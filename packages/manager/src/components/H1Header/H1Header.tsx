@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 
 interface Props {

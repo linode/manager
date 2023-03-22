@@ -25,12 +25,8 @@ import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -798,7 +794,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                               page={page}
                               pageSize={pageSize}
                               eventCategory={`${type.title.toLowerCase()} panel`}
-                              showAll
+                              // Disabling show All as it is impacting page performance.
+                              showAll={false}
                             />
                           </>
                         );

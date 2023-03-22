@@ -11,7 +11,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { DeepPartial, ResourcePage as Page } from '../types';
+import { DeepPartial, Filter, Params, ResourcePage as Page } from '../types';
 import { Volume } from '../volumes/types';
 import { CreateLinodeRequest, Linode } from './types';
 
@@ -51,8 +51,8 @@ export const getLinodeLishToken = (linodeId: number) =>
  */
 export const getLinodeVolumes = (
   linodeId: number,
-  params: any = {},
-  filter: any = {}
+  params: Params = {},
+  filter: Filter = {}
 ) =>
   Request<Page<Volume>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/volumes`),
@@ -68,7 +68,7 @@ export const getLinodeVolumes = (
  *
  * @param linodeId { number } The id of the Linode.
  */
-export const getLinodes = (params?: any, filter?: any) =>
+export const getLinodes = (params?: Params, filter?: Filter) =>
   Request<Page<Linode>>(
     setURL(`${API_ROOT}/linode/instances/`),
     setMethod('GET'),
@@ -145,8 +145,14 @@ export const changeLinodePassword = (linodeId: number, root_pass: string) =>
  * View Firewall information for Firewalls associated with this Linode
  */
 
-export const getLinodeFirewalls = (linodeId: number) =>
+export const getLinodeFirewalls = (
+  linodeId: number,
+  params?: Params,
+  filter?: Filter
+) =>
   Request<Page<Firewall>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/firewalls`),
-    setMethod('GET')
+    setMethod('GET'),
+    setXFilter(filter),
+    setParams(params)
   );

@@ -4,19 +4,26 @@ on:
   push:
     branches:
       - master
+      - staging
+      - develop
   pull_request:
 
 jobs:
   build-validation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.14"
+      - uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: packages-validation-lib
           path: |
@@ -55,17 +62,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-validation
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.14"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
           path: packages/validation
@@ -76,22 +83,22 @@ jobs:
     needs:
       - test-sdk
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.14"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
           path: packages/validation
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: packages-api-v4-lib
           path: |
@@ -99,30 +106,88 @@ jobs:
             packages/api-v4/index.node.js
             packages/api-v4/lib
 
+  validate-sdk:
+    runs-on: ubuntu-latest
+    needs:
+      - build-sdk
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.14"
+
+      # Download the validation and api-v4 artifacts (built packages)
+      - uses: actions/download-artifact@v3
+        with:
+          name: packages-validation-lib
+          path: packages/validation
+      - uses: actions/download-artifact@v3
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4
+
+      # Create an api-v4 tarball
+      - run: cd packages/api-v4 && npm pack --pack-destination ../../
+
+      # Test @linode/api-v4 as an ES Module
+      - run: mkdir test-sdk-esm && cd test-sdk-esm && npm init es6 -y && npm install ../$(ls ../ | grep "linode-api-v4-.*\.tgz")
+      - run: cp scripts/validatePackages/sdk-esm.js test-sdk-esm/
+      - run: cd test-sdk-esm && node ./sdk-esm.js
+
+      # Verify @linode/api-v4 as CommonJS
+      - run: mkdir test-sdk-cjs && cd test-sdk-cjs && npm init -y && npm install ../$(ls ../ | grep "linode-api-v4-.*\.tgz")
+      - run: cp scripts/validatePackages/sdk-commonjs.cjs test-sdk-cjs/
+      - run: cd test-sdk-cjs && node ./sdk-commonjs.cjs
+
   test-manager:
     runs-on: ubuntu-latest
     needs:
       - build-sdk
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.14"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
           path: packages/validation
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
+
+  typecheck-manager:
+    runs-on: ubuntu-latest
+    needs:
+      - build-sdk
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.14"
+      - uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/download-artifact@v3
+        with:
+          name: packages-validation-lib
+          path: packages/validation
+      - uses: actions/download-artifact@v3
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4
+      - run: yarn --frozen-lockfile
+      - run: yarn workspace linode-manager run typecheck
 
   build-manager:
     runs-on: ubuntu-latest
@@ -130,27 +195,27 @@ jobs:
     needs:
       - build-sdk
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.14"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: cp packages/manager/config/environments/beta packages/manager/.env
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
           path: packages/validation
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: packages-manager-build
           path: packages/manager/build
@@ -164,8 +229,8 @@ jobs:
       # If the validation publish failed we could have mismatched versions and a broken JS client
       - publish-validation
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
@@ -191,27 +256,29 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs:
       - build-sdk
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.14"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
           path: packages/validation
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build-storybook
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: storybook-build
           path: packages/manager/storybook-static
@@ -222,8 +289,8 @@ jobs:
     needs:
       - build-storybook
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
           name: storybook-build
           path: storybook/build

@@ -24,14 +24,6 @@ import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
 } from 'src/store/events/event.reducer';
-import firewallDevices, {
-  defaultState as defaultFirewallDevicesState,
-  State as FirewallDevicesState,
-} from 'src/store/firewalls/devices.reducer';
-import firewalls, {
-  defaultState as defaultFirewallState,
-  State as FirewallState,
-} from 'src/store/firewalls/firewalls.reducer';
 import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
@@ -112,10 +104,6 @@ import pendingUpload, {
   State as PendingUploadState,
 } from './pendingUpload';
 import { initReselectDevtools } from './selectors';
-import vlans, {
-  defaultState as defaultVLANState,
-  State as VlanState,
-} from './vlans/vlans.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 initReselectDevtools();
@@ -132,7 +120,6 @@ const __resourcesDefaultState = {
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
   types: defaultTypesState,
-  vlans: defaultVLANState,
 };
 
 export interface ResourcesState {
@@ -144,7 +131,6 @@ export interface ResourcesState {
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
   types: TypesState;
-  vlans: VlanState;
 }
 
 export interface ApplicationState {
@@ -161,8 +147,6 @@ export interface ApplicationState {
   pendingUpload: PendingUploadState;
   initialLoad: InitialLoadState;
   featureFlagsLoad: FeatureFlagsLoadState;
-  firewalls: FirewallState;
-  firewallDevices: FirewallDevicesState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
@@ -183,8 +167,6 @@ export const defaultState: ApplicationState = {
   pendingUpload: pendingUploadState,
   initialLoad: initialLoadState,
   featureFlagsLoad: featureFlagsLoadState,
-  firewalls: defaultFirewallState,
-  firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
@@ -203,7 +185,6 @@ const __resources = combineReducers({
   nodeBalancerConfigs,
   notifications,
   types,
-  vlans,
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -220,8 +201,6 @@ const reducers = combineReducers<ApplicationState>({
   pendingUpload,
   initialLoad,
   featureFlagsLoad,
-  firewalls,
-  firewallDevices,
   globalErrors,
   longviewClients: longview,
   longviewStats,

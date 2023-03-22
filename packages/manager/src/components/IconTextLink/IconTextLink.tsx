@@ -3,12 +3,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import ConditionalWrapper from 'src/components/ConditionalWrapper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
 
 type CSSClasses =
@@ -29,7 +25,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(1) + theme.spacing(0.5),
       color: theme.textColors.linkActiveLight,
       transition: 'none',
-      margin: `0 -calc(${theme.spacing(1) + theme.spacing(1)} / 2) 2px 0`,
+      margin: `0 ${theme.spacing(1)} 2px 0`,
       minHeight: 'auto',
       borderRadius: 0,
       '&:hover': {

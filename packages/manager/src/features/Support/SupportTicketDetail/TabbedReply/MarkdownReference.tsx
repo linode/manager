@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -8,8 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
   },
   example: {
-    backgroundColor:
-      theme.name === 'darkTheme' ? theme.bg.white : theme.bg.offWhite,
+    backgroundColor: theme.name === 'dark' ? theme.bg.white : theme.bg.offWhite,
     margin: `${theme.spacing(2)} 0`,
     padding: theme.spacing(2),
   },

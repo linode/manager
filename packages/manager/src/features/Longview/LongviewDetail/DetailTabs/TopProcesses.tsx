@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Box from 'src/components/core/Box';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';

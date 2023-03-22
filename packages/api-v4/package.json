@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.86.0",
+  "version": "0.88.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -68,9 +68,9 @@
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "jest": "~26.4.2",
-    "lint-staged": "^9.4.2",
+    "lint-staged": "^13.2.0",
     "prettier": "~2.2.1",
-    "tsup": "6.2.1"
+    "tsup": "^6.6.3"
   },
   "resolutions": {
     "handlebars": "^4.4.3"
@@ -78,8 +78,7 @@
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "eslint --ext .js,.ts,.tsx",
-      "git add"
+      "eslint --ext .js,.ts,.tsx"
     ],
     ".{ts,tsx}": [
       "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"

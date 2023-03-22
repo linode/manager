@@ -1,6 +1,6 @@
 import { API_ROOT } from '../constants';
-import Request, { setMethod, setURL } from '../request';
-import { ResourcePage as Page } from '../types';
+import Request, { setMethod, setParams, setURL } from '../request';
+import { Params, ResourcePage as Page } from '../types';
 import { Region } from './types';
 
 /**
@@ -15,8 +15,12 @@ import { Region } from './types';
  * in a Region response object are filterable.
  *
  */
-export const getRegions = () =>
-  Request<Page<Region>>(setURL(`${API_ROOT}/regions`), setMethod('GET'));
+export const getRegions = (params?: Params) =>
+  Request<Page<Region>>(
+    setURL(`${API_ROOT}/regions`),
+    setMethod('GET'),
+    setParams(params)
+  );
 
 /**
  * getRegion

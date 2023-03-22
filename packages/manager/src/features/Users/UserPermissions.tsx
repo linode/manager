@@ -16,12 +16,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -247,7 +243,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       updateGrants(username, { global: grants.global })
         .then((grantsResponse) => {
           this.setState(
-            compose(
+            compose<State, State, State>(
               set(lensPath(['grants', 'global']), grantsResponse.global),
               set(lensPath(['originalGrants', 'global']), grantsResponse.global)
             )

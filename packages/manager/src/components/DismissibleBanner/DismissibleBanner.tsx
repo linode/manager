@@ -1,14 +1,14 @@
 import Close from '@mui/icons-material/Close';
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import Notice, { NoticeProps } from 'src/components/Notice';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -38,7 +38,7 @@ type CombinedProps = Props & Partial<NoticeProps>;
 
 export const DismissibleBanner = (props: CombinedProps) => {
   const { className, preferenceKey, options, children, ...rest } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
     preferenceKey,
@@ -64,12 +64,7 @@ export const DismissibleBanner = (props: CombinedProps) => {
 
   return (
     <Notice
-      className={classNames(
-        {
-          [classes.root]: true,
-        },
-        className
-      )}
+      className={cx(classes.root, className)}
       dismissibleButton={dismissibleButton}
       {...rest}
     >

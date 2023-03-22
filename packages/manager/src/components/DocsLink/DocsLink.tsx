@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { sendHelpButtonClickEvent } from 'src/utilities/ga';
 import IconTextLink from '../IconTextLink';
 
@@ -11,9 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     lineHeight: 'normal',
     margin: 0,
-    marginTop: 2,
     minWidth: 'auto',
-    padding: 0,
     '& svg': {
       marginRight: theme.spacing(),
     },

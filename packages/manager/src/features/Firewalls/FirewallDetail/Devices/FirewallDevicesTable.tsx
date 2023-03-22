@@ -1,7 +1,6 @@
 import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
@@ -19,27 +18,16 @@ interface Props {
   error?: APIError[];
   loading: boolean;
   disabled: boolean;
-  lastUpdated: number;
-  triggerRemoveDevice: (deviceID: number, deviceLabel: string) => void;
+  triggerRemoveDevice: (deviceID: number) => void;
 }
 
-type CombinedProps = Props;
+const FirewallTable = (props: Props) => {
+  const { devices, error, loading, disabled, triggerRemoveDevice } = props;
 
-const FirewallTable: React.FC<CombinedProps> = (props) => {
-  const {
-    devices,
-    error,
-    lastUpdated,
-    loading,
-    disabled,
-    triggerRemoveDevice,
-  } = props;
-
-  const _error =
-    error && lastUpdated === 0
-      ? // @todo change to Devices or make dynamic when NBs are possible as Devices
-        getAPIErrorOrDefault(error, 'Unable to retrieve Linodes')
-      : undefined;
+  const _error = error
+    ? // @todo change to Devices or make dynamic when NBs are possible as Devices
+      getAPIErrorOrDefault(error, 'Unable to retrieve Linodes')
+    : undefined;
 
   return (
     <OrderBy data={devices} orderBy={'entity:label'} order={'asc'}>
@@ -72,9 +60,8 @@ const FirewallTable: React.FC<CombinedProps> = (props) => {
                 <TableBody>
                   <TableContentWrapper
                     length={paginatedAndOrderedData.length}
-                    loading={loading && lastUpdated === 0}
+                    loading={loading}
                     error={_error}
-                    lastUpdated={lastUpdated}
                   >
                     {paginatedAndOrderedData.map((thisDevice) => (
                       <FirewallDeviceRow
@@ -105,4 +92,4 @@ const FirewallTable: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(FirewallTable);
+export default React.memo(FirewallTable);

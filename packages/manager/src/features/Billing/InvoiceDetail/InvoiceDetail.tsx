@@ -13,7 +13,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
@@ -28,7 +29,7 @@ import { getAll } from 'src/utilities/getAll';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import InvoiceTable from './InvoiceTable';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
   },
@@ -58,8 +59,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }>;
 
-export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const InvoiceDetail = (props: CombinedProps) => {
+  const { classes } = useStyles();
 
   const csvRef = React.useRef<any>();
 

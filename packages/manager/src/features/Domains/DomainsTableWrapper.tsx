@@ -1,10 +1,6 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Table from 'src/components/Table';

@@ -346,7 +346,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                             <LandingHeader
                               title="Linodes"
                               entity="Linode"
-                              onAddNew={() =>
+                              onButtonClick={() =>
                                 this.props.history.push('/linodes/create')
                               }
                               docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"

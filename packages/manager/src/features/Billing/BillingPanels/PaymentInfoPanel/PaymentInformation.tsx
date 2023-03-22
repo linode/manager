@@ -6,71 +6,18 @@ import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import styled from 'src/containers/SummaryPanels.styles';
 import PaymentMethods from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { queryKey } from 'src/queries/accountPayment';
 import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  ...styled(theme),
-  summarySectionHeight: {
-    flex: '0 1 auto',
-    width: '100%',
-  },
-  container: {
-    flex: 1,
-    maxWidth: '100%',
-    position: 'relative',
-    '&.mlMain': {
-      [theme.breakpoints.up('lg')]: {
-        maxWidth: '78.8%',
-      },
-    },
-  },
-  billingGroup: {
-    marginBottom: theme.spacing(3),
-  },
-  paymentMethodNoticeContainer: {
-    fontSize: '0.875rem',
-    marginTop: theme.spacing(2),
-    padding: `8px 0px`,
-    '& button': {
-      marginLeft: theme.spacing(),
-    },
-    '& p': {
-      // Overwrites the default styling from the banner
-      fontSize: '0.875rem',
-      marginLeft: 0,
-    },
-  },
-  payPalIcon: {
-    flexShrink: 0,
-    height: 20,
-    marginRight: '6px',
-  },
-  edit: {
-    color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.normal,
-    fontSize: '.875rem',
-    fontWeight: 700,
-    minHeight: 'unset',
-    minWidth: 'auto',
-    padding: 0,
-    '&:hover, &:focus': {
-      backgroundColor: 'transparent',
-      color: theme.palette.primary.main,
-      textDecoration: 'underline',
-    },
-  },
-}));
 
 interface Props {
   loading: boolean;
@@ -79,7 +26,7 @@ interface Props {
   isAkamaiCustomer: boolean;
 }
 
-const PaymentInformation: React.FC<Props> = (props) => {
+const PaymentInformation = (props: Props) => {
   const { loading, error, paymentMethods, isAkamaiCustomer } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
@@ -93,7 +40,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
     setDeletePaymentMethodSelection,
   ] = React.useState<PaymentMethod | undefined>();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { replace } = useHistory();
 
   const drawerLink = '/account/billing/add-payment-method';
@@ -188,7 +135,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
           >
             <Box display="flex" alignItems="center">
               <PayPalIcon className={classes.payPalIcon} />
-              <Typography>
+              <Typography className={classes.notificationTypography}>
                 PayPal is now available for recurring payments.{' '}
                 <Link to="#" onClick={() => replace(drawerLink)}>
                   Add PayPal.
@@ -214,5 +161,63 @@ const PaymentInformation: React.FC<Props> = (props) => {
     </Grid>
   );
 };
+
+const useStyles = makeStyles({ name: { PaymentInformation } })(
+  (theme: Theme) => ({
+    title: {
+      marginBottom: theme.spacing(2),
+    },
+    summarySection: {
+      padding: theme.spacing(2.5),
+      marginBottom: theme.spacing(2),
+      minHeight: '160px',
+      height: '93%',
+    },
+    container: {
+      flex: 1,
+      maxWidth: '100%',
+      position: 'relative',
+      '&.mlMain': {
+        [theme.breakpoints.up('lg')]: {
+          maxWidth: '78.8%',
+        },
+      },
+    },
+    paymentMethodNoticeContainer: {
+      fontSize: '0.875rem',
+      marginTop: theme.spacing(2),
+      padding: '8px 0px',
+      '& button': {
+        marginLeft: theme.spacing(),
+      },
+    },
+    payPalIcon: {
+      flexShrink: 0,
+      height: 20,
+      marginRight: '6px',
+    },
+    edit: {
+      color: theme.textColors.linkActiveLight,
+      fontFamily: theme.font.normal,
+      fontSize: '.875rem',
+      fontWeight: 700,
+      minHeight: 'unset',
+      minWidth: 'auto',
+      padding: 0,
+      '&:hover, &:focus': {
+        backgroundColor: 'transparent',
+        color: theme.palette.primary.main,
+        textDecoration: 'underline',
+      },
+    },
+    notificationTypography: {
+      marginLeft: 0,
+      '&&': {
+        // Increase specificity until we refactor
+        fontSize: '0.875rem',
+      },
+    },
+  })
+);
 
 export default React.memo(PaymentInformation);

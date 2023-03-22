@@ -1,5 +1,5 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import {
   doesItemExistInPaginatedStore,
@@ -25,6 +25,7 @@ import {
   createVolume,
   getLinodeVolumes,
 } from '@linode/api-v4';
+import { Filter, Params } from '@linode/api-v4/src/types';
 
 /**
  * For Volumes, we must maintain the following stores to keep our cache up to date.
@@ -39,17 +40,31 @@ import {
 
 export const queryKey = 'volumes';
 
-export const useVolumesQuery = (params: any, filters: any) =>
+export const useVolumesQuery = (params: Params, filters: Filter) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
     [`${queryKey}-list`, params, filters],
     () => getVolumes(params, filters),
     { keepPreviousData: true }
   );
 
+export const useInfiniteVolumesQuery = (filter: any) =>
+  useInfiniteQuery<ResourcePage<Volume>, APIError[]>(
+    [queryKey, filter],
+    ({ pageParam }) => getVolumes({ page: pageParam, page_size: 25 }, filter),
+    {
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
+      },
+    }
+  );
+
 export const useLinodeVolumesQuery = (
   linodeId: number,
-  params: any = {},
-  filters: any = {},
+  params: Params = {},
+  filters: Filter = {},
   enabled = true
 ) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
@@ -58,8 +73,8 @@ export const useLinodeVolumesQuery = (
     { keepPreviousData: true, enabled }
   );
 export const useAllVolumesQuery = (
-  params: any = {},
-  filters: any = {},
+  params: Params = {},
+  filters: Filter = {},
   enabled = true
 ) =>
   useQuery<Volume[], APIError[]>(
@@ -226,7 +241,7 @@ export const volumeEventsHandler = (event: Event) => {
   }
 };
 
-const getAllVolumes = (passedParams: any = {}, passedFilter: any = {}) =>
+const getAllVolumes = (passedParams: Params = {}, passedFilter: Filter = {}) =>
   getAll<Volume>((params, filter) =>
     getVolumes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);

@@ -2,13 +2,13 @@ import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   loading: {
     display: 'flex',
     justifyContent: 'center',
@@ -22,9 +22,9 @@ interface Props {
   openDeleteDialog: (method: PaymentMethod) => void;
 }
 
-const PaymentMethods: React.FC<Props> = (props) => {
+const PaymentMethods = (props: Props) => {
   const { loading, error, paymentMethods, openDeleteDialog } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (loading) {
     return (

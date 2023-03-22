@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import {
   createLinode as _createLinode,
   deleteLinode as _deleteLinode,
@@ -7,6 +8,9 @@ import {
   linodeReboot as _rebootLinode,
   updateLinode as _updateLinode,
 } from '@linode/api-v4/lib/linodes';
+import { queryClient } from 'src/queries/base';
+import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
+import { getAllLinodeFirewalls } from 'src/queries/linodes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -36,7 +40,24 @@ export const createLinode = createRequestThunk(createLinodeActions, (data) =>
 
 export const deleteLinode = createRequestThunk(
   deleteLinodeActions,
-  ({ linodeId }) => _deleteLinode(linodeId)
+  async ({ linodeId }) => {
+    // Before we delete a Linode, we need to see what firewalls
+    // are associated with it so that we can update the firewalls
+    // UI to no longer include the deleted linode.
+    const firewalls = await getAllLinodeFirewalls(linodeId);
+
+    const response = await _deleteLinode(linodeId);
+
+    for (const firewall of firewalls) {
+      queryClient.invalidateQueries([
+        firewallsQueryKey,
+        firewall.id,
+        'devices',
+      ]);
+    }
+
+    return response;
+  }
 );
 
 export const rebootLinode = createRequestThunk(
@@ -44,7 +65,7 @@ export const rebootLinode = createRequestThunk(
   ({ linodeId, configId }) => _rebootLinode(linodeId, configId)
 );
 
-const getAllLinodes = (payload: { params?: any; filter?: any }) =>
+const getAllLinodes = (payload: { params?: Params; filter?: Filter }) =>
   getAll<Linode>((passedParams, passedFilter) =>
     getLinodes(passedParams, passedFilter)
   )(payload.params, payload.filter);

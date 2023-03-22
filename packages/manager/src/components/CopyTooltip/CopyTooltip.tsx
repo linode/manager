@@ -1,9 +1,9 @@
-import classNames from 'classnames';
+import { Theme } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 import FileCopy from 'src/assets/icons/copy.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import ToolTip from 'src/components/core/Tooltip';
+import { makeStyles } from 'tss-react/mui';
 
 interface Props {
   text: string;
@@ -12,7 +12,7 @@ interface Props {
   onClickCallback?: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     position: 'relative',
     padding: 4,
@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CopyTooltip: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const CopyTooltip = (props: Props) => {
+  const { classes, cx } = useStyles();
   const [copied, setCopied] = React.useState<boolean>(false);
 
   const { text, className, copyableText, onClickCallback } = props;
@@ -70,8 +70,7 @@ export const CopyTooltip: React.FC<Props> = (props) => {
         name={text}
         type="button"
         onClick={handleIconClick}
-        className={classNames(className, {
-          [classes.root]: true,
+        className={cx(classes.root, className, {
           [classes.copyableTextBtn]: copyableText,
         })}
         data-qa-copy-btn

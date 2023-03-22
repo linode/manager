@@ -1,6 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ValidationError, AnySchema } from 'yup';
-import { APIError } from './types';
+import { APIError, Filter, Params } from './types';
 
 interface RequestConfig extends AxiosRequestConfig {
   validationErrors?: APIError[];
@@ -64,7 +64,7 @@ export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
   set('method', method);
 
 /** Param */
-export const setParams = (params: any = {}) => set('params', params);
+export const setParams = (params: Params | undefined) => set('params', params);
 
 export const setHeaders = (newHeaders: any = {}) => (object: any) => {
   return !isEmpty(newHeaders)
@@ -106,7 +106,7 @@ export const setData = (
     return (object: any) => ({
       ...object,
       data: updatedData,
-      validationErrors: convertYupToLinodeErrors(error),
+      validationErrors: convertYupToLinodeErrors(error as ValidationError),
     });
   }
 };
@@ -141,7 +141,7 @@ const mapYupToLinodeAPIError = ({
 });
 
 /** X-Filter */
-export const setXFilter = (xFilter: any) => {
+export const setXFilter = (xFilter: Filter | undefined) => {
   return (object: any) =>
     !isEmpty(xFilter)
       ? {

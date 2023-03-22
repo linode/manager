@@ -1,7 +1,9 @@
+import { Filter, Params } from '@linode/api-v4';
 import { getTrustedDevices, TrustedDevice } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -101,7 +103,7 @@ export const TrustedDevices: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const paginated = Pagey((ownProps: {}, params: any, filter: any) =>
+const paginated = Pagey((ownProps: {}, params: Params, filter: Filter) =>
   getTrustedDevices(params, filter).then((response) => response)
 );
 

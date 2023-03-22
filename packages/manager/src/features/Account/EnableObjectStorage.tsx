@@ -22,14 +22,11 @@ interface Props {
   object_storage: AccountSettings['object_storage'];
 }
 
-type CombinedProps = Props;
-
-interface ContentProps {
-  object_storage: AccountSettings['object_storage'];
+interface ContentProps extends Props {
   openConfirmationModal: () => void;
 }
 
-export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
+export const ObjectStorageContent = (props: ContentProps) => {
   const { object_storage, openConfirmationModal } = props;
 
   if (object_storage !== 'disabled') {
@@ -71,7 +68,7 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
   );
 };
 
-export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
+export const EnableObjectStorage = (props: Props) => {
   const { object_storage } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();

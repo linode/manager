@@ -11,7 +11,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { Image, ImageUploadPayload, UploadImageResponse } from './types';
 
 /**
@@ -26,7 +26,7 @@ export const getImage = (imageId: string) =>
  * Returns a paginated list of Images.
  *
  */
-export const getImages = (params: any = {}, filters: any = {}) =>
+export const getImages = (params: Params = {}, filters: Filter = {}) =>
   Request<Page<Image>>(
     setURL(`${API_ROOT}/images`),
     setMethod('GET'),

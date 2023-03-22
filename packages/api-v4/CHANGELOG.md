@@ -1,3 +1,27 @@
+
+## [2023-03-20] - v0.88.0
+
+### Added:
+- `params` to regions endpoint [#8851](https://github.com/linode/manager/pull/8851)
+- `params` and `filters` to `getLinodeFirewalls` [#8848](https://github.com/linode/manager/pull/8848)
+
+### Changed:
+- Updated `VolumeStatus` type [#8862](https://github.com/linode/manager/pull/8862)
+- Updated `tsup` [#8838](https://github.com/linode/manager/pull/8838)
+
+### Removed:
+- Unused packages + update lint-staged [#8860](https://github.com/linode/manager/pull/8860)
+
+## [2023-03-06] - v0.87.0
+
+### Added:
+- Increased minimum acceptable password strength for Linode root passwords
+- Removed zone types for LISH URL change
+- Account Logins Show `Successful` or `Failed` Access
+
+### Changed:
+- Update Node.js from 14.17.4 LTS to 18.14.1 LTS
+
 ## [2023-02-07] - v0.86.0
 
 ### Added:

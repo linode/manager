@@ -2,12 +2,9 @@ import { deleteUser, User } from '@linode/api-v4/lib/account';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import {
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  useTheme,
-} from 'src/components/core/styles';
+import { makeStyles, useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';

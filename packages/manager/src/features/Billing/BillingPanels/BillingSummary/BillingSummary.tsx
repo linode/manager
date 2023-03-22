@@ -5,14 +5,14 @@ import {
 } from '@linode/api-v4/lib/account/types';
 import { GridSize } from '@mui/material/Grid';
 import { Breakpoint } from '@mui/material/styles';
-import classNames from 'classnames';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -24,7 +24,7 @@ import { isWithinDays } from 'src/utilities/date';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     marginTop: 0,
     marginBottom: 16,
@@ -86,8 +86,8 @@ interface BillingSummaryProps {
   balance: number;
 }
 
-export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
-  const classes = useStyles();
+export const BillingSummary = (props: BillingSummaryProps) => {
+  const { classes, cx } = useStyles();
   const notifications = useNotifications();
   const { account, _isRestrictedUser } = useAccountManagement();
 
@@ -175,7 +175,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     ? 'Credit'
     : 'You have no balance at this time.';
 
-  const accountBalanceClassnames = classNames({
+  const accountBalanceClassnames = cx({
     [classes.noBalanceOrNotDue]:
       balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod),
     [classes.pastDueBalance]: pastDueBalance,
@@ -310,8 +310,8 @@ export default React.memo(BillingSummary);
 // =============================================================================
 export type PromoDisplayProps = ActivePromotion;
 
-export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
-  const classes = useStyles();
+export const PromoDisplay = React.memo((props: PromoDisplayProps) => {
+  const { classes } = useStyles();
 
   const {
     summary,

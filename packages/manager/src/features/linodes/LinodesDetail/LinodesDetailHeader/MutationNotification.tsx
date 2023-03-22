@@ -11,12 +11,8 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { MBpsIntraDC } from 'src/constants';

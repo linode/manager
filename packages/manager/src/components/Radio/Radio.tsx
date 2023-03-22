@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { default as _Radio, RadioProps } from 'src/components/core/Radio';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import RadioIcon from '../../assets/icons/radio.svg';
 import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
 
@@ -11,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '10px 10px',
     transition: theme.transitions.create(['color']),
     '& .defaultFill': {
+      fill: theme.color.white,
       transition: theme.transitions.create(['fill']),
     },
     '&:hover': {

@@ -1,18 +1,19 @@
 import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { dcDisplayNames } from 'src/constants';
+import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import { makeStyles } from 'tss-react/mui';
 import {
   databaseEngineMap,
   databaseStatusMap,
 } from '../../DatabaseLanding/DatabaseRow';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(2),
   },
@@ -40,12 +41,15 @@ export const getDatabaseVersionNumber = (
   version: DatabaseInstance['version']
 ) => version.split('/')[1];
 
-export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const DatabaseSummaryClusterConfiguration = (props: Props) => {
+  const { classes } = useStyles();
 
   const { database } = props;
 
   const { data: types } = useDatabaseTypesQuery();
+  const { data: regions } = useRegionsQuery();
+
+  const region = regions?.find((r) => r.id === database.region);
 
   const type = types?.find((type) => type.id === database?.type);
 
@@ -81,7 +85,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
         </Box>
         <Box display="flex" style={{ marginBottom: 12 }}>
           <Typography className={classes.label}>Region</Typography>
-          {dcDisplayNames[database.region]}
+          {region?.label ?? database.region}
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Plan</Typography>

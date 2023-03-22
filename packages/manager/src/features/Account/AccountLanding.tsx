@@ -23,7 +23,7 @@ const MaintenanceLanding = React.lazy(
   () => import('./Maintenance/MaintenanceLanding')
 );
 
-const AccountLanding: React.FC = () => {
+const AccountLanding = () => {
   const history = useHistory();
   const location = useLocation();
   const { data: profile } = useProfile();
@@ -107,7 +107,7 @@ const AccountLanding: React.FC = () => {
       'https://www.linode.com/docs/guides/how-linode-billing-works/';
     landingHeaderProps.createButtonText = 'Make a Payment';
     if (!isAkamaiAccount) {
-      landingHeaderProps.onAddNew = () =>
+      landingHeaderProps.onButtonClick = () =>
         history.replace('/account/billing/make-payment');
     }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;

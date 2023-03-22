@@ -1,9 +1,9 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
-import classNames from 'classnames';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
@@ -17,7 +17,7 @@ import { useAccount } from 'src/queries/account';
 import { useClientToken } from 'src/queries/accountPayment';
 import { SetSuccess } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     position: 'relative',
   },
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.name === 'lightTheme' ? '#000' : '#fff',
+    backgroundColor: theme.name === 'light' ? '#000' : '#fff',
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       transition: 'none',
     },
     '& svg': {
-      color: theme.name === 'lightTheme' ? '#fff' : '#616161',
+      color: theme.name === 'light' ? '#fff' : '#616161',
       height: 16,
     },
     [theme.breakpoints.down('md')]: {
@@ -70,8 +70,8 @@ interface Props {
   disabled: boolean;
 }
 
-export const GooglePayButton: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const GooglePayButton = (props: Props) => {
+  const { classes, cx } = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const [initializationError, setInitializationError] = React.useState<boolean>(
@@ -153,7 +153,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
         </Tooltip>
       )}
       <button
-        className={classNames({
+        className={cx({
           [classes.button]: true,
           [classes.disabled]: disabledDueToPrice || disabledDueToProcessing,
         })}

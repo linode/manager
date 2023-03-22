@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -271,7 +271,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       <LandingHeader
         title="Volumes"
         entity="Volume"
-        onAddNew={() => history.push('/volumes/create')}
+        onButtonClick={() => history.push('/volumes/create')}
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
       />
       <Table>

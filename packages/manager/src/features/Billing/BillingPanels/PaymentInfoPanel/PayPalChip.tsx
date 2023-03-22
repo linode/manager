@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useClientToken } from 'src/queries/accountPayment';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import CircleProgress from 'src/components/CircleProgress';
 import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
@@ -8,7 +8,6 @@ import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import classNames from 'classnames';
 import { reportException } from 'src/exceptionReporting';
 import {
   OnApproveBraintreeData,
@@ -19,7 +18,7 @@ import {
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   disabled: {
     // Allows us to disable the pointer on the PayPal button because the SDK does not
     pointerEvents: 'none',
@@ -36,11 +35,11 @@ interface Props {
   disabled: boolean;
 }
 
-export const PayPalChip: React.FC<Props> = (props) => {
+export const PayPalChip = (props: Props) => {
   const { onClose, disabled, setProcessing, renderError } = props;
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -159,7 +158,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
 
   return (
     <div
-      className={classNames({
+      className={cx({
         [classes.button]: true,
         [classes.disabled]: disabled,
       })}

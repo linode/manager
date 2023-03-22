@@ -2,7 +2,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -13,7 +13,7 @@ import { queryKey } from 'src/queries/account';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   input: {
     maxWidth: 'unset',
     width: '100%',
@@ -25,9 +25,9 @@ interface Props {
   onClose: () => void;
 }
 
-const PromoDialog: React.FC<Props> = (props) => {
+const PromoDialog = (props: Props) => {
   const { open, onClose } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [promoCode, setPromoCode] = React.useState<string>('');
   const [error, setError] = React.useState<string>();

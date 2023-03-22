@@ -12,15 +12,14 @@
       "src/*": ["src/*"]
     },
     "resolveJsonModule": true,
-    "rootDir": "src",
+    "rootDir": ".",
 
     /* JavaScript Support */
     "allowJs": false,
 
     /* Emit */
-    "downlevelIteration": true,
-    "outDir": "build/dist",
     "sourceMap": true,
+    "noEmit": true,
 
     /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
@@ -37,19 +36,13 @@
     "suppressImplicitAnyIndexErrors": true,
 
     /* Completeness */
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    /* Optimizations */
+    "incremental": true
   },
-  "exclude": [
-    "acceptance-tests",
-    "build",
-    "config",
-    "cypress.config.ts",
-    "cypress",
-    "e2e",
-    "jest",
-    "node_modules",
-    "scripts",
-    "src/setupTests.ts",
-    "webpack"
-  ]
+  "include": [
+    "src",
+    "package.json"
+  ] 
 }

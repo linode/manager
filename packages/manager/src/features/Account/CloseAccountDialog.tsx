@@ -2,11 +2,11 @@ import { cancelAccount } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import Notice from 'src/components/Notice';
 import Typography from 'src/components/core/Typography';
 import TypeToConfirm from 'src/components/TypeToConfirm';
@@ -18,15 +18,13 @@ interface Props {
   closeDialog: () => void;
 }
 
-type CombinedProps = Props;
-
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   dontgo: {
     marginTop: theme.spacing(2),
   },
 }));
 
-const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
+const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
     false
   );
@@ -35,12 +33,12 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
   const [inputtedUsername, setUsername] = React.useState<string>('');
   const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const { data: profile } = useProfile();
 
   React.useEffect(() => {
-    if (props.open) {
+    if (open) {
       /**
        * reset error state, username, and disabled status when we open the modal
        * intentionally not resetting comments
@@ -49,7 +47,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
       setUsername('');
       setCanSubmit(false);
     }
-  }, [props.open]);
+  }, [open]);
 
   /**
    * enable the submit button if the user entered their
@@ -68,11 +66,11 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
       /**
        * focus on first textfield when modal is opened
        */
-      if (node && node.focus && props.open === true) {
+      if (node && node.focus && open === true) {
         node.focus();
       }
     },
-    [props.open]
+    [open]
   );
 
   const handleCancelAccount = () => {
@@ -101,13 +99,13 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      open={props.open}
+      open={open}
       title="Are you sure you want to close your Linode account?"
-      onClose={props.closeDialog}
+      onClose={closeDialog}
       error={errors ? errors[0].reason : ''}
       actions={
         <Actions
-          onClose={props.closeDialog}
+          onClose={closeDialog}
           isCanceling={isClosingAccount}
           onSubmit={handleCancelAccount}
           disabled={!canSubmit}
@@ -159,17 +157,22 @@ interface ActionsProps {
   disabled: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = (props) => {
+const Actions = ({
+  disabled,
+  isCanceling,
+  onClose,
+  onSubmit,
+}: ActionsProps) => {
   return (
     <ActionsPanel>
-      <Button buttonType="secondary" onClick={props.onClose}>
+      <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={props.onSubmit}
-        disabled={props.disabled}
-        loading={props.isCanceling}
+        onClick={onSubmit}
+        disabled={disabled}
+        loading={isCanceling}
       >
         Close Account
       </Button>
@@ -177,4 +180,4 @@ const Actions: React.FC<ActionsProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(CloseAccountDialog);
+export default React.memo(CloseAccountDialog);

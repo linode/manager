@@ -1,7 +1,8 @@
 import { InvoiceItem } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Currency from 'src/components/Currency';
@@ -16,7 +17,7 @@ import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   table: {
     border: `1px solid ${theme.borderColors.borderTable}`,
     '& thead th': {
@@ -34,8 +35,8 @@ interface Props {
   items?: InvoiceItem[];
 }
 
-const InvoiceTable: React.FC<Props> = (props) => {
-  const classes = useStyles();
+const InvoiceTable = (props: Props) => {
+  const { classes } = useStyles();
 
   const { loading, errors, items } = props;
 
@@ -67,9 +68,7 @@ const renderDate = (v: null | string) =>
 
 const renderQuantity = (v: null | number) => (v ? v : null);
 
-const RenderData: React.FC<{
-  items: InvoiceItem[];
-}> = (props) => {
+const RenderData = (props: { items: InvoiceItem[] }) => {
   const { items } = props;
 
   const MIN_PAGE_SIZE = 25;
@@ -140,11 +139,11 @@ const RenderData: React.FC<{
   );
 };
 
-const MaybeRenderContent: React.FC<{
+const MaybeRenderContent = (props: {
   loading: boolean;
   errors?: APIError[];
   items?: any[];
-}> = (props) => {
+}) => {
   const { loading, errors, items } = props;
 
   if (loading) {

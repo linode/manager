@@ -6,11 +6,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { withStyles } from 'tss-react/mui';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -29,28 +25,11 @@ import { Country } from './types';
 
 type ClassNames = 'mainFormContainer' | 'actions';
 
-const styles = () =>
-  createStyles({
-    mainFormContainer: {
-      maxWidth: 860,
-      '& .MuiGrid-item:not(:first-child) label': {
-        marginTop: 0,
-      },
-    },
-    actions: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      paddingBottom: 0,
-      '& button': {
-        marginBottom: 0,
-      },
-    },
-  });
-
 interface Props {
   onClose: () => void;
   open: boolean;
   focusEmail: boolean;
+  classes?: Partial<Record<ClassNames, string>>;
 }
 
 interface State {
@@ -61,10 +40,7 @@ interface State {
   errResponse: APIError[] | undefined;
 }
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  WithNotifications &
-  FeatureFlagConsumerProps;
+type CombinedProps = Props & WithNotifications & FeatureFlagConsumerProps;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
@@ -87,7 +63,7 @@ const L = {
 
 const excludedUSRegions = ['Micronesia', 'Marshall Islands', 'Palau'];
 
-class UpdateContactInformationForm extends React.Component<
+class _UpdateContactInformationForm extends React.Component<
   CombinedProps,
   State
 > {
@@ -158,7 +134,8 @@ class UpdateContactInformationForm extends React.Component<
   }
 
   renderForm = (account: Account) => {
-    const { classes, flags } = this.props;
+    const classes = withStyles.getClasses(this.props);
+    const { flags } = this.props;
     const { fields, success } = this.state;
 
     const errorMap = getErrorMap(
@@ -519,7 +496,8 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   renderFormActions = () => {
-    const { classes, flags } = this.props;
+    const classes = withStyles.getClasses(this.props);
+    const { flags } = this.props;
 
     return (
       <ActionsPanel className={classes.actions}>
@@ -669,10 +647,27 @@ class UpdateContactInformationForm extends React.Component<
   };
 }
 
-const styled = withStyles(styles);
+const UpdateContactInformationForm = withStyles(
+  _UpdateContactInformationForm,
+  () => ({
+    mainFormContainer: {
+      maxWidth: 860,
+      '& .MuiGrid-item:not(:first-child) label': {
+        marginTop: 0,
+      },
+    },
+    actions: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      paddingBottom: 0,
+      '& button': {
+        marginBottom: 0,
+      },
+    },
+  })
+);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withFeatureFlags,
   withNotifications()
 );

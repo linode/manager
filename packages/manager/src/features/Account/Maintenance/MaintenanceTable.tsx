@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
-import sync from 'css-animation-sync';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
@@ -16,7 +15,8 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Typography from 'src/components/core/Typography';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { CSVLink } from 'react-csv';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import { useOrder } from 'src/hooks/useOrder';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
@@ -38,7 +38,7 @@ const headersForCSVDownload = [
   { label: 'Reason', key: 'reason' },
 ];
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   csvLink: {
     [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
@@ -63,9 +63,9 @@ interface Props {
   type: 'pending' | 'completed';
 }
 
-export const MaintenanceTable = ({ type }: Props) => {
+const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type}`);
 
   const { order, orderBy, handleOrderChange } = useOrder(
@@ -101,10 +101,6 @@ export const MaintenanceTable = ({ type }: Props) => {
     },
     filter
   );
-
-  React.useEffect(() => {
-    sync('pulse');
-  }, []);
 
   const renderTableContent = () => {
     if (isLoading) {
@@ -242,3 +238,5 @@ export const MaintenanceTable = ({ type }: Props) => {
     </>
   );
 };
+
+export { MaintenanceTable };

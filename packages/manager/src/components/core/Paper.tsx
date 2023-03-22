@@ -1,10 +1,10 @@
 import _Paper, { PaperProps as _PaperProps } from '@mui/material/Paper';
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import FormHelperText from './FormHelperText';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
     paddingTop: 17,
@@ -25,15 +25,15 @@ type CombinedProps = PaperProps;
 
 const Paper: React.FC<CombinedProps> = (props) => {
   const { error, className, ...rest } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
     <React.Fragment>
       <_Paper
-        className={classNames(
+        className={cx(
+          classes.root,
           {
-            [classes.root]: true,
-            [classes.error]: error,
+            [classes.error]: Boolean(error),
           },
           className
         )}

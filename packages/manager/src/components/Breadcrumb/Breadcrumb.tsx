@@ -1,19 +1,21 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Crumbs, { CrumbOverridesProps } from './Crumbs';
 
 import { EditableProps, LabelProps } from './types';
 
 export interface Props {
-  labelTitle?: string;
-  labelOptions?: LabelProps;
-  onEditHandlers?: EditableProps;
-  removeCrumbX?: number;
-  firstAndLastOnly?: boolean;
-  crumbOverrides?: CrumbOverridesProps[];
+  breadcrumbDataAttrs?: { [key: string]: boolean };
   className?: string;
+  crumbOverrides?: CrumbOverridesProps[];
+  firstAndLastOnly?: boolean;
+  labelOptions?: LabelProps;
+  labelTitle?: string;
+  onEditHandlers?: EditableProps;
   pathname: string;
+  removeCrumbX?: number;
 }
 
 export type CombinedProps = Props;
@@ -47,14 +49,15 @@ export const Breadcrumb: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
-    labelTitle,
-    labelOptions,
-    onEditHandlers,
-    removeCrumbX,
-    firstAndLastOnly,
-    crumbOverrides,
+    breadcrumbDataAttrs,
     className,
+    crumbOverrides,
+    firstAndLastOnly,
+    labelOptions,
+    labelTitle,
+    onEditHandlers,
     pathname,
+    removeCrumbX,
   } = props;
 
   const url = pathname && pathname.slice(1);
@@ -75,6 +78,7 @@ export const Breadcrumb: React.FC<CombinedProps> = (props) => {
         },
         className
       )}
+      {...breadcrumbDataAttrs}
     >
       <div
         className={classNames({

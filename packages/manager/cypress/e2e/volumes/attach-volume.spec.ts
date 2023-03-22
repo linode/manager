@@ -5,9 +5,12 @@ import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { regions } from 'support/constants/regions';
-import { assertToast } from 'support/ui/events';
-import { apiMatcher } from 'support/util/intercepts';
+import {
+  interceptAttachVolume,
+  interceptDetachVolume,
+} from 'support/intercepts/volumes';
 import { randomItem, randomLabel, randomString } from 'support/util/random';
+import { ui } from 'support/ui';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -64,9 +67,7 @@ describe('volume attach and detach flows', () => {
     ]);
 
     cy.defer(entityPromise).then(([volume, linode]: [Volume, Linode]) => {
-      cy.intercept('POST', apiMatcher(`volumes/${volume.id}/attach`)).as(
-        'attachVolume'
-      );
+      interceptAttachVolume(volume.id).as('attachVolume');
       cy.visitWithLogin('/volumes', {
         localStorageOverrides: pageSizeOverride,
       });
@@ -99,7 +100,7 @@ describe('volume attach and detach flows', () => {
 
       // Confirm that volume has been attached to Linode.
       cy.wait('@attachVolume').its('response.statusCode').should('eq', 200);
-      assertToast(`Volume ${volume.label} successfully attached.`);
+      ui.toast.assertMessage(`Volume ${volume.label} successfully attached.`);
       cy.findByText(volume.label)
         .should('be.visible')
         .closest('tr')
@@ -117,9 +118,7 @@ describe('volume attach and detach flows', () => {
   it.skip('detaches a volume from a Linode', () => {
     cy.defer(createLinodeAndAttachVolume()).then(
       ([linode, volume]: [Linode, Volume]) => {
-        cy.intercept('POST', apiMatcher(`volumes/${volume.id}/detach`)).as(
-          'detachVolume'
-        );
+        interceptDetachVolume(volume.id).as('detachVolume');
 
         // @TODO Wait for Linode to finish provisioning before initiating detach.
         cy.visitWithLogin('/volumes', {

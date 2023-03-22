@@ -1,12 +1,8 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme,
-} from 'src/components/core/styles';
+import { makeStyles, withTheme, WithTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { isToday as _isToday } from 'src/utilities/isToday';

@@ -3,7 +3,8 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
-import { dcDisplayNames } from 'src/constants';
+import { useRegionsQuery } from 'src/queries/regions';
+
 export interface Props {
   regions: Region[];
 }
@@ -59,23 +60,20 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
   );
 };
 
-export const RegionStatusBanner: React.FC<Props> = (props) => {
-  const { regions } = props;
+export const RegionStatusBanner = () => {
+  const { data: regions } = useRegionsQuery();
 
-  const statusWarnings = regions
-    .filter(
-      (thisRegion) =>
-        thisRegion.status === 'outage' && !!dcDisplayNames[thisRegion.id]
-    )
-    .map((thisRegion) => dcDisplayNames[thisRegion.id]);
+  const labelsOfRegionsWithOutages = regions
+    ?.filter((region) => region.status === 'outage')
+    .map((region) => region.label);
 
-  if (statusWarnings.length === 0) {
+  if (!labelsOfRegionsWithOutages || labelsOfRegionsWithOutages?.length === 0) {
     return null;
   }
 
   return (
     <Notice warning important data-testid="status-banner">
-      {renderBanner(statusWarnings)}
+      {renderBanner(labelsOfRegionsWithOutages)}
     </Notice>
   );
 };

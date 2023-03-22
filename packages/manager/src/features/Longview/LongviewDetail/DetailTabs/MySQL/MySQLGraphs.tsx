@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { withTheme, WithTheme } from 'src/components/core/styles';
+import { withTheme, WithTheme } from '@mui/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {

@@ -3,21 +3,12 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
-import Button from 'src/components/Button';
 import Tab from 'src/components/core/ReachTab';
 import TabList from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import withGlobalErrors, {
@@ -27,29 +18,12 @@ import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer, { TicketType } from './SupportTicketDrawer';
 import TicketList from './TicketList';
-
-type ClassNames = 'title' | 'openTicketButton';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    title: {
-      [theme.breakpoints.down('sm')]: {
-        marginLeft: theme.spacing(),
-      },
-    },
-    openTicketButton: {
-      minWidth: 150,
-      [theme.breakpoints.down('md')]: {
-        marginRight: theme.spacing(),
-      },
-    },
-  });
+import LandingHeader from 'src/components/LandingHeader';
 
 interface Props {
   history: RouteComponentProps['history'];
 }
 type CombinedProps = Props &
-  WithStyles<ClassNames> &
   RouteComponentProps<{}, any, any> &
   GlobalErrorProps;
 
@@ -181,45 +155,26 @@ export class SupportTicketsLanding extends React.PureComponent<
     );
   };
 
+  handleButtonKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === 'Enter') {
+      this.openDrawer();
+    }
+  };
+
   render() {
-    const { classes, location } = this.props;
     const { notice, newTicket, value } = this.state;
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Support Tickets" />
-        <Grid
-          container
-          className="m0"
-          alignItems="center"
-          justifyContent="space-between"
-          updateFor={[classes]}
-        >
-          <Grid item className={`${classes.title} p0`}>
-            <Breadcrumb
-              pathname={location.pathname}
-              labelTitle="Tickets"
-              data-qa-breadcrumb
-            />
-          </Grid>
-          {!this.props.globalErrors.account_unactivated && (
-            <Grid item className="p0">
-              <Button
-                buttonType="primary"
-                onClick={this.openDrawer}
-                data-qa-open-ticket-link
-                className={classes.openTicketButton}
-                onKeyPress={(e) => {
-                  if (e.keyCode === 13) {
-                    this.openDrawer();
-                  }
-                }}
-              >
-                Open New Ticket
-              </Button>
-            </Grid>
-          )}
-        </Grid>
+        <LandingHeader
+          title="Tickets"
+          createButtonText="Open New Ticket"
+          onButtonClick={this.openDrawer}
+          onButtonKeyPress={this.handleButtonKeyPress}
+          data-qa-breadcrumb
+          buttonDataAttrs={{ 'data-qa-open-ticket-link': true }}
+        />
         {notice && <Notice success text={notice} />}
         <Tabs defaultIndex={value}>
           <TabList>
@@ -242,10 +197,7 @@ export class SupportTicketsLanding extends React.PureComponent<
   }
 }
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props>(
   withRouter,
-  styled,
   withGlobalErrors()
 )(SupportTicketsLanding);

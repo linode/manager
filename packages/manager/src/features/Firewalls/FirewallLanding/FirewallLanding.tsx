@@ -9,12 +9,7 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import EntityTable from 'src/components/EntityTable';
 import LandingHeader from 'src/components/LandingHeader';
-import {
-  useCreateFirewall,
-  useDeleteFirewall,
-  useFirewallQuery,
-  useMutateFirewall,
-} from 'src/queries/firewalls';
+import { useCreateFirewall, useFirewallQuery } from 'src/queries/firewalls';
 import { queryClient } from 'src/queries/base';
 import { useProfile, queryKey } from 'src/queries/profile';
 import AddFirewallDrawer from './AddFirewallDrawer';
@@ -65,9 +60,6 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   const { data: profile } = useProfile();
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
-  // @TODO: Refactor so these are combined?
-  const { mutateAsync: updateFirewall } = useMutateFirewall();
-  const { mutateAsync: _deleteFirewall } = useDeleteFirewall();
   const { mutateAsync: _createFirewall } = useCreateFirewall();
 
   const [
@@ -87,14 +79,6 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
     setSelectedFirewallLabel,
   ] = React.useState<string>('');
 
-  const enableFirewall = (id: number) => {
-    return updateFirewall({ id, payload: { status: 'enabled' } });
-  };
-
-  const disableFirewall = (id: number) => {
-    return updateFirewall({ id, payload: { status: 'disabled' } });
-  };
-
   const createFirewall = (
     payload: CreateFirewallPayload
   ): Promise<Firewall> => {
@@ -104,10 +88,6 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
       }
       return firewall;
     });
-  };
-
-  const deleteFirewall = (id: number) => {
-    return _deleteFirewall({ id });
   };
 
   const openModal = (mode: Mode, id: number, label: string) => {
@@ -194,7 +174,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
         title="Firewalls"
         entity="Firewall"
         breadcrumbProps={{ pathname: '/firewalls' }}
-        onAddNew={openDrawer}
+        onButtonClick={openDrawer}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
       />
       <EntityTable
@@ -212,9 +192,6 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
       <FirewallDialog
         open={modalOpen}
         mode={dialogMode}
-        enableFirewall={enableFirewall}
-        disableFirewall={disableFirewall}
-        deleteFirewall={deleteFirewall}
         selectedFirewallID={selectedFirewallID}
         selectedFirewallLabel={selectedFirewallLabel}
         closeDialog={() => toggleModal(false)}

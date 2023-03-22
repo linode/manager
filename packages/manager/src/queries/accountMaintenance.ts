@@ -1,15 +1,20 @@
 import { AccountMaintenance } from '@linode/api-v4/lib/account';
 import { getAccountMaintenance } from '@linode/api-v4/lib/account/maintenance';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 
 export const queryKey = 'account-maintenance';
 
 const getAllAccountMaintenance = (
-  passedParams: any = {},
-  passedFilter: any = {}
+  passedParams: Params = {},
+  passedFilter: Filter = {}
 ) =>
   getAll<AccountMaintenance>((params, filter) =>
     getAccountMaintenance(
@@ -19,8 +24,8 @@ const getAllAccountMaintenance = (
   )().then((res) => res.data);
 
 export const useAllAccountMaintenanceQuery = (
-  params: any = {},
-  filter: any = {},
+  params: Params = {},
+  filter: Filter = {},
   enabled: boolean = true
 ) => {
   return useQuery<AccountMaintenance[], APIError[]>(
@@ -30,7 +35,7 @@ export const useAllAccountMaintenanceQuery = (
   );
 };
 
-export const useAccountMaintenanceQuery = (params: any, filter: any) => {
+export const useAccountMaintenanceQuery = (params: Params, filter: Filter) => {
   return useQuery<ResourcePage<AccountMaintenance>, APIError[]>(
     [queryKey, params, filter],
     () => getAccountMaintenance(params, filter),

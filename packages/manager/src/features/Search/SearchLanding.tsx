@@ -5,13 +5,13 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Error from 'src/assets/icons/error.svg';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import { REFRESH_INTERVAL } from 'src/constants';
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
@@ -23,6 +23,7 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
@@ -141,6 +142,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     !_isLargeAccount
   );
 
+  const { data: regions } = useRegionsQuery();
+
   const linodes = useSelector((state: ApplicationState) =>
     Object.values(state.__resources.linodes.itemsById)
   );
@@ -201,6 +204,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         volumes ?? [],
         kubernetesClusters ?? [],
         _privateImages ?? [],
+        regions ?? [],
         searchableLinodes ?? []
       );
     }
@@ -215,6 +219,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     volumes,
     kubernetesClusters,
     _privateImages,
+    regions,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
@@ -326,15 +331,6 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const reloaded = reloadableWithRouter((routePropsOld, routePropsNew) => {
-  // reload if we're on the search landing
-  // and we enter a new term to search for
-  return routePropsOld.location.search !== routePropsNew.location.search;
-});
-
-const enhanced = compose<CombinedProps, {}>(
-  reloaded,
-  withStoreSearch()
-)(SearchLanding);
+const enhanced = compose<CombinedProps, {}>(withStoreSearch())(SearchLanding);
 
 export default enhanced;

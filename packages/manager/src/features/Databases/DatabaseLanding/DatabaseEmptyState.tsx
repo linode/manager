@@ -1,20 +1,34 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import DocsIcon from 'src/assets/icons/docs.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
-import { makeStyles } from 'src/components/core/styles';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
+import PointerIcon from 'src/assets/icons/pointer.svg';
+import YoutubeIcon from 'src/assets/icons/youtube.svg';
+import List from 'src/components/core/List';
+import ListItem from 'src/components/core/ListItem';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
-import { sendEvent } from 'src/utilities/ga';
 import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
 import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
-import DocsIcon from 'src/assets/icons/docs.svg';
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import PointerIcon from 'src/assets/icons/pointer.svg';
-import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
+import {
+  docsLink,
+  getLinkOnClick,
+  guidesMoreLinkText,
+  youtubeChannelLink,
+  youtubeMoreLinkLabel,
+  youtubeMoreLinkText,
+} from 'src/utilities/emptyStateLandingUtils';
+import { sendEvent } from 'src/utilities/ga';
+import { makeStyles } from 'tss-react/mui';
+
+const gaCategory = 'Managed Databases landing page empty';
+const linkGAEventTemplate = {
+  category: gaCategory,
+  action: 'Click:link',
+};
 
 const guidesLinkData = [
   {
@@ -49,18 +63,14 @@ const youtubeLinkData = [
   },
 ];
 
-const getLinkOnClick = (linkText: string) => () => {
-  sendEvent({
-    ...linkGAEventTemplate,
-    label: linkText,
-  });
-};
-
 const guideLinks = (
   <List>
     {guidesLinkData.map((linkData) => (
       <ListItem key={linkData.to}>
-        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+        <Link
+          to={linkData.to}
+          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
+        >
           {linkData.text}
         </Link>
       </ListItem>
@@ -68,17 +78,14 @@ const guideLinks = (
   </List>
 );
 
-const guidesMoreLinkText = 'Check out all our Docs';
-const youtubeMoreLinkText = 'View our YouTube channel';
-
-// retaining the old label for tracking
-const youtubeMoreLinkLabel = 'View the complete playlist';
-
 const youtubeLinks = (
   <List>
     {youtubeLinkData.map((linkData) => (
       <ListItem key={linkData.to}>
-        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+        <Link
+          to={linkData.to}
+          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
+        >
           {linkData.text}
           <ExternalLinkIcon />
         </Link>
@@ -87,7 +94,7 @@ const youtubeLinks = (
   </List>
 );
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     '& > svg': {
       transform: 'scale(0.8)',
@@ -95,15 +102,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const gaCategory = 'Managed Databases landing page empty';
-
-const linkGAEventTemplate = {
-  category: gaCategory,
-  action: 'Click:link',
-};
-
-const DatabaseEmptyState: React.FC = () => {
-  const classes = useStyles();
+const DatabaseEmptyState = () => {
+  const { classes } = useStyles();
   const history = useHistory();
 
   return (
@@ -135,8 +135,11 @@ const DatabaseEmptyState: React.FC = () => {
               icon={<DocsIcon />}
               MoreLink={(props) => (
                 <Link
-                  onClick={getLinkOnClick(guidesMoreLinkText)}
-                  to="https://www.linode.com/docs/"
+                  onClick={getLinkOnClick(
+                    linkGAEventTemplate,
+                    guidesMoreLinkText
+                  )}
+                  to={docsLink}
                   {...props}
                 >
                   {guidesMoreLinkText}
@@ -152,8 +155,11 @@ const DatabaseEmptyState: React.FC = () => {
               external
               MoreLink={(props) => (
                 <Link
-                  onClick={getLinkOnClick(youtubeMoreLinkLabel)}
-                  to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+                  onClick={getLinkOnClick(
+                    linkGAEventTemplate,
+                    youtubeMoreLinkLabel
+                  )}
+                  to={youtubeChannelLink}
                   {...props}
                 >
                   {youtubeMoreLinkText}

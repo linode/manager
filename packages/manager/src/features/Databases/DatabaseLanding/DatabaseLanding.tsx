@@ -22,7 +22,7 @@ import { DatabaseRow } from './DatabaseRow';
 
 const preferenceKey = 'databases';
 
-const DatabaseLanding: React.FC = () => {
+const DatabaseLanding = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
@@ -71,9 +71,8 @@ const DatabaseLanding: React.FC = () => {
       <LandingHeader
         title="Database Clusters"
         createButtonText="Create Database Cluster"
-        createButtonWidth={205}
         docsLink="https://www.linode.com/docs/products/databases/managed-databases/"
-        onAddNew={() => history.push('/databases/create')}
+        onButtonClick={() => history.push('/databases/create')}
       />
       <Table>
         <TableHead>

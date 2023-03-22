@@ -4,6 +4,7 @@ import {
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
+  VolumeStatus,
 } from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
@@ -303,14 +304,7 @@ export const handlers = [
     return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
-    return res(
-      ctx.json(
-        cachedRegions.data.map((thisRegion) => ({
-          ...thisRegion,
-          status: 'outage',
-        }))
-      )
-    );
+    return res(ctx.json(cachedRegions));
   }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(5, {
@@ -641,48 +635,14 @@ export const handlers = [
     );
   }),
   rest.get('*/volumes', (req, res, ctx) => {
-    const hddVolumeUnattached = volumeFactory.build({
-      id: 30,
-      label: 'hdd-unattached',
-    });
-    const hddVolumeAttached = volumeFactory.build({
-      id: 20,
-      linode_id: 20,
-      label: 'eligible-now-for-nvme',
-    });
-    const hddVolumeAttached2 = volumeFactory.build({
-      id: 2,
-      linode_id: 2,
-      label: 'example-upgrading',
-    });
-    const nvmeVolumeUpgrading = volumeFactory.build({
-      id: 2,
-      // hardware_type: 'nvme',
-    });
-    const newNVMeVolume = volumeFactory.build({
-      id: 1,
-      // hardware_type: 'nvme',
-    });
-
-    const volumes = [
-      newNVMeVolume,
-      nvmeVolumeUpgrading,
-      hddVolumeAttached,
-      hddVolumeAttached2,
-      hddVolumeUnattached,
-      volumeFactory.build({
-        status: 'contact_support',
-      }),
-      volumeFactory.build({
-        status: 'creating',
-      }),
-      volumeFactory.build({
-        status: 'deleting',
-      }),
-      volumeFactory.build({
-        status: 'resizing',
-      }),
+    const statuses: VolumeStatus[] = [
+      'active',
+      'creating',
+      'migrating',
+      'offline',
+      'resizing',
     ];
+    const volumes = statuses.map((status) => volumeFactory.build({ status }));
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {

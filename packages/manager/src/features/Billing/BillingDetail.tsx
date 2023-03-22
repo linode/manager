@@ -2,7 +2,8 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -18,7 +19,7 @@ import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   main: {
     [theme.breakpoints.up('md')]: {
       order: 1,
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
-export const BillingDetail: React.FC<CombinedProps> = (props) => {
+export const BillingDetail = (props: CombinedProps) => {
   const {
     data: paymentMethods,
     isLoading: paymentMethodsLoading,
@@ -45,7 +46,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
     isLoading: accountLoading,
   } = useAccount();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (accountLoading) {
     return <CircleProgress />;

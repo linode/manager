@@ -10,7 +10,8 @@ import { positionRight } from '@reach/popover';
 import classNames from 'classnames';
 import * as React from 'react';
 import KebabIcon from 'src/assets/icons/kebab.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 export interface Action {

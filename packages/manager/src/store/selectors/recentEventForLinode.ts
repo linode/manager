@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
@@ -19,8 +18,8 @@ export const useRecentEventForLinode = (linodeId: number) => {
 };
 
 export default (linodeId: number) =>
-  createSelector<ApplicationState, Event[], undefined | Event>(
-    (state) => state.events.events,
+  createSelector(
+    (state: ApplicationState) => state.events.events,
     (events) => {
       let idx = 0;
       const len = events.length;
