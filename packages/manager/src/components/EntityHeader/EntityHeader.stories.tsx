@@ -101,6 +101,7 @@ export const Default: Story = {
               heading: 'Linode 2GB',
               disk: 81920,
               id: 'g6-standard-2',
+              formattedLabel: 'Linode 2 GB',
               label: 'Linode 2GB',
               memory: 2048,
               vcpus: 1,

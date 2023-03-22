@@ -1,8 +1,7 @@
 import { PaymentMethod, PaymentType } from '@linode/api-v4';
-import classNames from 'classnames';
 import * as React from 'react';
 import Chip from 'src/components/core/Chip';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import {
@@ -13,7 +12,7 @@ import SelectionCard from 'src/components/SelectionCard';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   paymentMethod: {
     marginBottom: theme.spacing(),
   },
@@ -93,11 +92,11 @@ const getSubHeading = (paymentMethod: PaymentMethod, isExpired: boolean) => {
   }
 };
 
-export const PaymentMethodCard: React.FC<Props> = (props) => {
+export const PaymentMethodCard = (props: Props) => {
   const { paymentMethod, paymentMethodId, handlePaymentMethodChange } = props;
   const { id, type, is_default } = paymentMethod;
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const heading = getHeading(paymentMethod, type);
   const cardIsExpired = getIsCardExpired(paymentMethod);
@@ -119,7 +118,7 @@ export const PaymentMethodCard: React.FC<Props> = (props) => {
   return (
     <Grid className={classes.paymentMethod}>
       <SelectionCard
-        className={classNames({
+        className={cx({
           [classes.selectionCard]: true,
           [classes.expired]: cardIsExpired,
         })}

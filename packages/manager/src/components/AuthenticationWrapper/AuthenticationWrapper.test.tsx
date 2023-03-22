@@ -9,17 +9,13 @@ const component = shallow<AuthenticationWrapper>(
     linodesLastUpdated={0}
     linodesLoading={false}
     initSession={jest.fn()}
-    requestTypes={jest.fn()}
     requestLinodes={jest.fn()}
     requestNotifications={jest.fn()}
     requestRegions={jest.fn()}
     markAppAsDoneLoading={jest.fn()}
-    requestLinodeType={jest.fn()}
     checkAccountSize={jest.fn()}
     pendingUpload={false}
     linodes={[]}
-    typesLastUpdated={0}
-    types={[]}
   >
     <div />
   </AuthenticationWrapper>

@@ -8,7 +8,7 @@ import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Tag } from 'src/components/TagsInput';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/utilities/extendType';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -48,12 +48,6 @@ export interface WithRegionsProps {
   regionsData: Region[];
   regionsLoading: boolean;
   regionsError?: APIError[];
-}
-
-export interface WithTypesProps {
-  typesData?: ExtendedType[];
-  typesLoading: boolean;
-  typesError?: APIError[];
 }
 
 /**
