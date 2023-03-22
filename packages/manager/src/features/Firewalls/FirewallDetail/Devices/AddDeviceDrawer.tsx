@@ -8,11 +8,11 @@ import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
-import { useStyles } from 'src/components/Notice/Notice';
 import SupportLink from 'src/components/SupportLink';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/AddFirewallDrawer';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
   open: boolean;
@@ -39,7 +39,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
@@ -77,7 +77,14 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
       const labelIndex = errorMsg.indexOf(label);
       errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
       return (
-        <Notice error className={classes.noticeText}>
+        <Notice
+          error
+          sx={{
+            fontFamily: theme.font.bold,
+            fontSize: '1rem',
+            lineHeight: '20px',
+          }}
+        >
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
