@@ -1,23 +1,23 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
+import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import CopyTooltip from 'src/components/CopyTooltip';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(2),
   },
@@ -127,9 +127,9 @@ const privateHostCopy =
 const mongoHostHelperCopy =
   'This is a public hostname. Coming soon: connect to your MongoDB clusters using private IPs';
 
-export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
+export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const { database } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const [showCredentials, setShowPassword] = React.useState<boolean>(false);
