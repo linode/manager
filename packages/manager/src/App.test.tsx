@@ -38,8 +38,6 @@ it('renders without crashing.', () => {
             ldClient={{} as any}
             featureFlagsLoading={false}
             flags={{}}
-            typesError={undefined}
-            typesLoading={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>

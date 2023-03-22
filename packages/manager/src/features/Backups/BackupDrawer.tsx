@@ -121,7 +121,11 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       dismissSuccess();
       close();
     }
-    if (prevProps.linodesWithoutBackups !== this.props.linodesWithoutBackups) {
+    if (
+      prevProps.linodesWithoutBackups.some(
+        (linode, index) => linode != this.props.linodesWithoutBackups[index]
+      )
+    ) {
       this.updateRequestedTypes();
     }
   }

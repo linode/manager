@@ -39,7 +39,6 @@ import withPreferences, {
   PreferencesActionsProps,
   PreferencesStateProps,
 } from './containers/preferences.container';
-import { withTypes, WithTypesProps } from './containers/types.container';
 import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
 
@@ -61,8 +60,7 @@ type CombinedProps = Props &
   WithSnackbarProps &
   FeatureFlagConsumerProps &
   PreferencesStateProps &
-  PreferencesActionsProps &
-  WithTypesProps;
+  PreferencesActionsProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -207,7 +205,6 @@ export class App extends React.Component<CombinedProps, State> {
     const { hasError } = this.state;
     const {
       linodesError,
-      typesError,
       notificationsError,
       volumesError,
       bucketsError,
@@ -226,7 +223,6 @@ export class App extends React.Component<CombinedProps, State> {
     if (
       hasOauthError(
         linodesError,
-        typesError,
         notificationsError,
         volumesError,
         bucketsError,
@@ -278,7 +274,6 @@ interface StateProps {
   nodeBalancersError?: APIError[];
   bucketsError?: APIError[];
   notificationsError?: APIError[];
-  typesError?: APIError[];
   regionsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
@@ -309,9 +304,7 @@ export default compose(
   withSnackbar,
   withFeatureFlagProvider,
   withFeatureFlagConsumer,
-  withPreferences,
-  (component: React.ComponentType<WithTypesProps>) =>
-    withTypes(component, false)
+  withPreferences
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {

@@ -95,7 +95,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    */
   makeSecondaryRequests = async () => {
     try {
-      await Promise.all([this.props.requestNotifications()]);
+      await this.props.requestNotifications();
     } catch {
       /** We choose to do nothing, relying on the Redux error state. */
     }
