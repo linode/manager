@@ -6,7 +6,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CreateCluster: React.FC<RouteComponentProps> = (props) => {
+export const CreateCluster = () => {
   const classes = useStyles();
   const {
     data: allTypes,
@@ -151,6 +151,7 @@ export const CreateCluster: React.FC<RouteComponentProps> = (props) => {
     value: thisVersion.id,
     label: thisVersion.id,
   }));
+  const history = useHistory();
 
   React.useEffect(() => {
     if (filteredRegions.length === 1 && !selectedRegion) {
@@ -159,9 +160,7 @@ export const CreateCluster: React.FC<RouteComponentProps> = (props) => {
   }, [filteredRegions, selectedRegion]);
 
   const createCluster = () => {
-    const {
-      history: { push },
-    } = props;
+    const { push } = history;
 
     setErrors(undefined);
     setSubmitting(true);
@@ -354,4 +353,4 @@ export const CreateCluster: React.FC<RouteComponentProps> = (props) => {
   );
 };
 
-export default withRouter(CreateCluster);
+export default CreateCluster;
