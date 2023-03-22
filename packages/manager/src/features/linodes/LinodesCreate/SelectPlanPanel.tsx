@@ -150,6 +150,9 @@ const getGPU = (types: PlanSelectionType[]) =>
 const getMetal = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => t.class === 'metal');
 
+const getPremium = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => t.class === 'premium');
+
 type CombinedProps = Props & RegionsProps;
 
 export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
@@ -417,6 +420,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
     const metal = getMetal(types);
+    const premium = getPremium(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
@@ -557,6 +561,35 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
         title: 'Bare Metal',
       });
       tabOrder.push('metal');
+    }
+
+    if (!isEmpty(premium)) {
+      const programInfo = getDisabledClass('gpu') ? (
+        <>
+          GPU instances are not available in the selected region. Currently
+          these plans are only available in{' '}
+          {getRegionsWithCapability('GPU Linodes')}.
+        </>
+      ) : (
+        <div className={classes.gpuGuideLink}>{gpuPlanText()}</div>
+      );
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Notice warning>{programInfo}</Notice>
+              <Typography data-qa-gpu className={classes.copy}>
+                Linodes with dedicated GPUs accelerate highly specialized
+                applications such as machine learning, AI, and video
+                transcoding.
+              </Typography>
+              {renderPlanContainer(premium)}
+            </>
+          );
+        },
+        title: 'Premium',
+      });
+      tabOrder.push('premium');
     }
 
     return [tabs, tabOrder];
