@@ -2,7 +2,7 @@ import * as React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import UserDataAccordion from './UserDataAccordion';
-import { LINODE_CREATE_FROM } from './AccordionHeading';
+import { LINODE_CREATE_FROM } from './UserDataAccordionHeading';
 
 describe('UserDataAccordion', () => {
   const onChange = jest.fn();
