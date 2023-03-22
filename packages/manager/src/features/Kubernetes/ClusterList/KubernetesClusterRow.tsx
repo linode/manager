@@ -19,8 +19,7 @@ import {
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import { extendType } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -68,10 +67,7 @@ export const KubernetesClusterRow = (props: Props) => {
   const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
-  const types = typesQuery
-    .map((result) => result.data)
-    .filter(isNotNullOrUndefined)
-    .map(extendType);
+  const types = extendTypesQueryResult(typesQuery);
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r) => r.id === cluster.region);

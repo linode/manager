@@ -1,7 +1,9 @@
-import { LinodeType } from '@linode/api-v4';
+import { APIError, LinodeType } from '@linode/api-v4';
+import { UseQueryResult } from 'react-query';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { formatStorageUnits } from './formatStorageUnits';
+import { isNotNullOrUndefined } from './nullOrUndefined';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
@@ -42,3 +44,11 @@ export const extendType = (type: LinodeType): ExtendedType => {
     isDeprecated: type.successor !== null,
   };
 };
+
+export const extendTypesQueryResult = (
+  results: UseQueryResult<LinodeType, APIError[]>[]
+) =>
+  results
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);

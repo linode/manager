@@ -18,8 +18,7 @@ import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
-import { extendType } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 export interface Props {
   pools: KubeNodePoolResponse[];
@@ -55,10 +54,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const { data: account } = useAccount();
   const { data: agreements } = useAccountAgreements();
   const typesQuery = useSpecificTypes(pools.map((pool) => pool.type));
-  const types = typesQuery
-    .map((result) => result.data)
-    .filter(isNotNullOrUndefined)
-    .map(extendType);
+  const types = extendTypesQueryResult(typesQuery);
   const isLoading = typesQuery.some((query) => query.isLoading);
 
   const showGDPRCheckbox =

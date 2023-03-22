@@ -6,7 +6,7 @@ import { useSpecificTypes } from 'src/queries/types';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { extendType } from 'src/utilities/extendType';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
 const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
@@ -46,10 +46,7 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
       .filter(isNotNullOrUndefined)
   );
 
-  const types = typesQuery
-    .map((result) => result.data)
-    .filter(isNotNullOrUndefined)
-    .map(extendType);
+  const types = extendTypesQueryResult(typesQuery);
 
   const linodesDataWithFullType = Object.values(linodes.itemsById).map(
     (thisLinode) => {

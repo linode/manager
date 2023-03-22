@@ -37,7 +37,7 @@ import ResultGroup from './ResultGroup';
 import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
-import { extendType } from 'src/utilities/extendType';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -154,10 +154,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const typesQuery = useSpecificTypes(
     linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
-  const types = typesQuery
-    .map((result) => result.data)
-    .filter(isNotNullOrUndefined)
-    .map(extendType);
+  const types = extendTypesQueryResult(typesQuery);
 
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(_publicImages ?? []))

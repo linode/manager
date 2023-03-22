@@ -6,8 +6,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import { extendType } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { useRegionsQuery } from 'src/queries/regions';
 import { pluralize } from 'src/utilities/pluralize';
 import {
@@ -54,10 +53,7 @@ export const KubeClusterSpecs = (props: Props) => {
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
 
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
-  const types = typesQuery
-    .map((result) => result.data)
-    .filter(isNotNullOrUndefined)
-    .map(extendType);
+  const types = extendTypesQueryResult(typesQuery);
 
   const { RAM, CPU, Storage } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],

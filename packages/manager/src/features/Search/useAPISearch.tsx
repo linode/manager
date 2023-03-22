@@ -22,7 +22,7 @@ import {
   nodeBalToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { ExtendedType, extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
@@ -39,10 +39,7 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
 
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes);
-  const types = typesQuery
-    .map((result) => result.data)
-    .filter(isNotNullOrUndefined)
-    .map(extendType);
+  const types = extendTypesQueryResult(typesQuery);
 
   const images = listToItemsByID(_images ?? []);
 
