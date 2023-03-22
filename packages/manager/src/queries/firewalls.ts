@@ -32,14 +32,15 @@ import { Event } from '@linode/api-v4';
 export const queryKey = 'firewall';
 
 export const useAllFirewallDevicesQuery = (id: number) =>
-  useQuery<FirewallDevice[], APIError[]>([queryKey, id, 'devices'], () =>
-    getAllFirewallDevices(id)
+  useQuery<FirewallDevice[], APIError[]>(
+    [queryKey, 'firewall', id, 'devices'],
+    () => getAllFirewallDevices(id)
   );
 
 export const useAddFirewallDeviceMutation = (id: number) =>
   useMutation<FirewallDevice, APIError[], FirewallDevicePayload>(
     (data) => addFirewallDevice(id, data),
-    itemInListCreationHandler([queryKey, id, 'devices'])
+    itemInListCreationHandler([queryKey, 'firewall', id, 'devices'])
   );
 
 export const useRemoveFirewallDeviceMutation = (
@@ -51,7 +52,7 @@ export const useRemoveFirewallDeviceMutation = (
     {
       onSuccess() {
         queryClient.setQueryData<FirewallDevice[]>(
-          [queryKey, firewallId, 'devices'],
+          [queryKey, 'firewall', firewallId, 'devices'],
           (oldData) => {
             return oldData?.filter((device) => device.id !== deviceId) ?? [];
           }
@@ -69,12 +70,14 @@ export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
 };
 
 export const useFirewallQuery = (id: number) => {
-  return useQuery<Firewall, APIError[]>([queryKey, id], () => getFirewall(id));
+  return useQuery<Firewall, APIError[]>([queryKey, 'firewall', id], () =>
+    getFirewall(id)
+  );
 };
 
 export const useAllFirewallsQuery = (enabled: boolean = true) => {
   return useQuery<Firewall[], APIError[]>(
-    `${queryKey}-all`,
+    [queryKey, 'all'],
     getAllFirewallsRequest,
     { enabled }
   );
@@ -85,7 +88,7 @@ export const useMutateFirewall = (id: number) => {
     (data) => updateFirewall(id, data),
     {
       onSuccess(firewall) {
-        queryClient.setQueryData([queryKey, id], firewall);
+        queryClient.setQueryData([queryKey, 'firewall', id], firewall);
         queryClient.invalidateQueries([queryKey, 'paginated']);
       },
     }
@@ -98,7 +101,7 @@ export const useCreateFirewall = () => {
     {
       onSuccess(firewall) {
         queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData([queryKey, firewall.id], firewall);
+        queryClient.setQueryData([queryKey, 'firewall', firewall.id], firewall);
       },
     }
   );
@@ -107,7 +110,7 @@ export const useCreateFirewall = () => {
 export const useDeleteFirewall = (id: number) => {
   return useMutation<{}, APIError[]>(() => deleteFirewall(id), {
     onSuccess() {
-      queryClient.removeQueries([queryKey, id]);
+      queryClient.removeQueries([queryKey, 'firewall', id]);
       queryClient.invalidateQueries([queryKey, 'paginated']);
     },
   });
@@ -120,7 +123,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
       onSuccess(updatedRules) {
         // Update rules on specific firewall
         queryClient.setQueryData<Firewall | undefined>(
-          [queryKey, firewallId],
+          [queryKey, 'firewall', firewallId],
           (oldData) => {
             if (!oldData) {
               return undefined;
@@ -158,5 +161,5 @@ const getAllFirewallsRequest = () =>
 
 export const firewallEventsHandler = (event: Event) => {
   // We will over-fetch a little bit, bit this ensures Cloud firewalls are *always* up to date
-  queryClient.invalidateQueries(queryKey);
+  queryClient.invalidateQueries([queryKey]);
 };
