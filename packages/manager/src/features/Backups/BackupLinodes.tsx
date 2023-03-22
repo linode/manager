@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -33,10 +32,10 @@ export const displayPrice = (price: string | number) => {
   return _displayPrice(price);
 };
 
-const getLabel = (type?: ExtendedType) => pathOr('Unknown', ['label'], type);
+const getLabel = (type?: ExtendedType) => type?.formattedLabel ?? 'Unknown';
 
 const getPrice = (type?: ExtendedType) =>
-  pathOr('Unavailable', ['addons', 'backups', 'price', 'monthly'], type);
+  type?.addons?.backups?.price?.monthly ?? 'Unavailable';
 
 export const BackupLinodes: React.FC<CombinedProps> = (props) => {
   const { classes, linodes } = props;
@@ -44,7 +43,7 @@ export const BackupLinodes: React.FC<CombinedProps> = (props) => {
     <React.Fragment>
       {linodes &&
         linodes.map((linode: ExtendedLinode, idx: number) => {
-          const error = pathOr('', ['linodeError', 'reason'], linode);
+          const error = linode.linodeError?.reason ?? '';
           return (
             <React.Fragment key={`backup-linode-${idx}`}>
               <TableRow data-qa-linodes>
