@@ -7,13 +7,13 @@ import AccordionDetails, {
 import AccordionSummary, {
   AccordionSummaryProps,
 } from 'src/components/core/AccordionSummary';
-import { makeStyles } from '@mui/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
+import { makeStyles } from 'tss-react/mui';
 import Notice from '../Notice';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   itemCount: {
     display: 'flex',
     alignItems: 'center',
@@ -44,10 +44,8 @@ export interface Props extends AccordionProps {
   headingNumberCount?: number;
 }
 
-type CombinedProps = Props;
-
-export const Accordion: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const Accordion = (props: Props) => {
+  const { classes } = useStyles();
 
   const {
     summaryProps,
