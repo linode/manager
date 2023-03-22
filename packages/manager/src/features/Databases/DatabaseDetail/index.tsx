@@ -22,7 +22,7 @@ const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 
-export const DatabaseDetail: React.FC = () => {
+export const DatabaseDetail = () => {
   const history = useHistory();
 
   const { databaseId, engine } = useParams<{
