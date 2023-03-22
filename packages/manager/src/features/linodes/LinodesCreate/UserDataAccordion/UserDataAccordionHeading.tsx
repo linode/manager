@@ -12,7 +12,7 @@ interface Props {
   createType?: string | undefined;
 }
 
-const AccordionHeading = ({ createType }: Props) => {
+const UserDataAccordionHeading = ({ createType }: Props) => {
   const userDataHeaderWarningMessage =
     createType === LINODE_CREATE_FROM.BACKUPS
       ? 'Existing user data is not available when creating a Linode from a backup.'
@@ -43,4 +43,4 @@ const AccordionHeading = ({ createType }: Props) => {
   );
 };
 
-export default AccordionHeading;
+export default UserDataAccordionHeading;
