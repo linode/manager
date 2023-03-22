@@ -3,7 +3,7 @@ import Accordion from 'src/components/Accordion';
 import TextField from 'src/components/TextField';
 import Notice from 'src/components/Notice';
 import AcceptedFormats from './AcceptedFormats';
-import AccordionHeading from './AccordionHeading';
+import UserDataAccordionHeading from './UserDataAccordionHeading';
 import UserDataExplanatory from './UserDataExplanatory';
 
 interface Props {
@@ -51,7 +51,7 @@ const UserDataAccordion = (props: Props) => {
 
   return (
     <Accordion
-      heading={<AccordionHeading createType={createType} />}
+      heading={<UserDataAccordionHeading createType={createType} />}
       style={{ marginTop: renderNotice && renderCheckbox ? 0 : 24 }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       headingProps={{
         variant: 'h2',
