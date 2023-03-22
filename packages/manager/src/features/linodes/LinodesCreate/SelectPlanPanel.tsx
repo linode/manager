@@ -1,10 +1,5 @@
 import { useSelector } from 'react-redux';
-import {
-  LinodeTypeClass,
-  BaseType,
-  PriceObject,
-  LinodeType,
-} from '@linode/api-v4/lib/linodes';
+import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
@@ -38,7 +33,7 @@ import withRegions, {
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -105,12 +100,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface PlanSelectionType extends BaseType {
-  class: string;
-  heading: string;
-  subHeadings: string[];
-  price: PriceObject;
-  transfer?: LinodeType['transfer'];
-  network_out?: LinodeType['network_out'];
+  formattedLabel: ExtendedType['formattedLabel'];
+  class: ExtendedType['class'];
+  heading: ExtendedType['heading'];
+  subHeadings: ExtendedType['subHeadings'];
+  price: ExtendedType['price'];
+  transfer?: ExtendedType['transfer'];
+  network_out?: ExtendedType['network_out'];
 }
 
 interface Props {
@@ -213,18 +209,18 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     }
 
     const rowAriaLabel =
-      type && type.label && isSamePlan
-        ? `${type.label} this is your current plan`
+      type && type.formattedLabel && isSamePlan
+        ? `${type.formattedLabel} this is your current plan`
         : planTooSmall
-        ? `${type.label} this plan is too small for resize`
-        : type.label;
+        ? `${type.formattedLabel} this plan is too small for resize`
+        : type.formattedLabel;
 
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <TableRow
-            data-qa-plan-row={type.label}
+            data-qa-plan-row={type.formattedLabel}
             aria-label={rowAriaLabel}
             key={type.id}
             onClick={

@@ -69,9 +69,10 @@ import {
   WithDisplayData,
   WithLinodesProps,
   WithRegionsProps,
-  WithTypesProps,
   WithTypesRegionsAndImages,
 } from './types';
+import { extendType } from 'src/utilities/extendType';
+import { WithTypesProps } from 'src/containers/types.container';
 
 type ClassNames =
   | 'form'
@@ -275,7 +276,7 @@ export class LinodeCreate extends React.PureComponent<
   filterTypes = () => {
     const { createType, typesData } = this.props;
     const { selectedTab } = this.state;
-    const currentTypes = filterCurrentTypes(typesData ?? []);
+    const currentTypes = filterCurrentTypes(typesData?.map(extendType));
 
     return ['fromImage', 'fromBackup'].includes(createType) && selectedTab !== 0
       ? currentTypes.filter((t) => t.class !== 'metal')

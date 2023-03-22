@@ -1,7 +1,7 @@
 import { Domain } from '@linode/api-v4/lib/domains';
 import { Image } from '@linode/api-v4/lib/images';
 import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { createSelector } from 'reselect';
@@ -12,6 +12,7 @@ import { ApplicationState } from 'src/store';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { ExtendedType } from 'src/utilities/extendType';
 import { Region } from '@linode/api-v4/lib/regions';
 
 export type State = ApplicationState['__resources'];
@@ -37,7 +38,7 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 
 export const formatLinode = (
   linode: Linode,
-  types: LinodeType[],
+  types: ExtendedType[],
   images: Record<string, Image>
 ): SearchableItem => ({
   label: linode.label,

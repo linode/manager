@@ -16,7 +16,7 @@ import { useProfile } from 'src/queries/profile';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
-import MigrateLinode from '../../MigrateLanding/MigrateLinode';
+import MigrateLinode from '../../MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,

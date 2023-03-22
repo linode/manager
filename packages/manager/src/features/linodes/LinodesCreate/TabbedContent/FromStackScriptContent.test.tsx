@@ -25,7 +25,6 @@ const mockProps: CombinedProps = {
   updateTypeID: jest.fn(),
   imagesData: {},
   regionsData: [],
-  typesData: [],
   userCannotCreateLinode: false,
   request: jest.fn(),
   header: '',

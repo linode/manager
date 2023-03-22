@@ -30,7 +30,7 @@ describe('Extend Linode', () => {
       extendedTypes
     );
     expect(extendedLinodes[0].heading).toBe('test');
-    expect(extendedLinodes[0].subHeadings).toEqual(['Nanode 1GB, Debian 10']);
+    expect(extendedLinodes[0].subHeadings).toEqual(['Nanode 1 GB, Debian 10']);
   });
 
   it('should concat image and type data, separated by a comma', () => {

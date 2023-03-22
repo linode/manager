@@ -10,7 +10,8 @@ import Drawer from 'src/components/Drawer';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useAllLinodeTypesQuery } from 'src/queries/linodes';
+import { useSpecificTypes } from 'src/queries/types';
+import { extendType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
 
@@ -42,7 +43,11 @@ export const ResizeNodePoolDrawer = (props: Props) => {
   const { nodePool, onClose, open, kubernetesClusterId } = props;
   const classes = useStyles();
 
-  const { data: types, isLoading: isLoadingTypes } = useAllLinodeTypesQuery();
+  const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
+  const isLoadingTypes = typesQuery[0]?.isLoading ?? false;
+  const planType = typesQuery[0]?.data
+    ? extendType(typesQuery[0].data)
+    : undefined;
 
   const {
     mutateAsync: updateNodePool,
@@ -67,8 +72,6 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     setUpdatedCount(Math.min(100, Math.floor(value)));
   };
 
-  const planType = types?.find((thisType) => thisType.id === nodePool?.type);
-
   const pricePerNode = planType?.price.monthly ?? 0;
 
   if (!nodePool) {
@@ -86,12 +89,12 @@ export const ResizeNodePoolDrawer = (props: Props) => {
   const totalMonthlyPrice = getMonthlyPrice(
     nodePool.type,
     nodePool.count,
-    types || []
+    planType ? [planType] : []
   );
 
   return (
     <Drawer
-      title={`Resize Pool: ${planType?.label ?? 'Unknown'} Plan`}
+      title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
       open={open}
       onClose={onClose}
     >

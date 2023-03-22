@@ -9,10 +9,10 @@ export interface APIResponsePage<T> {
   results: number;
 }
 
-export type GetFunction = (
+export type GetFunction<T> = (
   params?: Params,
   filters?: Filter
-) => Promise<APIResponsePage<any>>;
+) => Promise<APIResponsePage<T[]>>;
 
 export type GetFromEntity = (
   entityId?: number,
@@ -49,9 +49,9 @@ export interface GetAllData<T> {
  *
  */
 export const getAll: <T>(
-  getter: GetFunction,
+  getter: GetFunction<T>,
   pageSize?: number,
-  cb?: any
+  cb?: (results: number) => void
 ) => (params?: Params, filter?: Filter) => Promise<GetAllData<T>> = (
   getter,
   pageSize = API_MAX_PAGE_SIZE,

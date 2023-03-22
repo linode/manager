@@ -340,7 +340,7 @@ const DatabaseCreate = () => {
       ] as [string, string];
       return {
         ...type,
-        label: formattedLabel,
+        formattedLabel,
         heading: formattedLabel,
         price,
         subHeadings,

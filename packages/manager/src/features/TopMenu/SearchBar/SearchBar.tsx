@@ -8,7 +8,6 @@ import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
@@ -33,12 +32,12 @@ import { ApplicationState } from 'src/store';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useSpecificTypes } from 'src/queries/types';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useRegionsQuery } from 'src/queries/regions';
 
-type CombinedProps = WithTypesProps &
-  SearchProps &
-  StyleProps &
-  RouteComponentProps<{}>;
+type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 
 const Control = (props: any) => <components.Control {...props} />;
 
@@ -131,9 +130,12 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const linodes = useSelector((state: ApplicationState) =>
     Object.values(state.__resources.linodes.itemsById)
   );
-  const types = useSelector((state: ApplicationState) =>
-    Object.values(state.__resources.types.entities)
+  const typesQuery = useSpecificTypes(
+    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined),
+    shouldMakeRequests
   );
+  const types = extendTypesQueryResult(typesQuery);
+
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(publicImages))
   );
@@ -343,7 +345,6 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 };
 
 export default compose<CombinedProps, {}>(
-  withTypes,
   withRouter,
   withStoreSearch(),
   styled

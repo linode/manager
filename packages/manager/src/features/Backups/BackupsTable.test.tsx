@@ -6,16 +6,17 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import * as linodes from 'src/__data__/linodes';
 import { BackupsTable } from './BackupsTable';
 import { ExtendedLinode } from './types';
+import { extendType } from 'src/utilities/extendType';
 
-const type = types.data[0];
+const type = extendType(types.data[0] as LinodeType);
 
 const linode1: ExtendedLinode = {
   ...linodes.linode1,
-  typeInfo: type as LinodeType,
+  typeInfo: type,
 };
 const linode2: ExtendedLinode = {
   ...linodes.linode2,
-  typeInfo: type as LinodeType,
+  typeInfo: type,
 };
 
 const component = shallow(<BackupsTable linodes={[]} loading={true} />);

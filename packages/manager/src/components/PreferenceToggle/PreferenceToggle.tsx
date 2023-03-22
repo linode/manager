@@ -1,6 +1,7 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import { isNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 type PreferenceValue = boolean | string | number;
 
@@ -204,10 +205,6 @@ const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
   return typeof children === 'function'
     ? children({ preference: currentlySetPreference, togglePreference })
     : null;
-};
-
-const isNullOrUndefined = (value: any): value is null | undefined => {
-  return typeof value === 'undefined' || value === null;
 };
 
 export default PreferenceToggle;

@@ -80,15 +80,15 @@ describe('Component', () => {
   });
 
   it('should show an empty state', async () => {
-    const { getByText } = renderWithTheme(<SearchLanding {...props} />);
-    getByText(/no results/i);
+    const { findByText } = renderWithTheme(<SearchLanding {...props} />);
+    await findByText(/no results/i);
   });
 
-  it('should display the query term', () => {
-    const { getByText } = renderWithTheme(
+  it('should display the query term', async () => {
+    const { findByText } = renderWithTheme(
       <SearchLanding {...propsWithResults} />
     );
-    getByText('Search Results for "search"');
+    await findByText('Search Results for "search"');
   });
 
   it('should parse multi-word queries correctly', async () => {
@@ -97,8 +97,8 @@ describe('Component', () => {
       '?query=two%20words',
       propsWithResults
     );
-    const { getByText } = renderWithTheme(<SearchLanding {...newProps} />);
-    expect(getByText('Search Results for "two words"'));
+    const { findByText } = renderWithTheme(<SearchLanding {...newProps} />);
+    expect(await findByText('Search Results for "two words"'));
   });
 
   it('should handle blank or unusual queries without crashing', async () => {
@@ -107,7 +107,7 @@ describe('Component', () => {
       '?query=',
       propsWithResults
     );
-    const { getByText } = renderWithTheme(<SearchLanding {...newProps} />);
-    getByText(/search/i);
+    const { findByText } = renderWithTheme(<SearchLanding {...newProps} />);
+    await findByText(/search/i);
   });
 });

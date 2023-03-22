@@ -21,8 +21,6 @@ import {
   getLinodeLishToken,
   getLinodeConfigs,
   Config,
-  LinodeType,
-  getLinodeTypes,
   getLinodeFirewalls,
 } from '@linode/api-v4/lib/linodes';
 import { Firewall } from '@linode/api-v4';
@@ -156,14 +154,6 @@ export const useLinodeLishTokenQuery = (id: number) => {
   );
 };
 
-export const useAllLinodeTypesQuery = () => {
-  return useQuery<LinodeType[], APIError[]>(
-    [queryKey, 'types'],
-    getAllLinodeTypes,
-    { ...queryPresets.oneTimeFetch }
-  );
-};
-
 export const useLinodeFirewalls = (linodeID: number) =>
   useQuery<ResourcePage<Firewall>, APIError[]>(
     [queryKey, linodeID, 'linodes'],
@@ -193,11 +183,6 @@ const getAllLinodeConfigs = (id: number) =>
   getAll<Config>((params, filter) =>
     getLinodeConfigs(id, params, filter)
   )().then((data) => data.data);
-
-const getAllLinodeTypes = () =>
-  getAll<LinodeType>((params) => getLinodeTypes(params))().then(
-    (data) => data.data
-  );
 
 export const getAllLinodeFirewalls = (
   linodeId: number,

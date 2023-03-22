@@ -1,7 +1,7 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { ExtendedType } from './extendType';
 
-export const getTypeInfo = (type: string | null, types: LinodeType[]) => {
-  return types.find((thisType: LinodeType) => {
+export const getTypeInfo = (type: string | null, types: ExtendedType[]) => {
+  return types.find((thisType: ExtendedType) => {
     return type === thisType.id;
   });
 };

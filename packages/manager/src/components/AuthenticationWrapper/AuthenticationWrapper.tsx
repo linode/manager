@@ -3,10 +3,9 @@ import {
   getAccountSettings,
   Notification,
 } from '@linode/api-v4/lib/account';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import { Region } from '@linode/api-v4/lib/regions';
-import { difference, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Action } from 'redux';
@@ -20,11 +19,6 @@ import { checkAccountSize } from 'src/store/accountManagement/accountManagement.
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
-import { GetLinodeTypeParams } from 'src/store/linodeType/linodeType.actions';
-import {
-  requestLinodeType,
-  requestTypes,
-} from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { requestRegions } from 'src/store/regions/regions.actions';
@@ -101,41 +95,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    */
   makeSecondaryRequests = async () => {
     try {
-      await Promise.all([
-        this.props.requestTypes(),
-        this.props.requestNotifications(),
-      ]);
+      await this.props.requestNotifications();
     } catch {
       /** We choose to do nothing, relying on the Redux error state. */
     }
-  };
-
-  // Some special types aren't returned from /types or /types-legacy. They are
-  // only available by hitting /types/:id directly. If there are Linodes with
-  // these special types, we have to request each one.
-  ensureAllTypes = () => {
-    const { linodes, types } = this.props;
-
-    // The types we already know about (from /types and /types-legacy).
-    const knownTypeIds = types.map((thisType) => thisType.id);
-
-    // The types of each Linode on the account.
-    const linodeTypeIds = uniqBy((thisLinode) => thisLinode.type, linodes).map(
-      (thisLinode) => thisLinode.type
-    );
-
-    // The difference between these two, i.e. the types we don't know about.
-    const missingTypeIds = difference(linodeTypeIds, knownTypeIds);
-
-    // For each type we don't know about, request it.
-    missingTypeIds.forEach((thisMissingTypeId) => {
-      if (thisMissingTypeId !== null) {
-        this.props.requestLinodeType({
-          typeId: thisMissingTypeId,
-          isShadowPlan: true,
-        });
-      }
-    });
   };
 
   componentDidMount() {
@@ -184,15 +147,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     ) {
       redirectToLogin(location.pathname, location.search);
     }
-
-    if (
-      !this.state.hasEnsuredAllTypes &&
-      this.props.typesLastUpdated > 0 &&
-      this.props.linodesLastUpdated > 0
-    ) {
-      this.setState({ hasEnsuredAllTypes: true });
-      this.ensureAllTypes();
-    }
   }
 
   render() {
@@ -209,8 +163,6 @@ interface StateProps {
   linodesLastUpdated: number;
   linodes: Linode[];
   pendingUpload: PendingUploadState;
-  types: LinodeType[];
-  typesLastUpdated: number;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
@@ -219,8 +171,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   linodesLastUpdated: state.__resources.linodes.lastUpdated,
   linodes: Object.values(state.__resources.linodes.itemsById),
   pendingUpload: state.pendingUpload,
-  types: state.__resources.types.entities,
-  typesLastUpdated: state.__resources.types.lastUpdated,
 });
 
 interface DispatchProps {
@@ -228,10 +178,8 @@ interface DispatchProps {
   checkAccountSize: () => Promise<null>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<GetAllData<Notification>>;
-  requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;
   markAppAsDoneLoading: () => void;
-  requestLinodeType: (params: GetLinodeTypeParams) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -241,10 +189,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   checkAccountSize: () => dispatch(checkAccountSize()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
-  requestTypes: () => dispatch(requestTypes()),
   requestRegions: () => dispatch(requestRegions()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
-  requestLinodeType: (options) => dispatch(requestLinodeType(options)),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

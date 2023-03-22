@@ -23,6 +23,7 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useSpecificTypes } from 'src/queries/types';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
@@ -36,6 +37,8 @@ import ResultGroup from './ResultGroup';
 import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -147,9 +150,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const linodes = useSelector((state: ApplicationState) =>
     Object.values(state.__resources.linodes.itemsById)
   );
-  const types = useSelector((state: ApplicationState) =>
-    Object.values(state.__resources.types.entities)
+
+  const typesQuery = useSpecificTypes(
+    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
+  const types = extendTypesQueryResult(typesQuery);
+
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(_publicImages ?? []))
   );

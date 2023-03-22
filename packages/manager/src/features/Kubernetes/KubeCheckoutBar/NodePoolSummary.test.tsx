@@ -16,7 +16,7 @@ const props: Props = {
 describe('Node Pool Summary', () => {
   it("should render the label of its pool's plan", () => {
     const { getByText } = renderWithTheme(<NodePoolSummary {...props} />);
-    getByText(/Linode 2GB Plan/i);
+    getByText(/Linode 2 GB Plan/i);
     getByText(/1 CPU, 50 GB Storage/i);
   });
 
