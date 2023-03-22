@@ -23,7 +23,6 @@ const emptyResource = {
 export const linodesSelector = (state: State) => state.linodes;
 export const volumesSelector = (state: State) => emptyResource; // state.volumes
 export const nodeBalsSelector = (state: State) => emptyResource; // state.nodebalancers
-export const typesSelector = (state: State) => state.types;
 
 const isInitialLoad = (
   e: Resource<any, any> | RequestableDataWithEntityError<any>
@@ -33,9 +32,8 @@ export default createSelector(
   linodesSelector,
   volumesSelector,
   nodeBalsSelector,
-  typesSelector,
-  (linodes, volumes, nodebalancers, types) => {
-    const entities = [linodes, volumes, nodebalancers, types];
+  (linodes, volumes, nodebalancers) => {
+    const entities = [linodes, volumes, nodebalancers];
     const l = entities.length;
     for (let i = 0; i < l; i++) {
       if (isInitialLoad(entities[i])) {

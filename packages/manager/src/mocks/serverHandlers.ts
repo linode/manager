@@ -269,6 +269,11 @@ const databases = [
   }),
 ];
 
+const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
+const standardTypes = linodeTypeFactory.buildList(7);
+const dedicatedTypes = dedicatedTypeFactory.buildList(7);
+const proDedicatedType = proDedicatedTypeFactory.build();
+
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
@@ -334,12 +339,10 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/types', (req, res, ctx) => {
-    const standardTypes = linodeTypeFactory.buildList(7);
-    const dedicatedTypes = dedicatedTypeFactory.buildList(7);
-    const proDedicatedType = proDedicatedTypeFactory.build();
     return res(
       ctx.json(
         makeResourcePage([
+          nanodeType,
           ...standardTypes,
           ...dedicatedTypes,
           proDedicatedType,
@@ -347,6 +350,15 @@ export const handlers = [
       )
     );
   }),
+  rest.get('*/linode/types-legacy', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(linodeTypeFactory.buildList(0))));
+  }),
+  ...[nanodeType, ...standardTypes, ...dedicatedTypes, proDedicatedType].map(
+    (type) =>
+      rest.get(`*/linode/types/${type.id}`, (req, res, ctx) => {
+        return res(ctx.json(type));
+      })
+  ),
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(60, {
       backups: { enabled: false },

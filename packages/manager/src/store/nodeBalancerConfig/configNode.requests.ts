@@ -2,7 +2,6 @@ import {
   createNodeBalancerConfigNode as _createNode,
   deleteNodeBalancerConfigNode as _deleteNode,
   getNodeBalancerConfigNodes as _getConfigNodes,
-  NodeBalancerConfig,
   updateNodeBalancerConfigNode as _updateNode,
 } from '@linode/api-v4/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
@@ -15,7 +14,7 @@ import {
 } from './configNode.actions';
 
 const getNodeBalancerConfigNodes = (nodeBalancerId: number, configId: number) =>
-  getAll<NodeBalancerConfig>(() => _getConfigNodes(nodeBalancerId, configId));
+  getAll(() => _getConfigNodes(nodeBalancerId, configId));
 
 export const getAllNodeBalancerConfigs = createRequestThunk(
   requestNodeBalancerConfigNodesActions,

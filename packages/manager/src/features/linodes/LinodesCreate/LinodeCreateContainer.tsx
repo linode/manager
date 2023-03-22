@@ -25,7 +25,7 @@ import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
 import withRegions from 'src/containers/regions.container';
-import withTypes from 'src/containers/types.container';
+import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -55,7 +55,6 @@ import {
   withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -71,9 +70,9 @@ import {
   TypeInfo,
   WithLinodesProps,
   WithRegionsProps,
-  WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 import LandingHeader from 'src/components/LandingHeader';
 
 const DEFAULT_IMAGE = 'linode/debian11';
@@ -634,7 +633,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   checkValidation: LinodeCreateValidation = (payload) => {
     try {
       CreateLinodeSchema.validateSync(payload, { abortEarly: false });
-      //reset errors to default state
+      // reset errors to default state
       this.setState({ errors: undefined, showApiAwarenessModal: true });
     } catch (error) {
       const processedErrors = convertYupToLinodeErrors(error);
@@ -655,19 +654,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   getTypeInfo = (): TypeInfo => {
     const { selectedTypeID } = this.state;
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
+    const selectedType = this.props.typesData?.find(
+      (type) => type.id === selectedTypeID
+    );
     return this.reshapeTypeInfo(
-      this.props.typesData!.find((type) => type.id === selectedTypeID)
+      selectedType ? extendType(selectedType) : undefined
     );
   };
 
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     return (
       type && {
-        title: type.label,
+        title: type.formattedLabel,
         details: `$${type.price.monthly}/month`,
         monthly: type.price.monthly ?? 0,
         hourly: type.price.hourly ?? 0,
@@ -722,13 +720,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
 
+    const extendedTypeData = typesData?.map(extendType);
+
     const userCannotCreateLinode =
       Boolean(profile.data?.restricted) &&
       !hasGrant('add_linodes', grants.data);
 
     // If the selected type is a GPU plan, only display region
     // options that support GPUs.
-    const selectedType = this.props.typesData?.find(
+    const selectedType = extendedTypeData?.find(
       (thisType) => thisType.id === this.state.selectedTypeID
     );
 
@@ -785,7 +785,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             setBackupID={this.setBackupID}
             regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
-            typesData={typesData}
+            typesData={extendedTypeData}
             vlanLabel={this.state.attachedVLANLabel}
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}

@@ -2,7 +2,12 @@ import {
   CreateNodeBalancerPayload,
   NodeBalancer,
 } from '@linode/api-v4/lib/nodebalancers';
-import { APIError, Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 import { GetAllData } from 'src/utilities/getAll';

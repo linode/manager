@@ -19,7 +19,7 @@ import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementChec
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import { useTypes } from 'src/hooks/useTypes';
+import { useSpecificTypes } from 'src/queries/types';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -36,6 +36,7 @@ import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
+import { extendType } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -78,13 +79,14 @@ interface Props {
 
 type CombinedProps = Props & WithTypesAndImages;
 
-const MigrateLanding: React.FC<CombinedProps> = (props) => {
+const MigrateLinode: React.FC<CombinedProps> = (props) => {
   const { linodeID, notifications, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
+  const typesQuery = useSpecificTypes(linode?.type ? [linode.type] : []);
+  const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
 
   const { data: imagesData } = useAllImagesQuery({}, {}, open);
   const images = listToItemsByID(imagesData ?? []);
@@ -182,7 +184,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const newLabel = getLinodeDescription(
-    displayType(linode.type, types.entities || []),
+    displayType(linode.type, type ? [type] : []),
     linode.specs.memory,
     linode.specs.disk,
     linode.specs.vcpus,
@@ -287,7 +289,7 @@ const withReduxState = connect(mapStateToProps);
 export default compose<CombinedProps, Props>(
   withReduxState,
   React.memo
-)(MigrateLanding);
+)(MigrateLinode);
 
 const getDisabledReason = (
   events: Event[],

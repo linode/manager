@@ -6,8 +6,8 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { ExtendedType } from 'src/utilities/extendType';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow';
 

@@ -28,12 +28,10 @@ import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrD
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import { useTypes } from 'src/hooks/useTypes';
+import { useSpecificTypes } from 'src/queries/types';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
@@ -49,6 +47,7 @@ import {
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
@@ -101,8 +100,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const { data: images } = useAllImagesQuery({}, {});
   const imagesItemsById = listToItemsByID(images ?? []);
 
-  useReduxLoad(['types']);
-  const { types } = useTypes();
+  const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
+  const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
 
   const extendedLinode = useExtendedLinode(linode.id);
 
@@ -115,11 +114,9 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
       ? imagesItemsById[imageSlug].vendor
       : null;
 
-  const linodeType = Boolean(linode.type)
-    ? types.entities.find((thisType) => thisType.id === linode.type) ?? null
-    : null;
+  const linodeType = Boolean(linode.type) ? type ?? null : null;
 
-  const linodePlan = linodeType?.label ?? null;
+  const linodePlan = linodeType?.formattedLabel ?? null;
 
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;

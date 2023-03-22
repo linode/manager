@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { LinodeType, LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
+import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -23,11 +23,7 @@ import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
-
-export interface ExtendedType extends LinodeType {
-  heading: string;
-  subHeadings: string[];
-}
+import { ExtendedType } from 'src/utilities/extendType';
 
 type ClassNames =
   | 'root'
@@ -176,7 +172,7 @@ export class SelectPlanPanel extends React.Component<
         {/* Displays Table Row for larger screens */}
         <Hidden mdDown>
           <TableRow
-            data-qa-plan-row={type.label}
+            data-qa-plan-row={type.formattedLabel}
             key={type.id}
             className={classNames({
               [classes.disabledRow]: disabled,

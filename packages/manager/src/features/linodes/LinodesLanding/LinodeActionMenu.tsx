@@ -2,7 +2,6 @@ import {
   Config,
   getLinodeConfigs,
   LinodeBackups,
-  LinodeType,
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -15,16 +14,16 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useTypes } from 'src/hooks/useTypes';
+import { useSpecificTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
 } from 'src/utilities/ga';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 export interface Props {
   linodeId: number;
@@ -53,7 +52,7 @@ export const buildQueryStringForLinodeClone = (
   linodeId: number,
   linodeRegion: string,
   linodeType: string | null,
-  types: LinodeType[],
+  types: ExtendedType[] | null,
   regions: Region[]
 ): string => {
   const params: Record<string, string> = {
@@ -89,7 +88,9 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { types } = useTypes();
+  const typesQuery = useSpecificTypes(linodeType?.id ? [linodeType.id] : []);
+  const type = typesQuery[0]?.data;
+  const extendedType = type ? extendType(type) : undefined;
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
@@ -205,7 +206,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
                 linodeId,
                 linodeRegion,
                 linodeType?.id ?? null,
-                types.entities,
+                extendedType ? [extendedType] : null,
                 regions
               ),
             });

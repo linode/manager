@@ -132,7 +132,7 @@ export class App extends React.Component<CombinedProps, State> {
       )
       .subscribe(imageEventsHandler);
 
-    /* 
+    /*
       Send any Token events to the Token events handler in the queries file
      */
     events$
@@ -205,7 +205,6 @@ export class App extends React.Component<CombinedProps, State> {
     const { hasError } = this.state;
     const {
       linodesError,
-      typesError,
       notificationsError,
       volumesError,
       bucketsError,
@@ -224,7 +223,6 @@ export class App extends React.Component<CombinedProps, State> {
     if (
       hasOauthError(
         linodesError,
-        typesError,
         notificationsError,
         volumesError,
         bucketsError,
@@ -276,7 +274,6 @@ interface StateProps {
   nodeBalancersError?: APIError[];
   bucketsError?: APIError[];
   notificationsError?: APIError[];
-  typesError?: APIError[];
   regionsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
@@ -287,7 +284,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
   notificationsError: state.__resources.notifications.error,
-  typesError: state.__resources.types.error,
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
