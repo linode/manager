@@ -66,10 +66,12 @@ export const NotificationButton = () => {
     eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
     formattedNotifications.filter((thisEvent) => thisEvent.countInTotal).length;
 
-  const handleMenuToggle = () => {
-    return notificationContext.menuOpen
-      ? notificationContext.closeMenu
-      : notificationContext.openMenu;
+  const handleNotificationMenuToggle = () => {
+    if (notificationContext.menuOpen) {
+      notificationContext.closeMenu();
+    } else {
+      notificationContext.openMenu();
+    }
   };
 
   return (
@@ -81,10 +83,10 @@ export const NotificationButton = () => {
             className={`${iconClasses.icon} ${classes.menuButton} ${
               notificationContext.menuOpen ? iconClasses.hover : ''
             }`}
-            onClick={handleMenuToggle()}
+            onClick={handleNotificationMenuToggle}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
-                handleMenuToggle();
+                handleNotificationMenuToggle();
               }
             }}
           >
