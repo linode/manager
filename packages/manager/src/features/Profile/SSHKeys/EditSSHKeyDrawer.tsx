@@ -9,6 +9,7 @@ import { useUpdateSSHKeyMutation } from 'src/queries/profile';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { SSHKey } from '@linode/api-v4';
+import { useEffect } from 'react';
 
 interface Props {
   open: boolean;
@@ -18,9 +19,15 @@ interface Props {
 
 const EditSSHKeyDrawer = ({ open, onClose, sshKey }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync, isLoading, error } = useUpdateSSHKeyMutation(
+  const { mutateAsync, isLoading, error, reset } = useUpdateSSHKeyMutation(
     sshKey?.id ?? -1
   );
+
+  useEffect(() => {
+    if (open) {
+      reset();
+    }
+  }, [open]);
 
   const formik = useFormik<{ label: string }>({
     initialValues: {
