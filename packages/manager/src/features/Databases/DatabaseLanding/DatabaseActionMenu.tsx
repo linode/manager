@@ -1,11 +1,12 @@
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import InlineAction from 'src/components/InlineMenuAction';
-import { makeStyles, useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     padding: '0px !important',
     display: 'flex',
@@ -27,8 +28,8 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const DatabaseActionMenu: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const DatabaseActionMenu = (props: CombinedProps) => {
+  const { classes } = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
