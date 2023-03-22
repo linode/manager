@@ -248,6 +248,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   firewall_create: {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been created.`,
   },
+  firewall_rules_update: {
+    notification: (e) =>
+      `Firewall rules have been updated on ${e.entity?.label ?? ''}.`,
+  },
   image_update: {
     notification: (e) => `Image ${e.entity?.label ?? ''} has been updated.`,
   },
