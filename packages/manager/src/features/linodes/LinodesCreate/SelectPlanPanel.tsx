@@ -564,24 +564,17 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     }
 
     if (!isEmpty(premium)) {
-      const programInfo = getDisabledClass('gpu') ? (
-        <>
-          GPU instances are not available in the selected region. Currently
-          these plans are only available in{' '}
-          {getRegionsWithCapability('GPU Linodes')}.
-        </>
-      ) : (
-        <div className={classes.gpuGuideLink}>{gpuPlanText()}</div>
-      );
       tabs.push({
         render: () => {
           return (
             <>
-              <Notice warning>{programInfo}</Notice>
+              <Notice warning>
+                This plan is only available in the Washington, DC region.
+              </Notice>
               <Typography data-qa-gpu className={classes.copy}>
-                Linodes with dedicated GPUs accelerate highly specialized
-                applications such as machine learning, AI, and video
-                transcoding.
+                Premium CPU instances guarantee a minimum processor model, AMD
+                Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
+                performance for more demanding workloads.
               </Typography>
               {renderPlanContainer(premium)}
             </>
