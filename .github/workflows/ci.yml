@@ -81,7 +81,7 @@ jobs:
   build-sdk:
     runs-on: ubuntu-latest
     needs:
-      - test-sdk
+      - build-validation
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -225,7 +225,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs:
       - test-sdk
-      - build-sdk
+      - validate-sdk
       # If the validation publish failed we could have mismatched versions and a broken JS client
       - publish-validation
     steps:
