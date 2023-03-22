@@ -35,7 +35,6 @@ import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { AppsDocs } from 'src/documentation';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
-import UserDataAccordion from 'src/features/linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -60,6 +59,7 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import UserDataAccordion from './UserDataAccordion/UserDataAccordion';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import {
   AllFormStateAndHandlers,
@@ -551,11 +551,6 @@ export class LinodeCreate extends React.PureComponent<
     const showUserData =
       imageIsCloudInitCompatible || linodeIsCloudInitCompatible;
 
-    const userDataHeaderWarningMessage =
-      this.props.createType === 'fromBackup'
-        ? 'Existing user data is not available when creating a Linode from a backup.'
-        : 'User data is not cloned.';
-
     return (
       <form className={classes.form}>
         <Grid item className="py0">
@@ -760,11 +755,7 @@ export class LinodeCreate extends React.PureComponent<
             <UserDataAccordion
               userData={this.props.userData}
               onChange={updateUserData}
-              renderHeaderWarningMessage={
-                <Notice warning spacingTop={16} spacingBottom={16}>
-                  {userDataHeaderWarningMessage}
-                </Notice>
-              }
+              createType={this.props.createType}
             />
           ) : null}
           <AddonsPanel

@@ -2,12 +2,14 @@ import * as React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import UserDataAccordion from './UserDataAccordion';
+import { LINODE_CREATE_FROM } from './UserDataAccordionHeading';
 
 describe('UserDataAccordion', () => {
   const onChange = jest.fn();
   const props = {
     userData: 'test data',
     onChange,
+    createType: '',
   };
   it('should render without errors', () => {
     const { container } = renderWithTheme(<UserDataAccordion {...props} />);
@@ -42,13 +44,12 @@ describe('UserDataAccordion', () => {
 
   it('should display a custom header warning message', () => {
     renderWithTheme(
-      <UserDataAccordion
-        {...props}
-        renderHeaderWarningMessage={<div>Custom warning message</div>}
-      />
+      <UserDataAccordion {...props} createType={LINODE_CREATE_FROM.BACKUPS} />
     );
 
-    const headerWarningMessage = screen.getByText('Custom warning message');
+    const headerWarningMessage = screen.getByText(
+      'Existing user data is not available when creating a Linode from a backup.'
+    );
 
     expect(headerWarningMessage).toBeInTheDocument();
   });
