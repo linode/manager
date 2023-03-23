@@ -26,3 +26,5 @@ export const truncateAndJoinList = (
 };
 
 export const wrapInQuotes = (s: string) => '"' + s + '"';
+
+export const isNumeric = (s: string) => /^\d+$/.test(s);
