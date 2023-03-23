@@ -1,4 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -7,8 +9,6 @@ import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import FileUploader from 'src/components/FileUploader/FileUploader';
@@ -19,6 +19,7 @@ import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -98,6 +99,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const regions = useRegionsQuery().data ?? [];
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
+  const flags = useFlags();
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
@@ -236,16 +238,17 @@ export const ImageUpload: React.FC<Props> = (props) => {
             errorText={errorMap.description}
             disabled={!canCreateImage}
           />
-          <div className={classes.cloudInitCheckboxWrapper}>
-            <CheckBox
-              checked={isCloudInit}
-              onChange={changeIsCloudInit}
-              text="This image is Cloud-init compatible"
-              toolTipText={cloudInitTooltipMessage}
-              toolTipInteractive
-            />
-          </div>
-
+          {flags.metadata ? (
+            <div className={classes.cloudInitCheckboxWrapper}>
+              <CheckBox
+                checked={isCloudInit}
+                onChange={changeIsCloudInit}
+                text="This image is Cloud-init compatible"
+                toolTipText={cloudInitTooltipMessage}
+                toolTipInteractive
+              />
+            </div>
+          ) : null}
           <RegionSelect
             label="Region"
             helperText="For fastest initial upload, select the region that is geographically

@@ -1,14 +1,15 @@
 import { Disk, getLinodeDisks, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
@@ -16,11 +17,11 @@ import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import useFlags from 'src/hooks/useFlags';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import CheckBox from 'src/components/CheckBox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -94,6 +95,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const flags = useFlags();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
@@ -281,15 +283,17 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
-      <Box className={classes.cloudInitCheckboxWrapper}>
-        <CheckBox
-          checked={isCloudInit}
-          onChange={changeIsCloudInit}
-          text="This image is Cloud-init compatible"
-          toolTipText={cloudInitTooltipMessage}
-          toolTipInteractive
-        />
-      </Box>
+      {flags.metadata ? (
+        <Box className={classes.cloudInitCheckboxWrapper}>
+          <CheckBox
+            checked={isCloudInit}
+            onChange={changeIsCloudInit}
+            text="This image is Cloud-init compatible"
+            toolTipText={cloudInitTooltipMessage}
+            toolTipInteractive
+          />
+        </Box>
+      ) : null}
       <>
         <TextField
           label="Label"

@@ -1,5 +1,7 @@
 import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
+import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import classNames from 'classnames';
 import { cloneDeep } from 'lodash';
 import * as React from 'react';
@@ -14,8 +16,6 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsLink from 'src/components/DocsLink';
@@ -28,6 +28,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
+import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getMonthlyAndHourlyNodePricing } from 'src/features/linodes/LinodesCreate/utilities';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
@@ -55,7 +56,6 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
-import UserDataAccordion from './UserDataAccordion/UserDataAccordion';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import {
   AllFormStateAndHandlers,
@@ -73,6 +73,7 @@ import {
   WithTypesProps,
   WithTypesRegionsAndImages,
 } from './types';
+import UserDataAccordion from './UserDataAccordion/UserDataAccordion';
 
 type ClassNames =
   | 'form'
@@ -193,7 +194,8 @@ type CombinedProps = Props &
   WithRegionsProps &
   WithStyles<ClassNames> &
   WithTypesProps &
-  RouteComponentProps<{}>;
+  RouteComponentProps<{}> &
+  FeatureFlagConsumerProps;
 
 interface State {
   selectedTab: number;
@@ -564,7 +566,8 @@ export class LinodeCreate extends React.PureComponent<
       );
 
     const showUserData =
-      imageIsCloudInitCompatible || linodeIsCloudInitCompatible;
+      this.props.flags.metadata &&
+      (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     return (
       <form className={classes.form}>
