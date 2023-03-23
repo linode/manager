@@ -10,7 +10,7 @@ import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
 
 const preferenceKey = 'abuse-tickets';
 
-export const AbuseTicketBanner: React.FC<{}> = (_) => {
+export const AbuseTicketBanner = () => {
   const abuseTickets = useSelector((state: ApplicationState) =>
     getAbuseTicket(state.__resources)
   );
