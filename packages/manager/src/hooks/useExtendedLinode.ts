@@ -10,7 +10,8 @@ import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { ExtendedType, extendTypesQueryResult } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import useLinodes from './useLinodes';
 
 export interface ExtendedLinode extends LinodeWithMaintenance {
@@ -22,31 +23,38 @@ export interface ExtendedLinode extends LinodeWithMaintenance {
   _permissions: GrantLevel;
 }
 
-export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
+export const useExtendedLinodes = (linodeIds?: number[]): ExtendedLinode[] => {
   const { data: grants } = useGrants();
-  const { linodes } = useLinodes();
-  const linode = linodes.itemsById[linodeId];
-  const typesQuery = useSpecificTypes(linode?.type ? [linode.type] : []);
-  const type = typesQuery[0]?.data;
+  const { linodes: linodesMap } = useLinodes();
+  const linodes = (linodeIds ?? Object.keys(linodesMap.itemsById))
+    .map((linodeId) => linodesMap.itemsById[linodeId])
+    .filter(isNotNullOrUndefined);
+  const typesQuery = useSpecificTypes(
+    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
+  );
+  const types = extendTypesQueryResult(typesQuery);
+
+  const typeMap = new Map<string, ExtendedType>(
+    types.map((type) => [type.id, type])
+  );
 
   return useSelector((state: ApplicationState) => {
-    if (!linode) {
-      return null;
-    }
-
     const { events, __resources } = state;
     const { notifications, linodeConfigs, linodeDisks } = __resources;
 
-    return {
+    return linodes.map((linode) => ({
       ...linode,
-      _notifications: getNotificationsForLinode(notifications, linodeId),
-      _type: type ? extendType(type) : undefined,
-      _events: eventsForLinode(events, linodeId),
-      _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
-      _disks: getLinodeDisksForLinode(linodeDisks, linodeId),
-      _permissions: getPermissionsForLinode(grants ?? null, linodeId),
-    };
+      _notifications: getNotificationsForLinode(notifications, linode.id),
+      _type: linode.type ? typeMap.get(linode.type) : null,
+      _events: eventsForLinode(events, linode.id),
+      _configs: getLinodeConfigsForLinode(linodeConfigs, linode.id),
+      _disks: getLinodeDisksForLinode(linodeDisks, linode.id),
+      _permissions: getPermissionsForLinode(grants ?? null, linode.id),
+    }));
   });
 };
+
+export const useExtendedLinode = (linodeId: number): ExtendedLinode | null =>
+  useExtendedLinodes([linodeId])[0] ?? null;
 
 export default useExtendedLinode;

@@ -23,8 +23,9 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
-import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { RenderLinodeProps } from './DisplayLinodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tagGridRow: {
@@ -80,8 +81,8 @@ interface Props {
     linodeConfigs: Config[]
   ) => void;
   display: 'grid' | 'list';
-  component: any;
-  data: ExtendedLinode[];
+  component: React.ComponentType<RenderLinodeProps>;
+  data: LinodeWithMaintenance[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
@@ -90,7 +91,7 @@ interface Props {
   isVLAN?: boolean;
 }
 
-type CombinedProps = Props & OrderByProps;
+type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
 
 const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -225,6 +226,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                     order,
                     orderBy,
                     isVLAN,
+                    count,
                   };
                   return (
                     <React.Fragment>
@@ -292,6 +294,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                     order,
                     orderBy,
                     isVLAN,
+                    count,
                   };
                   return (
                     <TableBody

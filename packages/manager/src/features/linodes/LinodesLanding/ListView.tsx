@@ -1,37 +1,11 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { PaginationProps } from 'src/components/Paginate';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import { ExtendedType } from 'src/utilities/extendType';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow';
+import { RenderLinodeProps } from './DisplayLinodes';
 
-interface Props {
-  data: ExtendedLinodeWithPlan[];
-  images: Image[];
-  showHead?: boolean;
-  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
-  openPowerActionDialog: (
-    bootAction: Action,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => void;
-}
-
-export interface ExtendedLinodeWithPlan
-  extends LinodeWithMaintenanceAndDisplayStatus {
-  _type?: ExtendedType;
-}
-
-type CombinedProps = Props & PaginationProps;
-
-export const ListView: React.FC<CombinedProps> = (props) => {
+export const ListView: React.FC<RenderLinodeProps> = (props) => {
   const { data, openDialog, openPowerActionDialog } = props;
 
   const notificationContext = React.useContext(_notificationContext);
@@ -47,7 +21,7 @@ export const ListView: React.FC<CombinedProps> = (props) => {
     // eslint-disable-next-line
     <>
       {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
-      {data.map((linode: ExtendedLinodeWithPlan, idx: number) => (
+      {data.map((linode, idx: number) => (
         <LinodeRow
           backups={linode.backups}
           id={linode.id}
@@ -65,7 +39,7 @@ export const ListView: React.FC<CombinedProps> = (props) => {
           disk={linode.specs.disk}
           vcpus={linode.specs.vcpus}
           memory={linode.specs.memory}
-          type={linode._type}
+          type={linode._type ?? undefined}
           image={linode.image}
           key={`linode-row-${idx}`}
           openDialog={openDialog}
