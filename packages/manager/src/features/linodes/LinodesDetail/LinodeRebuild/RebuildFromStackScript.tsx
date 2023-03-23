@@ -86,7 +86,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: '',
 };
 
-export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
+export const RebuildFromStackScript = (props: CombinedProps) => {
   const {
     userSSHKeys,
     sshError,
