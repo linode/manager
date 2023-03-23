@@ -4,6 +4,8 @@ import {
   UserData,
 } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
@@ -15,8 +17,6 @@ import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
@@ -25,6 +25,7 @@ import UserDataAccordion from 'src/features/linodes/LinodesCreate/UserDataAccord
 import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
+import useFlags from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -93,6 +94,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const flags = useFlags();
+
   const { data: _imagesData, error: imagesError } = useAllImagesQuery();
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
@@ -218,12 +221,14 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
           handleRebuildError(status.generalError);
         }
 
-        const shouldDisplayUserDataAccordion = Boolean(
-          values.image &&
-            _imagesData
-              ?.find((image) => image.id === values.image)
-              ?.capabilities?.includes('cloud-init')
-        );
+        const shouldDisplayUserDataAccordion =
+          flags.metadata &&
+          Boolean(
+            values.image &&
+              _imagesData
+                ?.find((image) => image.id === values.image)
+                ?.capabilities?.includes('cloud-init')
+          );
 
         return (
           <Grid item className={classes.root}>
