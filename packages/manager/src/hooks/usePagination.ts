@@ -8,9 +8,16 @@ export interface PaginationProps {
   handlePageSizeChange: (pageSize: number) => void;
 }
 
+/**
+ * usePagination hook
+ * @param initialPage initial page to start on
+ * @param preferenceKey a key used to store a user's prefered page size for a specific table
+ * @param queryParamsPrefix a prefix that is applied to the query params in the url. Useful when this hook is used more than once on the same page.
+ */
 export const usePagination = (
   initialPage: number = 1,
-  preferenceKey?: string
+  preferenceKey?: string,
+  queryParamsPrefix?: string
 ): PaginationProps => {
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
@@ -18,9 +25,14 @@ export const usePagination = (
   const history = useHistory();
   const location = useLocation();
 
+  const pageKey = queryParamsPrefix ? `${queryParamsPrefix}-page` : 'page';
+  const pageSizeKey = queryParamsPrefix
+    ? `${queryParamsPrefix}-pageSize`
+    : 'pageSize';
+
   const searchParams = new URLSearchParams(location.search);
-  const searchParamPage = searchParams.get('page');
-  const searchParamPageSize = searchParams.get('pageSize');
+  const searchParamPage = searchParams.get(pageKey);
+  const searchParamPageSize = searchParams.get(pageSizeKey);
 
   const page = searchParamPage ? Number(searchParamPage) : initialPage;
   const pageSize = searchParamPageSize
@@ -30,12 +42,12 @@ export const usePagination = (
     : 25;
 
   const setPage = (p: number) => {
-    searchParams.set('page', String(p));
+    searchParams.set(pageKey, String(p));
     history.replace(`?${searchParams.toString()}`);
   };
 
   const setPageSize = (size: number) => {
-    searchParams.set('pageSize', String(size));
+    searchParams.set(pageSizeKey, String(size));
     history.replace(`?${searchParams.toString()}`);
   };
 

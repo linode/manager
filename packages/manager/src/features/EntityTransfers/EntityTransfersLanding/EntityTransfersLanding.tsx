@@ -42,14 +42,17 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
 
   const paginationPendingTransfers = usePagination(
     initialPage,
+    pendingTransfersTablePreferenceKey,
     pendingTransfersTablePreferenceKey
   );
   const paginationReceivedTransfers = usePagination(
     initialPage,
+    receivedTransfersTablePreferenceKey,
     receivedTransfersTablePreferenceKey
   );
   const paginationSentTransfers = usePagination(
     initialPage,
+    sentTransfersTablePreferenceKey,
     sentTransfersTablePreferenceKey
   );
 

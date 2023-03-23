@@ -66,7 +66,7 @@ interface Props {
 const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const { classes } = useStyles();
-  const pagination = usePagination(1, `${preferenceKey}-${type}`);
+  const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
