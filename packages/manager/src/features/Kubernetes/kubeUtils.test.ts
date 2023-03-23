@@ -4,6 +4,7 @@ import {
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
+import { extendType } from 'src/utilities/extendType';
 
 import {
   getMonthlyPrice,
@@ -16,12 +17,14 @@ const mockNodePool = nodePoolFactory.build({
   count: 2,
 });
 
-const types = linodeTypeFactory.buildList(2, {
-  id: 'g1-fake-1',
-  price: {
-    monthly: 5,
-  },
-});
+const types = linodeTypeFactory
+  .buildList(2, {
+    id: 'g1-fake-1',
+    price: {
+      monthly: 5,
+    },
+  })
+  .map(extendType);
 
 describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
@@ -61,12 +64,14 @@ describe('helper functions', () => {
       nodes: kubeLinodeFactory.buildList(3),
     });
 
-    const types = linodeTypeFactory.buildList(1, {
-      id: 'g6-fake-1',
-      memory: 1024,
-      disk: 1048576,
-      vcpus: 2,
-    });
+    const types = linodeTypeFactory
+      .buildList(1, {
+        id: 'g6-fake-1',
+        memory: 1024,
+        disk: 1048576,
+        vcpus: 2,
+      })
+      .map(extendType);
 
     it('should sum up the total CPU cores of all nodes', () => {
       expect(getTotalClusterMemoryCPUAndStorage(pools, types)).toHaveProperty(

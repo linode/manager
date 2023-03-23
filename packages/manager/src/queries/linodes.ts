@@ -1,15 +1,16 @@
 import { NetworkTransfer } from '@linode/api-v4/lib/account/types';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { listToItemsByID, queryPresets } from './base';
 import { parseAPIDate } from 'src/utilities/date';
 import { DateTime } from 'luxon';
+import { Firewall } from '@linode/api-v4';
 import {
   Linode,
   getLinodes,
@@ -21,11 +22,8 @@ import {
   getLinodeLishToken,
   getLinodeConfigs,
   Config,
-  LinodeType,
-  getLinodeTypes,
   getLinodeFirewalls,
 } from '@linode/api-v4/lib/linodes';
-import { Firewall } from '@linode/api-v4';
 
 export const STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';
@@ -51,6 +49,7 @@ export const useLinodesQuery = (
   );
 };
 
+// @todo get rid of "byId". It adds yet another manipulation of API that a dev must understand
 export const useLinodesByIdQuery = (
   params: Params = {},
   filter: Filter = {},
@@ -75,6 +74,20 @@ export const useAllLinodesQuery = (
   );
 };
 
+export const useInfiniteLinodesQuery = (filter: Filter) =>
+  useInfiniteQuery<ResourcePage<Linode>, APIError[]>(
+    [queryKey, filter],
+    ({ pageParam }) => getLinodes({ page: pageParam, page_size: 25 }, filter),
+    {
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
+      },
+    }
+  );
+
 const getIsTooEarlyForStats = (linodeCreated?: string) => {
   if (!linodeCreated) {
     return false;
@@ -89,7 +102,7 @@ export const useLinodeStats = (
   linodeCreated?: string
 ) => {
   return useQuery<Stats, APIError[]>(
-    [`${queryKey}-stats`, id],
+    [queryKey, id, 'stats'],
     getIsTooEarlyForStats(linodeCreated)
       ? () => Promise.reject([{ reason: STATS_NOT_READY_MESSAGE }])
       : () => getLinodeStats(id),
@@ -109,7 +122,7 @@ export const useLinodeStatsByDate = (
   linodeCreated?: string
 ) => {
   return useQuery<Stats, APIError[]>(
-    [`${queryKey}-stats-date`, id, year, month],
+    [queryKey, id, 'stats', 'date', year, month],
     getIsTooEarlyForStats(linodeCreated)
       ? () => Promise.reject([{ reason: STATS_NOT_READY_MESSAGE }])
       : () => getLinodeStatsByDate(id, year, month),
@@ -128,7 +141,7 @@ export const useLinodeTransferByDate = (
   enabled = true
 ) => {
   return useQuery<NetworkTransfer, APIError[]>(
-    [`${queryKey}-transfer`, id, year, month],
+    [queryKey, id, 'transfer', year, month],
     () => getLinodeTransferByDate(id, year, month),
     { enabled }
   );
@@ -142,7 +155,7 @@ export const useLinodeQuery = (id: number, enabled = true) => {
 
 export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   return useQuery<Config[], APIError[]>(
-    [queryKey, 'configs', id],
+    [queryKey, id, 'configs'],
     () => getAllLinodeConfigs(id),
     { enabled }
   );
@@ -150,23 +163,15 @@ export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
 
 export const useLinodeLishTokenQuery = (id: number) => {
   return useQuery<{ lish_token: string }, APIError[]>(
-    [`${queryKey}-lish-token`, id],
+    [queryKey, id, 'lish-token'],
     () => getLinodeLishToken(id),
     { staleTime: Infinity }
   );
 };
 
-export const useAllLinodeTypesQuery = () => {
-  return useQuery<LinodeType[], APIError[]>(
-    [queryKey, 'types'],
-    getAllLinodeTypes,
-    { ...queryPresets.oneTimeFetch }
-  );
-};
-
 export const useLinodeFirewalls = (linodeID: number) =>
   useQuery<ResourcePage<Firewall>, APIError[]>(
-    [queryKey, linodeID, 'linodes'],
+    [queryKey, linodeID, 'firewalls'],
     () => getLinodeFirewalls(linodeID),
     queryPresets.oneTimeFetch
   );
@@ -193,11 +198,6 @@ const getAllLinodeConfigs = (id: number) =>
   getAll<Config>((params, filter) =>
     getLinodeConfigs(id, params, filter)
   )().then((data) => data.data);
-
-const getAllLinodeTypes = () =>
-  getAll<LinodeType>((params) => getLinodeTypes(params))().then(
-    (data) => data.data
-  );
 
 export const getAllLinodeFirewalls = (
   linodeId: number,

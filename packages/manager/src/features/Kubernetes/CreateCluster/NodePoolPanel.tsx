@@ -6,9 +6,9 @@ import Grid from 'src/components/core/Grid';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectPlanQuantityPanel, {
-  ExtendedType,
   ExtendedTypeWithCount,
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
+import { ExtendedType } from 'src/utilities/extendType';
 
 interface Props {
   types: ExtendedType[];

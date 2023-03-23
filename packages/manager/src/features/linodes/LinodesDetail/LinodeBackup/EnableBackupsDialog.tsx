@@ -9,7 +9,7 @@ import Currency from 'src/components/Currency';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useLinodes from 'src/hooks/useLinodes';
-import { useTypes } from 'src/hooks/useTypes';
+import { useSpecificTypes } from 'src/queries/types';
 
 interface Props {
   linodeId: number;
@@ -27,12 +27,12 @@ export const EnableBackupsDialog: React.FC<Props> = (props) => {
    * as well as detail, can't rely on parents knowing
    * this information.
    */
-  const { types } = useTypes();
   const { linodes } = useLinodes();
   const thisLinode = linodes.itemsById[linodeId];
-  const thisLinodeType = types.entities.find(
-    (thisType) => thisType.id === thisLinode?.type
+  const typesQuery = useSpecificTypes(
+    thisLinode?.type ? [thisLinode.type] : []
   );
+  const thisLinodeType = typesQuery[0]?.data;
 
   const price = thisLinodeType?.addons.backups.price.monthly ?? 0;
 

@@ -41,6 +41,7 @@ import withPreferences, {
 } from './containers/preferences.container';
 import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
+import { firewallEventsHandler } from './queries/firewalls';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -132,12 +133,19 @@ export class App extends React.Component<CombinedProps, State> {
       )
       .subscribe(imageEventsHandler);
 
-    /* 
+    /*
       Send any Token events to the Token events handler in the queries file
      */
     events$
       .filter((event) => event.action.startsWith('token') && !event._initial)
       .subscribe(tokenEventHandler);
+
+    /*
+      Send any Token events to the Token events handler in the queries file
+     */
+    events$
+      .filter((event) => event.action.startsWith('firewall') && !event._initial)
+      .subscribe(firewallEventsHandler);
 
     /*
      * We want to listen for migration events side-wide
@@ -205,7 +213,6 @@ export class App extends React.Component<CombinedProps, State> {
     const { hasError } = this.state;
     const {
       linodesError,
-      typesError,
       notificationsError,
       volumesError,
       bucketsError,
@@ -224,7 +231,6 @@ export class App extends React.Component<CombinedProps, State> {
     if (
       hasOauthError(
         linodesError,
-        typesError,
         notificationsError,
         volumesError,
         bucketsError,
@@ -276,7 +282,6 @@ interface StateProps {
   nodeBalancersError?: APIError[];
   bucketsError?: APIError[];
   notificationsError?: APIError[];
-  typesError?: APIError[];
   regionsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
@@ -287,7 +292,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
   notificationsError: state.__resources.notifications.error,
-  typesError: state.__resources.types.error,
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,

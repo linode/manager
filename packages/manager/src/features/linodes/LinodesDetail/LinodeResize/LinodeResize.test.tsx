@@ -53,6 +53,8 @@ describe('LinodeResize', () => {
       updateLinode={jest.fn()}
       typesData={extendedTypes}
       typesLoading={false}
+      setRequestedTypes={jest.fn()}
+      requestedTypesData={[]}
     />
   );
 

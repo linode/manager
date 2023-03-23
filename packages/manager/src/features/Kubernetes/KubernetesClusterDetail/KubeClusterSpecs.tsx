@@ -5,7 +5,8 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useAllLinodeTypesQuery } from 'src/queries/linodes';
+import { useSpecificTypes } from 'src/queries/types';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { useRegionsQuery } from 'src/queries/regions';
 import { pluralize } from 'src/utilities/pluralize';
 import {
@@ -47,10 +48,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const KubeClusterSpecs = (props: Props) => {
   const { cluster } = props;
   const classes = useStyles();
-  const { data: types } = useAllLinodeTypesQuery();
   const { data: regions } = useRegionsQuery();
 
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
+
+  const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
+  const types = extendTypesQueryResult(typesQuery);
 
   const { RAM, CPU, Storage } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],
