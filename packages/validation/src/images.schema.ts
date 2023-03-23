@@ -1,4 +1,4 @@
-import { number, object, string } from 'yup';
+import { boolean, number, object, string } from 'yup';
 
 const labelSchema = string()
   .max(50, 'Length must be 50 characters or less.')
@@ -10,6 +10,7 @@ const labelSchema = string()
 export const baseImageSchema = object().shape({
   label: labelSchema.notRequired(),
   description: string().notRequired().min(1).max(65000),
+  cloud_init: boolean().notRequired(),
 });
 
 export const createImageSchema = baseImageSchema.shape({

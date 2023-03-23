@@ -1,5 +1,7 @@
 import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
+import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import classNames from 'classnames';
 import { cloneDeep } from 'lodash';
 import * as React from 'react';
@@ -14,8 +16,6 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsLink from 'src/components/DocsLink';
@@ -28,6 +28,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
+import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getMonthlyAndHourlyNodePricing } from 'src/features/linodes/LinodesCreate/utilities';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
@@ -71,6 +72,7 @@ import {
   WithRegionsProps,
   WithTypesRegionsAndImages,
 } from './types';
+import UserDataAccordion from './UserDataAccordion/UserDataAccordion';
 import { extendType } from 'src/utilities/extendType';
 import { WithTypesProps } from 'src/containers/types.container';
 
@@ -159,6 +161,8 @@ interface Props {
   handleAgreementChange: () => void;
   handleShowApiAwarenessModal: () => void;
   signedAgreement: boolean;
+  userData: string | undefined;
+  updateUserData: (userData: string) => void;
 }
 
 const errorMap = [
@@ -191,7 +195,8 @@ type CombinedProps = Props &
   WithRegionsProps &
   WithStyles<ClassNames> &
   WithTypesProps &
-  RouteComponentProps<{}>;
+  RouteComponentProps<{}> &
+  FeatureFlagConsumerProps;
 
 interface State {
   selectedTab: number;
@@ -379,6 +384,13 @@ export class LinodeCreate extends React.PureComponent<
       }
       payload['interfaces'] = interfaces;
     }
+
+    if (this.props.userData) {
+      payload['metadata'] = {
+        user_data: window.btoa(this.props.userData),
+      };
+    }
+
     return payload;
   };
 
@@ -455,6 +467,7 @@ export class LinodeCreate extends React.PureComponent<
       handleAgreementChange,
       handleShowApiAwarenessModal,
       signedAgreement,
+      updateUserData,
       ...rest
     } = this.props;
 
@@ -535,6 +548,27 @@ export class LinodeCreate extends React.PureComponent<
         title: 'Private IP',
       });
     }
+
+    const selectedLinode = this.props.linodesData?.find(
+      (image) => image.id === this.props.selectedLinodeID
+    );
+
+    const imageIsCloudInitCompatible =
+      this.props.selectedImageID &&
+      this.props.imagesData[this.props.selectedImageID]?.capabilities?.includes(
+        'cloud-init'
+      );
+
+    const linodeIsCloudInitCompatible =
+      this.props.selectedLinodeID &&
+      selectedLinode?.image &&
+      this.props.imagesData[selectedLinode?.image]?.capabilities?.includes(
+        'cloud-init'
+      );
+
+    const showUserData =
+      this.props.flags.metadata &&
+      (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     return (
       <form className={classes.form}>
@@ -739,6 +773,13 @@ export class LinodeCreate extends React.PureComponent<
               requestKeys={requestKeys}
             />
           )}
+          {showUserData ? (
+            <UserDataAccordion
+              userData={this.props.userData}
+              onChange={updateUserData}
+              createType={this.props.createType}
+            />
+          ) : null}
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}

@@ -1,13 +1,14 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import FileUploader from 'src/components/FileUploader/FileUploader';
@@ -18,6 +19,7 @@ import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -56,16 +58,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
     fontWeight: 700,
   },
+  cloudInitCheckboxWrapper: {
+    marginTop: theme.spacing(2),
+    marginLeft: '3px',
+  },
 }));
+
+const cloudInitTooltipMessage = (
+  <Typography>
+    Only check this box if your Custom Image that is compatible with cloud-init,
+    or has had cloud-init installed at some point, and the config has been
+    changed to use our data service. <Link to="/">Link to doc</Link>
+  </Typography>
+);
 export interface Props {
   label: string;
   description: string;
+  isCloudInit: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeIsCloudInit: () => void;
 }
 
 export const ImageUpload: React.FC<Props> = (props) => {
-  const { label, description, changeLabel, changeDescription } = props;
+  const {
+    label,
+    description,
+    changeLabel,
+    changeDescription,
+    changeIsCloudInit,
+    isCloudInit,
+  } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -76,6 +99,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const regions = useRegionsQuery().data ?? [];
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
+  const flags = useFlags();
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
@@ -214,7 +238,17 @@ export const ImageUpload: React.FC<Props> = (props) => {
             errorText={errorMap.description}
             disabled={!canCreateImage}
           />
-
+          {flags.metadata ? (
+            <div className={classes.cloudInitCheckboxWrapper}>
+              <CheckBox
+                checked={isCloudInit}
+                onChange={changeIsCloudInit}
+                text="This image is Cloud-init compatible"
+                toolTipText={cloudInitTooltipMessage}
+                toolTipInteractive
+              />
+            </div>
+          ) : null}
           <RegionSelect
             label="Region"
             helperText="For fastest initial upload, select the region that is geographically
@@ -250,6 +284,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             label={label}
             description={description}
             region={region}
+            isCloudInit={isCloudInit}
             dropzoneDisabled={uploadingDisabled}
             apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
             setErrors={setErrors}

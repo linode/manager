@@ -1,14 +1,15 @@
 import { Disk, getLinodeDisks, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
@@ -16,6 +17,7 @@ import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import useFlags from 'src/hooks/useFlags';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -54,17 +56,38 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
+  cloudInitCheckboxWrapper: {
+    marginTop: theme.spacing(2),
+    marginLeft: 3,
+  },
 }));
+
+const cloudInitTooltipMessage = (
+  <Typography>
+    Many Linode supported distributions are compatible with cloud-init by
+    default, or you may have installed cloud-init.{' '}
+    <Link to="/">Learn more.</Link>
+  </Typography>
+);
 
 export interface Props {
   label?: string;
   description?: string;
+  isCloudInit?: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeIsCloudInit: () => void;
 }
 
 export const CreateImageTab: React.FC<Props> = (props) => {
-  const { label, description, changeLabel, changeDescription } = props;
+  const {
+    label,
+    description,
+    isCloudInit,
+    changeLabel,
+    changeDescription,
+    changeIsCloudInit,
+  } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -72,6 +95,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const flags = useFlags();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
@@ -143,6 +167,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       diskID: Number(selectedDisk),
       label,
       description: safeDescription,
+      cloud_init: isCloudInit ? isCloudInit : undefined,
     })
       .then((_) => {
         resetEventsPolling();
@@ -258,6 +283,17 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
+      {flags.metadata ? (
+        <Box className={classes.cloudInitCheckboxWrapper}>
+          <CheckBox
+            checked={isCloudInit}
+            onChange={changeIsCloudInit}
+            text="This image is Cloud-init compatible"
+            toolTipText={cloudInitTooltipMessage}
+            toolTipInteractive
+          />
+        </Box>
+      ) : null}
       <>
         <TextField
           label="Label"

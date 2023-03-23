@@ -41,8 +41,8 @@ export const useImageQuery = (imageID: string) =>
 // Create Image
 export const useCreateImageMutation = () => {
   return useMutation<Image, APIError[], CreateImagePayload>(
-    ({ diskID, label, description }) => {
-      return createImage(diskID, label, description);
+    ({ diskID, label, description, cloud_init }) => {
+      return createImage(diskID, label, description, cloud_init);
     },
     {
       onSuccess() {
