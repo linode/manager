@@ -3,9 +3,9 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow';
-import { RenderLinodeProps } from './DisplayLinodes';
+import { RenderLinodesProps } from './DisplayLinodes';
 
-export const ListView: React.FC<RenderLinodeProps> = (props) => {
+export const ListView: React.FC<RenderLinodesProps> = (props) => {
   const { data, openDialog, openPowerActionDialog } = props;
 
   const notificationContext = React.useContext(_notificationContext);

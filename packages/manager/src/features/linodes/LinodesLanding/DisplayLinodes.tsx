@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface RenderLinodeProps extends PaginationProps {
+export interface RenderLinodesProps extends PaginationProps {
   data: Props['data'];
   showHead?: boolean;
   openDialog: Props['openDialog'];
@@ -58,7 +58,7 @@ interface Props {
   ) => void;
   count: number;
   display: 'grid' | 'list';
-  component: React.ComponentType<RenderLinodeProps>;
+  component: React.ComponentType<RenderLinodesProps>;
   data: (ExtendedLinode & LinodeWithMaintenanceAndDisplayStatus)[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';

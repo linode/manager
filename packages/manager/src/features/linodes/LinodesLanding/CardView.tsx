@@ -10,7 +10,7 @@ import { notificationContext as _notificationContext } from 'src/features/Notifi
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useProfile } from 'src/queries/profile';
 import { getVolumesForLinode, useAllVolumesQuery } from 'src/queries/volumes';
-import { RenderLinodeProps } from './DisplayLinodes';
+import { RenderLinodesProps } from './DisplayLinodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CardView: React.FC<RenderLinodeProps> = (props) => {
+const CardView: React.FC<RenderLinodesProps> = (props) => {
   const classes = useStyles();
   const notificationContext = React.useContext(_notificationContext);
 

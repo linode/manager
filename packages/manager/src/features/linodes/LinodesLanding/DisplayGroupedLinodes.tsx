@@ -25,7 +25,7 @@ import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
-import { RenderLinodeProps } from './DisplayLinodes';
+import { RenderLinodesProps } from './DisplayLinodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tagGridRow: {
@@ -81,7 +81,7 @@ interface Props {
     linodeConfigs: Config[]
   ) => void;
   display: 'grid' | 'list';
-  component: React.ComponentType<RenderLinodeProps>;
+  component: React.ComponentType<RenderLinodesProps>;
   data: LinodeWithMaintenance[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
