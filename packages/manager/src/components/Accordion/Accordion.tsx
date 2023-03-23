@@ -51,6 +51,7 @@ export const Accordion = (props: Props) => {
     summaryProps,
     detailProps,
     headingProps,
+    heading,
     actions,
     success,
     warning,
@@ -78,10 +79,10 @@ export const Accordion = (props: Props) => {
         onClick={handleClick}
         expandIcon={<KeyboardArrowDown className="caret" />}
         {...summaryProps}
-        data-qa-panel-summary={props.heading}
+        data-qa-panel-summary={heading}
       >
         <Typography {...headingProps} variant="h3" data-qa-panel-subheading>
-          {props.heading}
+          {heading}
         </Typography>
         {headingNumberCount && headingNumberCount > 0 ? (
           <span className={classes.itemCount}>{headingNumberCount}</span>
@@ -89,7 +90,7 @@ export const Accordion = (props: Props) => {
       </AccordionSummary>
       <AccordionDetails {...detailProps} data-qa-panel-details>
         <Grid container>
-          {notice && (
+          {notice ? (
             <Grid item xs={12}>
               <Notice
                 data-qa-notice
@@ -100,13 +101,13 @@ export const Accordion = (props: Props) => {
                 spacingBottom={0}
               />
             </Grid>
-          )}
+          ) : null}
           <Grid item xs={12} data-qa-grid-item>
             {props.children}
           </Grid>
         </Grid>
       </AccordionDetails>
-      {actions && actions(accordionProps)}
+      {actions ? actions(accordionProps) : null}
     </_Accordion>
   );
 };
