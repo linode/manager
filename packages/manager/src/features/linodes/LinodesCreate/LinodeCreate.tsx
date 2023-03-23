@@ -727,14 +727,6 @@ export class LinodeCreate extends React.PureComponent<
               sshKeyError={sshError}
               password={this.props.password}
               handleChange={this.props.updatePassword}
-              updateFor={[
-                this.props.password,
-                errors,
-                sshError,
-                userSSHKeys,
-                this.props.selectedImageID,
-                userCannotCreateLinode,
-              ]}
               users={userSSHKeys}
               requestKeys={requestKeys}
             />

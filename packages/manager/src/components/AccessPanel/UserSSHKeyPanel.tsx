@@ -1,8 +1,7 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -14,10 +13,11 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/SSHKeyCreationDrawer';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
+import { makeStyles } from 'tss-react/mui';
 
 export const MAX_SSH_KEYS_DISPLAY = 100;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   title: {
     marginBottom: theme.spacing(2),
   },
@@ -58,10 +58,8 @@ interface Props {
   onKeyAddSuccess: () => void;
 }
 
-type CombinedProps = Props;
-
-const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const UserSSHKeyPanel = (props: Props) => {
+  const { classes } = useStyles();
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   /**

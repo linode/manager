@@ -335,7 +335,6 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
               <AccessPanel
                 password={values.root_pass}
                 handleChange={(value) => setFieldValue('root_pass', value)}
-                updateFor={[values.root_pass, errors, userSSHKeys, ss.id]}
                 error={errors.root_pass}
                 users={userSSHKeys}
                 sshKeyError={sshError}
