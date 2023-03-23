@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import {
-  EventAction,
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
@@ -799,49 +798,38 @@ export const handlers = [
     );
   }),
   rest.get('*/events', (req, res, ctx) => {
-    const events = eventFactory.buildList(1, {
-      action: 'lke_node_create',
-      percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' },
-      message:
-        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+    const brokenEvent = eventFactory.build({
+      action: 'community_question_reply',
+      message: 'some community reply',
+      username: 'randomperson',
+      status: 'notification',
+      percent_complete: null,
+      entity: null,
+      seen: false,
+      read: false,
     });
-    const volumeMigrationScheduled = eventFactory.build({
-      entity: { type: 'volume', id: 6, label: 'bravoExample' },
-      action: 'volume_migrate_scheduled' as EventAction,
-      status: 'scheduled',
-      message: 'Volume bravoExample has been scheduled for an upgrade to NVMe.',
-      percent_complete: 100,
+    const brokenEvent2 = eventFactory.build({
+      action: 'community_mention',
+      message: 'some community reply',
+      username: 'randomperson',
+      status: 'notification',
+      percent_complete: null,
+      entity: null,
+      seen: false,
+      read: false,
     });
-    const volumeMigrating = eventFactory.build({
-      entity: { type: 'volume', id: 2, label: 'example-upgrading' },
-      action: 'volume_migrate' as EventAction,
-      status: 'started',
-      message: 'Volume example-upgrading is being upgraded to NVMe.',
-      percent_complete: 65,
+    const brokenEvent3 = eventFactory.build({
+      action: 'community_like',
+      message: 'some community reply',
+      username: 'randomperson',
+      status: 'notification',
+      percent_complete: null,
+      entity: null,
+      seen: false,
+      read: false,
     });
-    const volumeMigrationFinished = eventFactory.build({
-      entity: { type: 'volume', id: 6, label: 'alphaExample' },
-      action: 'volume_migrate',
-      status: 'finished',
-      message: 'Volume alphaExample has finished upgrading to NVMe.',
-      percent_complete: 100,
-    });
-    const oldEvents = eventFactory.buildList(20, {
-      action: 'account_update',
-      seen: true,
-      percent_complete: 100,
-    });
-    return res.once(
-      ctx.json(
-        makeResourcePage([
-          ...events,
-          ...oldEvents,
-          volumeMigrationScheduled,
-          volumeMigrating,
-          volumeMigrationFinished,
-        ])
-      )
+    return res(
+      ctx.json(makeResourcePage([brokenEvent, brokenEvent2, brokenEvent3]))
     );
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
