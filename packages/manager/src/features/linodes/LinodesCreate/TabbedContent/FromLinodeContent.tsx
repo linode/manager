@@ -41,8 +41,9 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     errors,
     imagesData,
     linodesData,
-    selectedLinodeID,
     typesData,
+    regionsData,
+    selectedLinodeID,
     userCannotCreateLinode,
     updateLinodeID,
     updateTypeID,
@@ -87,7 +88,12 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
           <SelectLinodePanel
             data-qa-linode-panel
             error={hasErrorFor('linode_id')}
-            linodes={extendLinodes(linodesData, imagesData, extendedTypes)}
+            linodes={extendLinodes(
+              linodesData,
+              imagesData,
+              extendedTypes,
+              regionsData
+            )}
             selectedLinodeID={selectedLinodeID}
             header={'Select Linode to Clone From'}
             handleSelection={handleSelectLinode}
