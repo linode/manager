@@ -4,8 +4,10 @@ import Link from 'src/components/Link';
 
 const AcceptedFormats = () => (
   <Typography>
-    <br /> Accepted formats are YAML and bash.{' '}
-    <Link to="https://www.linode.com/docs">Learn more.</Link>
+    <br />
+    <Link to="https://cloudinit.readthedocs.io/en/latest/explanation/format.html">
+      Learn more about accepted formats.
+    </Link>
   </Typography>
 );
 

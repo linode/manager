@@ -377,7 +377,7 @@ export const handlers = [
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
     const busyLinodes = linodeFactory.buildList(1, { status: 'migrating' });
-    const metaDataLinodes = linodeFactory.buildList(2, {
+    const metadataLinodes = linodeFactory.buildList(2, {
       image: 'metadata-test',
       label: 'metadata-test',
     });
@@ -399,7 +399,7 @@ export const handlers = [
       tags: ['test1', 'test2', 'test3'],
     });
     const linodes = [
-      ...metaDataLinodes,
+      ...metadataLinodes,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,

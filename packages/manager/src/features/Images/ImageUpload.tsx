@@ -77,7 +77,7 @@ export interface Props {
   isCloudInit: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeIsCloudInit: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeIsCloudInit: () => void;
 }
 
 export const ImageUpload: React.FC<Props> = (props) => {
