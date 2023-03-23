@@ -1,62 +1,62 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import v4 from 'uuid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
-import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
+import LinodeMultiSelect from 'src/components/LinodeMultiSelect/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
-import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/AddFirewallDrawer';
+import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
+import { useParams } from 'react-router-dom';
+import {
+  useAddFirewallDeviceMutation,
+  useAllFirewallDevicesQuery,
+  useFirewallQuery,
+} from 'src/queries/firewalls';
 import { useTheme } from '@mui/material/styles';
 
 interface Props {
   open: boolean;
-  error?: APIError[];
-  isSubmitting: boolean;
-  currentDevices: number[];
-  firewallLabel: string;
   onClose: () => void;
-  addDevice: (selectedLinodes: number[]) => void;
 }
 
-export const AddDeviceDrawer: React.FC<Props> = (props) => {
-  const {
-    open,
-    error,
-    isSubmitting,
-    currentDevices,
-    firewallLabel,
-    onClose,
-    addDevice,
-  } = props;
+export const AddDeviceDrawer = (props: Props) => {
+  const { open, onClose } = props;
+
+  const { id } = useParams<{ id: string }>();
 
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
 
+  const { data: firewall } = useFirewallQuery(Number(id));
+  const { data: currentDevices } = useAllFirewallDevicesQuery(Number(id));
+
+  const currentLinodeIds =
+    currentDevices
+      ?.filter((device) => device.entity.type === 'linode')
+      .map((device) => device.entity.id) ?? [];
+
+  const {
+    mutateAsync: addDevice,
+    error,
+    isLoading,
+  } = useAddFirewallDeviceMutation(Number(id));
   const theme = useTheme();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
-  // Used to reset the selected form values on form submit, since
-  // the LinodeMultiSelect manages its state internally.
-  const [key, setKey] = React.useState<string>(v4());
-
-  React.useEffect(() => {
-    // If we have a new error, clear out the select values
-    if (error && error.length > 0) {
-      setKey(v4());
-    }
-  }, [error]);
-
-  const handleSubmit = () => {
-    // @todo handling will have to be added here when we support Firewalls for NodeBalancers
-    addDevice(selectedLinodes);
+  const handleSubmit = async () => {
+    await Promise.all(
+      selectedLinodes.map((thisLinode) =>
+        addDevice({ type: 'linode', id: thisLinode })
+      )
+    );
+    onClose();
+    setSelectedLinodes([]);
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
@@ -110,7 +110,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
 
   return (
     <Drawer
-      title={`Add Linode to Firewall: ${firewallLabel}`}
+      title={`Add Linode to Firewall: ${firewall?.label}`}
       open={open}
       onClose={onClose}
     >
@@ -122,11 +122,12 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
       >
         {errorMessage ? errorNotice(errorMessage) : null}
         <LinodeMultiSelect
-          key={key}
-          handleChange={(selected) => setSelectedLinodes(selected)}
-          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall.`}
-          filteredLinodes={[...currentDevices, ...readOnlyLinodeIds]}
-          guidance={linodeSelectGuidance}
+          onChange={(selected) => setSelectedLinodes(selected)}
+          value={selectedLinodes}
+          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
+            linodeSelectGuidance ? linodeSelectGuidance : ''
+          }`}
+          filteredLinodes={[...currentLinodeIds, ...readOnlyLinodeIds]}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
@@ -136,7 +137,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
             buttonType="primary"
             onClick={handleSubmit}
             disabled={selectedLinodes.length === 0}
-            loading={isSubmitting}
+            loading={isLoading}
             data-qa-submit
           >
             Add

@@ -222,6 +222,9 @@ const darkThemeOptions: ThemeOptions = {
         loading: {
           color: '#fff',
         },
+        noOptions: {
+          color: '#fff',
+        },
       },
     },
     MuiButton: {

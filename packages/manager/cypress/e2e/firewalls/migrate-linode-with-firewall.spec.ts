@@ -219,14 +219,19 @@ describe('Migrate Linode With Firewall', () => {
         fbtClick('Create Firewall');
       });
 
-      cy.get('[data-testid="textfield-input"]')
+      cy.get('[data-testid="textfield-input"]:first')
         .should('be.visible')
         .type(firewallLabel);
 
-      cy.get('[data-qa-enhanced-select="Select a Linode or type to search..."]')
+      cy.get('[data-testid="textfield-input"]:last')
         .should('be.visible')
         .click()
-        .type(`${linode.label}{enter}`);
+        .type(linode.label);
+
+      cy.get('[data-qa-autocomplete-popper]')
+        .findByText(linode.label)
+        .should('be.visible')
+        .click();
 
       cy.findByText(linode.label).should('be.visible');
 
@@ -278,14 +283,19 @@ describe('Migrate Linode With Firewall', () => {
         fbtClick('Create Firewall');
       });
 
-      cy.get('[data-testid="textfield-input"]')
+      cy.get('[data-testid="textfield-input"]:first')
         .should('be.visible')
         .type(firewallLabel);
 
-      cy.get('[data-qa-enhanced-select="Select a Linode or type to search..."]')
+      cy.get('[data-testid="textfield-input"]:last')
         .should('be.visible')
         .click()
-        .type(`${linodeLabel}{enter}`);
+        .type(linodeLabel);
+
+      cy.get('[data-qa-autocomplete-popper]')
+        .findByText(linode.label)
+        .should('be.visible')
+        .click();
 
       cy.findByText(linodeLabel).should('be.visible');
 

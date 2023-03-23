@@ -21,3 +21,5 @@ export const truncateAndJoinList = (strList: string[], max = 100) => {
 };
 
 export const wrapInQuotes = (s: string) => '"' + s + '"';
+
+export const isNumeric = (s: string) => /^\d+$/.test(s);

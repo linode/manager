@@ -13,7 +13,6 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
-import { updateFirewallRules } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
@@ -25,6 +24,7 @@ import curriedFirewallRuleEditorReducer, {
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
 import { Category, parseFirewallRuleError } from './shared';
+import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -63,6 +63,9 @@ interface Drawer {
 const FirewallRulesLanding = (props: Props) => {
   const classes = useStyles();
   const { firewallID, rules, disabled } = props;
+  const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
+    firewallID
+  );
 
   /**
    * inbound and outbound policy aren't part of any particular rule
@@ -196,7 +199,7 @@ const FirewallRulesLanding = (props: Props) => {
       outbound_policy: policy.outbound,
     };
 
-    updateFirewallRules(firewallID, finalRules)
+    updateFirewallRules(finalRules)
       .then((_rules) => {
         setSubmitting(false);
         // Reset editor state.

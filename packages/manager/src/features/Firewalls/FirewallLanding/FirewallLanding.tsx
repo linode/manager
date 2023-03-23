@@ -1,24 +1,24 @@
-import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
-import {
-  RouteComponentProps,
-  useHistory,
-  useRouteMatch,
-} from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import EntityTable from 'src/components/EntityTable';
 import LandingHeader from 'src/components/LandingHeader';
-import { useCreateFirewall, useFirewallQuery } from 'src/queries/firewalls';
-import { queryClient } from 'src/queries/base';
-import { useProfile, queryKey } from 'src/queries/profile';
-import AddFirewallDrawer from './AddFirewallDrawer';
+import { useFirewallsQuery } from 'src/queries/firewalls';
+import CreateFirewallDrawer from './CreateFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import FirewallDialog, { Mode } from './FirewallDialog';
 import FirewallEmptyState from './FirewallEmptyState';
 import FirewallRow from './FirewallRow';
-
-type CombinedProps = RouteComponentProps<{}>;
+import { usePagination } from 'src/hooks/usePagination';
+import { useOrder } from 'src/hooks/useOrder';
+import ErrorState from 'src/components/ErrorState/ErrorState';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import Table from 'src/components/Table/Table';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/TableRow/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableBody from 'src/components/core/TableBody';
+import Hidden from 'src/components/core/Hidden';
 
 export const headers = [
   {
@@ -56,78 +56,84 @@ export const headers = [
   },
 ];
 
-const FirewallLanding: React.FC<CombinedProps> = () => {
-  const { data: profile } = useProfile();
-  const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
+const preferenceKey = 'firewalls';
 
-  const { mutateAsync: _createFirewall } = useCreateFirewall();
+const FirewallLanding = () => {
+  const pagination = usePagination(1, preferenceKey);
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'asc',
+    },
+    `${preferenceKey}-order`
+  );
+
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+  };
+
+  const params = {
+    page: pagination.page,
+    page_size: pagination.pageSize,
+  };
+
+  const { data, isLoading, error } = useFirewallsQuery(params, filter);
 
   const [
-    addFirewallDrawerOpen,
-    toggleAddFirewallDrawer,
+    isCreateFirewallDrawerOpen,
+    setIsCreateFirewallDrawerOpen,
   ] = React.useState<boolean>(false);
 
-  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
 
-  const [selectedFirewallID, setSelectedFirewallID] = React.useState<
+  const [selectedFirewallId, setSelectedFirewallId] = React.useState<
     number | undefined
   >(undefined);
 
-  const [
-    selectedFirewallLabel,
-    setSelectedFirewallLabel,
-  ] = React.useState<string>('');
+  const selectedFirewall = data?.data.find(
+    (firewall) => firewall.id === selectedFirewallId
+  );
 
-  const createFirewall = (
-    payload: CreateFirewallPayload
-  ): Promise<Firewall> => {
-    return _createFirewall(payload).then((firewall) => {
-      if (profile?.restricted) {
-        queryClient.invalidateQueries(`${queryKey}-grants`);
-      }
-      return firewall;
-    });
-  };
-
-  const openModal = (mode: Mode, id: number, label: string) => {
-    setSelectedFirewallID(id);
-    setSelectedFirewallLabel(label);
+  const openModal = (mode: Mode, id: number) => {
+    setSelectedFirewallId(id);
     setDialogMode(mode);
-    toggleModal(true);
+    setIsModalOpen(true);
   };
 
-  const handleOpenDeleteFirewallModal = (id: number, label: string) => {
-    openModal('delete', id, label);
+  const handleOpenDeleteFirewallModal = (id: number) => {
+    openModal('delete', id);
   };
 
-  const handleOpenEnableFirewallModal = (id: number, label: string) => {
-    openModal('enable', id, label);
+  const handleOpenEnableFirewallModal = (id: number) => {
+    openModal('enable', id);
   };
 
-  const handleOpenDisableFirewallModal = (id: number, label: string) => {
-    openModal('disable', id, label);
+  const handleOpenDisableFirewallModal = (id: number) => {
+    openModal('disable', id);
   };
 
-  const openDrawer = React.useCallback(() => toggleAddFirewallDrawer(true), [
-    toggleAddFirewallDrawer,
-  ]);
+  const onOpenCreateDrawer = React.useCallback(
+    () => setIsCreateFirewallDrawerOpen(true),
+    [setIsCreateFirewallDrawerOpen]
+  );
 
   // On-the-fly route matching so this component can open the drawer itself.
   const createFirewallRouteMatch = Boolean(useRouteMatch('/firewalls/create'));
 
   React.useEffect(() => {
     if (createFirewallRouteMatch) {
-      openDrawer();
+      onOpenCreateDrawer();
     }
-  }, [createFirewallRouteMatch, openDrawer]);
+  }, [createFirewallRouteMatch, onOpenCreateDrawer]);
 
   const { replace } = useHistory();
 
   const closeDrawer = React.useCallback(() => {
-    toggleAddFirewallDrawer(false);
+    setIsCreateFirewallDrawerOpen(false);
     replace('/firewalls');
-  }, [toggleAddFirewallDrawer, replace]);
+  }, [setIsCreateFirewallDrawerOpen, replace]);
 
   const handlers: FirewallHandlers = {
     triggerEnableFirewall: handleOpenEnableFirewallModal,
@@ -135,38 +141,31 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
     triggerDeleteFirewall: handleOpenDeleteFirewallModal,
   };
 
-  const firewallArray = Object.values(data ?? {});
-
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  // We'll fall back to showing a request error in the EntityTable
-  if (firewallArray.length === 0 && !error) {
+  if (data?.results === 0) {
     return (
-      // Some repetition here, which we need to resolve separately
-      // (move the create form to /firewalls/create, or as a top
-      // level drawer).
       <>
-        <FirewallEmptyState openAddFirewallDrawer={openDrawer} />
-        <AddFirewallDrawer
-          open={addFirewallDrawerOpen}
-          onClose={() => toggleAddFirewallDrawer(false)}
-          onSubmit={createFirewall}
-          title="Create Firewall"
+        <FirewallEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
+        <CreateFirewallDrawer
+          open={isCreateFirewallDrawerOpen}
+          onClose={() => setIsCreateFirewallDrawerOpen(false)}
         />
       </>
     );
   }
 
-  const firewallRow = {
-    handlers,
-    Component: FirewallRow,
-    data: firewallArray,
-    loading: isLoading,
-    lastUpdated: dataUpdatedAt,
-    error: error ?? undefined,
-  };
+  if (error) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading your Firewalls.')[0].reason
+        }
+      />
+    );
+  }
 
   return (
     <React.Fragment>
@@ -174,30 +173,54 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
         title="Firewalls"
         entity="Firewall"
         breadcrumbProps={{ pathname: '/firewalls' }}
-        onButtonClick={openDrawer}
+        onButtonClick={onOpenCreateDrawer}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
       />
-      <EntityTable
-        entity="firewall"
-        row={firewallRow}
-        headers={headers}
-        initialOrder={{ order: 'asc', orderBy: 'domain' }}
-      />
-      <AddFirewallDrawer
-        open={addFirewallDrawerOpen}
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'label'}
+              direction={order}
+              label="label"
+              handleClick={handleOrderChange}
+            >
+              Label
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'status'}
+              direction={order}
+              label="status"
+              handleClick={handleOrderChange}
+            >
+              Status
+            </TableSortCell>
+            <Hidden smDown>
+              <TableCell>Rules</TableCell>
+              <TableCell>Linodes</TableCell>
+            </Hidden>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data?.data.map((firewall) => (
+            <FirewallRow key={firewall.id} {...firewall} {...handlers} />
+          ))}
+        </TableBody>
+      </Table>
+      <CreateFirewallDrawer
+        open={isCreateFirewallDrawerOpen}
         onClose={closeDrawer}
-        onSubmit={createFirewall}
-        title="Create Firewall"
       />
       <FirewallDialog
-        open={modalOpen}
+        open={isModalOpen}
         mode={dialogMode}
-        selectedFirewallID={selectedFirewallID}
-        selectedFirewallLabel={selectedFirewallLabel}
-        closeDialog={() => toggleModal(false)}
+        selectedFirewallID={selectedFirewallId}
+        selectedFirewallLabel={selectedFirewall?.label ?? ''}
+        onClose={() => setIsModalOpen(false)}
       />
     </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, {}>(React.memo)(FirewallLanding);
+export default React.memo(FirewallLanding);

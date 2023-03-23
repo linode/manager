@@ -4,131 +4,83 @@ import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export type Mode = 'enable' | 'disable' | 'delete';
+
 interface Props {
   open: boolean;
   mode: Mode;
-  closeDialog: () => void;
+  onClose: () => void;
   selectedFirewallID?: number;
   selectedFirewallLabel: string;
 }
 
-type CombinedProps = Props;
-
-const toContinuousTense = (s: string) => {
-  return s.replace(/e$/, 'ing');
-};
-
-const FirewallDialog: React.FC<CombinedProps> = (props) => {
-  const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
-
-  const { mutateAsync: updateFirewall } = useMutateFirewall();
-  const { mutateAsync: deleteFirewall } = useDeleteFirewall();
-
-  const enableFirewall = ({ id }: { id: number }) => {
-    return updateFirewall({ id, payload: { status: 'enabled' } });
-  };
-
-  const disableFirewall = ({ id }: { id: number }) => {
-    return updateFirewall({ id, payload: { status: 'disabled' } });
-  };
-
+const FirewallDialog = (props: Props) => {
   const {
     open,
-    closeDialog,
+    onClose,
     mode,
     selectedFirewallID,
     selectedFirewallLabel: label,
   } = props;
 
-  /** reset error on open */
-  React.useEffect(() => {
-    if (open) {
-      setError(undefined);
-    }
-  }, [open]);
+  const {
+    mutateAsync: updateFirewall,
+    isLoading: isUpdating,
+    error: updateError,
+  } = useMutateFirewall(selectedFirewallID ?? -1);
+  const {
+    mutateAsync: deleteFirewall,
+    isLoading: isDeleting,
+    error: deleteError,
+  } = useDeleteFirewall(selectedFirewallID ?? -1);
 
-  const determineRequest = () => {
-    switch (mode) {
-      case 'enable':
-        return enableFirewall;
-      case 'disable':
-        return disableFirewall;
-      case 'delete':
-        return deleteFirewall;
-    }
+  const requestMap = {
+    enable: () => updateFirewall({ status: 'enabled' }),
+    disable: () => updateFirewall({ status: 'disabled' }),
+    delete: () => deleteFirewall(),
   };
 
-  const handleSubmit = () => {
-    const defaultError = `There was an issue ${toContinuousTense(
-      mode
-    )} this Firewall.`;
-    if (!selectedFirewallID) {
-      return setError(defaultError);
-    }
-
-    setSubmitting(true);
-    setError(undefined);
-
-    const request = determineRequest();
-
-    request({ id: selectedFirewallID })
-      .then((_) => {
-        setSubmitting(false);
-        closeDialog();
-      })
-      .catch((e) => {
-        setSubmitting(false);
-        setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
-      });
+  const isLoadingMap = {
+    enable: isUpdating,
+    disable: isUpdating,
+    delete: isDeleting,
   };
 
-  const _label = label ? label : 'this Firewall';
+  const errorMap = {
+    enable: updateError,
+    disable: updateError,
+    delete: deleteError,
+  };
+
+  const onSubmit = async () => {
+    await requestMap[mode]();
+    onClose();
+  };
 
   return (
     <Dialog
       open={open}
-      title={`${capitalize(mode)} Firewall ${_label}?`}
-      onClose={props.closeDialog}
-      error={error}
+      title={`${capitalize(mode)} Firewall ${label}?`}
+      onClose={onClose}
+      error={errorMap[mode]?.[0].reason}
       actions={
-        <Actions
-          onClose={props.closeDialog}
-          isSubmitting={isSubmitting}
-          onSubmit={handleSubmit}
-          mode={mode}
-        />
+        <ActionsPanel>
+          <Button buttonType="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            onClick={onSubmit}
+            loading={isLoadingMap[mode]}
+          >
+            {capitalize(mode)} Firewall
+          </Button>
+        </ActionsPanel>
       }
     >
       Are you sure you want to {mode} this Firewall?
     </Dialog>
-  );
-};
-
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  isSubmitting: boolean;
-  mode: Mode;
-}
-
-const Actions: React.FC<ActionsProps> = (props) => {
-  return (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={props.onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.isSubmitting}
-      >
-        {capitalize(props.mode)} Firewall
-      </Button>
-    </ActionsPanel>
   );
 };
 

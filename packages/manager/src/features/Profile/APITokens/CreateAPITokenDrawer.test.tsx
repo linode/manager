@@ -47,19 +47,17 @@ describe('Create API Token Drawer', () => {
       <CreateAPITokenDrawer {...props} />
     );
 
-    await act(async () => {
-      const labelField = getByTestId('textfield-input');
+    const labelField = getByTestId('textfield-input');
+    const submit = getByText('Create Token');
 
+    act(() => {
       userEvent.type(labelField, 'my-test-token');
-
-      const submit = getByText('Create Token');
-
       userEvent.click(submit);
-
-      await waitFor(() =>
-        expect(props.showSecret).toBeCalledWith('secret-value')
-      );
     });
+
+    await waitFor(() =>
+      expect(props.showSecret).toBeCalledWith('secret-value')
+    );
   });
   it('Should default to read/write for all scopes', () => {
     const { getByLabelText } = renderWithTheme(
