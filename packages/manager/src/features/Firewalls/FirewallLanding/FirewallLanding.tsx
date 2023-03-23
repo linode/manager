@@ -19,42 +19,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableBody from 'src/components/core/TableBody';
 import Hidden from 'src/components/core/Hidden';
-
-export const headers = [
-  {
-    label: 'Firewall',
-    dataColumn: 'label',
-    sortable: true,
-    widthPercent: 25,
-  },
-  {
-    label: 'Status',
-    dataColumn: 'status',
-    sortable: true,
-    widthPercent: 15,
-  },
-  {
-    label: 'Rules',
-    dataColumn: 'rules',
-    sortable: false,
-    widthPercent: 25,
-    hideOnMobile: true,
-  },
-  {
-    label: 'Linodes',
-    dataColumn: 'devices',
-    sortable: false,
-    widthPercent: 25,
-    hideOnMobile: true,
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5,
-  },
-];
+import PaginationFooter from 'src/components/PaginationFooter';
 
 const preferenceKey = 'firewalls';
 
@@ -208,6 +173,14 @@ const FirewallLanding = () => {
           ))}
         </TableBody>
       </Table>
+      <PaginationFooter
+        count={data?.results ?? 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Firewalls Table"
+      />
       <CreateFirewallDrawer
         open={isCreateFirewallDrawerOpen}
         onClose={closeDrawer}
