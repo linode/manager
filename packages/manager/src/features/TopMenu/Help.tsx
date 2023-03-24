@@ -14,7 +14,7 @@ export const Help: React.FC<{}> = (_) => {
       to="/support"
     >
       <TopMenuIcon title={'Help & Support'}>
-        <HelpIcon />
+        <HelpIcon noticeIconStatus={'help'} />
       </TopMenuIcon>
     </Link>
   );

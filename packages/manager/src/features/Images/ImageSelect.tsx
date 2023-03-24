@@ -117,6 +117,7 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
         <HelpIcon
           className={classes.icon}
           text={helperText || 'Choosing a 64-bit distro is recommended.'}
+          noticeIconStatus={'help'}
         />
       </Grid>
     </Grid>

@@ -232,7 +232,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         {
           display: 'Help & Support',
           href: '/support',
-          icon: <HelpIcon />,
+          icon: <HelpIcon noticeIconStatus={'help'} />,
         },
       ],
     ],

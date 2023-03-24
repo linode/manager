@@ -265,6 +265,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                     text={tooltip}
                     tooltipPosition="right-end"
                     className="py0"
+                    noticeIconStatus={'help'}
                   />
                 )}
               </div>

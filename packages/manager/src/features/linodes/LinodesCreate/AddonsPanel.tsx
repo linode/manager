@@ -142,7 +142,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
         <Typography variant="h2" className={classes.title}>
           Add-ons{' '}
           {backupsDisabledReason ? (
-            <HelpIcon text={backupsDisabledReason} />
+            <HelpIcon text={backupsDisabledReason} noticeIconStatus={'help'} />
           ) : null}
         </Typography>
         <Grid container>

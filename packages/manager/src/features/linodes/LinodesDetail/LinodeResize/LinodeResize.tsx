@@ -372,17 +372,20 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             <HelpIcon
               className={classes.toolTip}
               text={`There was an error loading your Linode&rsquo; disks.`}
+              noticeIconStatus={'help'}
             />
           ) : isSmaller ? (
             <HelpIcon
               className={classes.toolTip}
               text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
+              noticeIconStatus={'help'}
             />
           ) : !_shouldEnableAutoResizeDiskOption ? (
             <HelpIcon
               className={classes.toolTip}
               text={`Your ext disk can only be automatically resized if you have one ext
                       disk or one ext disk and one swap disk on this Linode.`}
+              noticeIconStatus={'help'}
             />
           ) : null}
         </Typography>

@@ -116,6 +116,7 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
           className={classes.helpIcon}
           classes={{ tooltip: classes.tooltip }}
           interactive
+          noticeIconStatus={'help'}
         />
       </div>
     );

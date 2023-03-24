@@ -337,6 +337,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             tooltipPosition={tooltipPosition}
             interactive={tooltipInteractive}
             onMouseEnter={tooltipOnMouseEnter}
+            noticeIconStatus={'help'}
           />
         )}
       </div>

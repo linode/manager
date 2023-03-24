@@ -192,6 +192,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           <div className={classes.maintenanceOuter}>
             <strong>Maintenance Scheduled</strong>
             <HelpIcon
+              noticeIconStatus={'help'}
               text={<MaintenanceText />}
               tooltipPosition="top"
               interactive

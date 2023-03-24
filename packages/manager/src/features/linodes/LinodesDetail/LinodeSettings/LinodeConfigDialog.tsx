@@ -899,6 +899,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 <Box display="flex" alignItems="center">
                   <Typography variant="h3">Network Interfaces</Typography>
                   <HelpIcon
+                    noticeIconStatus={'help'}
                     className={classes.helpIcon}
                     classes={{ tooltip: classes.tooltip }}
                     interactive

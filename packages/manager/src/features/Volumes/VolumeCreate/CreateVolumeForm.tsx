@@ -162,6 +162,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         className={classes.helpIcon}
         text={tooltipText}
         tooltipPosition="right"
+        noticeIconStatus={'help'}
       />
     );
   };

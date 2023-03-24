@@ -22,7 +22,13 @@ const Toggle: React.FC<Props> = (props) => {
         color="primary"
         {...rest}
       />
-      {tooltipText && <HelpIcon text={tooltipText} interactive={interactive} />}
+      {tooltipText && (
+        <HelpIcon
+          text={tooltipText}
+          interactive={interactive}
+          noticeIconStatus={'help'}
+        />
+      )}
     </React.Fragment>
   );
 };

@@ -162,7 +162,10 @@ export const TransferControls: React.FC<{}> = (_) => {
               Review Details
             </Button>
             <Hidden mdDown>
-              <HelpIcon text="Enter a service transfer token to review the details and accept the transfer." />
+              <HelpIcon
+                text="Enter a service transfer token to review the details and accept the transfer."
+                noticeIconStatus={'help'}
+              />
             </Hidden>
           </Grid>
         </Grid>

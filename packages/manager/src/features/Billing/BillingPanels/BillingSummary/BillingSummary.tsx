@@ -272,6 +272,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
               <HelpIcon
                 className={classes.helpIcon}
                 text={accruedChargesHelperText}
+                noticeIconStatus={'help'}
               />
             </Box>
             <Divider />
@@ -341,7 +342,11 @@ export const PromoDisplay = React.memo((props: PromoDisplayProps) => {
           >
             {summary}
           </Typography>
-          <HelpIcon className={classes.helpIcon} text={description} />
+          <HelpIcon
+            className={classes.helpIcon}
+            text={description}
+            noticeIconStatus={'help'}
+          />
         </Box>
         {!Number.isNaN(parsedCreditRemaining) ? (
           <Typography

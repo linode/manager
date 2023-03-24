@@ -167,6 +167,7 @@ const ActionMenu: React.FC<CombinedProps> = (props) => {
                   text={a.tooltip}
                   tooltipPosition="right"
                   className={classes.tooltip}
+                  noticeIconStatus={'help'}
                 />
               ) : null}
             </MenuItem>

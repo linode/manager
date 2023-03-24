@@ -253,6 +253,7 @@ export const StackScript: React.FC<Props> = (props) => {
                   text="You must update your StackScript to use a compatible Image to deploy it"
                   tooltipPosition="bottom"
                   className={classes.helpIcon}
+                  noticeIconStatus={'help'}
                 />
               </Box>
               {imageChips.deprecated}

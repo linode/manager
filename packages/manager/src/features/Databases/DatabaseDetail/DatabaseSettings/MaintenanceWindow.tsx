@@ -262,6 +262,7 @@ export const MaintenanceWindow = (props: Props) => {
                   noMarginTop
                 />
                 <HelpIcon
+                  noticeIconStatus={'help'}
                   interactive
                   className={classes.helpIcon}
                   text={

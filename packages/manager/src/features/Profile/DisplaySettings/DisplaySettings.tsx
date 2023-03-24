@@ -123,6 +123,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
               className={classes.helpIcon}
               interactive
               text={helpIconText}
+              noticeIconStatus={'help'}
             />
           </Typography>
           <Typography className={classes.profileCopy} variant="body1">

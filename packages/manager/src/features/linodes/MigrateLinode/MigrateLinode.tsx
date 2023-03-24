@@ -266,7 +266,9 @@ const MigrateLinode: React.FC<CombinedProps> = (props) => {
         >
           Enter Migration Queue
         </Button>
-        {!!disabledText && <HelpIcon text={disabledText} />}
+        {!!disabledText && (
+          <HelpIcon text={disabledText} noticeIconStatus={'help'} />
+        )}
       </Box>
     </Dialog>
   );

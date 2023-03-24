@@ -34,14 +34,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: '100%',
     height: 5,
   },
-  tooltip: {
-    color: theme.color.grey1,
-    padding: '0 0 0 4px',
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
-  },
   notice: {
     borderLeft: `solid 6px ${theme.color.green}`,
     marginBottom: theme.spacing(2),
@@ -50,26 +42,32 @@ const useStyles = makeStyles()((theme: Theme) => ({
       fontSize: '0.95em',
     },
   },
-  link: {
-    ...theme.applyLinkStyles,
-  },
-  errorIcon: {
-    color: theme.color.red,
-    marginRight: -20,
-    '&:hover': {
-      color: theme.color.red,
-      opacity: 0.7,
-    },
-    '& svg': {
-      height: 28,
-      width: 28,
-    },
-  },
+  // errorIcon: {
+  //   marginRight: -20,
+  //   '&:hover': {
+  //     opacity: 0.7,
+  //   },
+  //   '& svg': {
+  //     height: 28,
+  //     width: 28,
+  //   },
+  // },
 }));
 
 const sxBox = {
   paddingTop: '8px',
   paddingBottom: '8px',
+};
+
+const sxHelpIcon = {
+  marginRight: -20,
+  '&:hover': {
+    opacity: 0.7,
+  },
+  '& svg': {
+    height: 28,
+    width: 28,
+  },
 };
 
 export const AddPaymentMethodDrawer = (props: Props) => {
@@ -95,7 +93,12 @@ export const AddPaymentMethodDrawer = (props: Props) => {
 
   const renderError = (errorMsg: string) => {
     return (
-      <HelpIcon className={classes.errorIcon} isError={true} text={errorMsg} />
+      <HelpIcon
+        // className={classes.errorIcon}
+        noticeIconStatus={'error'}
+        text={errorMsg}
+        sxHelpIcon={sxHelpIcon}
+      />
     );
   };
 

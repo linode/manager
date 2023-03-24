@@ -73,7 +73,11 @@ const LinodeCheckBox = (props: Props) => {
           sx={sxFormLabel}
         />
         {toolTipText ? (
-          <HelpIcon interactive={toolTipInteractive} text={toolTipText} />
+          <HelpIcon
+            interactive={toolTipInteractive}
+            text={toolTipText}
+            noticeIconStatus={'help'}
+          />
         ) : null}
       </React.Fragment>
     );

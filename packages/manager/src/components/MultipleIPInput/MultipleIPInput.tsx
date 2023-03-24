@@ -141,6 +141,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
             className={classes.helpIcon}
             text={tooltip}
             tooltipPosition="right"
+            noticeIconStatus={'help'}
           />
         </div>
       ) : (

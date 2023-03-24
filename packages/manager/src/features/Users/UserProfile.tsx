@@ -228,6 +228,7 @@ const UserProfile: React.FC<Props> = (props) => {
         </Button>
         {profile?.username === originalUsername && (
           <HelpIcon
+            noticeIconStatus={'help'}
             className={classes.topMargin}
             text="You can't delete the currently active user"
           />

@@ -301,6 +301,7 @@ export const PaymentDrawer = (props: Props) => {
                   {paymentTooLow || selectedCardExpired ? (
                     <HelpIcon
                       className={classes.helpIcon}
+                      noticeIconStatus={'help'}
                       text={
                         paymentTooLow
                           ? `Payment amount must be at least ${minimumPayment}.`

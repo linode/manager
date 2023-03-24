@@ -180,6 +180,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             {!freeDiskSpace ? (
               <HelpIcon
                 text={noFreeDiskSpaceWarning}
+                noticeIconStatus={'help'}
                 tooltipGAEvent={() =>
                   sendEvent({
                     category: `Disk Resize Flow`,

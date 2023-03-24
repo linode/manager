@@ -218,6 +218,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         <HelpIcon
           className={classes.helpIcon}
           text="Your Database Cluster is currently provisioning."
+          noticeIconStatus={'help'}
         />
       ) : null}
     </>
@@ -257,6 +258,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           {disableShowBtn ? (
             <HelpIcon
               className={classes.helpIcon}
+              noticeIconStatus={'help'}
               text={
                 database.status === 'provisioning'
                   ? 'Your Database Cluster is currently provisioning.'
@@ -290,6 +292,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                     <HelpIcon
                       className={classes.helpIcon}
                       text={mongoHostHelperCopy}
+                      noticeIconStatus={'help'}
                     />
                   ) : null}
                 </>
@@ -338,6 +341,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                         <HelpIcon
                           className={classes.helpIcon}
                           text={mongoHostHelperCopy}
+                          noticeIconStatus={'help'}
                         />
                       ) : null}
                     </Box>
@@ -355,7 +359,11 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               className={classes.inlineCopyToolTip}
               text={database.hosts.secondary}
             />
-            <HelpIcon className={classes.helpIcon} text={privateHostCopy} />
+            <HelpIcon
+              className={classes.helpIcon}
+              text={privateHostCopy}
+              noticeIconStatus={'help'}
+            />
           </Box>
         ) : null}
         <Typography>

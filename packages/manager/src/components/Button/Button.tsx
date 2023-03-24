@@ -102,6 +102,7 @@ const Button = ({
           sx={sxHelpIcon}
           text={tooltipText}
           tooltipGAEvent={tooltipGAEvent}
+          noticeIconStatus={'help'}
         />
       )}
     </React.Fragment>

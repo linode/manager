@@ -83,7 +83,10 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <Typography variant="h2" className={classes.title}>
-        Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
+        Attach a VLAN{' '}
+        {helperText ? (
+          <HelpIcon text={helperText} noticeIconStatus={'help'} />
+        ) : null}
       </Typography>
       <Grid container>
         <Grid item xs={12}>

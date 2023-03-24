@@ -136,6 +136,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
                 Maintenance: <br />
                 {dateTime[0]} at {dateTime[1]}
                 <HelpIcon
+                  noticeIconStatus={'help'}
                   text={<MaintenanceText />}
                   tooltipPosition="top"
                   interactive
