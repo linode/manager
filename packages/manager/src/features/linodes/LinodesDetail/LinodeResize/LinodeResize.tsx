@@ -29,7 +29,7 @@ import {
   WithTypesProps,
 } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel/SelectPlanPanel';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';

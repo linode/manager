@@ -44,7 +44,7 @@ import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/Databa
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel, {
   PlanSelectionType,
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+} from 'src/features/linodes/LinodesCreate/SelectPlanPanel/SelectPlanPanel';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import useFlags from 'src/hooks/useFlags';
 import {
