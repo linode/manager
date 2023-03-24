@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -12,13 +10,15 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
+import PaginationFooter from '../PaginationFooter/PaginationFooter';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
 import { useAccountUsers } from 'src/queries/accountUsers';
-import usePagination from 'src/hooks/usePagination';
-import { getGravatarUrl } from 'src/utilities/gravatar';
+import { usePagination } from 'src/hooks/usePagination';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
-import PaginationFooter from '../PaginationFooter/PaginationFooter';
+import { GravatarByEmail } from '../GravatarByEmail';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 export const MAX_SSH_KEYS_DISPLAY = 25;
 
@@ -82,7 +82,7 @@ const UserSSHKeyPanel = (props: Props) => {
   // For restricted users, we assume that they can only choose their own SSH keys,
   // so we use this query to get them so we can display their labels.
   // Notice how the query is only enabled when the user is restricted.
-  // Also notice this query is usually requires us to handle pagination, BUT,
+  // Also notice this query usually requires us to handle pagination, BUT,
   // because we truncate the results, we don't need all items.
   const {
     data: sshKeys,
@@ -139,10 +139,9 @@ const UserSSHKeyPanel = (props: Props) => {
           </TableCell>
           <TableCell className={classes.cellUser}>
             <div className={classes.userWrapper}>
-              <img
-                src={`${getGravatarUrl(profile.email)}?d=mp&s=24`}
+              <GravatarByEmail
+                email={profile.email}
                 className={classes.gravatar}
-                alt={profile.username}
               />
               {profile.username}
             </div>
@@ -172,11 +171,7 @@ const UserSSHKeyPanel = (props: Props) => {
         </TableCell>
         <TableCell className={classes.cellUser}>
           <div className={classes.userWrapper}>
-            <img
-              src={`${getGravatarUrl(user.email)}?d=mp&s=24`}
-              className={classes.gravatar}
-              alt={user.username}
-            />
+            <GravatarByEmail email={user.email} className={classes.gravatar} />
             {user.username}
           </div>
         </TableCell>

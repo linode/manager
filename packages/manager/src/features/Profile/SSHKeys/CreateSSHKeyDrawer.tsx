@@ -15,8 +15,12 @@ interface Props {
 }
 
 const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
-  const { mutateAsync, isLoading, error } = useCreateSSHKeyMutation();
   const { enqueueSnackbar } = useSnackbar();
+  const {
+    mutateAsync: createSSHKey,
+    isLoading,
+    error,
+  } = useCreateSSHKeyMutation();
 
   const formik = useFormik<{ label: string; ssh_key: string }>({
     initialValues: {
@@ -24,7 +28,7 @@ const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
       ssh_key: '',
     },
     async onSubmit(values) {
-      await mutateAsync(values);
+      await createSSHKey(values);
       enqueueSnackbar('Successfully created SSH key.', { variant: 'success' });
       formik.resetForm();
       onClose();

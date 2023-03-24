@@ -19,15 +19,12 @@ interface Props {
 
 const EditSSHKeyDrawer = ({ open, onClose, sshKey }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync, isLoading, error, reset } = useUpdateSSHKeyMutation(
-    sshKey?.id ?? -1
-  );
-
-  useEffect(() => {
-    if (open) {
-      reset();
-    }
-  }, [open]);
+  const {
+    mutateAsync: updateSSHKey,
+    isLoading,
+    error,
+    reset,
+  } = useUpdateSSHKeyMutation(sshKey?.id ?? -1);
 
   const formik = useFormik<{ label: string }>({
     initialValues: {
@@ -35,12 +32,19 @@ const EditSSHKeyDrawer = ({ open, onClose, sshKey }: Props) => {
     },
     enableReinitialize: true,
     async onSubmit(values) {
-      await mutateAsync(values);
+      await updateSSHKey(values);
       enqueueSnackbar('Successfully updated SSH key.', { variant: 'success' });
       formik.resetForm();
       onClose();
     },
   });
+
+  useEffect(() => {
+    if (open) {
+      reset();
+      formik.resetForm();
+    }
+  }, [open]);
 
   const hasErrorFor = getAPIErrorFor(
     {
