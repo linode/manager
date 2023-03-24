@@ -55,19 +55,19 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) =>
       e.entity
         ? `There has been a reply to your thread "${e.entity.label}".`
-        : `There has been a reply to your thread`,
+        : `There has been a reply to your thread.`,
   },
   community_like: {
     notification: (e) =>
       e.entity
         ? `A post on "${e.entity.label}" has been liked.`
-        : `There has been a like on your community post`,
+        : `There has been a like on your community post.`,
   },
   community_mention: {
     notification: (e) =>
       e.entity
-        ? `You have been mentioned in a Community post: ${e.entity.label}`
-        : `You have been mentioned in a Community post`,
+        ? `You have been mentioned in a Community post: ${e.entity.label}.`
+        : `You have been mentioned in a Community post.`,
   },
   credit_card_updated: {
     notification: (e) => `Credit card information has been updated.`,
