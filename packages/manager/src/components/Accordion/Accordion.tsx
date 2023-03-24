@@ -73,7 +73,7 @@ export const Accordion = (props: Props) => {
     <_Accordion
       defaultExpanded={defaultExpanded}
       {...accordionProps}
-      data-qa-panel
+      data-qa-panel={heading}
     >
       <AccordionSummary
         onClick={handleClick}
