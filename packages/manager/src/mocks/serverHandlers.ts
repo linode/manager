@@ -317,8 +317,8 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
-    const cloudinitCompatableImages = imageFactory.buildList(5, {
-      id: 'metadata-test',
+    const cloudinitCompatableImage = imageFactory.build({
+      label: 'metadata-test',
       status: 'available',
       type: 'manual',
       capabilities: ['cloud-init'],
@@ -337,7 +337,7 @@ export const handlers = [
     });
     const publicImages = imageFactory.buildList(0, { is_public: true });
     const images = [
-      ...cloudinitCompatableImages,
+      cloudinitCompatableImage,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
