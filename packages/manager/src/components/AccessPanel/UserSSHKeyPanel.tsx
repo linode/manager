@@ -40,6 +40,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(0.5),
   },
   gravatar: {
+    width: 24,
+    height: 24,
     borderRadius: '50%',
     marginRight: theme.spacing(1),
   },
