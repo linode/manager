@@ -37,7 +37,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   drawerHeader: {
-    marginBottom: theme.spacing(2),
+    '&&': {
+      marginBottom: theme.spacing(2),
+    },
   },
   title: {
     wordBreak: 'break-word',
