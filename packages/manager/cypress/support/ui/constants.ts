@@ -15,7 +15,9 @@ export const routes = {
   createLinodeOCA: '/linodes/create?type=One-Click',
   support: '/support',
   account: '/account',
-  supportTickets: '/support/tickets?type=open',
+  supportTickets: '/support/tickets',
+  supportTicketsOpen: '/support/tickets?type=open',
+  supportTicketsClosed: '/support/tickets?type=closed',
   profile: '/profile',
 };
 /**
@@ -211,13 +213,13 @@ export const pages = [
   },
   {
     name: 'Support/tickets/open',
-    url: `${routes.supportTickets}`,
+    url: `${routes.supportTicketsOpen}`,
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
     goWithUI: [
       {
         name: 'Tab',
         go: () => {
-          loadAppNoLogin(routes.supportTickets);
+          loadAppNoLogin(routes.supportTicketsOpen);
           cy.findByText('Open Tickets').click();
         },
       },
@@ -225,14 +227,13 @@ export const pages = [
   },
   {
     name: 'Support/tickets/closed',
-
-    url: `${routes.supportTickets}`,
+    url: `${routes.supportTicketsClosed}`,
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
     goWithUI: [
       {
         name: 'Tab',
         go: () => {
-          loadAppNoLogin(routes.supportTickets);
+          loadAppNoLogin(routes.supportTicketsClosed);
           cy.findByText('Closed Tickets').click();
         },
       },
