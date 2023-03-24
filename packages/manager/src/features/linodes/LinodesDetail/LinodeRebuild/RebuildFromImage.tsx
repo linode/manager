@@ -1,5 +1,11 @@
-import { rebuildLinode, RebuildRequest } from '@linode/api-v4/lib/linodes';
+import {
+  rebuildLinode,
+  RebuildRequest,
+  UserData,
+} from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
@@ -7,12 +13,15 @@ import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import CheckBox from 'src/components/CheckBox';
+import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
+import UserDataAccordion from 'src/features/linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
+import useFlags from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -22,6 +31,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
+import { StyledNotice } from './RebuildFromImage.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -51,12 +61,16 @@ interface RebuildFromImageForm {
   image: string;
   root_pass: string;
   authorized_users: string[];
+  metadata?: UserData;
 }
 
 const initialValues: RebuildFromImageForm = {
   image: '',
   root_pass: '',
   authorized_users: [],
+  metadata: {
+    user_data: '',
+  },
 };
 
 export const RebuildFromImage = (props: Props) => {
@@ -73,12 +87,32 @@ export const RebuildFromImage = (props: Props) => {
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const flags = useFlags();
+
+  const { data: _imagesData, error: imagesError } = useAllImagesQuery();
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
 
-  const { data: _imagesData, error: imagesError } = useAllImagesQuery();
+  const [userData, setUserData] = React.useState<string | undefined>('');
+  const [shouldReuseUserData, setShouldReuseUserData] = React.useState<boolean>(
+    false
+  );
+
+  const handleUserDataChange = (userData: string) => {
+    setUserData(userData);
+  };
+
+  const handleShouldReuseUserDataChange = () => {
+    setShouldReuseUserData((shouldReuseUserData) => !shouldReuseUserData);
+  };
+
+  React.useEffect(() => {
+    if (shouldReuseUserData) {
+      setUserData('');
+    }
+  }, [shouldReuseUserData]);
 
   const submitButtonDisabled =
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
@@ -96,7 +130,25 @@ export const RebuildFromImage = (props: Props) => {
       image,
       root_pass,
       authorized_users,
+      metadata: {
+        user_data: userData
+          ? window.btoa(userData)
+          : !userData && !shouldReuseUserData
+          ? null
+          : '',
+      },
     };
+
+    /*
+      User Data logic:
+      1) if user data has been provided, encode it and include it in the payload
+      2) if user data has not been provided and the Reuse User Data checkbox is
+        not checked, send null in the payload
+      3) if the Reuse User Data checkbox is checked, remove the Metadata property from the payload.
+    */
+    if (shouldReuseUserData) {
+      delete params['metadata'];
+    }
 
     // @todo: eventually this should be a dispatched action instead of a services library call
     rebuildLinode(linodeId, params)
@@ -160,6 +212,15 @@ export const RebuildFromImage = (props: Props) => {
           handleRebuildError(status.generalError);
         }
 
+        const shouldDisplayUserDataAccordion =
+          flags.metadata &&
+          Boolean(
+            values.image &&
+              _imagesData
+                ?.find((image) => image.id === values.image)
+                ?.capabilities?.includes('cloud-init')
+          );
+
         return (
           <Grid item className={classes.root}>
             <form>
@@ -195,6 +256,32 @@ export const RebuildFromImage = (props: Props) => {
                 disabled={disabled}
                 passwordHelperText={passwordHelperText}
               />
+              {shouldDisplayUserDataAccordion ? (
+                <>
+                  <Divider spacingTop={40} />
+                  <UserDataAccordion
+                    userData={userData}
+                    onChange={handleUserDataChange}
+                    disabled={shouldReuseUserData}
+                    renderNotice={
+                      <StyledNotice
+                        success
+                        text="Adding new user data is recommended as part of the rebuild process."
+                      />
+                    }
+                    renderCheckbox={
+                      <Box>
+                        <CheckBox
+                          checked={shouldReuseUserData}
+                          onChange={handleShouldReuseUserDataChange}
+                          text="Reuse user data previously provided for this Linode."
+                          sxFormLabel={{ paddingLeft: '2px' }}
+                        />
+                      </Box>
+                    }
+                  />
+                </>
+              ) : null}
               <ActionsPanel className={classes.actionPanel}>
                 <TypeToConfirm
                   confirmationText={
