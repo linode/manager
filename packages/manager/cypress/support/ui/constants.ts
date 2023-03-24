@@ -15,7 +15,7 @@ export const routes = {
   createLinodeOCA: '/linodes/create?type=One-Click',
   support: '/support',
   account: '/account',
-  supportTickets: '/support/tickets',
+  supportTickets: '/support/tickets?type=open',
   profile: '/profile',
 };
 /**
