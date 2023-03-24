@@ -2,7 +2,6 @@ import { registerSelectors } from 'reselect-tools';
 
 import entityErrors from './entitiesErrors';
 import entitiesLoading from './entitiesLoading';
-import getAbuseTicket from './getAbuseTicket';
 import getEntitiesWithGroupsToImport from './getEntitiesWithGroupsToImport';
 import getSearchEntities from './getSearchEntities';
 import inProgressEventForLinode from './inProgressEventForLinode';
@@ -17,7 +16,6 @@ export const initReselectDevtools = () => {
   registerSelectors({
     entityErrors,
     entitiesLoading,
-    getAbuseTicket,
     getEntitiesWithGroupsToImport,
     getSearchEntities,
     inProgressEventForLinode,

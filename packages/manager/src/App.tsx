@@ -1,7 +1,6 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr } from 'ramda';
@@ -16,17 +15,14 @@ import {
 } from 'src/components/DocumentTitle';
 import 'highlight.js/styles/a11y-light.css';
 import 'highlight.js/styles/a11y-dark.css';
-
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
-
 import composeState from 'src/utilities/composeState';
 import { MapState } from './store/types';
-
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
 import GoTo from './GoTo';
@@ -211,13 +207,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { hasError } = this.state;
-    const {
-      linodesError,
-      notificationsError,
-      volumesError,
-      bucketsError,
-      nodeBalancersError,
-    } = this.props;
+    const { linodesError, nodeBalancersError } = this.props;
 
     if (hasError) {
       return <TheApplicationIsOnFire />;
@@ -228,15 +218,7 @@ export class App extends React.Component<CombinedProps, State> {
      * error from the API, just render nothing because the user is
      * about to get shot off to login
      */
-    if (
-      hasOauthError(
-        linodesError,
-        notificationsError,
-        volumesError,
-        bucketsError,
-        nodeBalancersError
-      )
-    ) {
+    if (hasOauthError(linodesError, nodeBalancersError)) {
       return null;
     }
 
@@ -272,17 +254,12 @@ export class App extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   linodes: Linode[];
-  types?: string[];
-  regions?: Region[];
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   linodesLoading: boolean;
   linodesError?: APIError[];
-  volumesError?: APIError[];
   nodeBalancersError?: APIError[];
   bucketsError?: APIError[];
-  notificationsError?: APIError[];
-  regionsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
   featureFlagsLoading: boolean;
@@ -291,7 +268,6 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
-  notificationsError: state.__resources.notifications.error,
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
