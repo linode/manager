@@ -42,16 +42,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       fontSize: '0.95em',
     },
   },
-  // errorIcon: {
-  //   marginRight: -20,
-  //   '&:hover': {
-  //     opacity: 0.7,
-  //   },
-  //   '& svg': {
-  //     height: 28,
-  //     width: 28,
-  //   },
-  // },
 }));
 
 const sxBox = {
@@ -60,13 +50,13 @@ const sxBox = {
 };
 
 const sxHelpIcon = {
-  marginRight: -20,
+  marginRight: '-20px',
   '&:hover': {
     opacity: 0.7,
   },
   '& svg': {
-    height: 28,
-    width: 28,
+    height: '28px',
+    width: '28px',
   },
 };
 
@@ -93,12 +83,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
 
   const renderError = (errorMsg: string) => {
     return (
-      <HelpIcon
-        // className={classes.errorIcon}
-        noticeIconStatus={'error'}
-        text={errorMsg}
-        sxHelpIcon={sxHelpIcon}
-      />
+      <HelpIcon noticeIconStatus={'error'} text={errorMsg} sx={sxHelpIcon} />
     );
   };
 
