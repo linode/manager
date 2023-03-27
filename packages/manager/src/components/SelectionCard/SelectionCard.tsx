@@ -1,74 +1,88 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Tooltip from 'src/components/core/Tooltip';
-import Grid from 'src/components/Grid';
 import CardBase from './CardBase';
+import Grid from '@mui/material/Unstable_Grid2';
+import Tooltip from 'src/components/core/Tooltip';
+import { styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    minWidth: 200,
-    padding: theme.spacing(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: 'flex',
-    outline: 0,
-    '&.checked .cardBaseGrid': {
+export interface Props {
+  checked?: boolean;
+  className?: string;
+  disabled?: boolean;
+  heading: string;
+  headingDecoration?: JSX.Element;
+  id?: string;
+  onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
+  renderIcon?: () => JSX.Element;
+  renderVariant?: () => JSX.Element | null;
+  subheadings: (string | undefined)[];
+  sx?: SxProps;
+  sxCardBase?: SxProps;
+  sxCardBaseHeading?: SxProps;
+  sxCardBaseIcon?: SxProps;
+  sxCardBaseSubheading?: SxProps;
+  sxGrid?: SxProps;
+  sxTooltip?: SxProps;
+  tooltip?: string;
+}
+
+const StyledGrid = styled(Grid, {
+  label: 'SelectionCardGrid',
+})<Partial<Props>>(({ theme, ...props }) => ({
+  minWidth: 200,
+  padding: theme.spacing(2),
+  justifyContent: 'center',
+  alignItems: 'center',
+  display: 'flex',
+  outline: 0,
+  '&:focus': {
+    outline: '1px dotted #999',
+  },
+  '& [class^="fl-"]': {
+    transition: 'color 225ms ease-in-out',
+  },
+  ...(props.onClick &&
+    !props.disabled && {
+      cursor: 'pointer',
+    }),
+  ...(props.disabled && {
+    cursor: 'not-allowed',
+    '& > div': {
+      opacity: 0.4,
+    },
+  }),
+}));
+
+const SelectionCardBase = styled(CardBase)<Partial<Props>>(
+  ({ theme, ...props }) => ({
+    ...(props.checked && {
       backgroundColor: theme.bg.lightBlue2,
       borderColor: theme.palette.primary.main,
       '& span': {
         color: theme.palette.primary.main,
       },
-    },
-    '&:focus .cardBaseGrid': {
-      outline: '1px dotted #999',
-    },
-    '& [class^="fl-"]': {
-      transition: 'color 225ms ease-in-out',
-    },
-  },
-  showCursor: {
-    cursor: 'pointer',
-  },
-  disabled: {
-    cursor: 'not-allowed',
-    '& > div': {
-      opacity: 0.4,
-    },
-  },
-}));
+    }),
+  })
+);
 
-export interface Props {
-  id?: string;
-  heading: string;
-  subheadings: (string | undefined)[];
-  checked?: boolean;
-  disabled?: boolean;
-  tooltip?: string;
-  className?: string;
-  onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
-  renderIcon?: () => JSX.Element;
-  renderVariant?: () => JSX.Element | null;
-  headingDecoration?: JSX.Element;
-}
-
-const SelectionCard: React.FC<Props> = (props) => {
+const SelectionCard = (props: Props) => {
   const {
-    id,
-    heading,
-    subheadings,
-    checked,
-    disabled,
-    tooltip,
     className,
+    disabled,
+    heading,
+    headingDecoration,
+    id,
     onClick,
     renderIcon,
     renderVariant,
-    headingDecoration,
+    subheadings,
+    sxCardBase,
+    sxCardBaseHeading,
+    sxCardBaseIcon,
+    sxCardBaseSubheading,
+    sxGrid,
+    tooltip,
   } = props;
-
-  const classes = useStyles();
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
     if (onClick && !disabled) {
@@ -84,39 +98,36 @@ const SelectionCard: React.FC<Props> = (props) => {
   };
 
   const content = (
-    <CardBase
+    <SelectionCardBase
       renderIcon={renderIcon}
       heading={heading}
       subheadings={subheadings}
       renderVariant={renderVariant}
       headingDecoration={headingDecoration}
+      sx={sxCardBase}
+      sxHeading={sxCardBaseHeading}
+      sxIcon={sxCardBaseIcon}
+      sxSubheading={sxCardBaseSubheading}
     />
   );
 
   const cardGrid = (
-    <Grid
+    <StyledGrid
+      className={className}
+      data-qa-selection-card
+      disabled={disabled}
       id={id}
-      item
+      onClick={handleClick}
+      onKeyPress={handleKeyPress}
+      sx={sxGrid}
+      tabIndex={0}
       xs={12}
       sm={6}
       lg={4}
       xl={3}
-      tabIndex={0}
-      className={classNames(
-        {
-          [classes.root]: true,
-          checked,
-          [classes.disabled]: disabled,
-          [classes.showCursor]: onClick && !disabled,
-        },
-        className
-      )}
-      onClick={handleClick}
-      onKeyPress={handleKeyPress}
-      data-qa-selection-card
     >
       {content}
-    </Grid>
+    </StyledGrid>
   );
 
   if (tooltip) {
