@@ -9,7 +9,6 @@ import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import paginate, { PaginationProps } from 'src/components/Pagey';
@@ -255,8 +254,6 @@ const updateResponseData = (keys: SSHKey[]) =>
     created: parseAPIDate(key.created).toRelative(),
   }));
 
-const documented = setDocs(SSHKeys.docs);
-
 const updatedRequest = (ownProps: any, params: Params, filters: Filter) =>
   getSSHKeys(params, filters).then((response) => ({
     ...response,
@@ -267,6 +264,6 @@ const styled = withStyles(styles);
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose<CombinedProps, {}>(paginated, documented, styled);
+const enhanced = compose<CombinedProps, {}>(paginated, styled);
 
 export default enhanced(SSHKeys);

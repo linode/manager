@@ -19,7 +19,6 @@ import Chip from 'src/components/core/Chip';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -415,8 +414,4 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 }
 const styled = withStyles(styles);
 
-export default compose<any, any, any, any>(
-  setDocs(SupportTicketDetail.docs),
-  withProfile,
-  styled
-)(SupportTicketDetail);
+export default compose(withProfile, styled)(SupportTicketDetail);

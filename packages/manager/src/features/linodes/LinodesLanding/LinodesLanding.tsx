@@ -9,7 +9,6 @@ import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import CSVLink from 'src/components/DownloadCSV';
 import ErrorState from 'src/components/ErrorState';
@@ -20,7 +19,6 @@ import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
-import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import { DialogType } from 'src/features/linodes/types';
 import { ApplicationState } from 'src/store';
@@ -86,7 +84,6 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   StyleProps &
-  SetDocsProps &
   WithSnackbarProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
@@ -100,8 +97,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     linodeResizeOpen: false,
     linodeMigrateOpen: false,
   };
-
-  static docs = [LinodeGettingStarted, SecuringYourServer];
 
   /**
    * when you change the linode view, instantly update the query params
@@ -545,7 +540,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const enhanced = compose<CombinedProps, Props>(
   withRouter,
-  setDocs(ListLinodes.docs),
   withSnackbar,
   connected,
   styled,

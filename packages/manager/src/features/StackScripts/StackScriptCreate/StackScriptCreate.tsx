@@ -17,7 +17,6 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
@@ -25,7 +24,6 @@ import Notice from 'src/components/Notice';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
-import { StackScripts } from 'src/documentation';
 import {
   getGrants,
   hasGrant,
@@ -76,7 +74,6 @@ interface Props {
 type CombinedProps = Props &
   ImagesProps &
   ProfileProps &
-  SetDocsProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{ stackScriptID: string }>;
 
@@ -99,8 +96,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     isLoadingStackScript: false,
     updated: '',
   };
-
-  static docs = [StackScripts];
 
   mounted: boolean = false;
 
@@ -555,7 +550,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  setDocs(StackScriptCreate.docs),
   withImages,
   styled,
   withRouter,

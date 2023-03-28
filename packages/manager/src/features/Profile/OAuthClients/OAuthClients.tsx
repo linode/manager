@@ -15,7 +15,6 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import paginate, { PaginationProps } from 'src/components/Pagey';
@@ -27,7 +26,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import { LinodeAPI } from 'src/documentation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import Modals from './Modals';
@@ -73,7 +71,7 @@ interface State {
   drawerLoading: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & SetDocsProps;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class OAuthClients extends React.Component<CombinedProps, State> {
   defaultState: State = {
@@ -102,8 +100,6 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   static defaultProps = {
     data: [],
   };
-
-  static docs = [LinodeAPI];
 
   openSecretModal = (id: string, label: string) =>
     this.setState({
@@ -461,10 +457,6 @@ const updatedRequest = (ownProps: any, params: Params, filters: Filter) =>
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  paginated,
-  setDocs(OAuthClients.docs)
-);
+const enhanced = compose<CombinedProps, {}>(styled, paginated);
 
 export default enhanced(OAuthClients);

@@ -19,7 +19,6 @@ import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsLink from 'src/components/DocsLink';
-import DocsSidebar from 'src/components/DocsSidebar';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -803,12 +802,7 @@ export class LinodeCreate extends React.PureComponent<
             data-qa-checkout-bar
             heading={`Summary ${this.props.label}`}
             displaySections={displaySections}
-          >
-            {this.props.createType === 'fromApp' &&
-            this.props.documentation.length > 0 ? (
-              <DocsSidebar docs={this.props.documentation} />
-            ) : null}
-          </CheckoutSummary>
+          />
           <Box
             display="flex"
             justifyContent={showAgreement ? 'space-between' : 'flex-end'}

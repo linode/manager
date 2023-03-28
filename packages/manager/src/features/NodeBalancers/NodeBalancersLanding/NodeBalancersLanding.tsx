@@ -10,7 +10,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EntityTable, {
   EntityTableRow,
@@ -23,10 +22,6 @@ import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TransferDisplay from 'src/components/TransferDisplay';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
-import {
-  NodeBalancerGettingStarted,
-  NodeBalancerReference,
-} from 'src/documentation';
 import { ApplicationState } from 'src/store';
 import {
   withNodeBalancerActions,
@@ -53,8 +48,7 @@ interface State {
 
 type CombinedProps = WithNodeBalancerActions &
   WithNodeBalancers &
-  RouteComponentProps<{}> &
-  SetDocsProps;
+  RouteComponentProps<{}>;
 
 export const headers: HeaderCell[] = [
   {
@@ -140,8 +134,6 @@ export class NodeBalancersLanding extends React.Component<
   componentWillUnmount() {
     clearInterval(this.pollInterval);
   }
-
-  static docs = [NodeBalancerGettingStarted, NodeBalancerReference];
 
   toggleDialog = (nodeBalancerId: number, label: string) => {
     this.setState({
@@ -343,8 +335,7 @@ export const enhanced = compose<CombinedProps, {}>(
   }),
   withRouter,
   withNodeBalancerActions,
-  SectionErrorBoundary,
-  setDocs(NodeBalancersLanding.docs)
+  SectionErrorBoundary
 );
 
 export default enhanced(NodeBalancersLanding);

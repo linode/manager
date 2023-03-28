@@ -1,14 +1,10 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
@@ -31,9 +27,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
-
-export const BillingDetail = (props: CombinedProps) => {
+export const BillingDetail = () => {
   const {
     data: paymentMethods,
     isLoading: paymentMethodsLoading,
@@ -90,7 +84,6 @@ export const BillingDetail = (props: CombinedProps) => {
                 email={account.email}
                 phone={account.phone}
                 taxId={account.tax_id}
-                history={props.history}
               />
               <PaymentInformation
                 loading={paymentMethodsLoading}
@@ -107,6 +100,4 @@ export const BillingDetail = (props: CombinedProps) => {
   );
 };
 
-const docs = [BillingAndPayments, AccountsAndPasswords];
-
-export default compose<CombinedProps, {}>(setDocs(docs))(BillingDetail);
+export default BillingDetail;
