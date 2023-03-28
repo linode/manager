@@ -13,7 +13,7 @@ import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
-import getEventsActionLink from 'src/utilities/getEventsActionLink';
+import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import { GravatarByUsername } from '../../components/GravatarByUsername';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -42,7 +42,7 @@ type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
   const { event, entityId } = props;
-  const link = getEventsActionLink(event.action, event.entity, event._deleted);
+  const link = getLinkForEvent(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
