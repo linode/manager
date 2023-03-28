@@ -1,4 +1,5 @@
 import { useHistory, useLocation } from 'react-router-dom';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 export interface PaginationProps {
@@ -34,12 +35,14 @@ export const usePagination = (
   const searchParamPage = searchParams.get(pageKey);
   const searchParamPageSize = searchParams.get(pageSizeKey);
 
+  const preferedPageSize = preferenceKey
+    ? preferences?.pageSizes?.[preferenceKey] ?? MIN_PAGE_SIZE
+    : MIN_PAGE_SIZE;
+
   const page = searchParamPage ? Number(searchParamPage) : initialPage;
   const pageSize = searchParamPageSize
     ? Number(searchParamPageSize)
-    : preferenceKey
-    ? preferences?.pageSizes?.[preferenceKey] ?? 25
-    : 25;
+    : preferedPageSize;
 
   const setPage = (p: number) => {
     searchParams.set(pageKey, String(p));

@@ -27,7 +27,8 @@ const SupportTicketsLanding = () => {
     stateParams ? stateParams.open : parsedParams.drawerOpen === 'true'
   );
 
-  // why do we stores these in state?
+  // @todo this should be handled in the support ticket component
+  // and probably does not need to use state
   const [prefilledDescription] = React.useState(
     stateParams ? stateParams.description : undefined
   );
