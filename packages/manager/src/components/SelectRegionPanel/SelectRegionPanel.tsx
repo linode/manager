@@ -1,11 +1,13 @@
 import { Region } from '@linode/api-v4/lib/regions';
+import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
 
@@ -31,6 +33,7 @@ interface Props {
   selectedID?: string;
   disabled?: boolean;
   helperText?: string;
+  warningNoticeText?: string;
 }
 
 export const regionHelperText = (onClick?: () => void) => (
@@ -60,6 +63,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
     helperText,
     regions,
     selectedID,
+    warningNoticeText,
   } = props;
 
   if (props.regions.length === 0) {
@@ -72,6 +76,11 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
         Region
       </Typography>
       {regionHelperText(() => sendLinodeCreateDocsEvent('Speedtest Link'))}
+      {warningNoticeText ? (
+        <Box marginTop="16px">
+          <Notice warning text={warningNoticeText} />
+        </Box>
+      ) : null}
       <RegionSelect
         errorText={error}
         disabled={disabled}

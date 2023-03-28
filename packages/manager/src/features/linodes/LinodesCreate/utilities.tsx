@@ -104,3 +104,6 @@ export const getMonthlyAndHourlyNodePricing = (
     hourlyPrice: Math.round(hourlyPrice * numberOfNodes * 1000) / 1000,
   };
 };
+
+export const CROSS_DATA_CENTER_CLONE_WARNING =
+  'Cloning across Data Centers may cause long periods of down time.';
