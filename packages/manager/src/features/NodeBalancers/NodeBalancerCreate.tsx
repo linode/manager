@@ -29,9 +29,11 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import withRegions from 'src/containers/regions.container';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions,
@@ -53,13 +55,17 @@ import {
   NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest,
 } from './utils';
-import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import { simpleMutationHandlers } from 'src/queries/base';
 import {
   queryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import LandingHeader from 'src/components/LandingHeader';
 import { Region } from '@linode/api-v4/lib/regions';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -82,11 +88,12 @@ const styles = (theme: Theme) =>
   });
 
 type CombinedProps = WithNodeBalancerActions &
-  ProfileProps &
+  WithProfileProps &
   WithRegions &
   RouteComponentProps<{}> &
   WithStyles<ClassNames> &
-  AgreementsProps;
+  AgreementsProps &
+  WithQueryClientProps;
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -138,7 +145,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   disabled =
     Boolean(this.props.profile.data?.restricted) &&
-    !hasGrant('add_nodebalancers', this.props.grants.data);
+    !this.props.grants.data?.global.add_nodebalancers;
 
   addNodeBalancer = () => {
     if (this.disabled) {
@@ -330,12 +337,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           `${nodeBalancer.label}: ${nodeBalancer.region}`
         );
         if (signedAgreement) {
-          queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
+          this.props.queryClient.executeMutation<
+            {},
+            APIError[],
+            Partial<Agreements>
+          >({
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
             mutationKey: queryKey,
             onError: reportAgreementSigningError,
-            ...simpleMutationHandlers(queryKey),
+            ...simpleMutationHandlers(queryKey, this.props.queryClient),
           });
         }
       })
@@ -858,5 +869,6 @@ export default recompose<CombinedProps, {}>(
   styled,
   withRouter,
   withProfile,
-  withAgreements
+  withAgreements,
+  withQueryClient
 )(NodeBalancerCreate);

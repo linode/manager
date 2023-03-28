@@ -101,21 +101,30 @@ export class App extends React.Component<CombinedProps, State> {
      * Send any Database events to the Database events handler in the queries file
      */
     events$
-      .filter((event) => event.action.startsWith('database') && !event._initial)
+      .filter(
+        ({ event }) => event.action.startsWith('database') && !event._initial
+      )
       .subscribe(databaseEventsHandler);
 
     /*
      * Send any Domain events to the Domain events handler in the queries file
      */
     events$
-      .filter((event) => event.action.startsWith('domain') && !event._initial)
+      .filter(
+        ({ event }) =>
+          event.action.startsWith('domain') &&
+          !event._initial &&
+          event.entity !== null
+      )
       .subscribe(domainEventsHandler);
 
     /*
      * Send any Volume events to the Volume events handler in the queries file
      */
     events$
-      .filter((event) => event.action.startsWith('volume') && !event._initial)
+      .filter(
+        ({ event }) => event.action.startsWith('volume') && !event._initial
+      )
       .subscribe(volumeEventsHandler);
 
     /*
@@ -123,7 +132,7 @@ export class App extends React.Component<CombinedProps, State> {
     */
     events$
       .filter(
-        (event) =>
+        ({ event }) =>
           (event.action.startsWith('image') ||
             event.action === 'disk_imagize') &&
           !event._initial
@@ -134,21 +143,30 @@ export class App extends React.Component<CombinedProps, State> {
       Send any Token events to the Token events handler in the queries file
      */
     events$
-      .filter((event) => event.action.startsWith('token') && !event._initial)
-      .subscribe(tokenEventHandler);
+      .filter(
+        ({ event }) => event.action.startsWith('token') && !event._initial
+      )
+      .subscribe(({ event, queryClient }) =>
+        tokenEventHandler(event, queryClient)
+      );
 
     /*
       Send any SSH Key events to the SSH Key events handler in the queries file
      */
     events$
       .filter(
-        (event) => event.action.startsWith('user_ssh_key') && !event._initial
+        ({ event }) =>
+          event.action.startsWith('user_ssh_key') && !event._initial
       )
       .subscribe(sshKeyEventHandler);
 
     events$
-      .filter((event) => event.action.startsWith('firewall') && !event._initial)
-      .subscribe(firewallEventsHandler);
+      .filter(
+        ({ event }) => event.action.startsWith('firewall') && !event._initial
+      )
+      .subscribe(({ event, queryClient }) =>
+        firewallEventsHandler(event, queryClient)
+      );
 
     /*
      * We want to listen for migration events side-wide
@@ -158,9 +176,10 @@ export class App extends React.Component<CombinedProps, State> {
      */
     this.eventsSub = events$
       .filter(
-        (event) => !event._initial && ['linode_migrate'].includes(event.action)
+        ({ event }) =>
+          !event._initial && ['linode_migrate'].includes(event.action)
       )
-      .subscribe((event) => {
+      .subscribe(({ event }) => {
         const { entity: migratedLinode } = event;
         if (event.action === 'linode_migrate' && event.status === 'finished') {
           this.props.enqueueSnackbar(

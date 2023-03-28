@@ -3,9 +3,12 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store from 'src/store';
+import { queryClientFactory } from 'src/queries/base';
+import { storeFactory } from 'src/store';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { NodeBalancersLanding } from './NodeBalancersLanding';
+
+const store = storeFactory(queryClientFactory());
 
 describe.skip('NodeBalancers', () => {
   const component = mount(

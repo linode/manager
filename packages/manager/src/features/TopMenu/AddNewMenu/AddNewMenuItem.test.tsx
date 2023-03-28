@@ -3,8 +3,12 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import AddNewMenuItem from './AddNewMenuItem';
 import { Provider } from 'react-redux';
-import store from 'src/store';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { queryClientFactory } from 'src/queries/base';
+import { storeFactory } from 'src/store';
+
+const queryClient = queryClientFactory();
+const store = storeFactory(queryClient);
 
 describe('AddNewMenuItem', () => {
   it('should render without error', () => {
@@ -17,7 +21,8 @@ describe('AddNewMenuItem', () => {
             ItemIcon={LinodeIcon}
           />
         </LinodeThemeWrapper>
-      </Provider>
+      </Provider>,
+      { customStore: store.getState(), queryClient }
     );
   });
 

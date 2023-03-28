@@ -29,7 +29,6 @@ import TextField from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -84,7 +83,7 @@ export const CreateDomain = () => {
   const { data: grants } = useGrants();
   const { mutateAsync: createDomain } = useCreateDomainMutation();
 
-  const disabled = profile?.restricted && !hasGrant('add_domains', grants);
+  const disabled = profile?.restricted && !grants?.global.add_domains;
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   // Errors for selecting Linode/NB for default records aren't part

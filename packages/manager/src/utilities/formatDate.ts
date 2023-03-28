@@ -2,7 +2,7 @@ import { DateTime, Duration } from 'luxon';
 import { reportException } from 'src/exceptionReporting';
 import { DATETIME_DISPLAY_FORMAT, ISO_DATE_FORMAT } from 'src/constants';
 import { parseAPIDate } from 'src/utilities/date';
-import getUserTimezone from 'src/utilities/getUserTimezone';
+import getUserTimezone from './getUserTimezone';
 
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
@@ -48,8 +48,7 @@ export const formatDate = (
   date: string | number,
   options: FormatDateOptions = {}
 ): string => {
-  // Get the timezone from React Query and use it as the timezone
-  const userTimezone = options.timezone ?? getUserTimezone();
+  const userTimezone = getUserTimezone(options.timezone);
   const time = parseAPIDate(date).setZone(userTimezone);
   // Default to including time in the output. Hide the time if options.displayTime === false
   const defaultFormat =

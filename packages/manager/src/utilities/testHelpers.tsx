@@ -7,13 +7,13 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
-import { DeepPartial } from 'redux';
+import { DeepPartial, Store } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { FlagSet } from 'src/featureFlags';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { queryClient } from 'src/queries/base';
-import store, { ApplicationState, defaultState } from 'src/store';
+import { queryClientFactory } from 'src/queries/base';
+import { storeFactory, ApplicationState, defaultState } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = jest.fn().mockImplementation((query) => {
@@ -46,7 +46,10 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore, queryClient: passedQueryClient } = options;
-  const storeToPass = customStore ? baseStore(customStore) : store;
+  const queryClient = passedQueryClient ?? queryClientFactory();
+  const storeToPass = customStore
+    ? baseStore(customStore)
+    : storeFactory(queryClient);
   return (
     <Provider store={storeToPass}>
       <QueryClientProvider client={passedQueryClient || queryClient}>
@@ -82,8 +85,14 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
  * @param param {object} contains children to render
  * @returns {JSX.Element} wrapped component with Redux available for use
  */
-export const wrapWithStore = ({ children }: { children: any }) => {
-  return <Provider store={store}>{children}</Provider>;
+export const wrapWithStore = (props: {
+  children: React.ReactNode;
+  queryClient?: QueryClient;
+  store?: Store<ApplicationState>;
+}) => {
+  const queryClient = props.queryClient ?? queryClientFactory();
+  const store = props.store ?? storeFactory(queryClient);
+  return <Provider store={store}>{props.children}</Provider>;
 };
 
 // When wrapping a TableRow component to test, we'll get an invalid DOM nesting

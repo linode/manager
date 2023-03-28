@@ -1,10 +1,14 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import {
   doesItemExistInPaginatedStore,
   getItemInPaginatedStore,
-  queryClient,
   updateInPaginatedStore,
 } from './base';
 import {
@@ -13,7 +17,6 @@ import {
   detachVolume,
   getVolumes,
   Volume,
-  Event,
   UpdateVolumeRequest,
   updateVolume,
   ResizeVolumePayload,
@@ -26,6 +29,7 @@ import {
   getLinodeVolumes,
 } from '@linode/api-v4';
 import { Filter, Params } from '@linode/api-v4/src/types';
+import { EventWithStore } from 'src/events';
 
 /**
  * For Volumes, we must maintain the following stores to keep our cache up to date.
@@ -85,70 +89,107 @@ export const useAllVolumesQuery = (
     }
   );
 
-export const useResizeVolumeMutation = () =>
-  useMutation<Volume, APIError[], { volumeId: number } & ResizeVolumePayload>(
-    ({ volumeId, ...data }) => resizeVolume(volumeId, data),
-    {
-      onSuccess(volume) {
-        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
-      },
-    }
-  );
+export const useResizeVolumeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Volume,
+    APIError[],
+    { volumeId: number } & ResizeVolumePayload
+  >(({ volumeId, ...data }) => resizeVolume(volumeId, data), {
+    onSuccess(volume) {
+      updateInPaginatedStore<Volume>(
+        `${queryKey}-list`,
+        volume.id,
+        volume,
+        queryClient
+      );
+    },
+  });
+};
 
-export const useCloneVolumeMutation = () =>
-  useMutation<Volume, APIError[], { volumeId: number } & CloneVolumePayload>(
-    ({ volumeId, ...data }) => cloneVolume(volumeId, data),
+export const useCloneVolumeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Volume,
+    APIError[],
+    { volumeId: number } & CloneVolumePayload
+  >(({ volumeId, ...data }) => cloneVolume(volumeId, data), {
+    onSuccess() {
+      queryClient.invalidateQueries(`${queryKey}-list`);
+    },
+  });
+};
+
+export const useDeleteVolumeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { id: number }>(
+    ({ id }) => deleteVolume(id),
     {
       onSuccess() {
         queryClient.invalidateQueries(`${queryKey}-list`);
       },
     }
   );
+};
 
-export const useDeleteVolumeMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(({ id }) => deleteVolume(id), {
+export const useCreateVolumeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Volume, APIError[], VolumeRequestPayload>(createVolume, {
     onSuccess() {
       queryClient.invalidateQueries(`${queryKey}-list`);
     },
   });
+};
 
-export const useCreateVolumeMutation = () =>
-  useMutation<Volume, APIError[], VolumeRequestPayload>(createVolume, {
-    onSuccess() {
-      queryClient.invalidateQueries(`${queryKey}-list`);
+export const useUpdateVolumeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Volume,
+    APIError[],
+    { volumeId: number } & UpdateVolumeRequest
+  >(({ volumeId, ...data }) => updateVolume(volumeId, data), {
+    onSuccess(volume) {
+      updateInPaginatedStore<Volume>(
+        `${queryKey}-list`,
+        volume.id,
+        volume,
+        queryClient
+      );
     },
   });
+};
 
-export const useUpdateVolumeMutation = () =>
-  useMutation<Volume, APIError[], { volumeId: number } & UpdateVolumeRequest>(
-    ({ volumeId, ...data }) => updateVolume(volumeId, data),
-    {
-      onSuccess(volume) {
-        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
-      },
-    }
-  );
-
-export const useAttachVolumeMutation = () =>
-  useMutation<Volume, APIError[], { volumeId: number } & AttachVolumePayload>(
-    ({ volumeId, ...data }) => attachVolume(volumeId, data),
-    {
-      onSuccess(volume) {
-        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
-        queryClient.invalidateQueries([
-          `${queryKey}-list`,
-          'linode',
-          volume.linode_id,
-        ]);
-      },
-    }
-  );
+export const useAttachVolumeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Volume,
+    APIError[],
+    { volumeId: number } & AttachVolumePayload
+  >(({ volumeId, ...data }) => attachVolume(volumeId, data), {
+    onSuccess(volume) {
+      updateInPaginatedStore<Volume>(
+        `${queryKey}-list`,
+        volume.id,
+        volume,
+        queryClient
+      );
+      queryClient.invalidateQueries([
+        `${queryKey}-list`,
+        'linode',
+        volume.linode_id,
+      ]);
+    },
+  });
+};
 
 export const useDetachVolumeMutation = () =>
   useMutation<{}, APIError[], { id: number }>(({ id }) => detachVolume(id));
 
-export const volumeEventsHandler = (event: Event) => {
-  const { action, status, entity } = event;
+export const volumeEventsHandler = (event: EventWithStore) => {
+  const {
+    event: { action, status, entity },
+    queryClient,
+  } = event;
 
   // Keep the getAll query up to date so that when we have to use it, it contains accurate data
   queryClient.invalidateQueries(`${queryKey}-all`);
@@ -174,7 +215,8 @@ export const volumeEventsHandler = (event: Event) => {
         case 'finished':
           const volume = getItemInPaginatedStore<Volume>(
             `${queryKey}-list`,
-            entity!.id
+            entity!.id,
+            queryClient
           );
           if (volume && volume.linode_id === null) {
             queryClient.invalidateQueries(`${queryKey}-list`);
@@ -182,10 +224,15 @@ export const volumeEventsHandler = (event: Event) => {
           return;
         case 'failed':
           // This means a attach was unsuccessful. Remove associated Linode.
-          updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
-            linode_id: null,
-            linode_label: null,
-          });
+          updateInPaginatedStore<Volume>(
+            `${queryKey}-list`,
+            entity!.id,
+            {
+              linode_id: null,
+              linode_label: null,
+            },
+            queryClient
+          );
           return;
       }
     case 'volume_update':
@@ -200,12 +247,18 @@ export const volumeEventsHandler = (event: Event) => {
         case 'finished':
           const volume = getItemInPaginatedStore<Volume>(
             `${queryKey}-list`,
-            entity!.id
+            entity!.id,
+            queryClient
           );
-          updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
-            linode_id: null,
-            linode_label: null,
-          });
+          updateInPaginatedStore<Volume>(
+            `${queryKey}-list`,
+            entity!.id,
+            {
+              linode_id: null,
+              linode_label: null,
+            },
+            queryClient
+          );
           if (volume && volume.linode_id !== null) {
             queryClient.invalidateQueries([
               `${queryKey}-list`,
@@ -217,9 +270,14 @@ export const volumeEventsHandler = (event: Event) => {
       }
     case 'volume_resize':
       // This means a resize was successful. Transition from 'resizing' to 'active'.
-      updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
-        status: 'active',
-      });
+      updateInPaginatedStore<Volume>(
+        `${queryKey}-list`,
+        entity!.id,
+        {
+          status: 'active',
+        },
+        queryClient
+      );
       return;
     case 'volume_clone':
       // This is very hacky, but we have no way to know when a cloned volume should transition
@@ -230,7 +288,13 @@ export const volumeEventsHandler = (event: Event) => {
       }, 5000);
       return;
     case 'volume_delete':
-      if (doesItemExistInPaginatedStore(`${queryKey}-list`, entity!.id)) {
+      if (
+        doesItemExistInPaginatedStore(
+          `${queryKey}-list`,
+          entity!.id,
+          queryClient
+        )
+      ) {
         queryClient.invalidateQueries(`${queryKey}-list`);
       }
       return;

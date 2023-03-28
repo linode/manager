@@ -18,7 +18,7 @@ import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { getGrantData } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 import { isWithinDays } from 'src/utilities/date';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
@@ -95,8 +95,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     false
   );
 
-  const grantData = getGrantData();
-  const accountAccessGrant = grantData?.global?.account_access;
+  const { data: grants } = useGrants();
+  const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.

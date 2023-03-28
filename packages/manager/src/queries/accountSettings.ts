@@ -4,9 +4,14 @@ import {
   updateAccountSettings,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { useProfile } from 'src/queries/profile';
-import { queryClient, queryPresets } from './base';
+import { queryPresets } from './base';
 
 export const queryKey = 'account-settings';
 
@@ -21,19 +26,14 @@ export const useAccountSettings = () => {
 };
 
 export const useMutateAccountSettings = () => {
+  const queryClient = useQueryClient();
   return useMutation<AccountSettings, APIError[], Partial<AccountSettings>>(
     (data) => updateAccountSettings(data),
     {
-      onSuccess: updateAccountSettingsData,
+      onSuccess: (newData) => updateAccountSettingsData(newData, queryClient),
     }
   );
 };
-
-export const getIsManaged = () =>
-  Boolean(queryClient.getQueryData<AccountSettings>(queryKey)?.managed);
-
-export const getAccountBackupsEnabled = () =>
-  Boolean(queryClient.getQueryData<AccountSettings>(queryKey)?.backups_enabled);
 
 /**
  * updateAccountSettingsData is a function that we can use to directly update
@@ -43,7 +43,8 @@ export const getAccountBackupsEnabled = () =>
  * @param data {Partial<AccountSettings>} account settings to update
  */
 export const updateAccountSettingsData = (
-  newData: Partial<AccountSettings>
+  newData: Partial<AccountSettings>,
+  queryClient: QueryClient
 ): void => {
   queryClient.setQueryData(queryKey, (oldData: AccountSettings) => ({
     ...oldData,

@@ -26,9 +26,12 @@ import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { dbaasContext } from 'src/context';
-import { queryClient } from 'src/queries/base';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
 
 type CSSClasses =
   | 'wrapper'
@@ -139,14 +142,15 @@ type CombinedProps = WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
   StateProps &
-  FeatureFlagConsumerProps;
+  FeatureFlagConsumerProps &
+  WithQueryClientProps;
 
 const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps> {
   render() {
     const { classes, flags } = this.props;
-    const account = queryClient.getQueryData<Account>('account');
+    const account = this.props.queryClient.getQueryData<Account>('account');
 
     const showDatabases = isFeatureEnabled(
       'Managed Databases',
@@ -294,7 +298,8 @@ interface StateProps {
 const enhanced = compose<CombinedProps, {}>(
   withRouter,
   withFeatureFlags,
-  styled
+  styled,
+  withQueryClient
 )(AddNewMenu);
 
 export default enhanced;

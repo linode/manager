@@ -1,5 +1,6 @@
 import { curry } from 'ramda';
-import store from 'src/store';
+import { Store } from 'redux';
+import { ApplicationState } from 'src/store';
 
 export type EntityType = 'linode' | 'nodebalancer';
 
@@ -22,7 +23,8 @@ export type EntityType = 'linode' | 'nodebalancer';
  */
 const _getEntityByIDFromStore = (
   entityType: EntityType,
-  entityID: string | number
+  entityID: string | number,
+  store: Store<ApplicationState>
 ) => {
   if (!entityType || !entityID) {
     return;
