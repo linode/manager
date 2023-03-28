@@ -20,8 +20,14 @@ const CardBaseGrid = styled(Grid, {
   width: '100%',
 
   '&:hover': {
-    backgroundColor: theme.bg.main,
-    borderColor: theme.color.border2,
+    backgroundColor: props.checked ? theme.bg.lightBlue2 : theme.bg.main,
+    borderColor: props.checked
+      ? theme.palette.primary.main
+      : theme.color.border2,
+  },
+
+  '&:focus-visible': {
+    borderStyle: 'dashed',
   },
 
   '&:before': {

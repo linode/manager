@@ -53,19 +53,6 @@ const StyledGrid = styled(Grid, {
   }),
 }));
 
-// const SelectionCardBase = styled(CardBase)<Partial<Props>>(
-//   ({ theme, ...props }) => ({
-//     background: 'red  !important',
-//     ...(props.checked && {
-//       backgroundColor: theme.bg.lightBlue2,
-//       borderColor: theme.palette.primary.main,
-//       '& span': {
-//         color: theme.palette.primary.main,
-//       },
-//     }),
-//   })
-// );
-
 const SelectionCard = (props: Props) => {
   const {
     checked,
