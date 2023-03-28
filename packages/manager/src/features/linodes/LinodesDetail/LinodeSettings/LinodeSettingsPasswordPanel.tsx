@@ -64,7 +64,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     this.searchDisks();
   }
 
-  handleSubmit = async () => {
+  handleSubmit = () => {
     const { diskId, value } = this.state;
     const { linodeId, isBareMetalInstance } = this.props;
 
@@ -73,7 +73,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     }
 
     // Enforce password complexity/requirements
-    const passwordError = await validatePassword(value);
+    const passwordError = validatePassword(value);
     if (passwordError) {
       this.setState({
         ...this.state,
