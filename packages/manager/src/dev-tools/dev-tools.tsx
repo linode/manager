@@ -4,13 +4,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import FeatureFlagTool from './FeatureFlagTool';
 import EnvironmentToggleTool from './EnvironmentToggleTool';
-import store from 'src/store';
 import { Provider } from 'react-redux';
 import MockDataTool from './MockDataTool';
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import Grid from 'src/components/core/Grid';
+import { ApplicationState } from 'src/store';
+import { Store } from 'redux';
 
-function install() {
+function install(store: Store<ApplicationState>) {
   (window as any).devToolsEnabled = true;
 
   function DevTools() {

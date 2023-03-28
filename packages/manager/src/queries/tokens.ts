@@ -8,8 +8,13 @@ import {
 } from '@linode/api-v4/lib/profile';
 import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
 import { Event } from '@linode/api-v4';
-import { useMutation, useQuery } from 'react-query';
-import { queryClient, updateInPaginatedStore } from './base';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+import { updateInPaginatedStore } from './base';
 import { queryKey } from './profile';
 import {
   APIError,
@@ -38,6 +43,7 @@ export const usePersonalAccessTokensQuery = (
 };
 
 export const useCreatePersonalAccessTokenMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<Token, APIError[], TokenRequest>(
     createPersonalAccessToken,
     {
@@ -49,17 +55,24 @@ export const useCreatePersonalAccessTokenMutation = () => {
 };
 
 export const useUpdatePersonalAccessTokenMutation = (id: number) => {
+  const queryClient = useQueryClient();
   return useMutation<Token, APIError[], Partial<TokenRequest>>(
     (data) => updatePersonalAccessToken(id, data),
     {
       onSuccess: (token) => {
-        updateInPaginatedStore([queryKey, 'personal-access-tokens'], id, token);
+        updateInPaginatedStore(
+          [queryKey, 'personal-access-tokens'],
+          id,
+          token,
+          queryClient
+        );
       },
     }
   );
 };
 
 export const useRevokePersonalAccessTokenMutation = (id: number) => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deletePersonalAccessToken(id), {
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
@@ -73,6 +86,7 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
 };
 
 export const useRevokeAppAccessTokenMutation = (id: number) => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteAppToken(id), {
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
@@ -84,6 +98,6 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
   });
 };
 
-export function tokenEventHandler(event: Event) {
+export function tokenEventHandler(event: Event, queryClient: QueryClient) {
   queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
 }

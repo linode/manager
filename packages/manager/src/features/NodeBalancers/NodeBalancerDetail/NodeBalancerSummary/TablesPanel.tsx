@@ -83,7 +83,7 @@ const TablesPanel: React.FC<Props> = ({ nodeBalancer }) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const { data: profile } = useProfile();
-  const timezone = getUserTimezone(profile);
+  const timezone = getUserTimezone(profile?.timezone);
 
   const { data: stats, isLoading, error } = useNodeBalancerStats(
     nodeBalancer.id,

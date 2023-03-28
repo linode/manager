@@ -4,7 +4,12 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import {
   addFirewallDevice,
@@ -22,11 +27,7 @@ import {
   updateFirewall,
   updateFirewallRules,
 } from '@linode/api-v4/lib/firewalls';
-import {
-  queryClient,
-  itemInListCreationHandler,
-  updateInPaginatedStore,
-} from './base';
+import { itemInListCreationHandler, updateInPaginatedStore } from './base';
 import { Event } from '@linode/api-v4';
 
 export const queryKey = 'firewall';
@@ -37,17 +38,23 @@ export const useAllFirewallDevicesQuery = (id: number) =>
     () => getAllFirewallDevices(id)
   );
 
-export const useAddFirewallDeviceMutation = (id: number) =>
-  useMutation<FirewallDevice, APIError[], FirewallDevicePayload>(
+export const useAddFirewallDeviceMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<FirewallDevice, APIError[], FirewallDevicePayload>(
     (data) => addFirewallDevice(id, data),
-    itemInListCreationHandler([queryKey, 'firewall', id, 'devices'])
+    itemInListCreationHandler(
+      [queryKey, 'firewall', id, 'devices'],
+      queryClient
+    )
   );
+};
 
 export const useRemoveFirewallDeviceMutation = (
   firewallId: number,
   deviceId: number
-) =>
-  useMutation<{}, APIError[]>(
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(
     () => deleteFirewallDevice(firewallId, deviceId),
     {
       onSuccess() {
@@ -60,7 +67,7 @@ export const useRemoveFirewallDeviceMutation = (
       },
     }
   );
-
+};
 export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Firewall>, APIError[]>(
     [queryKey, 'paginated', params, filter],
@@ -84,6 +91,7 @@ export const useAllFirewallsQuery = (enabled: boolean = true) => {
 };
 
 export const useMutateFirewall = (id: number) => {
+  const queryClient = useQueryClient();
   return useMutation<Firewall, APIError[], Partial<Firewall>>(
     (data) => updateFirewall(id, data),
     {
@@ -96,6 +104,7 @@ export const useMutateFirewall = (id: number) => {
 };
 
 export const useCreateFirewall = () => {
+  const queryClient = useQueryClient();
   return useMutation<Firewall, APIError[], CreateFirewallPayload>(
     (data) => createFirewall(data),
     {
@@ -108,6 +117,7 @@ export const useCreateFirewall = () => {
 };
 
 export const useDeleteFirewall = (id: number) => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteFirewall(id), {
     onSuccess() {
       queryClient.removeQueries([queryKey, 'firewall', id]);
@@ -117,6 +127,7 @@ export const useDeleteFirewall = (id: number) => {
 };
 
 export const useUpdateFirewallRulesMutation = (firewallId: number) => {
+  const queryClient = useQueryClient();
   return useMutation<FirewallRules, APIError[], FirewallRules>(
     (data) => updateFirewallRules(firewallId, data),
     {
@@ -132,10 +143,15 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
           }
         );
         // update our paginated store with new rules
-        updateInPaginatedStore([queryKey, 'paginated'], firewallId, {
-          id: firewallId,
-          rules: updatedRules,
-        });
+        updateInPaginatedStore(
+          [queryKey, 'paginated'],
+          firewallId,
+          {
+            id: firewallId,
+            rules: updatedRules,
+          },
+          queryClient
+        );
       },
     }
   );
@@ -159,7 +175,10 @@ const getAllFirewallsRequest = () =>
     getFirewalls(passedParams, passedFilter)
   )().then((data) => data.data);
 
-export const firewallEventsHandler = (event: Event) => {
+export const firewallEventsHandler = (
+  event: Event,
+  queryClient: QueryClient
+) => {
   // We will over-fetch a little bit, bit this ensures Cloud firewalls are *always* up to date
   queryClient.invalidateQueries([queryKey]);
 };

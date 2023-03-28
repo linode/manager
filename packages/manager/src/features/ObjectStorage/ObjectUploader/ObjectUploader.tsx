@@ -22,6 +22,7 @@ import {
   ObjectUploaderAction,
   pathOrFileName,
 } from './reducer';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -119,6 +120,8 @@ const ObjectUploader: React.FC<Props> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
+  const queryClient = useQueryClient();
+
   const [state, dispatch] = React.useReducer(
     curriedObjectUploaderReducer,
     defaultState
@@ -177,7 +180,9 @@ const ObjectUploader: React.FC<Props> = (props) => {
   // If a user uploads many files at once, we don't want to refetch bucket stats for every object.
   // We debounce this request to prevent unnecessary fetches.
   const debouncedGetBucket = React.useRef(
-    debounce(3000, false, () => updateBucket(clusterId, bucketName))
+    debounce(3000, false, () =>
+      updateBucket(clusterId, bucketName, queryClient)
+    )
   ).current;
 
   // When `nextBatch` changes, upload the files.

@@ -15,9 +15,9 @@ import Link from 'src/components/Link';
 import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import PaymentMethods from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { queryKey } from 'src/queries/accountPayment';
-import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
+import { QueryClient, useQueryClient } from 'react-query';
 
 interface Props {
   loading: boolean;
@@ -42,6 +42,7 @@ const PaymentInformation = (props: Props) => {
 
   const { classes } = useStyles();
   const { replace } = useHistory();
+  const queryClient = useQueryClient();
 
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
@@ -53,7 +54,7 @@ const PaymentInformation = (props: Props) => {
       (paymetMethod: PaymentMethod) => paymetMethod.type === 'paypal'
     );
 
-  const doDelete = () => {
+  const doDelete = (queryClient: QueryClient) => {
     setDeleteLoading(true);
     deletePaymentMethod(deletePaymentMethodSelection!.id)
       .then(() => {
@@ -152,7 +153,7 @@ const PaymentInformation = (props: Props) => {
         <DeletePaymentMethodDialog
           open={deleteDialogOpen}
           onClose={closeDeleteDialog}
-          onDelete={doDelete}
+          onDelete={() => doDelete(queryClient)}
           paymentMethod={deletePaymentMethodSelection}
           loading={deleteLoading}
           error={deleteError}

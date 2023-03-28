@@ -207,7 +207,7 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   const { theme } = props;
   const classes = useStyles();
   const { data: profile } = useProfile();
-  const timezone = getUserTimezone(profile);
+  const timezone = getUserTimezone(profile?.timezone);
   const { data, isLoading, error } = useManagedStatsQuery();
 
   if (error) {

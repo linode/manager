@@ -6,6 +6,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import { QueryClient } from 'react-query';
 import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 
@@ -60,7 +61,7 @@ export const updateLinodeActions = actionCreator.async<
   APIError[]
 >(`update`);
 
-export type DeleteLinodeParams = LinodeID;
+export type DeleteLinodeParams = LinodeID & { queryClient: QueryClient };
 export const deleteLinodeActions = actionCreator.async<
   DeleteLinodeParams,
   {},

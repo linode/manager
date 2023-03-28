@@ -15,11 +15,16 @@ import {
   updateSSHKey,
 } from '@linode/api-v4/lib/profile';
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { Grants } from '../../../api-v4/lib';
-import { queryClient, queryPresets } from './base';
+import { queryPresets } from './base';
 import { queryKey as accountQueryKey } from './account';
-import { Event } from '@linode/api-v4';
+import { EventWithStore } from 'src/events';
 
 export const queryKey = 'profile';
 
@@ -30,13 +35,17 @@ export const useProfile = (givenProfile?: Profile) =>
   });
 
 export const useMutateProfile = () => {
+  const queryClient = useQueryClient();
   return useMutation<Profile, APIError[], Partial<Profile>>(
     (data) => updateProfile(data),
-    { onSuccess: updateProfileData }
+    { onSuccess: (newData) => updateProfileData(newData, queryClient) }
   );
 };
 
-export const updateProfileData = (newData: Partial<Profile>): void => {
+export const updateProfileData = (
+  newData: Partial<Profile>,
+  queryClient: QueryClient
+): void => {
   queryClient.setQueryData(queryKey, (oldData: Profile) => ({
     ...oldData,
     ...newData,
@@ -51,16 +60,19 @@ export const useGrants = () => {
   });
 };
 
-export const getProfileData = () => queryClient.getQueryData<Profile>(queryKey);
-export const getGrantData = () =>
+export const getProfileData = (queryClient: QueryClient) =>
+  queryClient.getQueryData<Profile>(queryKey);
+export const getGrantData = (queryClient: QueryClient) =>
   queryClient.getQueryData<Grants>([queryKey, 'grants']);
 
-export const useSMSOptOutMutation = () =>
-  useMutation<{}, APIError[]>(smsOptOut, {
+export const useSMSOptOutMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(smsOptOut, {
     onSuccess: () => {
-      updateProfileData({ verified_phone_number: null });
+      updateProfileData({ verified_phone_number: null }, queryClient);
     },
   });
+};
 
 export const useSendPhoneVerificationCodeMutation = () =>
   useMutation<{}, APIError[], SendPhoneVerificationCodePayload>(
@@ -86,8 +98,9 @@ export const useSSHKeysQuery = (
     }
   );
 
-export const useCreateSSHKeyMutation = () =>
-  useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>(
+export const useCreateSSHKeyMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>(
     createSSHKey,
     {
       onSuccess() {
@@ -97,9 +110,11 @@ export const useCreateSSHKeyMutation = () =>
       },
     }
   );
+};
 
-export const useUpdateSSHKeyMutation = (id: number) =>
-  useMutation<SSHKey, APIError[], { label: string }>(
+export const useUpdateSSHKeyMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<SSHKey, APIError[], { label: string }>(
     (data) => updateSSHKey(id, data),
     {
       onSuccess() {
@@ -109,21 +124,24 @@ export const useUpdateSSHKeyMutation = (id: number) =>
       },
     }
   );
+};
 
-export const useDeleteSSHKeyMutation = (id: number) =>
-  useMutation<{}, APIError[]>(() => deleteSSHKey(id), {
+export const useDeleteSSHKeyMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteSSHKey(id), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'ssh-keys']);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
       queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
   });
+};
 
-export const sshKeyEventHandler = (event: Event) => {
+export const sshKeyEventHandler = (event: EventWithStore) => {
   // This event handler is a bit agressive and will over-fetch, but UX will
   // be great because this will ensure Cloud has up to date data all the time.
 
-  queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+  event.queryClient.invalidateQueries([queryKey, 'ssh-keys']);
   // also invalidate the /account/users data because that endpoint returns some SSH key data
-  queryClient.invalidateQueries([accountQueryKey, 'users']);
+  event.queryClient.invalidateQueries([accountQueryKey, 'users']);
 };

@@ -1,6 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { concat } from 'ramda';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import Select, {
   Item,
   NoOptionsMessageProps,
@@ -44,6 +45,8 @@ const TagsInput: React.FC<Props> = (props) => {
     !profile?.restricted
   );
 
+  const queryClient = useQueryClient();
+
   const accountTagItems: Item[] =
     accountTags?.map((tag) => ({
       label: tag.label,
@@ -65,7 +68,7 @@ const TagsInput: React.FC<Props> = (props) => {
       setErrors([]);
       onChange(updatedSelectedTags);
       if (accountTags) {
-        updateTagsSuggestionsData([...accountTags, newTag]);
+        updateTagsSuggestionsData([...accountTags, newTag], queryClient);
       }
     }
   };

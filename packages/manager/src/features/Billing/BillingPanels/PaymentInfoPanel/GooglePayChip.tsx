@@ -9,6 +9,7 @@ import {
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -49,6 +50,7 @@ export const GooglePayChip = (props: Props) => {
   const { classes, cx } = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
+  const queryClient = useQueryClient();
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
   );
@@ -83,7 +85,8 @@ export const GooglePayChip = (props: Props) => {
         countryCode: 'US',
       },
       handleMessage,
-      setProcessing
+      setProcessing,
+      queryClient
     );
   };
 

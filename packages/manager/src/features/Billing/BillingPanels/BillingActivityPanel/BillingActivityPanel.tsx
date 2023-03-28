@@ -42,6 +42,7 @@ import { isAfter, parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -181,6 +182,7 @@ export interface Props {
 export const BillingActivityPanel = (props: Props) => {
   const { accountActiveSince } = props;
 
+  const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const isAkamaiCustomer = account?.billing_source === 'akamai';
 
@@ -355,6 +357,7 @@ export const BillingActivityPanel = (props: Props) => {
                 Account active since{' '}
                 {formatDate(accountActiveSince, {
                   displayTime: false,
+                  timezone: profile?.timezone,
                 })}
               </Typography>
             </div>

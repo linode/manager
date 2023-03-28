@@ -1,5 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { QueryClient, useQueryClient } from 'react-query';
 import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -10,13 +11,15 @@ interface Props {
   linodeLabel?: string;
   open: boolean;
   onClose: () => void;
-  handleDelete: (linodeID: number) => Promise<{}>;
+  handleDelete: (linodeID: number, queryClient: QueryClient) => Promise<{}>;
 }
 
 type CombinedProps = Props;
 
 const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
   const { linodeID, linodeLabel, open, onClose, handleDelete } = props;
+
+  const queryClient = useQueryClient();
 
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
@@ -38,7 +41,7 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
 
     setDeleting(true);
 
-    handleDelete(linodeID)
+    handleDelete(linodeID, queryClient)
       .then(() => {
         onClose();
       })

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useClientToken } from 'src/queries/accountPayment';
 import { makeStyles } from 'tss-react/mui';
 import CircleProgress from 'src/components/CircleProgress';
-import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
 import { useSnackbar } from 'notistack';
@@ -17,6 +16,7 @@ import {
   OnApproveBraintreeActions,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
+import { QueryClient, useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()(() => ({
   disabled: {
@@ -41,6 +41,7 @@ export const PayPalChip = (props: Props) => {
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     /**
@@ -97,16 +98,17 @@ export const PayPalChip = (props: Props) => {
 
   const onApprove = async (
     data: OnApproveBraintreeData,
-    actions: OnApproveBraintreeActions
+    actions: OnApproveBraintreeActions,
+    queryClient: QueryClient
   ) => {
     setProcessing(true);
 
     return actions.braintree
       .tokenizePayment(data)
-      .then((payload) => onNonce(payload.nonce));
+      .then((payload) => onNonce(payload.nonce, queryClient));
   };
 
-  const onNonce = (nonce: string) => {
+  const onNonce = (nonce: string, queryClient: QueryClient) => {
     addPaymentMethod({
       type: 'payment_method_nonce',
       data: { nonce },
@@ -168,7 +170,7 @@ export const PayPalChip = (props: Props) => {
         style={{ height: 25 }}
         fundingSource={FUNDING.PAYPAL}
         createBillingAgreement={createBillingAgreement}
-        onApprove={onApprove}
+        onApprove={(data, actions) => onApprove(data, actions, queryClient)}
         onError={onError}
       />
     </div>
