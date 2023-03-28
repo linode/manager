@@ -17,7 +17,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from 'src/components/IconButton';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
@@ -126,9 +126,9 @@ export const InvoiceDetail = (props: CombinedProps) => {
   return (
     <Paper className={classes.root}>
       <Grid container>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <Grid container justifyContent="space-between">
-            <Grid item className={classes.titleWrapper} style={{ flex: 1 }}>
+            <Grid className={classes.titleWrapper} style={{ flex: 1 }}>
               <Link to={`/account/billing`}>
                 <IconButton
                   className={classes.backButton}
@@ -144,11 +144,7 @@ export const InvoiceDetail = (props: CombinedProps) => {
                 </Typography>
               )}
             </Grid>
-            <Grid
-              item
-              className={classes.titleWrapper}
-              data-qa-printable-invoice
-            >
+            <Grid className={classes.titleWrapper} data-qa-printable-invoice>
               {account && invoice && items && (
                 <>
                   {/* Hidden CSVLink component controlled by a ref.
@@ -175,7 +171,7 @@ export const InvoiceDetail = (props: CombinedProps) => {
                 </>
               )}
             </Grid>
-            <Grid item className={`${classes.titleWrapper} ${classes.m2}`}>
+            <Grid className={`${classes.titleWrapper} ${classes.m2}`}>
               {invoice && (
                 <Typography variant="h2" data-qa-total={invoice.total}>
                   Total:{' '}
@@ -188,14 +184,14 @@ export const InvoiceDetail = (props: CombinedProps) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           {pdfGenerationError && <Notice error>Failed generating PDF.</Notice>}
           <InvoiceTable loading={loading} items={items} errors={errors} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           {invoice && (
             <Grid container justifyContent="flex-end">
-              <Grid item className={classes.totals}>
+              <Grid className={classes.totals}>
                 <Typography variant="h2">
                   Subtotal:{' '}
                   <Currency

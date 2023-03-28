@@ -29,7 +29,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import { PAYPAL_CLIENT_ENV } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
@@ -278,7 +278,7 @@ export const PayPalDisplay = (props: CombinedProps) => {
 
   return (
     <>
-      <Grid item xs={6} style={{ position: 'relative' }}>
+      <Grid xs={6} style={{ position: 'relative' }}>
         {!enabled && (
           <Tooltip
             title={'Payment amount must be between $5 and $10000'}

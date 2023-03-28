@@ -8,7 +8,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { withStyles } from 'tss-react/mui';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import withFeatureFlags, {
@@ -223,21 +223,17 @@ class _UpdateContactInformationForm extends React.Component<
         data-qa-update-contact
       >
         {generalError && (
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Notice error text={generalError} />
           </Grid>
         )}
         {success && (
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Notice success text={success} />
           </Grid>
         )}
 
-        <Grid
-          item
-          xs={12}
-          updateFor={[account.email, fields.email, errorMap.email, classes]}
-        >
+        <Grid xs={12} component="div">
           <TextField
             label="Email"
             errorText={errorMap.email}
@@ -251,17 +247,7 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[
-            account.first_name,
-            fields.first_name,
-            errorMap.first_name,
-            classes,
-          ]}
-        >
+        <Grid xs={12} sm={6}>
           <TextField
             label="First Name"
             errorText={errorMap.first_name}
@@ -271,17 +257,7 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[
-            account.last_name,
-            fields.last_name,
-            errorMap.last_name,
-            classes,
-          ]}
-        >
+        <Grid xs={12} sm={6}>
           <TextField
             label="Last Name"
             errorText={errorMap.last_name}
@@ -291,17 +267,8 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          updateFor={[
-            account.company,
-            fields.company,
-            errorMap.company,
-            classes,
-          ]}
-        >
-          <Grid item xs={12}>
+        <Grid xs={12}>
+          <Grid xs={12}>
             <TextField
               label="Company Name"
               errorText={errorMap.company}
@@ -312,16 +279,7 @@ class _UpdateContactInformationForm extends React.Component<
           </Grid>
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          updateFor={[
-            account.address_1,
-            fields.address_1,
-            errorMap.address_1,
-            classes,
-          ]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Address"
             errorText={errorMap.address_1}
@@ -331,16 +289,7 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          updateFor={[
-            account.address_2,
-            fields.address_2,
-            errorMap.address_2,
-            classes,
-          ]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Address 2"
             errorText={errorMap.address_2}
@@ -350,17 +299,7 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[
-            account.country,
-            fields.country,
-            errorMap.country,
-            classes,
-          ]}
-        >
+        <Grid xs={12} sm={6}>
           <EnhancedSelect
             label="Country"
             errorText={errorMap.country}
@@ -382,20 +321,7 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[
-            fields.state,
-            fields.zip,
-            fields.country,
-            errorMap.state,
-            errorMap.zip,
-            errorMap.country,
-            classes,
-          ]}
-        >
+        <Grid xs={12} sm={6}>
           {flags.regionDropdown &&
           (fields.country === 'US' || fields.country == 'CA') ? (
             <EnhancedSelect
@@ -438,12 +364,7 @@ class _UpdateContactInformationForm extends React.Component<
           )}
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[account.city, fields.city, errorMap.city, classes]}
-        >
+        <Grid xs={12} sm={6}>
           <TextField
             label="City"
             errorText={errorMap.city}
@@ -453,7 +374,7 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             label="Postal Code"
             errorText={errorMap.zip}
@@ -463,11 +384,7 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Phone"
             type="tel"
@@ -478,11 +395,7 @@ class _UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          updateFor={[account.tax_id, fields.tax_id, errorMap.tax_id, classes]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Tax ID"
             errorText={errorMap.tax_id}

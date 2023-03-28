@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LinearProgress from 'src/components/LinearProgress';
 import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
@@ -125,7 +125,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
         <Divider />
         <Box sx={sxBox}>
           <Grid container spacing={2}>
-            <Grid item xs={8} md={9}>
+            <Grid xs={8} md={9}>
               <Typography variant="h3">Google Pay</Typography>
               <Typography>
                 You&rsquo;ll be taken to Google Pay to complete sign up.
@@ -133,7 +133,6 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             <Grid
               container
-              item
               xs={4}
               md={3}
               justifyContent="flex-end"
@@ -154,7 +153,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
         <Divider />
         <Box sx={sxBox}>
           <Grid container spacing={2}>
-            <Grid item xs={8} md={9}>
+            <Grid xs={8} md={9}>
               <Typography variant="h3">PayPal</Typography>
               <Typography>
                 You&rsquo;ll be taken to PayPal to complete sign up.
@@ -162,7 +161,6 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             <Grid
               container
-              item
               xs={4}
               md={3}
               justifyContent="flex-end"

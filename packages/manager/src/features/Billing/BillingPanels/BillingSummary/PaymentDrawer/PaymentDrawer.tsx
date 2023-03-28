@@ -12,7 +12,7 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import HelpIcon from 'src/components/HelpIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
@@ -227,7 +227,7 @@ export const PaymentDrawer = (props: Props) => {
   return (
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {isProcessing ? (
@@ -236,7 +236,7 @@ export const PaymentDrawer = (props: Props) => {
           {accountLoading ? (
             <Typography data-testid="loading-account">Loading</Typography>
           ) : account ? (
-            <Grid item>
+            <Grid>
               <Typography variant="h3" className={classes.currentBalance}>
                 <strong>
                   Current balance:{' '}
@@ -252,7 +252,7 @@ export const PaymentDrawer = (props: Props) => {
               </Typography>
             </Grid>
           ) : null}
-          <Grid item xs={6}>
+          <Grid xs={6}>
             <TextField
               label="Payment Amount"
               onChange={handleUSDChange}
@@ -270,7 +270,7 @@ export const PaymentDrawer = (props: Props) => {
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
           <Grid container direction="column">
-            <Grid item>
+            <Grid>
               <Typography
                 variant="h3"
                 className={classes.header}
@@ -279,7 +279,7 @@ export const PaymentDrawer = (props: Props) => {
                 <strong>Payment Methods:</strong>
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid>
               {hasPaymentMethods ? (
                 paymentMethods?.map((paymentMethod: PaymentMethod) => (
                   <PaymentMethodCard
@@ -290,13 +290,13 @@ export const PaymentDrawer = (props: Props) => {
                   />
                 ))
               ) : (
-                <Grid item>
+                <Grid>
                   <Typography>No payment methods on file.</Typography>
                 </Grid>
               )}
             </Grid>
             {hasPaymentMethods ? (
-              <Grid item className={classes.input}>
+              <Grid className={classes.input}>
                 <Grid className={classes.button}>
                   {paymentTooLow || selectedCardExpired ? (
                     <HelpIcon
@@ -332,13 +332,13 @@ export const PaymentDrawer = (props: Props) => {
             usd={usd}
           />
           <Divider spacingTop={28} spacingBottom={16} />
-          <Grid item>
+          <Grid>
             <Typography variant="h3" className={classes.header}>
               <strong>Or pay via:</strong>
             </Typography>
           </Grid>
           <Grid container>
-            <Grid item xs={9} sm={6}>
+            <Grid xs={9} sm={6}>
               <PayPalErrorBoundary renderError={renderError}>
                 <PayPalButton
                   usd={usd}
@@ -350,7 +350,7 @@ export const PaymentDrawer = (props: Props) => {
                 />
               </PayPalErrorBoundary>
             </Grid>
-            <Grid item xs={9} sm={6}>
+            <Grid xs={9} sm={6}>
               <GooglePayButton
                 transactionInfo={{
                   totalPriceStatus: 'FINAL',
