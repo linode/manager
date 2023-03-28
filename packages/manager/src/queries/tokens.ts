@@ -1,4 +1,5 @@
 import {
+  createPersonalAccessToken,
   deleteAppToken,
   deletePersonalAccessToken,
   getAppTokens,
@@ -34,6 +35,17 @@ export const usePersonalAccessTokensQuery = (
     queryFn: () => getPersonalAccessTokens(params, filter),
     keepPreviousData: true,
   });
+};
+
+export const useCreatePersonalAccessTokenMutation = () => {
+  return useMutation<Token, APIError[], TokenRequest>(
+    createPersonalAccessToken,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
+      },
+    }
+  );
 };
 
 export const useUpdatePersonalAccessTokenMutation = (id: number) => {
