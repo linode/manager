@@ -6,8 +6,7 @@ import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
-import AccessPanel from 'src/components/AccessPanel';
+import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
@@ -17,9 +16,6 @@ import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
-import userSSHKeyHoc, {
-  UserSSHKeyProps,
-} from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import {
@@ -72,25 +68,22 @@ interface Props {
   onClose: () => void;
 }
 
-export type CombinedProps = Props & UserSSHKeyProps;
-
 interface RebuildFromStackScriptForm {
   image: string;
   root_pass: string;
   stackscript_id: string;
+  authorized_users: string[];
 }
 
 const initialValues: RebuildFromStackScriptForm = {
   image: '',
   root_pass: '',
   stackscript_id: '',
+  authorized_users: [],
 };
 
-export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
+export const RebuildFromStackScript = (props: Props) => {
   const {
-    userSSHKeys,
-    sshError,
-    requestKeys,
     linodeId,
     linodeLabel,
     handleRebuildError,
@@ -135,7 +128,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
   );
 
   const handleFormSubmit = (
-    { image, root_pass }: RebuildFromStackScriptForm,
+    { image, root_pass, authorized_users }: RebuildFromStackScriptForm,
     {
       setSubmitting,
       setStatus,
@@ -149,9 +142,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
       stackscript_data: ss.udf_data,
       root_pass,
       image,
-      authorized_users: userSSHKeys
-        .filter((u) => u.selected)
-        .map((u) => u.username),
+      authorized_users,
     })
       .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
@@ -335,11 +326,17 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
               <AccessPanel
                 password={values.root_pass}
                 handleChange={(value) => setFieldValue('root_pass', value)}
-                updateFor={[values.root_pass, errors, userSSHKeys, ss.id]}
+                updateFor={[
+                  values.root_pass,
+                  errors,
+                  ss.id,
+                  values.authorized_users,
+                ]}
+                setAuthorizedUsers={(usernames) =>
+                  setFieldValue('authorized_users', usernames)
+                }
+                authorizedUsers={values.authorized_users}
                 error={errors.root_pass}
-                users={userSSHKeys}
-                sshKeyError={sshError}
-                requestKeys={requestKeys}
                 data-qa-access-panel
                 passwordHelperText={passwordHelperText}
               />
@@ -381,9 +378,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(userSSHKeyHoc);
-
-export default enhanced(RebuildFromStackScript);
+export default RebuildFromStackScript;
 
 // =============================================================================
 // Helpers

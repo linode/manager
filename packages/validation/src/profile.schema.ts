@@ -18,6 +18,14 @@ export const createSSHKeySchema = object({
   ssh_key: string(),
 });
 
+export const updateSSHKeySchema = object({
+  label: string()
+    .required('Label is required.')
+    .min(1, 'Label must be between 1 and 64 characters.')
+    .max(64, 'Label must be between 1 and 64 characters.')
+    .trim(),
+});
+
 export const updateProfileSchema = object({
   email: string().email(),
   timezone: string(),

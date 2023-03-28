@@ -41,6 +41,7 @@ import withPreferences, {
 } from './containers/preferences.container';
 import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
+import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
 
 interface Props {
@@ -141,8 +142,14 @@ export class App extends React.Component<CombinedProps, State> {
       .subscribe(tokenEventHandler);
 
     /*
-      Send any Token events to the Token events handler in the queries file
+      Send any SSH Key events to the SSH Key events handler in the queries file
      */
+    events$
+      .filter(
+        (event) => event.action.startsWith('user_ssh_key') && !event._initial
+      )
+      .subscribe(sshKeyEventHandler);
+
     events$
       .filter((event) => event.action.startsWith('firewall') && !event._initial)
       .subscribe(firewallEventsHandler);

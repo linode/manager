@@ -13,10 +13,15 @@
  * The max number of elements to display.
  */
 
-export const truncateAndJoinList = (strList: string[], max = 100) => {
+export const truncateAndJoinList = (
+  strList: string[],
+  max = 100,
+  total?: number
+) => {
   const count = strList.length;
   return count > max
-    ? strList.slice(0, max).join(', ') + `, plus ${count - max} more`
+    ? strList.slice(0, max).join(', ') +
+        `, plus ${total ? total - max : count - max} more`
     : strList.join(', ');
 };
 

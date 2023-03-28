@@ -26,6 +26,16 @@ describe('truncateAndJoinList', () => {
     const result = truncateAndJoinList(bigStrList);
     expect(result).toMatch(/, plus 900 more/);
   });
+
+  it('supports overriding the total amount', () => {
+    // Imagine this is a response from the API with a page size of 3, but 6 results total
+    const fakeApiData = {
+      data: ['a', 'b', 'c'],
+      results: 6,
+    };
+    const result = truncateAndJoinList(strList, 2, fakeApiData.results);
+    expect(result).toMatch(/, plus 4 more/);
+  });
 });
 
 describe('isNumeric', () => {

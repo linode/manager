@@ -18,6 +18,8 @@ const props: Props = {
   open: true,
   onClose: jest.fn(),
   onSubmit: jest.fn().mockResolvedValue({}),
+  authorizedUsers: [],
+  setAuthorizedUsers: jest.fn(),
 };
 
 const EMPTY_DISK_RADIO_LABEL = new RegExp('create empty disk', 'i');

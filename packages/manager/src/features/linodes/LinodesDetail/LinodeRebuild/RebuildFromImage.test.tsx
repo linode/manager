@@ -2,16 +2,14 @@ import { render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
+import { RebuildFromImage } from './RebuildFromImage';
 
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
 
-const props: CombinedProps = {
+const props = {
   linodeId: 1234,
-  userSSHKeys: [],
   passwordHelperText: '',
-  requestKeys: jest.fn(),
   disabled: false,
   handleRebuildError: jest.fn(),
   onClose: jest.fn(),

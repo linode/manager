@@ -1,4 +1,7 @@
-import { createSSHKeySchema } from '@linode/validation/lib/profile.schema';
+import {
+  createSSHKeySchema,
+  updateSSHKeySchema,
+} from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -57,11 +60,11 @@ export const createSSHKey = (data: { label: string; ssh_key: string }) =>
  * @param keyId { number } the ID of the key to be updated.
  *
  */
-export const updateSSHKey = (keyId: number, data: Partial<SSHKey>) =>
+export const updateSSHKey = (keyId: number, data: { label: string }) =>
   Request<SSHKey>(
-    setMethod('DELETE'),
+    setMethod('PUT'),
     setURL(`${API_ROOT}/profile/sshkeys/${keyId}`),
-    setData(data, createSSHKeySchema)
+    setData(data, updateSSHKeySchema)
   );
 
 /**
