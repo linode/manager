@@ -15,11 +15,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectionCard: {
     mixBlendMode: theme.name === 'dark' ? 'initial' : 'darken',
-    '& .cardBaseIcon': {
-      width: 40,
-      paddingRight: 0,
-      justifyContent: 'flex-start',
-    },
   },
   info: {
     display: 'flex',
@@ -126,6 +121,11 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
       disabled={disabled}
       className={classes.selectionCard}
       headingDecoration={labelDecoration}
+      sxCardBaseIcon={{
+        justifyContent: 'flex-start',
+        paddingRight: 0,
+        width: 40,
+      }}
     />
   );
 };
