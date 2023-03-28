@@ -269,7 +269,7 @@ export const PaymentDrawer = (props: Props) => {
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
-          <Grid container direction="column">
+          <Grid container direction="column" rowGap={2}>
             <Grid>
               <Typography
                 variant="h3"
@@ -337,7 +337,7 @@ export const PaymentDrawer = (props: Props) => {
               <strong>Or pay via:</strong>
             </Typography>
           </Grid>
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid xs={9} sm={6}>
               <PayPalErrorBoundary renderError={renderError}>
                 <PayPalButton
