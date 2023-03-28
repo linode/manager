@@ -258,8 +258,11 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
               <Divider />
               <div style={{ maxHeight: 300, overflowY: 'auto' }}>
-                {promotions?.map((thisPromo) => (
-                  <PromoDisplay key={thisPromo.summary} {...thisPromo} />
+                {promotions?.map((promo) => (
+                  <PromoDisplay
+                    key={`${promo.summary}-${promo.expire_dt}`}
+                    {...promo}
+                  />
                 ))}
               </div>
             </Paper>

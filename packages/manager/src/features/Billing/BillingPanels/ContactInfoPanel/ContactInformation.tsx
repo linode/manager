@@ -1,10 +1,6 @@
 import countryData from 'country-region-data';
 import * as React from 'react';
-import {
-  RouteComponentProps,
-  useHistory,
-  useRouteMatch,
-} from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { Theme } from '@mui/material/styles';
@@ -69,7 +65,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface Props extends Pick<RouteComponentProps, 'history'> {
+interface Props {
   company: string;
   firstName: string;
   lastName: string;

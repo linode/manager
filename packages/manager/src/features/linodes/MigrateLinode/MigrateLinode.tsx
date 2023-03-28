@@ -206,7 +206,7 @@ const MigrateLinode: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={`Migrate Linode ${linode.label ?? ''}`}
+      title={`Migrate Linode ${linode.label ?? ''} to another region`}
       open={open}
       onClose={onClose}
       fullWidth
