@@ -14,6 +14,7 @@ const mockProps: CombinedProps = {
   updateLinodeID: jest.fn(),
   updateRegionID: jest.fn(),
   updateTypeID: jest.fn(),
+  updateSearchParams: jest.fn(),
   accountBackupsEnabled: false,
   imagesData: {},
   linodesData: linodes,

@@ -13,13 +13,14 @@ const mockProps: CombinedProps = {
   updateLinodeID: jest.fn(),
   updateRegionID: jest.fn(),
   updateTypeID: jest.fn(),
+  setBackupID: jest.fn(),
+  updateSearchParams: jest.fn(),
   accountBackupsEnabled: false,
   imagesData: {},
   regionsData: [],
   typesData: [],
   userCannotCreateLinode: false,
   linodesData: [],
-  setBackupID: jest.fn(),
 };
 
 describe('FromBackupsContent', () => {

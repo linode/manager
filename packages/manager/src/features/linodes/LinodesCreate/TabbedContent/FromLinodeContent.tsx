@@ -1,10 +1,11 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
+import { buildQueryStringForLinodeClone } from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectLinodePanel from '../SelectLinodePanel';
@@ -47,6 +48,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     userCannotCreateLinode,
     updateLinodeID,
     updateTypeID,
+    updateSearchParams,
   } = props;
 
   const extendedTypes = typesData?.map(extendType);
@@ -62,6 +64,15 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     if (linode) {
       updateLinodeID(linode.id, linode.specs.disk);
       updateTypeID(linode.type);
+      updateSearchParams(
+        buildQueryStringForLinodeClone(
+          linode.id,
+          linode.region,
+          linode.type,
+          extendedTypes,
+          regionsData
+        )
+      );
     }
   };
 

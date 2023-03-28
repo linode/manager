@@ -166,6 +166,7 @@ interface Props {
   userData: string | undefined;
   updateUserData: (userData: string) => void;
   showCrossDataCenterCloneWarning: boolean;
+  updateSearchParams: (search: string) => void;
 }
 
 const errorMap = [
@@ -690,7 +691,12 @@ export class LinodeCreate extends React.PureComponent<
               regions={regionsData!}
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
-              updateFor={[this.props.selectedRegionID, regionsData, errors]}
+              updateFor={[
+                this.props.showCrossDataCenterCloneWarning,
+                this.props.selectedRegionID,
+                regionsData,
+                errors,
+              ]}
               disabled={userCannotCreateLinode}
               helperText={this.props.regionHelperText}
               warningNoticeText={

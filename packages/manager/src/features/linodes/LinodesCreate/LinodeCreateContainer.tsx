@@ -221,6 +221,17 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (isNonDefaultImageType(prevProps.createType, this.props.createType)) {
       this.setState({ selectedImageID: undefined });
     }
+
+    // Update search params for Linode Clone
+    if (prevProps.location.search !== this.props.history.location.search) {
+      this.params = getParamsFromUrl(this.props.location.search) as Record<
+        string,
+        string
+      >;
+      this.setState({
+        showCrossDataCenterCloneWarning: false,
+      });
+    }
   }
 
   componentDidMount() {
@@ -311,6 +322,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         selectedTypeID: id,
       });
     }
+  };
+
+  setSearchParams = (search: string) => {
+    this.props.history.replace({ search });
   };
 
   setLinodeID = (id: number, diskSize?: number) => {
@@ -803,6 +818,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             accountBackupsEnabled={getAccountBackupsEnabled()}
             setAuthorizedUsers={this.setAuthorizedUsers}
             updateUserData={this.setUserData}
+            updateSearchParams={this.setSearchParams}
             {...restOfProps}
             {...restOfState}
           />
