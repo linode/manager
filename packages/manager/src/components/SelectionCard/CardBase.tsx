@@ -26,10 +26,6 @@ const CardBaseGrid = styled(Grid, {
       : theme.color.border2,
   },
 
-  '&:focus-visible': {
-    borderStyle: 'dashed',
-  },
-
   '&:before': {
     content: '""',
     display: 'block',
