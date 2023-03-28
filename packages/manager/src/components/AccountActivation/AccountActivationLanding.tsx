@@ -1,15 +1,14 @@
 import Warning from '@mui/icons-material/CheckCircle';
-import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   errorHeading: {
     marginBottom: theme.spacing(2),
   },
@@ -22,10 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = WithTheme & RouteComponentProps;
-
-const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const AccountActivationLanding = () => {
+  const { classes } = useStyles();
+  const history = useHistory();
 
   const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(
     false
@@ -35,7 +33,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
     ticketID: number,
     attachmentErrors?: AttachmentError[]
   ) => {
-    props.history.push({
+    history.push({
       pathname: `/support/tickets/${ticketID}`,
       state: { attachmentErrors },
     });
@@ -78,7 +76,4 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, {}>(
-  React.memo,
-  withTheme
-)(AccountActivationLanding);
+export default React.memo(AccountActivationLanding);
