@@ -150,6 +150,9 @@ const getGPU = (types: PlanSelectionType[]) =>
 const getMetal = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => t.class === 'metal');
 
+const getPremium = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => t.class === 'premium');
+
 type CombinedProps = Props & RegionsProps;
 
 export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
@@ -417,6 +420,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
     const metal = getMetal(types);
+    const premium = getPremium(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
@@ -557,6 +561,28 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
         title: 'Bare Metal',
       });
       tabOrder.push('metal');
+    }
+
+    if (!isEmpty(premium)) {
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Notice warning>
+                This plan is only available in the Washington, DC region.
+              </Notice>
+              <Typography data-qa-gpu className={classes.copy}>
+                Premium CPU instances guarantee a minimum processor model, AMD
+                Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
+                performance for more demanding workloads.
+              </Typography>
+              {renderPlanContainer(premium)}
+            </>
+          );
+        },
+        title: 'Premium',
+      });
+      tabOrder.push('premium');
     }
 
     return [tabs, tabOrder];
