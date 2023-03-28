@@ -9,11 +9,22 @@ import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 import { SxProps } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 
-type NoticeIconStatus = 'success' | 'error' | 'warning' | 'info' | 'help';
+export const NOTICE_ICON_STATUS = {
+  SUCCESS: 'success',
+  ERROR: 'error',
+  WARNING: 'warning',
+  INFO: 'info',
+  HELP: 'help',
+} as const;
+
+export type ObjectValues<T> = T[keyof T];
+
+export type NoticeIconStatus = ObjectValues<typeof NOTICE_ICON_STATUS>;
 
 interface Props
   extends Omit<TooltipProps, 'leaveDelay' | 'title' | 'children'> {
   sx?: SxProps;
+  sxHelpIcon?: SxProps;
   text: string | JSX.Element;
   className?: string;
   interactive?: boolean;
@@ -23,9 +34,7 @@ interface Props
   tooltipGAEvent?: () => void;
 }
 
-type CombinedProps = Props;
-
-const HelpIcon: React.FC<CombinedProps> = (props) => {
+const HelpIcon = (props: Props) => {
   const theme = useTheme();
 
   const {
@@ -36,6 +45,7 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
     leaveDelay,
     tooltipGAEvent,
     sx,
+    sxHelpIcon,
   } = props;
 
   const handleOpenTooltip = () => {
@@ -80,7 +90,7 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
       onOpen={handleOpenTooltip}
     >
-      <IconButton data-qa-help-button size="large">
+      <IconButton data-qa-help-button size="large" sx={sxHelpIcon}>
         {renderIcon}
       </IconButton>
     </Tooltip>

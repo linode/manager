@@ -16,6 +16,7 @@ import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
 import HelpIcon from 'src/components/HelpIcon';
 import Box from '@mui/material/Box';
+import { NOTICE_ICON_STATUS } from 'src/components/HelpIcon/HelpIcon';
 
 interface Props {
   open: boolean;
@@ -83,7 +84,12 @@ export const AddPaymentMethodDrawer = (props: Props) => {
 
   const renderError = (errorMsg: string) => {
     return (
-      <HelpIcon noticeIconStatus={'error'} text={errorMsg} sx={sxHelpIcon} />
+      <HelpIcon
+        // noticeIconStatus={'error'}
+        noticeIconStatus={NOTICE_ICON_STATUS.ERROR}
+        text={errorMsg}
+        sxHelpIcon={sxHelpIcon}
+      />
     );
   };
 
