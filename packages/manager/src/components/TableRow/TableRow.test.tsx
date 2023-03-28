@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
@@ -5,7 +6,7 @@ import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { CombinedProps, TableRow } from './TableRow';
 
-const mockHistoryPush = jest.fn();
+const mockHistoryPush = vi.fn();
 
 const props: CombinedProps = {
   classes: {

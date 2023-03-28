@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
@@ -5,7 +6,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import EnhancedNumberInput from './EnhancedNumberInput';
 
-const setValue = jest.fn();
+const setValue = vi.fn();
 
 const props = {
   value: 1,
@@ -17,7 +18,7 @@ const disabledProps = {
   disabled: true,
 };
 
-beforeEach(jest.clearAllMocks);
+beforeEach(vi.clearAllMocks);
 
 describe('EnhancedNumberInput', () => {
   it("should increment the input's value by 1 when the plus button is clicked", () => {

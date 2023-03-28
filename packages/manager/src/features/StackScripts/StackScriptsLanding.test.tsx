@@ -1,12 +1,25 @@
+import { vi } from 'vitest';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { StackScriptsLanding } from './StackScriptsLanding';
 
-jest.mock('@linode/api-v4/lib/account', () => ({
-  getUsers: jest.fn().mockResolvedValue({}),
-}));
+vi.mock('@linode/api-v4/lib/images', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/images');
+  return {
+    ...actual,
+    getImages: vi.fn().mockResolvedValue([]),
+  };
+});
+
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
+  return {
+    ...actual,
+    getUsers: vi.fn().mockResolvedValue({}),
+  };
+});
 
 describe('StackScripts Landing', () => {
   const { getByText } = render(wrapWithTheme(<StackScriptsLanding />));

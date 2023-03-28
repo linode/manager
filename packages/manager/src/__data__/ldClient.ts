@@ -1,21 +1,22 @@
+import { vi } from 'vitest';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 
 const client: LDClient = {
-  waitForInitialization: jest.fn(),
-  waitUntilGoalsReady: jest.fn(),
-  waitUntilReady: jest.fn(),
-  track: jest.fn(),
-  getUser: jest.fn(),
-  identify: jest.fn(),
-  off: jest.fn(),
-  on: jest.fn(),
-  allFlags: jest.fn(),
-  setStreaming: jest.fn(),
-  flush: jest.fn(),
-  variation: jest.fn(),
-  variationDetail: jest.fn(),
-  close: jest.fn(),
-  alias: jest.fn(),
+  waitForInitialization: vi.fn(),
+  waitUntilGoalsReady: vi.fn(),
+  waitUntilReady: vi.fn(),
+  track: vi.fn(),
+  getUser: vi.fn(),
+  identify: vi.fn(),
+  off: vi.fn(),
+  on: vi.fn(),
+  allFlags: vi.fn(),
+  setStreaming: vi.fn(),
+  flush: vi.fn(),
+  variation: vi.fn(),
+  variationDetail: vi.fn(),
+  close: vi.fn(),
+  alias: vi.fn(),
 };
 
 export default client;

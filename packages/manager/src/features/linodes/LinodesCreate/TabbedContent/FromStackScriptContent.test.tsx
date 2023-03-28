@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
@@ -20,17 +21,17 @@ const mockProps: CombinedProps = {
     emptyImagePanelText: '',
   },
   accountBackupsEnabled: false,
-  updateImageID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  updateImageID: vi.fn(),
+  updateRegionID: vi.fn(),
+  updateTypeID: vi.fn(),
   imagesData: {},
   regionsData: [],
   typesData: [],
   userCannotCreateLinode: false,
-  request: jest.fn(),
+  request: vi.fn(),
   header: '',
-  updateStackScript: jest.fn(),
-  handleSelectUDFs: jest.fn(),
+  updateStackScript: vi.fn(),
+  handleSelectUDFs: vi.fn(),
 };
 
 describe('FromImageContent', () => {

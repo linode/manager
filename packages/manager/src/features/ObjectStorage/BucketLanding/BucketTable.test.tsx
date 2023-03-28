@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { buckets } from 'src/__data__/buckets';
@@ -9,10 +10,10 @@ describe('BucketTable', () => {
       data={buckets}
       orderBy="label"
       order="asc"
-      handleOrderChange={jest.fn()}
-      openBucketDrawer={jest.fn()}
-      handleClickRemove={jest.fn()}
-      handleClickDetails={jest.fn()}
+      handleOrderChange={vi.fn()}
+      openBucketDrawer={vi.fn()}
+      handleClickRemove={vi.fn()}
+      handleClickDetails={vi.fn()}
     />
   );
 

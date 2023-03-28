@@ -44,23 +44,23 @@ describe('Abuse ticket banner', () => {
 
   it('should link to the ticket if there is a single abuse ticket', () => {
     const mockAbuseTicket = abuseTicketNotificationFactory.build();
-    const { getByTestId } = render(
+    const { getAllByTestId } = render(
       wrapWithTheme(<AbuseTicketBanner />, {
         customStore: makeMockStore([mockAbuseTicket]),
       })
     );
-    const link = getByTestId(TICKET_TESTID);
+    const link = getAllByTestId(TICKET_TESTID)[0];
     expect(link).toHaveAttribute('href', mockAbuseTicket.entity!.url);
   });
 
   it('should link to the ticket list view if there are multiple tickets', () => {
     const mockAbuseTicket = abuseTicketNotificationFactory.buildList(2);
-    const { getByTestId } = render(
+    const { getAllByTestId } = render(
       wrapWithTheme(<AbuseTicketBanner />, {
         customStore: makeMockStore(mockAbuseTicket),
       })
     );
-    const link = getByTestId(TICKET_TESTID);
+    const link = getAllByTestId(TICKET_TESTID)[0];
     expect(link).toHaveAttribute('href', '/support/tickets');
   });
 

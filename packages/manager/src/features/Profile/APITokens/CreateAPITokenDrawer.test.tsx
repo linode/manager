@@ -1,6 +1,7 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { rest, server } from 'src/mocks/testServer';
 import { appTokenFactory } from 'src/factories';
@@ -8,8 +9,8 @@ import userEvent from '@testing-library/user-event';
 
 const props = {
   open: true,
-  onClose: jest.fn(),
-  showSecret: jest.fn(),
+  onClose: vi.fn(),
+  showSecret: vi.fn(),
 };
 
 describe('Create API Token Drawer', () => {
@@ -47,18 +48,13 @@ describe('Create API Token Drawer', () => {
       <CreateAPITokenDrawer {...props} />
     );
 
-    await act(async () => {
-      const labelField = getByTestId('textfield-input');
+    const labelField = getByTestId('textfield-input');
+    userEvent.type(labelField, 'my-test-token');
+    const submit = getByText('Create Token');
+    userEvent.click(submit);
 
-      userEvent.type(labelField, 'my-test-token');
-
-      const submit = getByText('Create Token');
-
-      userEvent.click(submit);
-
-      await waitFor(() =>
-        expect(props.showSecret).toBeCalledWith('secret-value')
-      );
+    await waitFor(() => {
+      expect(props.showSecret).toBeCalledWith('secret-value');
     });
   });
   it('Should default to read/write for all scopes', () => {

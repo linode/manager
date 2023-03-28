@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 
 import { users } from 'src/__data__/userSSHKeyObjects';
@@ -6,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 const props = {
-  onKeyAddSuccess: jest.fn(),
+  onKeyAddSuccess: vi.fn(),
 };
 
 describe('UserSSHKeyPanel', () => {

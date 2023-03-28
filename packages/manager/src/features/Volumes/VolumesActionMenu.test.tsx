@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import { Props, VolumesActionMenu } from './VolumesActionMenu';
@@ -14,13 +15,13 @@ const props: Props = {
   volumeTags: ['abc', 'def'],
   volumeLabel: '',
   isVolumesLanding: false,
-  openForClone: jest.fn(),
-  openForConfig: jest.fn(),
-  openForEdit: jest.fn(),
-  openForResize: jest.fn(),
-  handleAttach: jest.fn(),
-  handleDelete: jest.fn(),
-  handleDetach: jest.fn(),
+  openForClone: vi.fn(),
+  openForConfig: vi.fn(),
+  openForEdit: vi.fn(),
+  openForResize: vi.fn(),
+  handleAttach: vi.fn(),
+  handleDelete: vi.fn(),
+  handleDetach: vi.fn(),
 };
 
 describe('Volume action menu', () => {

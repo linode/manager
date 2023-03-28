@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import { Props, MonitorActionMenu } from './MonitorActionMenu';
@@ -5,10 +6,10 @@ import { Props, MonitorActionMenu } from './MonitorActionMenu';
 const props: Props = {
   status: 'disabled',
   label: 'this-monitor',
-  openDialog: jest.fn(),
+  openDialog: vi.fn(),
   monitorID: 1,
-  openMonitorDrawer: jest.fn(),
-  openHistoryDrawer: jest.fn(),
+  openMonitorDrawer: vi.fn(),
+  openHistoryDrawer: vi.fn(),
 };
 
 describe('Monitor action menu', () => {

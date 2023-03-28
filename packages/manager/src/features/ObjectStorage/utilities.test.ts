@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
 import {
   basename,
@@ -196,14 +197,15 @@ describe('Object Storage utilities', () => {
   });
 
   describe('confirmObjectStorage', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
+    beforeEach(() => {
+      vi.clearAllMocks();
     });
-    const validateForm = jest.fn(() => Promise.resolve({}));
-    const setFieldTouched = jest.fn();
-    const setFieldError = jest.fn();
-    const handleSubmit = jest.fn();
-    const openConfirmationDialog = jest.fn();
+
+    const validateForm = vi.fn(() => Promise.resolve({}));
+    const setFieldTouched = vi.fn();
+    const setFieldError = vi.fn();
+    const handleSubmit = vi.fn();
+    const openConfirmationDialog = vi.fn();
     const mockFormikProps = {
       validateForm,
       setFieldTouched,
@@ -220,7 +222,8 @@ describe('Object Storage utilities', () => {
       expect(openConfirmationDialog).toHaveBeenCalledTimes(0);
       expect(handleSubmit).toHaveBeenCalledTimes(1);
     });
-    it('calls call the confirmation handler if OBJ is disabled', async () => {
+
+    it('calls the confirmation handler if OBJ is disabled', async () => {
       await confirmObjectStorage(
         'disabled',
         mockFormikProps,

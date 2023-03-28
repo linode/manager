@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import { assocPath } from 'ramda';
 import * as React from 'react';
@@ -17,7 +18,7 @@ const classes = {
 
 const props: CombinedProps = {
   classes,
-  searchAlgolia: jest.fn(),
+  searchAlgolia: vi.fn(),
   searchResults: [[], []],
   searchEnabled: true,
   ...reactRouterProps,

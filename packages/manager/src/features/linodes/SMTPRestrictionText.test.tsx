@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { accountCreatedAfterRestrictions } from './SMTPRestrictionText';
 import SMTPRestrictionText, { Props } from './SMTPRestrictionText';
@@ -11,9 +12,11 @@ const defaultChildren = (props: { text: React.ReactNode }) => (
 
 let mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
 
-jest.mock('../../queries/account', () => {
+vi.mock('../../queries/account', async () => {
+  const actual = await vi.importActual<{}>('../../queries/account');
   return {
-    useAccount: jest.fn(() => {
+    ...actual,
+    useAccount: vi.fn(() => {
       const account = accountFactory.build({
         active_since: mockActiveSince,
       });

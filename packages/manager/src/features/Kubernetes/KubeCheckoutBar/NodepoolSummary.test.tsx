@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
@@ -9,8 +10,8 @@ const props: Props = {
   nodeCount: 3,
   poolType: extendedTypes[1],
   price: 1000,
-  onRemove: jest.fn(),
-  updateNodeCount: jest.fn(),
+  onRemove: vi.fn(),
+  updateNodeCount: vi.fn(),
 };
 
 describe('Node Pool Summary', () => {

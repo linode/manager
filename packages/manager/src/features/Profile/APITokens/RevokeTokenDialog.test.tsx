@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
@@ -9,7 +10,7 @@ const token = appTokenFactory.build({ label: 'my-token' });
 
 const props: Props = {
   open: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   token,
   type: 'Personal Access Token',
 };

@@ -1,12 +1,13 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav from './PrimaryNav';
 
 const props = {
-  closeMenu: jest.fn(),
-  toggleTheme: jest.fn(),
-  toggleSpacing: jest.fn(),
+  closeMenu: vi.fn(),
+  toggleTheme: vi.fn(),
+  toggleSpacing: vi.fn(),
   isCollapsed: false,
 };
 

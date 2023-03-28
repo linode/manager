@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { linodes } from 'src/__data__/groupImports';
@@ -8,8 +9,9 @@ import {
   TagImportDrawer,
   withUpdates,
 } from './TagImportDrawer';
-jest.mock('src/utilities/ga', () => ({
-  sendImportDisplayGroupSubmitEvent: jest.fn(),
+
+vi.mock('src/utilities/ga', () => ({
+  sendImportDisplayGroupSubmitEvent: vi.fn(),
 }));
 
 const errors = [
@@ -20,16 +22,16 @@ const errors = [
 
 const props = {
   actions: {
-    update: jest.fn(),
-    close: jest.fn(),
+    update: vi.fn(),
+    close: vi.fn(),
   },
   open: true,
   errors,
   loading: false,
   success: false,
   entitiesWithGroupsToImport: { linodes },
-  enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
+  enqueueSnackbar: vi.fn(),
+  closeSnackbar: vi.fn(),
   classes: { root: '' },
 };
 
@@ -37,7 +39,7 @@ const EnhancedComponent = withUpdates(TagImportDrawer);
 const wrapper = shallow(<EnhancedComponent {...props} />);
 const component = wrapper.dive();
 
-jest.mock('src/store');
+vi.mock('src/store');
 
 describe('TagImportDrawer', () => {
   describe('getGroupImportList function', () => {

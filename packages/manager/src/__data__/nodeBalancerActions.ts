@@ -1,18 +1,20 @@
+import { vi } from 'vitest';
+
 export const mockNodeBalancerActions = {
   nodeBalancerActions: {
-    getAllNodeBalancersWithConfigs: jest.fn(),
-    getAllNodeBalancers: jest.fn(),
-    createNodeBalancer: jest.fn(),
-    deleteNodeBalancer: jest.fn(),
-    updateNodeBalancer: jest.fn(),
+    getAllNodeBalancersWithConfigs: vi.fn(),
+    getAllNodeBalancers: vi.fn(),
+    createNodeBalancer: vi.fn(),
+    deleteNodeBalancer: vi.fn(),
+    updateNodeBalancer: vi.fn(),
   },
 };
 
 export const modeNodeBalancerConfigActions = {
   nodeBalancerConfigActions: {
-    getAllNodeBalancerConfigs: jest.fn(),
-    createNodeBalancerConfig: jest.fn(),
-    updateNodeBalancerConfig: jest.fn(),
-    deleteNodeBalancerConfig: jest.fn(),
+    getAllNodeBalancerConfigs: vi.fn(),
+    createNodeBalancerConfig: vi.fn(),
+    updateNodeBalancerConfig: vi.fn(),
+    deleteNodeBalancerConfig: vi.fn(),
   },
 };

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { volumeFactory } from 'src/factories';
 import { VolumeTableRow } from './VolumeTableRow';
@@ -15,13 +16,13 @@ const unattachedVolume = volumeFactory.build({
 });
 
 const handlers = {
-  openForEdit: jest.fn(),
-  openForResize: jest.fn(),
-  openForClone: jest.fn(),
-  openForConfig: jest.fn(),
-  handleAttach: jest.fn(),
-  handleDetach: jest.fn(),
-  handleDelete: jest.fn(),
+  openForEdit: vi.fn(),
+  openForResize: vi.fn(),
+  openForClone: vi.fn(),
+  openForConfig: vi.fn(),
+  handleAttach: vi.fn(),
+  handleDetach: vi.fn(),
+  handleDelete: vi.fn(),
 };
 
 describe('Volume table row', () => {

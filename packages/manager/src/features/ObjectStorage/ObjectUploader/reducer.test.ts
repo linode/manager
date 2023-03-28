@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   curriedObjectUploaderReducer as reducer,
   ObjectUploaderState,
@@ -18,10 +19,10 @@ describe('reducer', () => {
     lastModified: 0,
     size: 0,
     type: '',
-    slice: jest.fn(),
-    arrayBuffer: jest.fn(),
-    stream: jest.fn(),
-    text: jest.fn(),
+    slice: vi.fn(),
+    arrayBuffer: vi.fn(),
+    stream: vi.fn(),
+    text: vi.fn(),
     webkitRelativePath: '',
   };
   const file2: File = {
@@ -29,10 +30,10 @@ describe('reducer', () => {
     lastModified: 0,
     size: 0,
     type: '',
-    slice: jest.fn(),
-    arrayBuffer: jest.fn(),
-    stream: jest.fn(),
-    text: jest.fn(),
+    slice: vi.fn(),
+    arrayBuffer: vi.fn(),
+    stream: vi.fn(),
+    text: vi.fn(),
     webkitRelativePath: '',
   };
 

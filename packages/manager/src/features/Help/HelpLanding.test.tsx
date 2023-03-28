@@ -11,7 +11,7 @@ describe('Help Landing', () => {
       }}
     />
   );
-  xit('should render search panel', () => {
+  it.skip('should render search panel', () => {
     expect(component.find('WithStyles(SearchPanel)')).toHaveLength(1);
   });
 

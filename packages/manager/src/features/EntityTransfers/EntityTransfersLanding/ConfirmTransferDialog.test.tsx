@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -11,7 +12,7 @@ import ConfirmTransferDialog, {
 
 const props: Props = {
   open: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   token: 'blahblah',
 };
 

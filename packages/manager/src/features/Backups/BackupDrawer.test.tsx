@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
+import { vi } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -92,14 +92,14 @@ const extendedLinodes: ExtendedLinode[] = [
 // Props for shallow rendering
 
 const actions = {
-  enable: jest.fn(),
-  getLinodesWithoutBackups: jest.fn(),
-  close: jest.fn(),
-  dismissError: jest.fn(),
-  dismissSuccess: jest.fn(),
-  clearSidebar: jest.fn(),
-  enroll: jest.fn(),
-  toggle: jest.fn(),
+  enable: vi.fn(),
+  getLinodesWithoutBackups: vi.fn(),
+  close: vi.fn(),
+  dismissError: vi.fn(),
+  dismissSuccess: vi.fn(),
+  clearSidebar: vi.fn(),
+  enroll: vi.fn(),
+  toggle: vi.fn(),
 };
 
 const classes = { root: '' };
@@ -127,8 +127,8 @@ const props = {
 const { rerender, getByTestId, findByTestId, queryByTestId } = render(
   wrapWithTheme(
     <BackupDrawer
-      closeSnackbar={jest.fn()}
-      enqueueSnackbar={jest.fn()}
+      closeSnackbar={vi.fn()}
+      enqueueSnackbar={vi.fn()}
       {...props}
     />
   )
@@ -136,7 +136,7 @@ const { rerender, getByTestId, findByTestId, queryByTestId } = render(
 
 describe('BackupDrawer component', () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
   describe('adding type and error info to Linodes', () => {
     it('should add type info to a list of Linodes', () => {
@@ -186,8 +186,8 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
+            closeSnackbar={vi.fn()}
+            enqueueSnackbar={vi.fn()}
             {...props}
             enableErrors={[error]}
           />
@@ -199,8 +199,8 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
+            closeSnackbar={vi.fn()}
+            enqueueSnackbar={vi.fn()}
             {...props}
             enableErrors={[error]}
             updatedCount={2}
@@ -214,8 +214,8 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
+            closeSnackbar={vi.fn()}
+            enqueueSnackbar={vi.fn()}
             {...props}
           />
         )
@@ -228,8 +228,8 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
+            closeSnackbar={vi.fn()}
+            enqueueSnackbar={vi.fn()}
             {...props}
           />
         )

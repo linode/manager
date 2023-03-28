@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   screen,
   waitForElementToBeRemoved,
@@ -36,8 +37,8 @@ const props: CombinedProps = {
   subscriptionRequestHook: {
     data: mockLongviewSubscriptions,
     lastUpdated: 0,
-    update: jest.fn(),
-    transformData: jest.fn(),
+    update: vi.fn(),
+    transformData: vi.fn(),
     loading: false,
   },
 };

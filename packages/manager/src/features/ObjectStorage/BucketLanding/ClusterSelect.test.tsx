@@ -1,8 +1,9 @@
+import { vi } from 'vitest';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import ClusterSelect from './ClusterSelect';
 import React from 'react';
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 describe('ClusterSelect', () => {
   it('Renders a select with object storage clusters', () => {

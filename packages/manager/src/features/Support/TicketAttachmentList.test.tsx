@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -20,7 +21,7 @@ const props = {
     'file7.pdf',
   ],
   showMoreAttachments: false,
-  toggle: jest.fn(),
+  toggle: vi.fn(),
   classes: { root: '', attachmentPaperWrapper: '' },
 };
 

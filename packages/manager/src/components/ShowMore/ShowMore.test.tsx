@@ -1,10 +1,11 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import Chip from 'src/components/core/Chip';
 import { ShowMore } from './ShowMore';
 
-const mockRender = jest.fn();
+const mockRender = vi.fn();
 const classes = {
   chip: '',
   label: '',

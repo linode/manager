@@ -1,52 +1,54 @@
-import { mount } from 'enzyme';
+import { vi } from 'vitest';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router-dom';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store from 'src/store';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import type { NodeBalancerWithConfigs, NodeBalancer } from '@linode/api-v4';
 import { NodeBalancersLanding } from './NodeBalancersLanding';
+import { waitFor } from '@testing-library/react';
+import { nodeBalancerFactory, nodeBalancerConfigFactory } from 'src/factories';
 
-describe.skip('NodeBalancers', () => {
-  const component = mount(
-    <StaticRouter context={{}}>
-      <Provider store={store}>
-        <LinodeThemeWrapper>
-          <NodeBalancersLanding
-            {...reactRouterProps}
-            nodeBalancersLoading={false}
-            nodeBalancersError={undefined}
-            nodeBalancersData={[]}
-            nodeBalancersLastUpdated={0}
-            nodeBalancersCount={0}
-            nodeBalancerActions={{
-              updateNodeBalancer: jest.fn(),
-              createNodeBalancer: jest.fn(),
-              deleteNodeBalancer: jest.fn(),
-              getAllNodeBalancers: jest.fn(),
-              getAllNodeBalancersWithConfigs: jest.fn(),
-              getNodeBalancerPage: jest.fn(),
-              getNodeBalancerWithConfigs: jest.fn(),
-            }}
-            setDocs={jest.fn()}
-            clearDocs={jest.fn()}
-          />
-        </LinodeThemeWrapper>
-      </Provider>
-    </StaticRouter>
+const mockNodeBalancers: NodeBalancerWithConfigs[] = nodeBalancerFactory
+  .buildList(2)
+  .map(
+    (nodeBalancer: NodeBalancer): NodeBalancerWithConfigs => {
+      return {
+        ...nodeBalancer,
+        configs: nodeBalancerConfigFactory.buildList(1),
+      };
+    }
   );
 
-  it('should render 7 columns', () => {
-    const numOfColumns = component
-      .find('WithStyles(TableHead)')
-      .find('WithStyles(TableCell)').length;
-    expect(numOfColumns).toBe(7);
-  });
+const nodeBalancerComponent = (
+  <NodeBalancersLanding
+    {...reactRouterProps}
+    nodeBalancersLoading={false}
+    nodeBalancersError={undefined}
+    nodeBalancersData={mockNodeBalancers}
+    nodeBalancersLastUpdated={0}
+    nodeBalancersCount={2}
+    nodeBalancerActions={{
+      updateNodeBalancer: vi.fn(),
+      createNodeBalancer: vi.fn(),
+      deleteNodeBalancer: vi.fn(),
+      getAllNodeBalancers: vi.fn(),
+      getAllNodeBalancersWithConfigs: vi.fn(),
+      getNodeBalancerPage: vi.fn(),
+      getNodeBalancerWithConfigs: vi.fn(),
+    }}
+    setDocs={vi.fn()}
+    clearDocs={vi.fn()}
+  />
+);
 
-  it.skip('should render a Kabob menu', () => {
-    const kabobMenu = component
-      .find('withRouter(NodeBalancerActionMenu)')
-      .first();
-    expect(kabobMenu).toHaveLength(1);
+describe('NodeBalancers', () => {
+  it('should render 3 columns', async () => {
+    const { container, findByText } = renderWithTheme(nodeBalancerComponent);
+
+    // @TODO Configure or mock DOM window size so that all 7 columns are shown.
+    expect(await findByText('Name')).toBeVisible();
+    expect(await findByText('IP Address')).toBeVisible();
+    await waitFor(() => {
+      expect(container.querySelectorAll('th').length).toBe(3);
+    });
   });
 });

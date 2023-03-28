@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 import { act, waitFor } from '@testing-library/react';
@@ -7,7 +8,7 @@ import userEvent from '@testing-library/user-event';
 
 const props = {
   open: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   token: appTokenFactory.build({ label: 'my-token' }),
 };
 

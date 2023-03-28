@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { supportTicketFactory } from 'src/factories/support';
@@ -6,13 +7,13 @@ import TicketRow from './TicketRow';
 
 const supportTicket = supportTicketFactory.build();
 
-window.matchMedia = jest.fn().mockImplementation((query) => {
+window.matchMedia = vi.fn().mockImplementation((query) => {
   return {
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
   };
 });
 

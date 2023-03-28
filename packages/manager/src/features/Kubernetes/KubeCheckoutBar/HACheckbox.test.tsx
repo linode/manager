@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
@@ -6,7 +7,7 @@ import HACheckbox, { Props } from './HACheckbox';
 
 const props: Props = {
   checked: false,
-  onChange: jest.fn(),
+  onChange: vi.fn(),
 };
 
 const shouldRender = HIGH_AVAILABILITY_PRICE !== undefined;

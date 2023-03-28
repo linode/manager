@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
@@ -8,7 +9,7 @@ import MultipleIPInput, { Props } from './MultipleIPInput';
 const baseProps: Props = {
   title: 'My Input',
   ips: [{ address: 'ip1' }, { address: 'ip2' }, { address: 'ip3' }],
-  onChange: jest.fn(),
+  onChange: vi.fn(),
 };
 
 describe('MultipleIPInput', () => {

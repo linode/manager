@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 
 import { StackScriptForm } from './StackScriptForm';
@@ -11,24 +12,24 @@ const props = {
   currentUser: 'mmckenna',
   label: {
     value: '',
-    handler: jest.fn(),
+    handler: vi.fn(),
   },
   description: {
     value: '',
-    handler: jest.fn(),
+    handler: vi.fn(),
   },
   revision: {
     value: '',
-    handler: jest.fn(),
+    handler: vi.fn(),
   },
   script: {
     value: '',
-    handler: jest.fn(),
+    handler: vi.fn(),
   },
-  onSelectChange: jest.fn(),
+  onSelectChange: vi.fn(),
   errors: [],
-  onSubmit: jest.fn(),
-  onCancel: jest.fn(),
+  onSubmit: vi.fn(),
+  onCancel: vi.fn(),
   isSubmitting: false,
   mode: 'create' as any,
   disableSubmit: false,

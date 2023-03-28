@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -10,7 +11,7 @@ const mockData: ResourcePage<any> = {
   data: [],
 };
 
-const mockFn = jest.fn(() => Promise.resolve(mockData));
+const mockFn = vi.fn(() => Promise.resolve(mockData));
 
 const setup = (mockRequest: any = mockFn) => {
   const MyComponent = paginate(mockRequest)(() => <div />);
@@ -95,7 +96,7 @@ describe('Paginator 2: Pagement Day', () => {
        * We need to test if Pagey is currently viewing a page of one, and we call onDelete, it requests
        * the following page, not the current page.
        */
-      const mockRequest = jest
+      const mockRequest = vi
         .fn(() => Promise.resolve({}))
         .mockImplementationOnce(() =>
           Promise.resolve({
@@ -133,7 +134,7 @@ describe('Paginator 2: Pagement Day', () => {
 
   describe('when handlePageChange is called', () => {
     it('should update page with provided argument', () => {
-      const { wrapper } = setup(jest.fn(() => Promise.resolve(mockData)));
+      const { wrapper } = setup(vi.fn(() => Promise.resolve(mockData)));
 
       const handlePageChange = wrapper.prop('handlePageChange');
 
@@ -146,7 +147,7 @@ describe('Paginator 2: Pagement Day', () => {
 
     it('should result in the request being called with updated params', () => {
       const { wrapper, mockRequest } = setup(
-        jest.fn(() => Promise.resolve(mockData))
+        vi.fn(() => Promise.resolve(mockData))
       );
 
       const handlePageChange = wrapper.prop('handlePageChange');
@@ -161,7 +162,7 @@ describe('Paginator 2: Pagement Day', () => {
 
   describe('when handlePageSizeChange is called', () => {
     it('should update pageSize with provided argument', () => {
-      const { wrapper } = setup(jest.fn(() => Promise.resolve(mockData)));
+      const { wrapper } = setup(vi.fn(() => Promise.resolve(mockData)));
 
       const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
 
@@ -175,7 +176,7 @@ describe('Paginator 2: Pagement Day', () => {
 
     it('should result in the request being called with updated params', () => {
       const { wrapper, mockRequest } = setup(
-        jest.fn(() => Promise.resolve(mockData))
+        vi.fn(() => Promise.resolve(mockData))
       );
 
       const handlePageSizeChange = wrapper.prop('handlePageSizeChange');

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { linodeFactory } from 'src/factories/linodes';
@@ -13,7 +14,7 @@ const metalLinode = linodeFactory.build({ type: 'g6-metal-alpha-2' });
 
 const props: Props = {
   linodeId: normalLinode.id,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
 };
 

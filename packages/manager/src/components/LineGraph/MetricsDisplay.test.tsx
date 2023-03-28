@@ -100,10 +100,12 @@ describe('CPUMetrics', () => {
 });
 
 describe('metrics by section', () => {
-  const metrics = { max: 10, average: 5, last: 8, total: 80, length: 10 };
-  expect(metricsBySection(metrics)).toHaveLength(3);
-  expect(metricsBySection(metrics)).toBeInstanceOf(Array);
-  expect(metricsBySection(metrics)[0]).toEqual(metrics.max);
-  expect(metricsBySection(metrics)[1]).toEqual(metrics.average);
-  expect(metricsBySection(metrics)[2]).toEqual(metrics.last);
+  it('exposes the metrics data as an array', () => {
+    const metrics = { max: 10, average: 5, last: 8, total: 80, length: 10 };
+    expect(metricsBySection(metrics)).toHaveLength(3);
+    expect(metricsBySection(metrics)).toBeInstanceOf(Array);
+    expect(metricsBySection(metrics)[0]).toEqual(metrics.max);
+    expect(metricsBySection(metrics)[1]).toEqual(metrics.average);
+    expect(metricsBySection(metrics)[2]).toEqual(metrics.last);
+  });
 });

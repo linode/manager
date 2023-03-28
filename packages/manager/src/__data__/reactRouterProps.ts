@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { RouteComponentProps } from 'react-router-dom';
 
 type History = RouteComponentProps<{}>['history'];
@@ -21,14 +22,14 @@ export const history: History = {
   length: 1,
   action: 'POP',
   location: mockLocation,
-  push: jest.fn(),
-  replace: jest.fn(),
-  go: jest.fn(),
-  goBack: jest.fn(),
-  goForward: jest.fn(),
-  block: jest.fn(),
-  listen: jest.fn(),
-  createHref: jest.fn(),
+  push: vi.fn(),
+  replace: vi.fn(),
+  go: vi.fn(),
+  goBack: vi.fn(),
+  goForward: vi.fn(),
+  block: vi.fn(),
+  listen: vi.fn(),
+  createHref: vi.fn(),
 };
 
 export const reactRouterProps: RouteComponentProps<any> = {

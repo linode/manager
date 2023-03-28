@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { UseQueryResult } from 'react-query';
@@ -29,8 +30,8 @@ describe('LinodeResize', () => {
       grants={
         { data: grantsFactory.build() } as UseQueryResult<Grants, APIError[]>
       }
-      closeSnackbar={jest.fn()}
-      enqueueSnackbar={jest.fn()}
+      closeSnackbar={vi.fn()}
+      enqueueSnackbar={vi.fn()}
       {...reactRouterProps}
       classes={{
         title: '',
@@ -45,12 +46,12 @@ describe('LinodeResize', () => {
       linodeId={12}
       linodeLabel=""
       open={false}
-      getUserPreferences={jest.fn()}
-      updateUserPreferences={jest.fn()}
+      getUserPreferences={vi.fn()}
+      updateUserPreferences={vi.fn()}
       preferences={preferencesFactory.build()}
-      onClose={jest.fn()}
-      getLinodeDisks={jest.fn()}
-      updateLinode={jest.fn()}
+      onClose={vi.fn()}
+      getLinodeDisks={vi.fn()}
+      updateLinode={vi.fn()}
       typesData={extendedTypes}
       typesLoading={false}
     />

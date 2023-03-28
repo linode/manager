@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { CombinedProps, FromImageContent } from './FromImageContent';
@@ -6,9 +7,9 @@ import store from 'src/store';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 const mockProps: CombinedProps = {
-  updateImageID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  updateImageID: vi.fn(),
+  updateRegionID: vi.fn(),
+  updateTypeID: vi.fn(),
   imagesData: {},
   regionsData: [],
   typesData: [],

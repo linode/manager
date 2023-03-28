@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
@@ -6,9 +7,9 @@ import {
   SSHAccessActionMenu as ActionMenu,
 } from './SSHAccessActionMenu';
 
-jest.mock('src/components/ActionMenu/ActionMenu');
+vi.mock('src/components/ActionMenu/ActionMenu');
 
-const mockOpenDrawer = jest.fn();
+const mockOpenDrawer = vi.fn();
 
 const props: Props = {
   linodeId: 1,

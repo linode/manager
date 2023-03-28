@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
@@ -12,7 +13,7 @@ describe('Select Plan Panel', () => {
         types={extendedTypes}
         currentPlanHeading="Linode 2GB"
         selectedID="test"
-        onSelect={jest.fn()}
+        onSelect={vi.fn()}
         regionsData={[]}
         regionsLoading={false}
         regionsLastUpdated={0}

@@ -1,10 +1,11 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { InfoPanel } from './LabelAndTagsPanel';
 
-const onLabelChange = () => jest.fn();
-const onTagsChange = () => jest.fn();
+const onLabelChange = () => vi.fn();
+const onTagsChange = () => vi.fn();
 
 describe('Tags list', () => {
   it('should render tags input if tagsInputProps are specified', () => {

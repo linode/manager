@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -8,14 +9,14 @@ const component = shallow<AuthenticationWrapper>(
     isAuthenticated={false}
     linodesLastUpdated={0}
     linodesLoading={false}
-    initSession={jest.fn()}
-    requestTypes={jest.fn()}
-    requestLinodes={jest.fn()}
-    requestNotifications={jest.fn()}
-    requestRegions={jest.fn()}
-    markAppAsDoneLoading={jest.fn()}
-    requestLinodeType={jest.fn()}
-    checkAccountSize={jest.fn()}
+    initSession={vi.fn()}
+    requestTypes={vi.fn()}
+    requestLinodes={vi.fn()}
+    requestNotifications={vi.fn()}
+    requestRegions={vi.fn()}
+    markAppAsDoneLoading={vi.fn()}
+    requestLinodeType={vi.fn()}
+    checkAccountSize={vi.fn()}
     pendingUpload={false}
     linodes={[]}
     typesLastUpdated={0}

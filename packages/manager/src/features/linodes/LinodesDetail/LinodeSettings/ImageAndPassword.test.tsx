@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -14,11 +15,11 @@ const props = {
   imagesError: {},
   imagesData: {},
   imagesLastUpdated: 0,
-  onImageChange: jest.fn(),
+  onImageChange: vi.fn(),
   password: '',
-  onPasswordChange: jest.fn(),
+  onPasswordChange: vi.fn(),
   userSSHKeys: [],
-  requestKeys: jest.fn(),
+  requestKeys: vi.fn(),
   permissions: null,
 };
 

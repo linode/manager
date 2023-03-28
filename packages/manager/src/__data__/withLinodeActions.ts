@@ -1,8 +1,10 @@
+import { vi } from 'vitest';
+
 export default {
   linodeActions: {
-    createLinode: jest.fn(),
-    updateLinode: jest.fn(),
-    deleteLinode: jest.fn(),
-    rebootLinode: jest.fn(),
+    createLinode: vi.fn(),
+    updateLinode: vi.fn(),
+    deleteLinode: vi.fn(),
+    rebootLinode: vi.fn(),
   },
 };

@@ -24,7 +24,7 @@ export default loadDevTools;
 //
 // Defaults to TRUE in development mode, but can be explicity disabled with
 // query param or local storage.
-export const devToolsEnabled = () => {
+export const devToolsEnabled = (): boolean => {
   const explicitlyDisabled =
     window.location.search.includes('dev-tools=false') ||
     window.localStorage.getItem('dev-tools') === 'false';
@@ -32,6 +32,7 @@ export const devToolsEnabled = () => {
     window.location.search.includes('dev-tools=true') ||
     window.localStorage.getItem('dev-tools') === 'true' ||
     ENABLE_DEV_TOOLS;
+  const devMode = !!import.meta.env.DEV;
 
-  return !explicitlyDisabled && (import.meta.env.DEV || explicitlyEnabled);
+  return !explicitlyDisabled && (devMode || explicitlyEnabled);
 };

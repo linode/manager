@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { attachment1, attachment2 } from 'src/__data__/fileAttachments';
@@ -5,8 +6,8 @@ import { AttachFileForm } from './AttachFileForm';
 
 const props = {
   files: [attachment1, attachment2],
-  handleFileSelected: jest.fn(),
-  updateFiles: jest.fn(),
+  handleFileSelected: vi.fn(),
+  updateFiles: vi.fn(),
   classes: {
     attachFileButton: '',
   },

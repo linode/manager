@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -10,8 +11,8 @@ import { AttachFileListItem } from './AttachFileListItem';
 
 const props = {
   fileIdx: 1,
-  onClick: jest.fn(),
-  removeFile: jest.fn(),
+  onClick: vi.fn(),
+  removeFile: vi.fn(),
 };
 
 describe('AttachFileListItem component', () => {

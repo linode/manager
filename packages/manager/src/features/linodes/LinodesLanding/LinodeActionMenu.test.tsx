@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { linodeBackupsFactory } from 'src/factories/linodes';
@@ -17,8 +18,8 @@ const props: Props = {
   linodeLabel: 'test-linode',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
-  openDialog: jest.fn(),
-  openPowerActionDialog: jest.fn(),
+  openDialog: vi.fn(),
+  openPowerActionDialog: vi.fn(),
 };
 
 describe('LinodeActionMenu', () => {

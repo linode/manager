@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { memory } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -46,25 +45,22 @@ describe('Longview RAM Gauge UI', () => {
     expect(getByText(/Loading/)).toBeInTheDocument();
   });
 
-  it('should render error UI if an error comes back from Redux State', async (done) => {
-    const { getByText } = renderWithTheme(<RAM clientID={123} />, {
+  it('should render error UI if an error comes back from Redux State', async () => {
+    const { findByText } = renderWithTheme(<RAM clientID={123} />, {
       customStore: errorStore,
     });
 
-    const resolvedDiv = await waitFor(() => getByText(/Error/));
-
+    const resolvedDiv = await findByText(/Error/);
     expect(resolvedDiv).toHaveTextContent(/Error/);
-    done();
   });
 
-  it('should render a data state UI if data comes back from Redux State', async (done) => {
-    const { getByTestId } = renderWithTheme(<RAM clientID={123} />, {
+  it('should render a data state UI if data comes back from Redux State', async () => {
+    const { findByTestId } = renderWithTheme(<RAM clientID={123} />, {
       customStore: dataStore,
     });
 
-    const innerText = await waitFor(() => getByTestId('gauge-innertext'));
-    const subtext = await waitFor(() => getByTestId('gauge-subtext'));
-    done();
+    const innerText = await findByTestId('gauge-innertext');
+    const subtext = await findByTestId('gauge-subtext');
 
     expect(innerText).toHaveTextContent('4.69 MB');
     expect(subtext).toHaveTextContent('1.91 GB');

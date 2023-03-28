@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -10,11 +11,11 @@ import { profileFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { QueryClient } from 'react-query';
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 const props: CombinedProps = {
-  onClose: jest.fn(),
-  onSubmit: jest.fn().mockResolvedValue({}),
+  onClose: vi.fn(),
+  onSubmit: vi.fn().mockResolvedValue({}),
   title: 'Create Firewall',
   open: true,
 };

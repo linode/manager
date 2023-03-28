@@ -1,8 +1,9 @@
+import { vi } from 'vitest';
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { SSHKeyCreationDrawer } from './SSHKeyCreationDrawer';
 
-jest.mock('@linode/api-v4/lib/profile');
+vi.mock('@linode/api-v4/lib/profile');
 
 const o = {
   labelField: `[data-qa-label-field=true]`,
@@ -13,8 +14,8 @@ const o = {
 
 describe('SSHKeyCreationDrawer', () => {
   let wrapper: ShallowWrapper;
-  const onSuccess = jest.fn();
-  const onCancel = jest.fn();
+  const onSuccess = vi.fn();
+  const onCancel = vi.fn();
 
   beforeEach(() => {
     onSuccess.mockReset();

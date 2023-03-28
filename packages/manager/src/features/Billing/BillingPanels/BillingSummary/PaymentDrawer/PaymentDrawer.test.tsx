@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import {
   render,
@@ -15,7 +16,7 @@ import { isAllowedUSDAmount, shouldEnablePaypalButton } from './Paypal';
 const props = {
   paymentMethods: [],
   open: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
 };
 
 describe('Make a Payment Panel', () => {

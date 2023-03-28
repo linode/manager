@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { mockMatchMedia, wrapWithTheme } from 'src/utilities/testHelpers';
@@ -13,7 +14,7 @@ const props: PageNumbersProps = {
   classes: { ellipses: '', ellipsesInner: '' },
   numOfPages: 4,
   currentPage: 1,
-  handlePageClick: jest.fn(),
+  handlePageClick: vi.fn(),
 };
 
 describe('PageNumbers', () => {

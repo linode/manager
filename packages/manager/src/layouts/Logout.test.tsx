@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -5,7 +6,7 @@ import { Logout } from './Logout';
 
 describe('layouts/Logout', () => {
   const component = shallow<Logout>(
-    <Logout token="" dispatchLogout={jest.fn()} />
+    <Logout token="" dispatchLogout={vi.fn()} />
   );
 
   it('dispatches logout action on componentDidMount', () => {

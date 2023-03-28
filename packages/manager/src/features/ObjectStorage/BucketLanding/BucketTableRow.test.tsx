@@ -1,9 +1,10 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { buckets } from 'src/__data__/buckets';
 import { BucketTableRow, CombinedProps } from './BucketTableRow';
 
-const mockOnRemove = jest.fn();
+const mockOnRemove = vi.fn();
 const bucket = buckets[0];
 
 describe('BucketTableRow', () => {
@@ -15,7 +16,7 @@ describe('BucketTableRow', () => {
     size: bucket.size,
     objects: bucket.objects,
     onRemove: mockOnRemove,
-    onDetails: jest.fn(),
+    onDetails: vi.fn(),
   };
 
   it('should render the bucket name', () => {

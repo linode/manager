@@ -1,10 +1,11 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { longviewProcessFactory } from 'src/factories/longviewProcess';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { extendData } from './ProcessesLanding';
 import { ProcessesTable, Props } from './ProcessesTable';
 
-const mockSetSelectedRow = jest.fn();
+const mockSetSelectedRow = vi.fn();
 
 const props: Props = {
   processesData: [],

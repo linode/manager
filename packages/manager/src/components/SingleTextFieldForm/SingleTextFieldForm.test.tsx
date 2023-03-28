@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import SingleTextFieldForm, { Props } from './SingleTextFieldForm';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -7,7 +8,7 @@ import userEvent from '@testing-library/user-event';
 describe('SingleTextFieldForm', () => {
   const props: Props = {
     label: 'Username',
-    submitForm: jest.fn(() => Promise.resolve()),
+    submitForm: vi.fn(() => Promise.resolve()),
     initialValue: 'jane-doe',
   };
 
@@ -30,7 +31,7 @@ describe('SingleTextFieldForm', () => {
     renderWithTheme(
       <SingleTextFieldForm
         {...props}
-        submitForm={jest.fn(() =>
+        submitForm={vi.fn(() =>
           Promise.reject([{ reason: 'Error updating username.' }])
         )}
       />

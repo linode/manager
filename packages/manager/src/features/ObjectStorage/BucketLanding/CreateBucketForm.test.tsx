@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { buckets } from 'src/__data__/buckets';
@@ -7,8 +8,8 @@ import { screen } from '@testing-library/react';
 describe('CreateBucketForm', () => {
   renderWithTheme(
     <CreateBucketForm
-      onClose={jest.fn()}
-      onSuccess={jest.fn()}
+      onClose={vi.fn()}
+      onSuccess={vi.fn()}
       isRestrictedUser={false}
     />
   );

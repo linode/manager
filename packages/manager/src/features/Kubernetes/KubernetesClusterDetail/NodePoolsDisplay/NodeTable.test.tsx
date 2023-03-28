@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
 import { linodeFactory } from 'src/factories/linodes';
@@ -12,7 +13,7 @@ const props: Props = {
   nodes: mockKubeNodes,
   poolId: 1,
   typeLabel: 'Linode 2G',
-  openRecycleNodeDialog: jest.fn(),
+  openRecycleNodeDialog: vi.fn(),
 };
 
 beforeAll(() => linodeFactory.resetSequenceNumber());

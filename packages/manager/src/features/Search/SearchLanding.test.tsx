@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
@@ -16,7 +17,7 @@ const props: Props = {
   entitiesLoading: false,
   searchResultsByEntity: emptyResults,
   combinedResults: [],
-  search: jest.fn(),
+  search: vi.fn(),
   errors: {
     hasErrors: false,
     linodes: false,
@@ -33,8 +34,8 @@ const propsWithResults: Props = {
 
 const queryClient = new QueryClient();
 
-jest.mock('src/hooks/useReduxLoad', () => ({
-  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false }),
+vi.mock('src/hooks/useReduxLoad', () => ({
+  useReduxLoad: () => vi.fn().mockReturnValue({ _loading: false }),
 }));
 
 describe('Component', () => {
@@ -68,7 +69,7 @@ describe('Component', () => {
   });
 
   it('should search when the entity list (from Redux) changes', () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const { rerender } = render(wrapWithTheme(<SearchLanding {...props} />));
     expect(props.search).toHaveBeenCalledTimes(1);
 

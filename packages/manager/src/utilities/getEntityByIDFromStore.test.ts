@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { linode1 as mockLinode } from 'src/__data__/linodes';
 
 const mockState = {
@@ -11,9 +12,13 @@ const mockState = {
 
 import { getEntityByIDFromStore } from './getEntityByIDFromStore';
 
-jest.mock('src/store', () => ({
-  getState: () => mockState,
-}));
+vi.mock('src/store', async () => {
+  return {
+    default: {
+      getState: () => mockState,
+    },
+  };
+});
 
 describe('getEntityByIDFromStore utility function', () => {
   it('should retrieve an entity that exists in the store', () => {

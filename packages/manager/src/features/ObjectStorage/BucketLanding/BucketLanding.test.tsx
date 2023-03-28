@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -11,8 +12,8 @@ import { queryPresets } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BucketLanding, { CombinedProps } from './BucketLanding';
 
-const mockCloseBucketDrawer = jest.fn();
-const mockOpenBucketDrawer = jest.fn();
+const mockCloseBucketDrawer = vi.fn();
+const mockOpenBucketDrawer = vi.fn();
 
 const props: CombinedProps = {
   isRestrictedUser: false,

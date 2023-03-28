@@ -1,16 +1,17 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import FirewallRuleActionMenu, { Props } from './FirewallRuleActionMenu';
 
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 
-jest.mock('src/components/ActionMenu/ActionMenu');
+vi.mock('src/components/ActionMenu/ActionMenu');
 
 const props: Props = {
   idx: 1,
   disabled: false,
-  triggerCloneFirewallRule: jest.fn(),
-  triggerDeleteFirewallRule: jest.fn(),
-  triggerOpenRuleDrawerForEditing: jest.fn(),
+  triggerCloneFirewallRule: vi.fn(),
+  triggerDeleteFirewallRule: vi.fn(),
+  triggerOpenRuleDrawerForEditing: vi.fn(),
 };
 
 describe('Firewall rule action menu', () => {

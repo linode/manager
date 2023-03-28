@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
@@ -9,12 +10,13 @@ import BillingActivityPanel, {
   makeFilter,
 } from './BillingActivityPanel';
 import { DateTime } from 'luxon';
-jest.mock('../../../../utilities/getUserTimezone');
+vi.mock('../../../../utilities/getUserTimezone');
 
 // Mock global Date object so Transaction Date tests are deterministic.
-global.Date.now = jest.fn(() => new Date('2020-01-02T00:00:00').getTime());
+global.Date.now = vi.fn(() => new Date('2020-01-02T00:00:00').getTime());
 
-jest.mock('@linode/api-v4/lib/account', () => {
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<{}>('@linode/api-v4/lib/account');
   const invoices = [
     // eslint-disable-next-line
     invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
@@ -27,13 +29,14 @@ jest.mock('@linode/api-v4/lib/account', () => {
   ];
 
   return {
-    getInvoices: jest.fn().mockResolvedValue({
+    ...actual,
+    getInvoices: vi.fn().mockResolvedValue({
       results: 2,
       page: 1,
       pages: 1,
       data: invoices,
     }),
-    getPayments: jest.fn().mockResolvedValue({
+    getPayments: vi.fn().mockResolvedValue({
       results: 2,
       page: 1,
       pages: 1,
@@ -41,7 +44,7 @@ jest.mock('@linode/api-v4/lib/account', () => {
     }),
   };
 });
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {

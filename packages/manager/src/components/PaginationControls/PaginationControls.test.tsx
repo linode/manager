@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import PaginationControls, { Props } from './PaginationControls';
@@ -8,7 +9,7 @@ const props: Props = {
   page: 1,
   pageSize: 25,
   eventCategory: 'a-category',
-  onClickHandler: jest.fn(),
+  onClickHandler: vi.fn(),
   classes: {},
 };
 

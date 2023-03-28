@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -9,11 +10,11 @@ import store from 'src/store';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 const mockProps: CombinedProps = {
-  updateDiskSize: jest.fn(),
-  updateImageID: jest.fn(),
-  updateLinodeID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  updateDiskSize: vi.fn(),
+  updateImageID: vi.fn(),
+  updateLinodeID: vi.fn(),
+  updateRegionID: vi.fn(),
+  updateTypeID: vi.fn(),
   accountBackupsEnabled: false,
   imagesData: {},
   linodesData: linodes,

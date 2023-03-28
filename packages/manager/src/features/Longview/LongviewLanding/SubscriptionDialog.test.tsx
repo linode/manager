@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -8,8 +9,8 @@ const props = {
   isOpen: true,
   isManaged: false,
   clientLimit: 5,
-  onClose: jest.fn(),
-  onSubmit: jest.fn(),
+  onClose: vi.fn(),
+  onSubmit: vi.fn(),
 };
 
 describe('Subscription Dialog component', () => {

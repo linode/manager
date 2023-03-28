@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
@@ -33,7 +34,7 @@ describe('CancelLanding', () => {
   it('navigates to the survey link when the button is clicked', () => {
     // Mock window.location.assign.
     // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
-    const mockAssign = jest.fn();
+    const mockAssign = vi.fn();
     delete (window as Partial<Window>).location;
     // eslint-disable-next-line
     window.location = { ...realLocation, assign: mockAssign };

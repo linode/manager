@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
@@ -15,7 +16,7 @@ const smallPool = nodePoolFactory.build({ count: 2 });
 
 const props: Props = {
   open: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   nodePool: pool,
   kubernetesClusterId: 1,
 };

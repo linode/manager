@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { linodeDiskFactory } from 'src/factories/disk';
@@ -8,7 +9,7 @@ import LinodeDiskDrawer, { Props } from './LinodeDiskDrawer';
 const disk = linodeDiskFactory.build();
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 const props: Props = {
@@ -16,8 +17,8 @@ const props: Props = {
   mode: 'create' as any,
   maximumSize: 100,
   open: true,
-  onClose: jest.fn(),
-  onSubmit: jest.fn().mockResolvedValue({}),
+  onClose: vi.fn(),
+  onSubmit: vi.fn().mockResolvedValue({}),
 };
 
 const EMPTY_DISK_RADIO_LABEL = new RegExp('create empty disk', 'i');

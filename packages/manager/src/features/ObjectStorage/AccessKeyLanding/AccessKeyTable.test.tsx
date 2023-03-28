@@ -1,11 +1,12 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AccessKeyTable, Props } from './AccessKeyTable';
 
 describe('ObjectStorageKeyTable', () => {
   const props: Props = {
-    openDrawer: jest.fn(),
-    openRevokeDialog: jest.fn(),
+    openDrawer: vi.fn(),
+    openRevokeDialog: vi.fn(),
     isRestrictedUser: false,
     isLoading: false,
     data: [],

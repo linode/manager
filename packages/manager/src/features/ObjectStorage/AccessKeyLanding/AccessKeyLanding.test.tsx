@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { pageyProps } from 'src/__data__/pageyProps';
 import { AccessKeyLanding } from './AccessKeyLanding';
@@ -15,8 +16,8 @@ const props = {
   },
   isRestrictedUser: false,
   accessDrawerOpen: false,
-  openAccessDrawer: jest.fn(),
-  closeAccessDrawer: jest.fn(),
+  openAccessDrawer: vi.fn(),
+  closeAccessDrawer: vi.fn(),
   mode: 'creating' as any,
   ...pageyProps,
 };

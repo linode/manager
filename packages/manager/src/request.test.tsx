@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { profileFactory } from './factories';
@@ -95,7 +96,7 @@ describe('Expiring Tokens', () => {
 
 describe('getURL', () => {
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
   });
 
   it('replaces the API baseURL with the one from the environment', () => {

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { clearDocs, setDocs } from 'src/store/documentation';
@@ -21,13 +22,13 @@ describe('ListLinodes', () => {
           linodesData={[]}
           classes={classes}
           clearDocs={clearDocs}
-          enqueueSnackbar={jest.fn()}
+          enqueueSnackbar={vi.fn()}
           linodesCount={0}
           linodesRequestError={undefined}
           linodesRequestLoading={false}
-          closeSnackbar={jest.fn()}
+          closeSnackbar={vi.fn()}
           setDocs={setDocs}
-          deleteLinode={jest.fn()}
+          deleteLinode={vi.fn()}
           {...reactRouterProps}
           linodesInTransition={new Set<number>()}
         />

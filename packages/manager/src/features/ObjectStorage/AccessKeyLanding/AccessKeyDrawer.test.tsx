@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Scope } from '@linode/api-v4/lib/object-storage/types';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
@@ -10,8 +11,8 @@ import { MODE } from './types';
 describe('AccessKeyDrawer', () => {
   const props: Props = {
     open: true,
-    onSubmit: jest.fn(),
-    onClose: jest.fn(),
+    onSubmit: vi.fn(),
+    onClose: vi.fn(),
     mode: 'creating' as MODE,
     isRestrictedUser: false,
   };

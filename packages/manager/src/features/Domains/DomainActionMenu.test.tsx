@@ -1,13 +1,14 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import { DomainActionMenu } from './DomainActionMenu';
 import { domainFactory } from 'src/factories/domain';
 
 const props = {
-  onClone: jest.fn(),
-  onRemove: jest.fn(),
-  onEdit: jest.fn(),
-  onDisableOrEnable: jest.fn(),
+  onClone: vi.fn(),
+  onRemove: vi.fn(),
+  onEdit: vi.fn(),
+  onDisableOrEnable: vi.fn(),
 };
 
 describe('Domain action menu', () => {

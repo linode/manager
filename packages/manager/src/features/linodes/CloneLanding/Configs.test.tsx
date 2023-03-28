@@ -1,10 +1,11 @@
+import { vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { Configs, Props } from './Configs';
 
-const mockHandleSelect = jest.fn();
+const mockHandleSelect = vi.fn();
 
 const props: Props = {
   configs: linodeConfigs,

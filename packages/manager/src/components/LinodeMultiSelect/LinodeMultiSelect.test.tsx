@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { linodeFactory } from 'src/factories/linodes';
@@ -12,12 +13,12 @@ import {
   userSelectedAllLinodes,
 } from './LinodeMultiSelect';
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 const linodes = linodeFactory.buildList(10);
 
 const props: Props = {
-  handleChange: jest.fn(),
+  handleChange: vi.fn(),
   selectedLinodes: [],
   showAllOption: true,
 };

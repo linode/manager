@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { extDisk3, swapDisk } from 'src/__data__/disks';
@@ -6,7 +7,7 @@ import { Disks, Props } from './Disks';
 
 const disks = [extDisk3, swapDisk];
 
-const mockHandleSelect = jest.fn();
+const mockHandleSelect = vi.fn();
 
 const props: Props = {
   disks,

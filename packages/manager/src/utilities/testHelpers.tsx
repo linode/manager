@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { MatcherFunction, render, RenderResult } from '@testing-library/react';
 import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
 import { SnackbarProvider } from 'notistack';
@@ -16,13 +17,13 @@ import { queryClient } from 'src/queries/base';
 import store, { ApplicationState, defaultState } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
-  window.matchMedia = jest.fn().mockImplementation((query) => {
+  window.matchMedia = vi.fn().mockImplementation((query) => {
     return {
       matches,
       media: query,
       onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
     };
   });
 };

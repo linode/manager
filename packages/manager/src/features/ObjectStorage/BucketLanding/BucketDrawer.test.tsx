@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { screen, within } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -5,8 +6,8 @@ import { BucketDrawer, CombinedProps } from './BucketDrawer';
 
 const props: CombinedProps = {
   isOpen: true,
-  openBucketDrawer: jest.fn(),
-  closeBucketDrawer: jest.fn(),
+  openBucketDrawer: vi.fn(),
+  closeBucketDrawer: vi.fn(),
   isRestrictedUser: false,
 };
 

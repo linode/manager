@@ -1,6 +1,7 @@
+import { vi } from 'vitest';
 import tagDrawer, * as T from './index';
 
-jest.mock('src/store');
+vi.mock('src/store');
 
 describe('tagImportDrawer Redux duck', () => {
   describe('reducer', () => {

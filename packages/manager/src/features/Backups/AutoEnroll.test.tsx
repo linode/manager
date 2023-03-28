@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -8,7 +9,7 @@ import { AutoEnroll } from './AutoEnroll';
 const props = {
   enabled: true,
   error: undefined,
-  toggle: jest.fn(),
+  toggle: vi.fn(),
   classes: {
     root: '',
     header: '',

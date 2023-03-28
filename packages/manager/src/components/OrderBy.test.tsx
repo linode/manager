@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { assertOrder, wrapWithTheme } from 'src/utilities/testHelpers';
@@ -118,8 +119,8 @@ describe('OrderBy', () => {
   describe('component', () => {
     const componentProps = {
       preferences: {},
-      getUserPreferences: jest.fn(),
-      updateUserPreferences: jest.fn(),
+      getUserPreferences: vi.fn(),
+      updateUserPreferences: vi.fn(),
     };
 
     it('re-sorts (previously) sorted data when the order changes', () => {

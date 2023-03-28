@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
@@ -17,8 +18,8 @@ import {
 } from './LongviewClients';
 import { LongviewLanding } from './LongviewLanding';
 
-jest.mock('../request');
-jest.mock('./LongviewClientRow');
+vi.mock('../request');
+vi.mock('./LongviewClientRow');
 
 const clients = longviewClientFactory.buildList(5);
 
@@ -35,15 +36,15 @@ const props: CombinedProps = {
   longviewClientsLastUpdated: 0,
   longviewClientsLoading: false,
   longviewClientsResults: clients.length,
-  createLongviewClient: jest.fn().mockResolvedValue({}),
-  deleteLongviewClient: jest.fn(),
-  getLongviewClients: jest.fn().mockResolvedValue([]),
-  updateLongviewClient: jest.fn(),
-  enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
+  createLongviewClient: vi.fn().mockResolvedValue({}),
+  deleteLongviewClient: vi.fn(),
+  getLongviewClients: vi.fn().mockResolvedValue([]),
+  updateLongviewClient: vi.fn(),
+  enqueueSnackbar: vi.fn(),
+  closeSnackbar: vi.fn(),
   activeSubscription: longviewSubscriptionFactory.build(),
   lvClientData: {},
-  handleAddClient: jest.fn(),
+  handleAddClient: vi.fn(),
   newClientLoading: false,
   ...reactRouterProps,
 };

@@ -1,11 +1,12 @@
+import { vi } from 'vitest';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { EnableObjectStorageModal, Props } from './EnableObjectStorageModal';
 
-const handleSubmit = jest.fn();
-const onClose = jest.fn();
+const handleSubmit = vi.fn();
+const onClose = vi.fn();
 
 const props: Props = {
   handleSubmit,

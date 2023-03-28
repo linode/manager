@@ -42,7 +42,7 @@ describe('Linode Power Control Dialogs', () => {
     expect(renderedComponent.state('powerDialogOpen')).toBeTruthy();
   });
 
-  xit('Confirmation Dialog cancel button should set powerAlertOpen state is false', () => {
+  it.skip('Confirmation Dialog cancel button should set powerAlertOpen state is false', () => {
     const renderedComponent = shallow(component);
     const cancelButton = renderedComponent
       .find('WithStyles(ConfirmationDialog)')

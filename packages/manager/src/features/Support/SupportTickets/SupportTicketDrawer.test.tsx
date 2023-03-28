@@ -1,15 +1,16 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import SupportTicketDrawer, { Props } from './SupportTicketDrawer';
 
 const props: Props = {
   open: true,
-  onClose: jest.fn(),
-  onSuccess: jest.fn(),
+  onClose: vi.fn(),
+  onSuccess: vi.fn(),
 };
 
 // Mock React-Select
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 describe('Support Ticket Drawer', () => {
   it('should render', () => {

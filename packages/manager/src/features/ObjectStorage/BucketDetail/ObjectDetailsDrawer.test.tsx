@@ -1,22 +1,27 @@
+import { vi } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import ObjectDetailsDrawer, { Props } from './ObjectDetailsDrawer';
 
-jest.mock('@linode/api-v4/lib/object-storage/objects', () => {
+vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
+  const actual = await vi.importActual<any>(
+    '@linode/api-v4/lib/object-storage/objects'
+  );
   return {
-    getObjectACL: jest.fn().mockResolvedValue({
+    ...actual,
+    getObjectACL: vi.fn().mockResolvedValue({
       acl: 'public-read',
       acl_xml: 'long xml string',
     }),
-    updateObjectACL: jest.fn().mockResolvedValue({}),
+    updateObjectACL: vi.fn().mockResolvedValue({}),
   };
 });
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 const props: Props = {
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   open: true,
   lastModified: '2019-12-31T23:59:59Z',
   displayName: 'my-image.png',
@@ -29,7 +34,7 @@ const props: Props = {
 
 describe('ObjectDetailsDrawer', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   it('renders formatted size, formatted last modified, truncated URL', async () => {
     renderWithTheme(<ObjectDetailsDrawer {...props} />);

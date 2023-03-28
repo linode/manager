@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -7,8 +8,8 @@ import { Provider } from 'react-redux';
 import ExtendedAccordion from './ExtendedAccordion';
 import store from 'src/store';
 
-const onChange = jest.fn();
-const renderMainContent = jest.fn();
+const onChange = vi.fn();
+const renderMainContent = vi.fn();
 
 const props = {
   heading: 'Header',
@@ -18,7 +19,7 @@ const props = {
 };
 
 describe('ExtendedAccordion', () => {
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => vi.resetAllMocks());
   const component = shallow(
     <Provider store={store}>
       <ExtendedAccordion {...props} />

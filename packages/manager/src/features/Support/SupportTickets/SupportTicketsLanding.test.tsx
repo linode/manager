@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -10,8 +11,8 @@ describe('Support Tickets Landing', () => {
   const component = shallow(
     <SupportTicketsLanding
       globalErrors={{}}
-      setErrors={jest.fn()}
-      clearErrors={jest.fn()}
+      setErrors={vi.fn()}
+      clearErrors={vi.fn()}
       {...reactRouterProps}
     />
   );

@@ -1,8 +1,10 @@
+import { vi } from 'vitest';
 import { getEnvLocalStorageOverrides, isDevToolsEnvValid } from './storage';
 
 describe('getLocalStorageOverrides', () => {
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
+    vi.unstubAllEnvs();
   });
 
   const localStorage = {
@@ -12,7 +14,7 @@ describe('getLocalStorageOverrides', () => {
     label: 'My Env',
   };
 
-  it.skip('it returns overrides if defined and if dev tools are enabled', () => {
+  it('it returns overrides if defined and if dev tools are enabled', () => {
     // Enable the dev tools.
     window.localStorage.setItem('dev-tools', 'true');
 
@@ -33,6 +35,8 @@ describe('getLocalStorageOverrides', () => {
   });
 
   it('only returns overrides while in development mode', () => {
+    vi.stubEnv('DEV', '');
+
     // Enable the dev tools.
     window.localStorage.setItem('dev-tools', 'true');
 

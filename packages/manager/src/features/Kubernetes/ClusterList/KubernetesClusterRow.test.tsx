@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { kubernetesClusterFactory } from 'src/factories';
@@ -8,8 +9,8 @@ const cluster = kubernetesClusterFactory.build();
 
 const props: Props = {
   cluster,
-  openUpgradeDialog: jest.fn(),
-  openDeleteDialog: jest.fn(),
+  openUpgradeDialog: vi.fn(),
+  openDeleteDialog: vi.fn(),
 };
 
 describe('ClusterRow component', () => {

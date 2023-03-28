@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
@@ -15,7 +16,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
         buttonText={buttonText}
         descriptiveText={descriptiveText}
         sectionTitle={sectionTitle}
-        onClick={jest.fn()}
+        onClick={vi.fn()}
       />
     );
     const title = getByRole('heading');
@@ -28,7 +29,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
         buttonText={buttonText}
         descriptiveText={descriptiveText}
         sectionTitle={sectionTitle}
-        onClick={jest.fn()}
+        onClick={vi.fn()}
       />
     );
     getByText(descriptiveText);
@@ -40,7 +41,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
         buttonText={buttonText}
         descriptiveText={descriptiveText}
         sectionTitle={sectionTitle}
-        onClick={jest.fn()}
+        onClick={vi.fn()}
       />
     );
     const button = getByRole('button');
@@ -48,7 +49,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
   });
 
   it('Should have a primary button that calls the provided callback when clicked', () => {
-    const onClick = jest.fn();
+    const onClick = vi.fn();
     const { getByRole } = renderWithTheme(
       <DatabaseSettingsMenuItem
         buttonText={buttonText}

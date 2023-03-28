@@ -2,10 +2,6 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import Graphs, { Props } from './Graphs';
 
-afterAll(async (done) => {
-  done();
-});
-
 const baseProps: Props = {
   isSwap: false,
   childOf: false,

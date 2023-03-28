@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -7,23 +8,23 @@ import {
   RebuildFromStackScript,
 } from './RebuildFromStackScript';
 
-const request = jest.requireMock('@linode/api-v4/lib/account');
-
-jest.mock('@linode/api-v4/lib/account', () => ({
-  getUsers: jest.fn(),
-}));
-
-request.getUsers = jest.fn().mockResolvedValue([]);
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<{}>('@linode/api-v4/lib/account');
+  return {
+    ...actual,
+    getUsers: vi.fn().mockResolvedValue([]),
+  };
+});
 
 const props: CombinedProps = {
   type: 'community',
   linodeId: 1234,
-  requestKeys: jest.fn(),
+  requestKeys: vi.fn(),
   userSSHKeys: [],
   disabled: false,
   passwordHelperText: '',
-  handleRebuildError: jest.fn(),
-  onClose: jest.fn(),
+  handleRebuildError: vi.fn(),
+  onClose: vi.fn(),
   ...reactRouterProps,
 };
 

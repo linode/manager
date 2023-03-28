@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -8,7 +9,7 @@ const token = appTokenFactory.build({ label: 'my-token', scopes: '*' });
 
 const props = {
   open: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   token,
 };
 

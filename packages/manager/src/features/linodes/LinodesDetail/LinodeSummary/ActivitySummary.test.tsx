@@ -1,9 +1,10 @@
+import { vi } from 'vitest';
 import * as account from '@linode/api-v4/lib/account/events';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { ActivitySummary } from './ActivitySummary';
 
-const mockGetEvents = jest.spyOn<any, any>(account, 'getEvents');
+const mockGetEvents = vi.spyOn<any, any>(account, 'getEvents');
 
 const props = {
   linodeId: 123456,

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 // import { fireEvent } from '@testing-library/react';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
@@ -6,9 +7,11 @@ import { paymentMethodFactory } from 'src/factories';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PaymentInformation from './PaymentInformation';
 
-jest.mock('@linode/api-v4/lib/account', () => {
+vi.mock('@linode/api-v4/lib/account', async () => {
+  const actual = await vi.importActual<{}>('@linode/api-v4/lib/account');
   return {
-    getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
+    ...actual,
+    getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
   };
 });
 

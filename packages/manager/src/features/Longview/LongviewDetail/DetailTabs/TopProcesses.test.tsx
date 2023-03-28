@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { longviewTopProcessesFactory } from 'src/factories/longviewTopProcesses';
@@ -14,7 +15,7 @@ const props: Props = {
 describe('Top Processes', () => {
   describe('TopProcesses Component', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('renders the title', () => {

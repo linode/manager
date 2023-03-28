@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { firewalls } from 'src/__data__/firewalls';
@@ -42,9 +43,9 @@ describe('FirewallRow', () => {
   describe('FirewallRow component', () => {
     const firewall = firewallFactory.build();
 
-    const mockTriggerDeleteFirewall = jest.fn();
-    const mockTriggerDisableFirewall = jest.fn();
-    const mockTriggerEnableFirewall = jest.fn();
+    const mockTriggerDeleteFirewall = vi.fn();
+    const mockTriggerDisableFirewall = vi.fn();
+    const mockTriggerEnableFirewall = vi.fn();
 
     const baseProps: CombinedProps = {
       ...firewall,

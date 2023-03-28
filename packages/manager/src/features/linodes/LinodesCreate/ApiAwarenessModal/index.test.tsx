@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -9,7 +10,7 @@ import ApiAwarenessModal, { Props } from '.';
 const defaultProps: Props = {
   payLoad: {},
   isOpen: false,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   route: '',
 };
 

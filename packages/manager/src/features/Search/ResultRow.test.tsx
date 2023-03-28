@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 import { searchbarResult1 } from 'src/__data__/searchResults';
@@ -17,8 +18,8 @@ const classes = {
 
 const props = {
   result: searchbarResult1,
-  redirect: jest.fn(),
-  openDomainDrawerForEditing: jest.fn(),
+  redirect: vi.fn(),
+  openDomainDrawerForEditing: vi.fn(),
   classes,
 };
 

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -20,12 +21,12 @@ import RuleDrawer, {
 import { ExtendedFirewallRule } from './firewallRuleEditor';
 import { FirewallRuleError, PORT_PRESETS } from './shared';
 
-const mockOnClose = jest.fn();
-const mockOnSubmit = jest.fn();
+const mockOnClose = vi.fn();
+const mockOnSubmit = vi.fn();
 
 const baseItems = [PORT_PRESETS['22'], PORT_PRESETS['443']];
 
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 const props: CombinedProps = {
   category: 'inbound',

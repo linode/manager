@@ -1,9 +1,10 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AuthenticationSettings } from './AuthenticationSettings';
 
-jest.mock('libphonenumber-js', () => ({
+vi.mock('libphonenumber-js', () => ({
   parsePhoneNumber: () => ({
     formatInternational: () => '',
   }),

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Event } from '@linode/api-v4/lib/account';
 import { entityFactory, eventFactory } from 'src/factories/events';
 import getEventMessage, {
@@ -6,8 +7,8 @@ import getEventMessage, {
 } from './eventMessageGenerator';
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'log').mockImplementation(() => {});
+  vi.spyOn(console, 'error').mockImplementation(() => {});
+  vi.spyOn(console, 'log').mockImplementation(() => {});
 });
 
 describe('Event message generation', () => {
@@ -41,7 +42,7 @@ describe('Event message generation', () => {
       };
 
       /** Mock the message creator */
-      eventMessageCreators.linode_reboot.scheduled = jest.fn();
+      eventMessageCreators.linode_reboot.scheduled = vi.fn();
 
       /** Invoke the function. */
       getEventMessage(mockEvent as Event);

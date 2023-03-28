@@ -1,12 +1,13 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { imageFactory } from 'src/factories/images';
 
-jest.mock('src/hooks/useReduxLoad', () => ({
-  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false }),
+vi.mock('src/hooks/useReduxLoad', () => ({
+  useReduxLoad: () => vi.fn().mockReturnValue({ _loading: false }),
 }));
-jest.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/EnhancedSelect/Select');
 
 import { getImagesOptions, groupNameMap, ImageSelect } from './ImageSelect';
 
@@ -14,7 +15,7 @@ const images = imageFactory.buildList(10);
 
 const props = {
   images,
-  onSelect: jest.fn(),
+  onSelect: vi.fn(),
 };
 
 const privateImage1 = imageFactory.build({

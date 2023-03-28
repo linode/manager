@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -19,7 +20,7 @@ const props = {
   classes,
   modes,
   selected: 'edit',
-  onChange: jest.fn(),
+  onChange: vi.fn(),
 };
 
 const component = shallow(<ModeSelect {...props} />);

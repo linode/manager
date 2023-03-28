@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
@@ -8,18 +9,18 @@ const mockProps: CombinedProps = {
   classes: {
     main: '',
   },
-  updateDiskSize: jest.fn(),
-  updateImageID: jest.fn(),
-  updateLinodeID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  updateDiskSize: vi.fn(),
+  updateImageID: vi.fn(),
+  updateLinodeID: vi.fn(),
+  updateRegionID: vi.fn(),
+  updateTypeID: vi.fn(),
   accountBackupsEnabled: false,
   imagesData: {},
   regionsData: [],
   typesData: [],
   userCannotCreateLinode: false,
   linodesData: [],
-  setBackupID: jest.fn(),
+  setBackupID: vi.fn(),
 };
 
 describe('FromBackupsContent', () => {

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -21,8 +22,8 @@ it('renders without crashing.', () => {
             {...reactRouterProps}
             linodes={[]}
             isLoggedInAsCustomer={false}
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
+            closeSnackbar={vi.fn()}
+            enqueueSnackbar={vi.fn()}
             location={{
               pathname: '',
               hash: '',
@@ -32,8 +33,8 @@ it('renders without crashing.', () => {
             documentation={[]}
             appIsLoading={false}
             preferences={preferencesFactory.build()}
-            getUserPreferences={jest.fn()}
-            updateUserPreferences={jest.fn()}
+            getUserPreferences={vi.fn()}
+            updateUserPreferences={vi.fn()}
             linodesLoading={false}
             ldClient={{} as any}
             featureFlagsLoading={false}

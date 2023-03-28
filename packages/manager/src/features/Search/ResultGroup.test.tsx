@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -7,12 +8,16 @@ import Typography from 'src/components/core/Typography';
 
 import { ResultGroup } from './ResultGroup';
 
-jest.mock('@mui/styles', () => ({
-  ...(jest.requireActual('@mui/styles') as any),
-  makeStyles: jest.fn(() => () => ({})),
-}));
-jest.mock('src/hooks/useFlags', () => ({
-  default: jest.fn().mockReturnValue({}),
+vi.mock('@mui/styles', async () => {
+  const actual = await vi.importActual<{}>('@mui/styles');
+  return {
+    ...actual,
+    makeStyles: vi.fn(() => () => ({})),
+  };
+});
+
+vi.mock('src/hooks/useFlags', () => ({
+  default: vi.fn().mockReturnValue({}),
 }));
 
 const props = {
@@ -28,7 +33,7 @@ const props = {
   loading: false,
   groupSize: 5,
   showMore: false,
-  toggle: jest.fn(),
+  toggle: vi.fn(),
 };
 
 const emptyProps = {
@@ -36,7 +41,7 @@ const emptyProps = {
   results: [],
   groupSize: 5,
   showMore: false,
-  toggle: jest.fn(),
+  toggle: vi.fn(),
 };
 
 const component = shallow(<ResultGroup {...props} />);

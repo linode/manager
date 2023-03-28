@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -28,8 +29,8 @@ describe('Breadcrumb component', () => {
           {...props}
           onEditHandlers={{
             editableTextTitle: 'Editable text',
-            onEdit: jest.fn(),
-            onCancel: jest.fn(),
+            onEdit: vi.fn(),
+            onCancel: vi.fn(),
           }}
         />
       )

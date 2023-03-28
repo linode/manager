@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -14,13 +15,13 @@ const props: Props = {
   pools,
   submitting: false,
   highAvailability: false,
-  setHighAvailability: jest.fn(),
-  updatePool: jest.fn(),
-  removePool: jest.fn(),
-  createCluster: jest.fn(),
+  setHighAvailability: vi.fn(),
+  updatePool: vi.fn(),
+  removePool: vi.fn(),
+  createCluster: vi.fn(),
   region: undefined,
   hasAgreed: false,
-  toggleHasAgreed: jest.fn(),
+  toggleHasAgreed: vi.fn(),
 };
 
 const renderComponent = (_props: Props) =>

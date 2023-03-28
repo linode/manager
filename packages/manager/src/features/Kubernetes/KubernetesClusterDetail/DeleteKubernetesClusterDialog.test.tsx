@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -12,7 +13,7 @@ const props: Props = {
   open: true,
   clusterLabel: 'this-cluster',
   clusterId: 1,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
 };
 
 const queryClient = new QueryClient();
