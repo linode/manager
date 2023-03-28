@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-03-28] - v1.89.1
+
+### Fixed:
+- NodeBalancer Configurations not saving [#8929](https://github.com/linode/manager/pull/8929)
+
 ## [2023-03-20] - v1.89.0
 
 ### Added:
