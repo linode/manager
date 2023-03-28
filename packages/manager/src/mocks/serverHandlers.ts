@@ -76,6 +76,7 @@ import {
   dedicatedTypeFactory,
   proDedicatedTypeFactory,
   kubernetesVersionFactory,
+  paymentFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
@@ -686,7 +687,7 @@ export const handlers = [
     const account = accountFactory.build({
       balance: 50,
       active_since: '2022-11-30',
-      active_promotions: promoFactory.buildList(2),
+      active_promotions: promoFactory.buildList(1),
     });
     return res(ctx.json(account));
   }),
@@ -696,6 +697,10 @@ export const handlers = [
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
     return res(ctx.delay(5000), ctx.json(transfer));
+  }),
+  rest.get('*/account/payments', (req, res, ctx) => {
+    const payments = paymentFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(payments)));
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
     const linodeInvoice = invoiceFactory.build({
