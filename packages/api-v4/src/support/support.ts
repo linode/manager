@@ -10,7 +10,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   ReplyRequest,
   SupportReply,
@@ -28,7 +28,7 @@ import {
  *
  *
  */
-export const getTickets = (params?: any, filter?: any) =>
+export const getTickets = (params?: Params, filter?: Filter) =>
   Request<Page<SupportTicket>>(
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('GET'),
@@ -66,8 +66,8 @@ export const getTicket = (ticketID: number) =>
  */
 export const getTicketReplies = (
   ticketId: number,
-  params?: any,
-  filter?: any
+  params?: Params,
+  filter?: Filter
 ) =>
   Request<Page<SupportReply>>(
     setURL(`${API_ROOT}/support/tickets/${ticketId}/replies`),

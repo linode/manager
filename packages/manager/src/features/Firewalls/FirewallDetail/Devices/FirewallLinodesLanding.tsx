@@ -1,24 +1,14 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import Promise from 'bluebird';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import withLinodes, {
-  Props as LinodesProps,
-} from 'src/containers/withLinodes.container';
 import AddDeviceDrawer from './AddDeviceDrawer';
 import FirewallDevicesTable from './FirewallDevicesTable';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
-import {
-  useAddFirewallDeviceMutation,
-  useAllFirewallDevicesQuery,
-} from 'src/queries/firewalls';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -48,17 +38,13 @@ interface Props {
   disabled: boolean;
 }
 
-type CombinedProps = RouteComponentProps & Props & LinodesProps;
-
-const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
+const FirewallLinodesLanding = (props: Props) => {
   const { firewallID, firewallLabel, disabled } = props;
   const classes = useStyles();
 
   const { data: devices, isLoading, error } = useAllFirewallDevicesQuery(
     firewallID
   );
-
-  const { mutateAsync: addDevice } = useAddFirewallDeviceMutation(firewallID);
 
   const [
     isRemoveDeviceDialogOpen,
@@ -74,52 +60,9 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
   const [addDeviceDrawerOpen, setDeviceDrawerOpen] = React.useState<boolean>(
     false
   );
-  const [deviceSubmitting, setDeviceSubmitting] = React.useState<boolean>(
-    false
-  );
-  const [addDeviceError, setDeviceError] = React.useState<
-    APIError[] | undefined
-  >();
-
-  const handleAddDevice = (selectedLinodes: number[]) => {
-    setDeviceSubmitting(true);
-    setDeviceError(undefined);
-    return Promise.map(selectedLinodes, (thisLinode) => {
-      return addDevice({ type: 'linode', id: thisLinode });
-    })
-      .then((_) => {
-        handleClose();
-      })
-      .catch((errorResponse) => {
-        /**
-         * API errors here identify the invalid Linode
-         * by its ID rather than label, which isn't helpful
-         * to Cloud users. This maps the ID onto the matching
-         * Linode if there is one, otherwise it should leave
-         * the message unaltered.
-         */
-        const errorWithLinodeLabel = [
-          {
-            reason: errorResponse[0].reason.replace(
-              /with ID ([0-9]+)/,
-              (match: string, group: string) => {
-                const linode = props.linodesData.find(
-                  (thisLinode) => thisLinode.id === +group
-                );
-                return linode ? linode.label : match;
-              }
-            ),
-          },
-        ];
-        setDeviceError(errorWithLinodeLabel);
-        setDeviceSubmitting(false);
-      });
-  };
 
   const handleClose = () => {
-    setDeviceError(undefined);
     setDeviceDrawerOpen(false);
-    setDeviceSubmitting(false);
   };
 
   return (
@@ -161,15 +104,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
           setIsRemoveDeviceDialogOpen(true);
         }}
       />
-      <AddDeviceDrawer
-        open={addDeviceDrawerOpen}
-        error={addDeviceError}
-        isSubmitting={deviceSubmitting}
-        currentDevices={devices?.map((device) => device.entity.id) ?? []}
-        firewallLabel={firewallLabel}
-        onClose={handleClose}
-        addDevice={handleAddDevice}
-      />
+      <AddDeviceDrawer open={addDeviceDrawerOpen} onClose={handleClose} />
       <RemoveDeviceDialog
         open={isRemoveDeviceDialogOpen}
         onClose={() => setIsRemoveDeviceDialogOpen(false)}
@@ -181,7 +116,4 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withLinodes()
-)(FirewallLinodesLanding);
+export default React.memo(FirewallLinodesLanding);

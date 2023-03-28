@@ -1,6 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -53,8 +53,8 @@ export interface State {
   listOfStackScripts: StackScript[];
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
-  currentFilter: any; // @TODO type correctly
-  currentSearchFilter: any;
+  currentFilter: Filter; // @TODO type correctly
+  currentSearchFilter: Filter;
   isSorting: boolean;
   error?: APIError[];
   fieldError: APIError | undefined;
@@ -135,7 +135,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
     getDataAtPage = (
       page: number,
-      filter: any = this.state.currentFilter,
+      filter: Filter = this.state.currentFilter,
       isSorting: boolean = false
     ) => {
       const { request, category } = this.props;
@@ -289,11 +289,14 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
        */
       const filterWithSearch = !!Object.keys(currentSearchFilter).length
         ? {
-            ['+order_by']: filterInfo.apiFilter,
+            ['+order_by']: filterInfo.apiFilter ?? undefined,
             ['+order']: sortOrder,
             ...currentSearchFilter,
           }
-        : { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder };
+        : {
+            ['+order_by']: filterInfo.apiFilter ?? undefined,
+            ['+order']: sortOrder,
+          };
 
       this.getDataAtPage(1, filterWithSearch, true);
       this.setState({
@@ -301,7 +304,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         sortOrder: nextSortOrder,
         currentFilterType: filterInfo.currentFilter,
         currentFilter: {
-          ['+order_by']: filterInfo.apiFilter,
+          ['+order_by']: filterInfo.apiFilter ?? undefined,
           ['+order']: sortOrder,
         },
       });
@@ -323,7 +326,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         updateQueryString(lowerCaseValue, history);
       }
 
-      let filter: any;
+      let filter: Filter;
 
       /**
        * only allow for advanced search if we're on the community

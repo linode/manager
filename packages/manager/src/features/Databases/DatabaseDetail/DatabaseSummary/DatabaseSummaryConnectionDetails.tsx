@@ -1,23 +1,23 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
+import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import CopyTooltip from 'src/components/CopyTooltip';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(2),
   },
@@ -44,23 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     padding: `${theme.spacing(1)} 0`,
-  },
-  actionBtn: {
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    borderRight: '1px solid #c4c4c4',
-    '&:hover': {
-      opacity: 0.7,
-    },
-    '&:last-child': {
-      borderRight: 'none',
-    },
-    marginLeft: theme.spacing(2),
-  },
-  actionText: {
-    color: theme.textColors.linkActiveLight,
-    whiteSpace: 'nowrap',
   },
   connectionDetailsCtn: {
     padding: '8px 15px',
@@ -97,6 +80,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     marginLeft: 4,
   },
+  caCertBtn: {
+    '& svg': {
+      marginRight: theme.spacing(),
+    },
+    '&:hover': {
+      opacity: 0.7,
+      backgroundColor: 'transparent',
+    },
+    color: theme.palette.primary.main,
+    marginLeft: theme.spacing(),
+    fontFamily: theme.font.normal,
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: '0.875rem',
+    lineHeight: '1.125rem',
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+    '&[disabled]': {
+      // Override disabled background color defined for dark mode
+      backgroundColor: 'transparent',
+      color: '#cdd0d5',
+      cursor: 'default',
+      '&:hover': {
+        backgroundColor: 'inherit',
+        textDecoration: 'none',
+      },
+      '& g': {
+        stroke: '#cdd0d5',
+      },
+    },
+  },
   provisioningText: {
     fontStyle: 'italic',
     fontWeight: 'lighter !important' as 'lighter',
@@ -113,11 +127,15 @@ const privateHostCopy =
 const mongoHostHelperCopy =
   'This is a public hostname. Coming soon: connect to your MongoDB clusters using private IPs';
 
-export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
+export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const { database } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+
   const [showCredentials, setShowPassword] = React.useState<boolean>(false);
+  const [isCACertDownloading, setIsCACertDownloading] = React.useState<boolean>(
+    false
+  );
 
   const {
     data: credentials,
@@ -143,16 +161,19 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   }, [credentials, getDatabaseCredentials, showCredentials]);
 
   const handleDownloadCACertificate = () => {
+    setIsCACertDownloading(true);
     getSSLFields(database.engine, database.id)
       .then((response: SSLFields) => {
         // Convert to utf-8 from base64
         try {
           const decodedFile = window.atob(response.ca_certificate);
           downloadFile(`${database.label}-ca-certificate.crt`, decodedFile);
+          setIsCACertDownloading(false);
         } catch (e) {
           enqueueSnackbar('Error parsing your CA Certificate file', {
             variant: 'error',
           });
+          setIsCACertDownloading(false);
           return;
         }
       })
@@ -161,11 +182,13 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
           errorResponse,
           'Unable to download your CA Certificate'
         );
+        setIsCACertDownloading(false);
         enqueueSnackbar(error, { variant: 'error' });
       });
   };
 
   const disableShowBtn = ['provisioning', 'failed'].includes(database.status);
+  const disableDownloadCACertificateBtn = database.status === 'provisioning';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
@@ -179,6 +202,26 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       </Button>
     );
   };
+
+  const caCertificateJSX = (
+    <>
+      <Button
+        onClick={handleDownloadCACertificate}
+        className={classes.caCertBtn}
+        disabled={disableDownloadCACertificateBtn}
+        loading={isCACertDownloading}
+      >
+        <DownloadIcon />
+        Download CA Certificate
+      </Button>
+      {disableDownloadCACertificateBtn ? (
+        <HelpIcon
+          className={classes.helpIcon}
+          text="Your Database Cluster is currently provisioning."
+        />
+      ) : null}
+    </>
+  );
 
   return (
     <>
@@ -346,25 +389,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         </Typography>
       </Grid>
       <div className={classes.actionBtnsCtn}>
-        {database.ssl_connection ? (
-          <Grid
-            item
-            onClick={handleDownloadCACertificate}
-            role="button"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleDownloadCACertificate();
-              }
-            }}
-            tabIndex={0}
-            className={classes.actionBtn}
-          >
-            <DownloadIcon style={{ marginRight: 8 }} />
-            <Typography className={classes.actionText}>
-              Download CA Certificate
-            </Typography>
-          </Grid>
-        ) : null}
+        {database.ssl_connection ? caCertificateJSX : null}
       </div>
     </>
   );

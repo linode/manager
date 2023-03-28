@@ -5,9 +5,7 @@ import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
 import { ApplicationState } from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
-import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
-import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
@@ -20,10 +18,8 @@ export type ReduxEntity =
   | 'linodes'
   | 'nodeBalancers'
   | 'notifications'
-  | 'types'
   | 'events'
-  | 'longview'
-  | 'firewalls';
+  | 'longview';
 
 type RequestMap = Record<ReduxEntity, any>;
 
@@ -31,10 +27,8 @@ const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
   nodeBalancers: getAllNodeBalancers,
   events: getEvents,
-  types: requestTypes,
   notifications: requestNotifications,
   longview: getAllLongviewClients,
-  firewalls: () => getAllFirewalls({}),
 };
 
 export const useReduxLoad = (

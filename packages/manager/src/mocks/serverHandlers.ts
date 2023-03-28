@@ -76,6 +76,7 @@ import {
   dedicatedTypeFactory,
   proDedicatedTypeFactory,
   kubernetesVersionFactory,
+  paymentFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
@@ -269,6 +270,11 @@ const databases = [
   }),
 ];
 
+const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
+const standardTypes = linodeTypeFactory.buildList(7);
+const dedicatedTypes = dedicatedTypeFactory.buildList(7);
+const proDedicatedType = proDedicatedTypeFactory.build();
+
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
@@ -311,6 +317,12 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
+    const cloudinitCompatableImages = imageFactory.buildList(5, {
+      id: 'metadata-test',
+      status: 'available',
+      type: 'manual',
+      capabilities: ['cloud-init'],
+    });
     const creatingImages = imageFactory.buildList(2, {
       type: 'manual',
       status: 'creating',
@@ -325,6 +337,7 @@ export const handlers = [
     });
     const publicImages = imageFactory.buildList(0, { is_public: true });
     const images = [
+      ...cloudinitCompatableImages,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
@@ -334,12 +347,10 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/types', (req, res, ctx) => {
-    const standardTypes = linodeTypeFactory.buildList(7);
-    const dedicatedTypes = dedicatedTypeFactory.buildList(7);
-    const proDedicatedType = proDedicatedTypeFactory.build();
     return res(
       ctx.json(
         makeResourcePage([
+          nanodeType,
           ...standardTypes,
           ...dedicatedTypes,
           proDedicatedType,
@@ -347,6 +358,15 @@ export const handlers = [
       )
     );
   }),
+  rest.get('*/linode/types-legacy', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(linodeTypeFactory.buildList(0))));
+  }),
+  ...[nanodeType, ...standardTypes, ...dedicatedTypes, proDedicatedType].map(
+    (type) =>
+      rest.get(`*/linode/types/${type.id}`, (req, res, ctx) => {
+        return res(ctx.json(type));
+      })
+  ),
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(60, {
       backups: { enabled: false },
@@ -358,6 +378,10 @@ export const handlers = [
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
     const busyLinodes = linodeFactory.buildList(1, { status: 'migrating' });
+    const metadataLinodes = linodeFactory.buildList(2, {
+      image: 'metadata-test',
+      label: 'metadata-test',
+    });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
@@ -376,6 +400,7 @@ export const handlers = [
       tags: ['test1', 'test2', 'test3'],
     });
     const linodes = [
+      ...metadataLinodes,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
@@ -662,7 +687,7 @@ export const handlers = [
     const account = accountFactory.build({
       balance: 50,
       active_since: '2022-11-30',
-      active_promotions: promoFactory.buildList(2),
+      active_promotions: promoFactory.buildList(1),
     });
     return res(ctx.json(account));
   }),
@@ -672,6 +697,10 @@ export const handlers = [
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
     return res(ctx.delay(5000), ctx.json(transfer));
+  }),
+  rest.get('*/account/payments', (req, res, ctx) => {
+    const payments = paymentFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(payments)));
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
     const linodeInvoice = invoiceFactory.build({

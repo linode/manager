@@ -13,7 +13,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage } from '../types';
+import { Filter, Params, ResourcePage } from '../types';
 import {
   Profile,
   ProfileLogin,
@@ -81,7 +81,7 @@ export const getMyGrants = () =>
  *
  * Returns a paginated list of all trusted devices associated with the user's profile.
  */
-export const getTrustedDevices = (params: any, filter: any) =>
+export const getTrustedDevices = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<TrustedDevice>>(
     setURL(`${API_ROOT}/profile/devices`),
     setMethod('GET'),
@@ -123,7 +123,7 @@ export const updateUserPreferences = (payload: UserPreferences) => {
   );
 };
 
-export const getLogins = (params: any, filter: any) => {
+export const getLogins = (params?: Params, filter?: Filter) => {
   return Request<ResourcePage<ProfileLogin>>(
     setURL(`${API_ROOT}/profile/logins`),
     setMethod('GET'),

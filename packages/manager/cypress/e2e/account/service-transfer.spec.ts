@@ -166,7 +166,7 @@ describe('Account service transfers', () => {
     // Confirm that pending transfers are displayed in "Pending Service Transfers" panel.
     cy.defer(getProfile()).then((profile: Profile) => {
       const dateFormatOptions = { timezone: profile.timezone };
-      cy.get('[data-qa-panel][heading="Pending Service Transfers"]')
+      cy.get('[data-qa-panel="Pending Service Transfers"]')
         .should('be.visible')
         .within(() => {
           pendingTransfers.forEach((pendingTransfer: EntityTransfer) => {
@@ -185,7 +185,7 @@ describe('Account service transfers', () => {
           });
         });
 
-      cy.get('[data-qa-panel][heading="Received Service Transfers"]')
+      cy.get('[data-qa-panel="Received Service Transfers"]')
         .should('be.visible')
         .within(() => {
           receivedTransfers.forEach((receivedTransfer: EntityTransfer) => {
@@ -201,7 +201,7 @@ describe('Account service transfers', () => {
           });
         });
 
-      cy.get('[data-qa-panel][heading="Sent Service Transfers"]')
+      cy.get('[data-qa-panel="Sent Service Transfers"]')
         .should('be.visible')
         .within(() => {
           sentTransfers.forEach((sentTransfer: EntityTransfer) => {
@@ -383,9 +383,7 @@ describe('Account service transfers', () => {
     cy.visitWithLogin(serviceTransferLandingUrl);
     cy.wait(['@getTransfers', '@getTransfers', '@getTransfers']);
 
-    cy.get('[data-qa-panel][heading="Pending Service Transfers"]').should(
-      'not.exist'
-    );
+    cy.get('[data-qa-panel="Pending Service Transfers"]').should('not.exist');
 
     redeemToken(token);
     cy.wait('@receiveEntityTransfer');
@@ -419,7 +417,7 @@ describe('Account service transfers', () => {
 
     cy.wait(['@acceptEntityTransfer', '@getTransfers']);
     ui.toast.assertMessage('Transfer accepted successfully.');
-    cy.get('[data-qa-panel][heading="Received Service Transfers"]')
+    cy.get('[data-qa-panel="Received Service Transfers"]')
       .should('be.visible')
       .click()
       .within(() => {
