@@ -8,8 +8,8 @@ const CardBaseGrid = styled(Grid, {
 })<Partial<Props>>(({ theme, ...props }) => ({
   alignItems: 'center',
   backgroundColor: props.checked ? theme.bg.lightBlue2 : theme.bg.offWhite,
-  borderColor: props.checked ? theme.palette.primary.main : undefined,
   border: `1px solid ${theme.bg.main}`,
+  borderColor: props.checked ? theme.palette.primary.main : undefined,
   height: '100%',
   margin: 0,
   minHeight: 60,
@@ -23,6 +23,7 @@ const CardBaseGrid = styled(Grid, {
     backgroundColor: theme.bg.main,
     borderColor: theme.color.border2,
   },
+
   '&:before': {
     content: '""',
     display: 'block',
