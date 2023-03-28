@@ -8,7 +8,6 @@ import {
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import * as Promise from 'bluebird';
 import {
   append,
   clone,
@@ -125,16 +124,18 @@ type CombinedProps = Props &
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
-    return Promise.map(configs.data, (config) => {
-      return getNodeBalancerConfigNodes(nodeBalancerId, config.id).then(
-        ({ data: nodes }) => {
-          return {
-            ...config,
-            nodes: parseAddresses(nodes),
-          };
-        }
-      );
-    }).catch((_) => []);
+    return Promise.all(
+      configs.data.map((config) => {
+        return getNodeBalancerConfigNodes(nodeBalancerId, config.id).then(
+          ({ data: nodes }) => {
+            return {
+              ...config,
+              nodes: parseAddresses(nodes),
+            };
+          }
+        );
+      })
+    );
   });
 };
 
@@ -363,7 +364,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     });
 
     /* Set the success message if all of the requests succeed */
-    Promise.all([nodeBalUpdate, ...nodeUpdates] as any)
+    Promise.all([nodeBalUpdate, ...nodeUpdates])
       .then((responseVals) => {
         const [nodeBalSuccess, ...nodeResults] = responseVals;
         if (nodeBalSuccess) {
