@@ -53,20 +53,22 @@ const StyledGrid = styled(Grid, {
   }),
 }));
 
-const SelectionCardBase = styled(CardBase)<Partial<Props>>(
-  ({ theme, ...props }) => ({
-    ...(props.checked && {
-      backgroundColor: theme.bg.lightBlue2,
-      borderColor: theme.palette.primary.main,
-      '& span': {
-        color: theme.palette.primary.main,
-      },
-    }),
-  })
-);
+// const SelectionCardBase = styled(CardBase)<Partial<Props>>(
+//   ({ theme, ...props }) => ({
+//     background: 'red  !important',
+//     ...(props.checked && {
+//       backgroundColor: theme.bg.lightBlue2,
+//       borderColor: theme.palette.primary.main,
+//       '& span': {
+//         color: theme.palette.primary.main,
+//       },
+//     }),
+//   })
+// );
 
 const SelectionCard = (props: Props) => {
   const {
+    checked,
     className,
     disabled,
     heading,
@@ -98,12 +100,13 @@ const SelectionCard = (props: Props) => {
   };
 
   const content = (
-    <SelectionCardBase
-      renderIcon={renderIcon}
+    <CardBase
+      checked={checked}
       heading={heading}
-      subheadings={subheadings}
-      renderVariant={renderVariant}
       headingDecoration={headingDecoration}
+      renderIcon={renderIcon}
+      renderVariant={renderVariant}
+      subheadings={subheadings}
       sx={sxCardBase}
       sxHeading={sxCardBaseHeading}
       sxIcon={sxCardBaseIcon}
