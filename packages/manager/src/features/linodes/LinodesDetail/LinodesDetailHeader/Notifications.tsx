@@ -15,6 +15,12 @@ const Notifications = () => {
 
   const { data: notifications, refetch } = useNotificationsQuery();
 
+  const linodeNotifications = notifications?.filter(
+    (notification) =>
+      notification.entity?.type === 'linode' &&
+      notification.entity.id === Number(linodeId)
+  );
+
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
     { status: { '+or': ['pending, started'] } }
@@ -60,7 +66,7 @@ const Notifications = () => {
 
   return (
     <>
-      {notifications?.map((n, idx) => {
+      {linodeNotifications?.map((n, idx) => {
         return (
           <React.Fragment key={idx}>
             {generateNotificationBody(n)}
