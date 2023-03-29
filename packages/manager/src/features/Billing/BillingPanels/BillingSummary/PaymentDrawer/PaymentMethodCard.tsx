@@ -83,6 +83,7 @@ export const PaymentMethodCard = (props: Props) => {
 
   return (
     <Grid
+      container
       sx={{
         marginBottom: theme.spacing(),
       }}
