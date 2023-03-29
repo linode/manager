@@ -3,12 +3,12 @@ import { Tag } from '@linode/api-v4/lib/tags/types';
 import { Theme } from '@mui/material/styles';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import classNames from 'classnames';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
-import AccessPanel from 'src/components/AccessPanel';
+import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import Button from 'src/components/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import CircleProgress from 'src/components/CircleProgress';
@@ -19,7 +19,6 @@ import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsLink from 'src/components/DocsLink';
-import DocsSidebar from 'src/components/DocsSidebar';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -64,7 +63,6 @@ import {
   Info,
   LinodeCreateValidation,
   ReduxStateProps,
-  ReduxStatePropsAndSSHKeys,
   StackScriptFormStateHandlers,
   TypeInfo,
   WithDisplayData,
@@ -161,6 +159,7 @@ interface Props {
   handleAgreementChange: () => void;
   handleShowApiAwarenessModal: () => void;
   signedAgreement: boolean;
+  setAuthorizedUsers: (usernames: string[]) => void;
   userData: string | undefined;
   updateUserData: (userData: string) => void;
 }
@@ -187,7 +186,7 @@ type CombinedProps = Props &
   InnerProps &
   AllFormStateAndHandlers &
   AppsData &
-  ReduxStatePropsAndSSHKeys &
+  ReduxStateProps &
   StateProps &
   WithDisplayData &
   ImagesProps &
@@ -354,9 +353,7 @@ export class LinodeCreate extends React.PureComponent<
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
       root_pass: this.props.password,
-      authorized_users: this.props.userSSHKeys
-        .filter((u) => u.selected)
-        .map((u) => u.username),
+      authorized_users: this.props.authorized_users,
       booted: true,
       backups_enabled: this.props.backupsEnabled,
       backup_id: this.props.selectedBackupID,
@@ -409,9 +406,7 @@ export class LinodeCreate extends React.PureComponent<
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
       root_pass: this.props.password,
-      authorized_users: this.props.userSSHKeys
-        .filter((u) => u.selected)
-        .map((u) => u.username),
+      authorized_users: this.props.authorized_users,
       booted: true,
       backups_enabled: this.props.backupsEnabled,
       backup_id: this.props.selectedBackupID,
@@ -455,9 +450,6 @@ export class LinodeCreate extends React.PureComponent<
       tags,
       updateTags,
       errors,
-      sshError,
-      userSSHKeys,
-      requestKeys,
       backupsMonthlyPrice,
       userCannotCreateLinode,
       accountBackupsEnabled,
@@ -758,19 +750,17 @@ export class LinodeCreate extends React.PureComponent<
                   : ''
               }
               error={hasErrorFor.root_pass}
-              sshKeyError={sshError}
               password={this.props.password}
               handleChange={this.props.updatePassword}
               updateFor={[
                 this.props.password,
                 errors,
-                sshError,
-                userSSHKeys,
                 this.props.selectedImageID,
                 userCannotCreateLinode,
+                this.props.authorized_users,
               ]}
-              users={userSSHKeys}
-              requestKeys={requestKeys}
+              setAuthorizedUsers={this.props.setAuthorizedUsers}
+              authorizedUsers={this.props.authorized_users}
             />
           )}
           {showUserData ? (
@@ -803,12 +793,7 @@ export class LinodeCreate extends React.PureComponent<
             data-qa-checkout-bar
             heading={`Summary ${this.props.label}`}
             displaySections={displaySections}
-          >
-            {this.props.createType === 'fromApp' &&
-            this.props.documentation.length > 0 ? (
-              <DocsSidebar docs={this.props.documentation} />
-            ) : null}
-          </CheckoutSummary>
+          />
           <Box
             display="flex"
             justifyContent={showAgreement ? 'space-between' : 'flex-end'}

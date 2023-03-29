@@ -37,9 +37,6 @@ import withAgreements, {
 import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
-import userSSHKeyHoc, {
-  State as userSSHKeysProps,
-} from 'src/features/linodes/userSSHKeyHoc';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import {
@@ -106,6 +103,7 @@ interface State {
   disabledClasses?: LinodeTypeClass[];
   attachedVLANLabel: string | null;
   vlanIPAMAddress: string | null;
+  authorized_users: string[];
   userData: string | undefined;
 }
 
@@ -116,7 +114,6 @@ type CombinedProps = WithSnackbarProps &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
-  userSSHKeysProps &
   DispatchProps &
   LabelProps &
   FeatureFlagConsumerProps &
@@ -139,6 +136,7 @@ const defaultState: State = {
   selectedRegionID: undefined,
   selectedTypeID: undefined,
   tags: [],
+  authorized_users: [],
   udfs: undefined,
   showAgreement: false,
   signedAgreement: false,
@@ -196,7 +194,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     selectedRegionID: this.params.regionID,
     selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
-    // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean
+    // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean. UPDATE 3/16/23 lol what
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined
       : +this.params.linodeID,
@@ -261,7 +259,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   }
 
   clearCreationState = () => {
-    this.props.resetSSHKeys();
     this.setState(defaultState);
   };
 
@@ -387,6 +384,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   setTags = (tags: Tag[]) => this.setState({ tags });
 
   setUDFs = (udfs: any) => this.setState({ udfs });
+
+  setAuthorizedUsers = (usernames: string[]) =>
+    this.setState({ authorized_users: usernames });
 
   setUserData = (userData: string) => this.setState({ userData });
 
@@ -797,6 +797,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={getAccountBackupsEnabled()}
+            setAuthorizedUsers={this.setAuthorizedUsers}
             updateUserData={this.setUserData}
             {...restOfProps}
             {...restOfState}
@@ -833,7 +834,6 @@ export default recompose<CombinedProps, {}>(
   withLinodeActions,
   connected,
   withSnackbar,
-  userSSHKeyHoc,
   withLabelGenerator,
   withFlags,
   withProfile,

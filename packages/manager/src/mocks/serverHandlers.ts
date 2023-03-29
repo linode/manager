@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import {
-  EventAction,
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
@@ -76,10 +75,12 @@ import {
   dedicatedTypeFactory,
   proDedicatedTypeFactory,
   kubernetesVersionFactory,
+  paymentFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
+import { accountUserFactory } from 'src/factories/accountUsers';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -686,7 +687,7 @@ export const handlers = [
     const account = accountFactory.build({
       balance: 50,
       active_since: '2022-11-30',
-      active_promotions: promoFactory.buildList(2),
+      active_promotions: promoFactory.buildList(1),
     });
     return res(ctx.json(account));
   }),
@@ -696,6 +697,10 @@ export const handlers = [
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
     return res(ctx.delay(5000), ctx.json(transfer));
+  }),
+  rest.get('*/account/payments', (req, res, ctx) => {
+    const payments = paymentFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(payments)));
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
     const linodeInvoice = invoiceFactory.build({
@@ -755,7 +760,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/account/users', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([profileFactory.build()])));
+    return res(ctx.json(makeResourcePage([accountUserFactory.build()])));
   }),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     return res(ctx.json(profileFactory.build()));
@@ -811,49 +816,38 @@ export const handlers = [
     );
   }),
   rest.get('*/events', (req, res, ctx) => {
-    const events = eventFactory.buildList(1, {
-      action: 'lke_node_create',
-      percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' },
-      message:
-        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+    const brokenEvent = eventFactory.build({
+      action: 'community_question_reply',
+      message: 'some community reply',
+      username: 'randomperson',
+      status: 'notification',
+      percent_complete: null,
+      entity: null,
+      seen: false,
+      read: false,
     });
-    const volumeMigrationScheduled = eventFactory.build({
-      entity: { type: 'volume', id: 6, label: 'bravoExample' },
-      action: 'volume_migrate_scheduled' as EventAction,
-      status: 'scheduled',
-      message: 'Volume bravoExample has been scheduled for an upgrade to NVMe.',
-      percent_complete: 100,
+    const brokenEvent2 = eventFactory.build({
+      action: 'community_mention',
+      message: 'some community reply',
+      username: 'randomperson',
+      status: 'notification',
+      percent_complete: null,
+      entity: null,
+      seen: false,
+      read: false,
     });
-    const volumeMigrating = eventFactory.build({
-      entity: { type: 'volume', id: 2, label: 'example-upgrading' },
-      action: 'volume_migrate' as EventAction,
-      status: 'started',
-      message: 'Volume example-upgrading is being upgraded to NVMe.',
-      percent_complete: 65,
+    const brokenEvent3 = eventFactory.build({
+      action: 'community_like',
+      message: 'some community reply',
+      username: 'randomperson',
+      status: 'notification',
+      percent_complete: null,
+      entity: null,
+      seen: false,
+      read: false,
     });
-    const volumeMigrationFinished = eventFactory.build({
-      entity: { type: 'volume', id: 6, label: 'alphaExample' },
-      action: 'volume_migrate',
-      status: 'finished',
-      message: 'Volume alphaExample has finished upgrading to NVMe.',
-      percent_complete: 100,
-    });
-    const oldEvents = eventFactory.buildList(20, {
-      action: 'account_update',
-      seen: true,
-      percent_complete: 100,
-    });
-    return res.once(
-      ctx.json(
-        makeResourcePage([
-          ...events,
-          ...oldEvents,
-          volumeMigrationScheduled,
-          volumeMigrating,
-          volumeMigrationFinished,
-        ])
-      )
+    return res(
+      ctx.json(makeResourcePage([brokenEvent, brokenEvent2, brokenEvent3]))
     );
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {

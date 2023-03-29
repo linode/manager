@@ -18,11 +18,11 @@ import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import useNotifications from 'src/hooks/useNotifications';
 import { getGrantData } from 'src/queries/profile';
 import { isWithinDays } from 'src/utilities/date';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -88,7 +88,7 @@ interface BillingSummaryProps {
 
 export const BillingSummary = (props: BillingSummaryProps) => {
   const { classes, cx } = useStyles();
-  const notifications = useNotifications();
+  const { data: notifications } = useNotificationsQuery();
   const { account, _isRestrictedUser } = useAccountManagement();
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
@@ -100,7 +100,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
-  const isBalanceOutsideGracePeriod = notifications.some(
+  const isBalanceOutsideGracePeriod = notifications?.some(
     (notification) =>
       notification.type === 'payment_due' &&
       notification.severity === 'critical'
@@ -258,8 +258,11 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
               <Divider />
               <div style={{ maxHeight: 300, overflowY: 'auto' }}>
-                {promotions?.map((thisPromo) => (
-                  <PromoDisplay key={thisPromo.summary} {...thisPromo} />
+                {promotions?.map((promo) => (
+                  <PromoDisplay
+                    key={`${promo.summary}-${promo.expire_dt}`}
+                    {...promo}
+                  />
                 ))}
               </div>
             </Paper>

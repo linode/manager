@@ -1,27 +1,24 @@
 import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
-import { DateTime } from 'luxon';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
-import { requestNotifications } from '../notification/notification.requests';
 import { deleteLinode } from './linodes.actions';
-import { parseAPIDate } from 'src/utilities/date';
 import { queryClient } from 'src/queries/base';
 import { queryKey as volumesQueryKey } from 'src/queries/volumes';
+import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
+import { EntityEvent } from '../events/event.types';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, percent_complete, status, id: eventID } = event;
   const { id } = entity;
 
   // We may want to request notifications here, depending on the event
-  // action, time of creation, and the last time we updated notifications.
-  const { lastUpdated } = getState().__resources.notifications;
-
-  if (shouldRequestNotifications(lastUpdated, event.action, event.created)) {
-    dispatch(requestNotifications() as any);
+  // action.
+  if (shouldRequestNotifications(event)) {
+    queryClient.invalidateQueries(accountNotificationsQueryKey);
   }
 
   const eventFromStore = getState().events.events.find(
@@ -138,7 +135,7 @@ const handleLinodeMigrate = (
     case 'notification':
       // Once the migration/resize is done, we request notifications in order
       // to clear the Migration Imminent notification
-      dispatch(requestNotifications());
+      queryClient.invalidateQueries(accountNotificationsQueryKey);
       /**
        * After resizing, a Linode is booted (if it was booted before);
        * however, no boot event is sent. Additionally, the 'finished'
@@ -260,20 +257,11 @@ const handleConfigEvent = (
  * 3) In the next few minutes, the resize is kicked off.
  * 4) The `migration_imminent` notification on the Linode goes away.
  */
-export const shouldRequestNotifications = (
-  notificationsLastUpdated: number,
-  lastEventAction?: EventAction,
-  lastEventCreated?: string
-) => {
-  if (!lastEventAction || !lastEventCreated) {
-    return false;
-  }
-
+export const shouldRequestNotifications = (event: EntityEvent) => {
   return (
-    eventsWithRelevantNotifications.includes(lastEventAction) &&
-    // if the event was created after the last time notifications were updated
-    parseAPIDate(lastEventCreated) >
-      DateTime.fromMillis(notificationsLastUpdated, { zone: 'utc' })
+    eventsWithRelevantNotifications.includes(event.action) &&
+    !event._initial &&
+    ['notification', 'finished', 'error'].includes(event.status)
   );
 };
 
