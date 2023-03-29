@@ -1,19 +1,18 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
-import { ApplicationState } from 'src/store';
-import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 
 const preferenceKey = 'abuse-tickets';
 
-export const AbuseTicketBanner: React.FC<{}> = (_) => {
-  const abuseTickets = useSelector((state: ApplicationState) =>
-    getAbuseTicket(state.__resources)
-  );
+export const AbuseTicketBanner = () => {
+  const { data: notifications } = useNotificationsQuery();
+
+  const abuseTickets = getAbuseTickets(notifications ?? []);
   const location = useLocation();
 
   if (!abuseTickets || abuseTickets.length === 0) {
@@ -30,7 +29,9 @@ export const AbuseTicketBanner: React.FC<{}> = (_) => {
     </>
   );
 
-  const href = multiple ? '/support/tickets' : abuseTickets[0].entity.url;
+  const href = multiple
+    ? '/support/tickets'
+    : abuseTickets[0].entity?.url ?? '';
   const isViewingTicket = location.pathname.match(href);
 
   return (
