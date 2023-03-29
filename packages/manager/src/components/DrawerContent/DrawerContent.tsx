@@ -7,9 +7,10 @@ export interface Props {
   loading: boolean;
   error: boolean;
   errorMessage?: string;
+  children: React.ReactNode;
 }
 
-export const DrawerContent: React.FC<Props> = (props) => {
+export const DrawerContent = (props: Props) => {
   const { title, loading, error, errorMessage, children } = props;
   if (loading) {
     return <CircleProgress />;
@@ -23,7 +24,7 @@ export const DrawerContent: React.FC<Props> = (props) => {
     );
   }
   // eslint-disable-next-line
-  return <React.Fragment>{children}</React.Fragment>;
+  return <>{children}</>;
 };
 
 export default DrawerContent;

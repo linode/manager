@@ -26,14 +26,11 @@ const useStyles = makeStyles<void, 'passwordInputOuter'>()(
 interface Props {
   password: string | null;
   error?: string;
-  sshKeyError?: string;
   handleChange: (value: string) => void;
   heading?: string;
   label?: string;
   required?: boolean;
   placeholder?: string;
-  users?: UserSSHKeyObject[];
-  requestKeys?: () => void;
   disabled?: boolean;
   disabledReason?: string | JSX.Element;
   tooltipInteractive?: boolean;
@@ -42,27 +39,16 @@ interface Props {
   small?: boolean;
   isOptional?: boolean;
   passwordHelperText?: string;
-}
-
-export interface UserSSHKeyObject {
-  gravatarUrl: string;
-  username: string;
-  selected: boolean;
-  keys: string[];
-  onSSHKeyChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    result: boolean
-  ) => void;
+  setAuthorizedUsers?: (usernames: string[]) => void;
+  authorizedUsers?: string[];
 }
 
 const AccessPanel = (props: Props) => {
   const {
     error,
-    sshKeyError,
     label,
     required,
     placeholder,
-    users,
     disabled,
     disabledReason,
     tooltipInteractive,
@@ -70,9 +56,10 @@ const AccessPanel = (props: Props) => {
     className,
     isOptional,
     passwordHelperText,
-    requestKeys,
     password,
     handleChange: _handleChange,
+    setAuthorizedUsers,
+    authorizedUsers,
   } = props;
 
   const { classes, cx } = useStyles();
@@ -109,14 +96,13 @@ const AccessPanel = (props: Props) => {
           helperText={passwordHelperText}
         />
       </React.Suspense>
-      {users ? (
+      {setAuthorizedUsers !== undefined && authorizedUsers !== undefined ? (
         <>
           <Divider spacingTop={44} spacingBottom={20} />
           <UserSSHKeyPanel
-            users={users}
-            error={sshKeyError}
+            setAuthorizedUsers={setAuthorizedUsers}
+            authorizedUsers={authorizedUsers}
             disabled={disabled}
-            onKeyAddSuccess={requestKeys || (() => null)}
           />
         </>
       ) : null}

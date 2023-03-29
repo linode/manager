@@ -28,8 +28,6 @@ describe.skip('NodeBalancers', () => {
               getNodeBalancerPage: jest.fn(),
               getNodeBalancerWithConfigs: jest.fn(),
             }}
-            setDocs={jest.fn()}
-            clearDocs={jest.fn()}
           />
         </LinodeThemeWrapper>
       </Provider>

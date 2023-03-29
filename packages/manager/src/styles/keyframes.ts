@@ -8,3 +8,12 @@ export const rotate360 = keyframes`
     transform: rotate(360deg);
   }
 `;
+
+export const fadeIn = keyframes`
+  from: {
+    opacity: 0,
+  },
+  to: {
+    opacity: 1,
+  }
+`;
