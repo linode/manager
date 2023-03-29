@@ -31,6 +31,20 @@ export const button = {
   ): Cypress.Chainable => {
     return cy.get(`button[${attributeName}="${attributeValue}"`);
   },
+
+  /**
+   * Finds a button by its text.
+   *
+   * Some buttons in Cloud Manager do not have a child `<span />` element containing
+   * the title text. Hence, the text of the `<button />` element to get the button
+   *
+   * @param buttonText - Text of button to find.
+   *
+   * @returns Cypress chainable.
+   */
+  findByText: (buttonText: string): Cypress.Chainable => {
+    return cy.get('button').contains(buttonText);
+  },
 };
 
 /**
