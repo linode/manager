@@ -5,10 +5,10 @@ import HelpIcon from 'src/components/HelpIcon';
 export const StyledHelpIcon = styled(HelpIcon)({
   padding: '0px 0px 0px 4px',
   verticalAlign: 'bottom',
-  '& svg': {
-    fill: '#888f91 !important',
-    stroke: 'none !important',
-    fontWeight: 'normal !important',
+  '&& svg': {
+    fill: 'currentColor',
+    stroke: 'none',
+    fontWeight: 'normal',
   },
 });
 
