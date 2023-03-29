@@ -12,11 +12,12 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { makeStyles } from 'tss-react/mui';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 // import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -51,10 +52,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       alignSelf: 'flex-start',
     },
-  },
-  helpIcon: {
-    padding: '0px 8px',
-    marginTop: '1.25rem',
   },
   formControlDropdown: {
     marginRight: '3rem',
@@ -261,9 +258,13 @@ export const MaintenanceWindow = (props: Props) => {
                   }
                   noMarginTop
                 />
-                <HelpIcon
+                <TooltipIcon
+                  status={TOOLTIP_ICON_STATUS.HELP}
                   interactive
-                  className={classes.helpIcon}
+                  sxTooltipIcon={{
+                    padding: '0px 8px',
+                    marginTop: '1.25rem',
+                  }}
                   text={
                     <Typography>
                       UTC is {utcOffsetText(utcOffsetInHours)} hours compared to

@@ -1,30 +1,41 @@
-import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
-import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
-import Grid from 'src/components/Grid';
-import Link from 'src/components/Link';
-import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import PaymentMethods from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
-import { queryKey } from 'src/queries/accountPayment';
-import { queryClient } from 'src/queries/base';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
+import Box from 'src/components/core/Box';
+import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
+import DismissibleBanner from 'src/components/DismissibleBanner';
+import Grid from '@mui/material/Unstable_Grid2';
+import Link from 'src/components/Link';
+import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
+import Typography from 'src/components/core/Typography';
+import { APIError } from '@linode/api-v4/lib/types';
+import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountPayment';
+import { styled } from '@mui/material/styles';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import {
+  BillingActionButton,
+  BillingBox,
+  BillingPaper,
+} from '../../BillingDetail';
 
 interface Props {
-  loading: boolean;
   error?: APIError[] | null;
-  paymentMethods: PaymentMethod[] | undefined;
   isAkamaiCustomer: boolean;
+  loading: boolean;
+  paymentMethods: PaymentMethod[] | undefined;
 }
+
+const StyledDismissibleBanner = styled(DismissibleBanner)(({ theme }) => ({
+  fontSize: '0.875rem',
+  marginTop: theme.spacing(2),
+  padding: '8px 0px',
+  '& button': {
+    marginLeft: theme.spacing(),
+  },
+}));
 
 const PaymentInformation = (props: Props) => {
   const { loading, error, paymentMethods, isAkamaiCustomer } = props;
@@ -39,8 +50,6 @@ const PaymentInformation = (props: Props) => {
     deletePaymentMethodSelection,
     setDeletePaymentMethodSelection,
   ] = React.useState<PaymentMethod | undefined>();
-
-  const { classes } = useStyles();
   const { replace } = useHistory();
 
   const drawerLink = '/account/billing/add-payment-method';
@@ -93,26 +102,19 @@ const PaymentInformation = (props: Props) => {
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
   return (
-    <Grid item xs={12} md={6}>
-      <Paper className={classes.summarySection} data-qa-billing-summary>
-        <Grid container spacing={2}>
-          <Grid item className={classes.container}>
-            <Typography variant="h3" className={classes.title}>
-              Payment Methods
-            </Typography>
-          </Grid>
-          <Grid item>
-            {!isAkamaiCustomer ? (
-              <Button
-                data-testid="payment-info-add-payment-method"
-                className={classes.edit}
-                onClick={() => replace(drawerLink)}
-              >
-                Add Payment Method
-              </Button>
-            ) : null}
-          </Grid>
-        </Grid>
+    <Grid xs={12} md={6}>
+      <BillingPaper variant="outlined" data-qa-billing-summary>
+        <BillingBox>
+          <Typography variant="h3">Payment Methods</Typography>
+          {!isAkamaiCustomer ? (
+            <BillingActionButton
+              data-testid="payment-info-add-payment-method"
+              onClick={() => replace(drawerLink)}
+            >
+              Add Payment Method
+            </BillingActionButton>
+          ) : null}
+        </BillingBox>
         {!isAkamaiCustomer ? (
           <PaymentMethods
             loading={loading}
@@ -129,20 +131,28 @@ const PaymentInformation = (props: Props) => {
           </Typography>
         )}
         {showPayPalAvailableNotice ? (
-          <DismissibleBanner
-            className={classes.paymentMethodNoticeContainer}
-            preferenceKey="paypal-available-notification"
-          >
+          <StyledDismissibleBanner preferenceKey="paypal-available-notification">
             <Box display="flex" alignItems="center">
-              <PayPalIcon className={classes.payPalIcon} />
-              <Typography className={classes.notificationTypography}>
+              <PayPalIcon
+                styles={{
+                  flexShrink: 0,
+                  height: 20,
+                  marginRight: '6px',
+                }}
+              />
+              <Typography
+                sx={{
+                  marginLeft: 0,
+                  fontSize: '0.875rem',
+                }}
+              >
                 PayPal is now available for recurring payments.{' '}
                 <Link to="#" onClick={() => replace(drawerLink)}>
                   Add PayPal.
                 </Link>
               </Typography>
             </Box>
-          </DismissibleBanner>
+          </StyledDismissibleBanner>
         ) : null}
         <AddPaymentMethodDrawer
           open={addDrawerOpen}
@@ -157,67 +167,9 @@ const PaymentInformation = (props: Props) => {
           loading={deleteLoading}
           error={deleteError}
         />
-      </Paper>
+      </BillingPaper>
     </Grid>
   );
 };
-
-const useStyles = makeStyles({ name: { PaymentInformation } })(
-  (theme: Theme) => ({
-    title: {
-      marginBottom: theme.spacing(2),
-    },
-    summarySection: {
-      padding: theme.spacing(2.5),
-      marginBottom: theme.spacing(2),
-      minHeight: '160px',
-      height: '93%',
-    },
-    container: {
-      flex: 1,
-      maxWidth: '100%',
-      position: 'relative',
-      '&.mlMain': {
-        [theme.breakpoints.up('lg')]: {
-          maxWidth: '78.8%',
-        },
-      },
-    },
-    paymentMethodNoticeContainer: {
-      fontSize: '0.875rem',
-      marginTop: theme.spacing(2),
-      padding: '8px 0px',
-      '& button': {
-        marginLeft: theme.spacing(),
-      },
-    },
-    payPalIcon: {
-      flexShrink: 0,
-      height: 20,
-      marginRight: '6px',
-    },
-    edit: {
-      color: theme.textColors.linkActiveLight,
-      fontFamily: theme.font.normal,
-      fontSize: '.875rem',
-      fontWeight: 700,
-      minHeight: 'unset',
-      minWidth: 'auto',
-      padding: 0,
-      '&:hover, &:focus': {
-        backgroundColor: 'transparent',
-        color: theme.palette.primary.main,
-        textDecoration: 'underline',
-      },
-    },
-    notificationTypography: {
-      marginLeft: 0,
-      '&&': {
-        // Increase specificity until we refactor
-        fontSize: '0.875rem',
-      },
-    },
-  })
-);
 
 export default React.memo(PaymentInformation);

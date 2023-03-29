@@ -10,12 +10,13 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { makeStyles } from 'tss-react/mui';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   header: {
@@ -75,10 +76,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   error: {
     color: theme.color.red,
     marginLeft: theme.spacing(2),
-  },
-  helpIcon: {
-    padding: 0,
-    marginLeft: 4,
   },
   caCertBtn: {
     '& svg': {
@@ -215,9 +212,13 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         Download CA Certificate
       </Button>
       {disableDownloadCACertificateBtn ? (
-        <HelpIcon
-          className={classes.helpIcon}
+        <TooltipIcon
+          sxTooltipIcon={{
+            padding: 0,
+            marginLeft: '4px',
+          }}
           text="Your Database Cluster is currently provisioning."
+          status={TOOLTIP_ICON_STATUS.HELP}
         />
       ) : null}
     </>
@@ -255,8 +256,13 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             )
           )}
           {disableShowBtn ? (
-            <HelpIcon
-              className={classes.helpIcon}
+            <TooltipIcon
+              // className={classes.TooltipIcon}
+              sxTooltipIcon={{
+                padding: 0,
+                marginLeft: '4px',
+              }}
+              status={TOOLTIP_ICON_STATUS.HELP}
               text={
                 database.status === 'provisioning'
                   ? 'Your Database Cluster is currently provisioning.'
@@ -287,9 +293,14 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                     text={database.hosts?.primary}
                   />
                   {database.engine === 'mongodb' ? (
-                    <HelpIcon
-                      className={classes.helpIcon}
+                    <TooltipIcon
+                      // className={classes.TooltipIcon}
+                      sxTooltipIcon={{
+                        padding: 0,
+                        marginLeft: '4px',
+                      }}
                       text={mongoHostHelperCopy}
+                      status={TOOLTIP_ICON_STATUS.HELP}
                     />
                   ) : null}
                 </>
@@ -335,9 +346,14 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                       />
                       {/*  Display the helper text on the first hostname */}
                       {i === 0 ? (
-                        <HelpIcon
-                          className={classes.helpIcon}
+                        <TooltipIcon
+                          // className={classes.TooltipIcon}
+                          sxTooltipIcon={{
+                            padding: 0,
+                            marginLeft: '4px',
+                          }}
                           text={mongoHostHelperCopy}
+                          status={TOOLTIP_ICON_STATUS.HELP}
                         />
                       ) : null}
                     </Box>
@@ -355,7 +371,15 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               className={classes.inlineCopyToolTip}
               text={database.hosts.secondary}
             />
-            <HelpIcon className={classes.helpIcon} text={privateHostCopy} />
+            <TooltipIcon
+              // className={classes.TooltipIcon}
+              sxTooltipIcon={{
+                padding: 0,
+                marginLeft: '4px',
+              }}
+              text={privateHostCopy}
+              status={TOOLTIP_ICON_STATUS.HELP}
+            />
           </Box>
         ) : null}
         <Typography>

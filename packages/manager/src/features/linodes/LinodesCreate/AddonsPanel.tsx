@@ -10,10 +10,11 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import { useAccount } from 'src/queries/account';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   vlan: {
@@ -142,7 +143,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
         <Typography variant="h2" className={classes.title}>
           Add-ons{' '}
           {backupsDisabledReason ? (
-            <HelpIcon text={backupsDisabledReason} />
+            <TooltipIcon
+              text={backupsDisabledReason}
+              status={TOOLTIP_ICON_STATUS.HELP}
+            />
           ) : null}
         </Typography>
         <Grid container>

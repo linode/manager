@@ -6,8 +6,9 @@ import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import Link from 'src/components/Link';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -27,10 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tooltip: {
     maxWidth: 275,
   },
-  helpIcon: {
-    padding: 0,
-  },
-  withHelpIcon: {
+  withTooltipIcon: {
     display: 'flex',
     alignItems: 'center',
   },
@@ -107,15 +105,18 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
 
   if (isBareMetalInstance) {
     return (
-      <div className={classes.withHelpIcon}>
+      <div className={classes.withTooltipIcon}>
         <Typography variant="body1" className={classes.backupNotApplicable}>
           N/A
         </Typography>
-        <HelpIcon
+        <TooltipIcon
           text={backupsUnavailableMessage}
-          className={classes.helpIcon}
+          sxTooltipIcon={{
+            padding: 0,
+          }}
           classes={{ tooltip: classes.tooltip }}
           interactive
+          status={TOOLTIP_ICON_STATUS.HELP}
         />
       </div>
     );

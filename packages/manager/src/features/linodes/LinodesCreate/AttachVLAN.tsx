@@ -5,7 +5,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
@@ -15,6 +15,7 @@ import {
   regionsWithFeature,
 } from 'src/utilities/doesRegionSupportFeature';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -83,7 +84,10 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <Typography variant="h2" className={classes.title}>
-        Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
+        Attach a VLAN{' '}
+        {helperText ? (
+          <TooltipIcon text={helperText} status={TOOLTIP_ICON_STATUS.HELP} />
+        ) : null}
       </Typography>
       <Grid container>
         <Grid item xs={12}>

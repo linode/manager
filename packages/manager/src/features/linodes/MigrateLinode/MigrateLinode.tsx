@@ -9,7 +9,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import Notice from 'src/components/Notice';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -34,6 +34,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
 import { extendType } from 'src/utilities/extendType';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -260,7 +261,9 @@ const MigrateLinode = (props: Props) => {
         >
           Enter Migration Queue
         </Button>
-        {!!disabledText && <HelpIcon text={disabledText} />}
+        {!!disabledText && (
+          <TooltipIcon text={disabledText} status={TOOLTIP_ICON_STATUS.HELP} />
+        )}
       </Box>
     </Dialog>
   );

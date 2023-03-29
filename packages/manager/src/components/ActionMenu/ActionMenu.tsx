@@ -10,8 +10,9 @@ import '@reach/menu-button/styles.css';
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import KebabIcon from 'src/assets/icons/kebab.svg';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import { makeStyles } from 'tss-react/mui';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 export interface Action {
   title: string;
@@ -128,6 +129,18 @@ const ActionMenu = (props: Props) => {
     return null;
   }
 
+  const sxTooltipIcon = {
+    color: '#fff',
+    '& :hover': {
+      color: '#4d99f1',
+    },
+    padding: '0 0 0 8px',
+    '& svg': {
+      height: '20px',
+      width: '20px',
+    },
+  };
+
   return (
     <Menu>
       <MenuButton
@@ -159,11 +172,12 @@ const ActionMenu = (props: Props) => {
             >
               {a.title}
               {a.tooltip ? (
-                <HelpIcon
+                <TooltipIcon
                   data-qa-tooltip-icon
                   text={a.tooltip}
                   tooltipPosition="right"
-                  className={classes.tooltip}
+                  sxTooltipIcon={sxTooltipIcon}
+                  status={TOOLTIP_ICON_STATUS.HELP}
                 />
               ) : null}
             </MenuItem>

@@ -3,10 +3,9 @@ import { PaymentMethod } from '@linode/api-v4/lib/account';
 import { VariantType } from 'notistack';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LinearProgress from 'src/components/LinearProgress';
 import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
@@ -14,8 +13,9 @@ import Notice from 'src/components/Notice';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import Box from '@mui/material/Box';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 interface Props {
   open: boolean;
@@ -28,48 +28,28 @@ export interface PaymentMessage {
   variant: VariantType;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   progress: {
     marginBottom: 18,
     width: '100%',
     height: 5,
-  },
-  tooltip: {
-    color: theme.color.grey1,
-    padding: '0 0 0 4px',
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
-  },
-  notice: {
-    borderLeft: `solid 6px ${theme.color.green}`,
-    marginBottom: theme.spacing(2),
-    padding: '8px 16px',
-    '& p': {
-      fontSize: '0.95em',
-    },
-  },
-  link: {
-    ...theme.applyLinkStyles,
-  },
-  errorIcon: {
-    color: theme.color.red,
-    marginRight: -20,
-    '&:hover': {
-      color: theme.color.red,
-      opacity: 0.7,
-    },
-    '& svg': {
-      height: 28,
-      width: 28,
-    },
   },
 }));
 
 const sxBox = {
   paddingTop: '8px',
   paddingBottom: '8px',
+};
+
+const sxTooltipIcon = {
+  marginRight: '-20px',
+  '&:hover': {
+    opacity: 0.7,
+  },
+  '& svg': {
+    height: '28px',
+    width: '28px',
+  },
 };
 
 export const AddPaymentMethodDrawer = (props: Props) => {
@@ -95,7 +75,11 @@ export const AddPaymentMethodDrawer = (props: Props) => {
 
   const renderError = (errorMsg: string) => {
     return (
-      <HelpIcon className={classes.errorIcon} isError={true} text={errorMsg} />
+      <TooltipIcon
+        status={TOOLTIP_ICON_STATUS.ERROR}
+        text={errorMsg}
+        sxTooltipIcon={sxTooltipIcon}
+      />
     );
   };
 
@@ -124,8 +108,8 @@ export const AddPaymentMethodDrawer = (props: Props) => {
       <>
         <Divider />
         <Box sx={sxBox}>
-          <Grid container spacing={2}>
-            <Grid item xs={8} md={9}>
+          <Grid container spacing={1.5}>
+            <Grid xs={8} md={9}>
               <Typography variant="h3">Google Pay</Typography>
               <Typography>
                 You&rsquo;ll be taken to Google Pay to complete sign up.
@@ -133,9 +117,8 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             <Grid
               container
-              item
               xs={4}
-              md={3}
+              md={2.5}
               justifyContent="flex-end"
               alignContent="center"
             >
@@ -153,8 +136,8 @@ export const AddPaymentMethodDrawer = (props: Props) => {
       <>
         <Divider />
         <Box sx={sxBox}>
-          <Grid container spacing={2}>
-            <Grid item xs={8} md={9}>
+          <Grid container spacing={1.5}>
+            <Grid xs={8} md={9}>
               <Typography variant="h3">PayPal</Typography>
               <Typography>
                 You&rsquo;ll be taken to PayPal to complete sign up.
@@ -162,9 +145,8 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             <Grid
               container
-              item
               xs={4}
-              md={3}
+              md={2.5}
               justifyContent="flex-end"
               alignContent="center"
             >

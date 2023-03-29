@@ -14,7 +14,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -38,6 +38,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEvent } from 'src/utilities/ga';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 type ClassNames =
   | 'root'
@@ -176,8 +177,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           </Grid>
           <span className={classes.addNewWrapperContainer}>
             {!freeDiskSpace ? (
-              <HelpIcon
+              <TooltipIcon
                 text={noFreeDiskSpaceWarning}
+                status={TOOLTIP_ICON_STATUS.HELP}
                 tooltipGAEvent={() =>
                   sendEvent({
                     category: `Disk Resize Flow`,
