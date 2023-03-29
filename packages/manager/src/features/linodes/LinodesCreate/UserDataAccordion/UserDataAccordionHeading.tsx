@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { StyledHelpIcon } from './UserDataAccordion.styles';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 export const LINODE_CREATE_FROM = {
   BACKUPS: 'fromBackup',
@@ -33,6 +34,7 @@ const UserDataAccordionHeading = ({ createType }: Props) => {
           </>
         }
         interactive
+        status={TOOLTIP_ICON_STATUS.HELP}
       />
       {showWarningMessage ? (
         <Notice warning spacingTop={16} spacingBottom={16}>

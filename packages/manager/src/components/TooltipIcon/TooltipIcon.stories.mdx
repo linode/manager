@@ -1,10 +1,10 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import HelpIcon from 'src/components/HelpIcon/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon/TooltipIcon';
 
-<Meta title="Elements/Tooltip/Help Icon" component={HelpIcon} />
+<Meta title="Elements/Tooltip/Help Icon" component={TooltipIcon} />
 
 export const Template = (args) => {
-  return <HelpIcon {...args} />;
+  return <TooltipIcon {...args} />;
 };
 
 # Help Icon
@@ -22,7 +22,7 @@ Tooltips can be attached to any active element (text fields, buttons, etc.) on a
 
 <Canvas>
   <Story
-    name="Help Icon"
+    name="Tooltip Icon"
     args={{
       text: 'Hello World',
       tooltipPosition: 'bottom',
@@ -31,11 +31,17 @@ Tooltips can be attached to any active element (text fields, buttons, etc.) on a
       text: {
         description: 'Tooltip text.',
       },
-      isError: {
-        description: 'Changes the icon to an error icon.',
+      status: {
+        description: 'Sets the tooltip icon SVG.',
       },
       leaveDelay: {
         description: 'Delay hiding the tooltip.',
+      },
+      sxTooltipIcon: {
+        description: 'Pass specific CSS styling for the SVG icon.',
+      },
+      tooltipGAEvent: {
+        description: 'Send event analytics.',
       },
     }}
   >
@@ -43,4 +49,8 @@ Tooltips can be attached to any active element (text fields, buttons, etc.) on a
   </Story>
 </Canvas>
 
-<ArgsTable story="Help Icon" exclude={['className', 'classes', 'ref']} sort="requiredFirst"/>
+<ArgsTable
+  story="Help Icon"
+  exclude={['className', 'classes', 'ref']}
+  sort="requiredFirst"
+/>

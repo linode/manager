@@ -1,10 +1,8 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
@@ -14,18 +12,9 @@ import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  main: {
-    [theme.breakpoints.up('md')]: {
-      order: 1,
-    },
-  },
-  heading: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2),
-  },
-}));
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Button from 'src/components/Button';
 
 export const BillingDetail = () => {
   const {
@@ -39,8 +28,6 @@ export const BillingDetail = () => {
     error: accountError,
     isLoading: accountLoading,
   } = useAccount();
-
-  const { classes } = useStyles();
 
   if (accountLoading) {
     return <CircleProgress />;
@@ -61,43 +48,72 @@ export const BillingDetail = () => {
   return (
     <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
       <DocumentTitleSegment segment={`Account & Billing`} />
-      <div data-testid="billing-detail">
-        <Grid container>
-          <Grid item xs={12} md={12} lg={12} className={classes.main}>
-            <BillingSummary
-              paymentMethods={paymentMethods}
-              balance={account?.balance ?? 0}
-              promotions={account?.active_promotions}
-              balanceUninvoiced={account?.balance_uninvoiced ?? 0}
-            />
-            <Grid container direction="row">
-              <ContactInfo
-                company={account.company}
-                firstName={account.first_name}
-                lastName={account.last_name}
-                address1={account.address_1}
-                address2={account.address_2}
-                city={account.city}
-                state={account.state}
-                zip={account.zip}
-                country={account.country}
-                email={account.email}
-                phone={account.phone}
-                taxId={account.tax_id}
-              />
-              <PaymentInformation
-                loading={paymentMethodsLoading}
-                error={paymentMethodsError}
-                paymentMethods={paymentMethods}
-                isAkamaiCustomer={account?.billing_source === 'akamai'}
-              />
-            </Grid>
-            <BillingActivityPanel accountActiveSince={account?.active_since} />
-          </Grid>
-        </Grid>
-      </div>
+      <Grid
+        columnSpacing={2}
+        container
+        data-testid="billing-detail"
+        rowSpacing={2}
+        sx={{
+          paddingTop: 1,
+        }}
+      >
+        <BillingSummary
+          balance={account?.balance ?? 0}
+          balanceUninvoiced={account?.balance_uninvoiced ?? 0}
+          paymentMethods={paymentMethods}
+          promotions={account?.active_promotions}
+        />
+        <ContactInfo
+          address1={account.address_1}
+          address2={account.address_2}
+          city={account.city}
+          company={account.company}
+          country={account.country}
+          email={account.email}
+          firstName={account.first_name}
+          lastName={account.last_name}
+          phone={account.phone}
+          state={account.state}
+          taxId={account.tax_id}
+          zip={account.zip}
+        />
+        <PaymentInformation
+          error={paymentMethodsError}
+          isAkamaiCustomer={account?.billing_source === 'akamai'}
+          loading={paymentMethodsLoading}
+          paymentMethods={paymentMethods}
+        />
+        <BillingActivityPanel accountActiveSince={account?.active_since} />
+      </Grid>
     </PayPalScriptProvider>
   );
 };
+
+export const BillingPaper = styled(Paper)(() => ({
+  height: '100%',
+  padding: `15px 20px`,
+}));
+
+export const BillingBox = styled('div')(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginBottom: theme.spacing(2),
+}));
+
+export const BillingActionButton = styled(Button)(({ theme }) => ({
+  color: theme.textColors.linkActiveLight,
+  fontFamily: theme.font.normal,
+  fontSize: '.875rem',
+  fontWeight: 700,
+  minHeight: 'unset',
+  minWidth: 'auto',
+  padding: 0,
+  '&:hover, &:focus': {
+    backgroundColor: 'transparent',
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+  },
+}));
 
 export default BillingDetail;

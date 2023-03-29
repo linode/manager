@@ -25,6 +25,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
+import Grid from '@mui/material/Unstable_Grid2';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {
@@ -334,166 +335,168 @@ export const BillingActivityPanel = (props: Props) => {
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
 
   return (
-    <div className={classes.root}>
-      <div className={classes.headerContainer}>
-        <Typography variant="h2" className={classes.headline}>
-          {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
-        </Typography>
-        {isAkamaiCustomer ? (
-          <div className={classes.headerLeft}>
-            <TextTooltip
-              displayText="Usage History may not reflect finalized invoice"
-              tooltipText={AkamaiBillingInvoiceText}
-              sxTypography={{ paddingLeft: '4px' }}
-            />
-          </div>
-        ) : null}
-        <div className={classes.headerRight}>
-          {accountActiveSince && (
-            <div className={classes.flexContainer}>
-              <Typography variant="body1" className={classes.activeSince}>
-                Account active since{' '}
-                {formatDate(accountActiveSince, {
-                  displayTime: false,
-                })}
-              </Typography>
+    <Grid xs={12}>
+      <div className={classes.root}>
+        <div className={classes.headerContainer}>
+          <Typography variant="h2" className={classes.headline}>
+            {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
+          </Typography>
+          {isAkamaiCustomer ? (
+            <div className={classes.headerLeft}>
+              <TextTooltip
+                displayText="Usage History may not reflect finalized invoice"
+                tooltipText={AkamaiBillingInvoiceText}
+                sxTypography={{ paddingLeft: '4px' }}
+              />
             </div>
-          )}
-          <div className={classes.flexContainer}>
-            <Select
-              className={classes.transactionType}
-              label="Transaction Types"
-              onChange={handleTransactionTypeChange}
-              value={
-                transactionTypeOptions.find(
-                  (thisOption) => thisOption.value === selectedTransactionType
-                ) || null
-              }
-              isClearable={false}
-              isSearchable={false}
-              options={transactionTypeOptions}
-              inline
-              small
-              hideLabel
-            />
-            <Select
-              className={classes.transactionDate}
-              label="Transaction Dates"
-              onChange={handleTransactionDateChange}
-              value={
-                transactionDateOptions.find(
-                  (thisOption) => thisOption.value === selectedTransactionDate
-                ) || null
-              }
-              isClearable={false}
-              isSearchable={false}
-              options={transactionDateOptions}
-              inline
-              small
-              hideLabel
-            />
+          ) : null}
+          <div className={classes.headerRight}>
+            {accountActiveSince && (
+              <div className={classes.flexContainer}>
+                <Typography variant="body1" className={classes.activeSince}>
+                  Account active since{' '}
+                  {formatDate(accountActiveSince, {
+                    displayTime: false,
+                  })}
+                </Typography>
+              </div>
+            )}
+            <div className={classes.flexContainer}>
+              <Select
+                className={classes.transactionType}
+                label="Transaction Types"
+                onChange={handleTransactionTypeChange}
+                value={
+                  transactionTypeOptions.find(
+                    (thisOption) => thisOption.value === selectedTransactionType
+                  ) || null
+                }
+                isClearable={false}
+                isSearchable={false}
+                options={transactionTypeOptions}
+                inline
+                small
+                hideLabel
+              />
+              <Select
+                className={classes.transactionDate}
+                label="Transaction Dates"
+                onChange={handleTransactionDateChange}
+                value={
+                  transactionDateOptions.find(
+                    (thisOption) => thisOption.value === selectedTransactionDate
+                  ) || null
+                }
+                isClearable={false}
+                isSearchable={false}
+                options={transactionDateOptions}
+                inline
+                small
+                hideLabel
+              />
+            </div>
           </div>
         </div>
+        <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
+          {React.useCallback(
+            ({ data: orderedData }) => (
+              <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
+                {({
+                  data: paginatedAndOrderedData,
+                  count,
+                  handlePageChange,
+                  handlePageSizeChange,
+                  page,
+                  pageSize,
+                }) => (
+                  <>
+                    <Table aria-label="List of Invoices and Payments">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell className={classes.descriptionColumn}>
+                            Description
+                          </TableCell>
+                          <TableCell className={classes.dateColumn}>
+                            Date
+                          </TableCell>
+                          <TableCell className={classes.totalColumn}>
+                            Amount
+                          </TableCell>
+                          <TableCell className={classes.pdfDownloadColumn} />
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableContentWrapper
+                          loadingProps={{
+                            columns: 4,
+                          }}
+                          length={paginatedAndOrderedData.length}
+                          loading={
+                            accountPaymentsLoading || accountInvoicesLoading
+                          }
+                          error={
+                            accountPaymentsError || accountInvoicesError
+                              ? [
+                                  {
+                                    reason:
+                                      'There was an error retrieving your billing activity.',
+                                  },
+                                ]
+                              : undefined
+                          }
+                        >
+                          {paginatedAndOrderedData.map((thisItem) => {
+                            return (
+                              <ActivityFeedItem
+                                key={`${thisItem.type}-${thisItem.id}`}
+                                downloadPDF={
+                                  thisItem.type === 'invoice'
+                                    ? downloadInvoicePDF
+                                    : downloadPaymentPDF
+                                }
+                                hasError={pdfErrors.has(
+                                  `${thisItem.type}-${thisItem.id}`
+                                )}
+                                isLoading={pdfLoading.has(
+                                  `${thisItem.type}-${thisItem.id}`
+                                )}
+                                {...thisItem}
+                              />
+                            );
+                          })}
+                        </TableContentWrapper>
+                      </TableBody>
+                    </Table>
+                    <PaginationFooter
+                      count={count}
+                      handlePageChange={handlePageChange}
+                      handleSizeChange={handlePageSizeChange}
+                      page={page}
+                      pageSize={pageSize}
+                      eventCategory="Billing Activity Table"
+                    />
+                  </>
+                )}
+              </Paginate>
+            ),
+            [
+              classes.descriptionColumn,
+              classes.dateColumn,
+              classes.totalColumn,
+              classes.pdfDownloadColumn,
+              accountPaymentsLoading,
+              accountInvoicesLoading,
+              accountPaymentsError,
+              accountInvoicesError,
+              downloadInvoicePDF,
+              downloadPaymentPDF,
+              pdfErrors,
+              pdfLoading,
+            ]
+          )}
+        </OrderBy>
       </div>
-      <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
-        {React.useCallback(
-          ({ data: orderedData }) => (
-            <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
-              {({
-                data: paginatedAndOrderedData,
-                count,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-              }) => (
-                <>
-                  <Table aria-label="List of Invoices and Payments">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell className={classes.descriptionColumn}>
-                          Description
-                        </TableCell>
-                        <TableCell className={classes.dateColumn}>
-                          Date
-                        </TableCell>
-                        <TableCell className={classes.totalColumn}>
-                          Amount
-                        </TableCell>
-                        <TableCell className={classes.pdfDownloadColumn} />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        loadingProps={{
-                          columns: 4,
-                        }}
-                        length={paginatedAndOrderedData.length}
-                        loading={
-                          accountPaymentsLoading || accountInvoicesLoading
-                        }
-                        error={
-                          accountPaymentsError || accountInvoicesError
-                            ? [
-                                {
-                                  reason:
-                                    'There was an error retrieving your billing activity.',
-                                },
-                              ]
-                            : undefined
-                        }
-                      >
-                        {paginatedAndOrderedData.map((thisItem) => {
-                          return (
-                            <ActivityFeedItem
-                              key={`${thisItem.type}-${thisItem.id}`}
-                              downloadPDF={
-                                thisItem.type === 'invoice'
-                                  ? downloadInvoicePDF
-                                  : downloadPaymentPDF
-                              }
-                              hasError={pdfErrors.has(
-                                `${thisItem.type}-${thisItem.id}`
-                              )}
-                              isLoading={pdfLoading.has(
-                                `${thisItem.type}-${thisItem.id}`
-                              )}
-                              {...thisItem}
-                            />
-                          );
-                        })}
-                      </TableContentWrapper>
-                    </TableBody>
-                  </Table>
-                  <PaginationFooter
-                    count={count}
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                    eventCategory="Billing Activity Table"
-                  />
-                </>
-              )}
-            </Paginate>
-          ),
-          [
-            classes.descriptionColumn,
-            classes.dateColumn,
-            classes.totalColumn,
-            classes.pdfDownloadColumn,
-            accountPaymentsLoading,
-            accountInvoicesLoading,
-            accountPaymentsError,
-            accountInvoicesError,
-            downloadInvoicePDF,
-            downloadPaymentPDF,
-            pdfErrors,
-            pdfLoading,
-          ]
-        )}
-      </OrderBy>
-    </div>
+    </Grid>
   );
 };
 

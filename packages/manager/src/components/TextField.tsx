@@ -11,8 +11,9 @@ import { makeStyles, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import { TooltipProps as _TooltipProps } from 'src/components/core/Tooltip';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
+import { TOOLTIP_ICON_STATUS } from './TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   helpWrapper: {
@@ -48,9 +49,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
-  },
-  helpIcon: {
-    padding: '0px 0px 0px 8px',
   },
   errorText: {
     display: 'flex',
@@ -330,13 +328,16 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
           {children}
         </TextField>
         {tooltipText && (
-          <HelpIcon
-            className={classes.helpIcon}
+          <TooltipIcon
             classes={{ popper: tooltipClasses }}
             text={tooltipText}
             tooltipPosition={tooltipPosition}
             interactive={tooltipInteractive}
             onMouseEnter={tooltipOnMouseEnter}
+            status={TOOLTIP_ICON_STATUS.HELP}
+            sxTooltipIcon={{
+              padding: '0px 0px 0px 8px',
+            }}
           />
         )}
       </div>

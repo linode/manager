@@ -6,7 +6,7 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
@@ -16,7 +16,8 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import Box from '../core/Box';
-import HelpIcon from '../HelpIcon';
+import TooltipIcon from '../TooltipIcon';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -73,10 +74,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     marginTop: theme.spacing(1),
   },
-  helpIcon: {
-    padding: 0,
-    marginLeft: theme.spacing(),
-  },
 }));
 
 export interface Props {
@@ -105,6 +102,7 @@ export const StackScript: React.FC<Props> = (props) => {
     userCanModify,
   } = props;
 
+  const theme = useTheme();
   const classes = useStyles();
   const history = useHistory();
   const { profile } = useAccountManagement();
@@ -249,10 +247,14 @@ export const StackScript: React.FC<Props> = (props) => {
                 className={classes.heading}
               >
                 <Typography variant="h3">Deprecated Images</Typography>
-                <HelpIcon
+                <TooltipIcon
                   text="You must update your StackScript to use a compatible Image to deploy it"
                   tooltipPosition="bottom"
-                  className={classes.helpIcon}
+                  sxTooltipIcon={{
+                    padding: 0,
+                    marginLeft: theme.spacing(),
+                  }}
+                  status={TOOLTIP_ICON_STATUS.HELP}
                 />
               </Box>
               {imageChips.deprecated}

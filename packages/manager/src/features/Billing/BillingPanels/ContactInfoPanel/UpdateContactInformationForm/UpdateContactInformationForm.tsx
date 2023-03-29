@@ -152,7 +152,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
         data-qa-update-contact
       >
         {generalError && (
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Notice error text={generalError} />
           </Grid>
         )}
@@ -340,7 +340,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             data-qa-contact-city
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             label="Postal Code"
             name="zip"

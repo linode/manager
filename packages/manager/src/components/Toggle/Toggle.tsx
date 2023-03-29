@@ -2,8 +2,9 @@ import * as React from 'react';
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
 import Switch, { SwitchProps } from 'src/components/core/Switch';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import './toggle.css';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 interface Props extends SwitchProps {
   tooltipText?: JSX.Element | string;
@@ -22,7 +23,13 @@ const Toggle: React.FC<Props> = (props) => {
         color="primary"
         {...rest}
       />
-      {tooltipText && <HelpIcon text={tooltipText} interactive={interactive} />}
+      {tooltipText && (
+        <TooltipIcon
+          text={tooltipText}
+          interactive={interactive}
+          status={TOOLTIP_ICON_STATUS.HELP}
+        />
+      )}
     </React.Fragment>
   );
 };

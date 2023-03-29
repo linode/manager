@@ -16,7 +16,7 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -35,6 +35,7 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
+import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -264,10 +265,15 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                   />
                 )}
                 {tooltip && (
-                  <HelpIcon
+                  <TooltipIcon
                     text={tooltip}
                     tooltipPosition="right-end"
-                    className="py0"
+                    // className="py0"
+                    sxTooltipIcon={{
+                      paddingTop: '0px !important',
+                      paddingBottom: '0px !important',
+                    }}
+                    status={TOOLTIP_ICON_STATUS.HELP}
                   />
                 )}
               </div>

@@ -1,69 +1,16 @@
 import countryData from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import Button from 'src/components/Button';
-import Paper from 'src/components/core/Paper';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import BillingContactDrawer from './EditBillingContactDrawer';
-
-import { makeStyles } from 'tss-react/mui';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  title: {
-    marginBottom: theme.spacing(2),
-  },
-  summarySection: {
-    padding: theme.spacing(2.5),
-    marginBottom: theme.spacing(2),
-    minHeight: '160px',
-    height: '93%',
-  },
-  section: {
-    marginBottom: theme.spacing(1),
-    '& .dif': {
-      position: 'relative',
-      width: 'auto',
-      '& .chip': {
-        position: 'absolute',
-        top: '-4px',
-        right: -10,
-      },
-    },
-  },
-  wordWrap: {
-    wordBreak: 'break-all',
-  },
-  switchWrapper: {
-    flex: 1,
-    maxWidth: '100%',
-    position: 'relative',
-    '&.mlMain': {
-      [theme.breakpoints.up('lg')]: {
-        maxWidth: '78.8%',
-      },
-    },
-  },
-  switchWrapperFlex: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  edit: {
-    color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.normal,
-    fontSize: '.875rem',
-    fontWeight: 700,
-    minHeight: 'unset',
-    minWidth: 'auto',
-    padding: 0,
-    '&:hover, &:focus': {
-      backgroundColor: 'transparent',
-      color: theme.palette.primary.main,
-      textDecoration: 'underline',
-    },
-  },
-}));
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import {
+  BillingPaper,
+  BillingBox,
+  BillingActionButton,
+} from '../../BillingDetail';
 
 interface Props {
   company: string;
@@ -80,6 +27,19 @@ interface Props {
   taxId: string;
 }
 
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(1),
+  '& .dif': {
+    position: 'relative',
+    width: 'auto',
+    '& .chip': {
+      position: 'absolute',
+      top: '-4px',
+      right: -10,
+    },
+  },
+}));
+
 const ContactInformation = (props: Props) => {
   const {
     company,
@@ -95,8 +55,6 @@ const ContactInformation = (props: Props) => {
     phone,
     taxId,
   } = props;
-
-  const { classes, cx } = useStyles();
 
   const history = useHistory<{
     contactDrawerOpen?: boolean;
@@ -144,27 +102,31 @@ const ContactInformation = (props: Props) => {
     (_country) => _country.countryShortCode === country
   )?.countryName;
 
+  const sxBox = {
+    flex: 1,
+    maxWidth: '100%',
+    position: 'relative',
+    ...(Boolean(taxId) &&
+      taxId !== '' && {
+        display: 'flex',
+        flexDirection: 'column',
+      }),
+  };
+
   return (
-    <Grid item xs={12} md={6}>
-      <Paper className={classes.summarySection} data-qa-contact-summary>
-        <Grid container spacing={2}>
-          <Grid item className={classes.switchWrapper}>
-            <Typography variant="h3" className={classes.title}>
-              Billing Contact
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Button
-              className={classes.edit}
-              onClick={() => {
-                history.push('/account/billing/edit');
-                handleEditDrawerOpen();
-              }}
-            >
-              Edit
-            </Button>
-          </Grid>
-        </Grid>
+    <Grid xs={12} md={6}>
+      <BillingPaper variant="outlined" data-qa-contact-summary>
+        <BillingBox>
+          <Typography variant="h3">Billing Contact</Typography>
+          <BillingActionButton
+            onClick={() => {
+              history.push('/account/billing/edit');
+              handleEditDrawerOpen();
+            }}
+          >
+            Edit
+          </BillingActionButton>
+        </BillingBox>
 
         <Grid container spacing={2}>
           {(firstName ||
@@ -176,74 +138,57 @@ const ContactInformation = (props: Props) => {
             state ||
             zip ||
             country) && (
-            <Grid item className={classes.switchWrapper}>
+            <Box sx={sxBox}>
               {(firstName || lastName) && (
-                <Typography
-                  className={`${classes.section} ${classes.wordWrap}`}
+                <StyledTypography
+                  sx={{ wordBreak: 'break-all' }}
                   data-qa-contact-name
                 >
                   {firstName} {lastName}
-                </Typography>
+                </StyledTypography>
               )}
               {company && (
-                <Typography
-                  className={`${classes.section} ${classes.wordWrap}`}
+                <StyledTypography
+                  sx={{ wordBreak: 'break-all' }}
                   data-qa-company
                 >
                   {company}
-                </Typography>
+                </StyledTypography>
               )}
               {(address1 || address2 || city || state || zip || country) && (
                 <>
-                  <Typography
-                    className={classes.section}
-                    data-qa-contact-address
-                  >
+                  <StyledTypography data-qa-contact-address>
                     {address1}
-                  </Typography>
-                  <Typography className={classes.section}>
-                    {address2}
-                  </Typography>
+                  </StyledTypography>
+                  <StyledTypography>{address2}</StyledTypography>
                 </>
               )}
-              <Typography className={classes.section}>
+              <StyledTypography>
                 {city}
                 {city && state && ','} {state} {zip}
-              </Typography>
-              <Typography className={classes.section}>{countryName}</Typography>
-            </Grid>
+              </StyledTypography>
+              <StyledTypography>{countryName}</StyledTypography>
+            </Box>
           )}
 
-          <Grid
-            item
-            className={cx({
-              [classes.switchWrapper]: true,
-              [classes.switchWrapperFlex]:
-                taxId !== undefined && taxId !== null && taxId !== '',
-            })}
-          >
-            <Typography
-              className={`${classes.section} ${classes.wordWrap}`}
+          <Box sx={sxBox}>
+            <StyledTypography
+              sx={{ wordBreak: 'break-all' }}
               data-qa-contact-email
             >
               {email}
-            </Typography>
+            </StyledTypography>
             {phone && (
-              <Typography className={classes.section} data-qa-contact-phone>
-                {phone}
-              </Typography>
+              <StyledTypography data-qa-contact-phone>{phone}</StyledTypography>
             )}
             {taxId && (
-              <Typography
-                className={classes.section}
-                style={{ marginTop: 'auto' }}
-              >
+              <StyledTypography sx={{ marginTop: 'auto' }}>
                 <strong>Tax ID</strong> {taxId}
-              </Typography>
+              </StyledTypography>
             )}
-          </Grid>
+          </Box>
         </Grid>
-      </Paper>
+      </BillingPaper>
       <BillingContactDrawer
         open={editContactDrawerOpen}
         onClose={() => {
