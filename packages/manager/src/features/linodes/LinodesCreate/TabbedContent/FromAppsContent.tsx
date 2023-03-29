@@ -1,4 +1,5 @@
-import _, { curry } from 'lodash';
+import compact from 'lodash/compact';
+import curry from 'lodash/curry';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
@@ -122,7 +123,7 @@ export const getCompatibleImages = (
   imagesData: Record<string, Image>,
   stackScriptImages: string[]
 ) =>
-  _.compact(
+  compact(
     stackScriptImages.map((stackScriptImage) => imagesData[stackScriptImage])
   );
 
