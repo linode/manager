@@ -7,8 +7,8 @@ export const StyledHelpIcon = styled(HelpIcon)({
   verticalAlign: 'bottom',
   '& svg': {
     fill: 'currentColor',
-    stroke: 'none',
-    fontWeight: 'normal',
+    stroke: 'none !important',
+    fontWeight: 'normal !important',
   },
 });
 
