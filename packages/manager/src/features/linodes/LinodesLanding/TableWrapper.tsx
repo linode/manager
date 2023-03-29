@@ -12,11 +12,12 @@ interface Props {
   linodesAreGrouped: boolean;
   isVLAN?: boolean;
   tableProps?: TableProps;
+  children: React.ReactNode;
 }
 
-type CombinedProps = Omit<OrderByProps, 'data'> & Props;
+type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> & Props;
 
-const TableWrapper: React.FC<CombinedProps> = (props) => {
+const TableWrapper = <T extends unknown>(props: CombinedProps<T>) => {
   const {
     dataLength,
     order,

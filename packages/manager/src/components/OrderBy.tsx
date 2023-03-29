@@ -15,9 +15,9 @@ import { debounce } from 'throttle-debounce';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { useHistory, useLocation } from 'react-router-dom';
 
-export interface OrderByProps extends State {
+export interface OrderByProps<T> extends State {
   handleOrderChange: (orderBy: string, order: Order) => void;
-  data: any[];
+  data: T[];
 }
 
 interface State {
@@ -25,15 +25,15 @@ interface State {
   orderBy: string;
 }
 
-interface Props {
-  data: any[];
-  children: (p: OrderByProps) => React.ReactNode;
+interface Props<T> {
+  data: T[];
+  children: (p: OrderByProps<T>) => React.ReactNode;
   order?: Order;
   orderBy?: string;
   preferenceKey?: string; // If provided, will store/read values from user preferences
 }
 
-export type CombinedProps = Props;
+export type CombinedProps<T> = Props<T>;
 
 /**
  * Given a set of UserPreferences (returned from the API),
@@ -91,8 +91,8 @@ export const getInitialValuesFromUserPreferences = (
   );
 };
 
-export const sortData = (orderBy: string, order: Order) => {
-  return sort((a, b) => {
+export const sortData = <T extends unknown>(orderBy: string, order: Order) => {
+  return sort<T>((a, b) => {
     /* If the column we're sorting on is an array (e.g. 'tags', which is string[]),
      *  we want to sort by the length of the array. Otherwise, do a simple comparison.
      */
@@ -148,7 +148,7 @@ export const sortData = (orderBy: string, order: Order) => {
   });
 };
 
-export const OrderBy: React.FC<CombinedProps> = (props) => {
+export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
@@ -181,7 +181,7 @@ export const OrderBy: React.FC<CombinedProps> = (props) => {
   }
 
   // SORT THE DATA!
-  const sortedData = sortData(orderBy, order)(dataToSort.current);
+  const sortedData = sortData<T>(orderBy, order)(dataToSort.current);
 
   // Save this – this is what will be sorted next time around, if e.g. the order
   // or orderBy keys change. In that case we don't want to start from scratch
@@ -230,7 +230,11 @@ export const OrderBy: React.FC<CombinedProps> = (props) => {
   return <>{props.children(downstreamProps)}</>;
 };
 
-export default React.memo(OrderBy);
+const Memoized = React.memo(OrderBy);
+
+export default <T extends unknown>(props: CombinedProps<T>) => (
+  <Memoized {...props} />
+);
 
 const isValidDate = (date: any) => {
   return DateTime.fromISO(date).isValid;

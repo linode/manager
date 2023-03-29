@@ -75,9 +75,9 @@ interface Props {
   isVLAN?: boolean;
 }
 
-type CombinedProps = Props & Omit<OrderByProps, 'data'>;
+type CombinedProps<T> = Props & Omit<OrderByProps<T>, 'data'>;
 
-const SortableTableHead: React.FC<CombinedProps> = (props) => {
+const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
   const classes = useStyles();
 
   const {

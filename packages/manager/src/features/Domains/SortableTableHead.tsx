@@ -17,9 +17,9 @@ const styles = (theme: Theme) =>
     },
   });
 
-type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
+type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> & WithStyles<ClassNames>;
 
-const SortableTableHead: React.FC<combinedProps> = (props) => {
+const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
   const { order, orderBy, handleOrderChange, classes } = props;
 
   const isActive = (label: string) => label === orderBy;
