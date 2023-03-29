@@ -6,7 +6,7 @@ export const StyledHelpIcon = styled(HelpIcon)({
   padding: '0px 0px 0px 4px',
   verticalAlign: 'bottom',
   '& svg': {
-    fill: 'currentColor',
+    fill: '#888f91 !important',
     stroke: 'none !important',
     fontWeight: 'normal !important',
   },
