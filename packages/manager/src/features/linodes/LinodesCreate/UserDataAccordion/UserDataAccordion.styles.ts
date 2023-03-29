@@ -3,10 +3,12 @@ import { makeStyles } from '@mui/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 export const StyledHelpIcon = styled(HelpIcon)({
-  padding: '0px 0px 4px 8px',
+  padding: '0px 0px 0px 4px',
+  verticalAlign: 'bottom',
   '& svg': {
     fill: 'currentColor',
     stroke: 'none',
+    fontWeight: 'normal',
   },
 });
 
