@@ -4,15 +4,15 @@ import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import useNotifications from 'src/hooks/useNotifications';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';
 
-const ComplianceBanner: React.FC<{}> = () => {
+const ComplianceBanner = () => {
   const context = React.useContext(complianceUpdateContext);
-  const notifications = useNotifications();
+  const { data: notifications } = useNotificationsQuery();
 
-  const hasComplianceNotification = notifications.some((thisNotification) =>
-    isEUModelContractNotification(thisNotification)
+  const hasComplianceNotification = notifications?.some((notification) =>
+    isEUModelContractNotification(notification)
   );
 
   if (!hasComplianceNotification) {

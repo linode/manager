@@ -11,7 +11,6 @@ import PowerDialogOrDrawer, {
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import useNotifications from 'src/hooks/useNotifications';
 import { useProfile } from 'src/queries/profile';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
@@ -36,6 +35,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ACCESS_LEVELS } from 'src/constants';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 interface Props {
   numVolumes: number;
@@ -79,7 +79,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const notifications = useNotifications();
+  const { data: notifications } = useNotificationsQuery();
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -270,16 +270,17 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     return deleteLinode(linodeId);
   };
 
-  const upgradeableVolumeIds = notifications
-    .filter(
-      (notification) =>
-        notification.type === 'volume_migration_scheduled' &&
-        volumesForLinode.some(
-          (volume: Volume) => volume.id === notification?.entity?.id
-        )
-    )
-    // Non null assertion because we assume that these kinds of notifications will always have an entity attached.
-    .map((notification) => notification.entity!.id);
+  const upgradeableVolumeIds =
+    notifications
+      ?.filter(
+        (notification) =>
+          notification.type === 'volume_migration_scheduled' &&
+          volumesForLinode.some(
+            (volume: Volume) => volume.id === notification?.entity?.id
+          )
+      )
+      // Non null assertion because we assume that these kinds of notifications will always have an entity attached.
+      .map((notification) => notification.entity!.id) ?? [];
 
   const {
     editableLabelError,

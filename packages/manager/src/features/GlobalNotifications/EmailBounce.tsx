@@ -8,19 +8,19 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import useNotifications from 'src/hooks/useNotifications';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 // =============================================================================
 // <EmailBounceNotificationSection />
 // =============================================================================
-export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
+export const EmailBounceNotificationSection = React.memo(() => {
   const { data: account } = useAccount();
   const { mutateAsync: updateAccount } = useMutateAccount();
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
-  const notifications = useNotifications();
+  const { data: notifications } = useNotificationsQuery();
   const history = useHistory();
 
   // Have to use refs here, because these values should be static. I.e. if we
@@ -29,11 +29,11 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
   const accountEmailRef = React.useRef(account?.email);
   const profileEmailRef = React.useRef(profile?.email);
 
-  const billingEmailBounceNotification = notifications.find(
+  const billingEmailBounceNotification = notifications?.find(
     (thisNotification) => thisNotification.type === 'billing_email_bounce'
   );
 
-  const userEmailBounceNotification = notifications.find(
+  const userEmailBounceNotification = notifications?.find(
     (thisNotification) => thisNotification.type === 'user_email_bounce'
   );
 
@@ -105,9 +105,7 @@ interface Props {
   changeEmail: () => void;
 }
 
-type CombinedProps = Props;
-
-const EmailBounceNotification: React.FC<CombinedProps> = React.memo((props) => {
+const EmailBounceNotification = React.memo((props: Props) => {
   const { text, confirmEmail, changeEmail } = props;
 
   const classes = useEmailBounceNotificationStyles();

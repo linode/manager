@@ -32,11 +32,7 @@ export const BillingContactDrawer = (props: Props) => {
       open={open}
       onClose={onClose}
     >
-      <UpdateContactInformationForm
-        open={open}
-        onClose={onClose}
-        focusEmail={focusEmail}
-      />
+      <UpdateContactInformationForm onClose={onClose} focusEmail={focusEmail} />
     </Drawer>
   );
 };

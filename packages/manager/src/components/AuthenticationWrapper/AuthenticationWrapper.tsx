@@ -1,8 +1,4 @@
-import {
-  getAccountInfo,
-  getAccountSettings,
-  Notification,
-} from '@linode/api-v4/lib/account';
+import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -19,7 +15,6 @@ import { checkAccountSize } from 'src/store/accountManagement/accountManagement.
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
-import { requestNotifications } from 'src/store/notification/notification.requests';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { MapState } from 'src/store/types';
@@ -84,20 +79,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       /** We choose to do nothing, relying on the Redux error state. */
     } finally {
       this.props.markAppAsDoneLoading();
-      this.makeSecondaryRequests();
-    }
-  };
-
-  /** Secondary Requests (non-blocking)
-   * Make these once the user is past the
-   * splash screen, since they aren't needed
-   * for navigation, basic display, etc.
-   */
-  makeSecondaryRequests = async () => {
-    try {
-      await this.props.requestNotifications();
-    } catch {
-      /** We choose to do nothing, relying on the Redux error state. */
     }
   };
 
@@ -177,7 +158,6 @@ interface DispatchProps {
   initSession: () => void;
   checkAccountSize: () => Promise<null>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
-  requestNotifications: () => Promise<GetAllData<Notification>>;
   requestRegions: () => Promise<Region[]>;
   markAppAsDoneLoading: () => void;
 }
@@ -188,7 +168,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   initSession: () => dispatch(handleInitTokens()),
   checkAccountSize: () => dispatch(checkAccountSize()),
   requestLinodes: () => dispatch(requestLinodes({})),
-  requestNotifications: () => dispatch(requestNotifications()),
   requestRegions: () => dispatch(requestRegions()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
 });
