@@ -3,8 +3,6 @@ import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-import { compose } from 'recompose';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
@@ -12,7 +10,6 @@ import ImageSelect from 'src/components/ImageSelect';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { ApplicationState } from 'src/store';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectAppPanel from '../SelectAppPanel';
 import {
@@ -106,7 +103,7 @@ type InnerProps = Props &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
 
-type CombinedProps = WithStyles<ClassNames> & InnerProps & StateProps;
+type CombinedProps = WithStyles<ClassNames> & InnerProps;
 
 interface State {
   detailDrawerOpen: boolean;
@@ -421,21 +418,4 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-interface StateProps {
-  documentation: Linode.Doc[];
-}
-
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  CombinedProps,
-  ApplicationState
-> = (state) => ({
-  documentation: state.documentation,
-});
-
-const connected = connect(mapStateToProps);
-
-export default compose<CombinedProps, InnerProps>(
-  connected,
-  styled
-)(FromAppsContent);
+export default styled(FromAppsContent);

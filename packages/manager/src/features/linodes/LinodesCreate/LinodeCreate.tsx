@@ -5,7 +5,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import classNames from 'classnames';
 import { cloneDeep } from 'lodash';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
@@ -35,7 +35,6 @@ import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import { ApplicationState } from 'src/store';
 import {
   CreateTypes,
   handleChangeCreateType,
@@ -187,7 +186,6 @@ type CombinedProps = Props &
   AllFormStateAndHandlers &
   AppsData &
   ReduxStateProps &
-  StateProps &
   WithDisplayData &
   ImagesProps &
   WithLinodesProps &
@@ -884,21 +882,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
   setTab: (value) => dispatch(handleChangeCreateType(value)),
 });
 
-interface StateProps {
-  documentation: Linode.Doc[];
-}
-
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  CombinedProps,
-  ApplicationState
-> = (state) => ({
-  documentation: state.documentation,
-});
-
 const styled = withStyles(styles);
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = recompose<CombinedProps, InnerProps>(connected, styled);
 
