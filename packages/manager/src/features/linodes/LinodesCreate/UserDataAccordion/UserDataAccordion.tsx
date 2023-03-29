@@ -51,6 +51,9 @@ const UserDataAccordion = (props: Props) => {
     padding: `0px 24px 24px ${renderNotice ? 0 : 24}px`,
   };
 
+  const fromBackupOrFromLinode =
+    createType && ['fromBackup', 'fromLinode'].includes(createType);
+
   return (
     <Accordion
       heading={<UserDataAccordionHeading createType={createType} />}
@@ -63,10 +66,7 @@ const UserDataAccordion = (props: Props) => {
       summaryProps={{
         sx: { padding: '5px 24px 0px 24px' },
         style: {
-          alignItems:
-            createType && ['fromBackup', 'fromLinode'].includes(createType)
-              ? 'flex-start'
-              : 'center',
+          alignItems: fromBackupOrFromLinode ? 'flex-start' : 'center',
         },
       }}
       detailProps={{ sx: sxDetails }}
@@ -75,11 +75,7 @@ const UserDataAccordion = (props: Props) => {
           display: 'none',
         },
       }}
-      expandIconClassNames={
-        createType && ['fromBackup', 'fromLinode'].includes(createType)
-          ? expandIconStyles
-          : ''
-      }
+      expandIconClassNames={fromBackupOrFromLinode ? expandIconStyles : ''}
     >
       {renderNotice ? (
         <div data-testid="render-notice">{renderNotice}</div>
