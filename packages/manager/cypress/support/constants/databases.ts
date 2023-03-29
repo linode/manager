@@ -1,5 +1,5 @@
 import { ClusterSize, Engine } from '@linode/api-v4/types';
-import { randomIp, randomLabel } from 'support/util/random';
+import { randomLabel } from 'support/util/random';
 
 interface databaseClusterConfiguration {
   label: string;

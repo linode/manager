@@ -13,12 +13,12 @@ import { ui } from 'support/ui';
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
-} from './database-configuration';
+} from 'support/constants/databases';
 
 describe('Delete database clusters', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
-      it(`Deletes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
+      describe(`Deletes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
         /*
          * - Tests database deletion UI flow using mocked data.
          * - Confirms that database deletion flow can be completed.

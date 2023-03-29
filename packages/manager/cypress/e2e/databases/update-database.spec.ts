@@ -22,7 +22,7 @@ import {
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
-} from './database-configuration';
+} from 'support/constants/databases';
 
 // @TODO Consider moving this to 'support/constants' or similar.
 // const databaseTypes = ['mysql', 'postgresql', 'mongodb'];
@@ -145,7 +145,7 @@ const resetRootPassword = () => {
 describe('Update database clusters', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
-      it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
+      describe(`updates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
         /*
          * - Tests active database update UI flows using mocked data.
          * - Confirms that users can change database label.

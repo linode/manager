@@ -6,7 +6,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import {
   databaseClusterConfiguration,
   databaseConfigurations,
-} from './database-configuration';
+} from 'support/constants/databases';
 
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
