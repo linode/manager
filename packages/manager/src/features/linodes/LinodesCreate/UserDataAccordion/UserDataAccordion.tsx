@@ -64,8 +64,8 @@ const UserDataAccordion = (props: Props) => {
         variant: 'h2',
       }}
       summaryProps={{
-        sx: { padding: '5px 24px 0px 24px' },
-        style: {
+        sx: {
+          padding: '5px 24px 0px 24px',
           alignItems: fromBackupOrFromLinode ? 'flex-start' : 'center',
         },
       }}
