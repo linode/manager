@@ -1,10 +1,8 @@
-import { Event, Notification } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import { makeStyles } from '@mui/styles';
@@ -28,7 +26,6 @@ import {
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
-import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
@@ -77,10 +74,8 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithTypesAndImages;
-
-const MigrateLinode: React.FC<CombinedProps> = (props) => {
-  const { linodeID, notifications, onClose, open } = props;
+const MigrateLinode = (props: Props) => {
+  const { linodeID, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -195,8 +190,7 @@ const MigrateLinode: React.FC<CombinedProps> = (props) => {
   const disabledText = getDisabledReason(
     linode._events,
     linode.status,
-    linodeID,
-    notifications
+    linodeID
   );
 
   /** how long will this take to migrate when the migration starts */
@@ -206,7 +200,7 @@ const MigrateLinode: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={`Migrate Linode ${linode.label ?? ''}`}
+      title={`Migrate Linode ${linode.label ?? ''} to another region`}
       open={open}
       onClose={onClose}
       fullWidth
@@ -272,30 +266,12 @@ const MigrateLinode: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface WithTypesAndImages {
-  notifications: Notification[];
-}
-
-const mapStateToProps: MapStateToProps<
-  WithTypesAndImages,
-  {},
-  ApplicationState
-> = (state) => ({
-  notifications: state.__resources.notifications.data || [],
-});
-
-const withReduxState = connect(mapStateToProps);
-
-export default compose<CombinedProps, Props>(
-  withReduxState,
-  React.memo
-)(MigrateLinode);
+export default React.memo(MigrateLinode);
 
 const getDisabledReason = (
   events: Event[],
   linodeStatus: string,
-  linodeID: number,
-  notifications: Notification[]
+  linodeID: number
 ) => {
   if (
     events[0]?.action === 'linode_migrate_datacenter' &&

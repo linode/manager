@@ -4,10 +4,11 @@ import Bell from 'src/assets/icons/notification.svg';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { NotificationMenu } from 'src/features/NotificationCenter';
-import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import { menuId } from '../NotificationCenter/NotificationContext';
 import { useStyles } from './iconStyles';
 import TopMenuIcon from './TopMenuIcon';
+import { useFormattedNotifications } from '../NotificationCenter/NotificationData/useFormattedNotifications';
+import { useEventNotifications } from '../NotificationCenter/NotificationData/useEventNotifications';
 
 const useMenuStyles = makeStyles((theme: Theme) => ({
   menuButton: {
@@ -50,19 +51,16 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const NotificationButton: React.FC<{}> = (_) => {
+export const NotificationButton = () => {
   const iconClasses = useStyles();
   const classes = useMenuStyles();
 
-  const notificationData = useNotificationData();
+  const formattedNotifications = useFormattedNotifications();
+  const eventNotifications = useEventNotifications();
 
   const numNotifications =
-    notificationData.eventNotifications.filter(
-      (thisEvent) => thisEvent.countInTotal
-    ).length +
-    notificationData.formattedNotifications.filter(
-      (thisEvent) => thisEvent.countInTotal
-    ).length;
+    eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
+    formattedNotifications.filter((thisEvent) => thisEvent.countInTotal).length;
 
   return (
     <Menu id={menuId}>
@@ -85,7 +83,7 @@ export const NotificationButton: React.FC<{}> = (_) => {
           </TopMenuIcon>
           <MenuPopover className={classes.menuPopover}>
             <MenuItems className={classes.menuItem}>
-              <NotificationMenu open={isExpanded} data={notificationData} />
+              <NotificationMenu open={isExpanded} />
             </MenuItems>
           </MenuPopover>
         </>

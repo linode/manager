@@ -3,19 +3,16 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { makeStyles } from '@mui/styles';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { LISH } from 'src/documentation';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -41,15 +38,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const LishSettings: React.FC = () => {
+const LishSettings = () => {
   const classes = useStyles();
   const { data: profile, isLoading } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
 
   const [submitting, setSubmitting] = React.useState<boolean>(false);
+
   const [lishAuthMethod, setLishAuthMethod] = React.useState<
-    Pick<Profile, 'lish_auth_method'> | undefined
-  >(profile?.lish_auth_method || ('password_keys' as any));
+    Profile['lish_auth_method'] | undefined
+  >(profile?.lish_auth_method || 'password_keys');
+
   const [authorizedKeys, setAuthorizedKeys] = React.useState<string[]>(
     profile?.authorized_keys || []
   );
@@ -130,7 +129,7 @@ const LishSettings: React.FC = () => {
       });
   };
 
-  const onListAuthMethodChange = (e: Item<Pick<Profile, 'lish_auth_method'>>) =>
+  const onListAuthMethodChange = (e: Item<Profile['lish_auth_method']>) =>
     setLishAuthMethod(e.value);
 
   const onPublicKeyChange = (idx: number) => (
@@ -233,6 +232,4 @@ const LishSettings: React.FC = () => {
   );
 };
 
-const enhanced = compose(setDocs([LISH]));
-
-export default enhanced(LishSettings);
+export default LishSettings;

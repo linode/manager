@@ -295,7 +295,8 @@ export type LinodeTypeClass =
   | 'highmem'
   | 'gpu'
   | 'metal'
-  | 'prodedicated';
+  | 'prodedicated'
+  | 'premium';
 
 export interface IPAllocationRequest {
   type: 'ipv4';

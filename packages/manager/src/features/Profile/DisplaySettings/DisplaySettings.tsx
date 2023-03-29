@@ -2,7 +2,6 @@ import { updateUser } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { compose } from 'recompose';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
@@ -16,11 +15,9 @@ import Link from 'src/components/Link';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
-import withNotifications, {
-  WithNotifications,
-} from 'src/store/notification/notification.containers';
 import { v4 } from 'uuid';
 import TimezoneForm from './TimezoneForm';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 const useStyles = makeStyles((theme: Theme) => ({
   profile: {
@@ -62,11 +59,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DisplaySettings: React.FC<WithNotifications> = (props) => {
+export const DisplaySettings = () => {
   const classes = useStyles();
 
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { data: profile, refetch: requestProfile } = useProfile();
+  const { data: notifications, refetch } = useNotificationsQuery();
 
   const loggedInAsCustomer = useSelector(
     (state: ApplicationState) => state.authentication.loggedInAsCustomer
@@ -161,11 +159,11 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
           // If there's a "user_email_bounce" notification for this user, and
           // the user has just updated their email, re-request notifications to
           // potentially clear the email bounce notification.
-          const hasUserEmailBounceNotification = props.notifications.find(
+          const hasUserEmailBounceNotification = notifications?.find(
             (thisNotification) => thisNotification.type === 'user_email_bounce'
           );
           if (hasUserEmailBounceNotification) {
-            props.requestNotifications();
+            refetch();
           }
         }}
         inputRef={emailRef}
@@ -177,6 +175,4 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   );
 };
 
-const enhanced = compose<WithNotifications, {}>(withNotifications());
-
-export default enhanced(DisplaySettings);
+export default DisplaySettings;
