@@ -1,11 +1,11 @@
 import * as React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { sendHelpButtonClickEvent } from 'src/utilities/ga';
 import IconTextLink from '../IconTextLink';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     alignItems: 'center',
     fontFamily: theme.font.normal,
@@ -38,8 +38,8 @@ interface Props {
   onClick?: () => void;
 }
 
-export const DocsLink: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const DocsLink = (props: Props) => {
+  const { classes } = useStyles();
 
   const { href, label, analyticsLabel, onClick } = props;
 
