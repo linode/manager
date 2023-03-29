@@ -4,7 +4,6 @@ import { Theme } from '@mui/material/styles';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { oneClickApps } from './FakeSpec';
 import Close from '@mui/icons-material/Close';
-import cloneDeep from 'lodash/cloneDeep';
 import Button from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import Drawer from 'src/components/core/Drawer';
@@ -87,8 +86,6 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
 
   const [selectedApp, setSelectedApp] = React.useState<OCA | null>(null);
 
-  const labelIndicatesCluster = /.+\s(Cluster)/.test(stackScriptLabel);
-
   const gradient = {
     backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${selectedApp?.colors.start}, #${selectedApp?.colors.end})`,
   };
@@ -101,29 +98,19 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
 
       const cleanedAppName = app.name.replace('&reg;', '');
 
-      return (
-        cleanedStackScriptLabel === cleanedAppName ||
-        cleanedStackScriptLabel === app.cluster_name
-      );
+      return cleanedStackScriptLabel === cleanedAppName;
     });
 
     if (!app) {
       return;
     }
 
-    const appCopy = cloneDeep(app);
-
-    if (labelIndicatesCluster) {
-      appCopy.name = app.cluster_name ?? app.name;
-      appCopy.related_guides = app.cluster_guides;
-    }
-
-    setSelectedApp(appCopy);
+    setSelectedApp(app);
 
     return () => {
       setSelectedApp(null);
     };
-  }, [labelIndicatesCluster, stackScriptLabel]);
+  }, [stackScriptLabel]);
 
   return (
     <Drawer
@@ -153,7 +140,10 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
           >
             <img
               className={classes.image}
-              src={`/assets/white/${selectedApp.logo_url}`}
+              src={`/assets/white/${
+                REUSE_WHITE_ICONS[selectedApp?.logo_url] ||
+                selectedApp?.logo_url
+              }`}
               alt={`${selectedApp.name} logo`}
             />
             <Typography
@@ -242,6 +232,13 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
       )}
     </Drawer>
   );
+};
+
+// remove this when we make the svgs white via css
+const REUSE_WHITE_ICONS = {
+  'mongodbmarketplaceocc.svg': 'mongodb.svg',
+  'postgresqlmarketplaceocc.svg': 'postgresql.svg',
+  'redissentinelmarketplaceocc.svg': 'redis.svg',
 };
 
 export default AppDetailDrawer;

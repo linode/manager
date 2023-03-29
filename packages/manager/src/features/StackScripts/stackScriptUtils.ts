@@ -119,6 +119,15 @@ export const baseApps = {
   '1051711': 'UniFi Network Application',
   '1051714': 'Microweber',
   '1096122': 'Mastodon',
+  '1102900': 'Apache Airflow',
+  '1102902': 'HaltDOS Community WAF',
+  '1102907': 'ONLYOFFICE Docs',
+  '1102906': 'Passky',
+  '1102904': 'Superinsight',
+  '1088136': 'Galera Cluster',
+  '1067004': 'MongoDB Cluster',
+  '1068726': 'PostgreSQL Cluster',
+  '1132204': 'Redis Sentinel Cluster',
 };
 
 const oneClickFilter = [
