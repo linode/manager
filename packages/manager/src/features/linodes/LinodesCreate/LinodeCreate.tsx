@@ -3,7 +3,7 @@ import { Tag } from '@linode/api-v4/lib/tags/types';
 import { Theme } from '@mui/material/styles';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import classNames from 'classnames';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
