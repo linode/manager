@@ -303,6 +303,10 @@ export interface IPAllocationRequest {
   public: boolean;
 }
 
+export interface UserData {
+  user_data: string | null;
+}
+
 export interface CreateLinodeRequest {
   type?: string;
   region?: string;
@@ -320,6 +324,7 @@ export interface CreateLinodeRequest {
   private_ip?: boolean;
   authorized_users?: string[];
   interfaces?: Interface[];
+  metadata?: UserData;
 }
 
 export type RescueRequestObject = Pick<
@@ -341,6 +346,7 @@ export interface LinodeCloneData {
 export interface RebuildRequest {
   image: string;
   root_pass: string;
+  metadata?: UserData;
   authorized_keys?: SSHKey[];
   authorized_users?: string[];
   stackscript_id?: number;

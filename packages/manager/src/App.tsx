@@ -41,6 +41,8 @@ import withPreferences, {
 } from './containers/preferences.container';
 import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
+import { sshKeyEventHandler } from './queries/profile';
+import { firewallEventsHandler } from './queries/firewalls';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -138,6 +140,19 @@ export class App extends React.Component<CombinedProps, State> {
     events$
       .filter((event) => event.action.startsWith('token') && !event._initial)
       .subscribe(tokenEventHandler);
+
+    /*
+      Send any SSH Key events to the SSH Key events handler in the queries file
+     */
+    events$
+      .filter(
+        (event) => event.action.startsWith('user_ssh_key') && !event._initial
+      )
+      .subscribe(sshKeyEventHandler);
+
+    events$
+      .filter((event) => event.action.startsWith('firewall') && !event._initial)
+      .subscribe(firewallEventsHandler);
 
     /*
      * We want to listen for migration events side-wide
