@@ -279,7 +279,7 @@ export const PaymentDrawer = (props: Props) => {
                 <strong>Payment Methods:</strong>
               </Typography>
             </Grid>
-            <Grid>
+            <Grid container spacing={1}>
               {hasPaymentMethods ? (
                 paymentMethods?.map((paymentMethod: PaymentMethod) => (
                   <PaymentMethodCard
