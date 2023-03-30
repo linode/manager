@@ -713,7 +713,7 @@ export class LinodeCreate extends React.PureComponent<
             docsLink={
               <DocsLink
                 href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
-                label="Choosing a Plan"
+                label="Plan"
                 onClick={() => {
                   sendEvent({
                     category: 'Linode Create Flow',
