@@ -18,13 +18,14 @@ const styles = () =>
 
 interface Props {
   dataLength: number;
+  children: React.ReactNode;
 }
 
-type CombinedProps = Omit<OrderByProps, 'data'> &
+type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> &
   WithStyles<ClassNames> &
   Props;
 
-const DomainsTableWrapper: React.FC<CombinedProps> = (props) => {
+const DomainsTableWrapper = <T extends unknown>(props: CombinedProps<T>) => {
   const { order, orderBy, handleOrderChange, classes, dataLength } = props;
 
   return (

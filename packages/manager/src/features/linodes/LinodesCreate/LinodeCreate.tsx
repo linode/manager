@@ -3,7 +3,7 @@ import { Tag } from '@linode/api-v4/lib/tags/types';
 import { Theme } from '@mui/material/styles';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import classNames from 'classnames';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -752,13 +752,6 @@ export class LinodeCreate extends React.PureComponent<
               error={hasErrorFor.root_pass}
               password={this.props.password}
               handleChange={this.props.updatePassword}
-              updateFor={[
-                this.props.password,
-                errors,
-                this.props.selectedImageID,
-                userCannotCreateLinode,
-                this.props.authorized_users,
-              ]}
               setAuthorizedUsers={this.props.setAuthorizedUsers}
               authorizedUsers={this.props.authorized_users}
             />

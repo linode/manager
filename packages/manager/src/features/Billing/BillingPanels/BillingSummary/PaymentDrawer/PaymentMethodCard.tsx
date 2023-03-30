@@ -73,20 +73,21 @@ export const PaymentMethodCard = (props: Props) => {
     return <Icon />;
   };
 
+  const sxVariant = {
+    paddingLeft: { xs: 0, sm: 1 },
+    flexShrink: 0,
+  };
+
   const renderVariant = () => {
     return is_default ? (
-      <Grid xs={3} md={2}>
+      <Grid xs={3} md={2} sx={sxVariant}>
         <Chip label="DEFAULT" component="span" size="small" />
       </Grid>
     ) : null;
   };
 
   return (
-    <Grid
-      sx={{
-        marginBottom: theme.spacing(),
-      }}
-    >
+    <Grid container>
       <SelectionCard
         checked={id === paymentMethodId}
         onClick={() => handlePaymentMethodChange(id, cardIsExpired)}

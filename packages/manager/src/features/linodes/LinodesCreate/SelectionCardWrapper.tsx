@@ -1,33 +1,10 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import Info from 'src/assets/icons/info.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
 import { APP_ROOT } from 'src/constants';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  flatImagePanelSelections: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(),
-    padding: `${theme.spacing(1)} 0`,
-  },
-  selectionCard: {
-    mixBlendMode: theme.name === 'dark' ? 'initial' : 'darken',
-  },
-  info: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    color: theme.palette.primary.main,
-    paddingLeft: 0,
-    maxWidth: 40,
-    '& svg': {
-      width: 19,
-      height: 19,
-    },
-  },
-}));
 
 interface Props {
   handleClick: (
@@ -49,7 +26,23 @@ interface Props {
   labelDecoration?: JSX.Element;
 }
 
+const InfoGrid = styled(Grid, {
+  label: 'InfoGrid',
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  color: theme.palette.primary.main,
+  padding: theme.spacing(1),
+  paddingLeft: 0,
+  maxWidth: 40,
+  '& svg': {
+    width: '19px',
+    height: '19px',
+  },
+}));
+
 export const SelectionCardWrapper: React.FC<Props> = (props) => {
+  const theme = useTheme();
   const {
     iconUrl,
     id,
@@ -67,7 +60,6 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
    * '' is the default value for a stackscript's logo_url;
    * display a fallback image in this case, to avoid broken image icons
    */
-  const classes = useStyles();
 
   const handleSelectApp = () =>
     handleClick(
@@ -96,7 +88,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
       : () => <img src={`${APP_ROOT}/${iconUrl}`} alt={`${label} logo`} />;
 
   const renderVariant = () => (
-    <Grid item className={classes.info} xs={2}>
+    <InfoGrid xs={2}>
       <Info
         role="button"
         aria-label={`Info for "${label}"`}
@@ -104,7 +96,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
         onKeyDown={handleKeyPress}
         tabIndex={0}
       />
-    </Grid>
+    </InfoGrid>
   );
 
   return (
@@ -119,7 +111,9 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
       subheadings={['']}
       data-qa-selection-card
       disabled={disabled}
-      className={classes.selectionCard}
+      sxGrid={{
+        mixBlendMode: theme.name === 'dark' ? 'initial' : 'darken',
+      }}
       headingDecoration={labelDecoration}
       sxCardBaseIcon={{
         justifyContent: 'flex-start',

@@ -1,3 +1,4 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
@@ -10,19 +11,18 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
-import PaginationFooter from '../PaginationFooter/PaginationFooter';
-import { truncateAndJoinList } from 'src/utilities/stringUtils';
-import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
-import { useAccountUsers } from 'src/queries/accountUsers';
 import { usePagination } from 'src/hooks/usePagination';
-import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
+import { useAccountUsers } from 'src/queries/accountUsers';
+import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
+import { truncateAndJoinList } from 'src/utilities/stringUtils';
+import { makeStyles } from 'tss-react/mui';
 import { GravatarByEmail } from '../GravatarByEmail';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import PaginationFooter from '../PaginationFooter/PaginationFooter';
+import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
 export const MAX_SSH_KEYS_DISPLAY = 25;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   title: {
     marginBottom: theme.spacing(2),
   },
@@ -54,7 +54,7 @@ interface Props {
 }
 
 const UserSSHKeyPanel = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { disabled, setAuthorizedUsers, authorizedUsers } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
