@@ -20,7 +20,7 @@
 
 `<commit type>: [JIRA-ticket-number] - <description>`
 
-**commit types:**
+**commit types:**  
 `feat`: New feature for the user (not a part of the code, or ci, ...).  
 `fix`: Bugfix for the user (not a fix to build something, ...).  
 `refactor`: Restructuring existing code without changing its external behavior or visual UI. Typically to improve readability, maintainability, and performance.  
