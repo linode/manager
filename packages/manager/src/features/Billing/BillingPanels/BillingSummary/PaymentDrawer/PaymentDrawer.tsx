@@ -29,7 +29,6 @@ import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import PayPalButton from './PayPalButton';
 import { SetSuccess } from './types';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   currentBalance: {
@@ -299,7 +298,7 @@ export const PaymentDrawer = (props: Props) => {
                   {paymentTooLow || selectedCardExpired ? (
                     <TooltipIcon
                       sxTooltipIcon={{ padding: `0px 8px` }}
-                      status={TOOLTIP_ICON_STATUS.HELP}
+                      status="help"
                       text={
                         paymentTooLow
                           ? `Payment amount must be at least ${minimumPayment}.`

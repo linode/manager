@@ -13,7 +13,6 @@ import TooltipIcon from 'src/components/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
@@ -141,7 +140,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
             }}
             text={tooltip}
             tooltipPosition="right"
-            status={TOOLTIP_ICON_STATUS.HELP}
+            status="help"
           />
         </div>
       ) : (

@@ -9,7 +9,6 @@ import Grid from 'src/components/Grid';
 import TooltipIcon from 'src/components/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -137,7 +136,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
                 Maintenance: <br />
                 {dateTime[0]} at {dateTime[1]}
                 <TooltipIcon
-                  status={TOOLTIP_ICON_STATUS.HELP}
+                  status="help"
                   text={<MaintenanceText />}
                   tooltipPosition="top"
                   interactive

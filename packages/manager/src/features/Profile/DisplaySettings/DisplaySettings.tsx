@@ -18,7 +18,6 @@ import { ApplicationState } from 'src/store';
 import { v4 } from 'uuid';
 import TimezoneForm from './TimezoneForm';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   profile: {
@@ -116,7 +115,7 @@ export const DisplaySettings = () => {
               classes={{ popper: classes.tooltip }}
               interactive
               text={tooltipIconText}
-              status={TOOLTIP_ICON_STATUS.HELP}
+              status="help"
               sxTooltipIcon={{
                 marginTop: '-2px',
                 marginLeft: '6px',

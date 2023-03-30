@@ -16,7 +16,6 @@ import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { makeStyles } from 'tss-react/mui';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   header: {
@@ -218,7 +217,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             marginLeft: '4px',
           }}
           text="Your Database Cluster is currently provisioning."
-          status={TOOLTIP_ICON_STATUS.HELP}
+          status="help"
         />
       ) : null}
     </>
@@ -262,7 +261,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                 padding: 0,
                 marginLeft: '4px',
               }}
-              status={TOOLTIP_ICON_STATUS.HELP}
+              status="help"
               text={
                 database.status === 'provisioning'
                   ? 'Your Database Cluster is currently provisioning.'
@@ -300,7 +299,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                         marginLeft: '4px',
                       }}
                       text={mongoHostHelperCopy}
-                      status={TOOLTIP_ICON_STATUS.HELP}
+                      status="help"
                     />
                   ) : null}
                 </>
@@ -353,7 +352,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                             marginLeft: '4px',
                           }}
                           text={mongoHostHelperCopy}
-                          status={TOOLTIP_ICON_STATUS.HELP}
+                          status="help"
                         />
                       ) : null}
                     </Box>
@@ -378,7 +377,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                 marginLeft: '4px',
               }}
               text={privateHostCopy}
-              status={TOOLTIP_ICON_STATUS.HELP}
+              status="help"
             />
           </Box>
         ) : null}

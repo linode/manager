@@ -34,7 +34,6 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
 import { extendType } from 'src/utilities/extendType';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -261,9 +260,7 @@ const MigrateLinode = (props: Props) => {
         >
           Enter Migration Queue
         </Button>
-        {!!disabledText && (
-          <TooltipIcon text={disabledText} status={TOOLTIP_ICON_STATUS.HELP} />
-        )}
+        {!!disabledText && <TooltipIcon text={disabledText} status="help" />}
       </Box>
     </Dialog>
   );

@@ -38,7 +38,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEvent } from 'src/utilities/ga';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 type ClassNames =
   | 'root'
@@ -179,7 +178,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             {!freeDiskSpace ? (
               <TooltipIcon
                 text={noFreeDiskSpaceWarning}
-                status={TOOLTIP_ICON_STATUS.HELP}
+                status="help"
                 tooltipGAEvent={() =>
                   sendEvent({
                     category: `Disk Resize Flow`,

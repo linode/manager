@@ -9,17 +9,7 @@ import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 import { SxProps } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 
-export const TOOLTIP_ICON_STATUS = {
-  SUCCESS: 'success',
-  ERROR: 'error',
-  WARNING: 'warning',
-  INFO: 'info',
-  HELP: 'help',
-} as const;
-
-export type ObjectValues<T> = T[keyof T];
-
-export type TooltipIconStatus = ObjectValues<typeof TOOLTIP_ICON_STATUS>;
+type TooltipIconStatus = 'success' | 'error' | 'warning' | 'info' | 'help';
 
 interface Props
   extends Omit<TooltipProps, 'leaveDelay' | 'title' | 'children'> {

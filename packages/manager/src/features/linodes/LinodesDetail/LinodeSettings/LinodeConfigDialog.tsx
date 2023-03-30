@@ -62,7 +62,6 @@ import {
 } from '../linodeDetailContext';
 import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
 import KernelSelect from './KernelSelect';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -896,7 +895,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 <Box display="flex" alignItems="center">
                   <Typography variant="h3">Network Interfaces</Typography>
                   <TooltipIcon
-                    status={TOOLTIP_ICON_STATUS.HELP}
+                    status="help"
                     sxTooltipIcon={{
                       paddingTop: 0,
                       paddingBottom: 0,

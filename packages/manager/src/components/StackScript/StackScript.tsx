@@ -17,7 +17,6 @@ import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import Box from '../core/Box';
 import TooltipIcon from '../TooltipIcon';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -254,7 +253,7 @@ export const StackScript: React.FC<Props> = (props) => {
                     padding: 0,
                     marginLeft: theme.spacing(),
                   }}
-                  status={TOOLTIP_ICON_STATUS.HELP}
+                  status="help"
                 />
               </Box>
               {imageChips.deprecated}

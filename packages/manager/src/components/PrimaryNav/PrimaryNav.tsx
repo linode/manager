@@ -31,7 +31,6 @@ import { useStackScriptsOCA } from 'src/queries/stackscripts';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 type NavEntity =
   | 'Linodes'
@@ -233,7 +232,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         {
           display: 'Help & Support',
           href: '/support',
-          icon: <TooltipIcon status={TOOLTIP_ICON_STATUS.HELP} />,
+          icon: <TooltipIcon status="help" />,
         },
       ],
     ],

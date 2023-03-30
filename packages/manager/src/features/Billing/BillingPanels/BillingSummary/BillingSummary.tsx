@@ -20,7 +20,6 @@ import { PromoDisplay } from './PromoDisplay';
 import { styled, useTheme } from '@mui/material/styles';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const GridContainer = styled(Grid)({
   marginBottom: 0,
@@ -230,7 +229,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
               <TooltipIcon
                 sxTooltipIcon={{ padding: '0 8px' }}
                 text={accruedChargesHelperText}
-                status={TOOLTIP_ICON_STATUS.HELP}
+                status="help"
               />
             </Box>
             <Divider />

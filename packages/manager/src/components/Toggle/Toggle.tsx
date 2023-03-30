@@ -4,7 +4,6 @@ import ToggleOn from 'src/assets/icons/toggleOn.svg';
 import Switch, { SwitchProps } from 'src/components/core/Switch';
 import TooltipIcon from 'src/components/TooltipIcon';
 import './toggle.css';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 interface Props extends SwitchProps {
   tooltipText?: JSX.Element | string;
@@ -27,7 +26,7 @@ const Toggle: React.FC<Props> = (props) => {
         <TooltipIcon
           text={tooltipText}
           interactive={interactive}
-          status={TOOLTIP_ICON_STATUS.HELP}
+          status="help"
         />
       )}
     </React.Fragment>

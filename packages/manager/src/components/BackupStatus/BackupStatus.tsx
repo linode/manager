@@ -8,7 +8,6 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TooltipIcon from 'src/components/TooltipIcon';
 import Link from 'src/components/Link';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -116,7 +115,7 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
           }}
           classes={{ tooltip: classes.tooltip }}
           interactive
-          status={TOOLTIP_ICON_STATUS.HELP}
+          status="help"
         />
       </div>
     );

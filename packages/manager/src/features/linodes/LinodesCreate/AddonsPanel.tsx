@@ -14,7 +14,6 @@ import TooltipIcon from 'src/components/TooltipIcon';
 import { useAccount } from 'src/queries/account';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   vlan: {
@@ -143,10 +142,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
         <Typography variant="h2" className={classes.title}>
           Add-ons{' '}
           {backupsDisabledReason ? (
-            <TooltipIcon
-              text={backupsDisabledReason}
-              status={TOOLTIP_ICON_STATUS.HELP}
-            />
+            <TooltipIcon text={backupsDisabledReason} status="help" />
           ) : null}
         </Typography>
         <Grid container>

@@ -9,7 +9,6 @@ import Grid from 'src/components/Grid';
 import TooltipIcon from 'src/components/TooltipIcon';
 import TextField from 'src/components/TextField';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -165,7 +164,7 @@ export const TransferControls: React.FC<{}> = (_) => {
             <Hidden mdDown>
               <TooltipIcon
                 text="Enter a service transfer token to review the details and accept the transfer."
-                status={TOOLTIP_ICON_STATUS.HELP}
+                status="help"
               />
             </Hidden>
           </Grid>

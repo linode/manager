@@ -6,7 +6,6 @@ import { useTheme, styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { isPropValid } from '../../utilities/isPropValid';
 import { rotate360 } from '../../styles/keyframes';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 export interface Props extends ButtonProps {
   buttonType?: 'primary' | 'secondary' | 'outlined';
@@ -103,7 +102,7 @@ const Button = ({
           sxTooltipIcon={sxTooltipIcon}
           text={tooltipText}
           tooltipGAEvent={tooltipGAEvent}
-          status={TOOLTIP_ICON_STATUS.HELP}
+          status="help"
         />
       )}
     </React.Fragment>

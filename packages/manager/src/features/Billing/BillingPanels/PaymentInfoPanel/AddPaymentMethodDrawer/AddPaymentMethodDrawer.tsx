@@ -15,7 +15,6 @@ import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
 import TooltipIcon from 'src/components/TooltipIcon';
 import Box from '@mui/material/Box';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 interface Props {
   open: boolean;
@@ -76,7 +75,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   const renderError = (errorMsg: string) => {
     return (
       <TooltipIcon
-        status={TOOLTIP_ICON_STATUS.ERROR}
+        status="error"
         text={errorMsg}
         sxTooltipIcon={sxTooltipIcon}
       />
