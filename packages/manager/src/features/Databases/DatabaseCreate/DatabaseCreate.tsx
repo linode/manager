@@ -516,7 +516,7 @@ const DatabaseCreate = () => {
             }}
             selectedID={values.type}
             updateFor={[values.type, selectedEngine, errors]}
-            header="Plan"
+            header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate
           />

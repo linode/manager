@@ -709,11 +709,10 @@ export class LinodeCreate extends React.PureComponent<
             disabledClasses={this.props.disabledClasses}
             isCreate
             showTransfer
-            header="Plan"
             docsLink={
               <DocsLink
                 href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
-                label="Plan"
+                label="Choosing a Plan"
                 onClick={() => {
                   sendEvent({
                     category: 'Linode Create Flow',
