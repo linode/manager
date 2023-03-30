@@ -1,6 +1,6 @@
 import { PlanSelectionType } from './SelectPlanPanel';
 
-interface FilteredPlanSelections {
+export interface FilteredPlanSelectionTypes {
   nanodes: PlanSelectionType[];
   standards: PlanSelectionType[];
   highmem: PlanSelectionType[];
@@ -11,20 +11,20 @@ interface FilteredPlanSelections {
   premium: PlanSelectionType[];
 }
 
+export const filteredPlans: FilteredPlanSelectionTypes = {
+  nanodes: [],
+  standards: [],
+  highmem: [],
+  proDedicated: [],
+  dedicated: [],
+  gpu: [],
+  metal: [],
+  premium: [],
+};
+
 export const filterPlanSelectionTypes = (
   types: PlanSelectionType[]
-): FilteredPlanSelections => {
-  const filteredPlans: FilteredPlanSelections = {
-    nanodes: [],
-    standards: [],
-    highmem: [],
-    proDedicated: [],
-    dedicated: [],
-    gpu: [],
-    metal: [],
-    premium: [],
-  };
-
+): FilteredPlanSelectionTypes => {
   types.forEach((t: PlanSelectionType) => {
     if (/nanode/.test(t.class)) {
       filteredPlans.nanodes.push(t);
