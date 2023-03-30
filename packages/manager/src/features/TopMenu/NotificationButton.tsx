@@ -40,7 +40,6 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
   menuPopover: {
     boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
     zIndex: 3000,
-    width: 430,
     top: '50px !important',
     left: 'auto !important',
     right: 8,
