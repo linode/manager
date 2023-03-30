@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 20,
     paddingTop: theme.spacing(2),
     paddingBottom: 0,
+    width: 430,
   },
 }));
 
@@ -18,8 +19,9 @@ export interface Props {
 }
 
 export const NotificationMenu = (props: Props) => {
-  const classes = useStyles();
   const { open } = props;
+
+  const classes = useStyles();
 
   return (
     <Paper className={classes.root}>
