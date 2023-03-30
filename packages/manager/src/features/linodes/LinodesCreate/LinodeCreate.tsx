@@ -752,13 +752,6 @@ export class LinodeCreate extends React.PureComponent<
               error={hasErrorFor.root_pass}
               password={this.props.password}
               handleChange={this.props.updatePassword}
-              updateFor={[
-                this.props.password,
-                errors,
-                this.props.selectedImageID,
-                userCannotCreateLinode,
-                this.props.authorized_users,
-              ]}
               setAuthorizedUsers={this.props.setAuthorizedUsers}
               authorizedUsers={this.props.authorized_users}
             />

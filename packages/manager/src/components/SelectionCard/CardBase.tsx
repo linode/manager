@@ -39,7 +39,9 @@ const CardBaseGrid = styled(Grid, {
   },
 }));
 
-const CardBaseIcon = styled(Grid)(() => ({
+const CardBaseIcon = styled(Grid, {
+  label: 'CardBaseIcon',
+})(() => ({
   display: 'flex',
   alignItems: 'flex-end',
   justifyContent: 'flex-end',
@@ -53,7 +55,9 @@ const CardBaseIcon = styled(Grid)(() => ({
   },
 }));
 
-const CardBaseHeadings = styled(Grid)(() => ({
+const CardBaseHeadings = styled(Grid, {
+  label: 'CardBaseHeadings',
+})(() => ({
   flex: 1,
   flexDirection: 'column',
   justifyContent: 'space-around',
@@ -62,7 +66,9 @@ const CardBaseHeadings = styled(Grid)(() => ({
   },
 }));
 
-const CardBaseHeading = styled('div')(({ theme }) => ({
+const CardBaseHeading = styled('div', {
+  label: 'CardBaseHeading',
+})(({ theme }) => ({
   fontFamily: theme.font.bold,
   fontSize: '1rem',
   color: theme.color.headline,
@@ -72,7 +78,9 @@ const CardBaseHeading = styled('div')(({ theme }) => ({
   columnGap: theme.spacing(2),
 }));
 
-const CardBaseSubheading = styled('div')(({ theme }) => ({
+const CardBaseSubheading = styled('div', {
+  label: 'CardBaseSubheading',
+})(({ theme }) => ({
   color: theme.palette.text.primary,
   fontSize: '0.875rem',
 }));

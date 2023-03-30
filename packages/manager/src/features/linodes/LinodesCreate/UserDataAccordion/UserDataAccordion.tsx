@@ -5,6 +5,7 @@ import Notice from 'src/components/Notice';
 import AcceptedFormats from './AcceptedFormats';
 import UserDataAccordionHeading from './UserDataAccordionHeading';
 import UserDataExplanatory from './UserDataExplanatory';
+import { useExpandIconStyles } from './UserDataAccordion.styles';
 
 interface Props {
   createType?: string;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const UserDataAccordion = (props: Props) => {
+  const { expandIconStyles } = useExpandIconStyles();
   const {
     createType,
     disabled,
@@ -49,15 +51,23 @@ const UserDataAccordion = (props: Props) => {
     padding: `0px 24px 24px ${renderNotice ? 0 : 24}px`,
   };
 
+  const fromBackupOrFromLinode =
+    createType && ['fromBackup', 'fromLinode'].includes(createType);
+
   return (
     <Accordion
       heading={<UserDataAccordionHeading createType={createType} />}
-      style={{ marginTop: renderNotice && renderCheckbox ? 0 : 24 }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
+      style={{
+        marginTop: renderNotice && renderCheckbox ? 0 : 24,
+      }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       headingProps={{
         variant: 'h2',
       }}
       summaryProps={{
-        sx: { padding: '5px 24px 0px 24px' },
+        sx: {
+          padding: '5px 24px 0px 24px',
+          alignItems: fromBackupOrFromLinode ? 'flex-start' : 'center',
+        },
       }}
       detailProps={{ sx: sxDetails }}
       sx={{
@@ -65,6 +75,7 @@ const UserDataAccordion = (props: Props) => {
           display: 'none',
         },
       }}
+      expandIconClassNames={fromBackupOrFromLinode ? expandIconStyles : ''}
     >
       {renderNotice ? (
         <div data-testid="render-notice">{renderNotice}</div>

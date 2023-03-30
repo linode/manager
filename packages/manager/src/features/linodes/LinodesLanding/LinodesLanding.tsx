@@ -1,4 +1,4 @@
-import { Config, Linode } from '@linode/api-v4/lib/linodes/types';
+import { Config } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -21,9 +21,9 @@ import TransferDisplay from 'src/components/TransferDisplay';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups';
 import { DialogType } from 'src/features/linodes/types';
+import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
 import formatDate, { formatDateISO } from 'src/utilities/formatDate';
 import {
@@ -70,11 +70,9 @@ interface Params {
 type RouteProps = RouteComponentProps<Params>;
 
 export interface Props {
-  filterLinodesFn?: (linode: Linode) => boolean;
-  extendLinodesFn?: (linode: Linode) => any;
   LandingHeader?: React.ReactElement;
   someLinodesHaveScheduledMaintenance: boolean;
-  linodesData: LinodeWithMaintenance[];
+  linodesData: ExtendedLinode[];
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
 }
@@ -204,15 +202,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       params.has('view') && ['grid', 'list'].includes(params.get('view')!)
         ? (params.get('view') as 'grid' | 'list')
         : undefined;
-
-    // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
-    const filteredLinodes = this.props.filterLinodesFn
-      ? linodesData.filter(this.props.filterLinodesFn)
-      : linodesData;
-
-    const extendedLinodes = this.props.extendLinodesFn
-      ? filteredLinodes.map(this.props.extendLinodesFn)
-      : filteredLinodes;
 
     const componentProps = {
       count: linodesCount,
@@ -349,7 +338,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
                       <OrderBy
                         preferenceKey={'linodes-landing'}
-                        data={extendedLinodes.map((linode) => {
+                        data={linodesData.map((linode) => {
                           // Determine the priority of this Linode's status.
                           // We have to check for "Maintenance" and "Busy" since these are
                           // not actual Linode statuses (we derive them client-side).
