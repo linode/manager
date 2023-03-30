@@ -709,6 +709,7 @@ export class LinodeCreate extends React.PureComponent<
             disabledClasses={this.props.disabledClasses}
             isCreate
             showTransfer
+            header="Linode Plan"
             docsLink={
               <DocsLink
                 href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
