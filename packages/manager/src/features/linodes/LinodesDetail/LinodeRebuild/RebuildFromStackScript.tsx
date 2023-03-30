@@ -326,12 +326,6 @@ export const RebuildFromStackScript = (props: Props) => {
               <AccessPanel
                 password={values.root_pass}
                 handleChange={(value) => setFieldValue('root_pass', value)}
-                updateFor={[
-                  values.root_pass,
-                  errors,
-                  ss.id,
-                  values.authorized_users,
-                ]}
                 setAuthorizedUsers={(usernames) =>
                   setFieldValue('authorized_users', usernames)
                 }

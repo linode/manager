@@ -239,14 +239,6 @@ export const RebuildFromImage = (props: Props) => {
               <AccessPanel
                 password={values.root_pass}
                 handleChange={(input) => setFieldValue('root_pass', input)}
-                updateFor={[
-                  classes,
-                  disabled,
-                  values.root_pass,
-                  errors,
-                  values.authorized_users,
-                  values.image,
-                ]}
                 error={errors.root_pass}
                 setAuthorizedUsers={(usernames) =>
                   setFieldValue('authorized_users', usernames)
