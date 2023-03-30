@@ -18,7 +18,7 @@ Here is a minimal code example demonstrating the basic structure of a component 
 ```tsx
 import * as React from "react";
 import { makeStyles } from "@mui/styles";
-import { Theme } from '@mui/material/styles';
+import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
   name: {
@@ -63,6 +63,10 @@ export default SayHello;
 
 - Prefer function components over class components.
   - Almost all new components in the repository are function components, though legacy class components are still present.
+- Use capitalization naming conventions for JSX elements used within a component.
+  - Example: const `ActionsElement = (<Button> Example </Button>)`.
+- If a prop accepts only JSX elements, capitalize the prop name.
+  - Example: const `<TestComponent Actions={ActionsElement}>`.
 
 #### Utility Functions
 
