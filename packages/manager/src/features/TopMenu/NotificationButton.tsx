@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -16,10 +17,19 @@ import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
 import Popper from 'src/components/core/Popper';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import { markAllSeen } from 'src/store/events/event.request';
+import { ThunkDispatch } from 'src/store/types';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 const useMenuStyles = makeStyles((theme: Theme) => ({
   menuButton: {
     margin: 0,
+    minWidth: 'unset',
+    backgroundColor: 'unset !important',
+    '&& :hover, && :focus, && :active': {
+      backgroundColor: 'unset !important',
+    },
     '& svg': {
       marginTop: 1,
     },
@@ -29,19 +39,18 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
   },
   menuPopover: {
     boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-    position: 'absolute',
     zIndex: 3000,
     width: 430,
     top: '50px !important',
     left: 'auto !important',
     right: 8,
+    overflowY: 'auto',
+    maxHeight: 'calc(90% - 50px)',
     [theme.breakpoints.down('sm')]: {
       right: 0,
       width: '100%',
       height: 'auto',
-      maxHeight: 'calc(90% - 50px)',
       overflowX: 'hidden',
-      overflowY: 'auto',
     },
   },
   menuItem: {
@@ -49,6 +58,12 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'initial',
     border: 'none',
     padding: 0,
+    cursor: 'default',
+  },
+  notificationIcon: {
+    '&:first-of-type': {
+      marginLeft: 0,
+    },
   },
 }));
 
@@ -56,6 +71,8 @@ export const NotificationButton = () => {
   const iconClasses = useStyles();
   const classes = useMenuStyles();
 
+  const { dismissNotifications } = useDismissibleNotifications();
+  const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
   const eventNotifications = useEventNotifications();
   const notificationContext = React.useContext(_notificationContext);
@@ -65,13 +82,15 @@ export const NotificationButton = () => {
     formattedNotifications.filter((thisEvent) => thisEvent.countInTotal).length;
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const prevOpen = React.useRef(notificationContext.menuOpen);
+  const openRef = React.useRef(notificationContext.menuOpen);
+
+  const dispatch = useDispatch<ThunkDispatch>();
 
   const handleNotificationMenuToggle = () => {
-    if (notificationContext.menuOpen) {
-      notificationContext.closeMenu();
-    } else {
+    if (!notificationContext.menuOpen) {
       notificationContext.openMenu();
+    } else {
+      notificationContext.closeMenu();
     }
   };
 
@@ -86,23 +105,27 @@ export const NotificationButton = () => {
     notificationContext.closeMenu();
   };
 
-  const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      notificationContext.closeMenu();
-    } else if (event.key === 'Escape') {
+  const handleMenuListKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
       notificationContext.closeMenu();
     }
   };
 
-  // Refocus the notification menu button after menu has closed.
+  // Refocus the notification menu button and hide the notification badge after menu has closed.
   React.useEffect(() => {
-    if (prevOpen.current && !notificationContext.menuOpen) {
+    if (openRef.current && !notificationContext.menuOpen) {
       anchorRef.current!.focus();
+      dispatch(markAllSeen());
+      dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
 
-    prevOpen.current = notificationContext.menuOpen;
-  }, [notificationContext.menuOpen]);
+    openRef.current = notificationContext.menuOpen;
+  }, [
+    notificationContext.menuOpen,
+    dismissNotifications,
+    notifications,
+    dispatch,
+  ]);
 
   return (
     <>
@@ -111,35 +134,34 @@ export const NotificationButton = () => {
           ref={anchorRef}
           aria-label="Notifications"
           aria-haspopup="true"
-          aria-expanded={notificationContext.menuOpen ? 'true' : undefined}
           onClick={handleNotificationMenuToggle}
-          className={`${iconClasses.icon} ${classes.menuButton} ${
-            notificationContext.menuOpen ? iconClasses.hover : ''
-          }`}
+          className={classes.menuButton}
+          disableRipple
         >
-          <Bell />
-          {numNotifications > 0 ? (
-            <div className={iconClasses.badge}>
-              <p>{numNotifications}</p>
-            </div>
-          ) : null}
+          <span className={`${iconClasses.icon} ${classes.notificationIcon}`}>
+            <Bell />
+            {numNotifications > 0 ? (
+              <div className={iconClasses.badge}>
+                <p>{numNotifications}</p>
+              </div>
+            ) : null}
+          </span>
         </Button>
       </TopMenuIcon>
       <Popper
         open={notificationContext.menuOpen}
         anchorEl={anchorRef.current}
-        role={undefined}
+        className={classes.menuPopover}
         transition
         disablePortal
-        className={classes.menuPopover}
       >
         <ClickAwayListener onClickAway={handleClose}>
           <MenuList
-            autoFocusItem={notificationContext.menuOpen}
             id={menuId}
-            onKeyDown={handleListKeyDown}
+            autoFocusItem={notificationContext.menuOpen}
+            onKeyDown={handleMenuListKeyDown}
           >
-            <MenuItem className={classes.menuItem}>
+            <MenuItem className={classes.menuItem} disableRipple>
               <NotificationMenu open={notificationContext.menuOpen} />
             </MenuItem>
           </MenuList>
