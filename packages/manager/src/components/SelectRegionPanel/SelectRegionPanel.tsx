@@ -77,7 +77,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
       </Typography>
       {regionHelperText(() => sendLinodeCreateDocsEvent('Speedtest Link'))}
       {warningNoticeText ? (
-        <Box marginTop="16px">
+        <Box marginTop="16px" data-testid="region-select-warning">
           <Notice warning text={warningNoticeText} />
         </Box>
       ) : null}
