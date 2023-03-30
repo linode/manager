@@ -148,8 +148,6 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
           </Grid>
         </Box>
-      </>
-      <>
         <Divider />
         <Box sx={sxBox}>
           <Grid container spacing={2}>
@@ -177,8 +175,6 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
           </Grid>
         </Box>
-      </>
-      <>
         <Divider spacingBottom={16} />
         <Typography variant="h3">Credit Card</Typography>
         <AddCreditCardForm disabled={disabled} onClose={onClose} />
