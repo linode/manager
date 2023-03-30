@@ -3,20 +3,22 @@ import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { NotificationMenu } from 'src/features/NotificationCenter';
+import { useStyles } from '../iconStyles';
+import TopMenuIcon from '../TopMenuIcon';
+import Notifications from 'src/features/NotificationCenter/Notifications';
 import {
   menuId,
   notificationContext as _notificationContext,
-} from '../NotificationCenter/NotificationContext';
-import { useStyles } from './iconStyles';
-import TopMenuIcon from './TopMenuIcon';
-import { useFormattedNotifications } from '../NotificationCenter/NotificationData/useFormattedNotifications';
-import { useEventNotifications } from '../NotificationCenter/NotificationData/useEventNotifications';
+} from 'src/features/NotificationCenter/NotificationContext';
+import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
+import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
 import MenuItem from 'src/components/MenuItem';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
+import Paper from 'src/components/core/Paper';
 import Popper from 'src/components/core/Popper';
+import Events from 'src/features/NotificationCenter/Events';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
@@ -59,6 +61,12 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     cursor: 'default',
   },
+  menuPaper: {
+    padding: 20,
+    paddingTop: theme.spacing(2),
+    paddingBottom: 0,
+    width: 430,
+  },
   notificationIcon: {
     '&:first-of-type': {
       marginLeft: 0,
@@ -66,7 +74,7 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const NotificationButton = () => {
+export const NotificationMenu = () => {
   const iconClasses = useStyles();
   const classes = useMenuStyles();
 
@@ -161,7 +169,10 @@ export const NotificationButton = () => {
             onKeyDown={handleMenuListKeyDown}
           >
             <MenuItem className={classes.menuItem} disableRipple>
-              <NotificationMenu open={notificationContext.menuOpen} />
+              <Paper className={classes.menuPaper}>
+                <Notifications />
+                <Events />
+              </Paper>
             </MenuItem>
           </MenuList>
         </ClickAwayListener>
@@ -170,4 +181,4 @@ export const NotificationButton = () => {
   );
 };
 
-export default NotificationButton;
+export default NotificationMenu;
