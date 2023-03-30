@@ -2,24 +2,16 @@ import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { decode } from 'he';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import SelectionCardWrapper from 'src/features/linodes/LinodesCreate/SelectionCardWrapper';
 import Chip from 'src/components/core/Chip';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  flatImagePanelSelections: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(),
-    padding: `${theme.spacing(1)} 0`,
-  },
-  chip: {
-    '& span': {
-      color: 'inherit !important',
-    },
-  },
+const AppPanelGrid = styled(Grid)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(),
+  padding: `${theme.spacing(1)} 0`,
 }));
 
 interface Props {
@@ -46,7 +38,6 @@ export const AppPanelSection: React.FC<Props> = (props) => {
     openDrawer,
     handleClick,
   } = props;
-  const classes = useStyles();
 
   return (
     <>
@@ -54,7 +45,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
       {heading && heading.length > 0 ? (
         <Divider spacingTop={16} spacingBottom={16} />
       ) : null}
-      <Grid className={classes.flatImagePanelSelections} container>
+      <AppPanelGrid container spacing={2}>
         {apps.map((eachApp) => {
           const decodedLabel = decode(eachApp.label);
           const isCluster =
@@ -82,14 +73,12 @@ export const AppPanelSection: React.FC<Props> = (props) => {
               disabled={disabled}
               iconUrl={eachApp.logo_url.toLowerCase() || ''}
               labelDecoration={
-                isCluster ? (
-                  <Chip size="small" label="CLUSTER" className={classes.chip} />
-                ) : undefined
+                isCluster ? <Chip size="small" label="CLUSTER" /> : undefined
               }
             />
           );
         })}
-      </Grid>
+      </AppPanelGrid>
     </>
   );
 };
