@@ -12,7 +12,6 @@ import * as React from 'react';
 import KebabIcon from 'src/assets/icons/kebab.svg';
 import TooltipIcon from 'src/components/TooltipIcon';
 import { makeStyles } from 'tss-react/mui';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 export interface Action {
   title: string;
@@ -177,7 +176,7 @@ const ActionMenu = (props: Props) => {
                   text={a.tooltip}
                   tooltipPosition="right"
                   sxTooltipIcon={sxTooltipIcon}
-                  status={TOOLTIP_ICON_STATUS.HELP}
+                  status="help"
                 />
               ) : null}
             </MenuItem>

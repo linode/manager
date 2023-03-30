@@ -35,7 +35,6 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -268,12 +267,11 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                   <TooltipIcon
                     text={tooltip}
                     tooltipPosition="right-end"
-                    // className="py0"
                     sxTooltipIcon={{
                       paddingTop: '0px !important',
                       paddingBottom: '0px !important',
                     }}
-                    status={TOOLTIP_ICON_STATUS.HELP}
+                    status="help"
                   />
                 )}
               </div>

@@ -45,7 +45,6 @@ import LinodePermissionsError from '../LinodePermissionsError';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 type ClassNames =
   | 'title'
@@ -372,7 +371,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                 marginLeft: '-2px',
               }}
               text={`There was an error loading your Linode&rsquo; disks.`}
-              status={TOOLTIP_ICON_STATUS.HELP}
+              status="help"
             />
           ) : isSmaller ? (
             <TooltipIcon
@@ -380,7 +379,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                 marginLeft: '-2px',
               }}
               text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
-              status={TOOLTIP_ICON_STATUS.HELP}
+              status="help"
             />
           ) : !_shouldEnableAutoResizeDiskOption ? (
             <TooltipIcon
@@ -389,7 +388,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               }}
               text={`Your ext disk can only be automatically resized if you have one ext
                       disk or one ext disk and one swap disk on this Linode.`}
-              status={TOOLTIP_ICON_STATUS.HELP}
+              status="help"
             />
           ) : null}
         </Typography>

@@ -35,7 +35,6 @@ import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import { SxProps } from '@mui/system';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 interface Props {
   backups: LinodeBackups;
@@ -197,7 +196,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           <div className={classes.maintenanceOuter}>
             <strong>Maintenance Scheduled</strong>
             <TooltipIcon
-              status={TOOLTIP_ICON_STATUS.HELP}
+              status="help"
               text={<MaintenanceText />}
               tooltipPosition="top"
               interactive

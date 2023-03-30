@@ -9,7 +9,6 @@ import TooltipIcon from 'src/components/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -117,7 +116,7 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
             marginLeft: '-20px',
           }}
           text={helperText || 'Choosing a 64-bit distro is recommended.'}
-          status={TOOLTIP_ICON_STATUS.HELP}
+          status="help"
         />
       </Grid>
     </Grid>

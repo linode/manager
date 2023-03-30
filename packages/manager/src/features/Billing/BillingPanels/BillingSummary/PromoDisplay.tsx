@@ -5,7 +5,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TooltipIcon from 'src/components/TooltipIcon';
 import Typography from 'src/components/core/Typography';
 import { useTheme } from '@mui/material/styles';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
+
 import {
   ActivePromotion,
   PromotionServiceType,
@@ -65,7 +65,7 @@ const PromoDisplay = React.memo(
                 padding: `0px 8px`,
               }}
               text={description}
-              status={TOOLTIP_ICON_STATUS.HELP}
+              status="help"
             />
           </Box>
           {!Number.isNaN(parsedCreditRemaining) && (

@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
-import HelpIcon from 'src/components/TooltipIcon';
+import TooltipIcon from 'src/components/TooltipIcon';
 import { makeStyles } from '@mui/styles';
 
-export const StyledHelpIcon = styled(HelpIcon)({
+export const StyledHelpIcon = styled(TooltipIcon)({
   padding: '0px 0px 0px 4px',
   verticalAlign: 'bottom',
   '&& svg': {

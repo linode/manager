@@ -18,7 +18,6 @@ import { useProfile } from 'src/queries/profile';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -230,7 +229,7 @@ const UserProfile: React.FC<Props> = (props) => {
         </Button>
         {profile?.username === originalUsername && (
           <TooltipIcon
-            status={TOOLTIP_ICON_STATUS.HELP}
+            status="help"
             text="You can't delete the currently active user"
             sxTooltipIcon={{
               marginTop: theme.spacing(2),

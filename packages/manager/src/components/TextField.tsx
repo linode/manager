@@ -13,7 +13,6 @@ import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import { TooltipProps as _TooltipProps } from 'src/components/core/Tooltip';
 import TooltipIcon from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
-import { TOOLTIP_ICON_STATUS } from './TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   helpWrapper: {
@@ -334,7 +333,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             tooltipPosition={tooltipPosition}
             interactive={tooltipInteractive}
             onMouseEnter={tooltipOnMouseEnter}
-            status={TOOLTIP_ICON_STATUS.HELP}
+            status="help"
             sxTooltipIcon={{
               padding: '0px 0px 0px 8px',
             }}

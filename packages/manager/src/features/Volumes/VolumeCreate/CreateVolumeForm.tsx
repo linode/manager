@@ -46,7 +46,6 @@ import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
 import { useRegionsQuery } from 'src/queries/regions';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -163,7 +162,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         }}
         text={tooltipText}
         tooltipPosition="right"
-        status={TOOLTIP_ICON_STATUS.HELP}
+        status="help"
       />
     );
   };

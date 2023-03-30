@@ -17,7 +17,7 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { makeStyles } from 'tss-react/mui';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
+
 // import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -259,7 +259,7 @@ export const MaintenanceWindow = (props: Props) => {
                   noMarginTop
                 />
                 <TooltipIcon
-                  status={TOOLTIP_ICON_STATUS.HELP}
+                  status="help"
                   interactive
                   sxTooltipIcon={{
                     padding: '0px 8px',

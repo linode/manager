@@ -8,7 +8,6 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TooltipIcon from 'src/components/TooltipIcon';
-import { TOOLTIP_ICON_STATUS } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -77,7 +76,7 @@ const LinodeCheckBox = (props: Props) => {
           <TooltipIcon
             interactive={toolTipInteractive}
             text={toolTipText}
-            status={TOOLTIP_ICON_STATUS.HELP}
+            status="help"
           />
         ) : null}
       </React.Fragment>
