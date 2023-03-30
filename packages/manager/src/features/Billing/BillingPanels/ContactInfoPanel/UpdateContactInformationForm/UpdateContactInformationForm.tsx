@@ -219,6 +219,8 @@ class _UpdateContactInformationForm extends React.Component<
     return (
       <Grid
         container
+        spacing={0}
+        columnSpacing={2}
         className={classes.mainFormContainer}
         data-qa-update-contact
       >
@@ -233,7 +235,7 @@ class _UpdateContactInformationForm extends React.Component<
           </Grid>
         )}
 
-        <Grid xs={12} component="div">
+        <Grid xs={12}>
           <TextField
             label="Email"
             errorText={errorMap.email}
@@ -268,15 +270,13 @@ class _UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid xs={12}>
-          <Grid xs={12}>
-            <TextField
-              label="Company Name"
-              errorText={errorMap.company}
-              onChange={this.updateCompany}
-              value={defaultTo(account.company, fields.company)}
-              data-qa-company
-            />
-          </Grid>
+          <TextField
+            label="Company Name"
+            errorText={errorMap.company}
+            onChange={this.updateCompany}
+            value={defaultTo(account.company, fields.company)}
+            data-qa-company
+          />
         </Grid>
 
         <Grid xs={12}>
