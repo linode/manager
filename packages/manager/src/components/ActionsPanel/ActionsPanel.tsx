@@ -1,11 +1,10 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import RenderGuard from 'src/components/RenderGuard';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Box, { BoxProps } from '../core/Box';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(1),
@@ -22,14 +21,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ActionPanel: React.FC<BoxProps> = (props) => {
-  const classes = useStyles();
+const ActionPanel = (props: BoxProps) => {
+  const { classes, cx } = useStyles();
   const { className, children, ...rest } = props;
 
   return (
     <Box
       data-qa-buttons
-      className={classNames(classes.root, className, 'actionPanel')}
+      className={cx(classes.root, className, 'actionPanel')}
       {...rest}
     >
       {Array.isArray(children)

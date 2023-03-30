@@ -15,7 +15,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -330,12 +330,12 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
 
     return (
-      <Grid container>
+      <Grid container spacing={2}>
         <Hidden lgUp={isCreate} mdUp={!isCreate}>
           {plans.map(renderSelection)}
         </Hidden>
         <Hidden lgDown={isCreate} mdDown={!isCreate}>
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Table
               aria-label="List of Linode Plans"
               className={classes.table}
