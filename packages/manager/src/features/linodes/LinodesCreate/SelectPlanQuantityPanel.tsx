@@ -11,7 +11,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
@@ -147,7 +147,7 @@ export class SelectPlanPanel extends React.Component<
     const subHeadings = type.subHeadings.slice(0, -2);
 
     const renderVariant = () => (
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <div className={classes.enhancedInputOuter}>
           <EnhancedNumberInput
             value={type.count}
@@ -262,10 +262,10 @@ export class SelectPlanPanel extends React.Component<
     );
 
     return (
-      <Grid container>
+      <Grid container spacing={2}>
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden mdDown>
-          <Grid item xs={12} lg={12}>
+          <Grid xs={12} lg={12}>
             <Table aria-label="List of Linode Plans" spacingBottom={16}>
               {tableHeader}
               <TableBody role="grid">

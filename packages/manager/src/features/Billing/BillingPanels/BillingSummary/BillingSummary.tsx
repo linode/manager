@@ -8,8 +8,8 @@ import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
 import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import useNotifications from 'src/hooks/useNotifications';
 import Button from 'src/components/Button';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { BillingPaper } from '../../BillingDetail';
 import { Breakpoint } from '@mui/material/styles';
 import { getGrantData } from 'src/queries/profile';
@@ -34,7 +34,7 @@ interface BillingSummaryProps {
 
 export const BillingSummary = (props: BillingSummaryProps) => {
   const theme = useTheme();
-  const notifications = useNotifications();
+  const { data: notifications } = useNotificationsQuery();
   const { account, _isRestrictedUser } = useAccountManagement();
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
@@ -46,7 +46,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
-  const isBalanceOutsideGracePeriod = notifications.some(
+  const isBalanceOutsideGracePeriod = notifications?.some(
     (notification) =>
       notification.type === 'payment_due' &&
       notification.severity === 'critical'

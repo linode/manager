@@ -29,12 +29,12 @@ import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
-import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import styled, { StyleProps } from './LinodeRow.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import { SxProps } from '@mui/system';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 interface Props {
   backups: LinodeBackups;
@@ -67,10 +67,7 @@ interface Props {
   openNotificationMenu: () => void;
 }
 
-export type CombinedProps = Props &
-  WithRecentEvent &
-  WithNotifications &
-  StyleProps;
+export type CombinedProps = Props & WithRecentEvent & StyleProps;
 
 export const LinodeRow: React.FC<CombinedProps> = (props) => {
   const {
@@ -93,12 +90,19 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
     image,
     // other props
     classes,
-    linodeNotifications,
     openDialog,
     openPowerActionDialog,
     openNotificationMenu,
     recentEvent,
   } = props;
+
+  const { data: notifications } = useNotificationsQuery();
+
+  const linodeNotifications =
+    notifications?.filter(
+      (notification) =>
+        notification.entity?.type === 'linode' && notification.entity?.id === id
+    ) ?? [];
 
   const isBareMetalInstance = type?.class === 'metal';
 
@@ -249,7 +253,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
 
 const enhanced = compose<CombinedProps, Props>(
   withRecentEvent,
-  withNotifications,
   styled,
   React.memo
 );

@@ -38,6 +38,7 @@ export interface Props extends AccordionProps {
   success?: string;
   loading?: boolean;
   actions?: (props: AccordionProps) => null | JSX.Element;
+  expandIconClassNames?: string;
   summaryProps?: AccordionSummaryProps;
   headingProps?: TypographyProps;
   detailProps?: AccordionDetailsProps;
@@ -58,6 +59,7 @@ export const Accordion = (props: Props) => {
     error,
     defaultExpanded,
     headingNumberCount,
+    expandIconClassNames,
     ...accordionProps
   } = props;
 
@@ -77,7 +79,9 @@ export const Accordion = (props: Props) => {
     >
       <AccordionSummary
         onClick={handleClick}
-        expandIcon={<KeyboardArrowDown className="caret" />}
+        expandIcon={
+          <KeyboardArrowDown className={`caret ${expandIconClassNames}`} />
+        }
         {...summaryProps}
         data-qa-panel-summary={heading}
       >
