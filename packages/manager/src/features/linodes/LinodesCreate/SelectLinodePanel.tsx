@@ -5,7 +5,7 @@ import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -95,7 +95,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
                   {!!header ? header : 'Select Linode'}
                 </Typography>
                 <Typography component="div" className={classes.panelBody}>
-                  <Grid container>
+                  <Grid container spacing={2}>
                     {linodesData.map((linode) => {
                       return this.renderCard(linode);
                     })}

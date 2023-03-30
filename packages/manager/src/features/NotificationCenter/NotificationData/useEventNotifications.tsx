@@ -60,5 +60,3 @@ const formatProgressEventForDisplay = (
   body: <RenderProgressEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
 });
-
-export default useEventNotifications;
