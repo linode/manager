@@ -19,6 +19,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableBody from 'src/components/core/TableBody';
 import Hidden from 'src/components/core/Hidden';
+import PaginationFooter from 'src/components/PaginationFooter';
 
 const preferenceKey = 'firewalls';
 
@@ -172,6 +173,14 @@ const FirewallLanding = () => {
           ))}
         </TableBody>
       </Table>
+      <PaginationFooter
+        count={data?.results ?? 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Firewalls Table"
+      />
       <CreateFirewallDrawer
         open={isCreateFirewallDrawerOpen}
         onClose={closeDrawer}
