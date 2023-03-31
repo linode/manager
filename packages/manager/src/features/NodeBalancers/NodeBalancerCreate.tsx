@@ -51,12 +51,13 @@ import {
 } from './utils';
 import { queryClient, simpleMutationHandlers } from 'src/queries/base';
 import {
-  queryKey,
+  queryKey as accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import LandingHeader from 'src/components/LandingHeader';
 import { Region } from '@linode/api-v4/lib/regions';
 import { createNodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { queryKey } from 'src/queries/nodebalancers';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -317,6 +318,12 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData(
+          [queryKey, 'nodebalancer', nodeBalancer.id],
+          nodeBalancer
+        );
+
         this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // GA Event
         sendCreateNodeBalancerEvent(
@@ -326,9 +333,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
-            mutationKey: queryKey,
+            mutationKey: accountAgreementsQueryKey,
             onError: reportAgreementSigningError,
-            ...simpleMutationHandlers(queryKey),
+            ...simpleMutationHandlers(accountAgreementsQueryKey),
           });
         }
       })

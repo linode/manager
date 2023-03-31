@@ -18,7 +18,8 @@ import {
   NodeBalancerStats,
   updateNodeBalancer,
   updateNodeBalancerConfig,
-} from '@linode/api-v4/lib/nodebalancers';
+  Event,
+} from '@linode/api-v4';
 import {
   APIError,
   Filter,
@@ -29,10 +30,9 @@ import {
   itemInListCreationHandler,
   itemInListMutationHandler,
   queryClient,
-  updateInPaginatedStore,
 } from './base';
 
-const queryKey = 'nodebalancers';
+export const queryKey = 'nodebalancers';
 
 export const NODEBALANCER_STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';
@@ -47,7 +47,7 @@ const getIsTooEarlyForStats = (created?: string) => {
 
 export const useNodeBalancerStats = (id: number, created?: string) => {
   return useQuery<NodeBalancerStats, APIError[]>(
-    [queryKey, id, 'stats'],
+    [queryKey, 'nodebalancer', id, 'stats'],
     getIsTooEarlyForStats(created)
       ? () =>
           Promise.reject([{ reason: NODEBALANCER_STATS_NOT_READY_API_MESSAGE }])
@@ -62,14 +62,14 @@ export const useNodeBalancerStats = (id: number, created?: string) => {
 
 export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<NodeBalancer>, APIError[]>(
-    [queryKey, 'list', params, filter],
+    [queryKey, 'paginated', params, filter],
     () => getNodeBalancers(params, filter),
     { keepPreviousData: true }
   );
 
 export const useNodeBalancerQuery = (id: number, enabled = true) =>
   useQuery<NodeBalancer, APIError[]>(
-    [queryKey, id],
+    [queryKey, 'nodebalancer', id],
     () => getNodeBalancer(id),
     { enabled }
   );
@@ -79,8 +79,8 @@ export const useNodebalancerUpdateMutation = (id: number) =>
     (data) => updateNodeBalancer(id, data),
     {
       onSuccess(data) {
-        queryClient.setQueryData([queryKey, id], data);
-        updateInPaginatedStore([queryKey, 'list'], id, data);
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData([queryKey, 'nodebalancer', id], data);
       },
     }
   );
@@ -88,8 +88,8 @@ export const useNodebalancerUpdateMutation = (id: number) =>
 export const useNodebalancerDeleteMutation = (id: number) =>
   useMutation<{}, APIError[]>(() => deleteNodeBalancer(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'list']);
-      queryClient.removeQueries([queryKey, id]);
+      queryClient.removeQueries([queryKey, 'nodebalancer', id]);
+      queryClient.invalidateQueries([queryKey]);
     },
   });
 
@@ -98,8 +98,8 @@ export const useNodebalancerCreateMutation = () =>
     createNodeBalancer,
     {
       onSuccess(data) {
-        queryClient.invalidateQueries([queryKey, 'list']);
-        queryClient.setQueryData([queryKey, data.id], data);
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData([queryKey, 'nodebalancer', data.id], data);
       },
     }
   );
@@ -107,7 +107,7 @@ export const useNodebalancerCreateMutation = () =>
 export const useNodebalancerConfigCreateMutation = (id: number) =>
   useMutation<NodeBalancerConfig, APIError[], CreateNodeBalancerConfig>(
     (data) => createNodeBalancerConfig(id, data),
-    itemInListCreationHandler([queryKey, id, 'configs'])
+    itemInListCreationHandler([queryKey, 'nodebalancer', id, 'configs'])
   );
 
 export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) =>
@@ -118,7 +118,12 @@ export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) =>
   >(
     ({ configId, ...data }) =>
       updateNodeBalancerConfig(nodebalancerId, configId, data),
-    itemInListMutationHandler([queryKey, nodebalancerId, 'configs'])
+    itemInListMutationHandler([
+      queryKey,
+      'nodebalancer',
+      nodebalancerId,
+      'configs',
+    ])
   );
 
 export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) =>
@@ -127,7 +132,7 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) =>
     {
       onSuccess(_, vars) {
         queryClient.setQueryData<NodeBalancerConfig[]>(
-          [queryKey, nodebalancerId, 'configs'],
+          [queryKey, 'nodebalancer', nodebalancerId, 'configs'],
           (oldData) => {
             return (oldData ?? []).filter(
               (config) => config.id !== vars.configId
@@ -139,8 +144,9 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) =>
   );
 
 export const useAllNodeBalancerConfigsQuery = (id: number) =>
-  useQuery<NodeBalancerConfig[], APIError[]>([queryKey, id, 'configs'], () =>
-    getAllNodeBalancerConfigs(id)
+  useQuery<NodeBalancerConfig[], APIError[]>(
+    [queryKey, 'nodebalanacer', id, 'configs'],
+    () => getAllNodeBalancerConfigs(id)
   );
 
 export const getAllNodeBalancerConfigs = (id: number) =>
@@ -161,7 +167,7 @@ export const useAllNodeBalancersQuery = (enabled = true) =>
 
 export const useInfiniteNodebalancersQuery = (filter: Filter) =>
   useInfiniteQuery<ResourcePage<NodeBalancer>, APIError[]>(
-    [queryKey, filter],
+    [queryKey, 'infinite', filter],
     ({ pageParam }) =>
       getNodeBalancers({ page: pageParam, page_size: 25 }, filter),
     {
@@ -173,3 +179,25 @@ export const useInfiniteNodebalancersQuery = (filter: Filter) =>
       },
     }
   );
+
+export const nodebalanacerEventHandler = (event: Event) => {
+  if (event.action.startsWith('nodebalancer_config')) {
+    queryClient.invalidateQueries([
+      queryKey,
+      'nodebalancer',
+      event.entity!.id,
+      'configs',
+    ]);
+  } else {
+    queryClient.invalidateQueries([queryKey, 'all']);
+    queryClient.invalidateQueries([queryKey, 'paginated']);
+    queryClient.invalidateQueries([queryKey, 'infinite']);
+    if (event.entity?.id) {
+      queryClient.invalidateQueries([
+        queryKey,
+        'nodebalancer',
+        event.entity.id,
+      ]);
+    }
+  }
+};

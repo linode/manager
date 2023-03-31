@@ -53,6 +53,8 @@ import {
   parseAddresses,
   transformConfigsForRequest,
 } from '../utils';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/nodebalancers';
 
 type ClassNames = 'title' | 'port' | 'nbStatuses' | 'button';
 
@@ -305,6 +307,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       configPayload
     )
       .then((nodeBalancerConfig) => {
+        queryClient.invalidateQueries([
+          queryKey,
+          'nodebalancer',
+          Number(nodeBalancerId),
+          'configs',
+        ]);
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
@@ -421,6 +429,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     createNodeBalancerConfig(Number(nodeBalancerId), configPayload)
       .then((nodeBalancerConfig) => {
+        queryClient.invalidateQueries([
+          queryKey,
+          'nodebalancer',
+          Number(nodeBalancerId),
+          'configs',
+        ]);
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
@@ -587,6 +601,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     // actually delete a real config
     deleteNodeBalancerConfig(Number(nodeBalancerId), config.id)
       .then((_) => {
+        queryClient.invalidateQueries([
+          queryKey,
+          'nodebalancer',
+          Number(nodeBalancerId),
+          'configs',
+        ]);
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs.splice(idxToDelete, 1);
