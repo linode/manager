@@ -345,7 +345,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                 <TableRow>
                   <TableCell className={classes.headerCell} />
                   <TableCell className={classes.headerCell} data-qa-plan-header>
-                    {header}
+                    Plan
                   </TableCell>
                   <TableCell
                     className={classes.headerCell}
