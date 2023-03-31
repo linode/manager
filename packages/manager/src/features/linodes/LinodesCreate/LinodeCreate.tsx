@@ -29,10 +29,7 @@ import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import {
-  getMonthlyAndHourlyNodePricing,
-  CROSS_DATA_CENTER_CLONE_WARNING,
-} from 'src/features/linodes/LinodesCreate/utilities';
+import { getMonthlyAndHourlyNodePricing } from 'src/features/linodes/LinodesCreate/utilities';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -165,7 +162,6 @@ interface Props {
   setAuthorizedUsers: (usernames: string[]) => void;
   userData: string | undefined;
   updateUserData: (userData: string) => void;
-  showCrossDataCenterCloneWarning: boolean;
   updateSearchParams: (search: string) => void;
 }
 
@@ -691,19 +687,9 @@ export class LinodeCreate extends React.PureComponent<
               regions={regionsData!}
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
-              updateFor={[
-                this.props.showCrossDataCenterCloneWarning,
-                this.props.selectedRegionID,
-                regionsData,
-                errors,
-              ]}
+              updateFor={[this.props.selectedRegionID, regionsData, errors]}
               disabled={userCannotCreateLinode}
               helperText={this.props.regionHelperText}
-              warningNoticeText={
-                this.props.showCrossDataCenterCloneWarning
-                  ? CROSS_DATA_CENTER_CLONE_WARNING
-                  : undefined
-              }
             />
           )}
           <SelectPlanPanel

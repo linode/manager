@@ -105,7 +105,6 @@ interface State {
   vlanIPAMAddress: string | null;
   authorized_users: string[];
   userData: string | undefined;
-  showCrossDataCenterCloneWarning: boolean;
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -148,7 +147,6 @@ const defaultState: State = {
   vlanIPAMAddress: null,
   showApiAwarenessModal: false,
   userData: undefined,
-  showCrossDataCenterCloneWarning: false,
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -228,9 +226,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         string,
         string
       >;
-      this.setState({
-        showCrossDataCenterCloneWarning: false,
-      });
     }
   }
 
@@ -301,8 +296,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           isEURegion(id) &&
           !this.props.agreements?.data?.eu_model
       ),
-      showCrossDataCenterCloneWarning:
-        /clone/i.test(this.params.type) && this.params.regionID !== id,
       disabledClasses,
     });
   };

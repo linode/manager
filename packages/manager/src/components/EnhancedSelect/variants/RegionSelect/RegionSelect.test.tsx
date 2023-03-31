@@ -1,6 +1,3 @@
-import * as React from 'react';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { regions } from 'src/__data__/regionsData';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect';
 
@@ -34,27 +31,5 @@ describe('SelectRegionPanel', () => {
         ).toHaveProperty('value', regions[1].id);
       });
     });
-  });
-
-  it('should not render a warning notice if no warning text is provided', () => {
-    const { queryByTestId } = renderWithTheme(
-      <SelectRegionPanel regions={regions} handleSelection={() => null} />
-    );
-
-    const selectRegionWarningNotice = queryByTestId('region-select-warning');
-    expect(selectRegionWarningNotice).toBeNull();
-  });
-  it('should render a warning notice if warning text is provided', () => {
-    const warningText = 'warning text';
-    const { getByTestId } = renderWithTheme(
-      <SelectRegionPanel
-        regions={regions}
-        handleSelection={() => null}
-        warningNoticeText={warningText}
-      />
-    );
-
-    const selectRegionWarningNotice = getByTestId('region-select-warning');
-    expect(selectRegionWarningNotice).toHaveTextContent(warningText);
   });
 });
