@@ -47,7 +47,9 @@ const TooltipIcon = (props: Props) => {
 
   let renderIcon: JSX.Element | null = null;
 
-  const sxHover = {
+  const sxRootStyle = {
+    height: 20,
+    width: 20,
     color: '#888f91',
     '&:hover': {
       color: '#3683dc',
@@ -68,9 +70,7 @@ const TooltipIcon = (props: Props) => {
       renderIcon = <InfoOutline style={{ color: theme.color.black }} />;
       break;
     case 'help':
-      renderIcon = (
-        <HelpOutline style={{ height: 20, width: 20 }} sx={sxHover} />
-      );
+      renderIcon = <HelpOutline sx={sxRootStyle} />;
       break;
     default:
       renderIcon = null;
