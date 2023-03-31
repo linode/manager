@@ -18,7 +18,7 @@ export const notificationContext = createContext<NotificationContextProps>(
 );
 
 export const menuId = 'notification-events-menu';
-const menuButtonId = 'menu-button--notification-events-menu';
+export const menuButtonId = 'menu-button--notification-events-menu';
 
 export const useNotificationContext = (): NotificationContextProps => {
   const [menuOpen, setMenuOpen] = useState(false);
