@@ -3,15 +3,12 @@ import { expect, vi } from 'vitest';
 import matchers from '@testing-library/jest-dom/matchers';
 import Enzyme from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-//import { Window } from 'happy-dom';
 
+// Enzyme React 17 adapter.
 Enzyme.configure({ adapter: new Adapter() });
 
 // JSDom matchers.
 expect.extend(matchers);
-
-// Enzyme React 17 adapter.
-// Enzyme.configure({adapter: new Adapter() });
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
 afterAll(() => server.close());
