@@ -214,7 +214,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { hasError } = this.state;
-    const { linodesError, nodeBalancersError } = this.props;
+    const { linodesError } = this.props;
 
     if (hasError) {
       return <TheApplicationIsOnFire />;
@@ -225,7 +225,7 @@ export class App extends React.Component<CombinedProps, State> {
      * error from the API, just render nothing because the user is
      * about to get shot off to login
      */
-    if (hasOauthError(linodesError, nodeBalancersError)) {
+    if (hasOauthError(linodesError)) {
       return null;
     }
 
@@ -265,7 +265,6 @@ interface StateProps {
   isLoggedInAsCustomer: boolean;
   linodesLoading: boolean;
   linodesError?: APIError[];
-  nodeBalancersError?: APIError[];
   bucketsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
@@ -282,7 +281,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
     state
   ),
   linodesLoading: state.__resources.linodes.loading,
-  nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
 });

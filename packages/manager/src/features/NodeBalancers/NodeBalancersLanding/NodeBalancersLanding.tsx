@@ -1,356 +1,156 @@
-import {
-  NodeBalancer,
-  NodeBalancerConfig,
-} from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
-import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import Typography from 'src/components/core/Typography';
+import Hidden from 'src/components/core/Hidden';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell,
-} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
-import Notice from 'src/components/Notice';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import PaginationFooter from 'src/components/PaginationFooter';
+import Table from 'src/components/Table/Table';
+import TableCell from 'src/components/TableCell/TableCell';
+import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import TransferDisplay from 'src/components/TransferDisplay';
-import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
-import { ApplicationState } from 'src/store';
-import {
-  withNodeBalancerActions,
-  WithNodeBalancerActions,
-} from 'src/store/nodeBalancer/nodeBalancer.containers';
-import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.selectors';
+import { useOrder } from 'src/hooks/useOrder';
+import usePagination from 'src/hooks/usePagination';
+import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
-import NodeBalancerTableRow from './NodeBalancerTableRow';
+import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
-interface DeleteConfirmDialogState {
-  open: boolean;
-  submitting: boolean;
-  errors?: APIError[];
-}
+const preferenceKey = 'nodebalancers';
 
-interface State {
-  deleteConfirmDialog: DeleteConfirmDialogState;
-  selectedNodeBalancerId?: number;
-  selectedNodeBalancerLabel: string;
-}
+export const NodeBalancersLanding = () => {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
+    false
+  );
+  const [
+    selectedNodeBalancerId,
+    setSelectedNodeBalancerId,
+  ] = React.useState<number>(-1);
 
-type CombinedProps = WithNodeBalancerActions &
-  WithNodeBalancers &
-  RouteComponentProps<{}>;
+  const history = useHistory();
+  const pagination = usePagination(1, preferenceKey);
 
-export const headers: HeaderCell[] = [
-  {
-    label: 'Name',
-    dataColumn: 'label',
-    sortable: true,
-    widthPercent: 20,
-  },
-  {
-    label: 'Backend Status',
-    dataColumn: 'status',
-    sortable: false,
-    widthPercent: 15,
-    hideOnMobile: true,
-  },
-  {
-    label: 'Transferred',
-    dataColumn: 'transfer:total',
-    sortable: true,
-    widthPercent: 5,
-    hideOnMobile: true,
-    hideOnTablet: true,
-  },
-  {
-    label: 'Ports',
-    dataColumn: 'updated',
-    sortable: true,
-    widthPercent: 5,
-    hideOnMobile: true,
-    hideOnTablet: true,
-  },
-  {
-    label: 'IP Address',
-    dataColumn: 'ip',
-    sortable: false,
-    widthPercent: 5,
-  },
-  {
-    label: 'Region',
-    dataColumn: 'region',
-    sortable: true,
-    widthPercent: 5,
-    hideOnMobile: true,
-  },
-];
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'asc',
+    },
+    `${preferenceKey}-order`
+  );
 
-export class NodeBalancersLanding extends React.Component<
-  CombinedProps,
-  State
-> {
-  static defaultDeleteConfirmDialogState = {
-    submitting: false,
-    open: false,
-    errors: undefined,
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
   };
 
-  state: State = {
-    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-    selectedNodeBalancerLabel: '',
+  const { data, isLoading, error } = useNodeBalancersQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
+
+  const selectedNodeBalancer = data?.data.find(
+    (nodebalancer) => nodebalancer.id === selectedNodeBalancerId
+  );
+
+  const onDelete = (nodeBalancerId: number) => {
+    setSelectedNodeBalancerId(nodeBalancerId);
+    setIsDeleteDialogOpen(true);
   };
 
-  pollInterval: number;
-
-  componentDidMount() {
-    const { getAllNodeBalancersWithConfigs } = this.props.nodeBalancerActions;
-    /**
-     * Normally we check for lastUpdated === 0 before requesting data,
-     * but since this page is already polling every 30 seconds (@todo should it?),
-     * it seems counterintuitive to make the first request conditional.
-     */
-    getAllNodeBalancersWithConfigs();
-    /**
-     * To keep NB node status up to date, poll NodeBalancers and configs every 30 seconds while the
-     * user is on this page.
-     */
-    this.pollInterval = window.setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        getAllNodeBalancersWithConfigs();
-      }
-    }, 30 * 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.pollInterval);
-  }
-
-  toggleDialog = (nodeBalancerId: number, label: string) => {
-    this.setState({
-      selectedNodeBalancerId: nodeBalancerId,
-      selectedNodeBalancerLabel: label,
-      deleteConfirmDialog: {
-        ...this.state.deleteConfirmDialog,
-        open: !this.state.deleteConfirmDialog.open,
-      },
-    });
-  };
-
-  onSubmitDelete = () => {
-    const {
-      nodeBalancerActions: { deleteNodeBalancer },
-    } = this.props;
-    const { selectedNodeBalancerId } = this.state;
-
-    if (!selectedNodeBalancerId) {
-      return;
-    }
-
-    this.setState({
-      deleteConfirmDialog: {
-        ...this.state.deleteConfirmDialog,
-        errors: undefined,
-        submitting: true,
-      },
-    });
-
-    deleteNodeBalancer({ nodeBalancerId: selectedNodeBalancerId })
-      .then((_) => {
-        this.setState({
-          deleteConfirmDialog: {
-            open: false,
-            submitting: false,
-          },
-        });
-      })
-      .catch((err) => {
-        return this.setState(
-          {
-            deleteConfirmDialog: {
-              ...this.state.deleteConfirmDialog,
-              submitting: false,
-              errors: getAPIErrorOrDefault(
-                err,
-                'There was an error deleting this NodeBalancer.'
-              ),
-            },
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
-      });
-  };
-
-  render() {
-    const {
-      nodeBalancersCount,
-      nodeBalancersLoading,
-      nodeBalancersData,
-      nodeBalancersLastUpdated,
-      nodeBalancersError,
-    } = this.props;
-
-    const {
-      deleteConfirmDialog: { open: deleteConfirmAlertOpen },
-    } = this.state;
-
-    if (nodeBalancersError) {
-      return <RenderError errors={nodeBalancersError} />;
-    }
-
-    if (nodeBalancersLoading) {
-      return <LoadingState />;
-    }
-
-    if (nodeBalancersCount === 0) {
-      return <NodeBalancersLandingEmptyState />;
-    }
-
-    const nodeBalancerRow: EntityTableRow<NodeBalancer> = {
-      Component: NodeBalancerTableRow,
-      data: Object.values(nodeBalancersData),
-      handlers: { toggleDialog: this.toggleDialog },
-      loading: nodeBalancersLoading,
-      error: nodeBalancersError,
-      lastUpdated: nodeBalancersLastUpdated,
-    };
-
+  if (error) {
     return (
-      <>
-        <DocumentTitleSegment segment="NodeBalancers" />
-        <PreferenceToggle<boolean>
-          preferenceKey="nodebalancers_group_by_tag"
-          preferenceOptions={[false, true]}
-          localStorageKey="GROUP_NODEBALANCERS"
-          toggleCallbackFnDebounced={toggleNodeBalancersGroupBy}
-        >
-          {({
-            preference: nodeBalancersAreGrouped,
-            togglePreference: toggleNodeBalancerGroupByTag,
-          }: ToggleProps<boolean>) => {
-            return (
-              <>
-                <LandingHeader
-                  title="NodeBalancers"
-                  entity="NodeBalancer"
-                  onButtonClick={() =>
-                    this.props.history.push('/nodebalancers/create')
-                  }
-                  docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
-                />
-                <EntityTable
-                  entity="nodebalancer"
-                  isGroupedByTag={nodeBalancersAreGrouped}
-                  toggleGroupByTag={toggleNodeBalancerGroupByTag}
-                  row={nodeBalancerRow}
-                  headers={headers}
-                  initialOrder={{ order: 'asc', orderBy: 'label' }}
-                />
-              </>
-            );
-          }}
-        </PreferenceToggle>
-        <TransferDisplay spacingTop={18} />
-        <TypeToConfirmDialog
-          title={`Delete ${this.state.selectedNodeBalancerLabel}?`}
-          entity={{
-            type: 'NodeBalancer',
-            label: this.state.selectedNodeBalancerLabel,
-          }}
-          open={deleteConfirmAlertOpen}
-          loading={this.state.deleteConfirmDialog.submitting}
-          errors={this.state.deleteConfirmDialog.errors}
-          onClose={this.closeConfirmationDialog}
-          onClick={this.onSubmitDelete}
-          typographyStyle={{ marginTop: '20px' }}
-        >
-          <Notice warning>
-            <Typography style={{ fontSize: '0.875rem' }}>
-              Deleting this NodeBalancer is permanent and can’t be undone.
-            </Typography>
-          </Notice>
-          <Typography variant="body1">
-            Traffic will no longer be routed through this NodeBalancer. Please
-            check your DNS settings and either provide the IP address of another
-            active NodeBalancer, or route traffic directly to your Linode.
-          </Typography>
-        </TypeToConfirmDialog>
-      </>
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading your databases.')[0].reason
+        }
+      />
     );
   }
 
-  closeConfirmationDialog = () =>
-    this.setState({
-      deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-    });
-}
+  if (isLoading) {
+    return <CircleProgress />;
+  }
 
-const eventCategory = `nodebalancers landing`;
+  if (data?.results === 0) {
+    return <NodeBalancersLandingEmptyState />;
+  }
 
-const toggleNodeBalancersGroupBy = (checked: boolean) =>
-  sendGroupByTagEnabledEvent(eventCategory, checked);
-
-interface NodeBalancerWithConfigs extends NodeBalancer {
-  configs: NodeBalancerConfig[];
-}
-
-interface WithNodeBalancers {
-  nodeBalancersCount: number;
-  nodeBalancersData: NodeBalancerWithConfigs[];
-  nodeBalancersError?: APIError[];
-  nodeBalancersLoading: boolean;
-  nodeBalancersLastUpdated: number;
-}
-
-export const enhanced = compose<CombinedProps, {}>(
-  connect((state: ApplicationState) => {
-    const { __resources } = state;
-    const { nodeBalancers } = __resources;
-    const {
-      error,
-      results,
-      loading: nodeBalancersLoading,
-      lastUpdated,
-    } = nodeBalancers;
-
-    return {
-      nodeBalancersCount: results,
-      nodeBalancersData: nodeBalancersWithConfigs(__resources),
-      nodeBalancersError: path(['read'], error),
-      // In this component we only want to show loading state on initial load
-      nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0,
-      nodeBalancersLastUpdated: lastUpdated,
-    };
-  }),
-  withRouter,
-  withNodeBalancerActions,
-  SectionErrorBoundary
-);
-
-export default enhanced(NodeBalancersLanding);
-
-const LoadingState = () => {
-  return <CircleProgress />;
-};
-
-const RenderError = ({ errors }: { errors: APIError[] }) => {
   return (
-    <ErrorState
-      errorText={
-        errors[0].reason ||
-        'There was an error loading your NodeBalancers. Please try again later.'
-      }
-    />
+    <>
+      <DocumentTitleSegment segment="NodeBalancers" />
+      <LandingHeader
+        title="NodeBalancers"
+        entity="NodeBalancer"
+        onButtonClick={() => history.push('/nodebalancers/create')}
+        docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
+      />
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'label'}
+              direction={order}
+              label="label"
+              handleClick={handleOrderChange}
+            >
+              Label
+            </TableSortCell>
+            <Hidden smDown>
+              <TableCell>Backend Status</TableCell>
+            </Hidden>
+            <Hidden mdDown>
+              <TableCell>Transfered</TableCell>
+              <TableCell>Ports</TableCell>
+            </Hidden>
+            <TableCell>IP Address</TableCell>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'region'}
+                direction={order}
+                label="region"
+                handleClick={handleOrderChange}
+              >
+                Region
+              </TableSortCell>
+            </Hidden>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data?.data.map((nodebalancer) => (
+            <NodeBalancerTableRow
+              key={nodebalancer.id}
+              onDelete={onDelete}
+              {...nodebalancer}
+            />
+          ))}
+        </TableBody>
+      </Table>
+      <PaginationFooter
+        count={data?.results || 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="NodeBalancers Table"
+      />
+      <TransferDisplay spacingTop={18} />
+      <NodeBalancerDeleteDialog
+        id={selectedNodeBalancerId}
+        label={selectedNodeBalancer?.label ?? ''}
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+      />
+    </>
   );
 };
+
+export default NodeBalancersLanding;
