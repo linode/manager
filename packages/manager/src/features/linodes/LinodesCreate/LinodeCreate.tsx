@@ -162,7 +162,6 @@ interface Props {
   setAuthorizedUsers: (usernames: string[]) => void;
   userData: string | undefined;
   updateUserData: (userData: string) => void;
-  updateSearchParams: (search: string) => void;
 }
 
 const errorMap = [

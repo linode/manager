@@ -14,7 +14,6 @@ const mockProps: CombinedProps = {
   updateRegionID: jest.fn(),
   updateTypeID: jest.fn(),
   setBackupID: jest.fn(),
-  updateSearchParams: jest.fn(),
   accountBackupsEnabled: false,
   imagesData: {},
   regionsData: [],

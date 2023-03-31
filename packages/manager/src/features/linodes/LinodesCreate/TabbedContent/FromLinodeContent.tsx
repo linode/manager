@@ -1,6 +1,7 @@
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
@@ -48,12 +49,17 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     userCannotCreateLinode,
     updateLinodeID,
     updateTypeID,
-    updateSearchParams,
   } = props;
 
   const extendedTypes = typesData?.map(extendType);
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+
+  const history = useHistory();
+
+  const updateSearchParams = (search: string) => {
+    history.replace({ search });
+  };
 
   /** Set the Linode ID and the disk size and reset the plan selection */
   const handleSelectLinode = (linodeID: number, type: null | string) => {

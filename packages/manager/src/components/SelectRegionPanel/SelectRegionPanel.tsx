@@ -36,7 +36,6 @@ interface Props {
   selectedID?: string;
   disabled?: boolean;
   helperText?: string;
-  warningNoticeText?: string;
 }
 
 export const regionHelperText = (onClick?: () => void) => (

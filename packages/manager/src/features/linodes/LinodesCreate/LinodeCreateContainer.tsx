@@ -317,10 +317,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }
   };
 
-  setSearchParams = (search: string) => {
-    this.props.history.replace({ search });
-  };
-
   setLinodeID = (id: number, diskSize?: number) => {
     if (id !== this.state.selectedLinodeID) {
       /**
@@ -811,7 +807,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             accountBackupsEnabled={getAccountBackupsEnabled()}
             setAuthorizedUsers={this.setAuthorizedUsers}
             updateUserData={this.setUserData}
-            updateSearchParams={this.setSearchParams}
             {...restOfProps}
             {...restOfState}
           />
