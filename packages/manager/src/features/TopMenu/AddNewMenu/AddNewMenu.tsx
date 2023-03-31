@@ -11,13 +11,13 @@ import '@reach/menu-button/styles.css';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+// import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
+// import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
-import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
+// import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
+// import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
@@ -212,7 +212,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={FirewallIcon}
                     />
                   </MenuLink>
-                  <MenuLink
+                  {/* <MenuLink
                     as={Link}
                     to="/domains/create"
                     className={classes.menuItemLink}
@@ -222,7 +222,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       body="Manage your DNS records"
                       ItemIcon={DomainIcon}
                     />
-                  </MenuLink>
+                  </MenuLink> */}
                   {showDatabases ? (
                     <MenuLink
                       as={Link}
@@ -237,7 +237,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       />
                     </MenuLink>
                   ) : null}
-                  <MenuLink
+                  {/* <MenuLink
                     as={Link}
                     to="/kubernetes/create"
                     className={classes.menuItemLink}
@@ -270,7 +270,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={OneClickIcon}
                       attr={{ 'data-qa-one-click-add-new': true }}
                     />
-                  </MenuLink>
+                  </MenuLink> */}
                 </MenuItems>
               </MenuPopover>
             </Menu>

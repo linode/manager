@@ -121,8 +121,8 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
 
   return (
     <Placeholder
-      title={'Linodes'}
-      subtitle="Cloud-based virtual machines"
+      title={' '}
+      // subtitle="Cloud-based virtual machines"
       icon={LinodeSvg}
       isEntity
       className={classes.placeholderAdjustment}
@@ -200,11 +200,16 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
       }
       showTransferDisplay
     >
-      <Typography
-        style={{ fontSize: '1.125rem', lineHeight: '1.75rem', maxWidth: 541 }}
+       <Typography
+        style={{
+          fontSize: '1.125rem',
+          lineHeight: '1.75rem',
+          maxWidth: 541,
+          color: '#3683dc',
+          fontWeight: '600',
+        }}
       >
-        Host your websites, applications, or any other Cloud-based workloads on
-        a scalable and reliable platform.
+        Welcome to Stacksville.
       </Typography>
     </Placeholder>
   );

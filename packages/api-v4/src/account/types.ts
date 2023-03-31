@@ -32,7 +32,7 @@ export interface Account {
   euuid: string;
 }
 
-export type BillingSource = 'linode' | 'akamai';
+export type BillingSource = 'akamai';
 
 export type AccountCapability =
   | 'Linodes'

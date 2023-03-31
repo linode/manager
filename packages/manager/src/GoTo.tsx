@@ -100,28 +100,28 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         display: 'Images',
         href: '/images',
       },
-      {
-        display: 'Domains',
-        href: '/domains',
-      },
-      {
-        display: 'Kubernetes',
-        href: '/kubernetes/clusters',
-      },
-      {
-        display: 'Object Storage',
-        href: '/object-storage/buckets',
-        activeLinks: ['/object-storage/buckets', '/object-storage/access-keys'],
-      },
-      {
-        display: 'Longview',
-        href: '/longview',
-      },
+      // {
+      //   display: 'Domains',
+      //   href: '/domains',
+      // },
+      // {
+      //   display: 'Kubernetes',
+      //   href: '/kubernetes/clusters',
+      // },
+      // {
+      //   display: 'Object Storage',
+      //   href: '/object-storage/buckets',
+      //   activeLinks: ['/object-storage/buckets', '/object-storage/access-keys'],
+      // },
+      // {
+      //   display: 'Longview',
+      //   href: '/longview',
+      // },
 
-      {
-        display: 'Marketplace',
-        href: '/linodes/create?type=One-Click',
-      },
+      // {
+      //   display: 'Marketplace',
+      //   href: '/linodes/create?type=One-Click',
+      // },
       {
         hide: !_hasAccountAccess,
         display: 'Account',

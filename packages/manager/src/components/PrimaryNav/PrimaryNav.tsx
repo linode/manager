@@ -2,20 +2,20 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import Account from 'src/assets/icons/account.svg';
-import Storage from 'src/assets/icons/entityIcons/bucket.svg';
-import Database from 'src/assets/icons/entityIcons/database.svg';
-import Domain from 'src/assets/icons/entityIcons/domain.svg';
+// import Storage from 'src/assets/icons/entityIcons/bucket.svg';
+// import Database from 'src/assets/icons/entityIcons/database.svg';
+// import Domain from 'src/assets/icons/entityIcons/domain.svg';
 import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
-import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
+// import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
+// import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
-import Longview from 'src/assets/icons/longview.svg';
+// import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import BetaChip from 'src/components/BetaChip';
 import Divider from 'src/components/core/Divider';
@@ -120,17 +120,17 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     account?.capabilities ?? []
   );
 
-  const prefetchObjectStorage = () => {
-    if (!enableObjectPrefetch) {
-      setEnableObjectPrefetch(true);
-    }
-  };
+  // const prefetchObjectStorage = () => {
+  //   if (!enableObjectPrefetch) {
+  //     setEnableObjectPrefetch(true);
+  //   }
+  // };
 
-  const prefetchMarketplace = () => {
-    if (!enableMarketplacePrefetch) {
-      setEnableMarketplacePrefetch(true);
-    }
-  };
+  // const prefetchMarketplace = () => {
+  //   if (!enableMarketplacePrefetch) {
+  //     setEnableMarketplacePrefetch(true);
+  //   }
+  // };
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
     () => [
@@ -179,50 +179,50 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           icon: <Image />,
         },
       ],
-      [
-        {
-          display: 'Domains',
-          href: '/domains',
-          icon: <Domain />,
-        },
-        {
-          hide: !showDatabases,
-          display: 'Databases',
-          href: '/databases',
-          icon: <Database />,
-          isBeta: flags.databaseBeta,
-        },
-        {
-          display: 'Kubernetes',
-          href: '/kubernetes/clusters',
-          activeLinks: ['/kubernetes/create'],
-          icon: <Kubernetes />,
-        },
-        {
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
-          activeLinks: [
-            '/object-storage/buckets',
-            '/object-storage/access-keys',
-          ],
-          icon: <Storage />,
-          prefetchRequestFn: prefetchObjectStorage,
-          prefetchRequestCondition: allowObjPrefetch,
-        },
-        {
-          display: 'Longview',
-          href: '/longview',
-          icon: <Longview />,
-        },
-        {
-          display: 'Marketplace',
-          href: '/linodes/create?type=One-Click',
-          attr: { 'data-qa-one-click-nav-btn': true },
-          icon: <OCA />,
-          prefetchRequestFn: prefetchMarketplace,
-          prefetchRequestCondition: allowMarketplacePrefetch,
-        },
-      ],
+      // [
+      //   {
+      //     display: 'Domains',
+      //     href: '/domains',
+      //     icon: <Domain />,
+      //   },
+      //   {
+      //     hide: !showDatabases,
+      //     display: 'Databases',
+      //     href: '/databases',
+      //     icon: <Database />,
+      //     isBeta: flags.databaseBeta,
+      //   },
+      //   {
+      //     display: 'Kubernetes',
+      //     href: '/kubernetes/clusters',
+      //     activeLinks: ['/kubernetes/create'],
+      //     icon: <Kubernetes />,
+      //   },
+      //   {
+      //     display: 'Object Storage',
+      //     href: '/object-storage/buckets',
+      //     activeLinks: [
+      //       '/object-storage/buckets',
+      //       '/object-storage/access-keys',
+      //     ],
+      //     icon: <Storage />,
+      //     prefetchRequestFn: prefetchObjectStorage,
+      //     prefetchRequestCondition: allowObjPrefetch,
+      //   },
+      //   {
+      //     display: 'Longview',
+      //     href: '/longview',
+      //     icon: <Longview />,
+      //   },
+      //   {
+      //     display: 'Marketplace',
+      //     href: '/linodes/create?type=One-Click',
+      //     attr: { 'data-qa-one-click-nav-btn': true },
+      //     icon: <OCA />,
+      //     prefetchRequestFn: prefetchMarketplace,
+      //     prefetchRequestCondition: allowMarketplacePrefetch,
+      //   },
+      // ],
       [
         {
           display: 'Account',

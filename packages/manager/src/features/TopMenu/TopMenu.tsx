@@ -11,7 +11,7 @@ import AddNewMenu from './AddNewMenu';
 import Community from './Community';
 import Help from './Help';
 import NotificationButton from './NotificationButton';
-import SearchBar from './SearchBar';
+// import SearchBar from './SearchBar';
 import TopMenuIcon from './TopMenuIcon';
 import UserMenu from './UserMenu';
 
@@ -106,7 +106,7 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
             </IconButton>
           </Hidden>
           <AddNewMenu />
-          <SearchBar />
+          {/* <SearchBar /> */}
           <Help />
           <Community className={classes.communityIcon} />
           <NotificationButton />

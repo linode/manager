@@ -35,7 +35,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     expiry: '01/2018',
   },
   balance_uninvoiced: 0.0,
-  billing_source: 'linode',
+  billing_source: 'akamai',
   active_since: '2018-07-03T12:15:25',
   capabilities: [
     'Linodes',
