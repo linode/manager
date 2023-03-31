@@ -30,7 +30,7 @@ import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
-import withRegions from 'src/containers/regions.container';
+import withRegions, { RegionsProps } from 'src/containers/regions.container';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -55,7 +55,6 @@ import {
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import LandingHeader from 'src/components/LandingHeader';
-import { Region } from '@linode/api-v4/lib/regions';
 import { createNodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { queryKey } from 'src/queries/nodebalancers';
 
@@ -80,7 +79,7 @@ const styles = (theme: Theme) =>
   });
 
 type CombinedProps = ProfileProps &
-  WithRegions &
+  RegionsProps &
   RouteComponentProps<{}> &
   WithStyles<ClassNames> &
   AgreementsProps;
@@ -845,12 +844,6 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
     ];
   }, []);
 };
-
-interface WithRegions {
-  regionsData: Region[];
-  regionsLoading: boolean;
-  regionsError: APIError[];
-}
 
 export default recompose<CombinedProps, {}>(
   withRegions,
