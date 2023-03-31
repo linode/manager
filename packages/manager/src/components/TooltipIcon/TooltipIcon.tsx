@@ -47,11 +47,16 @@ const TooltipIcon = (props: Props) => {
 
   let renderIcon: JSX.Element | null = null;
 
+  const sxHover = {
+    color: '#888f91',
+    '&:hover': {
+      color: '#3683dc',
+    },
+  };
+
   switch (status) {
     case 'success':
-      renderIcon = (
-        <SuccessOutline style={{ color: theme.color.blueDTwhite }} />
-      );
+      renderIcon = <SuccessOutline style={{ color: theme.color.blue }} />;
       break;
     case 'error':
       renderIcon = <ErrorOutline style={{ color: theme.color.red }} />;
@@ -63,7 +68,9 @@ const TooltipIcon = (props: Props) => {
       renderIcon = <InfoOutline style={{ color: theme.color.black }} />;
       break;
     case 'help':
-      renderIcon = <HelpOutline style={{ height: 20, width: 20 }} />;
+      renderIcon = (
+        <HelpOutline style={{ height: 20, width: 20 }} sx={sxHover} />
+      );
       break;
     default:
       renderIcon = null;
