@@ -16,10 +16,6 @@ import bucketDrawer, {
   defaultState as bucketDrawerDefaultState,
   State as BucketDrawerState,
 } from 'src/store/bucketDrawer/bucketDrawer.reducer';
-import documentation, {
-  defaultState as documentationDefaultState,
-  State as DocumentationState,
-} from 'src/store/documentation';
 import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
@@ -125,7 +121,6 @@ export interface ApplicationState {
   __resources: ResourcesState;
   authentication: AuthState;
   backups: BackupDrawerState;
-  documentation: DocumentationState;
   events: EventsState;
   stackScriptDialog: StackScriptDialogState;
   tagImportDrawer: TagImportDrawerState;
@@ -145,7 +140,6 @@ export const defaultState: ApplicationState = {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
-  documentation: documentationDefaultState,
   events: eventsDefaultState,
   stackScriptDialog: stackScriptDialogDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
@@ -177,7 +171,6 @@ const reducers = combineReducers<ApplicationState>({
   __resources,
   authentication,
   backups,
-  documentation,
   stackScriptDialog,
   tagImportDrawer,
   volumeDrawer,
