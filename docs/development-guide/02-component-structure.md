@@ -63,10 +63,10 @@ export default SayHello;
 
 - Prefer function components over class components.
   - Almost all new components in the repository are function components, though legacy class components are still present.
-- Use capitalization naming conventions for JSX elements used within a component.
-  - Example: const `ActionsElement = (<Button> Example </Button>)`.
+- Use capital naming conventions for JSX elements used within a component.
+  - Example: `const ActionsElement = (<Button> Example </Button>)`.
 - If a prop accepts only JSX elements, capitalize the prop name.
-  - Example: const `<TestComponent Actions={ActionsElement}>`.
+  - Example: `<TestComponent Actions={ActionsElement}>`.
 
 #### Utility Functions
 
