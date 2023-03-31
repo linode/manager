@@ -43,12 +43,13 @@ export const updateProfileData = (newData: Partial<Profile>): void => {
   }));
 };
 
-export const useGrants = () =>
-  useQuery<Grants, APIError[]>(
-    [queryKey, 'grants'],
-    listGrants,
-    queryPresets.oneTimeFetch
-  );
+export const useGrants = () => {
+  const { data: profile } = useProfile();
+  return useQuery<Grants, APIError[]>([queryKey, 'grants'], listGrants, {
+    ...queryPresets.oneTimeFetch,
+    enabled: Boolean(profile?.restricted),
+  });
+};
 
 export const getProfileData = () => queryClient.getQueryData<Profile>(queryKey);
 export const getGrantData = () =>
