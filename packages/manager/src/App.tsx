@@ -39,6 +39,7 @@ import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
 import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
+import { nodebalanacerEventHandler } from './queries/nodebalancers';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -149,6 +150,12 @@ export class App extends React.Component<CombinedProps, State> {
     events$
       .filter((event) => event.action.startsWith('firewall') && !event._initial)
       .subscribe(firewallEventsHandler);
+
+    events$
+      .filter(
+        (event) => event.action.startsWith('nodebalancer') && !event._initial
+      )
+      .subscribe(nodebalanacerEventHandler);
 
     /*
      * We want to listen for migration events side-wide

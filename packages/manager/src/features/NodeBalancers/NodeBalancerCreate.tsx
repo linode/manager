@@ -318,7 +318,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
-        queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries([queryKey, 'paginated']);
         queryClient.setQueryData(
           [queryKey, 'nodebalancer', nodeBalancer.id],
           nodeBalancer

@@ -23,6 +23,7 @@ export const NodeBalancerDeleteDialog = ({
 
   const onDelete = async () => {
     await mutateAsync();
+    onClose();
     push('/nodebalancers');
   };
 
