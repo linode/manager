@@ -16,8 +16,9 @@ describe('AccessKeyDrawer', () => {
     mode: 'creating' as MODE,
     isRestrictedUser: false,
   };
-  renderWithTheme(<AccessKeyDrawer {...props} />);
+
   it('renders without crashing', () => {
+    renderWithTheme(<AccessKeyDrawer {...props} />);
     expect(screen.getByTestId('drawer-title')).toBeInTheDocument();
   });
 

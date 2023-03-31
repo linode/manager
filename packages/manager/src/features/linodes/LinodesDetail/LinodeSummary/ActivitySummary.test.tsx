@@ -17,10 +17,10 @@ const props = {
     viewMore: '',
   },
 };
-const component = shallow(<ActivitySummary {...props} />);
 
 describe('ActivitySummary component', () => {
   it('should render', () => {
+    const component = shallow(<ActivitySummary {...props} />);
     expect(component).toHaveLength(1);
   });
 

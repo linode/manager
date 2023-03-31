@@ -6,15 +6,14 @@ import { CreateBucketForm, isDuplicateBucket } from './CreateBucketForm';
 import { screen } from '@testing-library/react';
 
 describe('CreateBucketForm', () => {
-  renderWithTheme(
-    <CreateBucketForm
-      onClose={vi.fn()}
-      onSuccess={vi.fn()}
-      isRestrictedUser={false}
-    />
-  );
-
   it('should render without crashing', () => {
+    renderWithTheme(
+      <CreateBucketForm
+        onClose={vi.fn()}
+        onSuccess={vi.fn()}
+        isRestrictedUser={false}
+      />
+    );
     screen.getByTestId('label');
   });
 });
