@@ -8,6 +8,7 @@ import TopMenuIcon from '../TopMenuIcon';
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import {
   menuId,
+  menuButtonId,
   notificationContext as _notificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
@@ -23,20 +24,18 @@ import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import usePrevious from 'src/hooks/usePrevious';
 
 const useMenuStyles = makeStyles((theme: Theme) => ({
   menuButton: {
     margin: 0,
+    padding: 0,
     minWidth: 'unset',
-    backgroundColor: 'unset !important',
-    '&& :hover, && :focus, && :active': {
-      backgroundColor: 'unset !important',
+    '&&': {
+      backgroundColor: 'unset',
     },
-    '& svg': {
-      marginTop: 1,
-    },
-    '& span': {
-      top: -1,
+    '&:focus span, &:hover span': {
+      color: '#606469',
     },
   },
   menuPopover: {
@@ -45,13 +44,14 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
     top: '50px !important',
     left: 'auto !important',
     right: 8,
-    overflowY: 'auto',
+    width: 430,
     maxHeight: 'calc(90% - 50px)',
+    height: 'auto',
+    // overflowX: 'hidden', // TODO: fix lack of menu scroll
+    // overflowY: 'auto',
     [theme.breakpoints.down('sm')]: {
       right: 0,
       width: '100%',
-      height: 'auto',
-      overflowX: 'hidden',
     },
   },
   menuItem: {
@@ -65,12 +65,17 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
     padding: 20,
     paddingTop: theme.spacing(2),
     paddingBottom: 0,
-    width: 430,
   },
   notificationIcon: {
     '&:first-of-type': {
       marginLeft: 0,
     },
+  },
+  focused: {
+    color: '#606469',
+  },
+  unfocused: {
+    color: '#c9c7c7',
   },
 }));
 
@@ -89,7 +94,7 @@ export const NotificationMenu = () => {
     formattedNotifications.filter((thisEvent) => thisEvent.countInTotal).length;
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const openRef = React.useRef(notificationContext.menuOpen);
+  const prevOpen = usePrevious(notificationContext.menuOpen);
 
   const dispatch = useDispatch<ThunkDispatch>();
 
@@ -115,29 +120,29 @@ export const NotificationMenu = () => {
   const handleMenuListKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
       notificationContext.closeMenu();
+      anchorRef.current!.focus(); // Refocus the notification menu button after the menu has closed.
     }
   };
 
-  // Refocus the notification menu button and hide the notification badge after menu has closed.
   React.useEffect(() => {
-    if (openRef.current && !notificationContext.menuOpen) {
-      anchorRef.current!.focus();
+    if (prevOpen && !notificationContext.menuOpen) {
+      // Dismiss seen notifications after the menu has closed.
       dispatch(markAllSeen());
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
-
-    openRef.current = notificationContext.menuOpen;
   }, [
     notificationContext.menuOpen,
     dismissNotifications,
     notifications,
     dispatch,
+    prevOpen,
   ]);
 
   return (
     <>
       <TopMenuIcon title="Notifications">
         <Button
+          id={menuButtonId}
           ref={anchorRef}
           aria-label="Notifications"
           aria-haspopup="true"
@@ -145,7 +150,11 @@ export const NotificationMenu = () => {
           className={classes.menuButton}
           disableRipple
         >
-          <span className={`${iconClasses.icon} ${classes.notificationIcon}`}>
+          <span
+            className={`${iconClasses.icon} ${classes.notificationIcon} ${
+              notificationContext.menuOpen ? classes.focused : classes.unfocused
+            }`}
+          >
             <Bell />
             {numNotifications > 0 ? (
               <div className={iconClasses.badge}>
@@ -161,6 +170,7 @@ export const NotificationMenu = () => {
         className={classes.menuPopover}
         transition
         disablePortal
+        style={{ position: 'absolute' }}
       >
         <ClickAwayListener onClickAway={handleClose}>
           <MenuList
@@ -169,7 +179,7 @@ export const NotificationMenu = () => {
             onKeyDown={handleMenuListKeyDown}
           >
             <MenuItem className={classes.menuItem} disableRipple>
-              <Paper className={classes.menuPaper}>
+              <Paper className={`${classes.menuPaper} ${classes.menuPopover}`}>
                 <Notifications />
                 <Events />
               </Paper>
