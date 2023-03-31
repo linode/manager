@@ -50,11 +50,6 @@ export const LARGE_ACCOUNT_THRESHOLD = 1500;
 export const PAYPAL_CLIENT_ID =
   import.meta.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
 
-// Sets Paypal Environment, valid values: 'sandbox|production'
-// @todo lets depreate this with the PayPal + Braintree work
-export const PAYPAL_CLIENT_ENV =
-  import.meta.env.REACT_APP_PAYPAL_ENV || 'production';
-
 // Google Pay Merchant ID
 export const GPAY_MERCHANT_ID = import.meta.env.REACT_APP_GPAY_MERCHANT_ID;
 

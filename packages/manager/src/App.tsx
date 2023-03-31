@@ -268,7 +268,6 @@ export class App extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   linodes: Linode[];
-  documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   linodesLoading: boolean;
   linodesError?: APIError[];
@@ -281,7 +280,6 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
-  documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
     ['authentication', 'loggedInAsCustomer'],

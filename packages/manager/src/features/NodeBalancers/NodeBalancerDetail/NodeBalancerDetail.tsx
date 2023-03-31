@@ -13,7 +13,7 @@ import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary/NodeBalancerSummary';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import {
   useNodeBalancerQuery,
@@ -26,7 +26,7 @@ import {
   useParams,
 } from 'react-router-dom';
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(),
@@ -35,7 +35,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 const NodeBalancerDetail = () => {
-  const { classes } = useStyles();
+  const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
