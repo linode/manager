@@ -29,7 +29,6 @@ it('renders without crashing.', () => {
               search: '',
               state: {},
             }}
-            documentation={[]}
             appIsLoading={false}
             preferences={preferencesFactory.build()}
             getUserPreferences={jest.fn()}
