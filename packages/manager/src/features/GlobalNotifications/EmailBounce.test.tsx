@@ -3,7 +3,6 @@ import * as profile from '@linode/api-v4/lib/profile/profile';
 import * as account from '@linode/api-v4/lib/account/account';
 import { waitFor, fireEvent } from '@testing-library/react';
 import * as React from 'react';
-import { notificationFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { EmailBounceNotificationSection } from './EmailBounce';
 
@@ -13,18 +12,7 @@ const mockUpdateProfile = vi.spyOn(profile, 'updateProfile');
 describe('EmailBounceNotificationSection', () => {
   it.skip('renders an account email bounce notice', async () => {
     const { getByTestId, queryByTestId } = renderWithTheme(
-      <EmailBounceNotificationSection />,
-      {
-        customStore: {
-          __resources: {
-            notifications: {
-              data: [
-                notificationFactory.build({ type: 'billing_email_bounce' }),
-              ],
-            },
-          },
-        },
-      }
+      <EmailBounceNotificationSection />
     );
     // Notice is visible.
     getByTestId('billing_email_bounce');
@@ -45,16 +33,7 @@ describe('EmailBounceNotificationSection', () => {
 
   it.skip('renders an profile email bounce notice', async () => {
     const { getByTestId, queryByTestId } = renderWithTheme(
-      <EmailBounceNotificationSection />,
-      {
-        customStore: {
-          __resources: {
-            notifications: {
-              data: [notificationFactory.build({ type: 'user_email_bounce' })],
-            },
-          },
-        },
-      }
+      <EmailBounceNotificationSection />
     );
     // Notice is visible.
     getByTestId('user_email_bounce');

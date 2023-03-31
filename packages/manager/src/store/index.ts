@@ -46,10 +46,6 @@ import linodes, {
   defaultState as defaultLinodesState,
   State as LinodesState,
 } from 'src/store/linodes/linodes.reducer';
-import types, {
-  defaultState as defaultTypesState,
-  State as TypesState,
-} from 'src/store/linodeType/linodeType.reducer';
 import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   defaultState as defaultLongviewState,
@@ -95,10 +91,6 @@ import mockFeatureFlags, {
 } from './mockFeatureFlags';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
-import notifications, {
-  defaultState as notificationsDefaultState,
-  State as NotificationsState,
-} from './notification/notification.reducer';
 import pendingUpload, {
   defaultState as pendingUploadState,
   State as PendingUploadState,
@@ -118,8 +110,6 @@ const __resourcesDefaultState = {
   linodeDisks: defaultLinodeDisksState,
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancers: defaultNodeBalancerState,
-  notifications: notificationsDefaultState,
-  types: defaultTypesState,
 };
 
 export interface ResourcesState {
@@ -129,8 +119,6 @@ export interface ResourcesState {
   linodeDisks: LinodeDisksState;
   nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancers: NodeBalancersState;
-  notifications: NotificationsState;
-  types: TypesState;
 }
 
 export interface ApplicationState {
@@ -183,8 +171,6 @@ const __resources = combineReducers({
   linodeDisks,
   nodeBalancers,
   nodeBalancerConfigs,
-  notifications,
-  types,
 });
 
 const reducers = combineReducers<ApplicationState>({

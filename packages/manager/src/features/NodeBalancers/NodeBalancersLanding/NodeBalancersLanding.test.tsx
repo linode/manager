@@ -35,8 +35,6 @@ const nodeBalancerComponent = (
       getNodeBalancerPage: vi.fn(),
       getNodeBalancerWithConfigs: vi.fn(),
     }}
-    setDocs={vi.fn()}
-    clearDocs={vi.fn()}
   />
 );
 

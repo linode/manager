@@ -26,7 +26,6 @@ const mockProps: CombinedProps = {
   updateTypeID: vi.fn(),
   imagesData: {},
   regionsData: [],
-  typesData: [],
   userCannotCreateLinode: false,
   request: vi.fn(),
   header: '',

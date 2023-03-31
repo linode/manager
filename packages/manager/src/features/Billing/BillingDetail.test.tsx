@@ -1,9 +1,6 @@
 import { vi } from 'vitest';
 import * as React from 'react';
-import { paymentMethodFactory } from 'src/factories';
-import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { history, match, mockLocation } from 'src/__data__/reactRouterProps';
 import { BillingDetail } from './BillingDetail';
 
 vi.mock('@linode/api-v4/lib/account', async () => {
@@ -11,22 +8,22 @@ vi.mock('@linode/api-v4/lib/account', async () => {
   return {
     ...actual,
     getInvoices: vi.fn().mockResolvedValue({
-      results: 2,
+      results: 0,
       page: 1,
       pages: 1,
-      data: invoiceFactory.buildList(2),
+      data: [],
     }),
     getPaymentMethods: vi.fn().mockResolvedValue({
-      results: 1,
+      results: 0,
       page: 1,
       pages: 1,
-      data: paymentMethodFactory.buildList(1),
+      data: [],
     }),
     getPayments: vi.fn().mockResolvedValue({
-      results: 2,
+      results: 0,
       page: 1,
       pages: 1,
-      data: paymentFactory.buildList(2),
+      data: [],
     }),
     getAccountInfo: vi.fn().mockResolvedValue([]),
   };
@@ -34,15 +31,8 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 
 describe('Account Landing', () => {
   it('should render', async () => {
-    const { findByTestId } = renderWithTheme(
-      <BillingDetail
-        history={history}
-        location={mockLocation}
-        match={match}
-        setDocs={vi.fn()}
-        clearDocs={vi.fn()}
-      />
-    );
+    const { findByTestId } = renderWithTheme(<BillingDetail />);
+
     await findByTestId('billing-detail');
     // Todo: add some get-by-texts once the correct text is available
   });

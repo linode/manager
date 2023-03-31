@@ -3,24 +3,11 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import {
-  CombinedProps,
-  RebuildFromStackScript,
-} from './RebuildFromStackScript';
+import { RebuildFromStackScript } from './RebuildFromStackScript';
 
-vi.mock('@linode/api-v4/lib/account', async () => {
-  const actual = await vi.importActual<{}>('@linode/api-v4/lib/account');
-  return {
-    ...actual,
-    getUsers: vi.fn().mockResolvedValue([]),
-  };
-});
-
-const props: CombinedProps = {
-  type: 'community',
+const props = {
+  type: 'community' as 'community' | 'account',
   linodeId: 1234,
-  requestKeys: vi.fn(),
-  userSSHKeys: [],
   disabled: false,
   passwordHelperText: '',
   handleRebuildError: vi.fn(),

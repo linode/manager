@@ -10,17 +10,12 @@ const component = shallow<AuthenticationWrapper>(
     linodesLastUpdated={0}
     linodesLoading={false}
     initSession={vi.fn()}
-    requestTypes={vi.fn()}
     requestLinodes={vi.fn()}
-    requestNotifications={vi.fn()}
     requestRegions={vi.fn()}
     markAppAsDoneLoading={vi.fn()}
-    requestLinodeType={vi.fn()}
     checkAccountSize={vi.fn()}
     pendingUpload={false}
     linodes={[]}
-    typesLastUpdated={0}
-    types={[]}
   >
     <div />
   </AuthenticationWrapper>

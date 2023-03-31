@@ -295,11 +295,16 @@ export type LinodeTypeClass =
   | 'highmem'
   | 'gpu'
   | 'metal'
-  | 'prodedicated';
+  | 'prodedicated'
+  | 'premium';
 
 export interface IPAllocationRequest {
   type: 'ipv4';
   public: boolean;
+}
+
+export interface UserData {
+  user_data: string | null;
 }
 
 export interface CreateLinodeRequest {
@@ -319,6 +324,7 @@ export interface CreateLinodeRequest {
   private_ip?: boolean;
   authorized_users?: string[];
   interfaces?: Interface[];
+  metadata?: UserData;
 }
 
 export type RescueRequestObject = Pick<
@@ -340,6 +346,7 @@ export interface LinodeCloneData {
 export interface RebuildRequest {
   image: string;
   root_pass: string;
+  metadata?: UserData;
   authorized_keys?: SSHKey[];
   authorized_users?: string[];
   stackscript_id?: number;

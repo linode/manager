@@ -54,6 +54,8 @@ describe('LinodeResize', () => {
       updateLinode={vi.fn()}
       typesData={extendedTypes}
       typesLoading={false}
+      setRequestedTypes={vi.fn()}
+      requestedTypesData={[]}
     />
   );
 

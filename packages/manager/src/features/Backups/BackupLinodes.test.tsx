@@ -8,26 +8,20 @@ import * as linodes from 'src/__data__/linodes';
 
 import { ExtendedLinode } from './types';
 
-const type = types.data[0];
+import { BackupLinodes, displayPrice } from './BackupLinodes';
+import { extendType } from 'src/utilities/extendType';
+
+const type = extendType(types.data[0] as LinodeType);
 
 const linode1: ExtendedLinode = {
   ...linodes.linode1,
-  typeInfo: type as LinodeType,
+  typeInfo: type,
 };
 const linode2: ExtendedLinode = {
   ...linodes.linode2,
-  typeInfo: type as LinodeType,
+  typeInfo: type,
   linodeError: { linodeId: linodes.linode2.id, reason: 'Error occurred' },
 };
-
-import { BackupLinodes, displayPrice } from './BackupLinodes';
-
-const component = shallow(
-  <BackupLinodes
-    linodes={[linode1, linode2]}
-    classes={{ root: '', error: '' }}
-  />
-);
 
 describe('BackupLinodes component', () => {
   describe('helper functions', () => {
@@ -42,6 +36,12 @@ describe('BackupLinodes component', () => {
   });
   describe('component rendering', () => {
     it('should render its props', () => {
+      const component = shallow(
+        <BackupLinodes
+          linodes={[linode1, linode2]}
+          classes={{ root: '', error: '' }}
+        />
+      );
       expect(component.find('[data-qa-linodes]')).toHaveLength(2);
     });
   });

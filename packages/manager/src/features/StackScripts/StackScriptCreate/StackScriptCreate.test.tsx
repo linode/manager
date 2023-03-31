@@ -1,9 +1,6 @@
-import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { StackScriptCreate } from './StackScriptCreate';
-
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
 import { UseQueryResult } from 'react-query';
@@ -28,8 +25,6 @@ describe('StackScriptCreate', () => {
         { data: profileFactory.build() } as UseQueryResult<Profile, APIError[]>
       }
       grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
-      setDocs={vi.fn()}
-      clearDocs={vi.fn()}
     />
   );
 
@@ -46,8 +41,7 @@ describe('StackScriptCreate', () => {
     expect(titleText).toBe('Create StackScript');
   });
 
-  it.skip(`should render a confirmation dialog with the
-  title "Clear StackScript Configuration?"`, () => {
+  it.skip(`should render a confirmation dialog with the title "Clear StackScript Configuration?"`, () => {
     const modalTitle = component
       .find('WithStyles(ConfirmationDialog)')
       .prop('title');

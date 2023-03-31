@@ -1,4 +1,4 @@
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -12,6 +12,10 @@ import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import {
+  withSpecificTypes,
+  WithSpecificTypesProps,
+} from 'src/containers/types.container';
 import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
 import { ApplicationState } from 'src/store';
 import {
@@ -25,6 +29,8 @@ import {
 } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { ThunkDispatch } from 'src/store/types';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
@@ -47,10 +53,10 @@ interface StateProps {
   loading: boolean;
   enabling: boolean;
   backupLoadError: string;
-  linodesWithoutBackups: ExtendedLinode[];
+  linodesWithoutBackups: Linode[];
   backupsLoading: boolean;
   enableSuccess: boolean;
-  enableErrors?: BackupError[];
+  enableErrors: BackupError[];
   autoEnroll: boolean;
   autoEnrollError?: string;
   enrolling: boolean;
@@ -59,8 +65,8 @@ interface StateProps {
 
 type CombinedProps = DispatchProps &
   StateProps &
-  WithTypesProps &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  WithSpecificTypesProps;
 
 const getFailureNotificationText = (
   success: number,
@@ -87,7 +93,19 @@ export const getTotalPrice = (linodes: ExtendedLinode[]) => {
   }, 0);
 };
 export class BackupDrawer extends React.Component<CombinedProps, {}> {
-  componentDidUpdate() {
+  updateRequestedTypes = () => {
+    this.props.setRequestedTypes(
+      this.props.linodesWithoutBackups
+        .map((linode) => linode.type)
+        .filter(isNotNullOrUndefined)
+    );
+  };
+
+  componentDidMount(): void {
+    this.updateRequestedTypes();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
     const { close, dismissSuccess } = this.props.actions;
     const { autoEnroll, enableSuccess, updatedCount } = this.props;
     if (enableSuccess) {
@@ -102,6 +120,13 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       });
       dismissSuccess();
       close();
+    }
+    if (
+      prevProps.linodesWithoutBackups.some(
+        (linode, index) => linode != this.props.linodesWithoutBackups[index]
+      )
+    ) {
+      this.updateRequestedTypes();
     }
   }
 
@@ -126,12 +151,19 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       enableErrors,
       enabling,
       enrolling,
-      linodesWithoutBackups,
       loading,
       open,
       updatedCount,
+      requestedTypesData,
     } = this.props;
-    const linodeCount = linodesWithoutBackups.length;
+
+    const extendedTypeData = requestedTypesData.map(extendType);
+    const extendedLinodes = enhanceLinodes(
+      this.props.linodesWithoutBackups,
+      enableErrors,
+      extendedTypeData
+    );
+    const linodeCount = extendedLinodes.length;
     return (
       <Drawer title="Enable All Backups" open={open} onClose={close}>
         <Grid container direction={'column'}>
@@ -172,7 +204,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
           )}
           <Grid item>
             <DisplayPrice
-              price={getTotalPrice(linodesWithoutBackups)}
+              price={getTotalPrice(extendedLinodes)}
               interval="mo"
             />
           </Grid>
@@ -199,7 +231,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
             </ActionsPanel>
           </Grid>
           <Grid item>
-            <BackupsTable linodes={linodesWithoutBackups} loading={loading} />
+            <BackupsTable linodes={extendedLinodes} loading={loading} />
           </Grid>
         </Grid>
       </Drawer>
@@ -225,7 +257,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 /* Attaches a full type object to each Linode. Needed to calculate
  * price and label information in BackupsTable.tsx.
  */
-export const addTypeInfo = (types: LinodeType[], linodes: Linode[]) =>
+export const addTypeInfo = (types: ExtendedType[], linodes: Linode[]) =>
   linodes.map((linode) => {
     const typeInfo = getTypeInfo(linode.type, types || []);
     return {
@@ -253,7 +285,7 @@ export const addErrors = (
 export const enhanceLinodes = (
   linodes: Linode[],
   errors: BackupError[],
-  types: LinodeType[]
+  types: ExtendedType[]
 ) => {
   const linodesWithTypes = addTypeInfo(types, linodes);
   return addErrors(errors, linodesWithTypes);
@@ -263,7 +295,7 @@ const mapStateToProps: MapStateToProps<
   StateProps,
   CombinedProps,
   ApplicationState
-> = (state: ApplicationState, ownProps: CombinedProps) => {
+> = (state: ApplicationState) => {
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = getLinodesWithoutBackups(state.__resources);
   return {
@@ -276,11 +308,7 @@ const mapStateToProps: MapStateToProps<
     open: pathOr(false, ['backups', 'open'], state),
     loading: pathOr(false, ['backups', 'loading'], state),
     enabling: pathOr(false, ['backups', 'enabling'], state),
-    linodesWithoutBackups: enhanceLinodes(
-      linodes,
-      enableErrors,
-      ownProps.typesData
-    ),
+    linodesWithoutBackups: linodes,
     autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
     autoEnrollError: path(['backups', 'autoEnrollError'], state),
@@ -289,14 +317,12 @@ const mapStateToProps: MapStateToProps<
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-interface WithTypesProps {
-  typesData: LinodeType[];
-}
-
-const withTypes = connect((state: ApplicationState) => ({
-  typesData: state.__resources.types.entities,
-}));
-
-const enhanced = compose<CombinedProps, {}>(withTypes, connected, withSnackbar);
+const enhanced = compose<CombinedProps, {}>(
+  connected,
+  // this awkward line avoids fetching all types until this dialog is opened
+  (comp: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
+    withSpecificTypes(comp, props.open)(props),
+  withSnackbar
+);
 
 export default enhanced(BackupDrawer);

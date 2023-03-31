@@ -13,7 +13,6 @@ import {
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 import {
-  CombinedProps,
   FirewallRow,
   getCountOfRules,
   getDeviceLinks,
@@ -47,7 +46,7 @@ describe('FirewallRow', () => {
     const mockTriggerDisableFirewall = vi.fn();
     const mockTriggerEnableFirewall = vi.fn();
 
-    const baseProps: CombinedProps = {
+    const baseProps = {
       ...firewall,
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,

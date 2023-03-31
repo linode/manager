@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import Link from 'src/components/Link';
 import { formatEventWithAPIMessage } from 'src/eventMessageGenerator';
+import { ExtendedType } from './utilities/extendType';
 import { Region } from '@linode/api-v4/lib/regions';
 
 export const eventMessageGenerator = (
   e: Event,
   linodes: Linode[] = [],
-  types: LinodeType[] = [],
+  types: ExtendedType[] = [],
   regions: Region[] = []
 ) => {
   const eventLinode = linodes.find(
@@ -24,7 +25,7 @@ export const eventMessageGenerator = (
         (thisType) => thisType.id === eventLinode?.type
       );
       return `resize ${
-        eventLinodeType ? `to ${eventLinodeType.label} Plan` : ''
+        eventLinodeType ? `to ${eventLinodeType.formattedLabel} Plan` : ''
       }`;
     case 'linode_migrate':
     case 'linode_migrate_datacenter':

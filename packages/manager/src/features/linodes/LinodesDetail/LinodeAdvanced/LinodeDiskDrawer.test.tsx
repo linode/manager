@@ -19,6 +19,8 @@ const props: Props = {
   open: true,
   onClose: vi.fn(),
   onSubmit: vi.fn().mockResolvedValue({}),
+  authorizedUsers: [],
+  setAuthorizedUsers: vi.fn(),
 };
 
 const EMPTY_DISK_RADIO_LABEL = new RegExp('create empty disk', 'i');

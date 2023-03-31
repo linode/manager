@@ -301,7 +301,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
-              label="Status"
+              label="status"
               handleClick={handleOrderChange}
             >
               Status

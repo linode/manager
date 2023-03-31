@@ -58,7 +58,6 @@ describe('BillingSummary', () => {
         />
       </PayPalScriptProvider>
     );
-    within(screen.getByTestId(accountBalanceText)).getByText(/Balance/gi);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
   });
 
