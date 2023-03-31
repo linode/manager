@@ -16,7 +16,6 @@ import TransferDisplay from 'src/components/TransferDisplay';
 import { useOrder } from 'src/hooks/useOrder';
 import usePagination from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
@@ -68,9 +67,7 @@ export const NodeBalancersLanding = () => {
   if (error) {
     return (
       <ErrorState
-        errorText={
-          getAPIErrorOrDefault(error, 'Error loading your databases.')[0].reason
-        }
+        errorText={error?.[0].reason ?? 'Unable to load your NodeBalancers'}
       />
     );
   }
