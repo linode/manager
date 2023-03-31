@@ -100,7 +100,13 @@ export const wrapWithTableBody = (ui: any, options: Options = {}) =>
   );
 
 export const renderWithTheme = (ui: any, options: Options = {}) => {
-  return render(wrapWithTheme(ui, options));
+  // Use fake timers when rendering the theme.
+  // This prevents the toggle timeout from leaking for tests that finish before the 500ms timeout.
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  const renderedComponent = render(wrapWithTheme(ui, options));
+  vi.advanceTimersByTime(1000);
+  vi.useRealTimers();
+  return renderedComponent;
 };
 
 declare global {
