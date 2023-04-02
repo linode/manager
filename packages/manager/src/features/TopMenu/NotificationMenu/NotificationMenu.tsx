@@ -43,15 +43,14 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
     zIndex: 3000,
     top: '50px !important',
     left: 'auto !important',
-    right: 8,
+    right: 20,
     width: 430,
-    maxHeight: 'calc(90% - 50px)',
-    height: 'auto',
-    // overflowX: 'hidden', // TODO: fix lack of menu scroll
-    // overflowY: 'auto',
+    maxHeight: 'calc(100vh - 125px)',
+    overflowY: 'auto',
     [theme.breakpoints.down('sm')]: {
       right: 0,
       width: '100%',
+      height: 'auto',
     },
   },
   menuItem: {
@@ -60,6 +59,7 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
     border: 'none',
     padding: 0,
     cursor: 'default',
+    display: 'block',
   },
   menuPaper: {
     padding: 20,
