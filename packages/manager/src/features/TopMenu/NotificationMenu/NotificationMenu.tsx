@@ -148,7 +148,7 @@ export const NotificationMenu = () => {
           right: '8px',
           width: '430px',
           position: 'absolute !important',
-          height: 'calc(100vh - 50px)',
+          height: 'calc(100vh - 125px)',
           overflowY: 'scroll',
           [theme.breakpoints.down('sm')]: {
             right: 0,
