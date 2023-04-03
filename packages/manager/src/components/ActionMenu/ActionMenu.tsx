@@ -1,3 +1,4 @@
+import { Theme } from '@mui/material/styles';
 import {
   Menu,
   MenuButton,
@@ -7,12 +8,10 @@ import {
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import { positionRight } from '@reach/popover';
-import classNames from 'classnames';
 import * as React from 'react';
 import KebabIcon from 'src/assets/icons/kebab.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import HelpIcon from 'src/components/HelpIcon';
+import { makeStyles } from 'tss-react/mui';
 
 export interface Action {
   title: string;
@@ -21,7 +20,7 @@ export interface Action {
   onClick: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '&[data-reach-menu-button]': {
       display: 'flex',
@@ -107,10 +106,8 @@ export interface Props {
   className?: string;
 }
 
-type CombinedProps = Props;
-
-const ActionMenu: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const ActionMenu = (props: Props) => {
+  const { classes, cx } = useStyles();
   const { toggleOpenCallback, actionsList } = props;
 
   const { ariaLabel } = props;
@@ -134,7 +131,7 @@ const ActionMenu: React.FC<CombinedProps> = (props) => {
   return (
     <Menu>
       <MenuButton
-        className={classNames({
+        className={cx({
           [classes.button]: true,
         })}
         aria-label={ariaLabel}
@@ -148,7 +145,7 @@ const ActionMenu: React.FC<CombinedProps> = (props) => {
           {(actionsList as Action[]).map((a, idx) => (
             <MenuItem
               key={idx}
-              className={classNames({
+              className={cx({
                 [classes.item]: true,
                 [classes.disabled]: a.disabled,
               })}

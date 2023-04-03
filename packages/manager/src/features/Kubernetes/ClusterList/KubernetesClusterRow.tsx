@@ -9,7 +9,6 @@ import ActionMenu from './ClusterActionMenu';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import {
   getNextVersion,
@@ -19,6 +18,8 @@ import {
   useAllKubernetesNodePoolQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
+import { useSpecificTypes } from 'src/queries/types';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -65,7 +66,8 @@ export const KubernetesClusterRow = (props: Props) => {
 
   const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
-  const { data: types } = useAllLinodeTypesQuery();
+  const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
+  const types = extendTypesQueryResult(typesQuery);
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r) => r.id === cluster.region);

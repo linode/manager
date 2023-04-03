@@ -25,14 +25,19 @@ import {
   updateNodePool,
   UpdateNodePoolData,
 } from '@linode/api-v4';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryClient, queryPresets, updateInPaginatedStore } from './base';
 
 export const queryKey = `kubernetes`;
 
-export const useKubernetesClustersQuery = (params: any, filter: any) => {
+export const useKubernetesClustersQuery = (params: Params, filter: Filter) => {
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getKubernetesClusters(params, filter),

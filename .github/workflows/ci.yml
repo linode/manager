@@ -129,13 +129,16 @@ jobs:
       # Create an api-v4 tarball
       - run: cd packages/api-v4 && npm pack --pack-destination ../../
 
+      # Create an validation tarball
+      - run: cd packages/validation && npm pack --pack-destination ../../
+
       # Test @linode/api-v4 as an ES Module
-      - run: mkdir test-sdk-esm && cd test-sdk-esm && npm init es6 -y && npm install ../$(ls ../ | grep "linode-api-v4-.*\.tgz")
+      - run: mkdir test-sdk-esm && cd test-sdk-esm && npm init es6 -y && npm install ../$(ls ../ | grep "linode-api-v4-.*\.tgz") ../$(ls ../ | grep "linode-validation-.*\.tgz")
       - run: cp scripts/validatePackages/sdk-esm.js test-sdk-esm/
       - run: cd test-sdk-esm && node ./sdk-esm.js
 
       # Verify @linode/api-v4 as CommonJS
-      - run: mkdir test-sdk-cjs && cd test-sdk-cjs && npm init -y && npm install ../$(ls ../ | grep "linode-api-v4-.*\.tgz")
+      - run: mkdir test-sdk-cjs && cd test-sdk-cjs && npm init -y && npm install ../$(ls ../ | grep "linode-api-v4-.*\.tgz") ../$(ls ../ | grep "linode-validation-.*\.tgz")
       - run: cp scripts/validatePackages/sdk-commonjs.cjs test-sdk-cjs/
       - run: cd test-sdk-cjs && node ./sdk-commonjs.cjs
 
@@ -256,6 +259,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs:
       - build-sdk
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

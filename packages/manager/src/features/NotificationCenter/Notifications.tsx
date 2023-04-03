@@ -1,16 +1,13 @@
 import * as React from 'react';
-import NotificationSection, { NotificationItem } from './NotificationSection';
+import { useFormattedNotifications } from './NotificationData/useFormattedNotifications';
+import NotificationSection from './NotificationSection';
 
-interface Props {
-  notificationsList: NotificationItem[];
-}
-
-export const Notifications: React.FC<Props> = (props) => {
-  const { notificationsList } = props;
+export const Notifications = () => {
+  const notifications = useFormattedNotifications();
 
   return (
     <NotificationSection
-      content={notificationsList}
+      content={notifications}
       header="Notifications"
       emptyMessage="No notifications to display."
     />

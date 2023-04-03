@@ -25,3 +25,66 @@ export interface ResourcePage<T> {
 export type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
+
+export interface Params {
+  page?: number;
+  page_size?: number;
+}
+
+interface FilterConditionTypes {
+  '+and'?: Filter[];
+  '+or'?: Filter[] | string[];
+  '+order_by'?: string;
+  '+order'?: string;
+  '+gt'?: number;
+  '+gte'?: number;
+  '+lt'?: number;
+  '+lte'?: number;
+  '+contains'?: string;
+  '+neq'?: string;
+}
+
+export type Filter = LinodeFilter | LinodeFilter[];
+
+type LinodeFilter =
+  | {
+      [key in keyof FilterConditionTypes]: FilterConditionTypes[key];
+    }
+  | { [key: string]: string | number | boolean | Filter | undefined };
+
+// const filter: Filter = {
+//   '+or': [{ vcpus: 1 }, { class: 'standard' }],
+// };
+
+// const f1: Filter = {
+//   '+and': [{ label: 'test' }, { id: 'odk' }],
+// };
+
+// const f: Filter = {
+//   '+or': [
+//     {
+//       '+or': [
+//         {
+//           class: 'standard',
+//         },
+//         {
+//           class: 'highmem',
+//         },
+//       ],
+//     },
+//     {
+//       '+and': [
+//         {
+//           vcpus: {
+//             '+gte': 12,
+//           },
+//         },
+//         {
+//           vcpus: {
+//             '+lte': 20,
+//           },
+//         },
+//       ],
+//     },
+//   ],
+// };

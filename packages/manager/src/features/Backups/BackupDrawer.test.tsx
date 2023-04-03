@@ -2,7 +2,6 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { LinodeType } from '@linode/api-v4/lib/linodes';
 import data from 'src/utilities/types.json';
 import { linodeFactory } from 'src/factories/linodes';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -16,8 +15,12 @@ import {
   getTotalPrice,
 } from './BackupDrawer';
 import { ExtendedLinode } from './types';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { LinodeType } from '@linode/api-v4';
 
-const cachedTypesData = data.data as LinodeType[];
+const cachedTypesData = (data.data as LinodeType[]).map(
+  extendType
+) as ExtendedType[];
 
 const linode1 = linodeFactory.build({
   specs: {
@@ -117,7 +120,8 @@ const props = {
   enableSuccess: false,
   enableErrors: [],
   typesLoading: false,
-  typesData: cachedTypesData,
+  requestedTypesData: cachedTypesData,
+  setRequestedTypes: jest.fn(),
   enrolling: false,
   autoEnroll: false,
   autoEnrollError: undefined,
@@ -141,8 +145,14 @@ describe('BackupDrawer component', () => {
   describe('adding type and error info to Linodes', () => {
     it('should add type info to a list of Linodes', () => {
       const withTypes = addTypeInfo(cachedTypesData, linodes);
-      expect(withTypes[0].typeInfo).toHaveProperty('label', 'Nanode 1GB');
-      expect(withTypes[1].typeInfo).toHaveProperty('label', 'Linode 4GB');
+      expect(withTypes[0].typeInfo).toHaveProperty(
+        'formattedLabel',
+        'Nanode 1 GB'
+      );
+      expect(withTypes[1].typeInfo).toHaveProperty(
+        'formattedLabel',
+        'Linode 4 GB'
+      );
     });
     it('should attach an error to a Linode', () => {
       const withErrors = addErrors([error], linodes);

@@ -3,17 +3,16 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DrawerContent, Props } from './DrawerContent';
 
+const defaultChildren = <div>Content</div>;
+
 const renderDrawer = (props: Props) =>
-  renderWithTheme(
-    <DrawerContent {...props}>
-      <div>Content</div>
-    </DrawerContent>
-  );
+  renderWithTheme(<DrawerContent {...props} />);
 
 const props: Props = {
   loading: true,
   error: false,
   title: 'my-drawer',
+  children: defaultChildren,
 };
 
 describe('DrawerContent', () => {

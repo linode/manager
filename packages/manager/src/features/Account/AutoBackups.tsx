@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
@@ -9,7 +9,7 @@ import OpenInNew from '@mui/icons-material/OpenInNew';
 import Toggle from 'src/components/Toggle';
 import Typography from 'src/components/core/Typography';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   footnote: {
     fontSize: '0.875rem',
     cursor: 'pointer',
@@ -33,7 +33,7 @@ interface Props {
   isManagedCustomer: boolean;
 }
 
-const AutoBackups: React.FC<Props> = (props) => {
+const AutoBackups = (props: Props) => {
   const {
     backups_enabled,
     hasLinodesWithoutBackups,
@@ -42,7 +42,7 @@ const AutoBackups: React.FC<Props> = (props) => {
     isManagedCustomer,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Accordion heading="Backup Auto Enrollment" defaultExpanded={true}>

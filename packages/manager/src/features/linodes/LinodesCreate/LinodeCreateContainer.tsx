@@ -25,7 +25,7 @@ import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
 import withRegions from 'src/containers/regions.container';
-import withTypes from 'src/containers/types.container';
+import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -37,9 +37,6 @@ import withAgreements, {
 import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
-import userSSHKeyHoc, {
-  State as userSSHKeysProps,
-} from 'src/features/linodes/userSSHKeyHoc';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import {
@@ -55,7 +52,6 @@ import {
   withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -71,9 +67,9 @@ import {
   TypeInfo,
   WithLinodesProps,
   WithRegionsProps,
-  WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 import LandingHeader from 'src/components/LandingHeader';
 
 const DEFAULT_IMAGE = 'linode/debian11';
@@ -107,6 +103,8 @@ interface State {
   disabledClasses?: LinodeTypeClass[];
   attachedVLANLabel: string | null;
   vlanIPAMAddress: string | null;
+  authorized_users: string[];
+  userData: string | undefined;
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -116,7 +114,6 @@ type CombinedProps = WithSnackbarProps &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
-  userSSHKeysProps &
   DispatchProps &
   LabelProps &
   FeatureFlagConsumerProps &
@@ -139,6 +136,7 @@ const defaultState: State = {
   selectedRegionID: undefined,
   selectedTypeID: undefined,
   tags: [],
+  authorized_users: [],
   udfs: undefined,
   showAgreement: false,
   signedAgreement: false,
@@ -148,6 +146,7 @@ const defaultState: State = {
   attachedVLANLabel: '',
   vlanIPAMAddress: null,
   showApiAwarenessModal: false,
+  userData: undefined,
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -195,7 +194,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     selectedRegionID: this.params.regionID,
     selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
-    // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean
+    // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean. UPDATE 3/16/23 lol what
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined
       : +this.params.linodeID,
@@ -260,7 +259,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   }
 
   clearCreationState = () => {
-    this.props.resetSSHKeys();
     this.setState(defaultState);
   };
 
@@ -386,6 +384,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   setTags = (tags: Tag[]) => this.setState({ tags });
 
   setUDFs = (udfs: any) => this.setState({ udfs });
+
+  setAuthorizedUsers = (usernames: string[]) =>
+    this.setState({ authorized_users: usernames });
+
+  setUserData = (userData: string) => this.setState({ userData });
 
   handleVLANChange = (updatedInterface: Interface) => {
     this.setState({
@@ -634,7 +637,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   checkValidation: LinodeCreateValidation = (payload) => {
     try {
       CreateLinodeSchema.validateSync(payload, { abortEarly: false });
-      //reset errors to default state
+      // reset errors to default state
       this.setState({ errors: undefined, showApiAwarenessModal: true });
     } catch (error) {
       const processedErrors = convertYupToLinodeErrors(error);
@@ -655,19 +658,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   getTypeInfo = (): TypeInfo => {
     const { selectedTypeID } = this.state;
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
+    const selectedType = this.props.typesData?.find(
+      (type) => type.id === selectedTypeID
+    );
     return this.reshapeTypeInfo(
-      this.props.typesData!.find((type) => type.id === selectedTypeID)
+      selectedType ? extendType(selectedType) : undefined
     );
   };
 
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     return (
       type && {
-        title: type.label,
+        title: type.formattedLabel,
         details: `$${type.price.monthly}/month`,
         monthly: type.price.monthly ?? 0,
         hourly: type.price.hourly ?? 0,
@@ -722,13 +724,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
 
+    const extendedTypeData = typesData?.map(extendType);
+
     const userCannotCreateLinode =
       Boolean(profile.data?.restricted) &&
       !hasGrant('add_linodes', grants.data);
 
     // If the selected type is a GPU plan, only display region
     // options that support GPUs.
-    const selectedType = this.props.typesData?.find(
+    const selectedType = extendedTypeData?.find(
       (thisType) => thisType.id === this.state.selectedTypeID
     );
 
@@ -785,7 +789,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             setBackupID={this.setBackupID}
             regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
-            typesData={typesData}
+            typesData={extendedTypeData}
             vlanLabel={this.state.attachedVLANLabel}
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}
@@ -793,6 +797,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={getAccountBackupsEnabled()}
+            setAuthorizedUsers={this.setAuthorizedUsers}
+            updateUserData={this.setUserData}
             {...restOfProps}
             {...restOfState}
           />
@@ -828,7 +834,6 @@ export default recompose<CombinedProps, {}>(
   withLinodeActions,
   connected,
   withSnackbar,
-  userSSHKeyHoc,
   withLabelGenerator,
   withFlags,
   withProfile,

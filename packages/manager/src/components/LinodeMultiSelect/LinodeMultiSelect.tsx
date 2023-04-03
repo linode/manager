@@ -1,164 +1,133 @@
 import * as React from 'react';
-import Select, { BaseSelectProps, Item } from 'src/components/EnhancedSelect';
-import { useAllLinodesQuery } from 'src/queries/linodes';
-import { Linode } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
+import { useInfiniteLinodesQuery } from 'src/queries/linodes';
+import Autocomplete from '@mui/material/Autocomplete';
+import Popper from '@mui/material/Popper';
+import TextField from 'src/components/TextField';
+import { isNumeric } from 'src/utilities/stringUtils';
 
-export interface Props extends Partial<BaseSelectProps> {
-  selectedLinodes?: number[];
+export interface Props {
   allowedRegions?: string[];
   filteredLinodes?: number[];
   helperText?: string;
-  showAllOption?: boolean;
-  handleChange: (selected: number[]) => void;
+  onChange: (selected: number[]) => void;
+  value: number[];
+  errorText?: string;
+  disabled?: boolean;
+  onBlur?: (e: React.FocusEvent) => void;
 }
 
-export const LinodeMultiSelect: React.FC<Props> = (props) => {
+const LinodeMultiSelect = (props: Props) => {
   const {
     allowedRegions,
     errorText,
     filteredLinodes,
-    selectedLinodes,
     helperText,
-    handleChange,
-    showAllOption,
-    ...selectProps
+    onChange,
+    value,
+    disabled,
+    onBlur,
   } = props;
 
-  const { data, isLoading, error } = useAllLinodesQuery();
+  const [inputValue, setInputValue] = React.useState<string>('');
 
-  const linodes = data ?? [];
+  const isInputValueNumeric = isNumeric(inputValue);
 
-  const _filteredLinodes = filteredLinodes ?? [];
+  const searchFilter = inputValue
+    ? {
+        '+or': isInputValueNumeric
+          ? [
+              { id: Number(inputValue) },
+              { label: { '+contains': inputValue } },
+              { tags: { '+contains': inputValue } },
+            ]
+          : [
+              { label: { '+contains': inputValue } },
+              { tags: { '+contains': inputValue } },
+            ],
+      }
+    : {};
 
-  const filteredLinodesData = React.useMemo(
-    () =>
-      linodes.filter(
-        (thisLinode) =>
-          !_filteredLinodes.includes(thisLinode.id) &&
-          // If allowedRegions wasn't passed, don't use region as a filter.
-          (!allowedRegions || allowedRegions.includes(thisLinode.region))
-      ),
-    [allowedRegions, _filteredLinodes, linodes]
-  );
+  const linodesFilter =
+    filteredLinodes && filteredLinodes.length > 0
+      ? { '+and': filteredLinodes.map((id) => ({ id: { '+neq': id } })) }
+      : {};
 
-  const linodeError = error?.[0]?.reason;
+  const regionFilter = allowedRegions
+    ? {
+        '+and': allowedRegions.map((regionId) => ({
+          region: regionId,
+        })),
+      }
+    : {};
 
-  const [selectAll, toggleSelectAll] = React.useState<boolean>(false);
+  const {
+    data,
+    isLoading,
+    error,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteLinodesQuery({
+    ...searchFilter,
+    ...regionFilter,
+    ...linodesFilter,
+  });
 
-  /**
-   * Update the current list of selected Linodes.
-   *
-   * This will call whatever state management function is passed as the
-   * handleChange prop.
-   *
-   * - If the user has clicked the "All Linodes" option, we will short circuit
-   * and call the handler with a list of all Linodes.
-   *
-   * - In some cases, such as Firewall devices, we don't want to submit with
-   * all Linodes even if the user has selected this option, since the API will
-   * return an error if you try to re-add an existing Device. We provide the
-   * filteredLinodes prop to allow this. When selectAll is true and filteredLinodes
-   * is provided, we will call the handler with a list of all Linodes *except* those
-   * in the filteredLinodes array.
-   *
-   */
-  const handleSelectLinodes = (selectedLinodes: Item<number>[]) => {
-    const hasSelectedAll =
-      !!showAllOption && userSelectedAllLinodes(selectedLinodes);
-    toggleSelectAll(hasSelectedAll);
-    const newSelectedLinodes = hasSelectedAll
-      ? filteredLinodesData.map((eachLinode) => eachLinode.id)
-      : selectedLinodes.map((eachValue) => eachValue.value);
-    handleChange(newSelectedLinodes);
-  };
+  const options = data?.pages
+    .flatMap((page) => page.data)
+    .map(({ id, label }) => ({ id, label }));
 
-  const value = selectedLinodes
-    ? selectedLinodes.map((thisLinodeID) => {
-        const thisLinode = linodes.find(
-          (eachLinode) => eachLinode.id === thisLinodeID
-        );
-        return {
-          value: thisLinodeID,
-          label: thisLinode?.label ?? thisLinodeID,
-        };
-      })
-    : undefined;
+  const selectedLinodeOptions =
+    options?.filter((option) => value.includes(option.id)) ?? [];
 
   return (
-    <Select
-      label="Linodes"
-      name="linodes"
-      value={value}
-      isLoading={isLoading}
-      errorText={linodeError || errorText}
-      isMulti
-      options={generateOptions(
-        selectAll,
-        !!showAllOption,
-        filteredLinodesData,
-        error
-      )}
-      noOptionsMessage={() =>
-        filteredLinodesData.length === 0 || selectAll
-          ? 'No Linodes available.'
-          : 'No results.'
-      }
-      onChange={handleSelectLinodes}
-      placeholder="Select a Linode or type to search..."
-      aria-label="Select one or more Linodes"
-      textFieldProps={{
-        helperTextPosition: 'top',
-        helperText,
+    <Autocomplete
+      multiple
+      clearOnBlur
+      onBlur={(e) => {
+        onBlur?.(e);
+        setInputValue('');
       }}
-      hideSelectedOptions={true}
-      {...selectProps}
+      disabled={disabled}
+      loading={isLoading}
+      options={options ?? []}
+      value={selectedLinodeOptions}
+      filterOptions={(options) => options}
+      onChange={(event, value) => {
+        onChange(value.map((option) => option.id));
+      }}
+      inputValue={inputValue}
+      onInputChange={(event, value, reason) => {
+        if (reason !== 'reset') {
+          setInputValue(value);
+        }
+      }}
+      PopperComponent={(popperProps) => (
+        <Popper {...popperProps} data-qa-autocomplete-popper />
+      )}
+      ListboxProps={{
+        onScroll: (event: React.SyntheticEvent) => {
+          const listboxNode = event.currentTarget;
+          if (
+            listboxNode.scrollTop + listboxNode.clientHeight >=
+              listboxNode.scrollHeight &&
+            hasNextPage
+          ) {
+            fetchNextPage();
+          }
+        },
+      }}
+      renderInput={(params) => (
+        <TextField
+          label="Linodes"
+          placeholder="Select Linodes"
+          loading={isLoading}
+          errorText={error?.[0].reason ?? errorText}
+          helperText={helperText}
+          {...params}
+        />
+      )}
     />
   );
 };
-
-export const generateOptions = (
-  allLinodesAreSelected: boolean,
-  showAllOption: boolean,
-  linodesData: Linode[],
-  linodeError: APIError[] | null | undefined
-): Item<any>[] => {
-  /** if there's an error, don't show any options */
-  if (linodeError) {
-    return [];
-  }
-
-  if (linodesData.length === 0) {
-    return [];
-  }
-
-  const items = linodesData.map((eachLinode) => ({
-    value: eachLinode.id,
-    label: eachLinode.label,
-  }));
-
-  /** If there's no show all, just return the list of Items. */
-  if (!showAllOption) {
-    return items;
-  }
-
-  return allLinodesAreSelected
-    ? [
-        {
-          value: 'ALL',
-          label: 'All Linodes',
-        },
-      ]
-    : [
-        {
-          value: 'ALL',
-          label: 'All Linodes',
-        },
-        ...items,
-      ];
-};
-
-export const userSelectedAllLinodes = (values: Item<string | number>[]) =>
-  values.some((eachValue) => eachValue.value === 'ALL');
 
 export default React.memo(LinodeMultiSelect);

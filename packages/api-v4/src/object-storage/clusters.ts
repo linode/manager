@@ -1,6 +1,6 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { ObjectStorageCluster } from './types';
 
 /**
@@ -8,7 +8,7 @@ import { ObjectStorageCluster } from './types';
  *
  * Gets a list of available clusters
  */
-export const getClusters = (params?: any, filters?: any) =>
+export const getClusters = (params?: Params, filters?: Filter) =>
   Request<Page<ObjectStorageCluster>>(
     setMethod('GET'),
     setParams(params),

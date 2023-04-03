@@ -30,8 +30,8 @@ export interface ListProps extends BaseProps {
   RowComponent: React.ComponentType;
   headers: HeaderCell[];
   initialOrder?: {
-    order: OrderByProps['order'];
-    orderBy: OrderByProps['orderBy'];
+    order: OrderByProps<Entity>['order'];
+    orderBy: OrderByProps<Entity>['orderBy'];
   };
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;

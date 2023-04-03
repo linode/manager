@@ -7,7 +7,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage } from '../types';
+import { Filter, Params, ResourcePage } from '../types';
 import {
   ActiveLongviewPlan,
   LongviewClient,
@@ -28,7 +28,7 @@ export const createLongviewClient = (label?: string) => {
   );
 };
 
-export const getLongviewClients = (params?: any, filter?: any) =>
+export const getLongviewClients = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<LongviewClient>>(
     setURL(`${API_ROOT}/longview/clients`),
     setParams(params),

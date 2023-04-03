@@ -6,10 +6,10 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { Tag, TagRequest } from './types';
 
-export const getTags = (params?: any, filter?: any) =>
+export const getTags = (params?: Params, filter?: Filter) =>
   Request<Page<Tag>>(
     setURL(`${API_ROOT}/tags`),
     setMethod('GET'),

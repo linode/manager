@@ -10,7 +10,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   CreateNodeBalancerPayload,
   NodeBalancer,
@@ -23,7 +23,7 @@ import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
  *
  * Returns a paginated list of NodeBalancers on your account.
  */
-export const getNodeBalancers = (params?: any, filters?: any) =>
+export const getNodeBalancers = (params?: Params, filters?: Filter) =>
   Request<Page<NodeBalancer>>(
     setURL(`${API_ROOT}/nodebalancers`),
     setMethod('GET'),

@@ -12,7 +12,6 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
@@ -356,7 +355,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 }
 
 export default compose(
-  setDocs(NodeBalancerDetail.docs),
   withFeatureFlagConsumerContainer,
   withSnackbar,
   withNodeBalancerActions,

@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
@@ -13,8 +14,8 @@ import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
   getLongviewClients: (
-    params?: any,
-    filters?: any
+    params?: Params,
+    filters?: Filter
   ) => Promise<GetAllData<LongviewClient>>;
   createLongviewClient: (label?: string) => Promise<LongviewClient>;
   deleteLongviewClient: (id: number) => Promise<{}>;

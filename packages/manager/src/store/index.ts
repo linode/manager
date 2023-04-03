@@ -24,14 +24,6 @@ import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
 } from 'src/store/events/event.reducer';
-import firewallDevices, {
-  defaultState as defaultFirewallDevicesState,
-  State as FirewallDevicesState,
-} from 'src/store/firewalls/devices.reducer';
-import firewalls, {
-  defaultState as defaultFirewallState,
-  State as FirewallState,
-} from 'src/store/firewalls/firewalls.reducer';
 import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
@@ -54,10 +46,6 @@ import linodes, {
   defaultState as defaultLinodesState,
   State as LinodesState,
 } from 'src/store/linodes/linodes.reducer';
-import types, {
-  defaultState as defaultTypesState,
-  State as TypesState,
-} from 'src/store/linodeType/linodeType.reducer';
 import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   defaultState as defaultLongviewState,
@@ -103,10 +91,6 @@ import mockFeatureFlags, {
 } from './mockFeatureFlags';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
-import notifications, {
-  defaultState as notificationsDefaultState,
-  State as NotificationsState,
-} from './notification/notification.reducer';
 import pendingUpload, {
   defaultState as pendingUploadState,
   State as PendingUploadState,
@@ -126,8 +110,6 @@ const __resourcesDefaultState = {
   linodeDisks: defaultLinodeDisksState,
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancers: defaultNodeBalancerState,
-  notifications: notificationsDefaultState,
-  types: defaultTypesState,
 };
 
 export interface ResourcesState {
@@ -137,8 +119,6 @@ export interface ResourcesState {
   linodeDisks: LinodeDisksState;
   nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancers: NodeBalancersState;
-  notifications: NotificationsState;
-  types: TypesState;
 }
 
 export interface ApplicationState {
@@ -155,8 +135,6 @@ export interface ApplicationState {
   pendingUpload: PendingUploadState;
   initialLoad: InitialLoadState;
   featureFlagsLoad: FeatureFlagsLoadState;
-  firewalls: FirewallState;
-  firewallDevices: FirewallDevicesState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
@@ -177,8 +155,6 @@ export const defaultState: ApplicationState = {
   pendingUpload: pendingUploadState,
   initialLoad: initialLoadState,
   featureFlagsLoad: featureFlagsLoadState,
-  firewalls: defaultFirewallState,
-  firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
@@ -195,8 +171,6 @@ const __resources = combineReducers({
   linodeDisks,
   nodeBalancers,
   nodeBalancerConfigs,
-  notifications,
-  types,
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -213,8 +187,6 @@ const reducers = combineReducers<ApplicationState>({
   pendingUpload,
   initialLoad,
   featureFlagsLoad,
-  firewalls,
-  firewallDevices,
   globalErrors,
   longviewClients: longview,
   longviewStats,

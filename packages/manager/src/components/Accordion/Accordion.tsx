@@ -7,13 +7,13 @@ import AccordionDetails, {
 import AccordionSummary, {
   AccordionSummaryProps,
 } from 'src/components/core/AccordionSummary';
-import { makeStyles } from '@mui/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
+import { makeStyles } from 'tss-react/mui';
 import Notice from '../Notice';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   itemCount: {
     display: 'flex',
     alignItems: 'center',
@@ -38,27 +38,28 @@ export interface Props extends AccordionProps {
   success?: string;
   loading?: boolean;
   actions?: (props: AccordionProps) => null | JSX.Element;
+  expandIconClassNames?: string;
   summaryProps?: AccordionSummaryProps;
   headingProps?: TypographyProps;
   detailProps?: AccordionDetailsProps;
   headingNumberCount?: number;
 }
 
-type CombinedProps = Props;
-
-export const Accordion: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const Accordion = (props: Props) => {
+  const { classes } = useStyles();
 
   const {
     summaryProps,
     detailProps,
     headingProps,
+    heading,
     actions,
     success,
     warning,
     error,
     defaultExpanded,
     headingNumberCount,
+    expandIconClassNames,
     ...accordionProps
   } = props;
 
@@ -74,16 +75,18 @@ export const Accordion: React.FC<CombinedProps> = (props) => {
     <_Accordion
       defaultExpanded={defaultExpanded}
       {...accordionProps}
-      data-qa-panel
+      data-qa-panel={heading}
     >
       <AccordionSummary
         onClick={handleClick}
-        expandIcon={<KeyboardArrowDown className="caret" />}
+        expandIcon={
+          <KeyboardArrowDown className={`caret ${expandIconClassNames}`} />
+        }
         {...summaryProps}
-        data-qa-panel-summary={props.heading}
+        data-qa-panel-summary={heading}
       >
         <Typography {...headingProps} variant="h3" data-qa-panel-subheading>
-          {props.heading}
+          {heading}
         </Typography>
         {headingNumberCount && headingNumberCount > 0 ? (
           <span className={classes.itemCount}>{headingNumberCount}</span>
@@ -91,7 +94,7 @@ export const Accordion: React.FC<CombinedProps> = (props) => {
       </AccordionSummary>
       <AccordionDetails {...detailProps} data-qa-panel-details>
         <Grid container>
-          {notice && (
+          {notice ? (
             <Grid item xs={12}>
               <Notice
                 data-qa-notice
@@ -102,13 +105,13 @@ export const Accordion: React.FC<CombinedProps> = (props) => {
                 spacingBottom={0}
               />
             </Grid>
-          )}
+          ) : null}
           <Grid item xs={12} data-qa-grid-item>
             {props.children}
           </Grid>
         </Grid>
       </AccordionDetails>
-      {actions && actions(accordionProps)}
+      {actions ? actions(accordionProps) : null}
     </_Accordion>
   );
 };

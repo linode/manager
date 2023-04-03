@@ -15,7 +15,7 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
-import { queryKey } from 'src/queries/accountUsers';
+import { queryKey } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -133,7 +133,7 @@ const UserDetail: React.FC = () => {
         if (profile?.username === originalUsername) {
           refreshProfile();
         } else {
-          queryClient.invalidateQueries(queryKey);
+          queryClient.invalidateQueries([queryKey, 'users']);
         }
 
         history.replace(`/account/users/${user.username}`, {

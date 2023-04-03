@@ -9,7 +9,7 @@ export const getEngineFromDatabaseEntityURL = (url: string) => {
   return url.match(/databases\/(\w*)\/instances/i)?.[1];
 };
 
-export default (
+export const getLinkForEvent = (
   action: EventAction,
   entity: null | Entity,
   deleted: undefined | string | boolean
@@ -18,8 +18,8 @@ export default (
   const id = entity?.id;
   const label = entity?.label;
 
-  if (action.match(/community/gi)) {
-    return entity!.url;
+  if (action.startsWith('community')) {
+    return entity?.url;
   }
 
   if (['disk_delete', 'linode_config_delete'].includes(action)) {
@@ -104,7 +104,7 @@ export default (
 
     case 'database':
       return `/databases/${getEngineFromDatabaseEntityURL(
-        entity!.url
+        entity?.url
       )}/${id}/summary`;
 
     case 'user':

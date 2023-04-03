@@ -1,23 +1,37 @@
-import classNames from 'classnames';
 import countryData from 'country-region-data';
 import * as React from 'react';
-import {
-  RouteComponentProps,
-  useHistory,
-  useRouteMatch,
-} from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import styled from 'src/containers/SummaryPanels.styles';
 import BillingContactDrawer from './EditBillingContactDrawer';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  ...styled(theme),
+import { makeStyles } from 'tss-react/mui';
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  summarySection: {
+    padding: theme.spacing(2.5),
+    marginBottom: theme.spacing(2),
+    minHeight: '160px',
+    height: '93%',
+  },
+  section: {
+    marginBottom: theme.spacing(1),
+    '& .dif': {
+      position: 'relative',
+      width: 'auto',
+      '& .chip': {
+        position: 'absolute',
+        top: '-4px',
+        right: -10,
+      },
+    },
+  },
   wordWrap: {
     wordBreak: 'break-all',
   },
@@ -51,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props extends Pick<RouteComponentProps, 'history'> {
+interface Props {
   company: string;
   firstName: string;
   lastName: string;
@@ -66,9 +80,7 @@ interface Props extends Pick<RouteComponentProps, 'history'> {
   taxId: string;
 }
 
-type CombinedProps = Props;
-
-const ContactInformation: React.FC<CombinedProps> = (props) => {
+const ContactInformation = (props: Props) => {
   const {
     company,
     firstName,
@@ -84,7 +96,7 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
     taxId,
   } = props;
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const history = useHistory<{
     contactDrawerOpen?: boolean;
@@ -204,7 +216,7 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
 
           <Grid
             item
-            className={classNames({
+            className={cx({
               [classes.switchWrapper]: true,
               [classes.switchWrapperFlex]:
                 taxId !== undefined && taxId !== null && taxId !== '',
@@ -245,4 +257,4 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(ContactInformation);
+export default React.memo(ContactInformation);

@@ -1,14 +1,14 @@
 import { getTypeInfo } from './typesHelpers';
-
-import { LinodeType } from '@linode/api-v4';
 import types from 'src/utilities/types.json';
+import { extendType } from './extendType';
+import { LinodeType } from '@linode/api-v4';
 
-const _types = types.data as LinodeType[];
+const _types = (types.data as LinodeType[]).map(extendType);
 
 describe('getTypeInfo helper function', () => {
   it('should return a matching type', () => {
-    const type = types.data[0];
-    expect(getTypeInfo(type.id, _types)).toBe(type);
+    const type = extendType(types.data[0] as LinodeType);
+    expect(getTypeInfo(type.id, _types)).toEqual(type);
   });
   it('should return undefined if there is no matching type', () => {
     expect(getTypeInfo('linode-standard-100T', _types)).toBeUndefined();

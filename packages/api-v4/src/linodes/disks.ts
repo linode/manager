@@ -11,7 +11,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { Disk, LinodeDiskCreationData } from './types';
 
 /**
@@ -21,7 +21,11 @@ import { Disk, LinodeDiskCreationData } from './types';
  *
  * @param linodeId { number } The id of the Linode to list disks for.
  */
-export const getLinodeDisks = (linodeId: number, params?: any, filter?: any) =>
+export const getLinodeDisks = (
+  linodeId: number,
+  params?: Params,
+  filter?: Filter
+) =>
   Request<Page<Disk>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks`),
     setMethod('GET'),

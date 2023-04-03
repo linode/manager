@@ -1,21 +1,20 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import SupportLink from 'src/components/SupportLink';
-import { Dispatch } from 'src/hooks/types';
 import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
-import { requestNotifications } from 'src/store/notification/notification.requests';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
+import { useQueryClient } from 'react-query';
+import { queryKey } from 'src/queries/accountNotifications';
 
-const ComplianceUpdateModal: React.FC<{}> = () => {
+const ComplianceUpdateModal = () => {
   const [error, setError] = React.useState('');
   const [checked, setChecked] = React.useState(false);
-  const dispatch: Dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
@@ -30,7 +29,7 @@ const ComplianceUpdateModal: React.FC<{}> = () => {
       .then(() => {
         complianceModelContext.close();
         // Re-request notifications so the GDPR notification goes away.
-        dispatch(requestNotifications());
+        queryClient.invalidateQueries(queryKey);
       })
       .catch((err) => {
         const errorMessage = getErrorStringOrDefault(

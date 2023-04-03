@@ -4,9 +4,9 @@ import {
   updateAccountInfo,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useProfile } from 'src/queries/profile';
-import { mutationHandlers, queryPresets } from './base';
+import { queryPresets } from './base';
 
 export const queryKey = 'account';
 
@@ -21,7 +21,11 @@ export const useAccount = () => {
 };
 
 export const useMutateAccount = () => {
-  return useMutation<Account, APIError[], Partial<Account>>((data) => {
-    return updateAccountInfo(data);
-  }, mutationHandlers(queryKey));
+  const queryClient = useQueryClient();
+
+  return useMutation<Account, APIError[], Partial<Account>>(updateAccountInfo, {
+    onSuccess(account) {
+      queryClient.setQueryData(queryKey, account);
+    },
+  });
 };

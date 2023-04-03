@@ -7,7 +7,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   KubeNodePoolResponse,
   CreateNodePoolData,
@@ -19,7 +19,11 @@ import {
  *
  * Gets a list of all node pools associated with the specified cluster
  */
-export const getNodePools = (clusterID: number, params?: any, filters?: any) =>
+export const getNodePools = (
+  clusterID: number,
+  params?: Params,
+  filters?: Filter
+) =>
   Request<Page<KubeNodePoolResponse>>(
     setMethod('GET'),
     setParams(params),

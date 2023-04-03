@@ -1,6 +1,6 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage } from '../types';
+import { Filter, Params, ResourcePage } from '../types';
 import { AccountLogin } from './types';
 
 /**
@@ -9,7 +9,7 @@ import { AccountLogin } from './types';
  * Retrieve a paginated list of logins on your account.
  *
  */
-export const getAccountLogins = (params?: any, filter?: any) =>
+export const getAccountLogins = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<AccountLogin>>(
     setURL(`${API_ROOT}/account/logins`),
     setMethod('GET'),

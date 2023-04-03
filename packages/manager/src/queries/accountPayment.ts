@@ -4,7 +4,12 @@ import {
   getPaymentMethods,
   PaymentMethod,
 } from '@linode/api-v4/lib/account';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { useGrants } from 'src/queries/profile';
 import { getAll } from 'src/utilities/getAll';
@@ -12,7 +17,10 @@ import { queryPresets } from './base';
 
 export const queryKey = 'account-payment-methods';
 
-export const usePaymentMethodsQuery = (params: any = {}, filter: any = {}) => {
+export const usePaymentMethodsQuery = (
+  params: Params = {},
+  filter: Filter = {}
+) => {
   return useQuery<ResourcePage<PaymentMethod>, APIError[]>(
     [queryKey, params, filter],
     () => getPaymentMethods(params),

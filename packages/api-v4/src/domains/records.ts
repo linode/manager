@@ -4,7 +4,7 @@ import {
 } from '@linode/validation/lib/records.schema';
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setParams, setURL } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Params, ResourcePage as Page } from '../types';
 import { DomainRecord } from './types';
 
 /**
@@ -13,7 +13,7 @@ import { DomainRecord } from './types';
  * @param domainId { number } The ID of the Domain we are accessing Records for.
  * @param params { object }
  */
-export const getDomainRecords = (domainId: number, params?: any) =>
+export const getDomainRecords = (domainId: number, params?: Params) =>
   Request<Page<DomainRecord>>(
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setParams(params),

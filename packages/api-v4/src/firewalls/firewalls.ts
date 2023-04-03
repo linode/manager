@@ -6,7 +6,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   CreateFirewallSchema,
   FirewallDeviceSchema,
@@ -21,18 +21,16 @@ import {
   UpdateFirewallPayload,
 } from './types';
 
-// FIREWALLS
-
 /**
  * getFirewalls
  *
  * Returns a paginated list of all Cloud Firewalls on this account.
  */
-export const getFirewalls = (params?: any, filters?: any) =>
+export const getFirewalls = (params?: Params, filter?: Filter) =>
   Request<Page<Firewall>>(
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
+    setXFilter(filter),
     setURL(`${BETA_API_ROOT}/networking/firewalls`)
   );
 
@@ -125,13 +123,13 @@ export const deleteFirewall = (firewallID: number) =>
  */
 export const getFirewallRules = (
   firewallID: number,
-  params?: any,
-  filters?: any
+  params?: Params,
+  filter?: Filter
 ) =>
   Request<Page<FirewallRules>>(
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
+    setXFilter(filter),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/rules`)
   );
 
@@ -158,13 +156,13 @@ export const updateFirewallRules = (firewallID: number, data: FirewallRules) =>
  */
 export const getFirewallDevices = (
   firewallID: number,
-  params?: any,
-  filters?: any
+  params?: Params,
+  filter?: Filter
 ) =>
   Request<Page<FirewallDevice>>(
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
+    setXFilter(filter),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices`)
   );
 

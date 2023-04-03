@@ -2,6 +2,7 @@ import * as Factory from 'factory.ts';
 import {
   Profile,
   SecurityQuestionsData,
+  SSHKey,
   UserPreferences,
 } from '@linode/api-v4/lib/profile';
 
@@ -148,3 +149,11 @@ export const userPreferencesFactory = Factory.Sync.makeFactory<UserPreferences>(
     },
   }
 );
+
+export const sshKeyFactory = Factory.Sync.makeFactory<SSHKey>({
+  id: Factory.each((id) => id),
+  label: Factory.each((id) => `ssh-key-${id}`),
+  ssh_key:
+    'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6p4bIK6Cfhy6BLQE7CUcBw6VNxibMsq+v7Y09aLcwkJu7rE7RzgHFwnw09hb1TRI9mZmb/mQaYB44WoA9NK2UMXjK4OXP+vFTk//4M9TIxqKs1oKzoOtZk/Q99gW7bIuVkax3eH4HocZ09IeF1qzM3ff0mY64hy+hD2bd5eEF6oSZZnM8WZqDbTP6jYb/LO0geW18vsueD7+DgEVUODYh7FkQ/HCDyqcGlWvDoJho62u/heOiaZQp25puTCWbNxhSck4GTRIU25febH2xX2OxRp/NRzchS4HvK/iC/mNaLE23gDBN73j/JS+oWwcu7zZk/VN+QUHCPw4fMI6wJdnl',
+  created: '2021-05-21T18:44:02',
+});

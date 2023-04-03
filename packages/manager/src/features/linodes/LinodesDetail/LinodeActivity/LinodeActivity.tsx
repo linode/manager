@@ -1,3 +1,4 @@
+import { Params } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import EventsLanding from 'src/features/Events/EventsLanding';
@@ -12,7 +13,7 @@ export const LinodeActivity: React.FC<CombinedProps> = (props) => {
   return (
     <EventsLanding
       entityId={linodeID}
-      getEventsRequest={(params: any = {}) =>
+      getEventsRequest={(params: Params = {}) =>
         getEventsForEntity(params, 'linode', props.linodeID)
       }
       errorMessage="There was an error retrieving activity for this Linode."

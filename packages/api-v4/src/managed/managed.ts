@@ -14,7 +14,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   ContactPayload,
   CredentialPayload,
@@ -52,7 +52,7 @@ export const enableManaged = () =>
  *
  * Returns a paginated list of Managed Services on your account.
  */
-export const getServices = (params?: any, filters?: any) =>
+export const getServices = (params?: Params, filters?: Filter) =>
   Request<Page<ManagedServiceMonitor>>(
     setMethod('GET'),
     setParams(params),
@@ -98,7 +98,7 @@ export const deleteServiceMonitor = (serviceID: number) =>
  *
  * Returns a paginated list of Managed Settings for your Linodes. There will be one entry per Linode on your Account.
  */
-export const getLinodeSettings = (params?: any, filters?: any) =>
+export const getLinodeSettings = (params?: Params, filters?: Filter) =>
   Request<Page<ManagedLinodeSetting>>(
     setMethod('GET'),
     setParams(params),
@@ -138,7 +138,7 @@ export const updateServiceMonitor = (
  *
  * Returns a paginated list of Managed Credentials for your account.
  */
-export const getCredentials = (params?: any, filters?: any) =>
+export const getCredentials = (params?: Params, filters?: Filter) =>
   Request<Page<ManagedCredential>>(
     setMethod('GET'),
     setParams(params),
@@ -234,7 +234,7 @@ export const updateLinodeSettings = (
  *
  * Returns a paginated list of Managed Contacts on your Account.
  */
-export const getManagedContacts = (params?: any, filters?: any) =>
+export const getManagedContacts = (params?: Params, filters?: Filter) =>
   Request<Page<ManagedContact>>(
     setMethod('GET'),
     setParams(params),

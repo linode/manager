@@ -1,6 +1,6 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import { getStackScripts, StackScript } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { StackScriptsRequest } from './types';
 
 export type StackScriptCategory = 'account' | 'community';
@@ -119,6 +119,15 @@ export const baseApps = {
   '1051711': 'UniFi Network Application',
   '1051714': 'Microweber',
   '1096122': 'Mastodon',
+  '1102900': 'Apache Airflow',
+  '1102902': 'HaltDOS Community WAF',
+  '1102907': 'ONLYOFFICE Docs',
+  '1102906': 'Passky',
+  '1102904': 'Superinsight',
+  '1088136': 'Galera Cluster',
+  '1067004': 'MongoDB Cluster',
+  '1068726': 'PostgreSQL Cluster',
+  '1132204': 'Redis Sentinel Cluster',
 };
 
 const oneClickFilter = [
@@ -135,13 +144,13 @@ const oneClickFilter = [
   { '+order_by': 'ordinal' },
 ];
 
-export const getOneClickApps = (params?: any) =>
+export const getOneClickApps = (params?: Params) =>
   getStackScripts(params, oneClickFilter);
 
 export const getStackScriptsByUser: StackScriptsRequest = (
   username: string,
-  params?: any,
-  filter?: any
+  params?: Params,
+  filter?: Filter
 ) =>
   getStackScripts(params, {
     ...filter,
@@ -149,8 +158,8 @@ export const getStackScriptsByUser: StackScriptsRequest = (
   });
 
 export const getMineAndAccountStackScripts: StackScriptsRequest = (
-  params?: any,
-  filter?: any
+  params?: Params,
+  filter?: Filter
 ) => {
   return getStackScripts(params, { ...filter, mine: true });
 };
@@ -160,8 +169,8 @@ export const getMineAndAccountStackScripts: StackScriptsRequest = (
  * and do not belong to any users on the current account
  */
 export const getCommunityStackscripts: StackScriptsRequest = (
-  params?: any,
-  filter?: any
+  params?: Params,
+  filter?: Filter
 ) => {
   return getStackScripts(params, {
     ...filter,

@@ -16,12 +16,12 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { withStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 import Toggle from 'src/components/Toggle';
@@ -49,54 +49,54 @@ type ClassNames =
   | 'section'
   | 'setAll';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    title: {
-      [theme.breakpoints.down('md')]: {
-        paddingLeft: theme.spacing(),
-      },
+const styles = (theme: Theme) => ({
+  title: {
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: theme.spacing(),
     },
-    toggle: {
-      marginRight: 3,
+  },
+  toggle: {
+    marginRight: 3,
+  },
+  unrestrictedRoot: {
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(3),
+  },
+  globalSection: {
+    marginTop: theme.spacing(2),
+  },
+  globalRow: {
+    padding: `${theme.spacing(1)} 0`,
+  },
+  section: {
+    marginTop: theme.spacing(2),
+    paddingBottom: 0,
+  },
+  setAll: {
+    '& > div': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
     },
-    unrestrictedRoot: {
-      marginTop: theme.spacing(2),
-      padding: theme.spacing(3),
+    '& label': {
+      marginTop: 6,
     },
-    globalSection: {
-      marginTop: theme.spacing(2),
+    '& .react-select__menu, & .input': {
+      width: 125,
+      right: 0,
+      marginLeft: theme.spacing(1),
+      textAlign: 'left' as const,
     },
-    globalRow: {
-      padding: `${theme.spacing(1)} 0`,
+    '& .react-select__menu-list': {
+      width: '100%',
     },
-    section: {
-      marginTop: theme.spacing(2),
-      paddingBottom: 0,
-    },
-    setAll: {
-      '& > div': {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-      },
-      '& label': {
-        marginTop: 6,
-      },
-      '& .react-select__menu, & .input': {
-        width: 125,
-        right: 0,
-        marginLeft: theme.spacing(1),
-        textAlign: 'left',
-      },
-      '& .react-select__menu-list': {
-        width: '100%',
-      },
-    },
-  });
+  },
+});
 
 interface Props {
   username?: string;
   currentUser?: string;
+  classes?: Partial<Record<ClassNames, string>>;
   clearNewUser: () => void;
 }
 
@@ -122,7 +122,7 @@ interface State {
   tabs?: string[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
+type CombinedProps = Props & WithSnackbarProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
@@ -389,7 +389,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderGlobalPerm = (perm: string, checked: boolean) => {
-    const { classes } = this.props;
+    const classes = withStyles.getClasses(this.props);
     const permDescriptionMap = {
       add_linodes: 'Can add Linodes to this account ($)',
       add_nodebalancers: 'Can add NodeBalancers to this account ($)',
@@ -405,7 +405,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_databases: 'Can add Databases to this account ($)',
     };
     return (
-      <Grid item key={perm} xs={12} sm={6} className="py0">
+      <Grid key={perm} xs={12} sm={6} className="py0">
         <FormControlLabel
           className={classes.globalRow}
           label={permDescriptionMap[perm]}
@@ -428,7 +428,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderBillingPerm = () => {
-    const { classes } = this.props;
+    const classes = withStyles.getClasses(this.props);
     const { grants } = this.state;
     if (!(grants && grants.global)) {
       return null;
@@ -436,14 +436,19 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.section}>
-        <Grid container className={classes.section} data-qa-billing-section>
-          <Grid item>
+        <Grid
+          spacing={2}
+          container
+          className={classes.section}
+          data-qa-billing-section
+        >
+          <Grid>
             <Typography variant="h3" data-qa-permissions-header="billing">
               Billing Access
             </Typography>
           </Grid>
         </Grid>
-        <Grid container className={classes.section}>
+        <Grid container spacing={2} className={classes.section}>
           <SelectionCard
             heading="None"
             subheadings={['The user cannot view any billing information.']}
@@ -477,7 +482,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     onCancel: () => void,
     loading: boolean
   ) => {
-    const { classes } = this.props;
+    const classes = withStyles.getClasses(this.props);
     return (
       <ActionsPanel
         display="flex"
@@ -501,7 +506,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderGlobalPerms = () => {
-    const { classes } = this.props;
+    const classes = withStyles.getClasses(this.props);
     const { grants, isSavingGlobal } = this.state;
     return (
       <Paper className={classes.globalSection} data-qa-global-section>
@@ -511,7 +516,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         >
           Global Permissions
         </Typography>
-        <Grid container className={classes.section}>
+        <Grid container className={classes.section} spacing={2}>
           {grants &&
             grants.global &&
             this.globalBooleanPerms
@@ -580,7 +585,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderSpecificPerms = () => {
-    const { classes } = this.props;
+    const classes = withStyles.getClasses(this.props);
     const { grants, setAllPerm, isSavingEntity } = this.state;
 
     const permOptions = [
@@ -596,7 +601,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item>
+          <Grid>
             <Typography
               variant="h2"
               data-qa-permissions-header="Specific Permissions"
@@ -605,7 +610,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
 
-          <Grid item style={{ marginTop: 5 }}>
+          <Grid style={{ marginTop: 5 }}>
             <Select
               options={permOptions}
               defaultValue={defaultPerm}
@@ -681,7 +686,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderUnrestricted = () => {
-    const { classes } = this.props;
+    const classes = withStyles.getClasses(this.props);
     /* TODO: render all permissions disabled with this message above */
     return (
       <Paper className={classes.unrestrictedRoot}>
@@ -693,7 +698,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   renderBody = () => {
-    const { classes, currentUser, username } = this.props;
+    const classes = withStyles.getClasses(this.props);
+    const { currentUser, username } = this.props;
     const { restricted, errors } = this.state;
     const hasErrorFor = getAPIErrorsFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
@@ -701,8 +707,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {generalError && <Notice error text={generalError} spacingTop={8} />}
-        <Grid container alignItems="center" style={{ width: 'auto' }}>
-          <Grid item>
+        <Grid
+          spacing={2}
+          container
+          alignItems="center"
+          style={{ width: 'auto' }}
+        >
+          <Grid>
             <Typography
               className={classes.title}
               variant="h2"
@@ -711,10 +722,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               Full Account Access:
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography variant="h2">{!restricted ? 'On' : 'Off'}</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Toggle
               tooltipText={
                 username === currentUser
@@ -746,6 +757,4 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default withSnackbar(styled(UserPermissions));
+export default withSnackbar(withStyles(UserPermissions, styles));

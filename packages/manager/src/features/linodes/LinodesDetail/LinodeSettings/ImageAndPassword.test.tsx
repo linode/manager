@@ -17,8 +17,8 @@ const props = {
   onImageChange: jest.fn(),
   password: '',
   onPasswordChange: jest.fn(),
-  userSSHKeys: [],
-  requestKeys: jest.fn(),
+  authorizedUsers: [],
+  setAuthorizedUsers: jest.fn(),
   permissions: null,
 };
 

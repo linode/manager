@@ -9,6 +9,7 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
+import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
@@ -24,8 +25,6 @@ import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -33,6 +32,7 @@ import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
@@ -45,6 +45,7 @@ import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/Fire
 import SelectPlanPanel, {
   PlanSelectionType,
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 import useFlags from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
@@ -61,10 +62,9 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
-import LandingHeader from 'src/components/LandingHeader';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   formControlLabel: {
     marginBottom: theme.spacing(),
   },
@@ -190,8 +190,8 @@ interface NodePricing {
   multi: DatabasePriceObject | undefined;
 }
 
-const DatabaseCreate: React.FC<{}> = () => {
-  const classes = useStyles();
+const DatabaseCreate = () => {
+  const { classes } = useStyles();
   const history = useHistory();
   const flags = useFlags();
 
@@ -340,7 +340,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       ] as [string, string];
       return {
         ...type,
-        label: formattedLabel,
+        formattedLabel,
         heading: formattedLabel,
         price,
         subHeadings,

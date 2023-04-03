@@ -10,7 +10,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { Config, LinodeConfigCreationData } from './types';
 
 /**
@@ -23,8 +23,8 @@ import { Config, LinodeConfigCreationData } from './types';
  */
 export const getLinodeConfigs = (
   linodeId: number,
-  params?: any,
-  filters?: any
+  params?: Params,
+  filters?: Filter
 ) =>
   Request<Page<Config>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs`),

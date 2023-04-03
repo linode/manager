@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators } from 'redux';
@@ -24,7 +25,7 @@ export interface WithNodeBalancerActions {
   nodeBalancerActions: {
     getAllNodeBalancersWithConfigs: () => Promise<void>;
     getNodeBalancerWithConfigs: (nodeBalancerID: number) => Promise<void>;
-    getNodeBalancerPage: (params?: any, filters?: any) => Promise<void>;
+    getNodeBalancerPage: (params?: Params, filters?: Filter) => Promise<void>;
     getAllNodeBalancers: () => Promise<NodeBalancer[]>;
     createNodeBalancer: (
       params: CreateNodeBalancerParams
@@ -50,7 +51,7 @@ export const withNodeBalancerActions = connect(
         },
         dispatch
       ),
-      getNodeBalancerPage: (params: any = {}, filters: any = {}) =>
+      getNodeBalancerPage: (params: Params = {}, filters: Filter = {}) =>
         dispatch(getNodeBalancersPage({ params, filters })),
       getNodeBalancerWithConfigs: (nodeBalancerId: number) =>
         dispatch(getNodeBalancerWithConfigs({ nodeBalancerId })),

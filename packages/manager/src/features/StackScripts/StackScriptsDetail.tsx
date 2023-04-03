@@ -5,13 +5,9 @@ import {
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
-import { StackScripts as StackScriptsDocs } from 'src/documentation';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -20,20 +16,14 @@ import {
   getStackScriptUrl,
 } from './stackScriptUtils';
 import LandingHeader from 'src/components/LandingHeader';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
-interface MatchProps {
-  stackScriptId: string;
-}
-
-type RouteProps = RouteComponentProps<MatchProps>;
-
-type CombinedProps = RouteProps & SetDocsProps;
-
-export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
+export const StackScriptsDetail = () => {
   const { _isRestrictedUser, _hasGrant, profile } = useAccountManagement();
   const { data: grants } = useGrants();
-  const { history } = props;
-  const { stackScriptId } = props.match.params;
+  const { stackScriptId } = useParams<{ stackScriptId: string }>();
+  const history = useHistory();
+  const location = useLocation();
 
   const [label, setLabel] = React.useState<string | undefined>('');
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -129,7 +119,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
         onButtonClick={handleCreateClick}
         docsLink="https://www.linode.com/docs/platform/stackscripts"
         breadcrumbProps={{
-          pathname: props.location.pathname,
+          pathname: location.pathname,
           labelOptions: { noCap: true },
           crumbOverrides: [
             {
@@ -157,6 +147,4 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(setDocs([StackScriptsDocs]));
-
-export default enhanced(StackScriptsDetail);
+export default StackScriptsDetail;

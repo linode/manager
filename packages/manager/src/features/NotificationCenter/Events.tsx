@@ -1,14 +1,11 @@
 import * as React from 'react';
-import NotificationSection, { NotificationItem } from './NotificationSection';
+import { useEventNotifications } from './NotificationData/useEventNotifications';
+import NotificationSection from './NotificationSection';
 
 const NUM_EVENTS_DISPLAY = 20;
 
-interface Props {
-  events: NotificationItem[];
-}
-
-export const Events: React.FC<Props> = (props) => {
-  const { events } = props;
+export const Events = () => {
+  const events = useEventNotifications();
 
   return (
     <NotificationSection

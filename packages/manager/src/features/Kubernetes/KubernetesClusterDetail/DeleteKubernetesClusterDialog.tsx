@@ -6,12 +6,8 @@ import Typography from 'src/components/core/Typography';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
 import { usePreferences } from 'src/queries/preferences';
-import {
-  useAllKubernetesNodePoolQuery,
-  useDeleteKubernetesClusterMutation,
-} from 'src/queries/kubernetes';
+import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
 import { KubeNodePoolResponse } from '@linode/api-v4';
-import CircleProgress from 'src/components/CircleProgress';
 import { useHistory } from 'react-router-dom';
 
 export interface Props {
@@ -30,10 +26,6 @@ export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
 export const DeleteKubernetesClusterDialog = (props: Props) => {
   const { clusterLabel, clusterId, open, onClose } = props;
 
-  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(clusterId, {
-    enabled: open,
-  });
-
   const {
     mutateAsync: deleteCluster,
     isLoading: isDeleting,
@@ -45,8 +37,6 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled =
     preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
-  const poolCount = pools?.length;
-  const linodeCount = getTotalLinodes(pools ?? []);
 
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
@@ -86,43 +76,35 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       actions={actions}
       error={error?.[0].reason}
     >
-      {isLoading ? (
-        <CircleProgress />
-      ) : (
-        <>
-          <Notice warning>
-            <Typography style={{ fontSize: '0.875rem' }}>
-              <strong>Warning:</strong> This cluster contains {` `}
-              <strong>
-                {poolCount === 1 ? `1 node pool ` : `${poolCount} node pools `}
-              </strong>
-              with a total of {` `}
-              <strong>
-                {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
-              </strong>
-              that will be deleted along with the cluster. Deleting a cluster is
-              permanent and can&rsquo;t be undone.
-            </Typography>
-          </Notice>
-          <TypeToConfirm
-            label="Cluster Name"
-            confirmationText={
-              <span>
-                To confirm deletion, type the name of the cluster (
-                <b>{clusterLabel}</b>) in the field below:
-              </span>
-            }
-            value={confirmText}
-            typographyStyle={{ marginTop: '10px' }}
-            data-testid={'dialog-confirm-text-input'}
-            expand
-            onChange={(input) => {
-              setConfirmText(input);
-            }}
-            visible={preferences?.type_to_confirm}
-          />
-        </>
-      )}
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong>
+          <ul style={{ paddingLeft: '15px', margin: '5px 0px 0px' }}>
+            <li>Deleting a cluster is permanent and can&apos;t be undone.</li>
+            <li>
+              Attached Block Storage Volumes or NodeBalancers must be deleted
+              separately.
+            </li>
+          </ul>
+        </Typography>
+      </Notice>
+      <TypeToConfirm
+        label="Cluster Name"
+        confirmationText={
+          <span>
+            To confirm deletion, type the name of the cluster (
+            <b>{clusterLabel}</b>) in the field below:
+          </span>
+        }
+        value={confirmText}
+        typographyStyle={{ marginTop: '10px' }}
+        data-testid={'dialog-confirm-text-input'}
+        expand
+        onChange={(input) => {
+          setConfirmText(input);
+        }}
+        visible={preferences?.type_to_confirm}
+      />
     </ConfirmationDialog>
   );
 };

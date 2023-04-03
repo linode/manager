@@ -1,7 +1,7 @@
 import { API_ROOT } from '../constants';
 import { NetworkUtilization, NetworkTransfer } from '../account/types';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { Kernel, LinodeType as Type, Stats } from './types';
 
 /**
@@ -79,7 +79,7 @@ export const getLinodeTransferByDate = (
  * This endpoint does not require authentication.
  *
  */
-export const getLinodeKernels = (params?: any, filter?: any) =>
+export const getLinodeKernels = (params?: Params, filter?: Filter) =>
   Request<Page<Kernel>>(
     setURL(`${API_ROOT}/linode/kernels`),
     setMethod('GET'),
@@ -108,7 +108,7 @@ export const getLinodeKernel = (kernelId: string) =>
  * Return a paginated list of available Linode types.
  * This endpoint does not require authentication.
  */
-export const getLinodeTypes = (params?: any) =>
+export const getLinodeTypes = (params?: Params) =>
   Request<Page<Type>>(
     setURL(`${API_ROOT}/linode/types`),
     setMethod('GET'),

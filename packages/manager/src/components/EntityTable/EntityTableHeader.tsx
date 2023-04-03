@@ -10,7 +10,7 @@ import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import { HeaderCell } from './types';
+import { Entity, HeaderCell } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props extends Omit<OrderByProps, 'data'> {
+interface Props extends Omit<OrderByProps<Entity>, 'data'> {
   headers: HeaderCell[];
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;
