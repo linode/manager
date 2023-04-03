@@ -3,10 +3,10 @@ import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { SxProps } from '@mui/system';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     color: '#888f91',
     '&:hover': {
@@ -36,7 +36,7 @@ type CombinedProps = Props;
 
 // @TODO: M3-5457 refactor this component to be generic
 const HelpIcon: React.FC<CombinedProps> = (props) => {
-  const styles = useStyles();
+  const { classes: styles } = useStyles();
 
   const {
     text,

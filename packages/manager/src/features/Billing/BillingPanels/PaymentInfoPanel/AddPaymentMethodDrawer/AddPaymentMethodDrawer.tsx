@@ -54,8 +54,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     ...theme.applyLinkStyles,
   },
   errorIcon: {
-    color: theme.color.red,
-    marginRight: -20,
+    color: `${theme.color.red} !important`, // TODO: Remove important with Erik's PR
     '&:hover': {
       color: theme.color.red,
       opacity: 0.7,
