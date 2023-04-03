@@ -75,7 +75,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
 
   const params = getParamsFromUrl(location.search);
   const showCrossDataCenterCloneWarning =
-    /clone/i.test(params.type) && params.regionID !== selectedID;
+    /clone/i.test(params.type) && selectedID && params.regionID !== selectedID;
 
   return (
     <Paper className={classes.root}>
