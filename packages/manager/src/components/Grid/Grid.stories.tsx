@@ -36,46 +36,17 @@ export default meta;
 type Story = StoryObj<typeof Grid2>;
 
 const gridSizes = [
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  2,
-  2,
-  2,
-  2,
-  2,
-  2,
-  3,
-  3,
-  3,
-  3,
-  4,
-  4,
-  4,
-  5,
-  2,
-  5,
-  6,
-  6,
-  7,
-  5,
-  8,
-  4,
-  9,
-  3,
-  10,
-  2,
-  11,
-  1,
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [2, 2, 2, 2, 2, 2],
+  [3, 3, 3, 3],
+  [4, 4, 4],
+  [5, 2, 5],
+  [6, 6],
+  [7, 5],
+  [8, 4],
+  [9, 3],
+  [10, 2],
+  [11, 1],
 ];
 
 export const Default: Story = {
@@ -109,11 +80,13 @@ export const Default: Story = {
         </Box>
         <Box sx={{ flexGrow: 1, padding: '20px 0' }}>
           <Grid container spacing={args.spacing} {...args}>
-            {gridSizes.map((size, index) => (
-              <ColorGrid item key={index} xs={size}>
-                <Item>xs={size}</Item>
-              </ColorGrid>
-            ))}
+            {gridSizes.map((row) =>
+              row.map((size, index) => (
+                <ColorGrid item key={index} xs={size}>
+                  <Item>xs={size}</Item>
+                </ColorGrid>
+              ))
+            )}
           </Grid>
         </Box>
       </Box>
@@ -129,11 +102,13 @@ export const Default: Story = {
         </Box>
         <Box sx={{ flexGrow: 1, padding: '20px 0' }}>
           <Grid2 container spacing={args.spacing} {...args}>
-            {gridSizes.map((size, index) => (
-              <ColorGrid2 key={index} xs={size}>
-                <Item>xs={size}</Item>
-              </ColorGrid2>
-            ))}
+            {gridSizes.map((row) =>
+              row.map((size, index) => (
+                <ColorGrid2 key={index} xs={size}>
+                  <Item>xs={size}</Item>
+                </ColorGrid2>
+              ))
+            )}
           </Grid2>
         </Box>
       </Box>
