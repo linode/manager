@@ -1,10 +1,4 @@
-import {
-  Disk,
-  getType,
-  LinodeSpecs,
-  LinodeType,
-  startMutation,
-} from '@linode/api-v4/lib/linodes';
+import { Disk, LinodeSpecs, startMutation } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -16,8 +10,8 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { MBpsIntraDC } from 'src/constants';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useSpecificTypes } from 'src/queries/types';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -26,6 +20,7 @@ import MutateDrawer from '../MutateDrawer';
 import withMutationDrawerState, {
   MutationDrawerProps,
 } from './mutationDrawerState';
+import { ExtendedType } from 'src/utilities/extendType';
 
 type ClassNames = 'pendingMutationLink';
 
@@ -43,7 +38,6 @@ interface Props {
 type CombinedProps = Props &
   MutationDrawerProps &
   ContextProps &
-  WithTypesProps &
   WithSnackbarProps &
   DispatchProps &
   WithStyles<ClassNames>;
@@ -51,7 +45,6 @@ type CombinedProps = Props &
 const MutationNotification: React.FC<CombinedProps> = (props) => {
   const {
     classes,
-    typesData,
     linodeId,
     linodeType,
     linodeSpecs,
@@ -65,41 +58,10 @@ const MutationNotification: React.FC<CombinedProps> = (props) => {
     updateLinode,
   } = props;
 
-  const [
-    successorMetaData,
-    setSuccessorMetaData,
-  ] = React.useState<LinodeType | null>(null);
-
-  React.useEffect(() => {
-    if (!linodeType) {
-      return;
-    }
-
-    /** did we find successor meta data in GET /types or GET /types-legacy? */
-    const foundSuccessorInAllTypes = typesData.find(
-      ({ id }) => id === linodeType.successor
-    );
-
-    if (typesData.length > 0 && !!foundSuccessorInAllTypes) {
-      setSuccessorMetaData(foundSuccessorInAllTypes);
-    } else {
-      /**
-       * this means we couldn't find the Linode's successor in either
-       * GET request to /types or /types-legacy. This is a SUPER edge
-       * case but it *does* happen. An example type that would flatter this
-       * condition would be the "standard-4" plan. In this case, we need to actually
-       * request the successor metadata
-       */
-      if (linodeType.successor) {
-        getType(linodeType.successor)
-          .then((requestedType) => {
-            setSuccessorMetaData(requestedType);
-          })
-          /** just silently fail if we couldn't get the data */
-          .catch((e) => e);
-      }
-    }
-  }, [typesData, linodeType]);
+  const typesQuery = useSpecificTypes(
+    linodeType?.successor ? [linodeType?.successor] : []
+  );
+  const successorMetaData = typesQuery[0]?.data ?? null;
 
   const initMutation = () => {
     openMutationDrawer();
@@ -220,7 +182,7 @@ const styled = withStyles(styles);
 interface ContextProps {
   linodeSpecs: LinodeSpecs;
   linodeId: number;
-  linodeType?: LinodeType | null;
+  linodeType?: ExtendedType | null;
 }
 
 interface DispatchProps {
@@ -240,7 +202,6 @@ const connected = connect(undefined, mapDispatchToProps);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   connected,
-  withTypes,
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeSpecs: linode.specs,
     linodeId: linode.id,

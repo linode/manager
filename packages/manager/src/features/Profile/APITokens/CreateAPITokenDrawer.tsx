@@ -19,7 +19,6 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import AccessCell from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
-import { useCreatePersonalAccessTokenMutation } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   Permission,
@@ -28,6 +27,7 @@ import {
   allScopesAreTheSame,
   basePermNameMap,
 } from './utils';
+import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
 
 type Expiry = [string, string];
 

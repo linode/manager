@@ -2,7 +2,7 @@ import { AccountLogin } from '@linode/api-v4/lib/account/types';
 import Typography from 'src/components/core/Typography';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -21,7 +21,7 @@ import AccountLoginsTableRow from './AccountLoginsTableRow';
 
 const preferenceKey = 'account-logins';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   cell: {
     width: '12%',
   },
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const AccountLogins = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const pagination = usePagination(1, preferenceKey);
 
   const { order, orderBy, handleOrderChange } = useOrder(

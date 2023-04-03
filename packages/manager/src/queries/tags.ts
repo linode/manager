@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { getTags, Tag } from '@linode/api-v4';
 import { queryClient, queryPresets } from './base';
@@ -7,12 +7,15 @@ import { getAll } from 'src/utilities/getAll';
 export const queryKey = 'tags';
 
 export const useTagSuggestions = (enabled = true) =>
-  useQuery<Tag[], APIError[]>(queryKey, getAllTagSuggestions, {
+  useQuery<Tag[], APIError[]>(queryKey, () => getAllTagSuggestions(), {
     ...queryPresets.longLived,
     enabled,
   });
 
-const getAllTagSuggestions = (passedParams: any = {}, passedFilter: any = {}) =>
+const getAllTagSuggestions = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
   getAll<Tag>((params, filter) =>
     getTags({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);

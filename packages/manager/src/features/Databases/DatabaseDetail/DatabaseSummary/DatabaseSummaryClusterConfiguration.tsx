@@ -1,19 +1,20 @@
 import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import { makeStyles } from 'tss-react/mui';
 import {
   databaseEngineMap,
   databaseStatusMap,
 } from '../../DatabaseLanding/DatabaseRow';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(2),
   },
@@ -41,8 +42,8 @@ export const getDatabaseVersionNumber = (
   version: DatabaseInstance['version']
 ) => version.split('/')[1];
 
-export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const DatabaseSummaryClusterConfiguration = (props: Props) => {
+  const { classes } = useStyles();
 
   const { database } = props;
 
@@ -89,7 +90,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Plan</Typography>
-          {type.label}
+          {formatStorageUnits(type.label)}
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>RAM</Typography>

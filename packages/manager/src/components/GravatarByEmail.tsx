@@ -30,7 +30,7 @@ export const GravatarByEmail = (props: Props) => {
       src={url}
       alt={`Avatar for user ${email}`}
     >
-      <UserIcon className={classNames(classes.avatar, className)} />
+      <UserIcon />
     </Avatar>
   );
 };

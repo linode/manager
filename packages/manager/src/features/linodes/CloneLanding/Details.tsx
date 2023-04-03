@@ -267,7 +267,6 @@ export const Configs: React.FC<Props> = (props) => {
         textFieldProps={{
           error: !!linodeError,
         }}
-        groupByRegion
         updateFor={[
           selectedLinodeId,
           shouldExcludeCurrentLinode,

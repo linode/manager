@@ -5,27 +5,26 @@ import {
 } from '@linode/api-v4/lib/account/types';
 import { GridSize } from '@mui/material/Grid';
 import { Breakpoint } from '@mui/material/styles';
-import classNames from 'classnames';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import useNotifications from 'src/hooks/useNotifications';
 import { getGrantData } from 'src/queries/profile';
 import { isWithinDays } from 'src/utilities/date';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     marginTop: 0,
     marginBottom: 16,
@@ -87,9 +86,9 @@ interface BillingSummaryProps {
   balance: number;
 }
 
-export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
-  const classes = useStyles();
-  const notifications = useNotifications();
+export const BillingSummary = (props: BillingSummaryProps) => {
+  const { classes, cx } = useStyles();
+  const { data: notifications } = useNotificationsQuery();
   const { account, _isRestrictedUser } = useAccountManagement();
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
@@ -101,7 +100,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
-  const isBalanceOutsideGracePeriod = notifications.some(
+  const isBalanceOutsideGracePeriod = notifications?.some(
     (notification) =>
       notification.type === 'payment_due' &&
       notification.severity === 'critical'
@@ -176,7 +175,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     ? 'Credit'
     : 'You have no balance at this time.';
 
-  const accountBalanceClassnames = classNames({
+  const accountBalanceClassnames = cx({
     [classes.noBalanceOrNotDue]:
       balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod),
     [classes.pastDueBalance]: pastDueBalance,
@@ -259,8 +258,11 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
 
               <Divider />
               <div style={{ maxHeight: 300, overflowY: 'auto' }}>
-                {promotions?.map((thisPromo) => (
-                  <PromoDisplay key={thisPromo.summary} {...thisPromo} />
+                {promotions?.map((promo) => (
+                  <PromoDisplay
+                    key={`${promo.summary}-${promo.expire_dt}`}
+                    {...promo}
+                  />
                 ))}
               </div>
             </Paper>
@@ -311,8 +313,8 @@ export default React.memo(BillingSummary);
 // =============================================================================
 export type PromoDisplayProps = ActivePromotion;
 
-export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
-  const classes = useStyles();
+export const PromoDisplay = React.memo((props: PromoDisplayProps) => {
+  const { classes } = useStyles();
 
   const {
     summary,

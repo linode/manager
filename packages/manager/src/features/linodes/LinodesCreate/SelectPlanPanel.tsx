@@ -1,10 +1,5 @@
 import { useSelector } from 'react-redux';
-import {
-  LinodeTypeClass,
-  BaseType,
-  PriceObject,
-  LinodeType,
-} from '@linode/api-v4/lib/linodes';
+import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
@@ -20,7 +15,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -38,7 +33,7 @@ import withRegions, {
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -105,12 +100,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface PlanSelectionType extends BaseType {
-  class: string;
-  heading: string;
-  subHeadings: string[];
-  price: PriceObject;
-  transfer?: LinodeType['transfer'];
-  network_out?: LinodeType['network_out'];
+  formattedLabel: ExtendedType['formattedLabel'];
+  class: ExtendedType['class'];
+  heading: ExtendedType['heading'];
+  subHeadings: ExtendedType['subHeadings'];
+  price: ExtendedType['price'];
+  transfer?: ExtendedType['transfer'];
+  network_out?: ExtendedType['network_out'];
 }
 
 interface Props {
@@ -153,6 +149,9 @@ const getGPU = (types: PlanSelectionType[]) =>
 
 const getMetal = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => t.class === 'metal');
+
+const getPremium = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => t.class === 'premium');
 
 type CombinedProps = Props & RegionsProps;
 
@@ -213,18 +212,18 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     }
 
     const rowAriaLabel =
-      type && type.label && isSamePlan
-        ? `${type.label} this is your current plan`
+      type && type.formattedLabel && isSamePlan
+        ? `${type.formattedLabel} this is your current plan`
         : planTooSmall
-        ? `${type.label} this plan is too small for resize`
-        : type.label;
+        ? `${type.formattedLabel} this plan is too small for resize`
+        : type.formattedLabel;
 
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <TableRow
-            data-qa-plan-row={type.label}
+            data-qa-plan-row={type.formattedLabel}
             aria-label={rowAriaLabel}
             key={type.id}
             onClick={
@@ -331,12 +330,12 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
 
     return (
-      <Grid container>
+      <Grid container spacing={2}>
         <Hidden lgUp={isCreate} mdUp={!isCreate}>
           {plans.map(renderSelection)}
         </Hidden>
         <Hidden lgDown={isCreate} mdDown={!isCreate}>
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Table
               aria-label="List of Linode Plans"
               className={classes.table}
@@ -421,6 +420,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
     const metal = getMetal(types);
+    const premium = getPremium(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
@@ -561,6 +561,28 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
         title: 'Bare Metal',
       });
       tabOrder.push('metal');
+    }
+
+    if (!isEmpty(premium)) {
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Notice warning>
+                This plan is only available in the Washington, DC region.
+              </Notice>
+              <Typography data-qa-gpu className={classes.copy}>
+                Premium CPU instances guarantee a minimum processor model, AMD
+                Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
+                performance for more demanding workloads.
+              </Typography>
+              {renderPlanContainer(premium)}
+            </>
+          );
+        },
+        title: 'Premium',
+      });
+      tabOrder.push('premium');
     }
 
     return [tabs, tabOrder];

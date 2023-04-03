@@ -1,5 +1,11 @@
 import { CreateLinodeRequest, Linode } from '@linode/api-v4/lib/linodes';
-import { APIError, DeepPartial, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  DeepPartial,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 
@@ -27,8 +33,8 @@ export type GetLinodeResponse = Promise<Linode>;
 
 export const getLinodesActions = actionCreator.async<
   {
-    params?: any;
-    filter?: any;
+    params?: Params;
+    filter?: Filter;
   },
   GetAllData<Linode>,
   APIError[]
@@ -69,8 +75,8 @@ export const rebootLinodeActions = actionCreator.async<
 >('reboot');
 
 export interface PageParams {
-  params?: any;
-  filters?: any;
+  params?: Params;
+  filters?: Filter;
 }
 export const getLinodesPageActions = actionCreator.async<
   PageParams,

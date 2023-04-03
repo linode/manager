@@ -20,7 +20,7 @@ import {
 } from 'src/queries/databases';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
-export const DatabaseBackups: React.FC = () => {
+export const DatabaseBackups = () => {
   const { databaseId, engine } = useParams<{
     databaseId: string;
     engine: Engine;

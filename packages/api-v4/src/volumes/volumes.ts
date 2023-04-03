@@ -12,7 +12,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   AttachVolumePayload,
   CloneVolumePayload,
@@ -37,7 +37,7 @@ export const getVolume = (volumeId: number) =>
  * Returns a paginated list of Volumes on your account.
  *
  */
-export const getVolumes = (params?: any, filters?: any) =>
+export const getVolumes = (params?: Params, filters?: Filter) =>
   Request<Page<Volume>>(
     setURL(`${API_ROOT}/volumes`),
     setMethod('GET'),
