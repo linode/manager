@@ -179,7 +179,6 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                       flexDirection="row"
                       alignItems="center"
                       flexGrow={1}
-                      data-testid={`name-${thisProvider.displayName}`}
                     >
                       <ProviderIcon className={classes.providerIcon} />
                       {thisProvider.displayName}
