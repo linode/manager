@@ -102,7 +102,11 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   // Pagination, order, and query hooks for manual/custom images
-  const paginationForManualImages = usePagination(1, `${queryKey}-manual`);
+  const paginationForManualImages = usePagination(
+    1,
+    `${queryKey}-manual`,
+    'manual'
+  );
   const {
     order: manualImagesOrder,
     orderBy: manualImagesOrderBy,
@@ -140,7 +144,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   // Pagination, order, and query hooks for automatic/recovery images
   const paginationForAutomaticImages = usePagination(
     1,
-    `${queryKey}-automatic`
+    `${queryKey}-automatic`,
+    'automatic'
   );
   const {
     order: automaticImagesOrder,
