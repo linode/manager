@@ -2,8 +2,6 @@ import * as React from 'react';
 import { PaymentMethod } from '@linode/api-v4/lib/account';
 import { VariantType } from 'notistack';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -28,51 +26,12 @@ export interface PaymentMessage {
   variant: VariantType;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  progress: {
-    marginBottom: 18,
-    width: '100%',
-    height: 5,
-  },
-  tooltip: {
-    color: theme.color.grey1,
-    padding: '0 0 0 4px',
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
-  },
-  notice: {
-    borderLeft: `solid 6px ${theme.color.green}`,
-    marginBottom: theme.spacing(2),
-    padding: '8px 16px',
-    '& p': {
-      fontSize: '0.95em',
-    },
-  },
-  link: {
-    ...theme.applyLinkStyles,
-  },
-  errorIcon: {
-    color: `${theme.color.red} !important`, // TODO: Remove important with Erik's PR
-    '&:hover': {
-      color: theme.color.red,
-      opacity: 0.7,
-    },
-    '& svg': {
-      height: 28,
-      width: 28,
-    },
-  },
-}));
-
 const sxBox = {
   paddingTop: '8px',
   paddingBottom: '8px',
 };
 
 const sxTooltipIcon = {
-  marginRight: '-20px',
   '&:hover': {
     opacity: 0.7,
   },
@@ -84,9 +43,6 @@ const sxTooltipIcon = {
 
 export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
-
-  const { classes } = useStyles();
-
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [noticeMessage, setNoticeMessage] = React.useState<
     PaymentMessage | undefined
@@ -121,7 +77,15 @@ export const AddPaymentMethodDrawer = (props: Props) => {
 
   return (
     <Drawer title="Add Payment Method" open={open} onClose={onClose}>
-      {isProcessing ? <LinearProgress className={classes.progress} /> : null}
+      {isProcessing ? (
+        <LinearProgress
+          sx={{
+            marginBottom: 18,
+            width: '100%',
+            height: 5,
+          }}
+        />
+      ) : null}
       {hasMaxPaymentMethods ? (
         <Notice
           warning
@@ -148,7 +112,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             <Grid
               container
               xs={4}
-              md={2.5}
+              md={3}
               justifyContent="flex-end"
               alignContent="center"
             >
@@ -174,7 +138,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             <Grid
               container
               xs={4}
-              md={2.5}
+              md={3}
               justifyContent="flex-end"
               alignContent="center"
             >
