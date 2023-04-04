@@ -3,7 +3,7 @@ import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import PaginationControls from '../PaginationControls';
 
 export const MIN_PAGE_SIZE = 25;
@@ -108,7 +108,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
           [classes.padded]: padded,
         })}
       >
-        <Grid item className="p0">
+        <Grid>
           {!isShowingAll && (
             <PaginationControls
               onClickHandler={handlePageChange}
@@ -120,7 +120,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
           )}
         </Grid>
         {!fixedSize ? (
-          <Grid item className={`${classes.select} p0`}>
+          <Grid className={`${classes.select}`}>
             <Select
               options={finalOptions}
               defaultValue={defaultPagination}
