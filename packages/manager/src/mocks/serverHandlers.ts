@@ -317,8 +317,17 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
-    const cloudinitCompatableImages = imageFactory.buildList(5, {
-      id: 'metadata-test',
+    const cloudinitCompatableDistro = imageFactory.build({
+      id: 'metadata-test-distro',
+      label: 'metadata-test-distro',
+      is_public: true,
+      status: 'available',
+      type: 'manual',
+      capabilities: ['cloud-init'],
+    });
+    const cloudinitCompatableImage = imageFactory.build({
+      id: 'metadata-test-image',
+      label: 'metadata-test-image',
       status: 'available',
       type: 'manual',
       capabilities: ['cloud-init'],
@@ -335,9 +344,10 @@ export const handlers = [
       type: 'automatic',
       expiry: '2021-05-01',
     });
-    const publicImages = imageFactory.buildList(0, { is_public: true });
+    const publicImages = imageFactory.buildList(4, { is_public: true });
     const images = [
-      ...cloudinitCompatableImages,
+      cloudinitCompatableDistro,
+      cloudinitCompatableImage,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
@@ -368,7 +378,16 @@ export const handlers = [
       })
   ),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(60, {
+    const metadataLinodeWithCompatibleImage = linodeFactory.build({
+      image: 'metadata-test-image',
+      label: 'metadata-test-image',
+    });
+    const metadataLinodeWithCompatibleImageAndRegion = linodeFactory.build({
+      region: 'eu-west',
+      image: 'metadata-test-image',
+      label: 'metadata-test-region',
+    });
+    const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
     });
@@ -378,10 +397,6 @@ export const handlers = [
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
     const busyLinodes = linodeFactory.buildList(1, { status: 'migrating' });
-    const metadataLinodes = linodeFactory.buildList(2, {
-      image: 'metadata-test',
-      label: 'metadata-test',
-    });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
@@ -400,7 +415,8 @@ export const handlers = [
       tags: ['test1', 'test2', 'test3'],
     });
     const linodes = [
-      ...metadataLinodes,
+      metadataLinodeWithCompatibleImage,
+      metadataLinodeWithCompatibleImageAndRegion,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
