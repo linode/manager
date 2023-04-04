@@ -1,10 +1,9 @@
-import classNames from 'classnames';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import LinearProgress from 'src/components/core/LinearProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   base: {
     display: 'flex',
     alignItems: 'center',
@@ -42,10 +41,8 @@ interface Props {
   narrow?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const BarPercent: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const BarPercent = (props: Props) => {
+  const { classes, cx } = useStyles();
 
   const {
     max,
@@ -75,7 +72,7 @@ export const BarPercent: React.FC<CombinedProps> = (props) => {
           bar2Buffer: classes.secondaryColor,
           dashed: classes.dashed,
         }}
-        className={classNames({
+        className={cx({
           [classes.rounded]: rounded,
           narrow,
         })}
