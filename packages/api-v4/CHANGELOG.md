@@ -1,4 +1,10 @@
 
+## [2023-04-03] - v0.89.0
+
+### Added:
+- React Query for SSH Keys [#8892](https://github.com/linode/manager/pull/8892)
+- React Query for Firewalls [#8889](https://github.com/linode/manager/pull/8889)
+
 ## [2023-03-20] - v0.88.0
 
 ### Added:

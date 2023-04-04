@@ -5,7 +5,6 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TooltipIcon from 'src/components/TooltipIcon';
 import Typography from 'src/components/core/Typography';
 import { useTheme } from '@mui/material/styles';
-
 import {
   ActivePromotion,
   PromotionServiceType,

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PaymentMethod } from '@linode/api-v4/lib/account';
 import { VariantType } from 'notistack';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -27,21 +26,12 @@ export interface PaymentMessage {
   variant: VariantType;
 }
 
-const useStyles = makeStyles()(() => ({
-  progress: {
-    marginBottom: 18,
-    width: '100%',
-    height: 5,
-  },
-}));
-
 const sxBox = {
   paddingTop: '8px',
   paddingBottom: '8px',
 };
 
 const sxTooltipIcon = {
-  marginRight: '-20px',
   '&:hover': {
     opacity: 0.7,
   },
@@ -53,9 +43,6 @@ const sxTooltipIcon = {
 
 export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
-
-  const { classes } = useStyles();
-
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [noticeMessage, setNoticeMessage] = React.useState<
     PaymentMessage | undefined
@@ -90,7 +77,15 @@ export const AddPaymentMethodDrawer = (props: Props) => {
 
   return (
     <Drawer title="Add Payment Method" open={open} onClose={onClose}>
-      {isProcessing ? <LinearProgress className={classes.progress} /> : null}
+      {isProcessing ? (
+        <LinearProgress
+          sx={{
+            marginBottom: 18,
+            width: '100%',
+            height: 5,
+          }}
+        />
+      ) : null}
       {hasMaxPaymentMethods ? (
         <Notice
           warning
@@ -107,7 +102,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
       <>
         <Divider />
         <Box sx={sxBox}>
-          <Grid container spacing={1.5}>
+          <Grid container spacing={2}>
             <Grid xs={8} md={9}>
               <Typography variant="h3">Google Pay</Typography>
               <Typography>
@@ -117,7 +112,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             <Grid
               container
               xs={4}
-              md={2.5}
+              md={3}
               justifyContent="flex-end"
               alignContent="center"
             >
@@ -131,11 +126,9 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
           </Grid>
         </Box>
-      </>
-      <>
         <Divider />
         <Box sx={sxBox}>
-          <Grid container spacing={1.5}>
+          <Grid container spacing={2}>
             <Grid xs={8} md={9}>
               <Typography variant="h3">PayPal</Typography>
               <Typography>
@@ -145,7 +138,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             <Grid
               container
               xs={4}
-              md={2.5}
+              md={3}
               justifyContent="flex-end"
               alignContent="center"
             >
@@ -160,8 +153,6 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
           </Grid>
         </Box>
-      </>
-      <>
         <Divider spacingBottom={16} />
         <Typography variant="h3">Credit Card</Typography>
         <AddCreditCardForm disabled={disabled} onClose={onClose} />

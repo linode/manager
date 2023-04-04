@@ -1,25 +1,25 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
+import Button from 'src/components/Button';
 import Currency from 'src/components/Currency';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import { getGrantData } from 'src/queries/profile';
-import { isWithinDays } from 'src/utilities/date';
-import PaymentDrawer from './PaymentDrawer';
-import PromoDialog from './PromoDialog';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import Divider from 'src/components/core/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
+import PaymentDrawer from './PaymentDrawer';
+import PromoDialog from './PromoDialog';
 import TooltipIcon from 'src/components/TooltipIcon';
 import Typography from 'src/components/core/Typography';
-import Button from 'src/components/Button';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import { ActivePromotion } from '@linode/api-v4/lib/account/types';
 import { BillingPaper } from '../../BillingDetail';
 import { Breakpoint } from '@mui/material/styles';
+import { getGrantData } from 'src/queries/profile';
 import { GridSize } from '@mui/material/Grid';
+import { isWithinDays } from 'src/utilities/date';
 import { PaymentMethod } from '@linode/api-v4';
 import { PromoDisplay } from './PromoDisplay';
 import { styled, useTheme } from '@mui/material/styles';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { ActivePromotion } from '@linode/api-v4/lib/account/types';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 const GridContainer = styled(Grid)({
   marginBottom: 0,
@@ -33,8 +33,8 @@ interface BillingSummaryProps {
 }
 
 export const BillingSummary = (props: BillingSummaryProps) => {
-  const { data: notifications } = useNotificationsQuery();
   const theme = useTheme();
+  const { data: notifications } = useNotificationsQuery();
   const { account, _isRestrictedUser } = useAccountManagement();
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
@@ -138,6 +138,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         <Button
           sx={{
             ...theme.applyLinkStyles,
+            verticalAlign: 'initial',
           }}
           onClick={() => replace(routeForMakePayment)}
         >
