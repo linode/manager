@@ -120,7 +120,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
           )}
         </Grid>
         {!fixedSize ? (
-          <Grid className={`${classes.select}`}>
+          <Grid className={classes.select}>
             <Select
               options={finalOptions}
               defaultValue={defaultPagination}
