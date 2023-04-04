@@ -2,7 +2,6 @@ import * as React from 'react';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'tss-react/mui';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
@@ -10,29 +9,13 @@ import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator
 import { useAllNodeBalancerConfigsQuery } from 'src/queries/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
-import { Theme } from '@mui/material/styles';
 import Skeleton from 'src/components/Skeleton';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  portLink: {
-    color: theme.textColors.linkActiveLight,
-  },
-  link: {
-    display: 'block',
-    color: theme.textColors.linkActiveLight,
-    lineHeight: '1.125rem',
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-    },
-  },
-}));
 
 interface Props extends NodeBalancer {
   onDelete: () => void;
 }
 
 export const NodeBalancerTableRow = (props: Props) => {
-  const { classes } = useStyles();
   const { id, label, transfer, ipv4, region, onDelete } = props;
 
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
@@ -47,7 +30,7 @@ export const NodeBalancerTableRow = (props: Props) => {
   return (
     <TableRow key={id} ariaLabel={label}>
       <TableCell>
-        <Link to={`/nodebalancers/${id}`} tabIndex={0} className={classes.link}>
+        <Link to={`/nodebalancers/${id}`} tabIndex={0}>
           {label}
         </Link>
       </TableCell>
@@ -63,10 +46,7 @@ export const NodeBalancerTableRow = (props: Props) => {
           {configs?.length === 0 && 'None'}
           {configs?.map(({ port, id: configId }, i) => (
             <React.Fragment key={configId}>
-              <Link
-                to={`/nodebalancers/${id}/configurations/${configId}`}
-                className={classes.portLink}
-              >
+              <Link to={`/nodebalancers/${id}/configurations/${configId}`}>
                 {port}
               </Link>
               {i < configs.length - 1 ? ', ' : ''}
