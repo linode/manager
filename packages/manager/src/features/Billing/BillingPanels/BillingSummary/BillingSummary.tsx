@@ -138,6 +138,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         <Button
           sx={{
             ...theme.applyLinkStyles,
+            verticalAlign: 'initial',
           }}
           onClick={() => replace(routeForMakePayment)}
         >
