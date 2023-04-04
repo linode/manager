@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { useStyles } from '../iconStyles';
-import TopMenuIcon from '../TopMenuIcon';
+import { useTheme, styled } from '@mui/material/styles';
+import TopMenuIcon, { StyledTopMenuIconWrapper } from '../TopMenuIcon';
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import {
   menuId,
@@ -18,70 +16,41 @@ import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
-import Popper from 'src/components/core/Popper';
+import Popper from '@mui/material/Popper';
 import Events from 'src/features/NotificationCenter/Events';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import usePrevious from 'src/hooks/usePrevious';
+import { isPropValid } from 'src/utilities/isPropValid';
 
-const useMenuStyles = makeStyles((theme: Theme) => ({
-  menuButton: {
-    margin: 0,
-    padding: 0,
-    minWidth: 'unset',
-    '&&': {
-      backgroundColor: 'unset',
-    },
-    '&:focus span, &:hover span': {
-      color: '#606469',
-    },
-  },
-  menuPopover: {
-    boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-    zIndex: 3000,
-    top: '50px !important',
-    left: 'auto !important',
-    right: 20,
-    width: 430,
-    maxHeight: 'calc(100vh - 125px)',
-    overflowY: 'auto',
-    [theme.breakpoints.down('sm')]: {
-      right: 0,
-      width: '100%',
-      height: 'auto',
-    },
-  },
-  menuItem: {
-    boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-    whiteSpace: 'initial',
-    border: 'none',
-    padding: 0,
-    cursor: 'default',
-    display: 'block',
-  },
-  menuPaper: {
-    padding: 20,
-    paddingTop: theme.spacing(2),
-    paddingBottom: 0,
-  },
-  notificationIcon: {
-    '&:first-of-type': {
-      marginLeft: 0,
-    },
-  },
-  focused: {
-    color: '#606469',
-  },
-  unfocused: {
-    color: '#c9c7c7',
-  },
+const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
+  label: 'NotificationIconWrapper',
+  shouldForwardProp: (prop) => isPropValid(['isMenuOpen'], prop),
+})<{
+  isMenuOpen: boolean;
+}>(({ ...props }) => ({
+  color: props.isMenuOpen ? '#606469' : '#c9c7c7',
+}));
+
+const NotificationIconBadge = styled('div')(({ theme }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.color.green,
+  borderRadius: '50%',
+  color: 'white',
+  display: 'flex',
+  fontSize: '0.72rem',
+  height: '1rem',
+  justifyContent: 'center',
+  left: 20,
+  position: 'absolute',
+  top: 2,
+  width: '1rem',
 }));
 
 export const NotificationMenu = () => {
-  const iconClasses = useStyles();
-  const classes = useMenuStyles();
+  const theme = useTheme();
 
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
@@ -147,30 +116,45 @@ export const NotificationMenu = () => {
           aria-label="Notifications"
           aria-haspopup="true"
           onClick={handleNotificationMenuToggle}
-          className={classes.menuButton}
+          sx={{
+            margin: 0,
+            padding: 0,
+            minWidth: 'unset',
+            '&:hover': {
+              backgroundColor: 'unset',
+            },
+          }}
           disableRipple
         >
-          <span
-            className={`${iconClasses.icon} ${classes.notificationIcon} ${
-              notificationContext.menuOpen ? classes.focused : classes.unfocused
-            }`}
-          >
+          <NotificationIconWrapper isMenuOpen={notificationContext.menuOpen}>
             <Bell />
             {numNotifications > 0 ? (
-              <div className={iconClasses.badge}>
-                <p>{numNotifications}</p>
-              </div>
+              <NotificationIconBadge>{numNotifications}</NotificationIconBadge>
             ) : null}
-          </span>
+          </NotificationIconWrapper>
         </Button>
       </TopMenuIcon>
+
       <Popper
         open={notificationContext.menuOpen}
         anchorEl={anchorRef.current}
-        className={classes.menuPopover}
         transition
         disablePortal
-        style={{ position: 'absolute' }}
+        sx={{
+          boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
+          zIndex: 3000,
+          top: '50px !important',
+          left: 'auto !important',
+          right: '8px',
+          width: '430px',
+          position: 'absolute !important',
+          height: 'calc(100vh - 125px)',
+          overflowY: 'scroll',
+          [theme.breakpoints.down('sm')]: {
+            right: 0,
+            width: '100%',
+          },
+        }}
       >
         <ClickAwayListener onClickAway={handleClose}>
           <MenuList
@@ -178,8 +162,23 @@ export const NotificationMenu = () => {
             autoFocusItem={notificationContext.menuOpen}
             onKeyDown={handleMenuListKeyDown}
           >
-            <MenuItem className={classes.menuItem} disableRipple>
-              <Paper className={`${classes.menuPaper} ${classes.menuPopover}`}>
+            <MenuItem
+              sx={{
+                boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
+                whiteSpace: 'initial',
+                border: 'none',
+                padding: 0,
+                cursor: 'default',
+              }}
+              disableRipple
+            >
+              <Paper
+                sx={{
+                  padding: '20px',
+                  paddingTop: theme.spacing(2),
+                  paddingBottom: 0,
+                }}
+              >
                 <Notifications />
                 <Events />
               </Paper>
