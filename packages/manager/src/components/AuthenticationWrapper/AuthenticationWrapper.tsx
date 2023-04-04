@@ -8,13 +8,17 @@ import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import {
+  WithApplicationStoreProps,
+  withApplicationStore,
+} from 'src/containers/withApplicationStore.container';
+import {
   withQueryClient,
   WithQueryClientProps,
 } from 'src/containers/withQueryClient.container';
 import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
-import { ApplicationState, ApplicationStore } from 'src/store';
+import { ApplicationState } from 'src/store';
 import { checkAccountSize } from 'src/store/accountManagement/accountManagement.requests';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
@@ -24,12 +28,15 @@ import { requestRegions } from 'src/store/regions/regions.actions';
 import { MapState } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
-type CombinedProps = DispatchProps &
+interface Props {
+  children: React.ReactNode;
+}
+
+type CombinedProps = Props &
+  DispatchProps &
   StateProps &
-  WithQueryClientProps & {
-    children: React.ReactNode;
-    store: ApplicationStore;
-  };
+  WithQueryClientProps &
+  WithApplicationStoreProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
@@ -183,4 +190,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(connected, withQueryClient)(AuthenticationWrapper);
+export default compose(
+  connected,
+  withQueryClient,
+  withApplicationStore
+)(AuthenticationWrapper);
