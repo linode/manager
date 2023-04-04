@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import TextField from 'src/components/TextField';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
 
@@ -162,7 +162,10 @@ export const TransferControls: React.FC<{}> = (_) => {
               Review Details
             </Button>
             <Hidden mdDown>
-              <HelpIcon text="Enter a service transfer token to review the details and accept the transfer." />
+              <TooltipIcon
+                text="Enter a service transfer token to review the details and accept the transfer."
+                status="help"
+              />
             </Hidden>
           </Grid>
         </Grid>

@@ -5,7 +5,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles } from 'tss-react/mui';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -147,20 +147,18 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid
-        container
         className={classes.mainFormContainer}
+        columnSpacing={2}
+        container
+        spacing={0}
         data-qa-update-contact
       >
         {generalError && (
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Notice error text={generalError} />
           </Grid>
         )}
-        <Grid
-          item
-          xs={12}
-          updateFor={[formik.values.email, errorMap.email, classes]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Email"
             errorText={errorMap.email}
@@ -174,12 +172,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             data-qa-contact-email
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[formik.values.first_name, errorMap.first_name, classes]}
-        >
+        <Grid xs={12} sm={6}>
           <TextField
             label="First Name"
             errorText={errorMap.first_name}
@@ -189,12 +182,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             data-qa-contact-first-name
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[formik.values.last_name, errorMap.last_name, classes]}
-        >
+        <Grid xs={12} sm={6}>
           <TextField
             label="Last Name"
             name="last_name"
@@ -204,27 +192,17 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             data-qa-contact-last-name
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          updateFor={[formik.values.company, errorMap.company, classes]}
-        >
-          <Grid item xs={12}>
-            <TextField
-              label="Company Name"
-              name="company"
-              errorText={errorMap.company}
-              onChange={formik.handleChange}
-              value={formik.values.company}
-              data-qa-company
-            />
-          </Grid>
+        <Grid xs={12}>
+          <TextField
+            label="Company Name"
+            name="company"
+            errorText={errorMap.company}
+            onChange={formik.handleChange}
+            value={formik.values.company}
+            data-qa-company
+          />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          updateFor={[formik.values.address_1, errorMap.address_1, classes]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Address"
             name="address_1"
@@ -234,11 +212,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             data-qa-contact-address-1
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          updateFor={[formik.values.address_2, errorMap.address_2, classes]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Address 2"
             name="address_2"
@@ -249,12 +223,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
           />
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[formik.values.country, errorMap.country, classes]}
-        >
+        <Grid xs={12} sm={6}>
           <EnhancedSelect
             label="Country"
             errorText={errorMap.country}
@@ -275,20 +244,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             }}
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[
-            formik.values.state,
-            formik.values.zip,
-            formik.values.country,
-            errorMap.state,
-            errorMap.zip,
-            errorMap.country,
-            classes,
-          ]}
-        >
+        <Grid xs={12} sm={6}>
           {flags.regionDropdown &&
           (formik.values.country === 'US' || formik.values.country == 'CA') ? (
             <EnhancedSelect
@@ -325,12 +281,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             />
           )}
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[formik.values.city, errorMap.city, classes]}
-        >
+        <Grid xs={12} sm={6}>
           <TextField
             label="City"
             name="city"
@@ -340,7 +291,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             data-qa-contact-city
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             label="Postal Code"
             name="zip"
@@ -350,11 +301,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             data-qa-contact-post-code
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          updateFor={[formik.values.phone, errorMap.phone, classes]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Phone"
             type="tel"
@@ -365,11 +312,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             data-qa-contact-phone
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          updateFor={[formik.values.tax_id, errorMap.tax_id, classes]}
-        >
+        <Grid xs={12}>
           <TextField
             label="Tax ID"
             name="tax_id"

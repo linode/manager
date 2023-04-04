@@ -1,7 +1,6 @@
 import {
   getUserPreferences,
   updateUserPreferences,
-  UserPreferences,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -11,7 +10,7 @@ import { queryClient, queryPresets } from './base';
 export const queryKey = 'preferences';
 
 export const usePreferences = (enabled = true) =>
-  useQuery<UserPreferences, APIError[]>(queryKey, getUserPreferences, {
+  useQuery<ManagerPreferences, APIError[]>(queryKey, getUserPreferences, {
     ...queryPresets.oneTimeFetch,
     enabled,
   });

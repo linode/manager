@@ -33,12 +33,18 @@ describe('Extend Linode', () => {
     expect(extendedLinodes[0].subHeadings).toEqual(['Nanode 1 GB, Debian 10']);
   });
 
-  it('should concat image and type data, separated by a comma', () => {
-    const withImage = formatLinodeSubheading('test', 'test');
-    const withoutImage = formatLinodeSubheading('test');
+  it('should concat image, type data, and region data separated by a comma', () => {
+    const withImage = formatLinodeSubheading('linode', 'image');
+    const withoutImage = formatLinodeSubheading('linode');
+    const withImageAndRegion = formatLinodeSubheading(
+      'linode',
+      'image',
+      'region'
+    );
 
-    expect(withImage).toEqual(['test, test']);
-    expect(withoutImage).toEqual(['test']);
+    expect(withImage).toEqual(['linode, image']);
+    expect(withoutImage).toEqual(['linode']);
+    expect(withImageAndRegion).toEqual(['linode, image, region']);
   });
 });
 

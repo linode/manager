@@ -556,8 +556,14 @@ export class LinodeCreate extends React.PureComponent<
         'cloud-init'
       );
 
+    const regionSupportsMetadata =
+      this.props.regionsData
+        .find((region) => region.id === this.props.selectedRegionID)
+        ?.capabilities.includes('Metadata') ?? false;
+
     const showUserData =
       this.props.flags.metadata &&
+      regionSupportsMetadata &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     return (

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
 
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  helpIcon: {
+  TooltipIcon: {
     paddingTop: 0,
     paddingBottom: 0,
   },
@@ -135,11 +135,12 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
               >
                 Maintenance: <br />
                 {dateTime[0]} at {dateTime[1]}
-                <HelpIcon
+                <TooltipIcon
+                  status="help"
                   text={<MaintenanceText />}
                   tooltipPosition="top"
                   interactive
-                  className={classes.helpIcon}
+                  className={classes.TooltipIcon}
                 />
               </Notice>
             </div>

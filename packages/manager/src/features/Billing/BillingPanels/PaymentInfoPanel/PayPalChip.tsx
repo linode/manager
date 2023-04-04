@@ -9,6 +9,7 @@ import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { reportException } from 'src/exceptionReporting';
+import Grid from '@mui/material/Unstable_Grid2';
 import {
   OnApproveBraintreeData,
   BraintreePayPalButtons,
@@ -22,9 +23,6 @@ const useStyles = makeStyles()(() => ({
   disabled: {
     // Allows us to disable the pointer on the PayPal button because the SDK does not
     pointerEvents: 'none',
-  },
-  button: {
-    marginRight: -8,
   },
 }));
 
@@ -153,13 +151,16 @@ export const PayPalChip = (props: Props) => {
   }
 
   if (isLoading || isPending || !options['data-client-token']) {
-    return <CircleProgress mini />;
+    return (
+      <Grid>
+        <CircleProgress mini />
+      </Grid>
+    );
   }
 
   return (
-    <div
+    <Grid
       className={cx({
-        [classes.button]: true,
         [classes.disabled]: disabled,
       })}
     >
@@ -171,6 +172,6 @@ export const PayPalChip = (props: Props) => {
         onApprove={onApprove}
         onError={onError}
       />
-    </div>
+    </Grid>
   );
 };

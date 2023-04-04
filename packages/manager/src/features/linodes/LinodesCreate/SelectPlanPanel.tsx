@@ -14,8 +14,8 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Grid from '@mui/material/Unstable_Grid2';
-import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
@@ -260,10 +260,14 @@ export const SelectPlanPanel = (props: Props) => {
                   />
                 )}
                 {tooltip && (
-                  <HelpIcon
+                  <TooltipIcon
                     text={tooltip}
                     tooltipPosition="right-end"
-                    className="py0"
+                    sxTooltipIcon={{
+                      paddingTop: '0px !important',
+                      paddingBottom: '0px !important',
+                    }}
+                    status="help"
                   />
                 )}
               </div>
@@ -341,7 +345,7 @@ export const SelectPlanPanel = (props: Props) => {
                 <TableRow>
                   <TableCell className={classes.headerCell} />
                   <TableCell className={classes.headerCell} data-qa-plan-header>
-                    {header}
+                    Plan
                   </TableCell>
                   <TableCell
                     className={classes.headerCell}

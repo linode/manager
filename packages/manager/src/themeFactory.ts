@@ -133,6 +133,7 @@ const color = {
   disabledText: '#c9cacb',
   tagButton: '#f1f7fd',
   tagIcon: '#7daee8',
+  blue: '#3683dc',
 } as const;
 
 const textColors = {
