@@ -285,7 +285,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
 });
 
-export const connected = connect(mapStateToProps);
+const connected = connect(mapStateToProps);
 
 export default compose(
   connected,
