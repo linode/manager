@@ -14,7 +14,7 @@ import TableCell from 'src/components/TableCell/TableCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import TransferDisplay from 'src/components/TransferDisplay';
 import { useOrder } from 'src/hooks/useOrder';
-import usePagination from 'src/hooks/usePagination';
+import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
