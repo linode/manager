@@ -13,7 +13,7 @@ import Currency from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
@@ -53,9 +53,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     alignSelf: 'flex-end',
     marginLeft: 'auto',
-  },
-  helpIcon: {
-    padding: `0px 8px`,
   },
 }));
 
@@ -299,8 +296,9 @@ export const PaymentDrawer = (props: Props) => {
               <Grid className={classes.input}>
                 <Grid className={classes.button}>
                   {paymentTooLow || selectedCardExpired ? (
-                    <HelpIcon
-                      className={classes.helpIcon}
+                    <TooltipIcon
+                      sxTooltipIcon={{ padding: `0px 8px` }}
+                      status="help"
                       text={
                         paymentTooLow
                           ? `Payment amount must be at least ${minimumPayment}.`
