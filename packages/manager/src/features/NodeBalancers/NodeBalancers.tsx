@@ -22,7 +22,7 @@ const NodeBalancers = () => {
         />
         <Route
           component={NodeBalancerDetail}
-          path="/nodebalancers/:nodeBalancerId"
+          path="/nodebalancers/:nodeBalancerId?/:tab?/:configId?"
         />
       </Switch>
     </React.Suspense>

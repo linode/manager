@@ -11,20 +11,9 @@ import { useAllNodeBalancerConfigsQuery } from 'src/queries/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
 import { Theme } from '@mui/material/styles';
+import Skeleton from 'src/components/Skeleton';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  // @todo: temporary measure that will cause scroll for the 'Name' and 'Backend Status'
-  // column until we implement a hideOnTablet prop for EntityTables to prevent the
-  // ActionCell from being misaligned
-  labelWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-  },
-  statusWrapper: {
-    whiteSpace: 'nowrap',
-  },
   portLink: {
     color: theme.textColors.linkActiveLight,
   },
@@ -34,23 +23,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
       textDecoration: 'underline',
-    },
-  },
-  ipsWrapper: {
-    display: 'inline-flex',
-    flexDirection: 'column',
-    '& [data-qa-copy-ip] button > svg': {
-      opacity: 0,
-    },
-  },
-  row: {
-    '&:hover': {
-      '& [data-qa-copy-ip] button > svg': {
-        opacity: 1,
-      },
-    },
-    '& [data-qa-copy-ip] button:focus > svg': {
-      opacity: 1,
     },
   },
 }));
@@ -73,33 +45,21 @@ export const NodeBalancerTableRow = (props: Props) => {
     0;
 
   return (
-    <TableRow
-      key={id}
-      data-qa-nodebalancer-cell={label}
-      className={classes.row}
-      ariaLabel={label}
-    >
-      <TableCell data-qa-nodebalancer-label>
-        <div className={classes.labelWrapper}>
-          <Link
-            to={`/nodebalancers/${id}`}
-            tabIndex={0}
-            className={classes.link}
-          >
-            {label}
-          </Link>
-        </div>
+    <TableRow key={id} ariaLabel={label}>
+      <TableCell>
+        <Link to={`/nodebalancers/${id}`} tabIndex={0} className={classes.link}>
+          {label}
+        </Link>
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-node-status className={classes.statusWrapper}>
+        <TableCell noWrap>
           <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
         </TableCell>
       </Hidden>
       <Hidden mdDown>
-        <TableCell data-qa-transferred>
-          {convertMegabytesTo(transfer.total)}
-        </TableCell>
-        <TableCell data-qa-ports>
+        <TableCell>{convertMegabytesTo(transfer.total)}</TableCell>
+        <TableCell>
+          {!configs ? <Skeleton /> : null}
           {configs?.length === 0 && 'None'}
           {configs?.map(({ port, id: configId }, i) => (
             <React.Fragment key={configId}>
@@ -114,10 +74,8 @@ export const NodeBalancerTableRow = (props: Props) => {
           ))}
         </TableCell>
       </Hidden>
-      <TableCell data-qa-nodebalancer-ips>
-        <div className={classes.ipsWrapper}>
-          <IPAddress ips={[ipv4]} showMore />
-        </div>
+      <TableCell>
+        <IPAddress ips={[ipv4]} showMore />
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-region>

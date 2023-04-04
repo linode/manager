@@ -92,23 +92,19 @@ const SummaryPanel = () => {
           </Typography>
         </div>
         <div className={classes.section}>
-          <Typography variant="body1" data-qa-node-status>
+          <Typography variant="body1">
             <strong>Backend Status: </strong>
             {`${up} up, ${down} down`}
           </Typography>
         </div>
         <div className={classes.section}>
-          <Typography variant="body1" data-qa-transferred>
+          <Typography variant="body1">
             <strong>Transferred: </strong>
             {convertMegabytesTo(nodebalancer.transfer.total)}
           </Typography>
         </div>
         <div className={classes.section}>
-          <Typography
-            variant="body1"
-            className={classes.hostName}
-            data-qa-hostname
-          >
+          <Typography variant="body1" className={classes.hostName}>
             <strong>Host Name: </strong>
             {nodebalancer.hostname}
           </Typography>
@@ -119,7 +115,6 @@ const SummaryPanel = () => {
           </Typography>
         </div>
       </Paper>
-
       <Paper className={classes.summarySection}>
         <Typography variant="h3" className={classes.title} data-qa-title>
           IP Addresses
