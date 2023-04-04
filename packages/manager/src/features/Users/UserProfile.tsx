@@ -8,10 +8,10 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
@@ -58,6 +58,7 @@ interface Props {
 
 const UserProfile: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const theme = useTheme();
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const {
@@ -227,9 +228,13 @@ const UserProfile: React.FC<Props> = (props) => {
           Delete
         </Button>
         {profile?.username === originalUsername && (
-          <HelpIcon
-            className={classes.topMargin}
+          <TooltipIcon
+            status="help"
             text="You can't delete the currently active user"
+            sxTooltipIcon={{
+              marginTop: theme.spacing(2),
+              marginLeft: 0,
+            }}
           />
         )}
         <Typography className={classes.topMargin} variant="body1">

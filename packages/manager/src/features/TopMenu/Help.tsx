@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HelpIcon from 'src/assets/icons/get_help.svg';
+import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Link from 'src/components/Link';
 import TopMenuIcon from './TopMenuIcon';
 import { StyledTopMenuIconWrapper } from './TopMenuIcon';
@@ -13,7 +13,7 @@ export const Help = () => {
         }}
       >
         <TopMenuIcon title={'Help & Support'}>
-          <HelpIcon />
+          <TooltipIcon status="help" />
         </TopMenuIcon>
       </StyledTopMenuIconWrapper>
     </Link>

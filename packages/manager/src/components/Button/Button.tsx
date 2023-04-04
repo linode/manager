@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
 import _Button, { ButtonProps } from '@mui/material/Button';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useTheme, styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { isPropValid } from '../../utilities/isPropValid';
@@ -76,7 +76,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
   ) => {
     const theme = useTheme();
     const color = buttonType === 'primary' ? 'primary' : 'secondary';
-    const sxHelpIcon = { marginLeft: `-${theme.spacing()}` };
+    const sxTooltipIcon = { marginLeft: `-${theme.spacing()}` };
 
     const variant =
       buttonType === 'primary' || buttonType === 'secondary'
@@ -105,15 +105,17 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
           </Span>
         </StyledButton>
         {tooltipText && (
-          <HelpIcon
-            sx={sxHelpIcon}
+          <TooltipIcon
+            sxTooltipIcon={sxTooltipIcon}
             text={tooltipText}
             tooltipGAEvent={tooltipGAEvent}
+            status="help"
           />
         )}
       </React.Fragment>
     );
   }
 );
+
 
 export default Button;
