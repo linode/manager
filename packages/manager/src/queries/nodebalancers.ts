@@ -147,7 +147,7 @@ export const useAllNodeBalancerConfigsQuery = (id: number) =>
   useQuery<NodeBalancerConfig[], APIError[]>(
     [queryKey, 'nodebalanacer', id, 'configs'],
     () => getAllNodeBalancerConfigs(id),
-    { refetchInterval: 20 }
+    { refetchInterval: 20000 }
   );
 
 export const getAllNodeBalancerConfigs = (id: number) =>

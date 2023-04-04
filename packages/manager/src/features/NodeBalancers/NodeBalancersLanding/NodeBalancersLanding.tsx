@@ -39,7 +39,7 @@ export const NodeBalancersLanding = () => {
       orderBy: 'label',
       order: 'asc',
     },
-    `${preferenceKey}-order`
+    preferenceKey
   );
 
   const filter = {
@@ -125,14 +125,14 @@ export const NodeBalancersLanding = () => {
           {data?.data.map((nodebalancer) => (
             <NodeBalancerTableRow
               key={nodebalancer.id}
-              onDelete={onDelete}
+              onDelete={() => onDelete(nodebalancer.id)}
               {...nodebalancer}
             />
           ))}
         </TableBody>
       </Table>
       <PaginationFooter
-        count={data?.results || 0}
+        count={data?.results ?? 0}
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}

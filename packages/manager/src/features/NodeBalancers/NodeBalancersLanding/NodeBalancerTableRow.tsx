@@ -56,7 +56,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 interface Props extends NodeBalancer {
-  onDelete: (id: number) => void;
+  onDelete: () => void;
 }
 
 export const NodeBalancerTableRow = (props: Props) => {
@@ -65,14 +65,12 @@ export const NodeBalancerTableRow = (props: Props) => {
 
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
 
-  const nodesUp = configs?.reduce(
-    (result, config) => config.nodes_status.up + result,
-    0
-  );
-  const nodesDown = configs?.reduce(
-    (result, config) => config.nodes_status.down + result,
-    0
-  );
+  const nodesUp =
+    configs?.reduce((result, config) => config.nodes_status.up + result, 0) ??
+    0;
+  const nodesDown =
+    configs?.reduce((result, config) => config.nodes_status.down + result, 0) ??
+    0;
 
   return (
     <TableRow
