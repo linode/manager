@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Link from 'src/components/Link';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { useMutateProfile, useProfile } from 'src/queries/profile';

@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAccount } from 'src/queries/account';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';

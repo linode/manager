@@ -15,7 +15,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import withProfile, { ProfileProps } from 'src/components/withProfile';

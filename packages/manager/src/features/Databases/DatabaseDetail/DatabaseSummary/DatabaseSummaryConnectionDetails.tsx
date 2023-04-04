@@ -10,7 +10,7 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';

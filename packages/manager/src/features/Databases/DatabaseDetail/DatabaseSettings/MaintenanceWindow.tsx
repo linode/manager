@@ -12,7 +12,7 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import { useDatabaseMutation } from 'src/queries/databases';

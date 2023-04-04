@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { makeStyles } from '@mui/styles';
 
 export const StyledHelpIcon = styled(TooltipIcon)({

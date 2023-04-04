@@ -30,7 +30,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';

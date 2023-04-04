@@ -7,7 +7,7 @@ import Checkbox, { CheckboxProps } from 'src/components/core/Checkbox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
