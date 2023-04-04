@@ -1,3 +1,3 @@
-import NotificationMenu from './NotificationMenu';
+import { NotificationMenu } from './NotificationMenu';
 
 export default NotificationMenu;
