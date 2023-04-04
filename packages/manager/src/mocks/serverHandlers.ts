@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import {
-  EventAction,
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
@@ -824,43 +823,12 @@ export const handlers = [
       message:
         'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
     });
-    const volumeMigrationScheduled = eventFactory.build({
-      entity: { type: 'volume', id: 6, label: 'bravoExample' },
-      action: 'volume_migrate_scheduled' as EventAction,
-      status: 'scheduled',
-      message: 'Volume bravoExample has been scheduled for an upgrade to NVMe.',
-      percent_complete: 100,
-    });
-    const volumeMigrating = eventFactory.build({
-      entity: { type: 'volume', id: 2, label: 'example-upgrading' },
-      action: 'volume_migrate' as EventAction,
-      status: 'started',
-      message: 'Volume example-upgrading is being upgraded to NVMe.',
-      percent_complete: 65,
-    });
-    const volumeMigrationFinished = eventFactory.build({
-      entity: { type: 'volume', id: 6, label: 'alphaExample' },
-      action: 'volume_migrate',
-      status: 'finished',
-      message: 'Volume alphaExample has finished upgrading to NVMe.',
-      percent_complete: 100,
-    });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
       seen: true,
       percent_complete: 100,
     });
-    return res.once(
-      ctx.json(
-        makeResourcePage([
-          ...events,
-          ...oldEvents,
-          volumeMigrationScheduled,
-          volumeMigrating,
-          volumeMigrationFinished,
-        ])
-      )
-    );
+    return res.once(ctx.json(makeResourcePage([...events, ...oldEvents])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
