@@ -1,11 +1,7 @@
 import * as React from 'react';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
-import Box from 'src/components/core/Box';
 import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
-import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import Typography from 'src/components/core/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
@@ -13,7 +9,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountPayment';
-import { styled } from '@mui/material/styles';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import {
   BillingActionButton,
@@ -27,15 +22,6 @@ interface Props {
   loading: boolean;
   paymentMethods: PaymentMethod[] | undefined;
 }
-
-const StyledDismissibleBanner = styled(DismissibleBanner)(({ theme }) => ({
-  fontSize: '0.875rem',
-  marginTop: theme.spacing(2),
-  padding: '8px 0px',
-  '& button': {
-    marginLeft: theme.spacing(),
-  },
-}));
 
 const PaymentInformation = (props: Props) => {
   const { loading, error, paymentMethods, isAkamaiCustomer } = props;
@@ -54,13 +40,6 @@ const PaymentInformation = (props: Props) => {
 
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
-
-  const showPayPalAvailableNotice =
-    !isAkamaiCustomer &&
-    !loading &&
-    !paymentMethods?.some(
-      (paymetMethod: PaymentMethod) => paymetMethod.type === 'paypal'
-    );
 
   const doDelete = () => {
     setDeleteLoading(true);
@@ -130,30 +109,6 @@ const PaymentInformation = (props: Props) => {
             Contact your representative with questions.
           </Typography>
         )}
-        {showPayPalAvailableNotice ? (
-          <StyledDismissibleBanner preferenceKey="paypal-available-notification">
-            <Box display="flex" alignItems="center">
-              <PayPalIcon
-                styles={{
-                  flexShrink: 0,
-                  height: 20,
-                  marginRight: '6px',
-                }}
-              />
-              <Typography
-                sx={{
-                  marginLeft: 0,
-                  fontSize: '0.875rem',
-                }}
-              >
-                PayPal is now available for recurring payments.{' '}
-                <Link to="#" onClick={() => replace(drawerLink)}>
-                  Add PayPal.
-                </Link>
-              </Typography>
-            </Box>
-          </StyledDismissibleBanner>
-        ) : null}
         <AddPaymentMethodDrawer
           open={addDrawerOpen}
           onClose={closeAddDrawer}

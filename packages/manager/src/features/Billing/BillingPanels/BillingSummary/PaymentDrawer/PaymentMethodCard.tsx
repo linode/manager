@@ -87,7 +87,7 @@ export const PaymentMethodCard = (props: Props) => {
   };
 
   return (
-    <Grid container>
+    <Grid xs={12}>
       <SelectionCard
         checked={id === paymentMethodId}
         onClick={() => handlePaymentMethodChange(id, cardIsExpired)}
@@ -101,7 +101,6 @@ export const PaymentMethodCard = (props: Props) => {
           width: 45,
         }}
         sxGrid={{
-          marginBottom: theme.spacing(),
           minWidth: '100%',
           padding: 0,
         }}

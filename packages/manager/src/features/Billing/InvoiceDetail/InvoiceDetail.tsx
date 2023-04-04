@@ -95,9 +95,13 @@ export const InvoiceDetail = (props: CombinedProps) => {
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };
 
-  const sxBox = {
-    display: 'flex',
+  const sxGrid = {
     alignItems: 'center',
+    display: 'flex',
+  };
+
+  const sxDownloadButton = {
+    whiteSpace: 'nowrap',
   };
 
   return (
@@ -108,8 +112,8 @@ export const InvoiceDetail = (props: CombinedProps) => {
     >
       <Grid container rowGap={2}>
         <Grid xs={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Box sx={{ ...sxBox, flex: 1 }}>
+          <Grid container sx={sxGrid} spacing={2}>
+            <Grid xs={12} sm={4} sx={sxGrid}>
               <Link to={`/account/billing`}>
                 <IconButton
                   data-qa-back-to-billing
@@ -135,8 +139,12 @@ export const InvoiceDetail = (props: CombinedProps) => {
                   Invoice #{invoice.id}
                 </Typography>
               )}
-            </Box>
-            <Box sx={sxBox} data-qa-printable-invoice>
+            </Grid>
+            <Grid
+              sm
+              data-qa-printable-invoice
+              sx={{ ...sxGrid, justifyContent: 'flex-end' }}
+            >
               {account && invoice && items && (
                 <>
                   {/* Hidden CSVLink component controlled by a ref.
@@ -150,20 +158,21 @@ export const InvoiceDetail = (props: CombinedProps) => {
                   <Button
                     buttonType="secondary"
                     onClick={() => csvRef.current.link.click()}
-                    style={{ marginRight: 8 }}
+                    sx={{ ...sxDownloadButton, marginRight: '8px' }}
                   >
                     Download CSV
                   </Button>
                   <Button
                     buttonType="secondary"
                     onClick={() => printInvoicePDF(account, invoice, items)}
+                    sx={sxDownloadButton}
                   >
                     Download PDF
                   </Button>
                 </>
               )}
-            </Box>
-            <Box sx={{ ...sxBox, margin: theme.spacing() }}>
+            </Grid>
+            <Grid sm="auto">
               {invoice && (
                 <Typography variant="h2" data-qa-total={invoice.total}>
                   Total:{' '}
@@ -173,8 +182,8 @@ export const InvoiceDetail = (props: CombinedProps) => {
                   />
                 </Typography>
               )}
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid xs={12}>
           {pdfGenerationError && <Notice error>Failed generating PDF.</Notice>}
