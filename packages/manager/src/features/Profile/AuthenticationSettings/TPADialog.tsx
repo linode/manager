@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface Props {
+export interface Props {
   currentProvider: Provider;
   newProvider: TPAProvider;
   open: boolean;
