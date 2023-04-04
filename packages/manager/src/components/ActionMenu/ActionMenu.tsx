@@ -10,7 +10,7 @@ import '@reach/menu-button/styles.css';
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import KebabIcon from 'src/assets/icons/kebab.svg';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { makeStyles } from 'tss-react/mui';
 
 export interface Action {

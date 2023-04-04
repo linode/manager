@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
 

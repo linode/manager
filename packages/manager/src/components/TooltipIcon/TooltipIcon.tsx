@@ -24,7 +24,7 @@ interface Props
   tooltipGAEvent?: () => void;
 }
 
-const TooltipIcon = (props: Props) => {
+export const TooltipIcon = (props: Props) => {
   const theme = useTheme();
 
   const {
@@ -95,5 +95,3 @@ const TooltipIcon = (props: Props) => {
     </Tooltip>
   );
 };
-
-export default TooltipIcon;

@@ -1,2 +1,2 @@
-import TooltipIcon from './TooltipIcon';
+import { TooltipIcon } from './TooltipIcon';
 export default TooltipIcon;
