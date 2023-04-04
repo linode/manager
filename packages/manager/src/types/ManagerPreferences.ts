@@ -25,6 +25,7 @@ export interface ManagerPreferences extends UserPreferences {
   theme?: ThemeChoice;
   desktop_sidebar_open?: boolean;
   sortKeys?: Partial<Record<string, OrderSet>>;
+  pageSizes?: Record<string, number>;
   main_content_banner_dismissal?: Record<string, boolean>;
   linode_news_banner_dismissed?: boolean;
   firewall_beta_notification?: boolean;

@@ -1,20 +1,20 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Currency from 'src/components/Currency';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import { getGrantData } from 'src/queries/profile';
-import { isWithinDays } from 'src/utilities/date';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
+import Typography from 'src/components/core/Typography';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import Button from 'src/components/Button';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import Divider from 'src/components/core/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import TooltipIcon from 'src/components/TooltipIcon';
-import Typography from 'src/components/core/Typography';
-import Button from 'src/components/Button';
 import { BillingPaper } from '../../BillingDetail';
 import { Breakpoint } from '@mui/material/styles';
+import { getGrantData } from 'src/queries/profile';
 import { GridSize } from '@mui/material/Grid';
+import { isWithinDays } from 'src/utilities/date';
 import { PaymentMethod } from '@linode/api-v4';
 import { PromoDisplay } from './PromoDisplay';
 import { styled, useTheme } from '@mui/material/styles';
@@ -138,6 +138,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         <Button
           sx={{
             ...theme.applyLinkStyles,
+            verticalAlign: 'initial',
           }}
           onClick={() => replace(routeForMakePayment)}
         >
