@@ -1,6 +1,4 @@
-import { curry } from 'ramda';
-import { Store } from 'redux';
-import { ApplicationState } from 'src/store';
+import { ApplicationStore } from 'src/store';
 
 export type EntityType = 'linode' | 'nodebalancer';
 
@@ -16,15 +14,11 @@ export type EntityType = 'linode' | 'nodebalancer';
  *
  * getEntityByIDFromStore('linode', 123456) => Linode | undefined
  *
- * The function is curried, so you can make entity-specific functions as needed:
- *
- * const getLinode = getEntityByIDFromStore('linode');
- * getLinode(123456) => Linode | undefined
  */
-const _getEntityByIDFromStore = (
+export const getEntityByIDFromStore = (
   entityType: EntityType,
   entityID: string | number,
-  store: Store<ApplicationState>
+  store: ApplicationStore
 ) => {
   if (!entityType || !entityID) {
     return;
@@ -40,5 +34,3 @@ const _getEntityByIDFromStore = (
       return;
   }
 };
-
-export const getEntityByIDFromStore = curry(_getEntityByIDFromStore);

@@ -35,6 +35,10 @@ import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
 import Reply from './TabbedReply';
 import LandingHeader from 'src/components/LandingHeader';
+import {
+  withApplicationStore,
+  WithApplicationStoreProps,
+} from 'src/containers/withApplicationStore.container';
 
 export type ClassNames =
   | 'title'
@@ -109,6 +113,7 @@ interface State {
 
 export type CombinedProps = RouteProps &
   WithProfileProps &
+  WithApplicationStoreProps &
   WithStyles<ClassNames>;
 
 export class SupportTicketDetail extends React.Component<CombinedProps, State> {
@@ -225,13 +230,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   renderEntityLabelWithIcon = () => {
-    const { classes } = this.props;
+    const { classes, store } = this.props;
     const { entity } = this.state.ticket!;
     if (!entity) {
       return null;
     }
     const icon: JSX.Element = this.getEntityIcon(entity.type);
-    const target = getLinkTargets(entity);
+    const target = getLinkTargets(entity, store);
     return (
       <Grid
         container
@@ -412,4 +417,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 }
 const styled = withStyles(styles);
 
-export default compose(withProfile, styled)(SupportTicketDetail);
+export default compose(
+  withProfile,
+  withApplicationStore,
+  styled
+)(SupportTicketDetail);

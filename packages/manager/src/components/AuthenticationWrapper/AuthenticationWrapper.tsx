@@ -5,7 +5,7 @@ import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-import { Action, Store } from 'redux';
+import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import {
   withQueryClient,
@@ -14,7 +14,7 @@ import {
 import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
-import { ApplicationState } from 'src/store';
+import { ApplicationState, ApplicationStore } from 'src/store';
 import { checkAccountSize } from 'src/store/accountManagement/accountManagement.requests';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
@@ -28,7 +28,7 @@ type CombinedProps = DispatchProps &
   StateProps &
   WithQueryClientProps & {
     children: React.ReactNode;
-    store: Store<ApplicationState>;
+    store: ApplicationStore;
   };
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {

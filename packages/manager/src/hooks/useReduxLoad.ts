@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePageVisibility } from 'react-page-visibility';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
-import { ApplicationState } from 'src/store';
+import { ApplicationState, useApplicationStore } from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
@@ -31,7 +31,7 @@ export const useReduxLoad = (
 ): UseReduxPreload => {
   const [_loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const store = useStore<ApplicationState>();
+  const store = useApplicationStore();
   const isVisible = usePageVisibility();
   /**
    * Restricted users get a 403 from /lke/clusters,

@@ -11,8 +11,7 @@ import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
-import { ApplicationState } from './store';
-import { Store } from 'redux';
+import { ApplicationStore } from './store';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
@@ -24,10 +23,7 @@ const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   return response;
 };
 
-export const handleError = (
-  error: AxiosError,
-  store: Store<ApplicationState>
-) => {
+export const handleError = (error: AxiosError, store: ApplicationStore) => {
   if (error.response && error.response.status === 401) {
     /**
      * this will blow out redux state and the componentDidUpdate in the
@@ -176,7 +172,7 @@ export const getXCustomerUuidHeader = (
   return response.headers['x-customer-uuid'];
 };
 
-export const setupInterceptors = (store: Store<ApplicationState>) => {
+export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use((config) => {
     const state = store.getState();
     /** Will end up being "Admin: 1234" or "Bearer 1234" */

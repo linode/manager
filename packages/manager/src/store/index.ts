@@ -1,5 +1,12 @@
 import { QueryClient } from 'react-query';
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import { useStore } from 'react-redux';
+import {
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore,
+  Store,
+} from 'redux';
 import thunk from 'redux-thunk';
 import accountManagement, {
   defaultState as defaultAccountManagementState,
@@ -209,3 +216,8 @@ const enhancersFactory = (queryClient: QueryClient) =>
 // We need an instance of the query client for some event event handlers
 export const storeFactory = (queryClient: QueryClient) =>
   createStore(reducers, defaultState, enhancersFactory(queryClient));
+
+export type ApplicationStore = Store<ApplicationState>;
+
+export const useApplicationStore = (): ApplicationStore =>
+  useStore<ApplicationState>();

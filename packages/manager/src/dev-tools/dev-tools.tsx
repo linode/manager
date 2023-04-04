@@ -8,10 +8,9 @@ import { Provider } from 'react-redux';
 import MockDataTool from './MockDataTool';
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import Grid from 'src/components/core/Grid';
-import { ApplicationState } from 'src/store';
-import { Store } from 'redux';
+import { ApplicationStore } from 'src/store';
 
-function install(store: Store<ApplicationState>) {
+function install(store: ApplicationStore) {
   (window as any).devToolsEnabled = true;
 
   function DevTools() {

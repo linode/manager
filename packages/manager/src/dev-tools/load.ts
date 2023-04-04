@@ -1,10 +1,9 @@
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
 
-import { Store } from 'redux';
 import { ENABLE_DEV_TOOLS } from 'src/constants';
-import { ApplicationState } from 'src/store';
+import { ApplicationStore } from 'src/store';
 
-function loadDevTools(store: Store<ApplicationState>, callback: () => any) {
+function loadDevTools(store: ApplicationStore, callback: () => any) {
   // we want it enabled by default everywhere but production and we also want
   // to support the dev tools in production (to make us more productive triaging production issues).
   // you can enable the DevTools via localStorage or the query string.

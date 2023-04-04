@@ -12,7 +12,6 @@
  */
 import { EntityEvent, Event } from '@linode/api-v4/lib/account';
 import { QueryClient } from 'react-query';
-import { Store } from 'redux';
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
 import {
@@ -23,11 +22,11 @@ import {
 } from 'src/eventsPolling';
 import { getEvents } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
-import { ApplicationState } from './store';
+import { ApplicationStore } from './store';
 
 export interface EventWithStore {
   event: Event;
-  store: Store<ApplicationState>;
+  store: ApplicationStore;
   queryClient: QueryClient;
 }
 
@@ -40,7 +39,7 @@ export const events$ = new Subject<EventWithStore>();
 let inProgress = false;
 
 export const requestEvents = (
-  store: Store<ApplicationState>,
+  store: ApplicationStore,
   queryClient: QueryClient
 ) => {
   inProgress = true;
@@ -61,7 +60,7 @@ export const requestEvents = (
 };
 
 export const startEventsInterval = (
-  store: Store<ApplicationState>,
+  store: ApplicationStore,
   queryClient: QueryClient
 ) =>
   setInterval(
