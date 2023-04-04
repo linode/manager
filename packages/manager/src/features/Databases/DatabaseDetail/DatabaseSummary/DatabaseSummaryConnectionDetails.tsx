@@ -117,6 +117,11 @@ interface Props {
   database: Database;
 }
 
+const sxTooltipIcon = {
+  padding: '0px',
+  marginLeft: '4px',
+};
+
 const privateHostCopy =
   'A private network host and a private IP can only be used to access a Database Cluster from Linodes in the same data center and will not incur transfer costs.';
 
@@ -211,14 +216,13 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         Download CA Certificate
       </Button>
       {disableDownloadCACertificateBtn ? (
-        <TooltipIcon
-          sxTooltipIcon={{
-            padding: 0,
-            marginLeft: '4px',
-          }}
-          text="Your Database Cluster is currently provisioning."
-          status="help"
-        />
+        <span className="tooltipIcon">
+          <TooltipIcon
+            sxTooltipIcon={sxTooltipIcon}
+            text="Your Database Cluster is currently provisioning."
+            status="help"
+          />
+        </span>
       ) : null}
     </>
   );
@@ -256,11 +260,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           )}
           {disableShowBtn ? (
             <TooltipIcon
-              // className={classes.TooltipIcon}
-              sxTooltipIcon={{
-                padding: 0,
-                marginLeft: '4px',
-              }}
+              sxTooltipIcon={sxTooltipIcon}
               status="help"
               text={
                 database.status === 'provisioning'
@@ -293,11 +293,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                   />
                   {database.engine === 'mongodb' ? (
                     <TooltipIcon
-                      // className={classes.TooltipIcon}
-                      sxTooltipIcon={{
-                        padding: 0,
-                        marginLeft: '4px',
-                      }}
+                      sxTooltipIcon={sxTooltipIcon}
                       text={mongoHostHelperCopy}
                       status="help"
                     />
@@ -346,11 +342,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                       {/*  Display the helper text on the first hostname */}
                       {i === 0 ? (
                         <TooltipIcon
-                          // className={classes.TooltipIcon}
-                          sxTooltipIcon={{
-                            padding: 0,
-                            marginLeft: '4px',
-                          }}
+                          sxTooltipIcon={sxTooltipIcon}
                           text={mongoHostHelperCopy}
                           status="help"
                         />
@@ -371,11 +363,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               text={database.hosts.secondary}
             />
             <TooltipIcon
-              // className={classes.TooltipIcon}
-              sxTooltipIcon={{
-                padding: 0,
-                marginLeft: '4px',
-              }}
+              sxTooltipIcon={sxTooltipIcon}
               text={privateHostCopy}
               status="help"
             />
