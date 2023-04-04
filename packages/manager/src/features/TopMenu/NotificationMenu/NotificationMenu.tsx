@@ -145,11 +145,11 @@ export const NotificationMenu = () => {
           zIndex: 3000,
           top: '50px !important',
           left: 'auto !important',
-          right: '8px',
+          right: '15px',
           width: '430px',
           position: 'absolute !important',
-          height: 'calc(100vh - 125px)',
-          overflowY: 'scroll',
+          maxHeight: 'calc(100vh - 150px)',
+          overflowY: 'auto',
           [theme.breakpoints.down('sm')]: {
             right: 0,
             width: '100%',
@@ -169,6 +169,7 @@ export const NotificationMenu = () => {
                 border: 'none',
                 padding: 0,
                 cursor: 'default',
+                display: 'block',
               }}
               disableRipple
             >
