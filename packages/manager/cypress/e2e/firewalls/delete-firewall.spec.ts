@@ -40,9 +40,13 @@ describe('delete firewall', () => {
         });
 
       // Confirm that firewall is still listed and initiate deletion again.
-      cy.findByText(firewall.label).should('be.visible');
-      fbtVisible('Delete');
-      fbtClick('Delete');
+      cy.findByText(firewall.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          fbtVisible('Delete');
+          fbtClick('Delete');
+        });
 
       // Confirm deletion.
       ui.dialog

@@ -5,6 +5,7 @@ import { authenticate } from 'support/api/authentication';
 import { containsClick, getClick } from 'support/helpers';
 import { interceptCreateFirewall } from 'support/intercepts/firewalls';
 import { randomItem, randomString, randomLabel } from 'support/util/random';
+import { ui } from 'support/ui';
 
 authenticate();
 describe('create firewall', () => {
@@ -22,13 +23,17 @@ describe('create firewall', () => {
     interceptCreateFirewall().as('createFirewall');
     cy.visitWithLogin('/firewalls/create');
 
-    // An error message appears when attempting to create a Firewall without a label
-    getClick('[data-testid="create-firewall-submit"]');
-    cy.findByText('Label is required.');
-
-    // Fill out and submit firewall create form.
-    containsClick('Label').type(firewall.label);
-    getClick('[data-testid="create-firewall-submit"]');
+    ui.drawer
+      .findByTitle('Create Firewall')
+      .should('be.visible')
+      .within(() => {
+        // An error message appears when attempting to create a Firewall without a label
+        getClick('[data-testid="create-firewall-submit"]');
+        cy.findByText('Label is required.');
+        // Fill out and submit firewall create form.
+        containsClick('Label').type(firewall.label);
+        getClick('[data-testid="create-firewall-submit"]');
+      });
 
     // Confirm that firewall is listed on landing page with expected configuration.
     cy.findByText(firewall.label)
@@ -63,11 +68,29 @@ describe('create firewall', () => {
       interceptCreateFirewall().as('createFirewall');
       cy.visitWithLogin('/firewalls/create');
 
-      // Fill out and submit firewall create form.
-      containsClick('Label').type(firewall.label);
-      containsClick('Select a Linode').type(`${linode.label}{enter}`);
+      ui.drawer
+        .findByTitle('Create Firewall')
+        .should('be.visible')
+        .within(() => {
+          // Fill out and submit firewall create form.
+          containsClick('Label').type(firewall.label);
+          cy.get('[data-testid="textfield-input"]:last')
+            .should('be.visible')
+            .click()
+            .type(linode.label);
+        });
 
-      getClick('[data-testid="create-firewall-submit"]');
+      ui.autocompletePopper
+        .findByTitle(linode.label)
+        .should('be.visible')
+        .click();
+
+      ui.drawer
+        .findByTitle('Create Firewall')
+        .should('be.visible')
+        .within(() => {
+          getClick('[data-testid="create-firewall-submit"]');
+        });
 
       // Confirm that firewall is listed on landing page with expected configuration.
       cy.findByText(firewall.label)
