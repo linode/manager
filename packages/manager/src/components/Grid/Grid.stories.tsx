@@ -35,6 +35,20 @@ export default meta;
 
 type Story = StoryObj<typeof Grid2>;
 
+const gridSizes = [
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [2, 2, 2, 2, 2, 2],
+  [3, 3, 3, 3],
+  [4, 4, 4],
+  [5, 2, 5],
+  [6, 6],
+  [7, 5],
+  [8, 4],
+  [9, 3],
+  [10, 2],
+  [11, 1],
+];
+
 export const Default: Story = {
   args: {
     children: 'Grid2',
@@ -66,126 +80,13 @@ export const Default: Story = {
         </Box>
         <Box sx={{ flexGrow: 1, padding: '20px 0' }}>
           <Grid container spacing={args.spacing} {...args}>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
-            <ColorGrid item xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid>
-            <ColorGrid item xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid>
-            <ColorGrid item xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid>
-            <ColorGrid item xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid>
-            <ColorGrid item xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid>
-            <ColorGrid item xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid>
-            <ColorGrid item xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid>
-            <ColorGrid item xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid>
-            <ColorGrid item xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid>
-            <ColorGrid item xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid>
-            <ColorGrid item xs={4}>
-              <Item>xs=4</Item>
-            </ColorGrid>
-            <ColorGrid item xs={4}>
-              <Item>xs=4</Item>
-            </ColorGrid>
-            <ColorGrid item xs={4}>
-              <Item>xs=4</Item>
-            </ColorGrid>
-            <ColorGrid item xs={5}>
-              <Item>xs=5</Item>
-            </ColorGrid>
-            <ColorGrid item xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid>
-            <ColorGrid item xs={5}>
-              <Item>xs=5</Item>
-            </ColorGrid>
-            <ColorGrid item xs={6}>
-              <Item>xs=6</Item>
-            </ColorGrid>
-            <ColorGrid item xs={6}>
-              <Item>xs=6</Item>
-            </ColorGrid>
-            <ColorGrid item xs={7}>
-              <Item>xs=7</Item>
-            </ColorGrid>
-            <ColorGrid item xs={5}>
-              <Item>xs=5</Item>
-            </ColorGrid>
-            <ColorGrid item xs={8}>
-              <Item>xs=8</Item>
-            </ColorGrid>
-            <ColorGrid item xs={4}>
-              <Item>xs=4</Item>
-            </ColorGrid>
-            <ColorGrid item xs={9}>
-              <Item>xs=9</Item>
-            </ColorGrid>
-            <ColorGrid item xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid>
-            <ColorGrid item xs={10}>
-              <Item>xs=10</Item>
-            </ColorGrid>
-            <ColorGrid item xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid>
-            <ColorGrid item xs={11}>
-              <Item>xs=11</Item>
-            </ColorGrid>
-            <ColorGrid item xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid>
+            {gridSizes.map((row) =>
+              row.map((size, index) => (
+                <ColorGrid item key={index} xs={size}>
+                  <Item>xs={size}</Item>
+                </ColorGrid>
+              ))
+            )}
           </Grid>
         </Box>
       </Box>
@@ -201,126 +102,13 @@ export const Default: Story = {
         </Box>
         <Box sx={{ flexGrow: 1, padding: '20px 0' }}>
           <Grid2 container spacing={args.spacing} {...args}>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={4}>
-              <Item>xs=4</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={4}>
-              <Item>xs=4</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={4}>
-              <Item>xs=4</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={5}>
-              <Item>xs=5</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={5}>
-              <Item>xs=5</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={6}>
-              <Item>xs=6</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={6}>
-              <Item>xs=6</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={7}>
-              <Item>xs=7</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={5}>
-              <Item>xs=5</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={8}>
-              <Item>xs=8</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={4}>
-              <Item>xs=4</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={9}>
-              <Item>xs=9</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={3}>
-              <Item>xs=3</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={10}>
-              <Item>xs=10</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={2}>
-              <Item>xs=2</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={11}>
-              <Item>xs=11</Item>
-            </ColorGrid2>
-            <ColorGrid2 xs={1}>
-              <Item>xs=1</Item>
-            </ColorGrid2>
+            {gridSizes.map((row) =>
+              row.map((size, index) => (
+                <ColorGrid2 key={index} xs={size}>
+                  <Item>xs={size}</Item>
+                </ColorGrid2>
+              ))
+            )}
           </Grid2>
         </Box>
       </Box>

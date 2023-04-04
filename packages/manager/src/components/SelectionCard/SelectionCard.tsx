@@ -28,7 +28,7 @@ export interface Props {
 
 const StyledGrid = styled(Grid, {
   label: 'SelectionCardGrid',
-})<Partial<Props>>(({ theme, ...props }) => ({
+})<Partial<Props>>(({ ...props }) => ({
   '&:focus': {
     outline: '1px dotted #999',
   },
