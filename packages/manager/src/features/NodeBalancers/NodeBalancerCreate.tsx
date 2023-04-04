@@ -16,7 +16,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
@@ -24,7 +23,6 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
@@ -57,6 +55,8 @@ import {
 import LandingHeader from 'src/components/LandingHeader';
 import { createNodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { queryKey } from 'src/queries/nodebalancers';
+import Box from 'src/components/core/Box';
+import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -503,21 +503,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         !agreements.data?.eu_model
     );
 
-    const { region } = this.state.nodeBalancerFields;
-    let displaySections;
-    if (region) {
-      const foundRegion = regionsData.find((r) => r.id === region);
-      if (foundRegion) {
-        displaySections = [
-          {
-            title: foundRegion.country,
-            details: foundRegion.label,
-          },
-        ];
-      } else {
-        displaySections = [{ title: 'Unknown Region' }];
-      }
-    }
+    const regionLabel = this.props.regionsData.find(
+      (r) => r.id === nodeBalancerFields.region
+    )?.label;
 
     if (this.props.regionsLoading) {
       return <CircleProgress />;
@@ -526,236 +514,204 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a NodeBalancer" />
-        <Grid container className="m0">
-          <Grid item className={`mlMain p0`}>
-            <LandingHeader
-              title="Create"
-              breadcrumbProps={{
-                pathname: '/nodebalancers/create',
-                breadcrumbDataAttrs: {
-                  'data-qa-create-nodebalancer-header': true,
-                },
-              }}
-            />
-            {generalError && !this.disabled && (
-              <Notice spacingTop={8} error>
-                {generalError}
-              </Notice>
-            )}
-            {this.disabled && (
-              <Notice
-                text={
-                  "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
-                }
-                error={true}
-                spacingTop={16}
-                important
-              />
-            )}
-            <LabelAndTagsPanel
-              data-qa-label-input
-              labelFieldProps={{
-                errorText: hasErrorFor('label'),
-                label: 'NodeBalancer Label',
-                onChange: this.labelChange,
-                value: nodeBalancerFields.label || '',
-                disabled: this.disabled,
-              }}
-              tagsInputProps={{
-                value: nodeBalancerFields.tags
-                  ? nodeBalancerFields.tags.map((tag) => ({
-                      label: tag,
-                      value: tag,
-                    }))
-                  : [],
-                onChange: this.tagsChange,
-                tagError: hasErrorFor('tags'),
-                disabled: this.disabled,
-              }}
-            />
-            <SelectRegionPanel
-              regions={regionsData}
-              error={hasErrorFor('region')}
-              selectedID={nodeBalancerFields.region}
-              handleSelection={this.regionChange}
-              disabled={this.disabled}
-            />
-            <Grid item xs={12}>
-              <Typography variant="h2" className={classes.title}>
-                NodeBalancer Settings
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              justifyContent="space-between"
-              alignItems="flex-end"
-              style={{ marginTop: 8 }}
-              data-qa-nodebalancer-settings-section
-            >
-              {this.state.nodeBalancerFields.configs.map(
-                (nodeBalancerConfig, idx) => {
-                  const lensTo = lensFrom([
-                    'nodeBalancerFields',
-                    'configs',
-                    idx,
-                  ]);
+        <LandingHeader
+          title="Create"
+          breadcrumbProps={{
+            pathname: '/nodebalancers/create',
+            breadcrumbDataAttrs: {
+              'data-qa-create-nodebalancer-header': true,
+            },
+          }}
+        />
+        {generalError && !this.disabled && (
+          <Notice spacingTop={8} error>
+            {generalError}
+          </Notice>
+        )}
+        {this.disabled && (
+          <Notice
+            text={
+              "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
+            }
+            error={true}
+            spacingTop={16}
+            important
+          />
+        )}
+        <LabelAndTagsPanel
+          data-qa-label-input
+          labelFieldProps={{
+            errorText: hasErrorFor('label'),
+            label: 'NodeBalancer Label',
+            onChange: this.labelChange,
+            value: nodeBalancerFields.label || '',
+            disabled: this.disabled,
+          }}
+          tagsInputProps={{
+            value: nodeBalancerFields.tags
+              ? nodeBalancerFields.tags.map((tag) => ({
+                  label: tag,
+                  value: tag,
+                }))
+              : [],
+            onChange: this.tagsChange,
+            tagError: hasErrorFor('tags'),
+            disabled: this.disabled,
+          }}
+        />
+        <SelectRegionPanel
+          regions={regionsData}
+          error={hasErrorFor('region')}
+          selectedID={nodeBalancerFields.region}
+          handleSelection={this.regionChange}
+          disabled={this.disabled}
+        />
+        <Typography variant="h2" className={classes.title}>
+          NodeBalancer Settings
+        </Typography>
+        {this.state.nodeBalancerFields.configs.map(
+          (nodeBalancerConfig, idx) => {
+            const lensTo = lensFrom(['nodeBalancerFields', 'configs', idx]);
 
-                  const L = {
-                    algorithmLens: lensTo(['algorithm']),
-                    checkPassiveLens: lensTo(['check_passive']),
-                    checkBodyLens: lensTo(['check_body']),
-                    checkPathLens: lensTo(['check_path']),
-                    portLens: lensTo(['port']),
-                    protocolLens: lensTo(['protocol']),
-                    proxyProtocolLens: lensTo(['proxy_protocol']),
-                    healthCheckTypeLens: lensTo(['check']),
-                    healthCheckAttemptsLens: lensTo(['check_attempts']),
-                    healthCheckIntervalLens: lensTo(['check_interval']),
-                    healthCheckTimeoutLens: lensTo(['check_timeout']),
-                    sessionStickinessLens: lensTo(['stickiness']),
-                    sslCertificateLens: lensTo(['ssl_cert']),
-                    privateKeyLens: lensTo(['ssl_key']),
-                  };
+            const L = {
+              algorithmLens: lensTo(['algorithm']),
+              checkPassiveLens: lensTo(['check_passive']),
+              checkBodyLens: lensTo(['check_body']),
+              checkPathLens: lensTo(['check_path']),
+              portLens: lensTo(['port']),
+              protocolLens: lensTo(['protocol']),
+              proxyProtocolLens: lensTo(['proxy_protocol']),
+              healthCheckTypeLens: lensTo(['check']),
+              healthCheckAttemptsLens: lensTo(['check_attempts']),
+              healthCheckIntervalLens: lensTo(['check_interval']),
+              healthCheckTimeoutLens: lensTo(['check_timeout']),
+              sessionStickinessLens: lensTo(['stickiness']),
+              sslCertificateLens: lensTo(['ssl_cert']),
+              privateKeyLens: lensTo(['ssl_key']),
+            };
 
-                  return (
-                    <Paper
-                      key={idx}
-                      style={{ padding: 24, margin: 8, width: '100%' }}
-                    >
-                      <NodeBalancerConfigPanel
-                        nodeBalancerRegion={
-                          this.state.nodeBalancerFields.region
-                        }
-                        errors={nodeBalancerConfig.errors}
-                        configIdx={idx}
-                        algorithm={view(L.algorithmLens, this.state)}
-                        onAlgorithmChange={this.updateState(L.algorithmLens)}
-                        checkPassive={view(L.checkPassiveLens, this.state)}
-                        onCheckPassiveChange={this.updateState(
-                          L.checkPassiveLens
-                        )}
-                        checkBody={view(L.checkBodyLens, this.state)}
-                        onCheckBodyChange={this.updateState(L.checkBodyLens)}
-                        checkPath={view(L.checkPathLens, this.state)}
-                        onCheckPathChange={this.updateState(L.checkPathLens)}
-                        port={view(L.portLens, this.state)}
-                        onPortChange={this.updateState(L.portLens)}
-                        protocol={view(L.protocolLens, this.state)}
-                        proxyProtocol={view(L.proxyProtocolLens, this.state)}
-                        onProtocolChange={this.updateState(
-                          L.protocolLens,
-                          L,
-                          this.afterProtocolUpdate
-                        )}
-                        onProxyProtocolChange={this.updateState(
-                          L.proxyProtocolLens
-                        )}
-                        healthCheckType={view(
-                          L.healthCheckTypeLens,
-                          this.state
-                        )}
-                        onHealthCheckTypeChange={this.updateState(
-                          L.healthCheckTypeLens,
-                          L,
-                          this.afterHealthCheckTypeUpdate
-                        )}
-                        healthCheckAttempts={view(
-                          L.healthCheckAttemptsLens,
-                          this.state
-                        )}
-                        onHealthCheckAttemptsChange={this.updateState(
-                          L.healthCheckAttemptsLens
-                        )}
-                        healthCheckInterval={view(
-                          L.healthCheckIntervalLens,
-                          this.state
-                        )}
-                        onHealthCheckIntervalChange={this.updateState(
-                          L.healthCheckIntervalLens
-                        )}
-                        healthCheckTimeout={view(
-                          L.healthCheckTimeoutLens,
-                          this.state
-                        )}
-                        onHealthCheckTimeoutChange={this.updateState(
-                          L.healthCheckTimeoutLens
-                        )}
-                        sessionStickiness={view(
-                          L.sessionStickinessLens,
-                          this.state
-                        )}
-                        onSessionStickinessChange={this.updateState(
-                          L.sessionStickinessLens
-                        )}
-                        sslCertificate={view(L.sslCertificateLens, this.state)}
-                        onSslCertificateChange={this.updateState(
-                          L.sslCertificateLens
-                        )}
-                        privateKey={view(L.privateKeyLens, this.state)}
-                        onPrivateKeyChange={this.updateState(L.privateKeyLens)}
-                        nodes={this.state.nodeBalancerFields.configs[idx].nodes}
-                        addNode={this.addNodeBalancerConfigNode(idx)}
-                        removeNode={this.removeNodeBalancerConfigNode(idx)}
-                        onNodeLabelChange={(nodeIndex, value) =>
-                          this.onNodeLabelChange(idx, nodeIndex, value)
-                        }
-                        onNodeAddressChange={(nodeIndex, value) =>
-                          this.onNodeAddressChange(idx, nodeIndex, value)
-                        }
-                        onNodePortChange={(nodeIndex, value) =>
-                          this.onNodePortChange(idx, nodeIndex, value)
-                        }
-                        onNodeWeightChange={(nodeIndex, value) =>
-                          this.onNodeWeightChange(idx, nodeIndex, value)
-                        }
-                        onDelete={this.onDeleteConfig(idx)}
-                        disabled={this.disabled}
-                      />
-                    </Paper>
-                  );
-                }
-              )}
-              <Grid item>
-                <Button
-                  buttonType="secondary"
-                  onClick={this.addNodeBalancer}
-                  data-qa-add-config
+            return (
+              <Paper key={idx} sx={{ marginTop: 2, marginBottom: 2 }}>
+                <NodeBalancerConfigPanel
+                  nodeBalancerRegion={this.state.nodeBalancerFields.region}
+                  errors={nodeBalancerConfig.errors}
+                  configIdx={idx}
+                  algorithm={view(L.algorithmLens, this.state)}
+                  onAlgorithmChange={this.updateState(L.algorithmLens)}
+                  checkPassive={view(L.checkPassiveLens, this.state)}
+                  onCheckPassiveChange={this.updateState(L.checkPassiveLens)}
+                  checkBody={view(L.checkBodyLens, this.state)}
+                  onCheckBodyChange={this.updateState(L.checkBodyLens)}
+                  checkPath={view(L.checkPathLens, this.state)}
+                  onCheckPathChange={this.updateState(L.checkPathLens)}
+                  port={view(L.portLens, this.state)}
+                  onPortChange={this.updateState(L.portLens)}
+                  protocol={view(L.protocolLens, this.state)}
+                  proxyProtocol={view(L.proxyProtocolLens, this.state)}
+                  onProtocolChange={this.updateState(
+                    L.protocolLens,
+                    L,
+                    this.afterProtocolUpdate
+                  )}
+                  onProxyProtocolChange={this.updateState(L.proxyProtocolLens)}
+                  healthCheckType={view(L.healthCheckTypeLens, this.state)}
+                  onHealthCheckTypeChange={this.updateState(
+                    L.healthCheckTypeLens,
+                    L,
+                    this.afterHealthCheckTypeUpdate
+                  )}
+                  healthCheckAttempts={view(
+                    L.healthCheckAttemptsLens,
+                    this.state
+                  )}
+                  onHealthCheckAttemptsChange={this.updateState(
+                    L.healthCheckAttemptsLens
+                  )}
+                  healthCheckInterval={view(
+                    L.healthCheckIntervalLens,
+                    this.state
+                  )}
+                  onHealthCheckIntervalChange={this.updateState(
+                    L.healthCheckIntervalLens
+                  )}
+                  healthCheckTimeout={view(
+                    L.healthCheckTimeoutLens,
+                    this.state
+                  )}
+                  onHealthCheckTimeoutChange={this.updateState(
+                    L.healthCheckTimeoutLens
+                  )}
+                  sessionStickiness={view(L.sessionStickinessLens, this.state)}
+                  onSessionStickinessChange={this.updateState(
+                    L.sessionStickinessLens
+                  )}
+                  sslCertificate={view(L.sslCertificateLens, this.state)}
+                  onSslCertificateChange={this.updateState(
+                    L.sslCertificateLens
+                  )}
+                  privateKey={view(L.privateKeyLens, this.state)}
+                  onPrivateKeyChange={this.updateState(L.privateKeyLens)}
+                  nodes={this.state.nodeBalancerFields.configs[idx].nodes}
+                  addNode={this.addNodeBalancerConfigNode(idx)}
+                  removeNode={this.removeNodeBalancerConfigNode(idx)}
+                  onNodeLabelChange={(nodeIndex, value) =>
+                    this.onNodeLabelChange(idx, nodeIndex, value)
+                  }
+                  onNodeAddressChange={(nodeIndex, value) =>
+                    this.onNodeAddressChange(idx, nodeIndex, value)
+                  }
+                  onNodePortChange={(nodeIndex, value) =>
+                    this.onNodePortChange(idx, nodeIndex, value)
+                  }
+                  onNodeWeightChange={(nodeIndex, value) =>
+                    this.onNodeWeightChange(idx, nodeIndex, value)
+                  }
+                  onDelete={this.onDeleteConfig(idx)}
                   disabled={this.disabled}
-                >
-                  Add another Configuration
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item className={`mlSidebar ${classes.sidebar}`}>
-            <CheckoutBar
-              heading={`${
-                this.state.nodeBalancerFields.label || 'NodeBalancer'
-              } Summary`}
-              onDeploy={this.createNodeBalancer}
-              calculatedPrice={10}
-              disabled={
-                this.state.submitting ||
-                this.disabled ||
-                (showAgreement && !signedAgreement)
+                />
+              </Paper>
+            );
+          }
+        )}
+        <Button
+          buttonType="outlined"
+          onClick={this.addNodeBalancer}
+          data-qa-add-config
+          disabled={this.disabled}
+        >
+          Add another Configuration
+        </Button>
+        <CheckoutSummary
+          heading={`Summary ${nodeBalancerFields.label ?? ''}`}
+          displaySections={[
+            { title: '$10/month' },
+            { title: regionLabel },
+            { title: 'Configs', details: nodeBalancerFields.configs.length },
+            {
+              title: 'Nodes',
+              details: nodeBalancerFields.configs.reduce(
+                (acc, config) => acc + config.nodes.length,
+                0
+              ),
+            },
+          ].filter((item) => Boolean(item.title))}
+        />
+        <Box
+          display="flex"
+          justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+        >
+          {showAgreement ? (
+            <EUAgreementCheckbox
+              checked={signedAgreement}
+              onChange={(e) =>
+                this.setState({ signedAgreement: e.target.checked })
               }
-              submitText="Create NodeBalancer"
-              agreement={
-                showAgreement ? (
-                  <EUAgreementCheckbox
-                    checked={signedAgreement}
-                    onChange={(e) =>
-                      this.setState({ signedAgreement: e.target.checked })
-                    }
-                  />
-                ) : undefined
-              }
-            >
-              <DisplaySectionList displaySections={displaySections} />
-            </CheckoutBar>
-          </Grid>
-        </Grid>
-
+            />
+          ) : undefined}
+          <Button buttonType="primary" onClick={this.createNodeBalancer}>
+            Create NodeBalancer
+          </Button>
+        </Box>
         <ConfirmationDialog
           onClose={this.onCloseConfirmation}
           title={'Delete this configuration?'}

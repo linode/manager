@@ -15,7 +15,7 @@ const styles = (theme: Theme) =>
     root: {
       flexGrow: 1,
       width: '100%',
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(1),
       backgroundColor: theme.color.white,
     },
     expPanelButton: {
@@ -46,6 +46,7 @@ export class InfoPanel extends React.Component<CombinedProps> {
             placeholder: 'Enter a label',
           })}
           data-qa-label-input
+          noMarginTop
         />
         {tagsInputProps && <TagsInput {...tagsInputProps} />}
       </Paper>
