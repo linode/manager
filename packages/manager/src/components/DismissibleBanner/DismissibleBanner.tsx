@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import Notice, { NoticeProps } from 'src/components/Notice';
+import { SxProps } from '@mui/system';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
@@ -32,6 +33,7 @@ interface Props {
   children: JSX.Element;
   className?: string;
   options?: DismissibleNotificationOptions;
+  sx?: SxProps;
 }
 
 type CombinedProps = Props & Partial<NoticeProps>;

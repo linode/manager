@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useFormik, yupToFormErrors } from 'formik';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -160,12 +160,12 @@ const AddCreditCardForm = (props: Props) => {
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <Grid item xs={12} className={classes.error}>
+        <Grid xs={12} className={classes.error}>
           <Notice error text={error} />
         </Grid>
       )}
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <TextField
             name="card_number"
             value={values.card_number}
@@ -179,7 +179,7 @@ const AddCreditCardForm = (props: Props) => {
             }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             inputRef={expiryRef}
             name="expiry"
@@ -198,7 +198,7 @@ const AddCreditCardForm = (props: Props) => {
             disabled={disableInput}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             name="cvv"
             value={values.cvv}
