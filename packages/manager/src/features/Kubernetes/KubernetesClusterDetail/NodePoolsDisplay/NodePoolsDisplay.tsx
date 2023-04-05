@@ -23,7 +23,7 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(0),
     paddingTop: '4px',
   },
   button: {
@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   nodePoolHeader: {
     marginBottom: theme.spacing(),
+    marginLeft: '15px',
   },
   nodePoolHeaderOuter: {
     display: 'flex',
@@ -49,12 +50,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   nodePool: {
     marginBottom: theme.spacing(3),
   },
-  mobileSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
+  // mobileSpacing: {
+  //   [theme.breakpoints.down('md')]: {
+  //     marginLeft: theme.spacing(),
+  //     marginRight: theme.spacing(),
+  //   },
+  // },
 }));
 
 export interface Props {
@@ -129,8 +130,8 @@ export const NodePoolsDisplay = (props: Props) => {
           <Typography
             variant="h2"
             className={classNames(
-              classes.nodePoolHeader,
-              classes.mobileSpacing
+              classes.nodePoolHeader
+              // classes.mobileSpacing
             )}
           >
             Node Pools
@@ -139,14 +140,20 @@ export const NodePoolsDisplay = (props: Props) => {
         <Grid item>
           <Button
             buttonType="secondary"
-            className={classNames(classes.button, classes.mobileSpacing)}
+            className={classNames(
+              classes.button
+              // classes.mobileSpacing
+            )}
             onClick={() => setIsRecycleClusterOpen(true)}
           >
             Recycle All Nodes
           </Button>
           <Button
             buttonType="primary"
-            className={classNames(classes.button, classes.mobileSpacing)}
+            className={classNames(
+              classes.button
+              //  classes.mobileSpacing
+            )}
             onClick={handleOpenAddDrawer}
           >
             Add a Node Pool
