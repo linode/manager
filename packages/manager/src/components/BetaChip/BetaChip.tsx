@@ -1,8 +1,7 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
-import classNames from 'classnames';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 interface Props
   extends Omit<
@@ -21,7 +20,7 @@ interface Props
   color?: 'default' | 'primary';
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     fontFamily: theme.font.bold,
     fontSize: '0.625rem',
@@ -32,8 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const BetaChip: React.FC<Props> = (props) => {
-  const classes = useStyles();
+const BetaChip = (props: Props) => {
+  const { classes, cx } = useStyles();
 
   const { className, color } = props;
 
@@ -42,11 +41,11 @@ const BetaChip: React.FC<Props> = (props) => {
       {...props}
       label="beta"
       color={color}
-      className={classNames(className, {
+      className={cx(className, {
         [classes.root]: true,
       })}
     />
   );
 };
 
-export default BetaChip;
+export { BetaChip };
