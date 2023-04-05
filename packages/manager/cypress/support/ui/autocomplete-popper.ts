@@ -10,7 +10,9 @@ export const autocompletePopper = {
    */
   findByTitle: (title: string): Cypress.Chainable => {
     return cy
-      .findByText(`${title}`)
-      .closest('[data-qa-autocomplete-popper="true"]');
+      .document()
+      .its('body')
+      .find('[data-qa-autocomplete-popper]')
+      .findByText(title);
   },
 };
