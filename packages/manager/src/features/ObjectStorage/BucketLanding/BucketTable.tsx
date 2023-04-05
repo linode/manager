@@ -16,7 +16,6 @@ interface Props {
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
-  openBucketDrawer: () => void;
   handleClickRemove: (bucket: ObjectStorageBucket) => void;
   handleClickDetails: (bucket: ObjectStorageBucket) => void;
 }

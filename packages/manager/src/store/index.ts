@@ -12,10 +12,6 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState,
 } from 'src/store/backupDrawer';
-import bucketDrawer, {
-  defaultState as bucketDrawerDefaultState,
-  State as BucketDrawerState,
-} from 'src/store/bucketDrawer/bucketDrawer.reducer';
 import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
@@ -125,7 +121,6 @@ export interface ApplicationState {
   stackScriptDialog: StackScriptDialogState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
-  bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
   pendingUpload: PendingUploadState;
   initialLoad: InitialLoadState;
@@ -144,7 +139,6 @@ export const defaultState: ApplicationState = {
   stackScriptDialog: stackScriptDialogDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
-  bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
   pendingUpload: pendingUploadState,
   initialLoad: initialLoadState,
@@ -174,7 +168,6 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDialog,
   tagImportDrawer,
   volumeDrawer,
-  bucketDrawer,
   events,
   createLinode: linodeCreateReducer,
   pendingUpload,
