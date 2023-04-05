@@ -13,7 +13,15 @@ interface Props {
 }
 
 export const BarPercent = (props: Props) => {
-  const { max, value, className, valueBuffer, isFetchingValue } = props;
+  const {
+    max,
+    value,
+    className,
+    valueBuffer,
+    isFetchingValue,
+    rounded,
+    narrow,
+  } = props;
 
   const sxDetails = {
     '& .MuiLinearProgress-barColorPrimary': {
@@ -40,6 +48,8 @@ export const BarPercent = (props: Props) => {
             : 'determinate'
         }
         sx={sxDetails}
+        rounded={rounded}
+        narrow={narrow}
       />
     </StyledDiv>
   );
@@ -60,12 +70,7 @@ const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
 })<Partial<Props>>(({ theme, ...props }) => ({
   backgroundColor: theme.color.grey2,
-  padding: 12,
+  padding: props.narrow ? 8 : 12,
   width: '100%',
-  ...(props.rounded && {
-    borderRadius: theme.shape.borderRadius,
-  }),
-  ...(props.narrow && {
-    padding: 8,
-  }),
+  borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
 }));
