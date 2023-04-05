@@ -17,7 +17,7 @@ import TextField from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
+import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -250,7 +250,7 @@ const UserProfile: React.FC<Props> = (props) => {
           <UserDeleteConfirmationDialog
             username={username}
             open={deleteConfirmDialogOpen}
-            onDelete={onDeleteConfirm}
+            onDelete={() => onDeleteConfirm(username)}
             onCancel={onDeleteCancel}
           />
         </>
