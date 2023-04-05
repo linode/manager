@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'center',
   },
   deletePoolBtn: {
-    paddingRight: 0,
+    paddingRight: 8,
     marginBottom: 3,
   },
 }));
@@ -70,7 +70,7 @@ const NodePool: React.FC<Props> = (props) => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Grid item>
+        <Grid item style={{ marginLeft: '15px' }}>
           <Typography variant="h2">{typeLabel}</Typography>
         </Grid>
         <Grid item style={{ display: 'flex' }}>
