@@ -90,7 +90,7 @@ const TopMenu = (props: Props) => {
               data-testid="open-nav-menu"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
-                <MenuIcon style={{ marginTop: 6 }} />
+                <MenuIcon />
               </TopMenuIcon>
             </IconButton>
           </Hidden>
@@ -102,7 +102,7 @@ const TopMenu = (props: Props) => {
               size="large"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
-                <MenuIcon style={{ marginTop: 6 }} />
+                <MenuIcon />
               </TopMenuIcon>
             </IconButton>
           </Hidden>
