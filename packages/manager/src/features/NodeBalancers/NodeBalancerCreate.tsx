@@ -18,15 +18,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import { Tag } from 'src/components/TagsInput';
+import TagsInput, { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withRegions, { RegionsProps } from 'src/containers/regions.container';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
@@ -57,31 +53,13 @@ import { createNodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { queryKey } from 'src/queries/nodebalancers';
 import Box from 'src/components/core/Box';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
-
-type ClassNames = 'title' | 'sidebar';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    title: {
-      marginTop: theme.spacing(3),
-    },
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        marginTop: '60px !important',
-      },
-      [theme.breakpoints.down('lg')]: {
-        '&.MuiGrid-item': {
-          paddingLeft: 0,
-          paddingRight: 0,
-        },
-      },
-    },
-  });
+import Accordion from 'src/components/Accordion';
+import Paper from 'src/components/core/Paper';
+import TextField from 'src/components/TextField';
 
 type CombinedProps = ProfileProps &
   RegionsProps &
   RouteComponentProps<{}> &
-  WithStyles<ClassNames> &
   AgreementsProps;
 
 interface NodeBalancerFieldsState {
@@ -492,7 +470,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, regionsData, agreements, profile } = this.props;
+    const { regionsData, agreements, profile } = this.props;
     const { nodeBalancerFields, signedAgreement } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -538,27 +516,29 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             important
           />
         )}
-        <LabelAndTagsPanel
-          data-qa-label-input
-          labelFieldProps={{
-            errorText: hasErrorFor('label'),
-            label: 'NodeBalancer Label',
-            onChange: this.labelChange,
-            value: nodeBalancerFields.label || '',
-            disabled: this.disabled,
-          }}
-          tagsInputProps={{
-            value: nodeBalancerFields.tags
-              ? nodeBalancerFields.tags.map((tag) => ({
-                  label: tag,
-                  value: tag,
-                }))
-              : [],
-            onChange: this.tagsChange,
-            tagError: hasErrorFor('tags'),
-            disabled: this.disabled,
-          }}
-        />
+        <Paper>
+          <TextField
+            errorText={hasErrorFor('label')}
+            label={'NodeBalancer Label'}
+            onChange={this.labelChange}
+            value={nodeBalancerFields.label || ''}
+            disabled={this.disabled}
+            noMarginTop
+          />
+          <TagsInput
+            value={
+              nodeBalancerFields.tags
+                ? nodeBalancerFields.tags.map((tag) => ({
+                    label: tag,
+                    value: tag,
+                  }))
+                : []
+            }
+            onChange={this.tagsChange}
+            tagError={hasErrorFor('tags')}
+            disabled={this.disabled}
+          />
+        </Paper>
         <SelectRegionPanel
           regions={regionsData}
           error={hasErrorFor('region')}
@@ -566,113 +546,123 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           handleSelection={this.regionChange}
           disabled={this.disabled}
         />
-        <Typography variant="h2" className={classes.title}>
-          NodeBalancer Settings
-        </Typography>
-        {this.state.nodeBalancerFields.configs.map(
-          (nodeBalancerConfig, idx) => {
-            const lensTo = lensFrom(['nodeBalancerFields', 'configs', idx]);
+        <Box marginTop={2} marginBottom={2}>
+          {this.state.nodeBalancerFields.configs.map(
+            (nodeBalancerConfig, idx) => {
+              const lensTo = lensFrom(['nodeBalancerFields', 'configs', idx]);
 
-            const L = {
-              algorithmLens: lensTo(['algorithm']),
-              checkPassiveLens: lensTo(['check_passive']),
-              checkBodyLens: lensTo(['check_body']),
-              checkPathLens: lensTo(['check_path']),
-              portLens: lensTo(['port']),
-              protocolLens: lensTo(['protocol']),
-              proxyProtocolLens: lensTo(['proxy_protocol']),
-              healthCheckTypeLens: lensTo(['check']),
-              healthCheckAttemptsLens: lensTo(['check_attempts']),
-              healthCheckIntervalLens: lensTo(['check_interval']),
-              healthCheckTimeoutLens: lensTo(['check_timeout']),
-              sessionStickinessLens: lensTo(['stickiness']),
-              sslCertificateLens: lensTo(['ssl_cert']),
-              privateKeyLens: lensTo(['ssl_key']),
-            };
+              const L = {
+                algorithmLens: lensTo(['algorithm']),
+                checkPassiveLens: lensTo(['check_passive']),
+                checkBodyLens: lensTo(['check_body']),
+                checkPathLens: lensTo(['check_path']),
+                portLens: lensTo(['port']),
+                protocolLens: lensTo(['protocol']),
+                proxyProtocolLens: lensTo(['proxy_protocol']),
+                healthCheckTypeLens: lensTo(['check']),
+                healthCheckAttemptsLens: lensTo(['check_attempts']),
+                healthCheckIntervalLens: lensTo(['check_interval']),
+                healthCheckTimeoutLens: lensTo(['check_timeout']),
+                sessionStickinessLens: lensTo(['stickiness']),
+                sslCertificateLens: lensTo(['ssl_cert']),
+                privateKeyLens: lensTo(['ssl_key']),
+              };
 
-            return (
-              <Paper key={idx} sx={{ marginTop: 2, marginBottom: 2 }}>
-                <NodeBalancerConfigPanel
-                  nodeBalancerRegion={this.state.nodeBalancerFields.region}
-                  errors={nodeBalancerConfig.errors}
-                  configIdx={idx}
-                  algorithm={view(L.algorithmLens, this.state)}
-                  onAlgorithmChange={this.updateState(L.algorithmLens)}
-                  checkPassive={view(L.checkPassiveLens, this.state)}
-                  onCheckPassiveChange={this.updateState(L.checkPassiveLens)}
-                  checkBody={view(L.checkBodyLens, this.state)}
-                  onCheckBodyChange={this.updateState(L.checkBodyLens)}
-                  checkPath={view(L.checkPathLens, this.state)}
-                  onCheckPathChange={this.updateState(L.checkPathLens)}
-                  port={view(L.portLens, this.state)}
-                  onPortChange={this.updateState(L.portLens)}
-                  protocol={view(L.protocolLens, this.state)}
-                  proxyProtocol={view(L.proxyProtocolLens, this.state)}
-                  onProtocolChange={this.updateState(
-                    L.protocolLens,
-                    L,
-                    this.afterProtocolUpdate
-                  )}
-                  onProxyProtocolChange={this.updateState(L.proxyProtocolLens)}
-                  healthCheckType={view(L.healthCheckTypeLens, this.state)}
-                  onHealthCheckTypeChange={this.updateState(
-                    L.healthCheckTypeLens,
-                    L,
-                    this.afterHealthCheckTypeUpdate
-                  )}
-                  healthCheckAttempts={view(
-                    L.healthCheckAttemptsLens,
-                    this.state
-                  )}
-                  onHealthCheckAttemptsChange={this.updateState(
-                    L.healthCheckAttemptsLens
-                  )}
-                  healthCheckInterval={view(
-                    L.healthCheckIntervalLens,
-                    this.state
-                  )}
-                  onHealthCheckIntervalChange={this.updateState(
-                    L.healthCheckIntervalLens
-                  )}
-                  healthCheckTimeout={view(
-                    L.healthCheckTimeoutLens,
-                    this.state
-                  )}
-                  onHealthCheckTimeoutChange={this.updateState(
-                    L.healthCheckTimeoutLens
-                  )}
-                  sessionStickiness={view(L.sessionStickinessLens, this.state)}
-                  onSessionStickinessChange={this.updateState(
-                    L.sessionStickinessLens
-                  )}
-                  sslCertificate={view(L.sslCertificateLens, this.state)}
-                  onSslCertificateChange={this.updateState(
-                    L.sslCertificateLens
-                  )}
-                  privateKey={view(L.privateKeyLens, this.state)}
-                  onPrivateKeyChange={this.updateState(L.privateKeyLens)}
-                  nodes={this.state.nodeBalancerFields.configs[idx].nodes}
-                  addNode={this.addNodeBalancerConfigNode(idx)}
-                  removeNode={this.removeNodeBalancerConfigNode(idx)}
-                  onNodeLabelChange={(nodeIndex, value) =>
-                    this.onNodeLabelChange(idx, nodeIndex, value)
-                  }
-                  onNodeAddressChange={(nodeIndex, value) =>
-                    this.onNodeAddressChange(idx, nodeIndex, value)
-                  }
-                  onNodePortChange={(nodeIndex, value) =>
-                    this.onNodePortChange(idx, nodeIndex, value)
-                  }
-                  onNodeWeightChange={(nodeIndex, value) =>
-                    this.onNodeWeightChange(idx, nodeIndex, value)
-                  }
-                  onDelete={this.onDeleteConfig(idx)}
-                  disabled={this.disabled}
-                />
-              </Paper>
-            );
-          }
-        )}
+              return (
+                <Accordion
+                  heading={`Configuration - Port ${
+                    view(L.portLens, this.state) ?? ''
+                  }`}
+                  key={idx}
+                  defaultExpanded
+                >
+                  <NodeBalancerConfigPanel
+                    nodeBalancerRegion={this.state.nodeBalancerFields.region}
+                    errors={nodeBalancerConfig.errors}
+                    configIdx={idx}
+                    algorithm={view(L.algorithmLens, this.state)}
+                    onAlgorithmChange={this.updateState(L.algorithmLens)}
+                    checkPassive={view(L.checkPassiveLens, this.state)}
+                    onCheckPassiveChange={this.updateState(L.checkPassiveLens)}
+                    checkBody={view(L.checkBodyLens, this.state)}
+                    onCheckBodyChange={this.updateState(L.checkBodyLens)}
+                    checkPath={view(L.checkPathLens, this.state)}
+                    onCheckPathChange={this.updateState(L.checkPathLens)}
+                    port={view(L.portLens, this.state)}
+                    onPortChange={this.updateState(L.portLens)}
+                    protocol={view(L.protocolLens, this.state)}
+                    proxyProtocol={view(L.proxyProtocolLens, this.state)}
+                    onProtocolChange={this.updateState(
+                      L.protocolLens,
+                      L,
+                      this.afterProtocolUpdate
+                    )}
+                    onProxyProtocolChange={this.updateState(
+                      L.proxyProtocolLens
+                    )}
+                    healthCheckType={view(L.healthCheckTypeLens, this.state)}
+                    onHealthCheckTypeChange={this.updateState(
+                      L.healthCheckTypeLens,
+                      L,
+                      this.afterHealthCheckTypeUpdate
+                    )}
+                    healthCheckAttempts={view(
+                      L.healthCheckAttemptsLens,
+                      this.state
+                    )}
+                    onHealthCheckAttemptsChange={this.updateState(
+                      L.healthCheckAttemptsLens
+                    )}
+                    healthCheckInterval={view(
+                      L.healthCheckIntervalLens,
+                      this.state
+                    )}
+                    onHealthCheckIntervalChange={this.updateState(
+                      L.healthCheckIntervalLens
+                    )}
+                    healthCheckTimeout={view(
+                      L.healthCheckTimeoutLens,
+                      this.state
+                    )}
+                    onHealthCheckTimeoutChange={this.updateState(
+                      L.healthCheckTimeoutLens
+                    )}
+                    sessionStickiness={view(
+                      L.sessionStickinessLens,
+                      this.state
+                    )}
+                    onSessionStickinessChange={this.updateState(
+                      L.sessionStickinessLens
+                    )}
+                    sslCertificate={view(L.sslCertificateLens, this.state)}
+                    onSslCertificateChange={this.updateState(
+                      L.sslCertificateLens
+                    )}
+                    privateKey={view(L.privateKeyLens, this.state)}
+                    onPrivateKeyChange={this.updateState(L.privateKeyLens)}
+                    nodes={this.state.nodeBalancerFields.configs[idx].nodes}
+                    addNode={this.addNodeBalancerConfigNode(idx)}
+                    removeNode={this.removeNodeBalancerConfigNode(idx)}
+                    onNodeLabelChange={(nodeIndex, value) =>
+                      this.onNodeLabelChange(idx, nodeIndex, value)
+                    }
+                    onNodeAddressChange={(nodeIndex, value) =>
+                      this.onNodeAddressChange(idx, nodeIndex, value)
+                    }
+                    onNodePortChange={(nodeIndex, value) =>
+                      this.onNodePortChange(idx, nodeIndex, value)
+                    }
+                    onNodeWeightChange={(nodeIndex, value) =>
+                      this.onNodeWeightChange(idx, nodeIndex, value)
+                    }
+                    onDelete={this.onDeleteConfig(idx)}
+                    disabled={this.disabled}
+                  />
+                </Accordion>
+              );
+            }
+          )}
+        </Box>
         <Button
           buttonType="outlined"
           onClick={this.addNodeBalancer}
@@ -727,8 +717,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-const styled = withStyles(styles);
 
 /* @todo: move to own file */
 export const lensFrom = (p1: (string | number)[]) => (
@@ -803,7 +791,6 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
 
 export default recompose<CombinedProps, {}>(
   withRegions,
-  styled,
   withRouter,
   withProfile,
   withAgreements

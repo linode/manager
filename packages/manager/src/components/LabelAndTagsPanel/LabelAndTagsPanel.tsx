@@ -15,7 +15,7 @@ const styles = (theme: Theme) =>
     root: {
       flexGrow: 1,
       width: '100%',
-      marginTop: theme.spacing(1),
+      marginTop: theme.spacing(3),
       backgroundColor: theme.color.white,
     },
     expPanelButton: {
