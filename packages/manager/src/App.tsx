@@ -146,9 +146,7 @@ export class App extends React.Component<CombinedProps, State> {
       .filter(
         ({ event }) => event.action.startsWith('token') && !event._initial
       )
-      .subscribe(({ event, queryClient }) =>
-        tokenEventHandler(event, queryClient)
-      );
+      .subscribe(tokenEventHandler);
 
     /*
       Send any SSH Key events to the SSH Key events handler in the queries file
@@ -164,9 +162,7 @@ export class App extends React.Component<CombinedProps, State> {
       .filter(
         ({ event }) => event.action.startsWith('firewall') && !event._initial
       )
-      .subscribe(({ event, queryClient }) =>
-        firewallEventsHandler(event, queryClient)
-      );
+      .subscribe(firewallEventsHandler);
 
     /*
      * We want to listen for migration events side-wide

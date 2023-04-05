@@ -4,12 +4,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import {
   addFirewallDevice,
@@ -29,6 +24,7 @@ import {
 } from '@linode/api-v4/lib/firewalls';
 import { itemInListCreationHandler, updateInPaginatedStore } from './base';
 import { Event } from '@linode/api-v4';
+import { EventWithStore } from 'src/events';
 
 export const queryKey = 'firewall';
 
@@ -175,10 +171,7 @@ const getAllFirewallsRequest = () =>
     getFirewalls(passedParams, passedFilter)
   )().then((data) => data.data);
 
-export const firewallEventsHandler = (
-  event: Event,
-  queryClient: QueryClient
-) => {
+export const firewallEventsHandler = ({ queryClient }: EventWithStore) => {
   // We will over-fetch a little bit, bit this ensures Cloud firewalls are *always* up to date
   queryClient.invalidateQueries([queryKey]);
 };
