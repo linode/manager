@@ -21,6 +21,7 @@ import {
   ObjectStorageObjectURLOptions,
   ObjectStorageObjectURL,
 } from '@linode/api-v4/lib/object-storage';
+import { queryKey as accountSettingsQueryKey } from './accountSettings';
 
 export interface BucketError {
   cluster: ObjectStorageCluster;
@@ -84,6 +85,8 @@ export const useCreateBucketMutation = () => {
     ObjectStorageBucketRequestPayload
   >(createBucket, {
     onSuccess: (newEntity) => {
+      // Invalidate account settings becuae it contains obj information
+      queryClient.invalidateQueries(accountSettingsQueryKey);
       queryClient.setQueryData<BucketsResponce>(
         `${queryKey}-buckets`,
         (oldData) => ({
