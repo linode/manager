@@ -57,56 +57,66 @@ const Span = styled('span')({
   },
 });
 
-const Button = ({
-  buttonType,
-  children,
-  className,
-  compactX,
-  compactY,
-  disabled,
-  loading,
-  sx,
-  tooltipText,
-  tooltipGAEvent,
-  ...rest
-}: Props) => {
-  const theme = useTheme();
-  const color = buttonType === 'primary' ? 'primary' : 'secondary';
-  const sxTooltipIcon = { marginLeft: `-${theme.spacing()}` };
+const Button = React.forwardRef<HTMLButtonElement, Props>(
+  (
+    {
+      buttonType,
+      children,
+      className,
+      compactX,
+      compactY,
+      disabled,
+      loading,
+      sx,
+      tooltipText,
+      tooltipGAEvent,
+      ...rest
+    }: Props,
+    ref
+  ) => {
+    const theme = useTheme();
+    const color = buttonType === 'primary' ? 'primary' : 'secondary';
+    const sxTooltipIcon = { marginLeft: `-${theme.spacing()}` };
 
-  const variant =
-    buttonType === 'primary' || buttonType === 'secondary'
-      ? 'contained'
-      : buttonType === 'outlined'
-      ? 'outlined'
-      : 'text';
+    const variant =
+      buttonType === 'primary' || buttonType === 'secondary'
+        ? 'contained'
+        : buttonType === 'outlined'
+        ? 'outlined'
+        : 'text';
 
-  return (
-    <React.Fragment>
-      <StyledButton
-        {...rest}
-        buttonType={buttonType}
-        className={className}
-        color={color}
-        compactX={compactX}
-        compactY={compactY}
-        disabled={disabled || loading}
-        loading={loading}
-        sx={sx}
-        variant={variant}
-      >
-        <Span data-testid="loadingIcon">{loading ? <Reload /> : children}</Span>
-      </StyledButton>
-      {tooltipText && (
-        <TooltipIcon
-          sxTooltipIcon={sxTooltipIcon}
-          text={tooltipText}
-          tooltipGAEvent={tooltipGAEvent}
-          status="help"
-        />
-      )}
-    </React.Fragment>
-  );
-};
+    return (
+      <React.Fragment>
+        <StyledButton
+          {...rest}
+          buttonType={buttonType}
+          className={className}
+          color={color}
+          compactX={compactX}
+          compactY={compactY}
+          disabled={disabled || loading}
+          loading={loading}
+          sx={sx}
+          variant={variant}
+          ref={ref}
+        >
+          <Span data-testid="loadingIcon">
+            {loading ? <Reload /> : children}
+          </Span>
+        </StyledButton>
+        {tooltipText && (
+          <TooltipIcon
+            sxTooltipIcon={sxTooltipIcon}
+            text={tooltipText}
+            tooltipGAEvent={tooltipGAEvent}
+            status="help"
+          />
+        )}
+      </React.Fragment>
+    );
+  }
+);
+
+Button.displayName = 'Button';
 
 export default Button;
