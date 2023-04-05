@@ -7,7 +7,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
-import AddNewMenu from './AddNewMenu';
+import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import Community from './Community';
 import Help from './Help';
 import NotificationButton from './NotificationButton';
