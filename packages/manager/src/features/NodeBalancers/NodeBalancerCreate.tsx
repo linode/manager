@@ -12,30 +12,22 @@ import {
   view,
 } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TagsInput, { Tag } from 'src/components/TagsInput';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
-import withRegions, { RegionsProps } from 'src/containers/regions.container';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
-import withAgreements, {
-  AgreementsProps,
-} from '../Account/Agreements/withAgreements';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
@@ -43,43 +35,25 @@ import {
   NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest,
 } from './utils';
-import { queryClient, simpleMutationHandlers } from 'src/queries/base';
 import {
-  queryKey as accountAgreementsQueryKey,
-  reportAgreementSigningError,
+  useAccountAgreements,
+  useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
 import LandingHeader from 'src/components/LandingHeader';
-import { createNodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import { queryKey } from 'src/queries/nodebalancers';
+import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
 import Box from 'src/components/core/Box';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import Accordion from 'src/components/Accordion';
 import Paper from 'src/components/core/Paper';
 import TextField from 'src/components/TextField';
-
-type CombinedProps = ProfileProps &
-  RegionsProps &
-  RouteComponentProps<{}> &
-  AgreementsProps;
+import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
   tags?: string[];
   configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
-}
-
-interface State {
-  signedAgreement: boolean;
-  submitting: boolean;
-  nodeBalancerFields: NodeBalancerFieldsState;
-  errors?: APIError[];
-  deleteConfigConfirmDialog: {
-    open: boolean;
-    submitting: boolean;
-    errors?: APIError[];
-    idxToDelete?: number;
-  };
 }
 
 const errorResources = {
@@ -89,142 +63,155 @@ const errorResources = {
   tags: 'tags',
 };
 
-class NodeBalancerCreate extends React.Component<CombinedProps, State> {
-  static defaultDeleteConfigConfirmDialogState = {
-    submitting: false,
-    open: false,
-    errors: undefined,
-    idxToDelete: undefined,
-  };
+const defaultDeleteConfigConfirmDialogState = {
+  submitting: false,
+  open: false,
+  errors: undefined,
+  idxToDelete: undefined,
+};
 
-  static defaultFieldsStates = {
-    configs: [createNewNodeBalancerConfig(true)],
-  };
+const defaultFieldsStates = {
+  configs: [createNewNodeBalancerConfig(true)],
+};
 
-  state: State = {
-    signedAgreement: false,
-    submitting: false,
-    nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
-    deleteConfigConfirmDialog: clone(
-      NodeBalancerCreate.defaultDeleteConfigConfirmDialogState
-    ),
-  };
+const NodeBalancerCreate = () => {
+  const { data: agreements } = useAccountAgreements();
+  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
+  const { data: regions } = useRegionsQuery();
 
-  disabled =
-    Boolean(this.props.profile.data?.restricted) &&
-    !hasGrant('add_nodebalancers', this.props.grants.data);
+  const {
+    mutateAsync: createNodeBalancer,
+    isLoading,
+    error,
+  } = useNodebalancerCreateMutation();
 
-  addNodeBalancer = () => {
-    if (this.disabled) {
+  const history = useHistory();
+
+  const [
+    nodeBalancerFields,
+    setNodeBalancerFields,
+  ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+
+  const [
+    deleteConfigConfirmDialog,
+    setDeleteConfigConfirmDialog,
+  ] = React.useState<{
+    open: boolean;
+    submitting: boolean;
+    errors?: APIError[];
+    idxToDelete?: number;
+  }>(defaultDeleteConfigConfirmDialogState);
+
+  const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
+
+  const disabled =
+    Boolean(profile?.restricted) && !hasGrant('add_nodebalancers', grants);
+
+  const addNodeBalancer = () => {
+    if (disabled) {
       return;
     }
-    this.setState({
-      nodeBalancerFields: {
-        ...this.state.nodeBalancerFields,
-        configs: [
-          ...this.state.nodeBalancerFields.configs,
-          createNewNodeBalancerConfig(),
-        ],
-      },
-    });
+    setNodeBalancerFields((prev) => ({
+      ...prev,
+      configs: [...prev.configs, createNewNodeBalancerConfig()],
+    }));
   };
 
-  addNodeBalancerConfigNode = (configIdx: number) => () =>
-    this.setState(
+  const addNodeBalancerConfigNode = (configIdx: number) => () =>
+    setNodeBalancerFields(
       over(
-        lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
+        lensPath(['configs', configIdx, 'nodes']),
         append(createNewNodeBalancerConfigNode())
       )
     );
 
-  removeNodeBalancerConfigNode = (configIdx: number) => (nodeIdx: number) =>
-    this.setState(
-      over(
-        lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
-        (nodes) => nodes.filter((n: any, idx: number) => idx !== nodeIdx)
+  const removeNodeBalancerConfigNode = (configIdx: number) => (
+    nodeIdx: number
+  ) =>
+    setNodeBalancerFields(
+      over(lensPath(['configs', configIdx, 'nodes']), (nodes) =>
+        nodes.filter((n: any, idx: number) => idx !== nodeIdx)
       )
     );
 
-  setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) =>
-    this.setState(
-      set(
-        lensPath([
-          'nodeBalancerFields',
-          'configs',
-          cidx,
-          'nodes',
-          nodeidx,
-          key,
-        ]),
-        value
-      )
+  const setNodeValue = (
+    cidx: number,
+    nodeidx: number,
+    key: string,
+    value: any
+  ) =>
+    setNodeBalancerFields(
+      set(lensPath(['configs', cidx, 'nodes', nodeidx, key]), value)
     );
 
-  onNodeLabelChange = (configIdx: number, nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'label', value);
+  const onNodeLabelChange = (
+    configIdx: number,
+    nodeIdx: number,
+    value: string
+  ) => setNodeValue(configIdx, nodeIdx, 'label', value);
 
-  onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) => {
-    this.setNodeValue(configIdx, nodeIdx, 'address', value);
+  const onNodeAddressChange = (
+    configIdx: number,
+    nodeIdx: number,
+    value: string
+  ) => {
+    setNodeValue(configIdx, nodeIdx, 'address', value);
   };
 
-  onNodePortChange = (configIdx: number, nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'port', value);
+  const onNodePortChange = (
+    configIdx: number,
+    nodeIdx: number,
+    value: string
+  ) => setNodeValue(configIdx, nodeIdx, 'port', value);
 
-  onNodeWeightChange = (configIdx: number, nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'weight', value);
+  const onNodeWeightChange = (
+    configIdx: number,
+    nodeIdx: number,
+    value: string
+  ) => setNodeValue(configIdx, nodeIdx, 'weight', value);
 
-  afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
-    this.setState(
-      compose<State, State, State>(
-        set(L.sslCertificateLens, ''),
-        set(L.privateKeyLens, '')
-      )
+  const afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
+    setNodeBalancerFields(
+      // @ts-expect-error compose is trash
+      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
     );
   };
 
-  afterHealthCheckTypeUpdate = (L: { [key: string]: Lens }) => () => {
-    this.setState(
+  const afterHealthCheckTypeUpdate = (L: { [key: string]: Lens }) => () => {
+    setNodeBalancerFields(
+      // @ts-expect-error compose is trash
       compose(
-        set(
-          L.checkPathLens,
-          NodeBalancerCreate.defaultFieldsStates.configs[0].check_path
-        ),
-        set(
-          L.checkBodyLens,
-          NodeBalancerCreate.defaultFieldsStates.configs[0].check_body
-        ),
+        set(L.checkPathLens, defaultFieldsStates.configs[0].check_path),
+        set(L.checkBodyLens, defaultFieldsStates.configs[0].check_body),
         set(
           L.healthCheckAttemptsLens,
-          NodeBalancerCreate.defaultFieldsStates.configs[0].check_attempts
+          defaultFieldsStates.configs[0].check_attempts
         ) as () => any,
         set(
           L.healthCheckIntervalLens,
-          NodeBalancerCreate.defaultFieldsStates.configs[0].check_interval
+          defaultFieldsStates.configs[0].check_interval
         ),
         set(
           L.healthCheckTimeoutLens,
-          NodeBalancerCreate.defaultFieldsStates.configs[0].check_timeout
+          defaultFieldsStates.configs[0].check_timeout
         ) as () => any
       )
     );
   };
 
-  clearNodeErrors = () => {
+  const clearNodeErrors = () => {
     // Build paths for all config errors.
-    const configPaths = this.state.nodeBalancerFields.configs.map(
-      (config, idxC) => {
-        return ['configs', idxC, 'errors'];
-      }
-    );
+    const configPaths = nodeBalancerFields.configs.map((config, idxC) => {
+      return ['configs', idxC, 'errors'];
+    });
 
     // Build paths to all node errors
-    const nodePaths = this.state.nodeBalancerFields.configs.map(
-      (config, idxC) => {
-        return config.nodes.map((nodes, idxN) => {
-          return ['configs', idxC, 'nodes', idxN, 'errors'];
-        });
-      }
-    );
+    const nodePaths = nodeBalancerFields.configs.map((config, idxC) => {
+      return config.nodes.map((nodes, idxN) => {
+        return ['configs', idxC, 'nodes', idxN, 'errors'];
+      });
+    });
 
     const paths = [
       ...configPaths,
@@ -237,13 +224,13 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     /* Map those paths to an array of updater functions */
     const setFns = paths.map((path: any[]) => {
-      return set(lensPath(['nodeBalancerFields', ...path]), []);
+      return set(lensPath([...path]), []);
     });
     /* Apply all of those update functions at once to state */
-    this.setState((compose as any)(...setFns));
+    setNodeBalancerFields((compose as any)(...setFns));
   };
 
-  setNodeErrors = (errors: APIError[]) => {
+  const setNodeErrors = (errors: APIError[]) => {
     /* Map the objects with this shape
         {
           path: ['configs', 2, 'nodes', 0, 'errors'],
@@ -257,30 +244,19 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     */
     const nodePathErrors = fieldErrorsToNodePathErrors(errors);
 
-    /** We still need to set the errors */
-    if (nodePathErrors.length === 0) {
-      return this.setState({ errors });
-    }
-
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
-        over(
-          lensPath(['nodeBalancerFields', ...nodePathError.path]),
-          append(nodePathError.error)
-        ),
+        over(lensPath([...nodePathError.path]), append(nodePathError.error)),
         defaultTo([]) as () => Array<{}>
       );
     });
 
     // Apply the error updater functions with a compose
-    this.setState((compose as any)(...setFns), () => {
-      scrollErrorIntoView();
-    });
+    setNodeBalancerFields((compose as any)(...setFns));
+    scrollErrorIntoView();
   };
 
-  createNodeBalancer = () => {
-    const { nodeBalancerFields, signedAgreement } = this.state;
-
+  const onCreate = () => {
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
     nodeBalancerRequestData.configs = transformConfigsForRequest(
@@ -288,120 +264,74 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     );
 
     /* Clear node errors */
-    this.clearNodeErrors();
-
-    /* Clear config errors */
-    this.setState({ submitting: true, errors: undefined });
+    clearNodeErrors();
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData(
-          [queryKey, 'nodebalancer', nodeBalancer.id],
-          nodeBalancer
-        );
-
-        this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
+        history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // GA Event
         sendCreateNodeBalancerEvent(
           `${nodeBalancer.label}: ${nodeBalancer.region}`
         );
-        if (signedAgreement) {
-          queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
-            variables: { eu_model: true, privacy_policy: true },
-            mutationFn: signAgreement,
-            mutationKey: accountAgreementsQueryKey,
-            onError: reportAgreementSigningError,
-            ...simpleMutationHandlers(accountAgreementsQueryKey),
-          });
-        }
       })
       .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
-        this.setNodeErrors(
+        setNodeErrors(
           errors.map((e: APIError) => ({
             ...e,
             ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') }),
           }))
         );
 
-        return this.setState({ errors, submitting: false }, () =>
-          scrollErrorIntoView()
-        );
+        scrollErrorIntoView();
       });
   };
 
-  onDeleteConfig = (configIdx: number) => () =>
-    this.setState({
-      deleteConfigConfirmDialog: {
-        ...clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
-        open: true,
-        idxToDelete: configIdx,
-      },
+  const onDeleteConfig = (configIdx: number) => () =>
+    setDeleteConfigConfirmDialog({
+      ...clone(defaultDeleteConfigConfirmDialogState),
+      open: true,
+      idxToDelete: configIdx,
     });
 
-  onRemoveConfig = () => {
-    const {
-      deleteConfigConfirmDialog: { idxToDelete },
-    } = this.state;
-
+  const onRemoveConfig = () => {
     /* show the submitting indicator */
-    this.setState({
-      deleteConfigConfirmDialog: {
-        ...this.state.deleteConfigConfirmDialog,
-        errors: undefined,
-        submitting: true,
-      },
-    });
+    setDeleteConfigConfirmDialog((prev) => ({
+      ...prev,
+      errors: undefined,
+      submitting: true,
+    }));
 
     /* remove the config */
-    this.setState({
-      nodeBalancerFields: {
-        ...this.state.nodeBalancerFields,
-        configs: this.state.nodeBalancerFields.configs.filter(
-          (config: NodeBalancerConfigFieldsWithStatus, idx: number) => {
-            return idx !== idxToDelete;
-          }
-        ),
-      },
-    });
-
-    /* remove the errors related to that config */
-    if (this.state.errors) {
-      this.setState({
-        errors: this.state.errors!.filter((error: APIError) => {
-          const t = new RegExp(`configs_${idxToDelete}_`);
-          return error.field && !t.test(error.field);
-        }),
-      });
-    }
+    setNodeBalancerFields((prev) => ({
+      ...prev,
+      configs: prev.configs.filter(
+        (config: NodeBalancerConfigFieldsWithStatus, idx: number) => {
+          return idx !== deleteConfigConfirmDialog.idxToDelete;
+        }
+      ),
+    }));
 
     /* clear the submitting indicator */
-    this.setState({
-      deleteConfigConfirmDialog: clone(
-        NodeBalancerCreate.defaultDeleteConfigConfirmDialogState
-      ),
-    });
+    setDeleteConfigConfirmDialog(clone(defaultDeleteConfigConfirmDialogState));
   };
 
-  labelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(
-      set(lensPath(['nodeBalancerFields', 'label']), e.target.value)
-    );
+  const labelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNodeBalancerFields(set(lensPath(['label']), e.target.value));
   };
 
-  tagsChange = (tags: Tag[]) => {
-    this.setState(
+  const tagsChange = (tags: Tag[]) => {
+    setNodeBalancerFields(
       set(
-        lensPath(['nodeBalancerFields', 'tags']),
+        lensPath(['tags']),
         tags.map((tag) => tag.value)
       )
     );
   };
 
-  resetNodeAddresses = () => {
+  const resetNodeAddresses = () => {
     /** Reset the IP addresses of all nodes at once */
-    const { configs } = this.state.nodeBalancerFields;
+    const { configs } = nodeBalancerFields;
     const newConfigs = configs.reduce((accum, thisConfig) => {
       return [
         ...accum,
@@ -415,308 +345,286 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         },
       ];
     }, []);
-    this.setState(set(lensPath(['nodeBalancerFields', 'configs']), newConfigs));
+    setNodeBalancerFields(set(lensPath(['configs']), newConfigs));
   };
 
-  regionChange = (region: string) => {
+  const regionChange = (region: string) => {
     // No change; no need to update the state.
-    if (this.state.nodeBalancerFields.region === region) {
+    if (nodeBalancerFields.region === region) {
       return;
     }
-    this.setState(set(lensPath(['nodeBalancerFields', 'region']), region));
+    setNodeBalancerFields(set(lensPath(['region']), region));
     // We just changed the region so any selected IP addresses are likely invalid
-    this.resetNodeAddresses();
+    resetNodeAddresses();
   };
 
-  onCloseConfirmation = () =>
-    this.setState({
-      deleteConfigConfirmDialog: clone(
-        NodeBalancerCreate.defaultDeleteConfigConfirmDialogState
-      ),
-    });
+  const onCloseConfirmation = () =>
+    setDeleteConfigConfirmDialog(clone(defaultDeleteConfigConfirmDialogState));
 
-  updateState = (
+  const updateState = (
     lens: Lens,
     L?: { [key: string]: Lens },
     callback?: (L: { [key: string]: Lens }) => () => void
   ) => (value: any) => {
-    this.setState(set(lens, value), L && callback ? callback(L) : undefined);
+    setNodeBalancerFields(set(lens, value));
+
+    if (L && callback) {
+      callback(L);
+    }
   };
 
-  confirmationConfigError = () =>
-    (this.state.deleteConfigConfirmDialog.errors || [])
-      .map((e) => e.reason)
-      .join(',');
+  const confirmationConfigError = () =>
+    (deleteConfigConfirmDialog.errors || []).map((e) => e.reason).join(',');
 
-  renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        className="cancel"
-        data-qa-cancel-cancel
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={this.onRemoveConfig}
-        loading={this.state.deleteConfigConfirmDialog.submitting}
-        data-qa-confirm-cancel
-      >
-        Delete
-      </Button>
-    </ActionsPanel>
+  const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
+  const generalError = hasErrorFor('none');
+
+  const showAgreement = Boolean(
+    isEURegion(nodeBalancerFields.region) &&
+      !profile?.restricted &&
+      !agreements?.eu_model
   );
 
-  render() {
-    const { regionsData, agreements, profile } = this.props;
-    const { nodeBalancerFields, signedAgreement } = this.state;
-    const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
-    const generalError = hasErrorFor('none');
+  const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
+    ?.label;
 
-    const showAgreement = Boolean(
-      isEURegion(nodeBalancerFields.region) &&
-        !profile.data?.restricted &&
-        !agreements.data?.eu_model
-    );
-
-    const regionLabel = this.props.regionsData.find(
-      (r) => r.id === nodeBalancerFields.region
-    )?.label;
-
-    if (this.props.regionsLoading) {
-      return <CircleProgress />;
-    }
-
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Create a NodeBalancer" />
-        <LandingHeader
-          title="Create"
-          breadcrumbProps={{
-            pathname: '/nodebalancers/create',
-            breadcrumbDataAttrs: {
-              'data-qa-create-nodebalancer-header': true,
-            },
-          }}
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="Create a NodeBalancer" />
+      <LandingHeader
+        title="Create"
+        breadcrumbProps={{
+          pathname: '/nodebalancers/create',
+          breadcrumbDataAttrs: {
+            'data-qa-create-nodebalancer-header': true,
+          },
+        }}
+      />
+      {generalError && !disabled && (
+        <Notice spacingTop={8} error>
+          {generalError}
+        </Notice>
+      )}
+      {disabled && (
+        <Notice
+          text={
+            "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
+          }
+          error={true}
+          spacingTop={16}
+          important
         />
-        {generalError && !this.disabled && (
-          <Notice spacingTop={8} error>
-            {generalError}
-          </Notice>
-        )}
-        {this.disabled && (
-          <Notice
-            text={
-              "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
-            }
-            error={true}
-            spacingTop={16}
-            important
-          />
-        )}
-        <Paper>
-          <TextField
-            errorText={hasErrorFor('label')}
-            label={'NodeBalancer Label'}
-            onChange={this.labelChange}
-            value={nodeBalancerFields.label || ''}
-            disabled={this.disabled}
-            noMarginTop
-          />
-          <TagsInput
-            value={
-              nodeBalancerFields.tags
-                ? nodeBalancerFields.tags.map((tag) => ({
-                    label: tag,
-                    value: tag,
-                  }))
-                : []
-            }
-            onChange={this.tagsChange}
-            tagError={hasErrorFor('tags')}
-            disabled={this.disabled}
-          />
-        </Paper>
-        <SelectRegionPanel
-          regions={regionsData}
-          error={hasErrorFor('region')}
-          selectedID={nodeBalancerFields.region}
-          handleSelection={this.regionChange}
-          disabled={this.disabled}
+      )}
+      <Paper>
+        <TextField
+          errorText={hasErrorFor('label')}
+          label={'NodeBalancer Label'}
+          onChange={labelChange}
+          value={nodeBalancerFields.label || ''}
+          disabled={disabled}
+          noMarginTop
         />
-        <Box marginTop={2} marginBottom={2}>
-          {this.state.nodeBalancerFields.configs.map(
-            (nodeBalancerConfig, idx) => {
-              const lensTo = lensFrom(['nodeBalancerFields', 'configs', idx]);
+        <TagsInput
+          value={
+            nodeBalancerFields.tags
+              ? nodeBalancerFields.tags.map((tag) => ({
+                  label: tag,
+                  value: tag,
+                }))
+              : []
+          }
+          onChange={tagsChange}
+          tagError={hasErrorFor('tags')}
+          disabled={disabled}
+        />
+      </Paper>
+      <SelectRegionPanel
+        regions={regions ?? []}
+        error={hasErrorFor('region')}
+        selectedID={nodeBalancerFields.region}
+        handleSelection={regionChange}
+        disabled={disabled}
+      />
+      <Box marginTop={2} marginBottom={2}>
+        {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
+          const lensTo = lensFrom(['configs', idx]);
 
-              const L = {
-                algorithmLens: lensTo(['algorithm']),
-                checkPassiveLens: lensTo(['check_passive']),
-                checkBodyLens: lensTo(['check_body']),
-                checkPathLens: lensTo(['check_path']),
-                portLens: lensTo(['port']),
-                protocolLens: lensTo(['protocol']),
-                proxyProtocolLens: lensTo(['proxy_protocol']),
-                healthCheckTypeLens: lensTo(['check']),
-                healthCheckAttemptsLens: lensTo(['check_attempts']),
-                healthCheckIntervalLens: lensTo(['check_interval']),
-                healthCheckTimeoutLens: lensTo(['check_timeout']),
-                sessionStickinessLens: lensTo(['stickiness']),
-                sslCertificateLens: lensTo(['ssl_cert']),
-                privateKeyLens: lensTo(['ssl_key']),
-              };
+          const L = {
+            algorithmLens: lensTo(['algorithm']),
+            checkPassiveLens: lensTo(['check_passive']),
+            checkBodyLens: lensTo(['check_body']),
+            checkPathLens: lensTo(['check_path']),
+            portLens: lensTo(['port']),
+            protocolLens: lensTo(['protocol']),
+            proxyProtocolLens: lensTo(['proxy_protocol']),
+            healthCheckTypeLens: lensTo(['check']),
+            healthCheckAttemptsLens: lensTo(['check_attempts']),
+            healthCheckIntervalLens: lensTo(['check_interval']),
+            healthCheckTimeoutLens: lensTo(['check_timeout']),
+            sessionStickinessLens: lensTo(['stickiness']),
+            sslCertificateLens: lensTo(['ssl_cert']),
+            privateKeyLens: lensTo(['ssl_key']),
+          };
 
-              return (
-                <Accordion
-                  heading={`Configuration - Port ${
-                    view(L.portLens, this.state) ?? ''
-                  }`}
-                  key={idx}
-                  defaultExpanded
-                >
-                  <NodeBalancerConfigPanel
-                    nodeBalancerRegion={this.state.nodeBalancerFields.region}
-                    errors={nodeBalancerConfig.errors}
-                    configIdx={idx}
-                    algorithm={view(L.algorithmLens, this.state)}
-                    onAlgorithmChange={this.updateState(L.algorithmLens)}
-                    checkPassive={view(L.checkPassiveLens, this.state)}
-                    onCheckPassiveChange={this.updateState(L.checkPassiveLens)}
-                    checkBody={view(L.checkBodyLens, this.state)}
-                    onCheckBodyChange={this.updateState(L.checkBodyLens)}
-                    checkPath={view(L.checkPathLens, this.state)}
-                    onCheckPathChange={this.updateState(L.checkPathLens)}
-                    port={view(L.portLens, this.state)}
-                    onPortChange={this.updateState(L.portLens)}
-                    protocol={view(L.protocolLens, this.state)}
-                    proxyProtocol={view(L.proxyProtocolLens, this.state)}
-                    onProtocolChange={this.updateState(
-                      L.protocolLens,
-                      L,
-                      this.afterProtocolUpdate
-                    )}
-                    onProxyProtocolChange={this.updateState(
-                      L.proxyProtocolLens
-                    )}
-                    healthCheckType={view(L.healthCheckTypeLens, this.state)}
-                    onHealthCheckTypeChange={this.updateState(
-                      L.healthCheckTypeLens,
-                      L,
-                      this.afterHealthCheckTypeUpdate
-                    )}
-                    healthCheckAttempts={view(
-                      L.healthCheckAttemptsLens,
-                      this.state
-                    )}
-                    onHealthCheckAttemptsChange={this.updateState(
-                      L.healthCheckAttemptsLens
-                    )}
-                    healthCheckInterval={view(
-                      L.healthCheckIntervalLens,
-                      this.state
-                    )}
-                    onHealthCheckIntervalChange={this.updateState(
-                      L.healthCheckIntervalLens
-                    )}
-                    healthCheckTimeout={view(
-                      L.healthCheckTimeoutLens,
-                      this.state
-                    )}
-                    onHealthCheckTimeoutChange={this.updateState(
-                      L.healthCheckTimeoutLens
-                    )}
-                    sessionStickiness={view(
-                      L.sessionStickinessLens,
-                      this.state
-                    )}
-                    onSessionStickinessChange={this.updateState(
-                      L.sessionStickinessLens
-                    )}
-                    sslCertificate={view(L.sslCertificateLens, this.state)}
-                    onSslCertificateChange={this.updateState(
-                      L.sslCertificateLens
-                    )}
-                    privateKey={view(L.privateKeyLens, this.state)}
-                    onPrivateKeyChange={this.updateState(L.privateKeyLens)}
-                    nodes={this.state.nodeBalancerFields.configs[idx].nodes}
-                    addNode={this.addNodeBalancerConfigNode(idx)}
-                    removeNode={this.removeNodeBalancerConfigNode(idx)}
-                    onNodeLabelChange={(nodeIndex, value) =>
-                      this.onNodeLabelChange(idx, nodeIndex, value)
-                    }
-                    onNodeAddressChange={(nodeIndex, value) =>
-                      this.onNodeAddressChange(idx, nodeIndex, value)
-                    }
-                    onNodePortChange={(nodeIndex, value) =>
-                      this.onNodePortChange(idx, nodeIndex, value)
-                    }
-                    onNodeWeightChange={(nodeIndex, value) =>
-                      this.onNodeWeightChange(idx, nodeIndex, value)
-                    }
-                    onDelete={this.onDeleteConfig(idx)}
-                    disabled={this.disabled}
-                  />
-                </Accordion>
-              );
-            }
-          )}
-        </Box>
-        <Button
-          buttonType="outlined"
-          onClick={this.addNodeBalancer}
-          data-qa-add-config
-          disabled={this.disabled}
-        >
-          Add another Configuration
+          return (
+            <Accordion
+              heading={`Configuration - Port ${
+                view(L.portLens, nodeBalancerFields) ?? ''
+              }`}
+              key={idx}
+              defaultExpanded
+            >
+              <NodeBalancerConfigPanel
+                nodeBalancerRegion={nodeBalancerFields.region}
+                errors={nodeBalancerConfig.errors}
+                configIdx={idx}
+                algorithm={view(L.algorithmLens, nodeBalancerFields)}
+                onAlgorithmChange={updateState(L.algorithmLens)}
+                checkPassive={view(L.checkPassiveLens, nodeBalancerFields)}
+                onCheckPassiveChange={updateState(L.checkPassiveLens)}
+                checkBody={view(L.checkBodyLens, nodeBalancerFields)}
+                onCheckBodyChange={updateState(L.checkBodyLens)}
+                checkPath={view(L.checkPathLens, nodeBalancerFields)}
+                onCheckPathChange={updateState(L.checkPathLens)}
+                port={view(L.portLens, nodeBalancerFields)}
+                onPortChange={updateState(L.portLens)}
+                protocol={view(L.protocolLens, nodeBalancerFields)}
+                proxyProtocol={view(L.proxyProtocolLens, nodeBalancerFields)}
+                onProtocolChange={updateState(
+                  L.protocolLens,
+                  L,
+                  afterProtocolUpdate
+                )}
+                onProxyProtocolChange={updateState(L.proxyProtocolLens)}
+                healthCheckType={view(
+                  L.healthCheckTypeLens,
+                  nodeBalancerFields
+                )}
+                onHealthCheckTypeChange={updateState(
+                  L.healthCheckTypeLens,
+                  L,
+                  afterHealthCheckTypeUpdate
+                )}
+                healthCheckAttempts={view(
+                  L.healthCheckAttemptsLens,
+                  nodeBalancerFields
+                )}
+                onHealthCheckAttemptsChange={updateState(
+                  L.healthCheckAttemptsLens
+                )}
+                healthCheckInterval={view(
+                  L.healthCheckIntervalLens,
+                  nodeBalancerFields
+                )}
+                onHealthCheckIntervalChange={updateState(
+                  L.healthCheckIntervalLens
+                )}
+                healthCheckTimeout={view(
+                  L.healthCheckTimeoutLens,
+                  nodeBalancerFields
+                )}
+                onHealthCheckTimeoutChange={updateState(
+                  L.healthCheckTimeoutLens
+                )}
+                sessionStickiness={view(
+                  L.sessionStickinessLens,
+                  nodeBalancerFields
+                )}
+                onSessionStickinessChange={updateState(L.sessionStickinessLens)}
+                sslCertificate={view(L.sslCertificateLens, nodeBalancerFields)}
+                onSslCertificateChange={updateState(L.sslCertificateLens)}
+                privateKey={view(L.privateKeyLens, nodeBalancerFields)}
+                onPrivateKeyChange={updateState(L.privateKeyLens)}
+                nodes={nodeBalancerFields.configs[idx].nodes}
+                addNode={addNodeBalancerConfigNode(idx)}
+                removeNode={removeNodeBalancerConfigNode(idx)}
+                onNodeLabelChange={(nodeIndex, value) =>
+                  onNodeLabelChange(idx, nodeIndex, value)
+                }
+                onNodeAddressChange={(nodeIndex, value) =>
+                  onNodeAddressChange(idx, nodeIndex, value)
+                }
+                onNodePortChange={(nodeIndex, value) =>
+                  onNodePortChange(idx, nodeIndex, value)
+                }
+                onNodeWeightChange={(nodeIndex, value) =>
+                  onNodeWeightChange(idx, nodeIndex, value)
+                }
+                onDelete={onDeleteConfig(idx)}
+                disabled={disabled}
+              />
+            </Accordion>
+          );
+        })}
+      </Box>
+      <Button
+        buttonType="outlined"
+        onClick={addNodeBalancer}
+        data-qa-add-config
+        disabled={disabled}
+      >
+        Add another Configuration
+      </Button>
+      <CheckoutSummary
+        heading={`Summary ${nodeBalancerFields.label ?? ''}`}
+        displaySections={[
+          { title: '$10/month' },
+          { title: regionLabel },
+          { title: 'Configs', details: nodeBalancerFields.configs.length },
+          {
+            title: 'Nodes',
+            details: nodeBalancerFields.configs.reduce(
+              (acc, config) => acc + config.nodes.length,
+              0
+            ),
+          },
+        ].filter((item) => Boolean(item.title))}
+      />
+      <Box
+        display="flex"
+        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+      >
+        {showAgreement ? (
+          <EUAgreementCheckbox
+            checked={Boolean(agreements?.eu_model)}
+            onChange={(e) => updateAgreements({ eu_model: e.target.checked })}
+          />
+        ) : undefined}
+        <Button buttonType="primary" onClick={onCreate} loading={isLoading}>
+          Create NodeBalancer
         </Button>
-        <CheckoutSummary
-          heading={`Summary ${nodeBalancerFields.label ?? ''}`}
-          displaySections={[
-            { title: '$10/month' },
-            { title: regionLabel },
-            { title: 'Configs', details: nodeBalancerFields.configs.length },
-            {
-              title: 'Nodes',
-              details: nodeBalancerFields.configs.reduce(
-                (acc, config) => acc + config.nodes.length,
-                0
-              ),
-            },
-          ].filter((item) => Boolean(item.title))}
-        />
-        <Box
-          display="flex"
-          justifyContent={showAgreement ? 'space-between' : 'flex-end'}
-        >
-          {showAgreement ? (
-            <EUAgreementCheckbox
-              checked={signedAgreement}
-              onChange={(e) =>
-                this.setState({ signedAgreement: e.target.checked })
-              }
-            />
-          ) : undefined}
-          <Button buttonType="primary" onClick={this.createNodeBalancer}>
-            Create NodeBalancer
-          </Button>
-        </Box>
-        <ConfirmationDialog
-          onClose={this.onCloseConfirmation}
-          title={'Delete this configuration?'}
-          error={this.confirmationConfigError()}
-          actions={this.renderConfigConfirmationActions}
-          open={this.state.deleteConfigConfirmDialog.open}
-        >
-          <Typography>
-            Are you sure you want to delete this NodeBalancer Configuration?
-          </Typography>
-        </ConfirmationDialog>
-      </React.Fragment>
-    );
-  }
-}
+      </Box>
+      <ConfirmationDialog
+        onClose={onCloseConfirmation}
+        title={'Delete this configuration?'}
+        error={confirmationConfigError()}
+        actions={
+          <ActionsPanel style={{ padding: 0 }}>
+            <Button
+              buttonType="secondary"
+              onClick={onCloseConfirmation}
+              className="cancel"
+            >
+              Cancel
+            </Button>
+            <Button
+              buttonType="primary"
+              onClick={onRemoveConfig}
+              loading={deleteConfigConfirmDialog.submitting}
+            >
+              Delete
+            </Button>
+          </ActionsPanel>
+        }
+        open={deleteConfigConfirmDialog.open}
+      >
+        <Typography>
+          Are you sure you want to delete this NodeBalancer Configuration?
+        </Typography>
+      </ConfirmationDialog>
+    </React.Fragment>
+  );
+};
 
 /* @todo: move to own file */
 export const lensFrom = (p1: (string | number)[]) => (
@@ -789,9 +697,4 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
   }, []);
 };
 
-export default recompose<CombinedProps, {}>(
-  withRegions,
-  withRouter,
-  withProfile,
-  withAgreements
-)(NodeBalancerCreate);
+export default NodeBalancerCreate;
