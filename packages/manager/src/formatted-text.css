@@ -17,7 +17,7 @@
   margin: 16px 0 0;
 }
 
-.formatted-text p:first-child {
+.formatted-text p:first-of-type {
   margin-top: 0;
 }
 

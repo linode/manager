@@ -26,7 +26,7 @@ const styles = (theme: Theme) =>
         border: 'none',
         backgroundColor: 'transparent',
       },
-      '& td:first-child': {
+      '& td:first-of-type': {
         backgroundColor: 'transparent !important',
       },
       '& .data': {
@@ -45,14 +45,14 @@ const styles = (theme: Theme) =>
         },
       },
       [theme.breakpoints.only('xs')]: {
-        '& tr:not(:first-child) td': {
-          '&:first-child': {
+        '& tr:not(:first-of-type) td': {
+          '&:first-of-type': {
             marginTop: theme.spacing(2),
           },
         },
       },
       [theme.breakpoints.only('sm')]: {
-        '& tr:not(:nth-last-child(n+3)) td:first-child': {
+        '& tr:not(:nth-last-child(n+3)) td:first-of-type': {
           marginTop: theme.spacing(2),
         },
         '& tbody': {

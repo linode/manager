@@ -1319,7 +1319,7 @@ export const base: ThemeOptions = {
           boxShadow: 'inset 0 -1px 0 #c5c6c8',
           minHeight: 48,
           position: 'relative',
-          '& $scrollButtons:first-child': {
+          '& $scrollButtons:first-of-type': {
             position: 'absolute',
             bottom: 6,
             zIndex: 2,

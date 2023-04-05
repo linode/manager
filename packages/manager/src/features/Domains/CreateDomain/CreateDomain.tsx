@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   radio: {
-    '& label:first-child .MuiButtonBase-root': {
+    '& label:first-of-type .MuiButtonBase-root': {
       marginLeft: -10,
     },
   },
