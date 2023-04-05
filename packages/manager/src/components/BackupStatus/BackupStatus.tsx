@@ -1,48 +1,50 @@
 import Backup from '@mui/icons-material/Backup';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Link from 'src/components/Link';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  icon: {
-    fontSize: 18,
-    fill: theme.color.grey1,
-  },
-  backupScheduledOrNever: {
-    marginRight: theme.spacing(),
-  },
-  backupNotApplicable: {
-    marginRight: theme.spacing(),
-  },
-  wrapper: {
-    display: 'flex',
-    alignContent: 'center',
-  },
-  tooltip: {
-    maxWidth: 275,
-  },
-  withTooltipIcon: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  backupLink: {
-    display: 'flex',
-    '&:hover': {
-      '& $icon': {
-        fill: theme.palette.primary.main,
+const useStyles = makeStyles<void, 'icon'>()(
+  (theme: Theme, _params, classes) => ({
+    icon: {
+      fontSize: 18,
+      fill: theme.color.grey1,
+    },
+    backupScheduledOrNever: {
+      marginRight: theme.spacing(),
+    },
+    backupNotApplicable: {
+      marginRight: theme.spacing(),
+    },
+    wrapper: {
+      display: 'flex',
+      alignContent: 'center',
+    },
+    tooltip: {
+      maxWidth: 275,
+    },
+    withTooltipIcon: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    backupLink: {
+      display: 'flex',
+      '&:hover': {
+        [`& .${classes.icon}`]: {
+          fill: theme.palette.primary.main,
+        },
       },
     },
-  },
-  backupText: {
-    whiteSpace: 'nowrap',
-  },
-}));
+    backupText: {
+      whiteSpace: 'nowrap',
+    },
+  })
+);
 
 interface Props {
   mostRecentBackup: string | null;
@@ -51,9 +53,7 @@ interface Props {
   isBareMetalInstance?: boolean;
 }
 
-type CombinedProps = Props;
-
-const BackupStatus: React.FC<CombinedProps> = (props) => {
+const BackupStatus = (props: Props) => {
   const {
     mostRecentBackup,
     linodeId,
@@ -61,7 +61,7 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
     isBareMetalInstance,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const backupsUnavailableMessage = (
     <Typography>
@@ -142,4 +142,4 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default BackupStatus;
+export { BackupStatus };

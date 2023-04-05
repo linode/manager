@@ -22,8 +22,9 @@ import { useAccountUsers } from 'src/queries/accountUsers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { GravatarByEmail } from '../../components/GravatarByEmail';
 import CreateUserDrawer from './CreateUserDrawer';
-import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
+import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   userLandingHeader: {
@@ -75,16 +76,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  isRestrictedUser: boolean;
-}
-
-const UsersLanding: React.FC<Props> = (props) => {
+const UsersLanding = () => {
+  const { data: profile } = useProfile();
   const pagination = usePagination(1, 'account-users');
   const { data: users, isLoading, error, refetch } = useAccountUsers({
     page: pagination.page,
     page_size: pagination.pageSize,
   });
+  const isRestrictedUser = profile?.restricted;
   const { enqueueSnackbar } = useSnackbar();
   const [createDrawerOpen, setCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -217,9 +216,9 @@ const UsersLanding: React.FC<Props> = (props) => {
       >
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
-            disabled={props.isRestrictedUser}
+            disabled={isRestrictedUser}
             disabledReason={
-              props.isRestrictedUser
+              isRestrictedUser
                 ? 'You cannot create other users as a restricted user.'
                 : undefined
             }
@@ -257,7 +256,7 @@ const UsersLanding: React.FC<Props> = (props) => {
       <UserDeleteConfirmationDialog
         username={toDeleteUsername || ''}
         open={deleteConfirmDialogOpen}
-        onDelete={onDeleteConfirm}
+        onDelete={() => onDeleteConfirm(toDeleteUsername ?? '')}
         onCancel={onDeleteCancel}
       />
     </React.Fragment>

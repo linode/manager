@@ -832,39 +832,19 @@ export const handlers = [
     );
   }),
   rest.get('*/events', (req, res, ctx) => {
-    const brokenEvent = eventFactory.build({
-      action: 'community_question_reply',
-      message: 'some community reply',
-      username: 'randomperson',
-      status: 'notification',
-      percent_complete: null,
-      entity: null,
-      seen: false,
-      read: false,
+    const events = eventFactory.buildList(1, {
+      action: 'lke_node_create',
+      percent_complete: 15,
+      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      message:
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
     });
-    const brokenEvent2 = eventFactory.build({
-      action: 'community_mention',
-      message: 'some community reply',
-      username: 'randomperson',
-      status: 'notification',
-      percent_complete: null,
-      entity: null,
-      seen: false,
-      read: false,
+    const oldEvents = eventFactory.buildList(20, {
+      action: 'account_update',
+      seen: true,
+      percent_complete: 100,
     });
-    const brokenEvent3 = eventFactory.build({
-      action: 'community_like',
-      message: 'some community reply',
-      username: 'randomperson',
-      status: 'notification',
-      percent_complete: null,
-      entity: null,
-      seen: false,
-      read: false,
-    });
-    return res(
-      ctx.json(makeResourcePage([brokenEvent, brokenEvent2, brokenEvent3]))
-    );
+    return res.once(ctx.json(makeResourcePage([...events, ...oldEvents])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });

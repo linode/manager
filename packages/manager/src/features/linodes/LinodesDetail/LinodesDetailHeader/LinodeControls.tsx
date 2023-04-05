@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
         backgroundColor: 'transparent',
         textDecoration: 'underline',
       },
-      '&:focus > span:first-child': {
+      '&:focus > span:first-of-type': {
         outline: '1px dotted #999',
       },
     },

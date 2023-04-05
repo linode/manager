@@ -347,7 +347,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
 const useStyles = makeStyles()({
   mainFormContainer: {
     maxWidth: 860,
-    '& .MuiGrid-item:not(:first-child) label': {
+    '& .MuiGrid-item:not(:first-of-type) label': {
       marginTop: 0,
     },
   },
