@@ -63,10 +63,6 @@ import stackScriptDialog, {
   defaultState as stackScriptDialogDefaultState,
   State as StackScriptDialogState,
 } from 'src/store/stackScriptDialog';
-import tagImportDrawer, {
-  defaultState as tagDrawerDefaultState,
-  State as TagImportDrawerState,
-} from 'src/store/tagImportDrawer';
 import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState,
@@ -123,7 +119,6 @@ export interface ApplicationState {
   backups: BackupDrawerState;
   events: EventsState;
   stackScriptDialog: StackScriptDialogState;
-  tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
   bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
@@ -142,7 +137,6 @@ export const defaultState: ApplicationState = {
   backups: backupsDefaultState,
   events: eventsDefaultState,
   stackScriptDialog: stackScriptDialogDefaultState,
-  tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
   bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
@@ -172,7 +166,6 @@ const reducers = combineReducers<ApplicationState>({
   authentication,
   backups,
   stackScriptDialog,
-  tagImportDrawer,
   volumeDrawer,
   bucketDrawer,
   events,

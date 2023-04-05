@@ -1,6 +1,5 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import { shallow } from 'enzyme';
 import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
 
 const component = shallow<AuthenticationWrapper>(
@@ -10,7 +9,6 @@ const component = shallow<AuthenticationWrapper>(
     linodesLoading={false}
     initSession={jest.fn()}
     requestLinodes={jest.fn()}
-    requestRegions={jest.fn()}
     markAppAsDoneLoading={jest.fn()}
     checkAccountSize={jest.fn()}
     pendingUpload={false}
