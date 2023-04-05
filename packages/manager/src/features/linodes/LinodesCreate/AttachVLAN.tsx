@@ -5,7 +5,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
@@ -85,7 +85,8 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <Typography variant="h2" className={classes.title}>
-        Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
+        Attach a VLAN{' '}
+        {helperText ? <TooltipIcon text={helperText} status="help" /> : null}
       </Typography>
       <Grid container>
         <Grid item xs={12}>

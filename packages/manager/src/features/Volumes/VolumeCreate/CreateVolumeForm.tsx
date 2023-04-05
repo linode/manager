@@ -11,10 +11,10 @@ import Box from 'src/components/core/Box';
 import Form from 'src/components/core/Form';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
@@ -58,11 +58,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   select: {
     width: 320,
-  },
-  helpIcon: {
-    marginBottom: 6,
-    marginLeft: theme.spacing(),
-    padding: 0,
   },
   tooltip: {
     '& .MuiTooltip-tooltip': {
@@ -119,6 +114,7 @@ interface Props {
 type CombinedProps = Props & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
+  const theme = useTheme();
   const classes = useStyles();
   const { onSuccess, origin, history } = props;
 
@@ -156,11 +152,16 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
   const renderSelectTooltip = (tooltipText: string) => {
     return (
-      <HelpIcon
+      <TooltipIcon
         classes={{ popper: classes.tooltip }}
-        className={classes.helpIcon}
+        sxTooltipIcon={{
+          marginBottom: '6px',
+          marginLeft: theme.spacing(),
+          padding: 0,
+        }}
         text={tooltipText}
         tooltipPosition="right"
+        status="help"
       />
     );
   };

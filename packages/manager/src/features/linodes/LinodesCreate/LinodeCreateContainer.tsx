@@ -144,7 +144,7 @@ const defaultState: State = {
   selectedStackScriptID: undefined,
   selectedStackScriptLabel: '',
   selectedStackScriptUsername: '',
-  selectedRegionID: undefined,
+  selectedRegionID: '',
   selectedTypeID: undefined,
   tags: [],
   authorized_users: [],
@@ -229,6 +229,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      */
     if (isNonDefaultImageType(prevProps.createType, this.props.createType)) {
       this.setState({ selectedImageID: undefined });
+    }
+
+    // Update search params for Linode Clone
+    if (prevProps.location.search !== this.props.history.location.search) {
+      this.params = getParamsFromUrl(this.props.location.search) as Record<
+        string,
+        string
+      >;
     }
   }
 

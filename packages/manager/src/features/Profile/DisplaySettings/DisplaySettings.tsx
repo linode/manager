@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Link from 'src/components/Link';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
@@ -35,11 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   gravatar: {
     height: 88,
     width: 88,
-  },
-  helpIcon: {
-    marginTop: -2,
-    marginLeft: 6,
-    padding: 0,
   },
   tooltip: {
     '& .MuiTooltip-tooltip': {
@@ -97,7 +92,7 @@ export const DisplaySettings = () => {
     return updateProfile({ email: newEmail });
   };
 
-  const helpIconText = (
+  const tooltipIconText = (
     <>
       Go to <Link to="https://en.gravatar.com/">gravatar.com</Link> and register
       an account using the same email address as your Linode account. Upload
@@ -116,11 +111,16 @@ export const DisplaySettings = () => {
         <div>
           <Typography className={classes.profileTitle} variant="h2">
             Profile photo
-            <HelpIcon
+            <TooltipIcon
               classes={{ popper: classes.tooltip }}
-              className={classes.helpIcon}
               interactive
-              text={helpIconText}
+              text={tooltipIconText}
+              status="help"
+              sxTooltipIcon={{
+                marginTop: '-2px',
+                marginLeft: '6px',
+                padding: 0,
+              }}
             />
           </Typography>
           <Typography className={classes.profileCopy} variant="body1">

@@ -30,7 +30,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
@@ -77,10 +77,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.textColors.tableHeader,
       order: 3,
     },
-  },
-  helpIcon: {
-    paddingTop: 0,
-    paddingBottom: 0,
   },
   tooltip: {
     maxWidth: 350,
@@ -900,8 +896,12 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               <Grid item xs={12}>
                 <Box display="flex" alignItems="center">
                   <Typography variant="h3">Network Interfaces</Typography>
-                  <HelpIcon
-                    className={classes.helpIcon}
+                  <TooltipIcon
+                    status="help"
+                    sxTooltipIcon={{
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                    }}
                     classes={{ tooltip: classes.tooltip }}
                     interactive
                     text={

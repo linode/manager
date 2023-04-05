@@ -12,7 +12,7 @@ import Flag from 'src/assets/icons/flag.svg';
 import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -195,7 +195,8 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
         ) : (
           <div className={classes.maintenanceOuter}>
             <strong>Maintenance Scheduled</strong>
-            <HelpIcon
+            <TooltipIcon
+              status="help"
               text={<MaintenanceText />}
               tooltipPosition="top"
               interactive
