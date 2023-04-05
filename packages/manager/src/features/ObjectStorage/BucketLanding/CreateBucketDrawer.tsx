@@ -134,7 +134,7 @@ export const CreateBucketDrawer = (props: Props) => {
             Cancel
           </Button>
           <Button buttonType="primary" type="submit" loading={isLoading}>
-            Create
+            Create Bucket
           </Button>
         </ActionsPanel>
         <EnableObjectStorageModal
