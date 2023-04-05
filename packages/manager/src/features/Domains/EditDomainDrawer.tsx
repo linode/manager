@@ -89,9 +89,9 @@ export const EditDomainDrawer = (props: Props) => {
   );
 
   React.useEffect(() => {
-    // Reset the React Query Mutation hook if the user opens the dialog and there was a previous error
-    if (open && error) {
+    if (open) {
       reset();
+      formik.resetForm();
     }
   }, [open]);
 
