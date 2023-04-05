@@ -6,6 +6,7 @@
     "skipLibCheck": true,
     "noImplicitAny": false,
     "target": "es6",
+    "moduleResolution": "node",
     "lib": ["es6", "dom"],
     "baseUrl": "..",
     "paths": {
