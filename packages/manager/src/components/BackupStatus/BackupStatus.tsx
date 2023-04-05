@@ -142,4 +142,4 @@ const BackupStatus = (props: Props) => {
   );
 };
 
-export default BackupStatus;
+export { BackupStatus };
