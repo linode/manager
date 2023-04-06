@@ -75,8 +75,7 @@ describe('LKE Create Cluster', () => {
 
     // Confirm change is reflected in checkout bar.
     cy.get('[data-testid="kube-checkout-bar"]').within(() => {
-      cy.findByText('Linode 2GB Plan').should('be.visible');
-
+      cy.findByText('Linode 2 GB Plan').should('be.visible');
       cy.findByTitle('Remove Linode 2GB Node Pool').should('be.visible');
 
       cy.get('[data-qa-notice="true"]').within(() => {

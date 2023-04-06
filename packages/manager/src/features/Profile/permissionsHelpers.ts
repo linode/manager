@@ -13,7 +13,7 @@ export const isRestrictedUser = () =>
 export const hasGrant = (grant: GlobalGrantTypes, grants?: Grants) => {
   if (!grants) {
     return (
-      queryClient.getQueryData<Grants>(`${queryKey}-grants`)?.global?.[grant] ||
+      queryClient.getQueryData<Grants>([queryKey, 'grants'])?.global?.[grant] ||
       false
     );
   }
@@ -23,7 +23,7 @@ export const hasGrant = (grant: GlobalGrantTypes, grants?: Grants) => {
 export const getGrants = (grants: Grants | undefined, grant: GrantType) => {
   if (!grants) {
     return (
-      queryClient.getQueryData<Grants>(`${queryKey}-grants`)?.[grant] || []
+      queryClient.getQueryData<Grants>([queryKey, 'grants'])?.[grant] || []
     );
   }
   return grants?.[grant] || [];

@@ -51,6 +51,7 @@ export const deleteLinode = createRequestThunk(
     for (const firewall of firewalls) {
       queryClient.invalidateQueries([
         firewallsQueryKey,
+        'firewall',
         firewall.id,
         'devices',
       ]);

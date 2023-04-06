@@ -29,18 +29,7 @@ const getLkePlanName = (clusterPlan: LkePlanDescription) => {
  * @returns LKE checkout plan name for plan.
  */
 const getLkePlanCheckoutName = (clusterPlan: LkePlanDescription) => {
-  return `${clusterPlan.type} ${clusterPlan.size}GB Plan`;
-};
-
-/**
- * Gets the label for an LKE node pool for a plan as shown on LKE summary pages.
- *
- * @param clusterPlan - Cluster plan from which to determine Cloud Manager LKE node pool label.
- *
- * @returns LKE node pool label for plan.
- */
-const getLkePlanNodePoolLabel = (clusterPlan: LkePlanDescription) => {
-  return `${clusterPlan.type} ${clusterPlan.size}GB`;
+  return `${clusterPlan.type} ${clusterPlan.size} GB Plan`;
 };
 
 /**
@@ -175,7 +164,7 @@ describe('LKE Cluster Creation', () => {
       // Because multiple node pools may have identical labels, we figure out
       // how many identical labels for each plan will exist and confirm that
       // the expected number is present.
-      const nodePoolLabel = getLkePlanNodePoolLabel(clusterPlan);
+      const nodePoolLabel = getLkePlanName(clusterPlan);
       const similarNodePoolCount = getSimilarPlans(clusterPlan, clusterPlans)
         .length;
 

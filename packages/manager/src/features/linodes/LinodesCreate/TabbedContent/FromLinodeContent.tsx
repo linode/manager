@@ -1,10 +1,13 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
+import { buildQueryStringForLinodeClone } from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
+import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectLinodePanel from '../SelectLinodePanel';
 import {
@@ -40,14 +43,23 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     errors,
     imagesData,
     linodesData,
-    selectedLinodeID,
     typesData,
+    regionsData,
+    selectedLinodeID,
     userCannotCreateLinode,
     updateLinodeID,
     updateTypeID,
   } = props;
 
+  const extendedTypes = typesData?.map(extendType);
+
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+
+  const history = useHistory();
+
+  const updateSearchParams = (search: string) => {
+    history.replace({ search });
+  };
 
   /** Set the Linode ID and the disk size and reset the plan selection */
   const handleSelectLinode = (linodeID: number, type: null | string) => {
@@ -58,6 +70,15 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     if (linode) {
       updateLinodeID(linode.id, linode.specs.disk);
       updateTypeID(linode.type);
+      updateSearchParams(
+        buildQueryStringForLinodeClone(
+          linode.id,
+          linode.region,
+          linode.type,
+          extendedTypes,
+          regionsData
+        )
+      );
     }
   };
 
@@ -84,7 +105,12 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
           <SelectLinodePanel
             data-qa-linode-panel
             error={hasErrorFor('linode_id')}
-            linodes={extendLinodes(linodesData, imagesData, typesData)}
+            linodes={extendLinodes(
+              linodesData,
+              imagesData,
+              extendedTypes,
+              regionsData
+            )}
             selectedLinodeID={selectedLinodeID}
             header={'Select Linode to Clone From'}
             handleSelection={handleSelectLinode}

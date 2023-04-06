@@ -741,7 +741,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         >
           <Grid item className="p0">
             <Typography variant="h3" className={classes.headline}>
-              Volumes
+              IP Addresses
             </Typography>
           </Grid>
           <Grid item className={classes.addNewWrapper}>

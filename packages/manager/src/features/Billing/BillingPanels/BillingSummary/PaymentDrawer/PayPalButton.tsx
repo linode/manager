@@ -8,10 +8,10 @@ import {
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { reportException } from 'src/exceptionReporting';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
@@ -22,7 +22,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useAccount } from 'src/queries/account';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     position: 'relative',
   },
@@ -53,8 +53,8 @@ interface TransactionInfo {
   orderID: string;
 }
 
-export const PayPalButton: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const PayPalButton = (props: Props) => {
+  const { classes } = useStyles();
   const {
     data,
     isLoading: clientTokenLoading,

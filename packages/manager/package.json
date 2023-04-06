@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.89.0",
+  "version": "1.90.0",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -47,6 +47,7 @@
     "jspdf-autotable": "^3.5.14",
     "launchdarkly-react-client-sdk": "^2.29.1",
     "libphonenumber-js": "^1.10.6",
+    "lodash": "^4.17.21",
     "logic-query-parser": "^0.0.5",
     "luxon": "^3.2.1",
     "markdown-it": "^12.3.2",

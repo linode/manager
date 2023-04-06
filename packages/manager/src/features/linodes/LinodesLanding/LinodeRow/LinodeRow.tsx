@@ -12,7 +12,7 @@ import Flag from 'src/assets/icons/flag.svg';
 import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -23,21 +23,18 @@ import {
   transitionText,
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/utilities/extendType';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
-import hasMutationAvailable, {
-  HasMutationAvailable,
-} from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
-import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import styled, { StyleProps } from './LinodeRow.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import { SxProps } from '@mui/system';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 interface Props {
   backups: LinodeBackups;
@@ -70,11 +67,7 @@ interface Props {
   openNotificationMenu: () => void;
 }
 
-export type CombinedProps = Props &
-  HasMutationAvailable &
-  WithRecentEvent &
-  WithNotifications &
-  StyleProps;
+export type CombinedProps = Props & WithRecentEvent & StyleProps;
 
 export const LinodeRow: React.FC<CombinedProps> = (props) => {
   const {
@@ -97,13 +90,19 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
     image,
     // other props
     classes,
-    linodeNotifications,
     openDialog,
     openPowerActionDialog,
     openNotificationMenu,
     recentEvent,
-    mutationAvailable,
   } = props;
+
+  const { data: notifications } = useNotificationsQuery();
+
+  const linodeNotifications =
+    notifications?.filter(
+      (notification) =>
+        notification.entity?.type === 'linode' && notification.entity?.id === id
+    ) ?? [];
 
   const isBareMetalInstance = type?.class === 'metal';
 
@@ -196,7 +195,8 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
         ) : (
           <div className={classes.maintenanceOuter}>
             <strong>Maintenance Scheduled</strong>
-            <HelpIcon
+            <TooltipIcon
+              status="help"
               text={<MaintenanceText />}
               tooltipPosition="top"
               interactive
@@ -208,7 +208,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
 
       <Hidden smDown>
         <TableCell className={classes.planCell} data-qa-ips>
-          <div className={classes.planCell}>{type?.label}</div>
+          <div className={classes.planCell}>{type?.formattedLabel}</div>
         </TableCell>
         <TableCell className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
@@ -232,7 +232,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
 
       <TableCell actionCell data-qa-notifications>
         <RenderFlag
-          mutationAvailable={mutationAvailable}
+          mutationAvailable={type?.isDeprecated ?? false}
           linodeNotifications={linodeNotifications}
           classes={classes}
         />
@@ -254,8 +254,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
 
 const enhanced = compose<CombinedProps, Props>(
   withRecentEvent,
-  hasMutationAvailable,
-  withNotifications,
   styled,
   React.memo
 );

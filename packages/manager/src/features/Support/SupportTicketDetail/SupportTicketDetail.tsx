@@ -19,7 +19,6 @@ import Chip from 'src/components/core/Chip';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -118,15 +117,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       this.props
     ),
   };
-
-  static docs: Linode.Doc[] = [
-    {
-      title: 'Linode Support',
-      src: 'https://linode.com/docs/platform/billing-and-support/support/',
-      body: `Linode provides live technical support services 24 hours a day, 7 days a week. Linode Support ensures network availability, verifies that you can access your Linode, resolves performance issues with hosts, and works to fix any service-related issues you may be experiencing.
-      Linode also offers a number of resources you can refer to when troubleshooting application and server configuration issues. These issues are generally outside the scope of Linode Support, and the other resources Linode provides can help you find solutions for your questions.`,
-    },
-  ];
 
   componentDidMount() {
     this.mounted = true;
@@ -415,8 +405,4 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 }
 const styled = withStyles(styles);
 
-export default compose<any, any, any, any>(
-  setDocs(SupportTicketDetail.docs),
-  withProfile,
-  styled
-)(SupportTicketDetail);
+export default compose(withProfile, styled)(SupportTicketDetail);

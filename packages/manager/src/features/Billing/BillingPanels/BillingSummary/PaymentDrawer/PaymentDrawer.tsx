@@ -1,20 +1,19 @@
 import { PaymentMethod } from '@linode/api-v4';
 import { makePayment } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
-import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import Grid from '@mui/material/Unstable_Grid2';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
@@ -31,7 +30,7 @@ import { PaymentMethodCard } from './PaymentMethodCard';
 import PayPalButton from './PayPalButton';
 import { SetSuccess } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   currentBalance: {
     fontSize: '1.1rem',
     marginBottom: theme.spacing(4),
@@ -54,9 +53,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     alignSelf: 'flex-end',
     marginLeft: 'auto',
-  },
-  helpIcon: {
-    padding: `0px 8px`,
   },
 }));
 
@@ -81,7 +77,7 @@ export const getMinimumPayment = (balance: number | false) => {
   return Math.min(5, balance).toFixed(2);
 };
 
-export const PaymentDrawer: React.FC<Props> = (props) => {
+export const PaymentDrawer = (props: Props) => {
   const { paymentMethods, selectedPaymentMethod, open, onClose } = props;
 
   const {
@@ -90,7 +86,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
     refetch: accountRefetch,
   } = useAccount();
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const hasPaymentMethods = paymentMethods && paymentMethods.length > 0;
@@ -228,7 +224,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
   return (
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {isProcessing ? (
@@ -237,12 +233,12 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
           {accountLoading ? (
             <Typography data-testid="loading-account">Loading</Typography>
           ) : account ? (
-            <Grid item>
+            <Grid>
               <Typography variant="h3" className={classes.currentBalance}>
                 <strong>
                   Current balance:{' '}
                   <span
-                    className={classNames({
+                    className={cx({
                       [classes.credit]: account?.balance < 0,
                     })}
                   >
@@ -253,7 +249,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
               </Typography>
             </Grid>
           ) : null}
-          <Grid item xs={6}>
+          <Grid xs={6}>
             <TextField
               label="Payment Amount"
               onChange={handleUSDChange}
@@ -270,8 +266,8 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
-          <Grid container direction="column">
-            <Grid item>
+          <Grid container direction="column" rowGap={2}>
+            <Grid>
               <Typography
                 variant="h3"
                 className={classes.header}
@@ -280,7 +276,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 <strong>Payment Methods:</strong>
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid container spacing={1}>
               {hasPaymentMethods ? (
                 paymentMethods?.map((paymentMethod: PaymentMethod) => (
                   <PaymentMethodCard
@@ -291,17 +287,18 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                   />
                 ))
               ) : (
-                <Grid item>
+                <Grid>
                   <Typography>No payment methods on file.</Typography>
                 </Grid>
               )}
             </Grid>
             {hasPaymentMethods ? (
-              <Grid item className={classes.input}>
+              <Grid className={classes.input}>
                 <Grid className={classes.button}>
                   {paymentTooLow || selectedCardExpired ? (
-                    <HelpIcon
-                      className={classes.helpIcon}
+                    <TooltipIcon
+                      sxTooltipIcon={{ padding: `0px 8px` }}
+                      status="help"
                       text={
                         paymentTooLow
                           ? `Payment amount must be at least ${minimumPayment}.`
@@ -333,13 +330,13 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
             usd={usd}
           />
           <Divider spacingTop={28} spacingBottom={16} />
-          <Grid item>
+          <Grid>
             <Typography variant="h3" className={classes.header}>
               <strong>Or pay via:</strong>
             </Typography>
           </Grid>
-          <Grid container>
-            <Grid item xs={9} sm={6}>
+          <Grid container spacing={2}>
+            <Grid xs={9} sm={6}>
               <PayPalErrorBoundary renderError={renderError}>
                 <PayPalButton
                   usd={usd}
@@ -351,7 +348,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 />
               </PayPalErrorBoundary>
             </Grid>
-            <Grid item xs={9} sm={6}>
+            <Grid xs={9} sm={6}>
               <GooglePayButton
                 transactionInfo={{
                   totalPriceStatus: 'FINAL',
@@ -377,7 +374,7 @@ interface WarningProps {
   warning: APIWarning;
 }
 
-const Warning: React.FC<WarningProps> = (props) => {
+const Warning = (props: WarningProps) => {
   const { warning } = props;
   /** The most common API warning includes "please open a Support ticket",
    * which we'd like to be a link.

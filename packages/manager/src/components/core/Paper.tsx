@@ -1,47 +1,26 @@
-import _Paper, { PaperProps as _PaperProps } from '@mui/material/Paper';
-import classNames from 'classnames';
+import _Paper, { PaperProps } from '@mui/material/Paper';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import FormHelperText from './FormHelperText';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(3),
-    paddingTop: 17,
-  },
-  error: {
-    borderColor: `#ca0813 !important`,
-  },
-  errorText: {
-    color: '#ca0813',
-  },
+const StyledPaper = styled(_Paper)<Props>(({ theme, ...props }) => ({
+  padding: theme.spacing(3),
+  paddingTop: 17,
+  borderColor: Boolean(props.error) ? `#ca0813` : undefined,
 }));
 
-export interface PaperProps extends _PaperProps {
+export interface Props extends PaperProps {
   error?: string;
 }
 
-type CombinedProps = PaperProps;
-
-const Paper: React.FC<CombinedProps> = (props) => {
+const Paper = (props: Props) => {
   const { error, className, ...rest } = props;
-  const classes = useStyles();
 
   return (
     <React.Fragment>
-      <_Paper
-        className={classNames(
-          {
-            [classes.root]: true,
-            [classes.error]: error,
-          },
-          className
-        )}
-        {...rest}
-      />
+      <StyledPaper className={className} {...rest} />
       {error && (
-        <FormHelperText className={classes.errorText}>{error}</FormHelperText>
+        <FormHelperText sx={{ color: '#ca0813' }}>{error}</FormHelperText>
       )}
     </React.Fragment>
   );

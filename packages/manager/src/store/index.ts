@@ -16,10 +16,6 @@ import bucketDrawer, {
   defaultState as bucketDrawerDefaultState,
   State as BucketDrawerState,
 } from 'src/store/bucketDrawer/bucketDrawer.reducer';
-import documentation, {
-  defaultState as documentationDefaultState,
-  State as DocumentationState,
-} from 'src/store/documentation';
 import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
@@ -46,10 +42,6 @@ import linodes, {
   defaultState as defaultLinodesState,
   State as LinodesState,
 } from 'src/store/linodes/linodes.reducer';
-import types, {
-  defaultState as defaultTypesState,
-  State as TypesState,
-} from 'src/store/linodeType/linodeType.reducer';
 import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   defaultState as defaultLongviewState,
@@ -71,10 +63,6 @@ import stackScriptDialog, {
   defaultState as stackScriptDialogDefaultState,
   State as StackScriptDialogState,
 } from 'src/store/stackScriptDialog';
-import tagImportDrawer, {
-  defaultState as tagDrawerDefaultState,
-  State as TagImportDrawerState,
-} from 'src/store/tagImportDrawer';
 import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState,
@@ -95,10 +83,6 @@ import mockFeatureFlags, {
 } from './mockFeatureFlags';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
-import notifications, {
-  defaultState as notificationsDefaultState,
-  State as NotificationsState,
-} from './notification/notification.reducer';
 import pendingUpload, {
   defaultState as pendingUploadState,
   State as PendingUploadState,
@@ -118,8 +102,6 @@ const __resourcesDefaultState = {
   linodeDisks: defaultLinodeDisksState,
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancers: defaultNodeBalancerState,
-  notifications: notificationsDefaultState,
-  types: defaultTypesState,
 };
 
 export interface ResourcesState {
@@ -129,18 +111,14 @@ export interface ResourcesState {
   linodeDisks: LinodeDisksState;
   nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancers: NodeBalancersState;
-  notifications: NotificationsState;
-  types: TypesState;
 }
 
 export interface ApplicationState {
   __resources: ResourcesState;
   authentication: AuthState;
   backups: BackupDrawerState;
-  documentation: DocumentationState;
   events: EventsState;
   stackScriptDialog: StackScriptDialogState;
-  tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
   bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
@@ -157,10 +135,8 @@ export const defaultState: ApplicationState = {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
-  documentation: documentationDefaultState,
   events: eventsDefaultState,
   stackScriptDialog: stackScriptDialogDefaultState,
-  tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
   bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
@@ -183,17 +159,13 @@ const __resources = combineReducers({
   linodeDisks,
   nodeBalancers,
   nodeBalancerConfigs,
-  notifications,
-  types,
 });
 
 const reducers = combineReducers<ApplicationState>({
   __resources,
   authentication,
   backups,
-  documentation,
   stackScriptDialog,
-  tagImportDrawer,
   volumeDrawer,
   bucketDrawer,
   events,

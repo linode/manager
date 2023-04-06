@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-04-03] - v1.90.0
+
+### Added:
+- Delete warning to LKE [#8891](https://github.com/linode/manager/pull/8891)
+- “to another region” to the title of the Linode Migrate Dialog [#8920](https://github.com/linode/manager/pull/8920)
+
+### Changed:
+- Disable Download CA Certificate when DB is provisioning [#8890](https://github.com/linode/manager/pull/8890)
+- Update OCC logos to include naming convention [#8927](https://github.com/linode/manager/pull/8927)
+- MUI v5 Migration - Features > Billing [#8895](https://github.com/linode/manager/pull/8895)
+- MUI v5 Migration - Features > Account [#8893](https://github.com/linode/manager/pull/8893)
+- MUI v5 Migration - Components > Drawer, DrawerContent [#8908](https://github.com/linode/manager/pull/8908)
+- MUI v5 Migration - Components > Accordion [#8905](https://github.com/linode/manager/pull/8905)
+- MUI v5 Migration - Components > SelectionCard [#8939](https://github.com/linode/manager/pull/8939)
+- MUI v5 Migration - Components > AccountActivation, ActionMenu [#8930](https://github.com/linode/manager/pull/8930)
+- MUI v5 Migration - Components > AbuseTicketBanner, AccessPanel [#8913](https://github.com/linode/manager/pull/8913)
+- MUI v5 Migration - Components > DocsLink, ExternalLink, IconTextLink [#8919](https://github.com/linode/manager/pull/8919)
+- MUI v5 Migration - Features > Databases [#8896](https://github.com/linode/manager/pull/8896)
+- React Query for Firewalls [#8889](https://github.com/linode/manager/pull/8889)
+- RQ-ify Types endpoints [#8840](https://github.com/linode/manager/pull/8840)
+- React Query for SSH Keys [#8892](https://github.com/linode/manager/pull/8892)
+- React Query for Notifications [#8915](https://github.com/linode/manager/pull/8915)
+
+### Fixed:
+- Filtering by `Status` on Linode Details Volumes Table [#8947](https://github.com/linode/manager/pull/8947)
+- Tag drawer in LinodesLanding summary view [#8909](https://github.com/linode/manager/pull/8909)
+- Crash for Events with a `null` community post `entity` [#8912](https://github.com/linode/manager/pull/8912)
+- Incorrect headline in Linode Details Networking table [#8925](https://github.com/linode/manager/pull/8925)
+
+### Removed:
+- Repo clean up, remove old Redux Docs [#8907](https://github.com/linode/manager/pull/8907)
+
+## [2023-03-28] - v1.89.1
+
+### Fixed:
+- NodeBalancer Configurations not saving [#8929](https://github.com/linode/manager/pull/8929)
+
 ## [2023-03-20] - v1.89.0
 
 ### Added:

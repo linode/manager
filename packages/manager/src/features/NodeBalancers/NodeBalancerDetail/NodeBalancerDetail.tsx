@@ -12,7 +12,6 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
@@ -201,21 +200,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       : undefined;
   };
 
-  static docs: Linode.Doc[] = [
-    {
-      title: 'Getting Started with NodeBalancers',
-      src:
-        'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers-new-manager/',
-      body: `Using a NodeBalancer to begin managing a simple web application`,
-    },
-    {
-      title: 'NodeBalancer Reference Guide',
-      src:
-        'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide-new-manager/',
-      body: `NodeBalancer Reference Guide`,
-    },
-  ];
-
   tabs = [
     {
       routeName: `${this.props.match.url}/summary`,
@@ -356,7 +340,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 }
 
 export default compose(
-  setDocs(NodeBalancerDetail.docs),
   withFeatureFlagConsumerContainer,
   withSnackbar,
   withNodeBalancerActions,

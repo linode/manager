@@ -78,6 +78,10 @@ export const UpdateLinodePasswordSchema = object({
   // .concat(rootPasswordValidation)
 });
 
+const MetadataSchema = object({
+  user_data: string().notRequired().nullable(true),
+});
+
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
@@ -110,6 +114,7 @@ export const CreateLinodeSchema = object({
     otherwise: string().notRequired(),
   }),
   interfaces: linodeInterfaceSchema,
+  metadata: MetadataSchema,
 });
 
 const alerts = object({
@@ -189,6 +194,7 @@ export const RebuildLinodeSchema = object().shape({
   stackscript_id: number().notRequired(),
   stackscript_data,
   booted: boolean().notRequired(),
+  metadata: MetadataSchema,
 });
 
 export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({

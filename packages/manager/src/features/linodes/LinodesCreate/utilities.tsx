@@ -1,10 +1,11 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { displayType } from 'src/features/linodes/presentation';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-import { ExtendedLinode } from './types';
-import Typography from 'src/components/core/Typography';
+import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
+import Typography from 'src/components/core/Typography';
+import { displayType } from 'src/features/linodes/presentation';
+import { ExtendedType } from 'src/utilities/extendType';
+import { ExtendedLinode } from './types';
 
 /**
  * adds a heading and subheading key to the Linode
@@ -12,7 +13,8 @@ import * as React from 'react';
 export const extendLinodes = (
   linodes: Linode[],
   imagesData: Record<string, Image> = {},
-  typesData: ExtendedType[] = []
+  typesData: ExtendedType[] = [],
+  regionsData: Region[] = []
 ): ExtendedLinode[] => {
   return linodes.map((linode) => {
     /** get image data based on the Linode's image key */
@@ -23,7 +25,9 @@ export const extendLinodes = (
       heading: linode.label,
       subHeadings: formatLinodeSubheading(
         displayType(linode.type, typesData),
-        linodeImageMetaData ? linodeImageMetaData.label : ''
+        linodeImageMetaData ? linodeImageMetaData.label : '',
+        regionsData.find((region) => region.id === linode.region)?.label ??
+          undefined
       ),
     };
   });
@@ -31,12 +35,16 @@ export const extendLinodes = (
 
 export const formatLinodeSubheading = (
   typeLabel: string,
-  imageLabel?: string
+  imageLabel?: string,
+  regionLabel?: string
 ) => {
-  const subheading = imageLabel
-    ? `${typeLabel}, ${imageLabel}`
-    : `${typeLabel}`;
-  return [subheading];
+  if (imageLabel && regionLabel) {
+    return [`${typeLabel}, ${imageLabel}, ${regionLabel}`];
+  }
+  if (imageLabel) {
+    return [`${typeLabel}, ${imageLabel}`];
+  }
+  return [typeLabel];
 };
 
 export const getRegionIDFromLinodeID = (
@@ -96,3 +104,6 @@ export const getMonthlyAndHourlyNodePricing = (
     hourlyPrice: Math.round(hourlyPrice * numberOfNodes * 1000) / 1000,
   };
 };
+
+export const CROSS_DATA_CENTER_CLONE_WARNING =
+  'Cloning a Powered Off instance across Data Centers may cause long periods of down time.';

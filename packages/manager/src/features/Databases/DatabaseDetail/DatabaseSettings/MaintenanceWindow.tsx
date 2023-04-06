@@ -1,5 +1,6 @@
 import { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -9,17 +10,17 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import { useDatabaseMutation } from 'src/queries/databases';
+import { makeStyles } from 'tss-react/mui';
+
 // import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   topSection: {
     display: 'flex',
     alignItems: 'center',
@@ -52,12 +53,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignSelf: 'flex-start',
     },
   },
-  helpIcon: {
-    padding: '0px 8px',
-    marginTop: '1.25rem',
-  },
   formControlDropdown: {
     marginRight: '3rem',
+    '& label': {
+      overflow: 'visible',
+    },
   },
 }));
 
@@ -66,7 +66,7 @@ interface Props {
   timezone?: string;
 }
 
-export const MaintenanceWindow: React.FC<Props> = (props) => {
+export const MaintenanceWindow = (props: Props) => {
   const { database, timezone } = props;
 
   const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<
@@ -82,7 +82,7 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
     setModifiedWeekSelectionMap,
   ] = React.useState<Item[]>([]);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(
@@ -258,9 +258,13 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
                   }
                   noMarginTop
                 />
-                <HelpIcon
+                <TooltipIcon
+                  status="help"
                   interactive
-                  className={classes.helpIcon}
+                  sxTooltipIcon={{
+                    padding: '0px 8px',
+                    marginTop: '1.25rem',
+                  }}
                   text={
                     <Typography>
                       UTC is {utcOffsetText(utcOffsetInHours)} hours compared to

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useFormik, yupToFormErrors } from 'formik';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -16,7 +16,7 @@ import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   error: {
     marginTop: theme.spacing(2),
   },
@@ -46,10 +46,10 @@ interface Values {
   country: string;
 }
 
-const AddCreditCardForm: React.FC<Props> = (props) => {
+const AddCreditCardForm = (props: Props) => {
   const { onClose, disabled } = props;
   const [error, setError] = React.useState<string>();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const expiryRef = React.useRef<HTMLInputElement>(null);
 
@@ -160,12 +160,12 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <Grid item xs={12} className={classes.error}>
+        <Grid xs={12} className={classes.error}>
           <Notice error text={error} />
         </Grid>
       )}
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <TextField
             name="card_number"
             value={values.card_number}
@@ -179,7 +179,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             inputRef={expiryRef}
             name="expiry"
@@ -198,7 +198,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             disabled={disableInput}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             name="cvv"
             value={values.cvv}
@@ -208,75 +208,6 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             errorText={touched.cvv ? errors.cvv : undefined}
             disabled={disableInput}
           />
-        </Grid>
-        <Grid item xs={12}>
-          {/*
-          <TextField
-            name="address"
-            value={values.address}
-            onChange={handleChange}
-            label="Address"
-            error={Boolean(errors.address)}
-            errorText={errors.address}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            name="address2"
-            value={values.address2}
-            onChange={handleChange}
-            label="Address 2"
-            error={Boolean(errors.address2)}
-            errorText={errors.address2}
-          />
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <TextField
-            name="city"
-            value={values.city}
-            onChange={handleChange}
-            label="City"
-            error={Boolean(errors.city)}
-            errorText={errors.city}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            name="state"
-            value={values.state}
-            onChange={handleChange}
-            label="State / Province"
-            error={Boolean(errors.state)}
-            errorText={errors.state}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            name="zip"
-            value={values.zip}
-            onChange={handleChange}
-            label="Zip / Postal Code"
-            error={Boolean(errors.zip)}
-            errorText={errors.zip}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <EnhancedSelect
-            name="country"
-            onChange={(data: Item<string>) => {
-              setFieldValue('country', data.value);
-            }}
-            label="Country"
-            placeholder="Select a Country"
-            isClearable={false}
-            options={countryResults}
-            value={countryResults.find(
-              (country) => country.label === values.country
-            )}
-            error={Boolean(errors.country)}
-            errorText={errors.country}
-            />
-            */}
         </Grid>
       </Grid>
       <ActionsPanel style={{ marginTop: 0 }}>
@@ -308,11 +239,11 @@ export interface CreditCardFormProps extends NumberFormatProps {
 type CombinedCreditCardFormProps = CreditCardFormProps &
   InputBaseComponentProps;
 
-const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
+const creditCardField = ({
   inputRef,
   onChange,
   ...other
-}) => {
+}: CombinedCreditCardFormProps) => {
   return (
     <NumberFormat
       {...other}
