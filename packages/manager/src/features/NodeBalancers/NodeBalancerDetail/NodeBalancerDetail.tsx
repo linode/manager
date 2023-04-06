@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Breadcrumb from 'src/components/Breadcrumb';
+import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
