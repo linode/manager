@@ -2,7 +2,11 @@ import * as React from 'react';
 import Drawer from 'src/components/Drawer';
 import { useProfile } from 'src/queries/profile';
 import { useFormik } from 'formik';
-import { useCreateBucketMutation } from 'src/queries/objectStorage';
+import {
+  useCreateBucketMutation,
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 import { isEURegion } from 'src/utilities/formatRegion';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -41,6 +45,9 @@ export const CreateBucketDrawer = (props: Props) => {
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
 
+  const { data: clusters } = useObjectStorageClusters();
+  const { data: buckets } = useObjectStorageBuckets(clusters);
+
   const {
     mutateAsync: createBucket,
     isLoading,
@@ -59,6 +66,19 @@ export const CreateBucketDrawer = (props: Props) => {
     initialValues: {
       label: '',
       cluster: '',
+    },
+    validate(values) {
+      reset();
+      const doesBucketExist = buckets?.buckets.find(
+        (b) => b.label === values.label && b.cluster === values.cluster
+      );
+      if (doesBucketExist) {
+        return {
+          label:
+            'A bucket with this label already exists in your selected region',
+        };
+      }
+      return {};
     },
     async onSubmit(values) {
       await createBucket(values);
@@ -105,7 +125,7 @@ export const CreateBucketDrawer = (props: Props) => {
           data-qa-cluster-label
           label="Label"
           name="label"
-          errorText={formik.touched.label ? errorMap.label : undefined}
+          errorText={errorMap.label ?? formik.errors.label}
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           value={formik.values.label}
