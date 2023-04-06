@@ -53,13 +53,13 @@ export const attemptWithBackoff = async <T>(
 
   // Disable ESLint rule because we do not want to parallelize the async operations.
   /* eslint-disable no-await-in-loop */
-  for (let attempt = 1; attempt < maxAttempts; attempt++) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const nextAttempt = attempt + 1;
     try {
       const result = await promiseCallback();
       return result;
     } catch (e) {
-      if (nextAttempt < maxAttempts) {
+      if (nextAttempt <= maxAttempts) {
         const backoffTime = backoffMethod.calculateBackoff(nextAttempt);
         await timeout(backoffTime);
       }
@@ -70,7 +70,7 @@ export const attemptWithBackoff = async <T>(
 };
 
 /**
- * Tries to resolve a Promise a given number of times using some backoff logic.
+ * Calculates backoff time when retrying an attempt to do something.
  */
 export abstract class BackoffMethod {
   /// Backoff method options.
@@ -99,7 +99,7 @@ export abstract class BackoffMethod {
 }
 
 /**
- * Tries to resolve a Promise a given number of times using a constant delay between attempts.
+ * Calculates backoff time using a constant interval between attempts.
  */
 export class SimpleBackoffMethod extends BackoffMethod {
   /// Delay between attempts (in milliseconds).
@@ -127,7 +127,7 @@ export class SimpleBackoffMethod extends BackoffMethod {
 }
 
 /**
- * Tries to resolve a Promise a given number of times using Fibonacci backoff.
+ * Calculates backoff time using Fibonacci sequence.
  */
 export class FibonacciBackoffMethod extends BackoffMethod {
   /// Optional maximum timeout, in milliseconds.
