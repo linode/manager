@@ -24,7 +24,7 @@ import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
-import withRegions, { RegionsProps } from 'src/containers/regions.container';
+import { withRegions, RegionsProps } from 'src/containers/regions.container';
 import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
