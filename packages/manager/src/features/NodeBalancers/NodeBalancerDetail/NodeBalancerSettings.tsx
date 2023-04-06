@@ -4,26 +4,17 @@ import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import TextField from 'src/components/TextField';
-import defaultNumeric from 'src/utilities/defaultNumeric';
+import { useTheme } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { clamp, compose, defaultTo } from 'ramda';
-import { Theme } from '@mui/material/styles';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
-import { makeStyles } from 'tss-react/mui';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  spacing: {
-    marginTop: theme.spacing(),
-  },
-}));
-
 export const NodeBalancerSettings = () => {
-  const { classes } = useStyles();
+  const theme = useTheme();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
 
@@ -65,6 +56,10 @@ export const NodeBalancerSettings = () => {
     return null;
   }
 
+  const sxButton = {
+    marginTop: theme.spacing(),
+  };
+
   return (
     <div>
       <DocumentTitleSegment segment={`${nodebalancer.label} - Settings`} />
@@ -79,7 +74,7 @@ export const NodeBalancerSettings = () => {
         />
         <Button
           buttonType="primary"
-          className={classes.spacing}
+          sx={sxButton}
           loading={isUpdatingLabel}
           disabled={label === nodebalancer.label}
           onClick={() => updateNodeBalancerLabel({ label })}
@@ -95,15 +90,12 @@ export const NodeBalancerSettings = () => {
               <InputAdornment position="end">/ second</InputAdornment>
             ),
           }}
+          type="number"
           label="Connection Throttle"
           errorText={throttleError?.[0].reason}
-          onChange={(e) =>
-            setConnectionThrottle(
-              controlClientConnectionThrottle(e.target.value)
-            )
-          }
+          onChange={(e) => setConnectionThrottle(Number(e.target.value))}
           placeholder="0"
-          value={defaultTo(0, connectionThrottle)}
+          value={connectionThrottle}
           data-qa-connection-throttle
         />
         <FormHelperText>
@@ -112,7 +104,7 @@ export const NodeBalancerSettings = () => {
         </FormHelperText>
         <Button
           buttonType="primary"
-          className={classes.spacing}
+          sx={sxButton}
           loading={isUpdatingThrottle}
           disabled={connectionThrottle === nodebalancer.client_conn_throttle}
           onClick={() =>
@@ -142,9 +134,5 @@ export const NodeBalancerSettings = () => {
     </div>
   );
 };
-
-const controlClientConnectionThrottle = compose(clamp(0, 20), (value: string) =>
-  defaultNumeric(0, value)
-);
 
 export default NodeBalancerSettings;
