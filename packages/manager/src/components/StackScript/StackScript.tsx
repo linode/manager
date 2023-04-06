@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   headerLabel: {
-    marginLeft: '0.25em',
     maxWidth: 'calc(100% - 80px)',
   },
   editBtn: {
