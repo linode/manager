@@ -9,7 +9,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
@@ -50,10 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipNetmaskTooltipSection: {
     display: 'flex',
     flexDirection: 'row',
-  },
-  helpIcon: {
-    marginTop: -15,
-    marginLeft: -4,
   },
   required: {
     fontFamily: theme.font.normal,
@@ -137,10 +133,14 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
       {tooltip ? (
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
-          <HelpIcon
-            className={classes.helpIcon}
+          <TooltipIcon
+            sxTooltipIcon={{
+              marginTop: '-15px',
+              marginLeft: '-4px',
+            }}
             text={tooltip}
             tooltipPosition="right"
+            status="help"
           />
         </div>
       ) : (

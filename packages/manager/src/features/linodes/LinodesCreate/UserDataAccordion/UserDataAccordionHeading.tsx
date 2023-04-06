@@ -33,6 +33,7 @@ const UserDataAccordionHeading = ({ createType }: Props) => {
           </>
         }
         interactive
+        status="help"
       />
       {showWarningMessage ? (
         <Notice warning spacingTop={16} spacingBottom={16}>

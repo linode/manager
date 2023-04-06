@@ -7,7 +7,8 @@ export type Capabilities =
   | 'GPU Linodes'
   | 'Cloud Firewall'
   | 'Vlans'
-  | 'Bare Metal'; // This hasn't actually been added to the API yet
+  | 'Bare Metal'
+  | 'Metadata';
 
 export interface DNSResolvers {
   ipv4: string; // Comma-separated IP addresses
