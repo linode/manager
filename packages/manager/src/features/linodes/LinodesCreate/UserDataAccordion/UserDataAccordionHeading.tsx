@@ -15,8 +15,8 @@ interface Props {
 const UserDataAccordionHeading = ({ createType }: Props) => {
   const userDataHeaderWarningMessage =
     createType === LINODE_CREATE_FROM.BACKUPS
-      ? 'Existing user data is not available when creating a Linode from a backup.'
-      : 'User data is not cloned.';
+      ? 'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.'
+      : 'Existing user data is not cloned. You may add new user data now.';
   const showWarningMessage =
     createType &&
     [LINODE_CREATE_FROM.BACKUPS, LINODE_CREATE_FROM.CLONE].includes(createType);
@@ -27,9 +27,8 @@ const UserDataAccordionHeading = ({ createType }: Props) => {
       <StyledHelpIcon
         text={
           <>
-            User data is part of a virtual machine&rsquo;s cloud-init metadata
-            containing information related to a user&rsquo;s local account.{' '}
-            <Link to="/">Learn more.</Link>
+            User data is a virtual machine&rsquo;s cloud-init metadata relating
+            to a user&rsquo;s local account. <Link to="/">Learn more.</Link>
           </>
         }
         interactive

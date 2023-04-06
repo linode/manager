@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import TextField from 'src/components/TextField';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import AcceptedFormats from './AcceptedFormats';
-import UserDataAccordionHeading from './UserDataAccordionHeading';
-import UserDataExplanatory from './UserDataExplanatory';
+import TextField from 'src/components/TextField';
+import Typography from 'src/components/core/Typography';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
-
+import UserDataAccordionHeading from './UserDataAccordionHeading';
 interface Props {
   createType?: string;
   userData: string | undefined;
@@ -80,12 +79,16 @@ const UserDataAccordion = (props: Props) => {
       {renderNotice ? (
         <div data-testid="render-notice">{renderNotice}</div>
       ) : (
-        <UserDataExplanatory />
+        <Typography sx={{ marginBottom: 3 }}>
+          User data is a virtual machine&rsquo;s cloud-init metadata relating to
+          a user&rsquo;s local account, including username and user group(s).
+          User data must be added before the Linode provisions.{' '}
+          <Link to="http://linode.com/docs">Learn more.</Link>{' '}
+        </Typography>
       )}
-      <AcceptedFormats />
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
-          This user data may not be in a format accepted by cloud-init.
+          The user data may be formatted incorrectly.
         </Notice>
       ) : null}
       <TextField
