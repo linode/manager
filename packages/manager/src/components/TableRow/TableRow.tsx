@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderTop: `1px solid ${theme.palette.primary.light}`,
       borderBottomColor: theme.palette.primary.light,
       position: 'relative',
-      '&:first-child': {
+      '&:first-of-type': {
         borderLeft: `1px solid ${theme.palette.primary.light}`,
       },
       [theme.breakpoints.down('lg')]: {

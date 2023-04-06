@@ -9,7 +9,7 @@ export const Help = () => {
     <Link aria-label="Link to Linode Support" to="/support">
       <StyledTopMenuIconWrapper
         sx={{
-          marginLeft: '8px',
+          marginLeft: [null, null, '8px'],
         }}
       >
         <TopMenuIcon title={'Help & Support'}>

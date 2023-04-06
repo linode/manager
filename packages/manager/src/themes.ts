@@ -528,7 +528,7 @@ const darkThemeOptions: ThemeOptions = {
           boxShadow: 'inset 0 -1px 0 #222',
         },
         flexContainer: {
-          '& $scrollButtons:first-child': {
+          '& $scrollButtons:first-of-type': {
             color: '#222',
           },
         },

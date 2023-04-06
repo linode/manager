@@ -10,7 +10,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { useAccount } from 'src/queries/account';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 import AccountLogins from './AccountLogins';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
@@ -26,8 +26,6 @@ const MaintenanceLanding = React.lazy(
 const AccountLanding = () => {
   const history = useHistory();
   const location = useLocation();
-
-  const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: grants } = useGrants();
 
@@ -128,7 +126,7 @@ const AccountLanding = () => {
               <Billing />
             </SafeTabPanel>
             <SafeTabPanel index={++idx}>
-              <Users isRestrictedUser={profile?.restricted || false} />
+              <Users />
             </SafeTabPanel>
             <SafeTabPanel index={++idx}>
               <AccountLogins />
