@@ -16,36 +16,37 @@ The basic structure of a component file should follow:
 Here is a minimal code example demonstrating the basic structure of a component file:
 
 ```tsx
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { isPropValid } from 'src/utilities/isPropValid';
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import { isPropValid } from "src/utilities/isPropValid";
 
 interface SayHelloProps {
-    name: string;
-    isDisabled: boolean;
+  name: string;
+  isDisabled: boolean;
 }
 
-const SayHello = ({ name, isDisabled }: SayHelloProps) => {
-    return (
-        <StyledH1 isDisabled={isDisabled}>Hello, {capitalize(name)}</StyledH1>
-    );
+const SayHello = (props: SayHelloProps) => {
+  const { name, isDisabled } = props;
+
+  return <StyledH1 isDisabled={isDisabled}>Hello, {capitalize(name)}</StyledH1>;
 };
 
-const StyledH1 = styled('h1', {
-  label: 'StyledH1',
-  shouldForwardProp: (prop) =>
-    isPropValid(['isDisabled'], prop),
+const StyledH1 = styled("h1", {
+  label: "StyledH1",
+  shouldForwardProp: (prop) => isPropValid(["isDisabled"], prop),
 })(({ theme, ...props }) => ({
-    color: props.isDisabled ? theme.color.grey : theme.color.black
+  color: props.isDisabled ? theme.color.grey : theme.color.black,
 }));
 
 export const capitalize = (s: string) => {
-    return s.charAt(0).toUpperCase() + s.slice(1);
+  return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
 export { SayHello };
 ```
-There are cases where you don't want the prop to be forwarded to the DOM element, so we've provided a helper `isPropValid` to assist in these cases. In addition, adding a `label` to your styled component can assist in debugging.
+
+- There are cases where you don't want the prop to be forwarded to the DOM element, so we've provided a helper `isPropValid` to assist in these cases.
+- The `label` property in the `styled` API is used to provide a unique identifier for the component when it is being styled. This can be useful when debugging a large codebase, as it can help identify which component the style is being applied to. For example, if you have multiple instances of the `StyledH1` component, the `label` property can help you identify which instance is being styled in the browser's developer tools.
 
 #### Imports
 
@@ -61,8 +62,13 @@ There are cases where you don't want the prop to be forwarded to the DOM element
 
 #### Types and Interfaces
 
-- To specify component props, define an interface with the name of the component `SayHelloProps` and pass it to the component as a type argument. This is to provide clarity if ever we need to export this type into another component.
-  - e.g. `const SayHello = (props: SayHelloProps)`
+- To specify component props, define an interface with the name of the component `MyComponentProps` and pass it to the component as a type argument. This is to provide clarity if ever we need to export this type into another component.
+```
+export const interface MyComponentProps {
+  name: string;
+}
+const MyComponent = (props: MyComponentProps) { ... }
+```
 
 #### Function Component Definition
 
@@ -71,7 +77,7 @@ There are cases where you don't want the prop to be forwarded to the DOM element
 - Use capital naming conventions for JSX elements used within a component.
   - Example: `const ActionsElement = (<Button> Example </Button>)`.
 - If a prop accepts only JSX elements, capitalize the prop name.
-  - Example: `<TestComponent Actions={ActionsElement}>`.
+  - Example: `<MyComponent Actions={ActionsElement}>`.
 
 #### Utility Functions
 
@@ -80,5 +86,5 @@ There are cases where you don't want the prop to be forwarded to the DOM element
 
 #### Default Export
 
-- Usually you'll export the component by default,
-  - e.g. `export default = MyComponent`
+- You should use named exports when exporting a component:
+  - e.g. `export { MyComponent }`
