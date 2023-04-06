@@ -23,9 +23,13 @@ describe('delete firewall', () => {
       cy.visitWithLogin('/firewalls');
 
       // Confirm that firewall is listed and initiate deletion.
-      cy.findByText(firewall.label).should('be.visible');
-      fbtVisible('Delete');
-      fbtClick('Delete');
+      cy.findByText(firewall.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          fbtVisible('Delete');
+          fbtClick('Delete');
+        });
 
       // Cancel deletion when prompted to confirm.
       ui.dialog
