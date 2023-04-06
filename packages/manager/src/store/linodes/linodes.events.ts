@@ -8,7 +8,7 @@ import { EventHandler } from 'src/store/types';
 import { deleteLinode } from './linodes.actions';
 import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
 import { EntityEvent } from '../events/event.types';
-import { QueryClient } from 'react-query';
+import type { QueryClient } from 'react-query';
 
 const linodeEventsHandler: EventHandler = (
   event,

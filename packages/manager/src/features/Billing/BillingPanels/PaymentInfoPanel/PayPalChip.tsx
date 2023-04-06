@@ -96,8 +96,7 @@ export const PayPalChip = (props: Props) => {
 
   const onApprove = async (
     data: OnApproveBraintreeData,
-    actions: OnApproveBraintreeActions,
-    queryClient: QueryClient
+    actions: OnApproveBraintreeActions
   ) => {
     setProcessing(true);
 
@@ -171,7 +170,7 @@ export const PayPalChip = (props: Props) => {
         style={{ height: 25 }}
         fundingSource={FUNDING.PAYPAL}
         createBillingAgreement={createBillingAgreement}
-        onApprove={(data, actions) => onApprove(data, actions, queryClient)}
+        onApprove={onApprove}
         onError={onError}
       />
     </Grid>

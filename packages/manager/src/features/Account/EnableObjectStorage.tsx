@@ -16,7 +16,7 @@ import { updateAccountSettingsData } from 'src/queries/accountSettings';
 import { usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';
 import { queryKey } from 'src/queries/objectStorage';
-import { QueryClient, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 interface Props {
   object_storage: AccountSettings['object_storage'];
@@ -91,7 +91,7 @@ export const EnableObjectStorage = (props: Props) => {
     setLoading(false);
   };
 
-  const handleSubmit = (queryClient: QueryClient) => {
+  const handleSubmit = () => {
     setLoading(true);
     setError(undefined);
     cancelObjectStorage()
@@ -116,7 +116,7 @@ export const EnableObjectStorage = (props: Props) => {
 
       <Button
         buttonType="primary"
-        onClick={() => handleSubmit(queryClient)}
+        onClick={handleSubmit}
         disabled={disabledConfirm}
         loading={isLoading}
         data-testid="dialog-confirm"
