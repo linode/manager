@@ -50,12 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   nodePool: {
     marginBottom: theme.spacing(3),
   },
-  // mobileSpacing: {
-  //   [theme.breakpoints.down('md')]: {
-  //     marginLeft: theme.spacing(),
-  //     marginRight: theme.spacing(),
-  //   },
-  // },
 }));
 
 export interface Props {
@@ -129,10 +123,7 @@ export const NodePoolsDisplay = (props: Props) => {
         <Grid item>
           <Typography
             variant="h2"
-            className={classNames(
-              classes.nodePoolHeader
-              // classes.mobileSpacing
-            )}
+            className={classNames(classes.nodePoolHeader)}
           >
             Node Pools
           </Typography>
@@ -140,20 +131,14 @@ export const NodePoolsDisplay = (props: Props) => {
         <Grid item>
           <Button
             buttonType="secondary"
-            className={classNames(
-              classes.button
-              // classes.mobileSpacing
-            )}
+            className={classNames(classes.button)}
             onClick={() => setIsRecycleClusterOpen(true)}
           >
             Recycle All Nodes
           </Button>
           <Button
             buttonType="primary"
-            className={classNames(
-              classes.button
-              //  classes.mobileSpacing
-            )}
+            className={classNames(classes.button)}
             onClick={handleOpenAddDrawer}
           >
             Add a Node Pool
