@@ -40,6 +40,7 @@ import { getNextThemeValue } from './utilities/theme';
 import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
+import { oauthClientsEventHandler } from './queries/accountOAuth';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -98,30 +99,18 @@ export class App extends React.Component<CombinedProps, State> {
     // eslint-disable-next-line
     document.addEventListener('keydown', this.keyboardListener);
 
-    /*
-     * Send any Database events to the Database events handler in the queries file
-     */
     events$
       .filter((event) => event.action.startsWith('database') && !event._initial)
       .subscribe(databaseEventsHandler);
 
-    /*
-     * Send any Domain events to the Domain events handler in the queries file
-     */
     events$
       .filter((event) => event.action.startsWith('domain') && !event._initial)
       .subscribe(domainEventsHandler);
 
-    /*
-     * Send any Volume events to the Volume events handler in the queries file
-     */
     events$
       .filter((event) => event.action.startsWith('volume') && !event._initial)
       .subscribe(volumeEventsHandler);
 
-    /*
-      Send any Image events to the Image events handler in the queries file.
-    */
     events$
       .filter(
         (event) =>
@@ -131,16 +120,10 @@ export class App extends React.Component<CombinedProps, State> {
       )
       .subscribe(imageEventsHandler);
 
-    /*
-      Send any Token events to the Token events handler in the queries file
-     */
     events$
       .filter((event) => event.action.startsWith('token') && !event._initial)
       .subscribe(tokenEventHandler);
 
-    /*
-      Send any SSH Key events to the SSH Key events handler in the queries file
-     */
     events$
       .filter(
         (event) => event.action.startsWith('user_ssh_key') && !event._initial
@@ -156,6 +139,12 @@ export class App extends React.Component<CombinedProps, State> {
         (event) => event.action.startsWith('nodebalancer') && !event._initial
       )
       .subscribe(nodebalanacerEventHandler);
+
+    events$
+      .filter(
+        (event) => event.action.startsWith('oauth_client') && !event._initial
+      )
+      .subscribe(oauthClientsEventHandler);
 
     /*
      * We want to listen for migration events side-wide
