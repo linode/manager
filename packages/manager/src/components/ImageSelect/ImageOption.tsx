@@ -3,20 +3,23 @@ import * as React from 'react';
 import { OptionProps } from 'react-select';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
+import CloudInitIncompatibleIcon from 'src/assets/icons/cloud-init-incompatible.svg';
 
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import TooltipIcon from 'src/components/TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: `2px !important`, // Revist use of important when we refactor the Select component
+    display: 'flex',
   },
   focused: {
     backgroundColor: theme.palette.primary.main,
     color: 'white',
   },
-  icon: {
+  distroIcon: {
     fontSize: '1.8em',
     margin: `0 ${theme.spacing()}`,
     [theme.breakpoints.only('xs')]: {
@@ -27,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface ImageItem extends Item<string> {
   className?: string;
+  isCloudInitCompatible: boolean;
 }
 
 interface ImageOptionProps extends OptionProps<any, any> {
@@ -57,8 +61,16 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
           justifyContent: 'flex-start',
         }}
       >
-        <span className={`${props.data.className} ${classes.icon}`} />
+        <span className={`${props.data.className} ${classes.distroIcon}`} />
         <Box>{label}</Box>
+        {!data.isCloudInitCompatible ? (
+          <TooltipIcon
+            text="This image has been indicated as not compatible with cloud-init."
+            status="other"
+            icon={<CloudInitIncompatibleIcon />}
+            sxTooltipIcon={{ marginLeft: 'auto' }}
+          />
+        ) : null}
       </Box>
     </Option>
   );

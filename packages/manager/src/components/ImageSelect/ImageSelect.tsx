@@ -22,6 +22,7 @@ export type Variant = 'public' | 'private' | 'all';
 interface ImageItem extends Item<string> {
   created: string;
   className: string;
+  isCloudInitCompatible: boolean;
 }
 
 interface Props {
@@ -87,7 +88,14 @@ export const imagesToGroupedItems = (images: Image[]) => {
           label: thisGroup,
           options: group
             .reduce((acc: ImageItem[], thisImage) => {
-              const { created, eol, id, label, vendor } = thisImage;
+              const {
+                created,
+                eol,
+                id,
+                label,
+                vendor,
+                capabilities,
+              } = thisImage;
               const differenceInMonths = DateTime.now().diff(
                 DateTime.fromISO(eol!),
                 'months'
@@ -96,10 +104,11 @@ export const imagesToGroupedItems = (images: Image[]) => {
               if (!eol || differenceInMonths < MAX_MONTHS_EOL_FILTER) {
                 acc.push({
                   created,
-                  // Add suffix 'depricated' to the image at end of life.
+                  // Add suffix 'deprecated' to the image at end of life.
                   label:
                     differenceInMonths > 0 ? `${label} (deprecated)` : label,
                   value: id,
+                  isCloudInitCompatible: capabilities?.includes('cloud-init'),
                   className: vendor
                     ? // Use Tux as a fallback.
                       `fl-${distroIcons[vendor] ?? 'tux'}`
