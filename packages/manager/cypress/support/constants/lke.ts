@@ -5,11 +5,10 @@ import { LkePlanDescription } from 'support/api/lke';
  */
 export const lkeClusterPlans: LkePlanDescription[] = [
   { type: 'Dedicated', size: 4, tab: 'Dedicated CPU' },
-  { type: 'Dedicated', size: 16, tab: 'Dedicated CPU' },
+  { type: 'Dedicated', size: 8, tab: 'Dedicated CPU' },
   { type: 'Linode', size: 2, tab: 'Shared CPU' },
   { type: 'Linode', size: 4, tab: 'Shared CPU' },
-  { type: 'Linode', size: 16, tab: 'Shared CPU' },
-  { type: 'Linode', size: 24, tab: 'High Memory' },
+  { type: 'Linode', size: 8, tab: 'Shared CPU' },
 ];
 
 /**

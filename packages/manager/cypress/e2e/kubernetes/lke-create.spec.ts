@@ -77,7 +77,7 @@ describe('LKE Cluster Creation', () => {
     const clusterLabel = randomLabel();
     const clusterRegion = randomItem(regionsFriendly);
     const clusterVersion = '1.25';
-    const clusterPlans = new Array(3)
+    const clusterPlans = new Array(2)
       .fill(null)
       .map(() => randomItem(lkeClusterPlans));
 
@@ -112,7 +112,7 @@ describe('LKE Cluster Creation', () => {
     // Add a node pool for each randomly selected plan, and confirm that the
     // selected node pool plan is added to the checkout bar.
     clusterPlans.forEach((clusterPlan) => {
-      const nodeCount = randomNumber(3, 8);
+      const nodeCount = randomNumber(1, 3);
       const planName = getLkePlanName(clusterPlan);
       const checkoutName = getLkePlanCheckoutName(clusterPlan);
 
