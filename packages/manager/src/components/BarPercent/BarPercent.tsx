@@ -1,36 +1,7 @@
-import classNames from 'classnames';
+import { styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import * as React from 'react';
 import LinearProgress from 'src/components/core/LinearProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  base: {
-    display: 'flex',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  root: {
-    backgroundColor: theme.color.grey2,
-    padding: 12,
-    width: '100%',
-    '&.narrow': {
-      padding: 8,
-    },
-  },
-  primaryColor: {
-    backgroundColor: '#5ad865',
-  },
-  secondaryColor: {
-    backgroundColor: '#99ec79',
-  },
-  rounded: {
-    borderRadius: theme.shape.borderRadius,
-  },
-  dashed: {
-    display: 'none',
-  },
-}));
 
 interface Props {
   max: number;
@@ -40,13 +11,10 @@ interface Props {
   isFetchingValue?: boolean;
   rounded?: boolean;
   narrow?: boolean;
+  sx?: SxProps;
 }
 
-type CombinedProps = Props;
-
-export const BarPercent: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const BarPercent = (props: Props) => {
   const {
     max,
     value,
@@ -55,11 +23,12 @@ export const BarPercent: React.FC<CombinedProps> = (props) => {
     isFetchingValue,
     rounded,
     narrow,
+    sx,
   } = props;
 
   return (
-    <div className={`${className} ${classes.base}`}>
-      <LinearProgress
+    <StyledDiv className={`${className}`}>
+      <StyledLinearProgress
         value={getPercentage(value, max)}
         valueBuffer={valueBuffer}
         variant={
@@ -69,22 +38,39 @@ export const BarPercent: React.FC<CombinedProps> = (props) => {
             ? 'buffer'
             : 'determinate'
         }
-        classes={{
-          root: classes.root,
-          barColorPrimary: classes.primaryColor,
-          bar2Buffer: classes.secondaryColor,
-          dashed: classes.dashed,
-        }}
-        className={classNames({
-          [classes.rounded]: rounded,
-          narrow,
-        })}
+        rounded={rounded}
+        narrow={narrow}
+        sx={sx}
       />
-    </div>
+    </StyledDiv>
   );
 };
+
+export default React.memo(BarPercent);
 
 export const getPercentage = (value: number, max: number) =>
   (value / max) * 100;
 
-export default React.memo(BarPercent);
+const StyledDiv = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  position: 'relative',
+});
+
+const StyledLinearProgress = styled(LinearProgress, {
+  label: 'StyledLinearProgress',
+})<Partial<Props>>(({ theme, ...props }) => ({
+  backgroundColor: theme.color.grey2,
+  padding: props.narrow ? 8 : 12,
+  width: '100%',
+  borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
+  '& .MuiLinearProgress-barColorPrimary': {
+    backgroundColor: '#5ad865',
+  },
+  '& .MuiLinearProgress-bar2Buffer': {
+    backgroundColor: '#99ec79',
+  },
+  '& .MuiLinearProgress-dashed': {
+    display: 'none',
+  },
+}));
