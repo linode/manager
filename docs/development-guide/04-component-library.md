@@ -2,7 +2,7 @@
 
 ## Material-UI
 
-We use [Material-UI](https://material-ui.com/) as the primary component library for Cloud Manager. The library contains many UI primitives like `<Typography />` and `<Button />` as well as a layout system with the `<Grid />` component.
+We use [Material-UI](https://mui.com/material-ui/getting-started/overview/) as the primary component library for Cloud Manager. The library contains many UI primitives like `<Typography />` and `<Button />` as well as a layout system with the `<Grid />` component.
 
 All MUI components have abstractions in the Cloud Manager codebase, meaning you will use relative imports to use them instead of importing from MUI directly:
 
@@ -28,8 +28,8 @@ We use [Storybook](https://storybook.js.org/) to document our UI component libra
 
 #### Adding Stories
 
-To make a new story for a component, create a new file in the same directory as the `.tsx` file the component is defined in. This new file should follow the naming convention of `<Component Name>.stories.mdx`.
-For example, the story for `EnhancedNumberInput.tsx` is defined in the `EnhancedNumberInput.stories.mdx` file. New entries should be categorized as one of the following:
+To make a new story for a component, create a new file in the same directory as the `.tsx` file the component is defined in. This new file should follow the naming convention of `<Component Name>.stories.tsx`.
+For example, the story for `LandingHeader.tsx` is defined in the `LandingHeader.stories.tsx` file. New entries should be categorized as one of the following:
 
 ##### Core Style
 
@@ -47,55 +47,8 @@ A composition of Core Styles and Elements. Normally with some code that defines 
 
 A Composition of Core Styles, Elements, and Components that defines a verticle slice of functionality. An example of a Feature is the Payment Method Row it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
 
-The `Meta` tag's `title` prop is used to define how a story is categorized within these categories. For example, the `Meta` tag for the Payment Method Row is defined like this:
-```ts
-<Meta title="Features/Payment Method Row" component={PaymentMethodRow} />
-```
-
-A story might also be grouped within a single entry in one of these categories. In this case define a single story that combines examples of each. The Dialogs Component can be used as a template here. The story file imports all the types of Dialogs from their `.tsx` files.
-
-```ts
-import Dialog from './Dialog';
-import DeletionDialog from 'src/components/DeletionDialog';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-```
-
-Use the `name` field on the `Story` tags to display the different types of Dialogs. For example, within the `Dialog.stories.mdx` file there are multiple `Story` tags:
-
-```ts
-<Story
-    name="Dialog"
-    args={{
-      open: true,
-      fullHeight: false,
-      fullWidth: false,...>
-```
-```ts
-<Story
-    name="Confirmation Dialog"
-    args={{
-      open: true,
-      title: 'Enable this feature?',
-      children: 'This confirmation modal is making sure you really want to do this.',...>
-```
-```ts
-<Story
-    name="Deletion Dialog"
-    args={{
-      open: true,
-      typeToConfirm: true,
-      entity: 'Linode',
-      label: 'my-linode-0',...>
-```
-
 #### Best Practices
+Our stories are in the process of being updated to the latest Storybook 7.0 format.
+We currently use MDX both for documentation and for defining stories in the same .stories.mdx file. However, Storybook has deprecated this functionality and plan to remove it in a future version of Storybook.
 
-- Write new stories in [MDX](https://storybook.js.org/docs/react/api/mdx) format with a `.mdx` file extension. Older stories might follow the [Component Story Format (CSF)](https://storybook.js.org/docs/react/api/csf), an ES6 module-based standard for writing stories, with a `.tsx` file extension.
-- If you need to wrap a component in order to use hooks, etc., you can use [decorators](https://storybook.js.org/docs/react/writing-stories/decorators).
-  - From a decorator, make sure you return `Story(props)` instead of `<Story {…props}/>` or else you’ll see `<No Display Name />` in the code preview tab.
-  - To access given props from your template, use the [second “context” argument](https://github.com/linode/manager/pull/8060/files#diff-c7a7ccf5bc5311daaff07fd6fd33a40e4e73a06b4df8a337f9ce94f0577fdceeR13) in the template function.
-- Mocking data/API calls can be tricky, and the solution may be component-dependent.
-- MDX is unforgiving. Check the browser console for Storybook errors with syntax, imports, etc.
-- Use the recommended Markdown and MDX VSCode plugins outlined in our [Coding Standards](./13-coding-standards.md).
-- Avoid using the `useArgs` hook. It should only be used when there needs to be a two way binding between component state and the values shown in the `ArgsTable`.
-- When defining an `ArgsTable` always set the `sort` prop to `requiredFirst`.
+As we begin to move away from the MDX formatPlease refer to their [documentation](https://storybook.js.org/docs/react/writing-docs/introduction) for how to write stories in the CSF format.

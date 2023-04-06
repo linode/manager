@@ -6,9 +6,9 @@ The basic structure of a component file should follow:
 
 ```
 [ imports ]
-[ styles ]
 [ types and interfaces ]
 [ function component definition ]
+[ styles ]
 [ utility functions ]
 [ default export ]
 ```
@@ -16,31 +16,36 @@ The basic structure of a component file should follow:
 Here is a minimal code example demonstrating the basic structure of a component file:
 
 ```tsx
-import * as React from "react";
-import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import { isPropValid } from 'src/utilities/isPropValid';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  name: {
-    color: theme.color.black,
-  },
-}));
-
-interface Props {
-  name: string;
+interface SayHelloProps {
+    name: string;
+    isDisabled: boolean;
 }
 
-const SayHello: React.FC<Props> = (props) => {
-  const classes = useStyles();
-  return <h1 className={classes.name}>Hello, {capitalize(props.name)}</h1>;
+const SayHello = ({ name, isDisabled }: SayHelloProps) => {
+    return (
+        <StyledH1 isDisabled={isDisabled}>Hello, {capitalize(name)}</StyledH1>
+    );
 };
+
+const StyledH1 = styled('h1', {
+  label: 'StyledH1',
+  shouldForwardProp: (prop) =>
+    isPropValid(['isDisabled'], prop),
+})(({ theme, ...props }) => ({
+    color: props.isDisabled ? theme.color.grey : theme.color.black
+}));
 
 export const capitalize = (s: string) => {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+    return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-export default SayHello;
+export { SayHello };
 ```
+There are cases where you don't want the prop to be forwarded to the DOM element, so we've provided a helper `isPropValid` to assist in these cases. In addition, adding a `label` to your styled component can assist in debugging.
 
 #### Imports
 
@@ -56,8 +61,8 @@ export default SayHello;
 
 #### Types and Interfaces
 
-- To specify component props, define an interface called `Props` and pass it to the component as a type argument
-  - e.g. `const SayHello: React.FC<Props> // ...`
+- To specify component props, define an interface with the name of the component `SayHelloProps` and pass it to the component as a type argument. This is to provide clarity if ever we need to export this type into another component.
+  - e.g. `const SayHello = (props: SayHelloProps)`
 
 #### Function Component Definition
 
