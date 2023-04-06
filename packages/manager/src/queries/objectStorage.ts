@@ -85,7 +85,7 @@ export const useCreateBucketMutation = () => {
     ObjectStorageBucketRequestPayload
   >(createBucket, {
     onSuccess: (newEntity) => {
-      // Invalidate account settings becuae it contains obj information
+      // Invalidate account settings because it contains obj information
       queryClient.invalidateQueries(accountSettingsQueryKey);
       queryClient.setQueryData<BucketsResponce>(
         `${queryKey}-buckets`,
