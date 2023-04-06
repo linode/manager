@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import {
   Breadcrumb,
-  Props as BreadcrumbProps,
+  BreadcrumbProps,
 } from 'src/components/Breadcrumb/Breadcrumb';
 import DocsLink from '../DocsLink';
 import Grid from '@mui/material/Grid';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import { makeStyles } from 'tss-react/mui';
 
-interface Props
+interface BetaChipProps
   extends Omit<
     ChipProps,
     | 'label'
@@ -31,7 +31,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const BetaChip = (props: Props) => {
+const BetaChip = (props: BetaChipProps) => {
   const { classes, cx } = useStyles();
 
   const { className, color } = props;

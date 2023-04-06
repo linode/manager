@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   Breadcrumb,
-  Props as BreadcrumbProps,
+  BreadcrumbProps,
 } from 'src/components/Breadcrumb/Breadcrumb';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

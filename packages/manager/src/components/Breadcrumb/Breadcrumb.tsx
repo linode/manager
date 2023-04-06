@@ -4,7 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 import Crumbs, { CrumbOverridesProps } from './Crumbs';
 import { EditableProps, LabelProps } from './types';
 
-export interface Props {
+export interface BreadcrumbProps {
   breadcrumbDataAttrs?: { [key: string]: boolean };
   className?: string;
   crumbOverrides?: CrumbOverridesProps[];
@@ -41,7 +41,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const Breadcrumb = (props: Props) => {
+const Breadcrumb = (props: BreadcrumbProps) => {
   const { classes, cx } = useStyles();
 
   const {
