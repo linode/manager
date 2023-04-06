@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import * as React from 'react';
 import LinearProgress from 'src/components/core/LinearProgress';
 
@@ -10,6 +11,7 @@ interface Props {
   isFetchingValue?: boolean;
   rounded?: boolean;
   narrow?: boolean;
+  sx?: SxProps;
 }
 
 export const BarPercent = (props: Props) => {
@@ -21,19 +23,8 @@ export const BarPercent = (props: Props) => {
     isFetchingValue,
     rounded,
     narrow,
+    sx,
   } = props;
-
-  const sxDetails = {
-    '& .MuiLinearProgress-barColorPrimary': {
-      backgroundColor: '#5ad865',
-    },
-    '& .MuiLinearProgress-bar2Buffer': {
-      backgroundColor: '#99ec79',
-    },
-    '& .MuiLinearProgress-dashed': {
-      display: 'none',
-    },
-  };
 
   return (
     <StyledDiv className={`${className}`}>
@@ -47,9 +38,9 @@ export const BarPercent = (props: Props) => {
             ? 'buffer'
             : 'determinate'
         }
-        sx={sxDetails}
         rounded={rounded}
         narrow={narrow}
+        sx={sx}
       />
     </StyledDiv>
   );
@@ -73,4 +64,13 @@ const StyledLinearProgress = styled(LinearProgress, {
   padding: props.narrow ? 8 : 12,
   width: '100%',
   borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
+  '& .MuiLinearProgress-barColorPrimary': {
+    backgroundColor: '#5ad865',
+  },
+  '& .MuiLinearProgress-bar2Buffer': {
+    backgroundColor: '#99ec79',
+  },
+  '& .MuiLinearProgress-dashed': {
+    display: 'none',
+  },
 }));
