@@ -373,7 +373,7 @@ export interface OAuthClient {
   id: string;
   label: string;
   redirect_uri: string;
-  thumbnail_url: string;
+  thumbnail_url: string | null;
   public: boolean;
   status: 'disabled' | 'active' | 'suspended';
 }

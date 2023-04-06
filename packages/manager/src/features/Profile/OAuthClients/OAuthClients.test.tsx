@@ -1,89 +1,28 @@
-import { OAuthClient } from '@linode/api-v4/lib/account';
-import { shallow, ShallowWrapper } from 'enzyme';
-import * as React from 'react';
-import { pageyProps } from 'src/__data__/pageyProps';
-import { OAuthClients } from './OAuthClients';
+import React from 'react';
+import OAuthClients from './OAuthClients';
+import { oauthClientFactory } from 'src/factories/accountOAuth';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { rest, server } from 'src/mocks/testServer';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 
-describe('OAuth Clients', () => {
-  const mockData: OAuthClient[] = [
-    {
-      public: false,
-      id: 'test1',
-      redirect_uri: 'http://localhost:3000',
-      thumbnail_url: 'http://localhost:3000',
-      label: 'test1',
-      status: 'active',
-    },
-    {
-      public: true,
-      id: 'test2',
-      redirect_uri: 'http://localhost:3000',
-      thumbnail_url: 'http://localhost:3000',
-      label: 'test2',
-      status: 'active',
-    },
-    {
-      public: false,
-      id: 'test3',
-      redirect_uri: 'http://localhost:3000',
-      thumbnail_url: 'http://localhost:3000',
-      label: 'test3',
-      status: 'active',
-    },
-  ];
+describe('Maintenance Table Row', () => {
+  const clients = oauthClientFactory.buildList(3);
 
-  let wrapper: ShallowWrapper;
-  beforeEach(() => {
-    wrapper = shallow(
-      <OAuthClients
-        classes={{ root: '', addNewWrapper: '' }}
-        {...pageyProps}
-        data={mockData}
-      />
+  it('should render oauth clients that come from the API', async () => {
+    server.use(
+      rest.get('*/account/oauth-clients', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage(clients)));
+      })
     );
-  });
 
-  it('should have a table header with 5 cells', () => {
-    const tableHead = wrapper.find('[data-qa-table-head]');
-    expect(tableHead.exists()).toBeTruthy();
-    expect(tableHead.childAt(0).children().length).toEqual(5);
-  });
+    const { getByText, getByTestId } = renderWithTheme(<OAuthClients />);
 
-  it('should have a table body', () => {
-    expect(wrapper.find('[data-qa-table-body]').exists()).toBeTruthy();
-  });
+    await waitForElementToBeRemoved(getByTestId('table-row-loading'));
 
-  it('should have pagination controls', () => {
-    expect(wrapper.find('WithStyles(PaginationFooter)').exists()).toBeTruthy();
-  });
-
-  it('should render a row for each client', () => {
-    expect(wrapper.find('[data-qa-table-body]').children()).toHaveLength(3);
-  });
-
-  it('should display label, access, id, and callback URL for a given client', () => {
-    const testRow = wrapper.find('[data-qa-table-row="test1"]');
-    expect(testRow.find('[data-qa-oauth-label]').children().text()).toEqual(
-      'test1'
-    );
-    expect(testRow.find('[data-qa-oauth-access]').children().text()).toEqual(
-      'Private'
-    );
-    expect(testRow.find('[data-qa-oauth-id]').children().text()).toEqual(
-      'test1'
-    );
-    expect(testRow.find('[data-qa-oauth-callback]').children().text()).toEqual(
-      'http://localhost:3000'
-    );
-  });
-
-  it('should display TableRowError if error if state.error is set.', () => {
-    wrapper.setProps({ error: Error('Test Error') });
-    expect(wrapper.find(`TableRowError`).exists()).toBeTruthy();
-  });
-
-  it('should display TableEmptyState if done loading and there is no data', () => {
-    wrapper.setProps({ loading: false, data: [] });
-    expect(wrapper.find(`TableRowEmptyState`).exists()).toBeTruthy();
+    for (const client of clients) {
+      getByText(client.label);
+      getByText(client.id);
+    }
   });
 });

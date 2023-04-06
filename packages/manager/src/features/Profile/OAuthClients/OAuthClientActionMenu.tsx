@@ -6,46 +6,28 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
-  openSecretModal: (id: string, label: string) => void;
-  openDeleteModal: (id: string, label: string) => void;
-  openEditDrawer: (
-    isPublic: boolean,
-    redirectUri: string,
-    label: string,
-    clientID?: string
-  ) => void;
   label: string;
-  redirectUri: string;
-  isPublic: boolean;
-  clientID: string;
+  onOpenResetDialog: () => void;
+  onOpenDeleteDialog: () => void;
+  onOpenEditDrawer: () => void;
 }
 
-type CombinedProps = Props;
-
-export const OAuthClientActionMenu: React.FC<CombinedProps> = (props) => {
+export const OAuthClientActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-
-  const { label, redirectUri, isPublic, clientID } = props;
 
   const actions: Action[] = [
     {
       title: 'Edit',
-      onClick: () => {
-        props.openEditDrawer(isPublic, redirectUri, label, clientID);
-      },
+      onClick: props.onOpenEditDrawer,
     },
     {
       title: 'Reset',
-      onClick: () => {
-        props.openSecretModal(clientID, label);
-      },
+      onClick: props.onOpenResetDialog,
     },
     {
       title: 'Delete',
-      onClick: () => {
-        props.openDeleteModal(clientID, label);
-      },
+      onClick: props.onOpenDeleteDialog,
     },
   ];
 

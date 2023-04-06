@@ -51,7 +51,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
       '& th, td': {
         padding: `${theme.spacing(0.5)} !important`,
       },
-      '& td:first-child': {
+      '& td:first-of-type': {
         backgroundColor: 'transparent !important',
         [theme.breakpoints.down('md')]: {
           marginLeft: -45,
