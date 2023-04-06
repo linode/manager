@@ -3,7 +3,10 @@ import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
+import {
+  Breadcrumb,
+  BreadcrumbProps,
+} from 'src/components/Breadcrumb/Breadcrumb';
 import Button from 'src/components/Button';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

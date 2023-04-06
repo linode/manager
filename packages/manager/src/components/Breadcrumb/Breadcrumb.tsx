@@ -1,12 +1,10 @@
-import classNames from 'classnames';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 import Crumbs, { CrumbOverridesProps } from './Crumbs';
-
 import { EditableProps, LabelProps } from './types';
 
-export interface Props {
+export interface BreadcrumbProps {
   breadcrumbDataAttrs?: { [key: string]: boolean };
   className?: string;
   crumbOverrides?: CrumbOverridesProps[];
@@ -18,9 +16,7 @@ export interface Props {
   removeCrumbX?: number;
 }
 
-export type CombinedProps = Props;
-
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -45,8 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Breadcrumb: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const Breadcrumb = (props: BreadcrumbProps) => {
+  const { classes, cx } = useStyles();
 
   const {
     breadcrumbDataAttrs,
@@ -71,7 +67,7 @@ export const Breadcrumb: React.FC<CombinedProps> = (props) => {
 
   return (
     <div
-      className={classNames(
+      className={cx(
         {
           [classes.root]: true,
           [classes.hasError]: hasError,
@@ -81,7 +77,7 @@ export const Breadcrumb: React.FC<CombinedProps> = (props) => {
       {...breadcrumbDataAttrs}
     >
       <div
-        className={classNames({
+        className={cx({
           [classes.preContainer]: true,
           [classes.editablePreContainer]: onEditHandlers !== undefined,
         })}
@@ -105,4 +101,4 @@ const removeByIndex = (list: string[], indexToRemove: number) => {
   });
 };
 
-export default Breadcrumb;
+export { Breadcrumb };
