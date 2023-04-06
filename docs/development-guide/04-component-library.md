@@ -49,6 +49,6 @@ A Composition of Core Styles, Elements, and Components that defines a verticle s
 
 #### Best Practices
 Our stories are in the process of being updated to the latest Storybook 7.0 format.
-We currently use MDX both for documentation and for defining stories in the same `.stories.mdx` file. However, Storybook has deprecated this functionality and we plan to remove it in a future version of Storybook.
+We currently use MDX both for documentation and for defining stories in the same `.stories.mdx` file. However, Storybook has deprecated this functionality and they plan to remove it in a future version of Storybook.
 
 As we begin to move away from the MDX format, please refer to Storybook's  [documentation](https://storybook.js.org/docs/react/writing-docs/introduction) for how to write stories in the CSF format.
