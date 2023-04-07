@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import Box from 'src/components/core/Box';
 
 export const LINODE_CREATE_FROM = {
   BACKUPS: 'fromBackup',
@@ -23,18 +24,21 @@ const UserDataAccordionHeading = ({ createType }: Props) => {
 
   return (
     <>
-      Add User Data{' '}
-      <TooltipIcon
-        sxTooltipIcon={{ padding: '0 8px' }}
-        text={
-          <>
-            User data is a virtual machine&rsquo;s cloud-init metadata relating
-            to a user&rsquo;s local account. <Link to="/">Learn more.</Link>
-          </>
-        }
-        status="help"
-        interactive
-      />
+      <Box display="flex">
+        Add User Data{' '}
+        <TooltipIcon
+          sxTooltipIcon={{ padding: '0 8px' }}
+          text={
+            <>
+              User data is a virtual machine&rsquo;s cloud-init metadata
+              relating to a user&rsquo;s local account.{' '}
+              <Link to="/">Learn more.</Link>
+            </>
+          }
+          status="help"
+          interactive
+        />
+      </Box>
       {showWarningMessage ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
           {userDataHeaderWarningMessage}
