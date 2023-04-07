@@ -51,8 +51,13 @@ export const TooltipIcon = (props: Props) => {
     height: 20,
     width: 20,
     color: '#888f91',
+    fill: '#888f91 !important',
+    stroke: '#888f91 !important',
+    strokeWidth: 0,
     '&:hover': {
       color: '#3683dc',
+      fill: '#3683dc !important',
+      stroke: '#3683dc !important',
     },
   };
 
