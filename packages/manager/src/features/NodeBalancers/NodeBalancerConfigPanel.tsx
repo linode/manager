@@ -807,6 +807,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         </Grid>
 
         <Grid
+          container
           updateFor={[
             nodes,
             errors,
@@ -815,7 +816,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             errorMap.nodes,
             this.props.nodeBalancerRegion,
           ]}
-          container
         >
           <Grid item xs={12}>
             <Grid updateFor={[nodeMessage, classes]} item xs={12}>

@@ -144,7 +144,9 @@ const NodeBalancerCreate = () => {
   ) =>
     setNodeBalancerFields((prev) => {
       const newConfigs = [...prev.configs];
-      newConfigs[cidx].nodes[nodeidx][key] = value;
+      const newNodeArray = [...prev.configs[cidx].nodes];
+      newNodeArray[nodeidx] = { ...newNodeArray[nodeidx], [key]: value };
+      newConfigs[cidx].nodes = newNodeArray;
       return { ...prev, configs: newConfigs };
     });
 
@@ -549,7 +551,12 @@ const NodeBalancerCreate = () => {
             onChange={(e) => updateAgreements({ eu_model: e.target.checked })}
           />
         ) : undefined}
-        <Button buttonType="primary" onClick={onCreate} loading={isLoading}>
+        <Button
+          buttonType="primary"
+          onClick={onCreate}
+          loading={isLoading}
+          data-qa-deploy-nodebalancer
+        >
           Create NodeBalancer
         </Button>
       </Box>
