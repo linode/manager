@@ -243,7 +243,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
               <CheckBox
                 checked={isCloudInit}
                 onChange={changeIsCloudInit}
-                text="This image is Cloud-init compatible"
+                text="This image is cloud-init compatible"
                 toolTipText={cloudInitTooltipMessage}
                 toolTipInteractive
               />
