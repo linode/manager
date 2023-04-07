@@ -144,7 +144,9 @@ const NodeBalancerCreate = () => {
   ) =>
     setNodeBalancerFields((prev) => {
       const newConfigs = [...prev.configs];
-      newConfigs[cidx].nodes[nodeidx][key] = value;
+      const newNodeArray = [...prev.configs[cidx].nodes];
+      newNodeArray[nodeidx] = { ...newNodeArray[nodeidx], [key]: value };
+      newConfigs[cidx].nodes = newNodeArray;
       return { ...prev, configs: newConfigs };
     });
 
