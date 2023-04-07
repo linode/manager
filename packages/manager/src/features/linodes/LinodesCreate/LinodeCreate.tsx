@@ -66,12 +66,12 @@ import {
   TypeInfo,
   WithDisplayData,
   WithLinodesProps,
-  WithRegionsProps,
   WithTypesRegionsAndImages,
 } from './types';
 import UserDataAccordion from './UserDataAccordion/UserDataAccordion';
 import { extendType } from 'src/utilities/extendType';
 import { WithTypesProps } from 'src/containers/types.container';
+import { RegionsProps } from 'src/containers/regions.container';
 
 type ClassNames =
   | 'form'
@@ -189,7 +189,7 @@ type CombinedProps = Props &
   WithDisplayData &
   ImagesProps &
   WithLinodesProps &
-  WithRegionsProps &
+  RegionsProps &
   WithStyles<ClassNames> &
   WithTypesProps &
   RouteComponentProps<{}> &

@@ -39,6 +39,7 @@ import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
 import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
+import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 
 interface Props {
@@ -135,6 +136,12 @@ export class App extends React.Component<CombinedProps, State> {
 
     events$
       .filter(
+        (event) => event.action.startsWith('nodebalancer') && !event._initial
+      )
+      .subscribe(nodebalanacerEventHandler);
+
+    events$
+      .filter(
         (event) => event.action.startsWith('oauth_client') && !event._initial
       )
       .subscribe(oauthClientsEventHandler);
@@ -203,7 +210,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { hasError } = this.state;
-    const { linodesError, nodeBalancersError } = this.props;
+    const { linodesError } = this.props;
 
     if (hasError) {
       return <TheApplicationIsOnFire />;
@@ -214,7 +221,7 @@ export class App extends React.Component<CombinedProps, State> {
      * error from the API, just render nothing because the user is
      * about to get shot off to login
      */
-    if (hasOauthError(linodesError, nodeBalancersError)) {
+    if (hasOauthError(linodesError)) {
       return null;
     }
 
@@ -253,7 +260,6 @@ interface StateProps {
   isLoggedInAsCustomer: boolean;
   linodesLoading: boolean;
   linodesError?: APIError[];
-  nodeBalancersError?: APIError[];
   bucketsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
@@ -269,7 +275,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
     state
   ),
   linodesLoading: state.__resources.linodes.loading,
-  nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
 });

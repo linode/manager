@@ -121,6 +121,7 @@ export const UpdateNodeBalancerConfigSchema = object({
 
 export const NodeBalancerSchema = object({
   label: string()
+    .required('Label is required.')
     .min(3, LABEL_WARNING)
     .max(32, LABEL_WARNING)
     .matches(

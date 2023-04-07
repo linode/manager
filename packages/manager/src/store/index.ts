@@ -47,14 +47,6 @@ import longviewStats, {
   defaultState as defaultLongviewStatsState,
   State as LongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
-import nodeBalancers, {
-  defaultState as defaultNodeBalancerState,
-  State as NodeBalancersState,
-} from 'src/store/nodeBalancer/nodeBalancer.reducer';
-import nodeBalancerConfigs, {
-  defaultState as defaultNodeBalancerConfigState,
-  State as NodeBalancerConfigsState,
-} from 'src/store/nodeBalancerConfig/nodeBalancerConfig.reducer';
 import stackScriptDialog, {
   defaultState as stackScriptDialogDefaultState,
   State as StackScriptDialogState,
@@ -77,8 +69,6 @@ import mockFeatureFlags, {
   defaultMockFeatureFlagState,
   MockFeatureFlagState,
 } from './mockFeatureFlags';
-import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
-import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import pendingUpload, {
   defaultState as pendingUploadState,
   State as PendingUploadState,
@@ -96,8 +86,6 @@ const __resourcesDefaultState = {
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
-  nodeBalancerConfigs: defaultNodeBalancerConfigState,
-  nodeBalancers: defaultNodeBalancerState,
 };
 
 export interface ResourcesState {
@@ -105,8 +93,6 @@ export interface ResourcesState {
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
-  nodeBalancerConfigs: NodeBalancerConfigsState;
-  nodeBalancers: NodeBalancersState;
 }
 
 export interface ApplicationState {
@@ -151,8 +137,6 @@ const __resources = combineReducers({
   linodes,
   linodeConfigs,
   linodeDisks,
-  nodeBalancers,
-  nodeBalancerConfigs,
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -178,8 +162,6 @@ const enhancers = compose(
     combineEventsMiddleware(
       linodeEvents,
       longviewEvents,
-      nodeBalancerEvents,
-      nodeBalancerConfigEvents,
       diskEvents,
       linodeConfigEvents
     )
