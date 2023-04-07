@@ -549,7 +549,12 @@ const NodeBalancerCreate = () => {
             onChange={(e) => updateAgreements({ eu_model: e.target.checked })}
           />
         ) : undefined}
-        <Button buttonType="primary" onClick={onCreate} loading={isLoading}>
+        <Button
+          buttonType="primary"
+          onClick={onCreate}
+          loading={isLoading}
+          data-qa-deploy-nodebalancer
+        >
           Create NodeBalancer
         </Button>
       </Box>
