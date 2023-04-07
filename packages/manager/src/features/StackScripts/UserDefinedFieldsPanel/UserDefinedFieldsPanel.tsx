@@ -79,8 +79,8 @@ const renderField = (
   if (isHeader(field)) {
     return (
       <Grid item xs={12} lg={12} key={field.name} style={{ marginTop: 24 }}>
-        <Typography variant="h2">{field.label}</Typography>
         <Divider />
+        <Typography variant="h2">{field.label}</Typography>
       </Grid>
     );
   }
