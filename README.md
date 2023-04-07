@@ -37,7 +37,7 @@
 
 ## Overview 📒
 
-This repository is home to the Linode **[Cloud Manager](https://cloud.linode.com)** and Linode's related `@linode/api-v4` and `@linode/validation` Typescript packages.
+This repository is home to the Linode **[Cloud Manager](https://cloud.linode.com)** and Linode's related [`@linode/api-v4`](packages/api-v4/) and [`@linode/validation`](packages/validation/) Typescript packages.
 
 ## Developing Locally 💻
 
