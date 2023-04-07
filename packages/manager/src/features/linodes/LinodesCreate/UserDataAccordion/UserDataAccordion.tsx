@@ -81,7 +81,8 @@ const UserDataAccordion = (props: Props) => {
       ) : (
         <Typography sx={{ marginBottom: 3 }}>
           User data is a virtual machine&rsquo;s cloud-init metadata relating to
-          a user&rsquo;s local account, including username and user group(s).
+          a user&rsquo;s local account, including username and user group(s).{' '}
+          <br />
           User data must be added before the Linode provisions.{' '}
           <Link to="http://linode.com/docs">Learn more.</Link>{' '}
         </Typography>
