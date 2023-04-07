@@ -10,13 +10,19 @@
     <img src="https://github.com/linode/manager/actions/workflows/ci.yml/badge.svg?branch=develop" alt="CI Build Stats on develop" />
   </a>
   <a href="https://github.com/linode/manager/releases">
-    <img src="https://img.shields.io/github/package-json/v/linode/manager?filename=packages%2Fmanager%2Fpackage.json&label=manager" alt="Cloud Manager Version" />
+    <img src="https://img.shields.io/github/package-json/v/linode/manager?filename=packages%2Fmanager%2Fpackage.json&label=cloud.linode.com" alt="Cloud Manager Version" />
   </a>
   <a href="https://www.npmjs.com/package/@linode/api-v4">
     <img src="https://img.shields.io/npm/v/@linode/api-v4?label=%40linode%2Fapi-v4" alt="@linode/api-v4 version" />
   </a>
+  <a href="https://bundlephobia.com/package/@linode/api-v4">
+    <img alt="api-v4 bundle size" src="https://img.shields.io/bundlephobia/min/@linode/api-v4?label=api-v4 size">
+  </a>
   <a href="https://www.npmjs.com/package/@linode/validation">
     <img src="https://img.shields.io/npm/v/@linode/validation?label=%40linode%2Fapi-v4" alt="@linode/validation version" />
+  </a>
+  <a href="https://bundlephobia.com/package/@linode/validation">
+    <img alt="validation bundle size" src="https://img.shields.io/bundlephobia/min/@linode/validation?label=validation size">
   </a>
   <a href="https://design.linode.com">
     <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg" alt="Storybook" />
