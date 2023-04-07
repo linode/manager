@@ -109,7 +109,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Grid updateFor={[node, classes]} item data-qa-node xs={12}>
+      <Grid item data-qa-node xs={12}>
         {idx !== 0 && (
           <Grid item xs={12}>
             <Divider
@@ -163,12 +163,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <Grid
-          key={idx}
-          updateFor={[nodeBalancerRegion, node, configIdx, classes]}
-          container
-          data-qa-node
-        >
+        <Grid key={idx} container data-qa-node>
           <Grid item xs={12} sm={3} lg={forEdit ? 2 : 4}>
             <SelectIP
               textfieldProps={{
