@@ -35,21 +35,21 @@
   
 </p>
 
-## Overview 📒
+## Overview
 
-This repository is home to the Linode **[Cloud Manager](https://cloud.linode.com)** and Linode's related [`@linode/api-v4`](packages/api-v4/) and [`@linode/validation`](packages/validation/) Typescript packages.
+This repository is home to the Akamai Connected **[Cloud Manager](https://cloud.linode.com)** and related [`@linode/api-v4`](packages/api-v4/) and [`@linode/validation`](packages/validation/) Typescript packages.
 
-## Developing Locally 💻
+## Developing Locally
 
 To get started running Cloud Manager locally, please see the [_Getting Started_ guide](docs/GETTING_STARTED.md).
 
-## Contributing 👏
+## Contributing
 
 If you already have your development environment set up, please read the [contributing guidelines](docs/CONTRIBUTING.md) to get help in creating your first Pull Request.
 
 To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use [linode.com/feedback](https://www.linode.com/feedback/).
 
-## License 📝
+## License
 
 All code located in this repository is distributed under the terms of the [APLv2
 license](LICENSE).
