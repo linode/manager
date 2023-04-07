@@ -16,6 +16,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: `${theme.spacing(3)} 0 0`,
+      display: 'flex',
+      flexDirection: 'column',
     },
     radioGroupLabel: {
       display: 'block',
@@ -53,7 +55,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
     const { value, error, field, classes, isOptional } = this.props;
 
     /* Display a select if there are more than 2 oneof options, otherwise display as radio. */
-    if (oneof.length > 2) {
+    if (oneof.length > 4) {
       return (
         <div>
           {error && <Notice error text={error} spacingTop={8} />}
