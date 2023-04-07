@@ -73,7 +73,7 @@ export const deleteAllTestData = async () => {
     await cancelAllTestEntityTransfers();
     await deleteAllTestLinodes();
 
-    // // Asynchronous test data deletion runs first.
+    // Delete remaining test data.
     await Promise.all([
       deleteAllTestNodeBalancers(),
       deleteAllTestImages(),
