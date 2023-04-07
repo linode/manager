@@ -3,11 +3,10 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useRegionsQuery } from 'src/queries/regions';
 import { Region } from '@linode/api-v4/lib/regions';
 
-export interface DefaultProps {
+export interface RegionsProps {
   regionsData: Region[];
   regionsError?: APIError[];
   regionsLoading: boolean;
-  regionsLastUpdated: number;
 }
 
 /**
@@ -22,22 +21,14 @@ export interface DefaultProps {
  * component is needed, best practice is to include an FC container above it (the routing level often works well)
  * and pass regions through there.
  */
-type Wrapper = (
-  Component: React.ComponentType<DefaultProps>
-) => React.FC<unknown>;
-const regionsContainer: Wrapper = (
-  Component: React.ComponentType<DefaultProps>
-) => (props) => {
-  const { data, error, isLoading, dataUpdatedAt } = useRegionsQuery();
-  return (
-    <Component
-      regionsData={data ?? []}
-      regionsLastUpdated={dataUpdatedAt}
-      regionsError={error ?? undefined}
-      regionsLoading={isLoading}
-      {...props}
-    />
-  );
+export const withRegions = <Props>(
+  Component: React.ComponentType<Props & RegionsProps>
+) => (props: Props) => {
+  const { data, isLoading, error } = useRegionsQuery();
+  return React.createElement(Component, {
+    regionsData: data ?? [],
+    regionsLoading: isLoading,
+    regionsError: error ?? undefined,
+    ...props,
+  });
 };
-
-export default regionsContainer;

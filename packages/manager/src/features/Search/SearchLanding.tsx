@@ -39,6 +39,7 @@ import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -128,6 +129,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   } = useAllKubernetesClustersQuery(!_isLargeAccount);
 
   const {
+    data: nodebalancers,
+    error: nodebalancersError,
+    isLoading: areNodeBalancersLoading,
+  } = useAllNodeBalancersQuery(!_isLargeAccount);
+
+  const {
     data: volumes,
     isLoading: areVolumesLoading,
     error: volumesError,
@@ -173,7 +180,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   }
 
   const { _loading: reduxLoading } = useReduxLoad(
-    ['linodes', 'nodeBalancers'],
+    ['linodes'],
     REFRESH_INTERVAL,
     !_isLargeAccount
   );
@@ -211,7 +218,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         kubernetesClusters ?? [],
         _privateImages ?? [],
         regions ?? [],
-        searchableLinodes ?? []
+        searchableLinodes ?? [],
+        nodebalancers ?? []
       );
     }
   }, [
@@ -226,6 +234,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     kubernetesClusters,
     _privateImages,
     regions,
+    nodebalancers,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
@@ -242,7 +251,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (imagesError) {
       errorString.push('Images');
     }
-    if (errors.nodebalancers) {
+    if (nodebalancersError) {
       errorString.push('NodeBalancers');
     }
     if (kubernetesClustersError) {
@@ -273,7 +282,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areDomainsLoading ||
     areVolumesLoading ||
     areKubernetesClustersLoading ||
-    areImagesLoading;
+    areImagesLoading ||
+    areNodeBalancersLoading;
 
   return (
     <Grid container className={classes.root} direction="column">

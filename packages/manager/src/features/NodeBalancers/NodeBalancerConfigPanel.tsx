@@ -630,11 +630,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
           ]}
           container
         >
-          <Grid item xs={12}>
-            <Typography variant="h2" data-qa-port-config-header>
-              Port Configuration
-            </Typography>
-          </Grid>
           <Grid item xs={6} md={3}>
             <TextField
               type="number"
