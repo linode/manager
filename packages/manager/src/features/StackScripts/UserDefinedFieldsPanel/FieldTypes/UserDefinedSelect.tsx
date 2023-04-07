@@ -18,9 +18,11 @@ const styles = (theme: Theme) =>
       margin: `${theme.spacing(3)} 0 0`,
       display: 'flex',
       flexDirection: 'column',
+      marginTop: '16px',
     },
     radioGroupLabel: {
       display: 'block',
+      marginBottom: '4px',
     },
   });
 
