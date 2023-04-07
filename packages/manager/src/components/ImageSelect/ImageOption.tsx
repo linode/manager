@@ -43,6 +43,13 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data, label } = props;
 
+  const sxCloudInitTooltipIcon = {
+    '& svg': {
+      width: 20,
+      height: 20,
+    },
+  };
+
   return (
     <Option
       className={classNames({
@@ -68,7 +75,7 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
             text="This image has been indicated as not compatible with cloud-init."
             status="other"
             icon={<CloudInitIncompatibleIcon />}
-            sxTooltipIcon={{ marginLeft: 'auto' }}
+            sxTooltipIcon={sxCloudInitTooltipIcon}
           />
         ) : null}
       </Box>
