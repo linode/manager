@@ -44,6 +44,7 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
   const { data, label } = props;
 
   const sxCloudInitTooltipIcon = {
+    marginLeft: 'auto',
     '& svg': {
       width: 20,
       height: 20,
