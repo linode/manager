@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import EntityIcon, { Variant } from 'src/components/EntityIcon';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   storyItem: {
@@ -42,7 +42,7 @@ const EntityIconStory: React.FC<{}> = () => {
     <Grid container>
       {variantList.map((variant, idx) => {
         return (
-          <Grid key={idx} item className={classes.storyItem}>
+          <Grid key={idx} className={classes.storyItem}>
             <EntityIcon variant={variant.name as Variant} />
             <div className={classes.storyLabel}>{variant.displayName}</div>
           </Grid>
