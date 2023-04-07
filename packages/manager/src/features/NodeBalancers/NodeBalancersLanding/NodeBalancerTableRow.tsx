@@ -9,7 +9,7 @@ import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator
 import { useAllNodeBalancerConfigsQuery } from 'src/queries/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
-import Skeleton from 'src/components/Skeleton';
+import Skeleton from '@mui/material/Skeleton';
 
 interface Props extends NodeBalancer {
   onDelete: () => void;
