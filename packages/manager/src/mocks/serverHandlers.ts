@@ -617,7 +617,7 @@ export const handlers = [
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(650);
+    const buckets = objectStorageBucketFactory.buildList(0);
 
     return res(
       ctx.json({
@@ -890,12 +890,12 @@ export const handlers = [
         longview_subscription: 'longview-100',
         managed: true,
         network_helper: true,
-        object_storage: 'active',
+        object_storage: 'disabled',
       })
     );
   }),
   rest.put('*/account/settings/*', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(ctx.json(req.body as any));
   }),
   rest.get('*/tags', (req, res, ctx) => {
     tagFactory.resetSequenceNumber();

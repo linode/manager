@@ -10,7 +10,6 @@ describe('BucketTable', () => {
       orderBy="label"
       order="asc"
       handleOrderChange={jest.fn()}
-      openBucketDrawer={jest.fn()}
       handleClickRemove={jest.fn()}
       handleClickDetails={jest.fn()}
     />
