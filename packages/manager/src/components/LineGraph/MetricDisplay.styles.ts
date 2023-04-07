@@ -11,9 +11,7 @@ export type ClassNames =
   | 'lightGreen'
   | 'darkGreen'
   | 'text'
-  | 'tableHeadInner'
-  | 'simpleLegend'
-  | 'simpleLegendRoot';
+  | 'tableHeadInner';
 
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
 
@@ -121,14 +119,6 @@ const styles = (theme: Theme) =>
     },
     text: {
       color: theme.color.black,
-    },
-    simpleLegendRoot: {
-      maxWidth: 'initial',
-      display: 'flex',
-    },
-    simpleLegend: {
-      width: 'auto',
-      marginTop: theme.spacing(2),
     },
   });
 

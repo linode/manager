@@ -10,6 +10,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
+import Box from '@mui/material/Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -36,6 +37,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     width: 45,
+    paddingLeft: 6,
+    paddingRight: 6,
   },
 }));
 
@@ -70,13 +73,15 @@ export const CreditCard = (props: Props) => {
   const Icon = type ? getIcon(type) : GenericCardIcon;
 
   return (
-    <div className={classes.root}>
-      {showIcon ? (
-        <span className={classes.icon}>
-          <Icon />
-        </span>
-      ) : null}
-      <div className={classes.card}>
+    <>
+      <Box className={classes.root}>
+        {showIcon ? (
+          <span className={classes.icon}>
+            <Icon />
+          </span>
+        ) : null}
+      </Box>
+      <Box className={classes.card}>
         <Typography className={classes.cardInfo} data-qa-contact-cc>
           {`${type || 'Card ending in'} ****${lastFour}`}
         </Typography>
@@ -89,8 +94,8 @@ export const CreditCard = (props: Props) => {
             <span>{`Expires ${formatExpiry(expiry)}`}</span>
           ) : null}
         </Typography>
-      </div>
-    </div>
+      </Box>
+    </>
   );
 };
 

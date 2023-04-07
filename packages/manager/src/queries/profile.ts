@@ -17,7 +17,12 @@ import {
   TrustedDevice,
   deleteTrustedDevice,
 } from '@linode/api-v4/lib/profile';
-import { APIError, Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { Grants } from '../../../api-v4/lib';
 import { queryClient, queryPresets } from './base';

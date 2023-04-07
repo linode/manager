@@ -1,7 +1,7 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
@@ -17,10 +17,6 @@ type Props = TextFieldProps & {
 };
 
 const useStyles = makeStyles(() => ({
-  container: {
-    position: 'relative',
-    paddingBottom: 4,
-  },
   usernameInput: {
     display: 'none',
   },
@@ -50,8 +46,8 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
   const strength = React.useMemo(() => maybeStrength(value), [value]);
 
   return (
-    <Grid container className={classes.container}>
-      <Grid item xs={12}>
+    <Grid container spacing={1}>
+      <Grid xs={12}>
         <input
           type="text"
           name="name"
@@ -72,7 +68,7 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
         />
       </Grid>
       {!hideValidation && (
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <StrengthIndicator
             strength={strength}
             hideStrengthLabel={hideStrengthLabel}
