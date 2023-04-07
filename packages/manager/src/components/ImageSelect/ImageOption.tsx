@@ -73,7 +73,7 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
         <Box>{label}</Box>
         {!data.isCloudInitCompatible ? (
           <TooltipIcon
-            text="This image has been indicated as not compatible with cloud-init."
+            text="This image is not compatible with cloud-init."
             status="other"
             icon={<CloudInitIncompatibleIcon />}
             sxTooltipIcon={sxCloudInitTooltipIcon}
