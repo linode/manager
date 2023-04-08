@@ -1,8 +1,7 @@
+import * as React from 'react';
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
-import { Region } from '@linode/api-v4/lib/regions';
-import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -16,7 +15,6 @@ import { handleInitTokens } from 'src/store/authentication/authentication.action
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
-import { requestRegions } from 'src/store/regions/regions.actions';
 import { MapState } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
@@ -158,7 +156,6 @@ interface DispatchProps {
   initSession: () => void;
   checkAccountSize: () => Promise<null>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
-  requestRegions: () => Promise<Region[]>;
   markAppAsDoneLoading: () => void;
 }
 
@@ -168,7 +165,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   initSession: () => dispatch(handleInitTokens()),
   checkAccountSize: () => dispatch(checkAccountSize()),
   requestLinodes: () => dispatch(requestLinodes({})),
-  requestRegions: () => dispatch(requestRegions()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
 });
 

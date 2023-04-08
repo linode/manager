@@ -28,7 +28,7 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
+import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   radio: {
-    '& label:first-child .MuiButtonBase-root': {
+    '& label:first-of-type .MuiButtonBase-root': {
       marginLeft: -10,
     },
   },
@@ -282,9 +282,6 @@ export const CreateDomain = () => {
   const updateSelectedLinode = (linode: Linode) =>
     setSelectedDefaultLinode(linode);
 
-  const updateSelectedNodeBalancer = (nodebalancer: NodeBalancer) =>
-    setSelectedDefaultNodeBalancer(nodebalancer);
-
   const updateInsertDefaultRecords = (value: Item<DefaultRecordsType>) =>
     setDefaultRecordsSetting(value);
 
@@ -455,13 +452,11 @@ export const CreateDomain = () => {
               defaultRecordsSetting.value === 'nodebalancer' && (
                 <React.Fragment>
                   <NodeBalancerSelect
-                    nodeBalancerError={errorMap.defaultNodeBalancer}
-                    handleChange={updateSelectedNodeBalancer}
-                    selectedNodeBalancer={
-                      selectedDefaultNodeBalancer
-                        ? selectedDefaultNodeBalancer.id
-                        : null
+                    error={errorMap.defaultNodeBalancer}
+                    onChange={(_, nodebalancer) =>
+                      setSelectedDefaultNodeBalancer(nodebalancer)
                     }
+                    value={selectedDefaultNodeBalancer?.id}
                     disabled={disabled}
                   />
                   {!errorMap.defaultNodeBalancer && (
