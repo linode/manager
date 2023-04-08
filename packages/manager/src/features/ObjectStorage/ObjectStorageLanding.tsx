@@ -1,13 +1,6 @@
-import { DateTime } from 'luxon';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
-import {
-  matchPath,
-  RouteComponentProps,
-  useRouteMatch,
-} from 'react-router-dom';
-import { compose } from 'recompose';
-import { Dispatch } from 'redux';
+import { DateTime } from 'luxon';
+import { useHistory, useParams } from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles } from '@mui/styles';
@@ -22,19 +15,15 @@ import PromotionalOfferCard from 'src/components/PromotionalOfferCard/Promotiona
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
-import bucketDrawerContainer, {
-  DispatchProps,
-} from 'src/containers/bucketDrawer.container';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useOpenClose from 'src/hooks/useOpenClose';
+import { MODE } from './AccessKeyLanding/types';
+import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { openBucketDrawer } from 'src/store/bucketDrawer/bucketDrawer.actions';
-import { MODE } from './AccessKeyLanding/types';
-import BucketDrawer from './BucketLanding/BucketDrawer';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
 const AccessKeyLanding = React.lazy(
@@ -47,27 +36,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = DispatchProps & RouteComponentProps<{}>;
-
-export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
+export const ObjectStorageLanding = () => {
   const classes = useStyles();
-  const { replace } = props.history;
+  const history = useHistory();
   const [mode, setMode] = React.useState<MODE>('creating');
+  const { action, tab } = useParams<{
+    action?: 'create';
+    tab?: 'buckets' | 'access-keys';
+  }>();
 
-  const dispatch = useDispatch<Dispatch>();
-
-  // @todo: dispatch bucket drawer open action
-
-  // On-the-fly route matching so this component can open the drawer itself.
-  const createBucketRouteMatch = Boolean(
-    useRouteMatch('/object-storage/buckets/create')
-  );
-
-  React.useEffect(() => {
-    if (createBucketRouteMatch) {
-      dispatch(openBucketDrawer());
-    }
-  }, [dispatch, createBucketRouteMatch]);
+  const isCreateBucketOpen = tab === 'buckets' && action === 'create';
 
   const { _isRestrictedUser, accountSettings } = useAccountManagement();
 
@@ -81,36 +59,26 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
 
   const createOrEditDrawer = useOpenClose();
 
-  const [route, setRoute] = React.useState<string>('');
-
   const tabs = [
-    /* NB: These must correspond to the routes, inside the Switch */
     {
       title: 'Buckets',
-      routeName: `${props.match.url}/buckets`,
+      routeName: `/object-storage/buckets`,
     },
     {
       title: 'Access Keys',
-      routeName: `${props.match.url}/access-keys`,
+      routeName: `/object-storage/access-keys`,
     },
   ];
+
+  const realTabs = ['buckets', 'access-keys'];
 
   const openDrawer = (mode: MODE) => {
     setMode(mode);
     createOrEditDrawer.open();
   };
 
-  React.useEffect(() => {
-    setRoute(props.location.pathname.replace('/object-storage/', ''));
-  }, [route, props.location.pathname]);
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
   const navToURL = (index: number) => {
-    setRoute(props.location.pathname.replace('/object-storage/', ''));
-    props.history.push(tabs[index].routeName);
+    history.push(tabs[index].routeName);
   };
 
   const flags = useFlags();
@@ -129,23 +97,15 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
     objectStorageBucketsResponse?.buckets.length === 0 &&
     accountSettings?.object_storage === 'active';
 
-  const matchesAccessKeys = Boolean(
-    matchPath(props.location.pathname, {
-      path: '/object-storage/access-keys',
-      exact: true,
-    })
-  );
-
-  const createButtonText = matchesAccessKeys
-    ? 'Create Access Key'
-    : 'Create Bucket';
+  const createButtonText =
+    tab === 'access-keys' ? 'Create Access Key' : 'Create Bucket';
 
   const createButtonAction = () => {
-    if (matchesAccessKeys) {
+    if (tab === 'access-keys') {
       setMode('creating');
       return createOrEditDrawer.open();
     } else {
-      replace('/object-storage/buckets/create');
+      history.replace('/object-storage/buckets/create');
     }
   };
 
@@ -163,10 +123,11 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
         breadcrumbProps={{ pathname: '/object-storage' }}
       />
       <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
+        index={
+          realTabs.findIndex((t) => t === tab) !== -1
+            ? realTabs.findIndex((t) => t === tab)
+            : 0
+        }
         onChange={navToURL}
       >
         <TabLinkList tabs={tabs} />
@@ -183,7 +144,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <BucketLanding isRestrictedUser={_isRestrictedUser} />
+              <BucketLanding />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
@@ -196,19 +157,17 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-        <BucketDrawer isRestrictedUser={_isRestrictedUser} />
+        <CreateBucketDrawer
+          isOpen={isCreateBucketOpen}
+          onClose={() => history.replace('/object-storage/buckets')}
+        />
       </Tabs>
     </React.Fragment>
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(React.memo, bucketDrawerContainer);
+export default ObjectStorageLanding;
 
-export default enhanced(ObjectStorageLanding);
-
-// =============================================================================
-// <BillingNotice/>
-// ============================================================================
 const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
@@ -217,11 +176,9 @@ const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
 
 const NOTIFICATION_KEY = 'obj-billing-notification';
 
-export const BillingNotice: React.FC<{}> = React.memo(() => {
+export const BillingNotice = React.memo(() => {
   const classes = useBillingNoticeStyles();
-
-  const dispatch: Dispatch = useDispatch();
-  const openDrawer = () => dispatch(openBucketDrawer());
+  const history = useHistory();
 
   return (
     <DismissibleBanner
@@ -237,7 +194,10 @@ export const BillingNotice: React.FC<{}> = React.memo(() => {
         You are being billed for Object Storage but do not have any Buckets. You
         can cancel Object Storage in your{' '}
         <Link to="/account/settings">Account Settings</Link>, or{' '}
-        <button className={classes.button} onClick={openDrawer}>
+        <button
+          className={classes.button}
+          onClick={() => history.replace('/object-storage/buckets/create')}
+        >
           create a Bucket.
         </button>
       </Typography>

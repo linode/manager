@@ -6,11 +6,11 @@ import Option from 'src/components/EnhancedSelect/components/Option';
 
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(1),
+    padding: `2px !important`, // Revist use of important when we refactor the Select component
   },
   focused: {
     backgroundColor: theme.palette.primary.main,
@@ -18,10 +18,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     fontSize: '1.8em',
+    margin: `0 ${theme.spacing()}`,
     [theme.breakpoints.only('xs')]: {
       fontSize: '1.52em',
     },
-    marginLeft: theme.spacing(),
   },
 }));
 
@@ -49,15 +49,17 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
       attrs={{ ['data-qa-image-select-item']: data.value }}
       {...props}
     >
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justifyContent="flex-start"
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+        }}
       >
         <span className={`${props.data.className} ${classes.icon}`} />
-        <Grid item>{label}</Grid>
-      </Grid>
+        <Box>{label}</Box>
+      </Box>
     </Option>
   );
 };

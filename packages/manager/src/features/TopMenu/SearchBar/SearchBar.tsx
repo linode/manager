@@ -36,6 +36,7 @@ import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 
 type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 
@@ -73,7 +74,7 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
-const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers'];
+const searchDeps: ReduxEntity[] = ['linodes'];
 
 export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
@@ -105,6 +106,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
 
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
+
+  const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
 
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
@@ -177,7 +180,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
         clusters ?? [],
         _privateImages ?? [],
         regions ?? [],
-        searchableLinodes ?? []
+        searchableLinodes ?? [],
+        nodebalancers ?? []
       );
     }
   }, [
@@ -192,6 +196,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     volumes,
     _privateImages,
     regions,
+    nodebalancers,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {

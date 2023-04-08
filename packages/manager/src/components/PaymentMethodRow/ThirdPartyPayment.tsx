@@ -6,7 +6,7 @@ import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -76,17 +76,17 @@ export const TPP: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Grid item className={classes.icon}>
+      <Box className={classes.icon}>
         <Icon />
-      </Grid>
-      <Grid item className={classes.paymentTextContainer}>
+      </Box>
+      <Box className={classes.paymentTextContainer}>
         {!matchesSmDown ? (
           <Typography className={classes.paymentMethodLabel}>
             {thirdPartyPaymentMap[paymentMethod.type].label}
           </Typography>
         ) : null}
         {renderThirdPartyPaymentBody(paymentMethod)}
-      </Grid>
+      </Box>
     </>
   );
 };

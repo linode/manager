@@ -13,11 +13,10 @@ import { randomLabel } from 'support/util/random';
 
 const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
-  cy.get('[data-qa-deploy-linode]').click();
+  cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 const createNodeBalancerWithUI = (nodeBal) => {
   cy.visitWithLogin('/nodebalancers/create');
-  fbtVisible('NodeBalancer Settings');
   getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
   containsClick('create a tag').type(testNodeBalTag);
   // this will create the NB in newark, where the default Linode was created

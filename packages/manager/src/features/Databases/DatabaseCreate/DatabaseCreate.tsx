@@ -17,7 +17,7 @@ import { useHistory } from 'react-router-dom';
 import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
-import BetaChip from 'src/components/BetaChip';
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';

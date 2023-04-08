@@ -9,13 +9,12 @@ import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import Box from '../core/Box';
+import Box from '@mui/material/Box';
 import TooltipIcon from '../TooltipIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   headerLabel: {
-    marginLeft: '0.25em',
     maxWidth: 'calc(100% - 80px)',
   },
   editBtn: {
@@ -155,7 +153,13 @@ export const StackScript: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="flex-start" justifyContent="space-between">
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+        }}
+      >
         <H1Header
           className={classes.headerLabel}
           title={label}
@@ -172,7 +176,7 @@ export const StackScript: React.FC<Props> = (props) => {
             Edit
           </Button>
         ) : null}
-      </Grid>
+      </Box>
       <Typography
         variant="h2"
         className={classes.author}

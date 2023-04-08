@@ -8,7 +8,7 @@ import { Theme, useTheme } from '@mui/material/styles';
 import clsx from 'clsx';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
-import AddNewMenu from './AddNewMenu';
+import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import Community from './Community';
 import Help from './Help';
 import NotificationMenu from './NotificationMenu';
@@ -90,7 +90,7 @@ const TopMenu = (props: Props) => {
               data-testid="open-nav-menu"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
-                <MenuIcon style={{ marginTop: 6 }} />
+                <MenuIcon />
               </TopMenuIcon>
             </IconButton>
           </Hidden>
@@ -102,7 +102,7 @@ const TopMenu = (props: Props) => {
               size="large"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
-                <MenuIcon style={{ marginTop: 6 }} />
+                <MenuIcon />
               </TopMenuIcon>
             </IconButton>
           </Hidden>

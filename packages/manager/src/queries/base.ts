@@ -131,7 +131,7 @@ export const itemInListMutationHandler = <
   V,
   E = APIError[]
 >(
-  queryKey: string
+  queryKey: QueryKey
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {

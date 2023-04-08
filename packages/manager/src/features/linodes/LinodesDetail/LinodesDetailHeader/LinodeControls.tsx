@@ -3,7 +3,10 @@ import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
+import {
+  Breadcrumb,
+  BreadcrumbProps,
+} from 'src/components/Breadcrumb/Breadcrumb';
 import Button from 'src/components/Button';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -45,7 +48,7 @@ const styles = (theme: Theme) =>
         backgroundColor: 'transparent',
         textDecoration: 'underline',
       },
-      '&:focus > span:first-child': {
+      '&:focus > span:first-of-type': {
         outline: '1px dotted #999',
       },
     },

@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginLeft: 4,
       },
       // Add a Tag button
-      '& > div:first-child': {
+      '& > div:first-of-type': {
         justifyContent: 'flex-end',
         marginTop: theme.spacing(4),
       },

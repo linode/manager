@@ -4,7 +4,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 interface Color {
   color: string;
@@ -162,14 +162,7 @@ export const ColorPalette: React.FC<{}> = () => {
 
   const createSwatch = (color: string, alias: string) => {
     return (
-      <Grid
-        item
-        className={classes.swatchWrapper}
-        key={alias}
-        xs={12}
-        sm={6}
-        md={4}
-      >
+      <Grid className={classes.swatchWrapper} key={alias} xs={12} sm={6} md={4}>
         <div
           className={classes.swatch}
           style={{ backgroundColor: color }}
@@ -186,7 +179,7 @@ export const ColorPalette: React.FC<{}> = () => {
   const renderColor = (heading: string, colors: Color[]) => {
     return (
       <>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <Typography variant="h2">{heading}</Typography>
         </Grid>
         {colors.map((color) => createSwatch(color.color, color.alias))}
@@ -195,7 +188,7 @@ export const ColorPalette: React.FC<{}> = () => {
   };
 
   return (
-    <Grid container className={classes.root}>
+    <Grid container className={classes.root} spacing={2}>
       {renderColor('Primary Colors', primaryColors)}
       {renderColor('Etc.', etc)}
       {renderColor('Background Colors', bgColors)}

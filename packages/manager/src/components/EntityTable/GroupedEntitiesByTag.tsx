@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paginationCell: {
     paddingTop: 2,
-    '& div:first-child': {
+    '& div:first-of-type': {
       marginTop: 0,
     },
   },
