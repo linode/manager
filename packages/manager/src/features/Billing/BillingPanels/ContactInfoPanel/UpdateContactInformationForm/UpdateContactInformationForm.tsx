@@ -262,11 +262,12 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
               value={
                 filteredRegionResults.find(
                   ({ value }) => value === formik.values.state
-                ) ?? ''
+                ) ?? null
               }
               textFieldProps={{
-                // @ts-expect-error What is the best way to handle this?
-                'data-qa-contact-state-province': true,
+                dataAttrs: {
+                  'data-qa-contact-state-province': true,
+                },
               }}
             />
           ) : (
