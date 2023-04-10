@@ -12,7 +12,7 @@ import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `2px !important`, // Revist use of important when we refactor the Select component
+    padding: `2px !important`, // Revisit use of important when we refactor the Select component
     display: 'flex',
     '& g': {
       fill: theme.name === 'dark' ? 'white' : '#888f91',
