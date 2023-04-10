@@ -66,8 +66,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const cloudInitTooltipMessage = (
   <Typography>
-    Only check this box if your Custom Image that is compatible with cloud-init,
-    or has cloud-init installed, and the config has been changed to use our data
+    Only check this box if your Custom Image is compatible with cloud-init, or
+    has cloud-init installed, and the config has been changed to use our data
     service. <Link to="/">Learn how.</Link>
   </Typography>
 );

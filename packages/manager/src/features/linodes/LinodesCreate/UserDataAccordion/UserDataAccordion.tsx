@@ -6,6 +6,7 @@ import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
 import UserDataAccordionHeading from './UserDataAccordionHeading';
+import Box from 'src/components/core/Box';
 interface Props {
   createType?: string;
   userData: string | undefined;
@@ -77,16 +78,16 @@ const UserDataAccordion = (props: Props) => {
       expandIconClassNames={fromBackupOrFromLinode ? expandIconStyles : ''}
     >
       {renderNotice ? (
-        <div data-testid="render-notice">{renderNotice}</div>
-      ) : (
-        <Typography sx={{ marginBottom: 3 }}>
-          User data is a virtual machine&rsquo;s cloud-init metadata relating to
-          a user&rsquo;s local account, including username and user group(s).{' '}
-          <br />
-          User data must be added before the Linode provisions.{' '}
-          <Link to="http://linode.com/docs">Learn more.</Link>{' '}
-        </Typography>
-      )}
+        <Box marginBottom="16px" data-testid="render-notice">
+          {renderNotice}
+        </Box>
+      ) : null}
+      <Typography sx={{ marginBottom: 3 }}>
+        User data is a virtual machine&rsquo;s cloud-init metadata relating to a
+        user&rsquo;s local account, including username and user group(s). <br />
+        User data must be added before the Linode provisions.{' '}
+        <Link to="http://linode.com/docs">Learn more.</Link>{' '}
+      </Typography>
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
           The user data may be formatted incorrectly.
