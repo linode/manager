@@ -48,9 +48,7 @@ interface ImageOptionProps extends OptionProps<any, any> {
   data: ImageItem;
 }
 
-type CombinedProps = ImageOptionProps;
-
-const ImageOption = (props: CombinedProps) => {
+const ImageOption = (props: ImageOptionProps) => {
   const classes = useStyles();
   const { data, label, isFocused, isSelected } = props;
 

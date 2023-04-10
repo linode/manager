@@ -108,10 +108,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
                   label:
                     differenceInMonths > 0 ? `${label} (deprecated)` : label,
                   value: id,
-                  isCloudInitCompatible:
-                    thisGroup === 'My Images'
-                      ? capabilities?.includes('cloud-init')
-                      : true, // Default to cloud-init compatible for distro images.
+                  isCloudInitCompatible: capabilities?.includes('cloud-init'),
                   className: vendor
                     ? // Use Tux as a fallback.
                       `fl-${distroIcons[vendor] ?? 'tux'}`
