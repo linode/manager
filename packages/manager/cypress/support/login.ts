@@ -4,6 +4,7 @@ import {
   mockCommonRequests,
   CommonRequestMockOptions,
 } from 'support/intercepts/common';
+import { oauthToken } from 'support/constants/api';
 import { apiMatcher } from 'support/util/intercepts';
 
 const overrideLocalStorage = (
@@ -16,10 +17,8 @@ const overrideLocalStorage = (
   });
 };
 
-// handles login authorization and visits specified url
-const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const _loginWithToken = (win) => {
-  win.localStorage.setItem('authentication/oauth-token', oauthtoken);
+  win.localStorage.setItem('authentication/oauth-token', oauthToken);
   win.localStorage.setItem('authentication/scopes', '*');
   // cy.log(window.localStorage.getItem('authentication/oauth-token'));
   const expireDate = DateTime.local().plus({ days: 30 });
@@ -27,7 +26,7 @@ const _loginWithToken = (win) => {
   // cy.log(isoExpire);
   win.localStorage.setItem('authentication/expires', isoExpire);
   win.localStorage.setItem('authentication/expire-datetime', isoExpire);
-  win.localStorage.setItem('authentication/token', 'Bearer ' + oauthtoken);
+  win.localStorage.setItem('authentication/token', 'Bearer ' + oauthToken);
   win.localStorage.setItem('authentication/expire', isoExpire);
 };
 
