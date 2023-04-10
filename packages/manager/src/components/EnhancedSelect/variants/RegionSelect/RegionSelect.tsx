@@ -18,11 +18,11 @@ import Select, {
 } from 'src/components/EnhancedSelect/Select';
 import RegionOption, { RegionItem } from './RegionOption';
 
-interface Props extends Omit<BaseSelectProps, 'onChange'> {
+interface Props extends Omit<BaseSelectProps, 'onChange' | 'label'> {
+  label?: string;
   regions: Region[];
   handleSelection: (id: string) => void;
   selectedID: string | null;
-  label?: string;
   helperText?: string;
   isClearable?: boolean;
   required?: boolean;

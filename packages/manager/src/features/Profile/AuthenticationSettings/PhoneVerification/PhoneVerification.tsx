@@ -252,7 +252,6 @@ export const PhoneVerification = () => {
                   className={classes.select}
                   id="iso_code"
                   name="iso_code"
-                  type="text"
                   isClearable={false}
                   value={{
                     value: sendCodeForm.values.iso_code,

@@ -61,7 +61,6 @@ export const Question = (props: Props) => {
       placeholder="Select a question"
       defaultValue={currentOption}
       isClearable={false}
-      height="36px"
       onChange={onChange}
     />
   );

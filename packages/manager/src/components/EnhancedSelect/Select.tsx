@@ -1,8 +1,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import ReactSelect, { Props as SelectProps } from 'react-select';
+import ReactSelect, { NamedProps as SelectProps } from 'react-select';
 import CreatableSelect, {
-  Props as CreatableSelectProps,
+  CreatableProps as CreatableSelectProps,
 } from 'react-select/creatable';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
@@ -77,7 +77,7 @@ interface ModifiedTextFieldProps extends Omit<TextFieldProps, 'label'> {
 }
 
 export interface BaseSelectProps
-  extends Omit<SelectProps<any>, 'onChange' | 'value' | 'onFocus'> {
+  extends Omit<SelectProps<Item, any>, 'onChange' | 'value' | 'onFocus'> {
   classes?: any;
   /*
    textFieldProps isn't native to react-select
@@ -93,7 +93,7 @@ export interface BaseSelectProps
   /**
    * We require label for accessibility purpose
    */
-  label: string;
+  label?: string;
   /** alias for isDisabled */
   disabled?: boolean;
   /** retyped this */
@@ -195,10 +195,10 @@ const Select = (props: CombinedProps) => {
 
   // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
   // (AsyncCreatable exists, but we have not adapted it.)
-  type PossibleProps = BaseSelectProps | CreatableProps;
-  const BaseSelect: React.ComponentClass<PossibleProps> = creatable
-    ? CreatableSelect
-    : ReactSelect;
+
+  const BaseSelect = creatable
+    ? (CreatableSelect as React.ComponentClass<CreatableProps>)
+    : (ReactSelect as React.ComponentClass<BaseSelectProps>);
 
   if (creatable) {
     restOfProps.variant = 'creatable';
@@ -214,6 +214,7 @@ const Select = (props: CombinedProps) => {
   return (
     <BaseSelect
       {...restOfProps}
+      label={props.label}
       // If isClearable hasn't been supplied, default to true
       isClearable={isClearable ?? true}
       isSearchable

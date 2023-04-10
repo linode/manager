@@ -167,7 +167,6 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
               (thisOption) => thisOption.value === purpose
             )}
             onChange={handlePurposeChange}
-            onCreate
             disabled={readOnly}
             isClearable={false}
           />
