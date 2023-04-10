@@ -191,7 +191,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                           value: values.group,
                           label: values.group,
                         }
-                      : ''
+                      : null
                   }
                   options={groups.map((group) => ({
                     label: group.groupName,

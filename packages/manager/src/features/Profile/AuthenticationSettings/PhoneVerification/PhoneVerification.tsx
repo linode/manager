@@ -164,7 +164,7 @@ export const PhoneVerification = () => {
     }),
     singleValue: (provided: React.CSSProperties) => ({
       ...provided,
-      textAlign: 'center',
+      textAlign: 'center' as React.CSSProperties['textAlign'],
       fontSize: '20px',
     }),
   };
@@ -244,6 +244,7 @@ export const PhoneVerification = () => {
                 })}
               >
                 <Select
+                  label="ISO Code"
                   onFocus={() => setIsPhoneInputFocused(true)}
                   onBlur={() => setIsPhoneInputFocused(false)}
                   styles={customStyles}

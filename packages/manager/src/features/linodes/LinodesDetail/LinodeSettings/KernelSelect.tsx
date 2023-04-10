@@ -8,7 +8,7 @@ export interface Props {
   selectedKernel?: string;
   readOnly?: boolean;
   errorText?: string;
-  onChange: (selected: Item<string> | void) => void;
+  onChange: (selected: Item<string>) => void;
 }
 
 /**

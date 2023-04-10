@@ -265,6 +265,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
                 ) ?? ''
               }
               textFieldProps={{
+                // @ts-expect-error What is the best way to handle this?
                 'data-qa-contact-state-province': true,
               }}
             />
