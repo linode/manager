@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  ignorePatterns: ["temp.js", "**/vendor/*.js"],
+  ignorePatterns: ["**/node_modules/", "**/build/"],
 };
