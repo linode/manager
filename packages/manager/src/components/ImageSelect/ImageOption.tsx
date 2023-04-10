@@ -25,6 +25,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       fill: 'white',
     },
   },
+  selected: {
+    '& g': {
+      fill: theme.palette.primary.main,
+    },
+  },
   distroIcon: {
     fontSize: '1.8em',
     margin: `0 ${theme.spacing()}`,
@@ -45,15 +50,16 @@ interface ImageOptionProps extends OptionProps<any, any> {
 
 type CombinedProps = ImageOptionProps;
 
-export const ImageOption: React.FC<CombinedProps> = (props) => {
+export const ImageOption = (props: CombinedProps) => {
   const classes = useStyles();
-  const { data, label } = props;
+  const { data, label, isFocused, isSelected } = props;
 
   return (
     <Option
       className={classNames({
         [classes.root]: true,
-        [classes.focused]: props.isFocused,
+        [classes.focused]: isFocused,
+        [classes.selected]: isSelected,
       })}
       value={data.value}
       attrs={{ ['data-qa-image-select-item']: data.value }}
@@ -67,7 +73,7 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
           justifyContent: 'flex-start',
         }}
       >
-        <span className={`${props.data.className} ${classes.distroIcon}`} />
+        <span className={`${data.className} ${classes.distroIcon}`} />
         <Box>{label}</Box>
         {!data.isCloudInitCompatible ? (
           <TooltipIcon
