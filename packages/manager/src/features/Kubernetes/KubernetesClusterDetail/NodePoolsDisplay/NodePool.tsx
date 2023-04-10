@@ -25,14 +25,6 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  slash: {
-    alignSelf: 'end',
-    padding: '0px !important',
-    '& p': {
-      fontSize: '1rem',
-      padding: `${theme.spacing(2)} 0`,
-    },
-  },
   button: {
     paddingRight: 8,
   },
