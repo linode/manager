@@ -5,7 +5,8 @@
     "strict": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
-    "target": "es5",
+    "target": "es6",
+    "moduleResolution": "node",
     "lib": ["es6", "dom"],
     "baseUrl": "..",
     "paths": {

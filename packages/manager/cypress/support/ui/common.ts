@@ -12,24 +12,12 @@ import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets,
 } from 'support/api/objectStorage';
-import { deleteAllTestStackscripts } from '../api/stackscripts';
+import { deleteAllTestStackScripts } from '../api/stackscripts';
 import { deleteAllTestVolumes } from '../api/volumes';
 import { deleteAllTestTags } from '../api/tags';
 import { cancelAllTestEntityTransfers } from '../api/entityTransfer';
 import { apiMatcher } from 'support/util/intercepts';
-
-const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
-  cy.log(`Attempts remaining: ${attemptsRemaining}`);
-  if (attemptsRemaining <= 1) {
-    return fn(); // last attempt
-  }
-  try {
-    return fn();
-  } catch (err) {
-    cy.wait(delayBetweenAttemptsMs);
-    return attempt(fn, attemptsRemaining - 1, delayBetweenAttemptsMs);
-  }
-};
+import { SimpleBackoffMethod, attemptWithBackoff } from 'support/util/backoff';
 
 export const waitForAppLoad = (path = '/', withLogin = true) => {
   cy.intercept('GET', apiMatcher('linode/instances/*')).as('getLinodes');
@@ -69,26 +57,36 @@ export const interceptOnce = (
   });
 };
 
-export const deleteAllTestData = () => {
-  // Asynchronous test data deletion runs first.
-  const asyncDeletionPromise = Promise.all([
-    deleteAllTestBuckets(),
-    deleteAllTestAccessKeys(),
-    deleteAllTestTags(),
-    deleteAllTestLkeClusters(),
-    cancelAllTestEntityTransfers(),
-  ]);
+/**
+ * Deletes all test data on the account.
+ *
+ * In case an HTTP error occurs, 2 additional attempts will be made to delete
+ * the data with a 45 second delay between attempts.
+ */
+export const deleteAllTestData = async () => {
+  const backoff = new SimpleBackoffMethod(45000, {
+    maxAttempts: 3,
+  });
 
-  // Remaining deletion functions then run sequentially.
+  await attemptWithBackoff(backoff, async () => {
+    // Cancel service transfers first, then Linodes, before attempting to delete
+    // any other entities.
+    await cancelAllTestEntityTransfers();
+    await deleteAllTestLinodes();
 
-  cy.defer(asyncDeletionPromise).then(() => {
-    deleteAllTestLinodes();
-    deleteAllTestNodeBalancers();
-    deleteAllTestVolumes();
-    deleteAllTestImages();
-    deleteAllTestClients();
-    deleteAllTestFirewalls();
-    deleteAllTestStackscripts();
-    deleteAllTestDomains();
+    // Delete remaining test data.
+    await Promise.all([
+      deleteAllTestLkeClusters(),
+      deleteAllTestNodeBalancers(),
+      deleteAllTestImages(),
+      deleteAllTestClients(),
+      deleteAllTestFirewalls(),
+      deleteAllTestStackScripts(),
+      deleteAllTestDomains(),
+      deleteAllTestBuckets(),
+      deleteAllTestAccessKeys(),
+      deleteAllTestTags(),
+      deleteAllTestVolumes(),
+    ]);
   });
 };

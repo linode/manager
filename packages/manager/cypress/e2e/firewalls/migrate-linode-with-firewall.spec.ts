@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { createLinode } from 'support/api/linodes';
-import { deleteFirewallByLabel } from 'support/api/firewalls';
 import {
   getClick,
   containsClick,
@@ -260,8 +259,6 @@ describe('Migrate Linode With Firewall', () => {
 
       ui.regionSelect.findItemByRegionName('Toronto, CA').click();
       validateMigration();
-
-      deleteFirewallByLabel(firewallLabel);
     });
   });
 
@@ -302,7 +299,6 @@ describe('Migrate Linode With Firewall', () => {
       getClick('[data-qa-submit="true"]');
       cy.wait('@createFirewall').its('response.statusCode').should('eq', 200);
       fbtVisible(linodeLabel);
-      deleteFirewallByLabel(firewallLabel);
     });
   });
 });

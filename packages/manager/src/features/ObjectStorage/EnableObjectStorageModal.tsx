@@ -12,11 +12,11 @@ export interface Props {
   handleSubmit: () => void;
 }
 
-export const EnableObjectStorageModal: React.FC<Props> = ({
+export const EnableObjectStorageModal = ({
   open,
   onClose,
   handleSubmit,
-}) => {
+}: Props) => {
   return (
     <ConfirmationDialog
       open={open}
