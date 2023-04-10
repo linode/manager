@@ -14,10 +14,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: `2px !important`, // Revist use of important when we refactor the Select component
     display: 'flex',
+    '& g': {
+      fill: theme.name === 'dark' ? 'white' : '#888f91',
+    },
   },
   focused: {
     backgroundColor: theme.palette.primary.main,
     color: 'white',
+    '& g': {
+      fill: 'white',
+    },
   },
   distroIcon: {
     fontSize: '1.8em',
@@ -42,14 +48,6 @@ type CombinedProps = ImageOptionProps;
 export const ImageOption: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data, label } = props;
-
-  const sxCloudInitTooltipIcon = {
-    marginLeft: 'auto',
-    '& svg': {
-      width: 20,
-      height: 20,
-    },
-  };
 
   return (
     <Option
@@ -82,6 +80,14 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
       </Box>
     </Option>
   );
+};
+
+const sxCloudInitTooltipIcon = {
+  marginLeft: 'auto',
+  '& svg': {
+    width: 20,
+    height: 20,
+  },
 };
 
 export default ImageOption;
