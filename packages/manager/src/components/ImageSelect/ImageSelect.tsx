@@ -15,7 +15,7 @@ import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
-import ImageOption from './ImageOption';
+import { ImageOption } from 'src/components/ImageSelect/ImageOption';
 
 export type Variant = 'public' | 'private' | 'all';
 

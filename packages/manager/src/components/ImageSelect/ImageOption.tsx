@@ -50,7 +50,7 @@ interface ImageOptionProps extends OptionProps<any, any> {
 
 type CombinedProps = ImageOptionProps;
 
-export const ImageOption = (props: CombinedProps) => {
+const ImageOption = (props: CombinedProps) => {
   const classes = useStyles();
   const { data, label, isFocused, isSelected } = props;
 
@@ -96,4 +96,4 @@ const sxCloudInitTooltipIcon = {
   },
 };
 
-export default ImageOption;
+export { ImageOption };
