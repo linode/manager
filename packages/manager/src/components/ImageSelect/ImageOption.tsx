@@ -1,14 +1,14 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
-import { Item } from 'src/components/EnhancedSelect';
-import Option from 'src/components/EnhancedSelect/components/Option';
 import CloudInitIncompatibleIcon from 'src/assets/icons/cloud-init-incompatible.svg';
-
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import { Item } from 'src/components/EnhancedSelect';
+import Option from 'src/components/EnhancedSelect/components/Option';
 import TooltipIcon from 'src/components/TooltipIcon';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -51,6 +51,7 @@ interface ImageOptionProps extends OptionProps<any, any> {
 const ImageOption = (props: ImageOptionProps) => {
   const classes = useStyles();
   const { data, label, isFocused, isSelected } = props;
+  const flags = useFlags();
 
   return (
     <Option
@@ -73,7 +74,7 @@ const ImageOption = (props: ImageOptionProps) => {
       >
         <span className={`${data.className} ${classes.distroIcon}`} />
         <Box>{label}</Box>
-        {!data.isCloudInitCompatible ? (
+        {flags.metadata && !data.isCloudInitCompatible ? (
           <TooltipIcon
             text="This image is not compatible with cloud-init."
             status="other"
