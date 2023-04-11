@@ -1,14 +1,16 @@
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Accordion from 'src/components/Accordion';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
+import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
-import UserDataAccordionHeading from './UserDataAccordionHeading';
-import Box from 'src/components/core/Box';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+
 interface Props {
-  createType?: string;
+  createType?: CreateTypes;
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
@@ -16,7 +18,7 @@ interface Props {
   renderCheckbox?: JSX.Element;
 }
 
-const UserDataAccordion = (props: Props) => {
+export const UserDataAccordion = (props: Props) => {
   const { expandIconStyles } = useExpandIconStyles();
   const {
     createType,
@@ -113,5 +115,3 @@ const UserDataAccordion = (props: Props) => {
     </Accordion>
   );
 };
-
-export default UserDataAccordion;

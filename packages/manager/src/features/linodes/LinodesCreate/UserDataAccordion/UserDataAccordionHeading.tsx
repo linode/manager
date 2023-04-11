@@ -3,24 +3,24 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Box from 'src/components/core/Box';
-
-export const LINODE_CREATE_FROM = {
-  BACKUPS: 'fromBackup',
-  CLONE: 'fromLinode',
-};
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 interface Props {
-  createType?: string | undefined;
+  createType?: CreateTypes;
 }
 
-const UserDataAccordionHeading = ({ createType }: Props) => {
-  const userDataHeaderWarningMessage =
-    createType === LINODE_CREATE_FROM.BACKUPS
-      ? 'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.'
-      : 'Existing user data is not cloned. You may add new user data now.';
-  const showWarningMessage =
-    createType &&
-    [LINODE_CREATE_FROM.BACKUPS, LINODE_CREATE_FROM.CLONE].includes(createType);
+export const UserDataAccordionHeading = ({ createType }: Props) => {
+  const warningMessageMap: Record<CreateTypes, string | null> = {
+    fromBackup:
+      'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.',
+    fromLinode:
+      'Existing user data is not cloned. You may add new user data now.',
+    fromApp: null,
+    fromStackScript: null,
+    fromImage: null,
+  };
+
+  const warningMessage = createType ? warningMessageMap[createType] : null;
 
   return (
     <>
@@ -39,13 +39,11 @@ const UserDataAccordionHeading = ({ createType }: Props) => {
           interactive
         />
       </Box>
-      {showWarningMessage ? (
+      {warningMessage ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
-          {userDataHeaderWarningMessage}
+          {warningMessage}
         </Notice>
       ) : null}
     </>
   );
 };
-
-export default UserDataAccordionHeading;
