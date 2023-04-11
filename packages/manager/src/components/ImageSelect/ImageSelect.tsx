@@ -36,7 +36,7 @@ interface Props {
 }
 
 export interface ImageProps
-  extends Omit<BaseSelectProps, 'onChange' | 'variant'> {
+  extends Omit<BaseSelectProps<false>, 'onChange' | 'variant'> {
   selectedImageID?: string;
   disabled: boolean;
   handleSelectImage: (selection?: string) => void;

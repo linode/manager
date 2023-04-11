@@ -26,19 +26,31 @@ interface Props {
   images: Image[];
   imageError?: string;
   imageFieldError?: string;
-  isMulti?: boolean;
+  isMulti?: false;
   helperText?: string;
-  value?: Item | Item[];
+  value?: Item;
   disabled?: boolean;
-  onSelect: (selected: Item<any> | Item<any>[]) => void;
+  onSelect: (selected: Item) => void;
   label?: string;
   required?: boolean;
   anyAllOption?: boolean;
 }
 
-type CombinedProps = Props;
+interface MultiProps {
+  images: Image[];
+  imageError?: string;
+  imageFieldError?: string;
+  isMulti: true;
+  helperText?: string;
+  value?: Item[];
+  disabled?: boolean;
+  onSelect: (selected: Item[]) => void;
+  label?: string;
+  required?: boolean;
+  anyAllOption?: boolean;
+}
 
-export const ImageSelect: React.FC<CombinedProps> = (props) => {
+export function ImageSelect(props: Props | MultiProps) {
   const {
     helperText,
     images,
@@ -121,7 +133,7 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
       </Grid>
     </Grid>
   );
-};
+}
 
 export const getImagesOptions = (images: Image[]) => {
   const groupedImages = groupImages(images);

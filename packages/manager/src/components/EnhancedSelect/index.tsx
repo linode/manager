@@ -6,5 +6,6 @@ import EnhancedSelect, {
 /* tslint:disable */
 export interface Item<T> extends _Item<T> {}
 export interface GroupType<T> extends _GroupType<T> {}
-export interface BaseSelectProps extends _BaseSelectProps {}
+export interface BaseSelectProps<T extends boolean>
+  extends _BaseSelectProps<T> {}
 export default EnhancedSelect;

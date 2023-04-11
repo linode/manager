@@ -39,10 +39,6 @@ export interface SelectState {
   isSelected: boolean;
 }
 
-interface ActionMeta {
-  action: string;
-}
-
 export interface NoOptionsMessageProps {
   inputValue: string;
 }
@@ -62,22 +58,15 @@ const _components = {
   Input,
 };
 
-interface OwnProps {
-  // Set this prop to `true` when using a <Select /> on a modal. It attaches the <Select /> to the
-  // document body directly, so the overflow is visible over the edge of the modal.
-  overflowPortal?: boolean;
-}
-
-type CombinedProps = OwnProps & BaseSelectProps & CreatableProps;
-
 // We extend TexFieldProps to still be able to pass
 // the required label to Select and not duplicated it to TextFieldProps
 interface ModifiedTextFieldProps extends Omit<TextFieldProps, 'label'> {
   label?: string;
 }
 
-export interface BaseSelectProps
-  extends Omit<SelectProps<Item, any>, 'onChange' | 'value' | 'onFocus'> {
+export interface BaseSelectProps<isMulti extends boolean>
+  extends SelectProps<Item, isMulti>,
+    CreatableSelectProps<Item, isMulti> {
   classes?: any;
   /*
    textFieldProps isn't native to react-select
@@ -97,13 +86,12 @@ export interface BaseSelectProps
   /** alias for isDisabled */
   disabled?: boolean;
   /** retyped this */
-  value?: Item | Item[] | null;
+  // value?: Item | Item[] | null;
   /** making this required */
-  onChange: (selected: Item | Item[] | null, actionMeta?: ActionMeta) => void;
+  // onChange: (selected: Item | Item[] | null, actionMeta?: ActionMeta) => void;
   /** alias for onCreateOption */
   createNew?: (inputValue: string) => void;
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
-  onFocus?: any;
   /** the rest are props we've added ourselves */
   medium?: boolean;
   small?: boolean;
@@ -116,11 +104,14 @@ export interface BaseSelectProps
   required?: boolean;
   creatable?: boolean;
   variant?: 'creatable';
+  // Set this prop to `true` when using a <Select /> on a modal. It attaches the <Select /> to the
+  // document body directly, so the overflow is visible over the edge of the modal.
+  overflowPortal?: boolean;
 }
 
-interface CreatableProps extends CreatableSelectProps<any, any> {}
-
-const Select = (props: CombinedProps) => {
+const Select = <isMulti extends boolean = false>(
+  props: BaseSelectProps<isMulti>
+) => {
   const theme = useTheme<Theme>();
   const classes = useStyles();
   const {
@@ -166,18 +157,18 @@ const Select = (props: CombinedProps) => {
   //
   // This essentially reverts the behavior of the v3 React-Select update. Long term, we should
   // probably re-write our component handlers to expect EITHER an array OR `null`.
-  const _onChange = (
-    selected: Item | Item[] | null,
-    actionMeta?: ActionMeta
-  ) => {
-    const { isMulti, onChange } = props;
+  // const _onChange = (
+  //   selected: Item | Item[] | null,
+  //   actionMeta?: ActionMeta
+  // ) => {
+  //   const { isMulti, onChange } = props;
 
-    if (isMulti && !selected) {
-      return onChange([], actionMeta);
-    }
+  //   if (isMulti && !selected) {
+  //     return onChange([], actionMeta);
+  //   }
 
-    onChange(selected, actionMeta);
-  };
+  //   onChange(selected, actionMeta);
+  // };
 
   /*
    * By default, we use the built-in Option component from React-Select, along with several Material-UI based
@@ -197,8 +188,8 @@ const Select = (props: CombinedProps) => {
   // (AsyncCreatable exists, but we have not adapted it.)
 
   const BaseSelect = creatable
-    ? (CreatableSelect as React.ComponentClass<CreatableProps>)
-    : (ReactSelect as React.ComponentClass<BaseSelectProps>);
+    ? (CreatableSelect as React.ComponentClass<BaseSelectProps<any>>)
+    : (ReactSelect as React.ComponentClass<BaseSelectProps<any>>);
 
   if (creatable) {
     restOfProps.variant = 'creatable';
@@ -269,7 +260,7 @@ const Select = (props: CombinedProps) => {
       onBlur={onBlur}
       options={options}
       components={combinedComponents}
-      onChange={_onChange}
+      onChange={onChange}
       onInputChange={onInputChange}
       onCreateOption={createNew}
       placeholder={placeholder || 'Select a value...'}

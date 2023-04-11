@@ -8,7 +8,8 @@ import Select, {
 } from 'src/components/EnhancedSelect/Select';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
-interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
+interface Props
+  extends Omit<BaseSelectProps<false>, 'onChange' | 'defaultValue'> {
   handleStatsChange?: (start: number, end: number) => void;
   defaultValue?: Labels;
 }
