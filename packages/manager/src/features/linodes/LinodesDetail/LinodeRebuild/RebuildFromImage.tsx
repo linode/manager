@@ -266,7 +266,7 @@ export const RebuildFromImage = (props: Props) => {
                         <CheckBox
                           checked={shouldReuseUserData}
                           onChange={handleShouldReuseUserDataChange}
-                          text="Reuse user data previously provided for this Linode."
+                          text={`Reuse user data previously provided for ${linodeLabel}`}
                           sxFormLabel={{ paddingLeft: '2px' }}
                         />
                       </Box>
