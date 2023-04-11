@@ -1,17 +1,16 @@
-import classNames from 'classnames';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import CircleProgress from 'src/components/CircleProgress';
-import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import Tag from 'src/components/Tag';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
+import Typography from 'src/components/core/Typography';
 import { useProfile } from 'src/queries/profile';
+import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -36,7 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     animation: '$fadeIn 225ms linear forwards',
     borderLeft: `5px solid ${theme.palette.error.dark}`,
     '& .noticeText': {
-      ...theme.typography.body1,
       fontFamily: '"LatoWeb", sans-serif',
     },
     marginTop: 20,
@@ -123,15 +121,15 @@ interface ActionMeta {
   action: string;
 }
 
-export interface Props {
+export interface TagsPanelProps {
   align?: 'left' | 'right';
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
   disabled?: boolean;
 }
 
-const TagsPanel: React.FC<Props> = (props) => {
-  const classes = useStyles();
+const TagsPanel = (props: TagsPanelProps) => {
+  const { classes, cx } = useStyles();
   const { tags, disabled, updateTags } = props;
 
   const [tagError, setTagError] = React.useState<string>('');
@@ -265,9 +263,9 @@ const TagsPanel: React.FC<Props> = (props) => {
         />
       ) : (
         <div
-          className={classNames({
+          className={cx({
             [classes.addButtonWrapper]: true,
-            [classes.hasError]: tagError,
+            [classes.hasError]: tagError.length > 0,
           })}
         >
           <button
@@ -290,7 +288,7 @@ const TagsPanel: React.FC<Props> = (props) => {
           return (
             <Tag
               key={`tag-item-${thisTag}`}
-              className={classNames({
+              className={cx({
                 [classes.tag]: true,
                 [classes.loading]: tagsLoading,
               })}
@@ -311,4 +309,4 @@ const TagsPanel: React.FC<Props> = (props) => {
   );
 };
 
-export default TagsPanel;
+export { TagsPanel };
