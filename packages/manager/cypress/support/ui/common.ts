@@ -7,6 +7,7 @@ import { deleteAllTestImages } from '../api/images';
 import { deleteAllTestLinodes } from '../api/linodes';
 import { deleteAllTestClients } from '../api/longview';
 import { deleteAllTestNodeBalancers } from '../api/nodebalancers';
+import { deleteAllTestLkeClusters } from 'support/api/lke';
 import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets,
@@ -75,6 +76,7 @@ export const deleteAllTestData = async () => {
 
     // Delete remaining test data.
     await Promise.all([
+      deleteAllTestLkeClusters(),
       deleteAllTestNodeBalancers(),
       deleteAllTestImages(),
       deleteAllTestClients(),
