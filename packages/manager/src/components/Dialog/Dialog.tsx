@@ -21,7 +21,6 @@ export interface DialogProps extends _DialogProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
     paddingTop: 0,
     maxHeight: '100%',
     '& .actionPanel': {
@@ -64,9 +63,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.bgPaper,
     position: 'sticky',
     top: 0,
-    padding: `${theme.spacing(1.5)} 0`,
-    paddingTop: theme.spacing(4),
-    zIndex: 1,
+    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+    zIndex: 2,
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
@@ -118,30 +116,27 @@ const Dialog: React.FC<DialogProps> = (props) => {
     >
       <Grid container alignItems="center">
         <div className={classes.sticky}>
-          <Grid>
-            <Typography
-              variant="h2"
-              id={titleID}
-              data-qa-drawer-title={title}
-              data-qa-dialog-title={title}
-            >
-              {title}
-            </Typography>
-          </Grid>
-          <Grid>
-            <Button
-              buttonType="secondary"
-              onClick={props.onClose as (e: any) => void}
-              className={classes.button}
-              data-qa-close-drawer
-              aria-label="Close"
-            >
-              <Close />
-            </Button>
-          </Grid>
+          <Typography
+            variant="h2"
+            id={titleID}
+            data-qa-drawer-title={title}
+            data-qa-dialog-title={title}
+          >
+            {title}
+          </Typography>
+
+          <Button
+            buttonType="secondary"
+            onClick={props.onClose as (e: any) => void}
+            className={classes.button}
+            data-qa-close-drawer
+            aria-label="Close"
+          >
+            <Close />
+          </Button>
         </div>
         {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
-        <Grid container>
+        <Grid container sx={{ margin: '0 32px 0 32px' }}>
           <div className={className}>
             {error && <Notice text={error} error />}
             {children}
