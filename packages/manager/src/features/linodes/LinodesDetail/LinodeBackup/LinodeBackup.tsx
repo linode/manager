@@ -7,7 +7,6 @@ import {
   LinodeBackup,
   LinodeBackupSchedule,
   LinodeBackupsResponse,
-  LinodeType,
   takeSnapshot,
   Window,
 } from '@linode/api-v4/lib/linodes';
@@ -24,12 +23,8 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Tooltip from 'src/components/core/Tooltip';
@@ -52,6 +47,7 @@ import {
   withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { ExtendedType } from 'src/utilities/extendType';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendBackupsDisabledEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -145,7 +141,7 @@ interface ContextProps {
 
 interface PreloadedProps {
   backups: PromiseLoaderResponse<LinodeBackupsResponse>;
-  type: PromiseLoaderResponse<LinodeType>;
+  type: PromiseLoaderResponse<ExtendedType>;
 }
 
 interface State {

@@ -129,7 +129,6 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
 
             <VolumeSelect
               error={touched.volume_id ? errors.volume_id : undefined}
-              name="volumd_id"
               value={values.volume_id}
               onBlur={handleBlur}
               onChange={(v) => setFieldValue('volume_id', v)}

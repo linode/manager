@@ -1,10 +1,11 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { clone, propOr } from 'ramda';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';
@@ -12,10 +13,6 @@ import { groupImages } from 'src/utilities/images';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
-  },
-  icon: {
-    marginTop: 30,
-    marginLeft: -20,
   },
   selectContainer: {
     width: `calc(415px + ${theme.spacing(2)})`,
@@ -113,9 +110,13 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
         />
       </Grid>
       <Grid item xs={1}>
-        <HelpIcon
-          className={classes.icon}
+        <TooltipIcon
+          sxTooltipIcon={{
+            marginTop: '30px',
+            marginLeft: '-20px',
+          }}
           text={helperText || 'Choosing a 64-bit distro is recommended.'}
+          status="help"
         />
       </Grid>
     </Grid>

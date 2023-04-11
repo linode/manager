@@ -1,7 +1,8 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { makeStyles } from 'tss-react/mui';
 
 interface Props {
   buttonText: string;
@@ -11,7 +12,7 @@ interface Props {
   disabled?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   topSection: {
     display: 'flex',
     alignItems: 'center',
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
+export const DatabaseSettingsMenuItem = (props: Props) => {
   const {
     buttonText,
     descriptiveText,
@@ -52,7 +53,7 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
     disabled = false,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.topSection} data-qa-settings-section={sectionTitle}>

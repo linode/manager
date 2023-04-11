@@ -1,13 +1,14 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import IconButton from 'src/components/IconButton';
+import { ExtendedType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   nodeCount: number;
-  poolType: LinodeType | null;
+  poolType: ExtendedType | null;
   price: number;
   updateNodeCount: (count: number) => void;
   onRemove: () => void;
@@ -75,7 +76,7 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
         <Box display="flex" justifyContent="space-between">
           <div>
             <Typography className={classes.typeHeader}>
-              {poolType.label} Plan
+              {poolType.formattedLabel} Plan
             </Typography>
             <Typography className={classes.typeSubheader}>
               {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}

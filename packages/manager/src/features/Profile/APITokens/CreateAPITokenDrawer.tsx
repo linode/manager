@@ -5,7 +5,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Drawer from 'src/components/Drawer';
@@ -18,7 +19,6 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import AccessCell from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
-import { useCreatePersonalAccessTokenMutation } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   Permission,
@@ -27,6 +27,7 @@ import {
   allScopesAreTheSame,
   basePermNameMap,
 } from './utils';
+import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
 
 type Expiry = [string, string];
 

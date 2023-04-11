@@ -2,7 +2,6 @@ import { Engine } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -17,12 +16,13 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import LandingHeader from 'src/components/LandingHeader';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 
-export const DatabaseDetail: React.FC = () => {
+export const DatabaseDetail = () => {
   const history = useHistory();
 
   const { databaseId, engine } = useParams<{
@@ -117,22 +117,24 @@ export const DatabaseDetail: React.FC = () => {
   return (
     <>
       <DocumentTitleSegment segment={database.label} />
-      <Breadcrumb
-        pathname={location.pathname}
-        labelTitle={database.label}
-        firstAndLastOnly
-        crumbOverrides={[
-          {
-            position: 1,
-            label: 'Database Clusters',
+      <LandingHeader
+        title={database.label}
+        breadcrumbProps={{
+          firstAndLastOnly: true,
+          pathname: location.pathname,
+          labelOptions: { noCap: true },
+          crumbOverrides: [
+            {
+              label: 'Database Clusters',
+              position: 1,
+            },
+          ],
+          onEditHandlers: {
+            editableTextTitle: database.label,
+            errorText: editableLabelError,
+            onCancel: resetEditableLabel,
+            onEdit: handleSubmitLabelChange,
           },
-        ]}
-        labelOptions={{ noCap: true }}
-        onEditHandlers={{
-          editableTextTitle: database.label,
-          onEdit: handleSubmitLabelChange,
-          onCancel: resetEditableLabel,
-          errorText: editableLabelError,
         }}
       />
       <Tabs index={getTabIndex()} onChange={handleTabChange}>

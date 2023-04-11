@@ -3,12 +3,8 @@ import Community from 'src/assets/icons/community.svg';
 import Documentation from 'src/assets/icons/document.svg';
 import Status from 'src/assets/icons/status.svg';
 import Support from 'src/assets/icons/support.svg';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tile from 'src/components/Tile';

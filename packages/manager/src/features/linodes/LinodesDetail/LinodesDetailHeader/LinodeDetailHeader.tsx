@@ -11,12 +11,11 @@ import PowerDialogOrDrawer, {
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import useNotifications from 'src/hooks/useNotifications';
 import { useProfile } from 'src/queries/profile';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
-import MigrateLinode from '../../MigrateLanding/MigrateLinode';
+import MigrateLinode from '../../MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
@@ -26,10 +25,17 @@ import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
-import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
+import LandingHeader from 'src/components/LandingHeader';
+import { sendEvent } from 'src/utilities/ga';
+import useEditableLabelState from 'src/hooks/useEditableLabelState';
+import { APIError } from '@linode/api-v4/lib/types';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { ACCESS_LEVELS } from 'src/constants';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 interface Props {
   numVolumes: number;
@@ -73,7 +79,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const notifications = useNotifications();
+  const { data: notifications } = useNotificationsQuery();
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -264,25 +270,82 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     return deleteLinode(linodeId);
   };
 
-  const upgradeableVolumeIds = notifications
-    .filter(
-      (notification) =>
-        notification.type === 'volume_migration_scheduled' &&
-        volumesForLinode.some(
-          (volume: Volume) => volume.id === notification?.entity?.id
-        )
-    )
-    // Non null assertion because we assume that these kinds of notifications will always have an entity attached.
-    .map((notification) => notification.entity!.id);
+  const upgradeableVolumeIds =
+    notifications
+      ?.filter(
+        (notification) =>
+          notification.type === 'volume_migration_scheduled' &&
+          volumesForLinode.some(
+            (volume: Volume) => volume.id === notification?.entity?.id
+          )
+      )
+      // Non null assertion because we assume that these kinds of notifications will always have an entity attached.
+      .map((notification) => notification.entity!.id) ?? [];
+
+  const {
+    editableLabelError,
+    setEditableLabelError,
+    resetEditableLabel,
+  } = useEditableLabelState();
+  const disabled = linode._permissions === ACCESS_LEVELS.readOnly;
+
+  const updateLinodeLabel = async (linodeId: number, label: string) => {
+    try {
+      await updateLinode({ linodeId, label });
+    } catch (updateError) {
+      const errors: APIError[] = getAPIErrorOrDefault(
+        updateError,
+        'An error occurred while updating label',
+        'label'
+      );
+      const errorReasons: string[] = errors.map((error) => error.reason);
+      throw new Error(errorReasons[0]);
+    }
+  };
+
+  const handleLinodeLabelUpdate = (label: string) => {
+    const linodeId = linode.id;
+    return updateLinodeLabel(linodeId, label)
+      .then(() => {
+        resetEditableLabel();
+      })
+      .catch((updateError) => {
+        const errorReasons: string[] = [updateError.message];
+        setEditableLabelError(errorReasons[0]);
+        scrollErrorIntoView();
+        return Promise.reject(errorReasons[0]);
+      });
+  };
 
   return (
     <>
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
-      <LinodeDetailsBreadcrumb />
+      <LandingHeader
+        title="Create"
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/platform/get-started/"
+        breadcrumbProps={{
+          pathname: `/linodes/${linode.label}`,
+          onEditHandlers: !disabled
+            ? {
+                editableTextTitle: linode.label,
+                onEdit: handleLinodeLabelUpdate,
+                onCancel: resetEditableLabel,
+                errorText: editableLabelError,
+              }
+            : undefined,
+        }}
+        onDocsClick={() => {
+          sendEvent({
+            category: 'Linode Create Flow',
+            action: 'Click:link',
+            label: 'Getting Started',
+          });
+        }}
+      />
       <LinodeEntityDetail
-        variant="details"
         id={linode.id}
         linode={linode}
         numVolumes={numAttachedVolumes}

@@ -5,10 +5,11 @@ import TabList from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from '../Notice';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -104,9 +105,9 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
     <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
       <div className={innerClass}>
         {error && <Notice error>{error}</Notice>}
-        <Grid className={classes.header}>
+        <Grid container className={classes.header}>
           {header !== '' && (
-            <Grid item xs={6}>
+            <Grid xs={6}>
               <Typography variant="h2" data-qa-tp-title>
                 {header}
               </Typography>
@@ -114,7 +115,6 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
           )}
           {docsLink ? (
             <Grid
-              item
               xs={6}
               style={{ display: 'flex', flexDirection: 'row-reverse' }}
             >

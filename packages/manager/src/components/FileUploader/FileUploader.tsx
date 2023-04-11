@@ -8,7 +8,8 @@ import { Dispatch } from 'src/hooks/types';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { uploadImageFile } from 'src/features/Images/requests';
 import FileUpload from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
@@ -117,6 +118,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   label: string;
   description?: string;
+  isCloudInit?: boolean;
   region: string;
   dropzoneDisabled: boolean;
   apiError: string | undefined;
@@ -132,6 +134,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   const {
     label,
     description,
+    isCloudInit,
     region,
     dropzoneDisabled,
     apiError,
@@ -144,6 +147,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     label,
     region,
     description: description ? description : undefined,
+    cloud_init: isCloudInit ? isCloudInit : undefined,
   });
 
   const classes = useStyles();

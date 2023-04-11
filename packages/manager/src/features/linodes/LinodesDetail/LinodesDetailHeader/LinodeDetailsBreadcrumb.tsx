@@ -3,8 +3,12 @@ import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  Breadcrumb,
+  BreadcrumbProps,
+} from 'src/components/Breadcrumb/Breadcrumb';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import DocsLink from 'src/components/DocsLink';
 import Grid from 'src/components/Grid';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';

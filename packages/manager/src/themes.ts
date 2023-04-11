@@ -213,6 +213,20 @@ const darkThemeOptions: ThemeOptions = {
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        listbox: {
+          backgroundColor: customDarkModeOptions.bg.white,
+          border: `1px solid ${primaryColors.main}`,
+        },
+        loading: {
+          color: '#fff',
+        },
+        noOptions: {
+          color: '#fff',
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -514,7 +528,7 @@ const darkThemeOptions: ThemeOptions = {
           boxShadow: 'inset 0 -1px 0 #222',
         },
         flexContainer: {
-          '& $scrollButtons:first-child': {
+          '& $scrollButtons:first-of-type': {
             color: '#222',
           },
         },

@@ -4,15 +4,15 @@ import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
-import { Dispatch } from 'src/hooks/types';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
-import { requestNotifications } from 'src/store/notification/notification.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedLinode } from '../types';
+import { useQueryClient } from 'react-query';
+import { queryKey } from 'src/queries/accountNotifications';
 
 interface Props {
   open: boolean;
@@ -29,12 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
+export const UpgradeVolumesDialog = (props: Props) => {
   const { open, onClose, linode, upgradeableVolumeIds } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-
-  const dispatch: Dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const {
     mutateAsync: migrateVolumes,
@@ -51,7 +50,7 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
         { variant: 'success' }
       );
       // Re-request notifications so the Upgrade Volume banner on the Linode Detail page disappears.
-      dispatch(requestNotifications());
+      queryClient.invalidateQueries(queryKey);
       onClose();
     });
   };

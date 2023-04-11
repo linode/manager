@@ -15,8 +15,6 @@ export const linodesErrorSelector = (state: State) => {
   return Boolean(error && Array.isArray(error) && error.length > 0);
 };
 export const nodeBalsErrorSelector = (state: State) => false; //  Boolean(state.nodebalancers.error && state.nodebalancers.error.length > 0)
-export const typesErrorSelector = (state: State) =>
-  Boolean(state.types.error && state.types.error.length > 0);
 
 export default createSelector(
   linodesErrorSelector,

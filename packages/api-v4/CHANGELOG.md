@@ -1,4 +1,23 @@
 
+## [2023-04-03] - v0.89.0
+
+### Added:
+- React Query for SSH Keys [#8892](https://github.com/linode/manager/pull/8892)
+- React Query for Firewalls [#8889](https://github.com/linode/manager/pull/8889)
+
+## [2023-03-20] - v0.88.0
+
+### Added:
+- `params` to regions endpoint [#8851](https://github.com/linode/manager/pull/8851)
+- `params` and `filters` to `getLinodeFirewalls` [#8848](https://github.com/linode/manager/pull/8848)
+
+### Changed:
+- Updated `VolumeStatus` type [#8862](https://github.com/linode/manager/pull/8862)
+- Updated `tsup` [#8838](https://github.com/linode/manager/pull/8838)
+
+### Removed:
+- Unused packages + update lint-staged [#8860](https://github.com/linode/manager/pull/8860)
+
 ## [2023-03-06] - v0.87.0
 
 ### Added:

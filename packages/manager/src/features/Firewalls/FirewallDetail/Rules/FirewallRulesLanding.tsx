@@ -5,19 +5,14 @@ import {
 } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
-import withFirewalls, {
-  DispatchProps,
-} from 'src/containers/firewalls.container';
-import { updateFirewallRules } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
@@ -29,6 +24,7 @@ import curriedFirewallRuleEditorReducer, {
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
 import { Category, parseFirewallRuleError } from './shared';
+import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -64,11 +60,12 @@ interface Drawer {
   ruleIdx?: number;
 }
 
-type CombinedProps = Props & DispatchProps & RouteComponentProps;
-
-const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
+const FirewallRulesLanding = (props: Props) => {
   const classes = useStyles();
   const { firewallID, rules, disabled } = props;
+  const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
+    firewallID
+  );
 
   /**
    * inbound and outbound policy aren't part of any particular rule
@@ -202,7 +199,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
       outbound_policy: policy.outbound,
     };
 
-    updateFirewallRules(firewallID, finalRules)
+    updateFirewallRules(finalRules)
       .then((_rules) => {
         setSubmitting(false);
         // Reset editor state.
@@ -394,10 +391,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withFirewalls()
-)(FirewallRulesLanding);
+export default React.memo(FirewallRulesLanding);
 
 interface DiscardChangesDialogProps {
   isOpen: boolean;

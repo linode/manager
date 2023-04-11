@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon, { Variant } from 'src/components/EntityIcon/EntityIcon';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import EditableInput from './EditableInput';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -68,7 +69,7 @@ export const EditableEntityLabel: React.FC<Props> = (props) => {
       className={`${classes.root} m0`}
     >
       {!isEditing && iconVariant && (
-        <Grid item className="py0 px0">
+        <Grid className="py0 px0">
           <EntityIcon
             variant={iconVariant}
             status={status}
@@ -76,9 +77,9 @@ export const EditableEntityLabel: React.FC<Props> = (props) => {
           />
         </Grid>
       )}
-      <Grid item className="py0">
+      <Grid className="py0">
         <Grid container>
-          <Grid item className="py0 px0">
+          <Grid className="py0 px0">
             <EditableInput
               errorText={error}
               loading={loading}
@@ -94,7 +95,7 @@ export const EditableEntityLabel: React.FC<Props> = (props) => {
             />
           </Grid>
           {subText && !isEditing && (
-            <Grid item xs={12} className="py0 px0">
+            <Grid xs={12} className="py0 px0">
               <Typography variant="body1">{subText}</Typography>
             </Grid>
           )}

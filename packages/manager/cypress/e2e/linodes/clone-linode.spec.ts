@@ -7,7 +7,6 @@ import {
   getVisible,
 } from 'support/helpers';
 import { ui } from 'support/ui';
-import { assertToast } from 'support/ui/events';
 import { apiMatcher } from 'support/util/intercepts';
 
 describe('clone linode', () => {
@@ -30,8 +29,14 @@ describe('clone linode', () => {
 
         ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
 
-        containsClick('Select a Region');
-        containsClick('Newark, NJ');
+        cy.get('[data-qa-tp="Region"]')
+          .parent()
+          .should('be.visible')
+          .within(() => {
+            containsClick('Select a Region');
+            containsClick('Newark, NJ');
+          });
+
         getVisible('[data-qa-summary]').within(() => {
           containsVisible(linode.label);
         });
@@ -41,7 +46,9 @@ describe('clone linode', () => {
         cy.wait('@cloneLinode').then((xhr) => {
           const newLinodeLabel = xhr.response?.body?.label;
           assert.equal(xhr.response?.statusCode, 200);
-          assertToast(`Your Linode ${newLinodeLabel} is being created.`);
+          ui.toast.assertMessage(
+            `Your Linode ${newLinodeLabel} is being created.`
+          );
           containsVisible(newLinodeLabel);
         });
       }

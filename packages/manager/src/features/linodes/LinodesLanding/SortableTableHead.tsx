@@ -2,7 +2,8 @@ import * as React from 'react';
 import GridView from 'src/assets/icons/grid-view.svg';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableHead from 'src/components/core/TableHead';
 import Tooltip from 'src/components/core/Tooltip';
 import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
@@ -74,9 +75,9 @@ interface Props {
   isVLAN?: boolean;
 }
 
-type CombinedProps = Props & Omit<OrderByProps, 'data'>;
+type CombinedProps<T> = Props & Omit<OrderByProps<T>, 'data'>;
 
-const SortableTableHead: React.FC<CombinedProps> = (props) => {
+const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
   const classes = useStyles();
 
   const {

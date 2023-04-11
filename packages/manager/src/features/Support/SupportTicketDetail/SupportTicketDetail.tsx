@@ -14,17 +14,11 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -37,6 +31,7 @@ import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
 import Reply from './TabbedReply';
+import LandingHeader from 'src/components/LandingHeader';
 
 export type ClassNames =
   | 'title'
@@ -53,13 +48,6 @@ const styles = (theme: Theme) =>
     title: {
       display: 'flex',
       alignItems: 'center',
-    },
-    breadcrumbs: {
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(1),
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(),
-      },
     },
     label: {
       marginLeft: 32,
@@ -129,15 +117,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       this.props
     ),
   };
-
-  static docs: Linode.Doc[] = [
-    {
-      title: 'Linode Support',
-      src: 'https://linode.com/docs/platform/billing-and-support/support/',
-      body: `Linode provides live technical support services 24 hours a day, 7 days a week. Linode Support ensures network availability, verifies that you can access your Linode, resolves performance issues with hosts, and works to fix any service-related issues you may be experiencing.
-      Linode also offers a number of resources you can refer to when troubleshooting application and server configuration issues. These issues are generally outside the scope of Linode Support, and the other resources Linode provides can help you find solutions for your questions.`,
-    },
-  ];
 
   componentDidMount() {
     this.mounted = true;
@@ -330,6 +309,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
     // Format date for header
     const formattedDate = formatDate(ticket.updated);
+    const status = ticket.status === 'closed' ? 'Closed' : 'Last updated';
 
     const _Chip = () => (
       <Chip
@@ -350,34 +330,31 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid container justifyContent="space-between" alignItems="flex-end">
-          <Grid item>
-            <Breadcrumb
-              pathname={location.pathname}
-              crumbOverrides={[
-                {
-                  position: 2,
-                  linkTo: {
-                    pathname: `/support/tickets`,
-                    // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
-                    search: `type=${
-                      ticket.status === 'closed' ? 'closed' : 'open'
-                    }`,
-                  },
+        <LandingHeader
+          title={`#${ticket.id}: ${ticket.summary}`}
+          breadcrumbProps={{
+            pathname: location.pathname,
+            breadcrumbDataAttrs: {
+              'data-qa-breadcrumb': true,
+            },
+            labelOptions: {
+              subtitle: `${status} by ${ticket.updated_by} at ${formattedDate}`,
+              suffixComponent: <_Chip />,
+            },
+            crumbOverrides: [
+              {
+                position: 2,
+                linkTo: {
+                  pathname: `/support/tickets`,
+                  // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
+                  search: `type=${
+                    ticket.status === 'closed' ? 'closed' : 'open'
+                  }`,
                 },
-              ]}
-              labelTitle={`#${ticket.id}: ${ticket.summary}`}
-              labelOptions={{
-                subtitle: `${
-                  ticket.status === 'closed' ? 'Closed' : 'Last updated'
-                } by ${ticket.updated_by} at ${formattedDate}`,
-                suffixComponent: <_Chip />,
-              }}
-              className={classes.breadcrumbs}
-              data-qa-breadcrumb
-            />
-          </Grid>
-        </Grid>
+              },
+            ],
+          }}
+        />
 
         {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
         {!isEmpty(attachmentErrors) &&
@@ -428,8 +405,4 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 }
 const styled = withStyles(styles);
 
-export default compose<any, any, any, any>(
-  setDocs(SupportTicketDetail.docs),
-  withProfile,
-  styled
-)(SupportTicketDetail);
+export default compose(withProfile, styled)(SupportTicketDetail);

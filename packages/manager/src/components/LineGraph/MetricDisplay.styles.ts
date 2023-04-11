@@ -1,10 +1,5 @@
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-  WithTheme,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles, WithTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 export type ClassNames =
   | 'root'
@@ -16,9 +11,7 @@ export type ClassNames =
   | 'lightGreen'
   | 'darkGreen'
   | 'text'
-  | 'tableHeadInner'
-  | 'simpleLegend'
-  | 'simpleLegendRoot';
+  | 'tableHeadInner';
 
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
 
@@ -31,7 +24,7 @@ const styles = (theme: Theme) =>
         border: 'none',
         backgroundColor: 'transparent',
       },
-      '& td:first-child': {
+      '& td:first-of-type': {
         backgroundColor: 'transparent !important',
       },
       '& .data': {
@@ -50,14 +43,14 @@ const styles = (theme: Theme) =>
         },
       },
       [theme.breakpoints.only('xs')]: {
-        '& tr:not(:first-child) td': {
-          '&:first-child': {
+        '& tr:not(:first-of-type) td': {
+          '&:first-of-type': {
             marginTop: theme.spacing(2),
           },
         },
       },
       [theme.breakpoints.only('sm')]: {
-        '& tr:not(:nth-last-child(n+3)) td:first-child': {
+        '& tr:not(:nth-last-child(n+3)) td:first-of-type': {
           marginTop: theme.spacing(2),
         },
         '& tbody': {
@@ -126,14 +119,6 @@ const styles = (theme: Theme) =>
     },
     text: {
       color: theme.color.black,
-    },
-    simpleLegendRoot: {
-      maxWidth: 'initial',
-      display: 'flex',
-    },
-    simpleLegend: {
-      width: 'auto',
-      marginTop: theme.spacing(2),
     },
   });
 

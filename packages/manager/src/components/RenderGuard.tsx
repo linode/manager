@@ -1,6 +1,6 @@
 import { equals } from 'ramda';
 import * as React from 'react';
-import { withTheme, WithTheme } from 'src/components/core/styles';
+import { withTheme, WithTheme } from '@mui/styles';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 
 export interface RenderGuardProps {

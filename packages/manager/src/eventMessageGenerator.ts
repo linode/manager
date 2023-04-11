@@ -2,7 +2,11 @@ import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import createLinkHandlerForNotification from 'src/utilities/getEventsActionLink';
+import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
+import {
+  formatEventWithUsername,
+  formatEventWithAppendedText,
+} from './features/Events/Event.helpers';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -49,14 +53,21 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   community_question_reply: {
     notification: (e) =>
-      `There has been a reply to your thread "${e.entity!.label}".`,
+      e.entity
+        ? `There has been a reply to your thread "${e.entity.label}".`
+        : `There has been a reply to your thread.`,
   },
   community_like: {
-    notification: (e) => e.entity!.label,
+    notification: (e) =>
+      e.entity
+        ? `A post on "${e.entity.label}" has been liked.`
+        : `There has been a like on your community post.`,
   },
   community_mention: {
     notification: (e) =>
-      `You have been mentioned in a Community post: ${e.entity!.label}`,
+      e.entity
+        ? `You have been mentioned in a Community post: ${e.entity.label}.`
+        : `You have been mentioned in a Community post.`,
   },
   credit_card_updated: {
     notification: (e) => `Credit card information has been updated.`,
@@ -163,7 +174,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   disk_resize: {
     scheduled: (e) => `A disk on ${e.entity!.label} is scheduled for resizing.`,
     started: (e) => `A disk on Linode ${e.entity!.label} is being resized.`,
-    failed: (e) => `A disk on Linode ${e.entity!.label} could not be resized.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `A disk on Linode ${e.entity!.label} could not be resized.`,
+        'Learn more',
+        'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
+      )}`,
     finished: (e) => `A disk on Linode ${e.entity!.label} has been resized`,
     // notification: e => ``,
   },
@@ -241,6 +258,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   firewall_create: {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been created.`,
+  },
+  firewall_rules_update: {
+    notification: (e) =>
+      `Firewall rules have been updated on ${e.entity?.label ?? ''}.`,
   },
   image_update: {
     notification: (e) => `Image ${e.entity?.label ?? ''} has been updated.`,
@@ -775,8 +796,15 @@ export default (e: Event): string => {
     });
   }
 
+  /** add the username to message; if it already contains the username, return the original message **/
+  const messageWithUsername = formatEventWithUsername(
+    e.action,
+    e.username,
+    message
+  );
+
   /** return either the formatted message or an empty string */
-  const formattedMessage = applyLinking(e, message);
+  const formattedMessage = applyLinking(e, messageWithUsername);
   return applyBolding(e, formattedMessage);
 };
 
@@ -827,12 +855,8 @@ function applyLinking(event: Event, message: string) {
     return '';
   }
 
-  const entityLinkTarget = createLinkHandlerForNotification(
-    event.action,
-    event.entity,
-    false
-  );
-  const secondaryEntityLinkTarget = createLinkHandlerForNotification(
+  const entityLinkTarget = getLinkForEvent(event.action, event.entity, false);
+  const secondaryEntityLinkTarget = getLinkForEvent(
     event.action,
     event.secondary_entity,
     false

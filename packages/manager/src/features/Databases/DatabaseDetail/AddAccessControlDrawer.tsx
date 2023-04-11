@@ -1,9 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
@@ -16,8 +16,9 @@ import {
   ipFieldPlaceholder,
   validateIPs,
 } from 'src/utilities/ipUtils';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   instructions: {
     marginBottom: '2rem',
   },
@@ -39,10 +40,10 @@ interface Values {
 
 type CombinedProps = Props;
 
-const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
+const AddAccessControlDrawer = (props: CombinedProps) => {
   const { open, onClose, updateDatabase, allowList } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [error, setError] = React.useState<string | undefined>('');
   const [allowListErrors, setAllowListErrors] = React.useState<APIError[]>();

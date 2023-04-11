@@ -6,11 +6,13 @@ import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
+import Box from '@mui/material/Box';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -35,6 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     width: 45,
+    paddingLeft: 6,
+    paddingRight: 6,
   },
 }));
 
@@ -59,25 +63,25 @@ export const getIcon = (type: CardType | undefined) => {
   return iconMap[type];
 };
 
-export type CombinedProps = Props;
-
-export const CreditCard: React.FC<CombinedProps> = (props) => {
+export const CreditCard = (props: Props) => {
   const {
     creditCard: { card_type: type = undefined, last_four: lastFour, expiry },
     showIcon = true,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const Icon = type ? getIcon(type) : GenericCardIcon;
 
   return (
-    <div className={classes.root}>
-      {showIcon ? (
-        <span className={classes.icon}>
-          <Icon />
-        </span>
-      ) : null}
-      <div className={classes.card}>
+    <>
+      <Box className={classes.root}>
+        {showIcon ? (
+          <span className={classes.icon}>
+            <Icon />
+          </span>
+        ) : null}
+      </Box>
+      <Box className={classes.card}>
         <Typography className={classes.cardInfo} data-qa-contact-cc>
           {`${type || 'Card ending in'} ****${lastFour}`}
         </Typography>
@@ -90,8 +94,8 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
             <span>{`Expires ${formatExpiry(expiry)}`}</span>
           ) : null}
         </Typography>
-      </div>
-    </div>
+      </Box>
+    </>
   );
 };
 

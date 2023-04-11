@@ -5,11 +5,12 @@ import CheckBox from 'src/components/CheckBox';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAccount } from 'src/queries/account';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
@@ -141,7 +142,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
         <Typography variant="h2" className={classes.title}>
           Add-ons{' '}
           {backupsDisabledReason ? (
-            <HelpIcon text={backupsDisabledReason} />
+            <TooltipIcon text={backupsDisabledReason} status="help" />
           ) : null}
         </Typography>
         <Grid container>

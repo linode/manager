@@ -8,7 +8,6 @@ import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
@@ -33,11 +32,13 @@ import { ApplicationState } from 'src/store';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useSpecificTypes } from 'src/queries/types';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { useRegionsQuery } from 'src/queries/regions';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 
-type CombinedProps = WithTypesProps &
-  SearchProps &
-  StyleProps &
-  RouteComponentProps<{}>;
+type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 
 const Control = (props: any) => <components.Control {...props} />;
 
@@ -73,7 +74,7 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
-const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers'];
+const searchDeps: ReduxEntity[] = ['linodes'];
 
 export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
@@ -106,6 +107,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
 
+  const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
+
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
@@ -119,6 +122,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
   const publicImages = _publicImages ?? [];
 
+  const { data: regions } = useRegionsQuery();
+
   const { _loading } = useReduxLoad(
     searchDeps,
     REFRESH_INTERVAL,
@@ -128,9 +133,12 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const linodes = useSelector((state: ApplicationState) =>
     Object.values(state.__resources.linodes.itemsById)
   );
-  const types = useSelector((state: ApplicationState) =>
-    Object.values(state.__resources.types.entities)
+  const typesQuery = useSpecificTypes(
+    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined),
+    shouldMakeRequests
   );
+  const types = extendTypesQueryResult(typesQuery);
+
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(publicImages))
   );
@@ -171,7 +179,9 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
         volumes ?? [],
         clusters ?? [],
         _privateImages ?? [],
-        searchableLinodes ?? []
+        regions ?? [],
+        searchableLinodes ?? [],
+        nodebalancers ?? []
       );
     }
   }, [
@@ -185,6 +195,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     domains,
     volumes,
     _privateImages,
+    regions,
+    nodebalancers,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
@@ -338,7 +350,6 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 };
 
 export default compose<CombinedProps, {}>(
-  withTypes,
   withRouter,
   withStoreSearch(),
   styled

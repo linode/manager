@@ -12,26 +12,10 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState,
 } from 'src/store/backupDrawer';
-import bucketDrawer, {
-  defaultState as bucketDrawerDefaultState,
-  State as BucketDrawerState,
-} from 'src/store/bucketDrawer/bucketDrawer.reducer';
-import documentation, {
-  defaultState as documentationDefaultState,
-  State as DocumentationState,
-} from 'src/store/documentation';
 import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
 } from 'src/store/events/event.reducer';
-import firewallDevices, {
-  defaultState as defaultFirewallDevicesState,
-  State as FirewallDevicesState,
-} from 'src/store/firewalls/devices.reducer';
-import firewalls, {
-  defaultState as defaultFirewallState,
-  State as FirewallState,
-} from 'src/store/firewalls/firewalls.reducer';
 import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
@@ -54,10 +38,6 @@ import linodes, {
   defaultState as defaultLinodesState,
   State as LinodesState,
 } from 'src/store/linodes/linodes.reducer';
-import types, {
-  defaultState as defaultTypesState,
-  State as TypesState,
-} from 'src/store/linodeType/linodeType.reducer';
 import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   defaultState as defaultLongviewState,
@@ -67,22 +47,10 @@ import longviewStats, {
   defaultState as defaultLongviewStatsState,
   State as LongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
-import nodeBalancers, {
-  defaultState as defaultNodeBalancerState,
-  State as NodeBalancersState,
-} from 'src/store/nodeBalancer/nodeBalancer.reducer';
-import nodeBalancerConfigs, {
-  defaultState as defaultNodeBalancerConfigState,
-  State as NodeBalancerConfigsState,
-} from 'src/store/nodeBalancerConfig/nodeBalancerConfig.reducer';
 import stackScriptDialog, {
   defaultState as stackScriptDialogDefaultState,
   State as StackScriptDialogState,
 } from 'src/store/stackScriptDialog';
-import tagImportDrawer, {
-  defaultState as tagDrawerDefaultState,
-  State as TagImportDrawerState,
-} from 'src/store/tagImportDrawer';
 import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState,
@@ -101,21 +69,11 @@ import mockFeatureFlags, {
   defaultMockFeatureFlagState,
   MockFeatureFlagState,
 } from './mockFeatureFlags';
-import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
-import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
-import notifications, {
-  defaultState as notificationsDefaultState,
-  State as NotificationsState,
-} from './notification/notification.reducer';
 import pendingUpload, {
   defaultState as pendingUploadState,
   State as PendingUploadState,
 } from './pendingUpload';
 import { initReselectDevtools } from './selectors';
-import vlans, {
-  defaultState as defaultVLANState,
-  State as VlanState,
-} from './vlans/vlans.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 initReselectDevtools();
@@ -128,11 +86,6 @@ const __resourcesDefaultState = {
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
-  nodeBalancerConfigs: defaultNodeBalancerConfigState,
-  nodeBalancers: defaultNodeBalancerState,
-  notifications: notificationsDefaultState,
-  types: defaultTypesState,
-  vlans: defaultVLANState,
 };
 
 export interface ResourcesState {
@@ -140,29 +93,19 @@ export interface ResourcesState {
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
-  nodeBalancerConfigs: NodeBalancerConfigsState;
-  nodeBalancers: NodeBalancersState;
-  notifications: NotificationsState;
-  types: TypesState;
-  vlans: VlanState;
 }
 
 export interface ApplicationState {
   __resources: ResourcesState;
   authentication: AuthState;
   backups: BackupDrawerState;
-  documentation: DocumentationState;
   events: EventsState;
   stackScriptDialog: StackScriptDialogState;
-  tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
-  bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
   pendingUpload: PendingUploadState;
   initialLoad: InitialLoadState;
   featureFlagsLoad: FeatureFlagsLoadState;
-  firewalls: FirewallState;
-  firewallDevices: FirewallDevicesState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
@@ -173,18 +116,13 @@ export const defaultState: ApplicationState = {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
-  documentation: documentationDefaultState,
   events: eventsDefaultState,
   stackScriptDialog: stackScriptDialogDefaultState,
-  tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
-  bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
   pendingUpload: pendingUploadState,
   initialLoad: initialLoadState,
   featureFlagsLoad: featureFlagsLoadState,
-  firewalls: defaultFirewallState,
-  firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
@@ -199,29 +137,19 @@ const __resources = combineReducers({
   linodes,
   linodeConfigs,
   linodeDisks,
-  nodeBalancers,
-  nodeBalancerConfigs,
-  notifications,
-  types,
-  vlans,
 });
 
 const reducers = combineReducers<ApplicationState>({
   __resources,
   authentication,
   backups,
-  documentation,
   stackScriptDialog,
-  tagImportDrawer,
   volumeDrawer,
-  bucketDrawer,
   events,
   createLinode: linodeCreateReducer,
   pendingUpload,
   initialLoad,
   featureFlagsLoad,
-  firewalls,
-  firewallDevices,
   globalErrors,
   longviewClients: longview,
   longviewStats,
@@ -234,8 +162,6 @@ const enhancers = compose(
     combineEventsMiddleware(
       linodeEvents,
       longviewEvents,
-      nodeBalancerEvents,
-      nodeBalancerConfigEvents,
       diskEvents,
       linodeConfigEvents
     )

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import _ from 'lodash';
+import snakeCase from 'lodash/snakeCase';
 import CopyTooltip from 'src/components/CopyTooltip';
 import DownloadTooltip from 'src/components/DownloadTooltip';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,7 +36,7 @@ export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
   const classes = useStyles();
   const { value, className, hideIcon, ...restProps } = props;
 
-  const fileName = props.fileName ?? _.snakeCase(props.label);
+  const fileName = props.fileName ?? snakeCase(props.label);
 
   return (
     <TextField

@@ -2,12 +2,8 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputLabel from 'src/components/core/InputLabel';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -20,9 +16,13 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: `${theme.spacing(3)} 0 0`,
+      display: 'flex',
+      flexDirection: 'column',
+      marginTop: '16px',
     },
     radioGroupLabel: {
       display: 'block',
+      marginBottom: '4px',
     },
   });
 
@@ -57,7 +57,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
     const { value, error, field, classes, isOptional } = this.props;
 
     /* Display a select if there are more than 2 oneof options, otherwise display as radio. */
-    if (oneof.length > 2) {
+    if (oneof.length > 4) {
       return (
         <div>
           {error && <Notice error text={error} spacingTop={8} />}

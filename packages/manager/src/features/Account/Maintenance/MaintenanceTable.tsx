@@ -9,13 +9,14 @@ import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import PaginationFooter from 'src/components/PaginationFooter';
 import TableRowError from 'src/components/TableRowError';
-import usePagination from 'src/hooks/usePagination';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Typography from 'src/components/core/Typography';
+import { usePagination } from 'src/hooks/usePagination';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { CSVLink } from 'react-csv';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import { useOrder } from 'src/hooks/useOrder';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
@@ -37,7 +38,7 @@ const headersForCSVDownload = [
   { label: 'Reason', key: 'reason' },
 ];
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   csvLink: {
     [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
@@ -62,10 +63,10 @@ interface Props {
   type: 'pending' | 'completed';
 }
 
-export const MaintenanceTable = ({ type }: Props) => {
+const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
-  const classes = useStyles();
-  const pagination = usePagination(1, `${preferenceKey}-${type}`);
+  const { classes } = useStyles();
+  const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
@@ -237,3 +238,5 @@ export const MaintenanceTable = ({ type }: Props) => {
     </>
   );
 };
+
+export { MaintenanceTable };

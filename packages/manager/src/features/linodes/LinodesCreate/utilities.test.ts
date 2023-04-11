@@ -6,6 +6,7 @@ import {
   extendLinodes,
   formatLinodeSubheading,
   getRegionIDFromLinodeID,
+  getMonthlyAndHourlyNodePricing,
 } from './utilities';
 
 const linodeImage = imageFactory.build({
@@ -29,22 +30,44 @@ describe('Extend Linode', () => {
       extendedTypes
     );
     expect(extendedLinodes[0].heading).toBe('test');
-    expect(extendedLinodes[0].subHeadings).toEqual(['Nanode 1GB, Debian 10']);
+    expect(extendedLinodes[0].subHeadings).toEqual(['Nanode 1 GB, Debian 10']);
   });
 
-  it('should concat image and type data, separated by a comma', () => {
-    const withImage = formatLinodeSubheading('test', 'test');
-    const withoutImage = formatLinodeSubheading('test');
+  it('should concat image, type data, and region data separated by a comma', () => {
+    const withImage = formatLinodeSubheading('linode', 'image');
+    const withoutImage = formatLinodeSubheading('linode');
+    const withImageAndRegion = formatLinodeSubheading(
+      'linode',
+      'image',
+      'region'
+    );
 
-    expect(withImage).toEqual(['test, test']);
-    expect(withoutImage).toEqual(['test']);
+    expect(withImage).toEqual(['linode, image']);
+    expect(withoutImage).toEqual(['linode']);
+    expect(withImageAndRegion).toEqual(['linode, image, region']);
   });
 });
 
 describe('getRegionIDFromLinodeID', () => {
   it('returns the regionID from the given Linodes and Linode ID', () => {
     expect(getRegionIDFromLinodeID([linode1, linode2], 2020425)).toBe(
-      'us-east-1a'
+      'us-east'
     );
+  });
+});
+
+describe('Marketplace cluster pricing', () => {
+  it('should return the monthly and hourly price multipled by the number of nodes', () => {
+    expect(getMonthlyAndHourlyNodePricing(30, 0.045, 3)).toEqual({
+      monthlyPrice: 90,
+      hourlyPrice: 0.135,
+    });
+  });
+
+  it('should round the hourly price to 3 digits', () => {
+    expect(getMonthlyAndHourlyNodePricing(30, 0.045, 5)).toEqual({
+      monthlyPrice: 150,
+      hourlyPrice: 0.225,
+    });
   });
 });

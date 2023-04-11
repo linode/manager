@@ -1,24 +1,16 @@
-import _, { curry } from 'lodash';
+import compact from 'lodash/compact';
+import curry from 'lodash/curry';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import { AppsDocs } from 'src/documentation';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { ApplicationState } from 'src/store';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectAppPanel from '../SelectAppPanel';
 import {
@@ -102,15 +94,17 @@ const errorResources = {
   stackscript_id: 'The selected App',
 };
 
-type InnerProps = AppsData &
+interface Props {
+  setNumberOfNodesForAppCluster: (num: number) => void;
+}
+
+type InnerProps = Props &
+  AppsData &
   ReduxStateProps &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
 
-type CombinedProps = WithStyles<ClassNames> &
-  InnerProps &
-  StateProps &
-  SetDocsProps;
+type CombinedProps = WithStyles<ClassNames> & InnerProps;
 
 interface State {
   detailDrawerOpen: boolean;
@@ -126,7 +120,7 @@ export const getCompatibleImages = (
   imagesData: Record<string, Image>,
   stackScriptImages: string[]
 ) =>
-  _.compact(
+  compact(
     stackScriptImages.map((stackScriptImage) => imagesData[stackScriptImage])
   );
 
@@ -292,9 +286,10 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       appInstancesError,
       appInstancesLoading,
       userCannotCreateLinode,
+      setNumberOfNodesForAppCluster,
     } = this.props;
 
-    //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
+    // ramda's curry placeholder conflicts with lodash so the lodash curry and placeholder is used here
     const handleSelectStackScript = curriedHandleSelectStackScript(
       curry.placeholder,
       curry.placeholder,
@@ -379,6 +374,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
               udf_data={udf_data || {}}
               appLogo={appLogo}
               openDrawer={this.openDrawer}
+              setNumberOfNodesForAppCluster={setNumberOfNodesForAppCluster}
             />
           ) : null}
           {!userCannotCreateLinode &&
@@ -409,46 +405,4 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-interface StateProps {
-  documentation: Linode.Doc[];
-}
-
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  CombinedProps,
-  ApplicationState
-> = (state) => ({
-  documentation: state.documentation,
-});
-
-const connected = connect(mapStateToProps);
-
-const generateDocs = (ownProps: InnerProps & StateProps) => {
-  const { selectedStackScriptLabel } = ownProps;
-  if (!!selectedStackScriptLabel) {
-    const foundDocs = AppsDocs.filter((eachDoc) => {
-      return eachDoc.title
-        .toLowerCase()
-        .includes(
-          selectedStackScriptLabel
-            .substr(0, selectedStackScriptLabel.indexOf(' '))
-            .toLowerCase()
-        );
-    });
-    return foundDocs.length ? foundDocs : [];
-  }
-  return [];
-};
-
-const updateCond = (
-  prevProps: InnerProps & StateProps,
-  nextProps: InnerProps & StateProps
-) => {
-  return prevProps.selectedStackScriptID !== nextProps.selectedStackScriptID;
-};
-
-export default compose<CombinedProps, InnerProps>(
-  connected,
-  setDocs(generateDocs, updateCond),
-  styled
-)(FromAppsContent);
+export default styled(FromAppsContent);

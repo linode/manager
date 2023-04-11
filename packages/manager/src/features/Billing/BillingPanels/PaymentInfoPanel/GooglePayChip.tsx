@@ -1,8 +1,7 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import {
   gPay,
@@ -10,12 +9,12 @@ import {
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
+import Grid from '@mui/material/Unstable_Grid2';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   button: {
     border: 0,
     padding: 0,
-    marginRight: -8,
     backgroundColor: 'transparent',
     cursor: 'pointer',
     '&:hover': {
@@ -39,7 +38,7 @@ interface Props {
   disabled: boolean;
 }
 
-export const GooglePayChip: React.FC<Props> = (props) => {
+export const GooglePayChip = (props: Props) => {
   const {
     disabled: disabledDueToProcessing,
     setMessage,
@@ -47,7 +46,7 @@ export const GooglePayChip: React.FC<Props> = (props) => {
     onClose,
     renderError,
   } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const [initializationError, setInitializationError] = React.useState<boolean>(
@@ -97,21 +96,27 @@ export const GooglePayChip: React.FC<Props> = (props) => {
   }
 
   if (isLoading) {
-    return <CircleProgress mini />;
+    return (
+      <Grid>
+        <CircleProgress mini />
+      </Grid>
+    );
   }
 
   return (
-    <button
-      className={classNames({
-        [classes.button]: true,
-        [classes.disabled]: disabledDueToProcessing,
-      })}
-      onClick={handlePay}
-      disabled={disabledDueToProcessing}
-      data-qa-button="gpayChip"
-    >
-      <GooglePayIcon width="49" height="26" />
-    </button>
+    <Grid>
+      <button
+        className={cx({
+          [classes.button]: true,
+          [classes.disabled]: disabledDueToProcessing,
+        })}
+        onClick={handlePay}
+        disabled={disabledDueToProcessing}
+        data-qa-button="gpayChip"
+      >
+        <GooglePayIcon width="49" height="26" />
+      </button>
+    </Grid>
   );
 };
 

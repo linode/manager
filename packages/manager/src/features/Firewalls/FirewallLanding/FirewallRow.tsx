@@ -2,9 +2,9 @@ import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export type CombinedProps = Firewall & ActionHandlers;
+export type Props = Firewall & ActionHandlers;
 
-export const FirewallRow: React.FC<CombinedProps> = (props) => {
+export const FirewallRow = (props: Props) => {
   const classes = useStyles();
 
   const { id, label, status, rules, ...actionHandlers } = props;
@@ -37,7 +37,6 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
 
   return (
     <TableRow
-      key={`firewall-row-${id}`}
       data-testid={`firewall-row-${id}`}
       ariaLabel={`Firewall ${label}`}
     >
@@ -141,6 +140,4 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
   );
 };
 
-export default compose<CombinedProps, ActionHandlers & Firewall>(React.memo)(
-  FirewallRow
-);
+export default React.memo(FirewallRow);

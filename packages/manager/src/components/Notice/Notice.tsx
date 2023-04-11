@@ -1,19 +1,19 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme,
-} from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { withTheme, WithTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
+import { SxProps } from '@mui/system';
 
-export const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles<
+  void,
+  'important' | 'error' | 'noticeText' | 'icon'
+>()((theme: Theme, _params, classes) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -35,10 +35,10 @@ export const useStyles = makeStyles((theme: Theme) => ({
     '& + .notice': {
       marginTop: `${theme.spacing()} !important`,
     },
-    '& $important': {
+    [`& .${classes.important}`]: {
       backgroundColor: theme.bg.bgPaper,
     },
-    '& $error': {
+    [`& .${classes.error}`]: {
       borderLeftColor: theme.color.red,
     },
   },
@@ -46,7 +46,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.bgPaper,
     padding: theme.spacing(2),
     paddingRight: 18,
-    '& $noticeText': {
+    [`& .${classes.noticeText}`]: {
       fontFamily: theme.font.normal,
     },
   },
@@ -62,7 +62,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   breakWords: {
-    '& $noticeText': {
+    [`& .${classes.noticeText}`]: {
       wordBreak: 'break-all',
     },
   },
@@ -74,7 +74,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   error: {
     animation: '$fadeIn 225ms linear forwards',
     borderLeft: `5px solid ${theme.palette.error.dark}`,
-    '&$important': {
+    [`&.${classes.important}`]: {
       borderLeftWidth: 32,
     },
   },
@@ -84,10 +84,10 @@ export const useStyles = makeStyles((theme: Theme) => ({
   warning: {
     animation: '$fadeIn 225ms linear forwards',
     borderLeft: `5px solid ${theme.palette.warning.dark}`,
-    '&$important': {
+    [`&.${classes.important}`]: {
       borderLeftWidth: 32,
     },
-    '& $icon': {
+    [`& .${classes.icon}`]: {
       color: '#555',
     },
   },
@@ -97,7 +97,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   success: {
     animation: '$fadeIn 225ms linear forwards',
     borderLeft: `5px solid ${theme.palette.success.dark}`,
-    '&$important': {
+    [`&.${classes.important}`]: {
       borderLeftWidth: 32,
     },
   },
@@ -127,6 +127,7 @@ export interface Props extends GridProps {
   spacingTop?: 0 | 4 | 8 | 12 | 16 | 24 | 32;
   spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
   spacingLeft?: number;
+  sx?: SxProps;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   dismissibleButton?: JSX.Element;
@@ -154,9 +155,10 @@ const Notice: React.FC<CombinedProps> = (props) => {
     spacingBottom,
     spacingLeft,
     dismissibleButton,
+    sx,
   } = props;
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const innerText = text ? (
     <Typography
@@ -201,7 +203,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
   return (
     <Grid
       item
-      className={classNames({
+      className={cx({
         [classes.root]: true,
         [classes.important]: important,
         [errorScrollClassName]: error,
@@ -224,6 +226,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
       }}
       {...dataAttributes}
       role="alert"
+      sx={sx}
     >
       {flag && (
         <Grid item>

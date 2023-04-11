@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -195,7 +196,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
 
     const getEventsRequest = props.getEventsRequest || getEvents;
 
-    getEventsRequest({ page: currentPage, pageSize: 50 })
+    getEventsRequest({ page: currentPage })
       .then(handleEventsRequestSuccess)
       .catch(() => {
         props.enqueueSnackbar('There was an error loading more events', {

@@ -5,7 +5,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Error from 'src/assets/icons/error.svg';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
@@ -22,6 +23,8 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useSpecificTypes } from 'src/queries/types';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
@@ -34,6 +37,9 @@ import ResultGroup from './ResultGroup';
 import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -123,6 +129,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   } = useAllKubernetesClustersQuery(!_isLargeAccount);
 
   const {
+    data: nodebalancers,
+    error: nodebalancersError,
+    isLoading: areNodeBalancersLoading,
+  } = useAllNodeBalancersQuery(!_isLargeAccount);
+
+  const {
     data: volumes,
     isLoading: areVolumesLoading,
     error: volumesError,
@@ -140,12 +152,17 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     !_isLargeAccount
   );
 
+  const { data: regions } = useRegionsQuery();
+
   const linodes = useSelector((state: ApplicationState) =>
     Object.values(state.__resources.linodes.itemsById)
   );
-  const types = useSelector((state: ApplicationState) =>
-    Object.values(state.__resources.types.entities)
+
+  const typesQuery = useSpecificTypes(
+    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
+  const types = extendTypesQueryResult(typesQuery);
+
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(_publicImages ?? []))
   );
@@ -163,7 +180,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   }
 
   const { _loading: reduxLoading } = useReduxLoad(
-    ['linodes', 'nodeBalancers'],
+    ['linodes'],
     REFRESH_INTERVAL,
     !_isLargeAccount
   );
@@ -200,7 +217,9 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         volumes ?? [],
         kubernetesClusters ?? [],
         _privateImages ?? [],
-        searchableLinodes ?? []
+        regions ?? [],
+        searchableLinodes ?? [],
+        nodebalancers ?? []
       );
     }
   }, [
@@ -214,6 +233,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     volumes,
     kubernetesClusters,
     _privateImages,
+    regions,
+    nodebalancers,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
@@ -230,7 +251,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (imagesError) {
       errorString.push('Images');
     }
-    if (errors.nodebalancers) {
+    if (nodebalancersError) {
       errorString.push('NodeBalancers');
     }
     if (kubernetesClustersError) {
@@ -261,7 +282,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areDomainsLoading ||
     areVolumesLoading ||
     areKubernetesClustersLoading ||
-    areImagesLoading;
+    areImagesLoading ||
+    areNodeBalancersLoading;
 
   return (
     <Grid container className={classes.root} direction="column">

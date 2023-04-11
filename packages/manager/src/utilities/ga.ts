@@ -1,6 +1,5 @@
-import { pathOr } from 'ramda';
 import { event } from 'react-ga';
-import { dcDisplayNames, GA_ID } from 'src/constants';
+import { GA_ID } from 'src/constants';
 
 interface AnalyticsEvent {
   category: string;
@@ -258,17 +257,14 @@ export const sendMigrationNavigationEvent = (
 };
 
 export const sendMigrationInitiatedEvent = (
-  sourceRegion: string,
-  destRegion: string,
+  sourceRegionLabel: string,
+  destRegionLabel: string,
   usersCurrentHour: number
 ): void => {
-  const safeSourceRegion = pathOr(sourceRegion, [sourceRegion], dcDisplayNames);
-  const safeDestRegion = pathOr(destRegion, [destRegion], dcDisplayNames);
-
   sendEvent({
     category: 'Inter-DC Migration Requested',
     action: `Initiation Time: ${generateTimeOfDay(usersCurrentHour)}`,
-    label: `${safeSourceRegion} to ${safeDestRegion}`,
+    label: `${sourceRegionLabel} to ${destRegionLabel}`,
   });
 };
 

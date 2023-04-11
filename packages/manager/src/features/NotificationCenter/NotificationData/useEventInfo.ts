@@ -1,7 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 import { path } from 'ramda';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
 import {
   EntityType,
   getEntityByIDFromStore,
@@ -23,10 +22,6 @@ export interface EventInfo {
 
 export const useEventInfo = (event: Event): EventInfo => {
   const message = eventMessageGenerator(event);
-  const messageWithUsername =
-    message === null
-      ? null
-      : formatEventWithUsername(event.action, event.username, message);
   const type = (event.entity?.type ?? 'linode') as Variant;
 
   const entity = getEntityByIDFromStore(
@@ -40,7 +35,7 @@ export const useEventInfo = (event: Event): EventInfo => {
 
   return {
     duration,
-    message: messageWithUsername,
+    message,
     status,
     type,
   };

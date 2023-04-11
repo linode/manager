@@ -3,41 +3,43 @@ import {
   NotificationSeverity,
   NotificationType,
 } from '@linode/api-v4/lib/account';
+import { Region } from '@linode/api-v4/lib/regions';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
-import { dcDisplayNames } from 'src/constants';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useStyles } from 'src/features/NotificationCenter/NotificationData/RenderNotification';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import useNotifications from 'src/hooks/useNotifications';
+import { useRegionsQuery } from 'src/queries/regions';
 import { formatDate } from 'src/utilities/formatDate';
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
 }
 
-export const useFormattedNotifications = (
-  givenNotifications?: Notification[]
-): NotificationItem[] => {
+export const useFormattedNotifications = (): NotificationItem[] => {
   const notificationContext = React.useContext(_notificationContext);
   const {
     dismissNotifications,
     hasDismissedNotifications,
   } = useDismissibleNotifications();
 
-  const notifications = givenNotifications ?? useNotifications();
+  const { data: regions } = useRegionsQuery();
 
-  const volumeMigrationScheduledIsPresent = notifications.some(
+  const { data: notifications } = useNotificationsQuery();
+
+  const volumeMigrationScheduledIsPresent = notifications?.some(
     (notification) =>
       notification.type === ('volume_migration_scheduled' as NotificationType)
   );
@@ -47,11 +49,11 @@ export const useFormattedNotifications = (
   const dayOfMonth = DateTime.local().day;
 
   const handleClose = () => {
-    dismissNotifications(notifications, { prefix: 'notificationMenu' });
+    dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     notificationContext.closeMenu();
   };
 
-  const filteredNotifications = notifications.filter((thisNotification) => {
+  const filteredNotifications = notifications?.filter((thisNotification) => {
     /**
      * Don't show balance overdue notifications at the beginning of the month
      * to avoid causing anxiety if an automatic payment takes time to process.
@@ -70,7 +72,7 @@ export const useFormattedNotifications = (
   });
 
   if (volumeMigrationScheduledIsPresent) {
-    filteredNotifications.push({
+    filteredNotifications?.push({
       type: 'volume_migration_scheduled' as NotificationType,
       entity: null,
       when: null,
@@ -83,13 +85,20 @@ export const useFormattedNotifications = (
     });
   }
 
-  return filteredNotifications.map((notification, idx) =>
-    formatNotificationForDisplay(
-      interceptNotification(notification, handleClose, classes),
-      idx,
-      handleClose,
-      !hasDismissedNotifications([notification], 'notificationMenu')
-    )
+  return (
+    filteredNotifications?.map((notification, idx) =>
+      formatNotificationForDisplay(
+        interceptNotification(
+          notification,
+          handleClose,
+          classes,
+          regions ?? []
+        ),
+        idx,
+        handleClose,
+        !hasDismissedNotifications([notification], 'notificationMenu')
+      )
+    ) ?? []
   );
 };
 
@@ -105,7 +114,8 @@ export const useFormattedNotifications = (
 const interceptNotification = (
   notification: Notification,
   onClose: () => void,
-  classes: any
+  classes: any,
+  regions: Region[]
 ): ExtendedNotification => {
   // Ticket interceptions
   if (notification.type === 'ticket_abuse') {
@@ -231,14 +241,14 @@ const interceptNotification = (
       notification.type === 'outage' &&
       notification.entity?.type === 'region'
     ) {
-      const convertedRegion = dcDisplayNames[notification.entity.id];
+      // @ts-expect-error Are the API docs wrong?
+      const region = regions.find((r) => r.id === notification.entity?.id);
 
-      if (!convertedRegion) {
+      if (!region) {
         reportException(
           'Could not find the DC name for the outage notification',
           {
-            rawRegion: notification.entity.id,
-            convertedRegion,
+            region: notification.entity.id,
           }
         );
       }
@@ -246,7 +256,7 @@ const interceptNotification = (
       const jsx = (
         <Typography>
           We are aware of an issue affecting service in{' '}
-          {convertedRegion || 'one of our facilities'}. If you are experiencing
+          {region?.label || 'one of our facilities'}. If you are experiencing
           service issues in this facility, there is no need to open a support
           ticket at this time. Please monitor our status blog at{' '}
           <Link to={'https://status.linode.com/'}>
@@ -355,8 +365,6 @@ export const adjustSeverity = ({
 
   return severity;
 };
-
-export default useFormattedNotifications;
 
 const useComplianceNotificationStyles = makeStyles((theme: Theme) => ({
   reviewUpdateButton: {

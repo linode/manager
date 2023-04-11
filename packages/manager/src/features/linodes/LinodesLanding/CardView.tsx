@@ -1,19 +1,16 @@
-import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { PaginationProps } from 'src/components/Paginate';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useProfile } from 'src/queries/profile';
 import { getVolumesForLinode, useAllVolumesQuery } from 'src/queries/volumes';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { RenderLinodesProps } from './DisplayLinodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
@@ -34,24 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  data: LinodeWithMaintenance[];
-  showHead?: boolean;
-  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
-  openPowerActionDialog: (
-    bootAction: Action,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => void;
-  linodeConfigs: Config[];
-  linodeLabel: string;
-  linodeID: number;
-}
-
-type CombinedProps = Props & PaginationProps;
-
-const CardView: React.FC<CombinedProps> = (props) => {
+const CardView: React.FC<RenderLinodesProps> = (props) => {
   const classes = useStyles();
   const notificationContext = React.useContext(_notificationContext);
 
@@ -72,12 +52,12 @@ const CardView: React.FC<CombinedProps> = (props) => {
     setTagDrawer({ ...tagDrawer, open: false });
   };
 
-  const openTagDrawer = (tags: string[]) => {
+  const openTagDrawer = (label: string, entityID: number, tags: string[]) => {
     setTagDrawer({
       open: true,
-      label: linodeLabel,
+      label,
       tags,
-      entityID: linodeID,
+      entityID,
     });
   };
 
@@ -87,14 +67,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const {
-    data,
-    openDialog,
-    openPowerActionDialog,
-    linodeConfigs,
-    linodeLabel,
-    linodeID,
-  } = props;
+  const { data, openDialog, openPowerActionDialog } = props;
 
   if (!profile?.username) {
     return null;
@@ -122,15 +95,16 @@ const CardView: React.FC<CombinedProps> = (props) => {
           <React.Fragment key={`linode-card-${idx}`}>
             <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
               <LinodeEntityDetail
-                variant="landing"
                 id={linode.id}
                 linode={linode}
-                isDetailLanding
+                isSummaryView
                 numVolumes={getVolumesByLinode(linode.id)}
                 username={profile?.username}
-                linodeConfigs={linodeConfigs}
+                linodeConfigs={linode._configs}
                 backups={linode.backups}
-                openTagDrawer={openTagDrawer}
+                openTagDrawer={(tags) =>
+                  openTagDrawer(linode.label, linode.id, tags)
+                }
                 openDialog={openDialog}
                 openPowerActionDialog={openPowerActionDialog}
                 openNotificationMenu={notificationContext.openMenu}

@@ -2,14 +2,15 @@ import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableHead from 'src/components/core/TableHead';
 import Tooltip from 'src/components/core/Tooltip';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import { HeaderCell } from './types';
+import { Entity, HeaderCell } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props extends Omit<OrderByProps, 'data'> {
+interface Props extends Omit<OrderByProps<Entity>, 'data'> {
   headers: HeaderCell[];
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;

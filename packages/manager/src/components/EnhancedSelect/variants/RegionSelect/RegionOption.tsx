@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -58,11 +59,10 @@ export const RegionOption: React.FC<CombinedProps> = (props) => {
             direction="row"
             alignItems="center"
             justifyContent="flex-start"
+            spacing={2}
           >
-            <Grid item className="py0">
-              {data.flag && data.flag()}
-            </Grid>
-            <Grid item>{label} (Not available)</Grid>
+            <Grid className="py0">{data.flag && data.flag()}</Grid>
+            <Grid>{label} (Not available)</Grid>
           </Grid>
         </Tooltip>
       ) : (
@@ -71,11 +71,10 @@ export const RegionOption: React.FC<CombinedProps> = (props) => {
           direction="row"
           alignItems="center"
           justifyContent="flex-start"
+          spacing={2}
         >
-          <Grid item className="py0">
-            {data.flag && data.flag()}
-          </Grid>
-          <Grid item>{label}</Grid>
+          <Grid className="py0">{data.flag && data.flag()}</Grid>
+          <Grid>{label}</Grid>
         </Grid>
       )}
     </Option>

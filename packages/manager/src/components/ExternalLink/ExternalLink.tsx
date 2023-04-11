@@ -1,48 +1,51 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    color: theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
-    display: 'inline-flex',
-    alignItems: 'baseline',
-    '&:hover': {
-      '& $icon': {
-        opacity: 1,
+const useStyles = makeStyles<void, 'icon'>()(
+  (theme: Theme, _params, classes) => ({
+    root: {
+      color:
+        theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
+      display: 'inline-flex',
+      alignItems: 'baseline',
+      '&:hover': {
+        [`& .${classes.icon}`]: {
+          opacity: 1,
+        },
       },
     },
-  },
-  icon: {
-    color: theme.palette.primary.main,
-    position: 'relative',
-    left: theme.spacing(1),
-    opacity: 0,
-    width: 14,
-    height: 14,
-  },
-  absoluteIcon: {
-    display: 'inline',
-    position: 'relative',
-    paddingRight: 26,
-    '& $icon': {
-      position: 'absolute',
-      right: 0,
-      bottom: 2,
+    icon: {
+      color: theme.palette.primary.main,
+      position: 'relative',
+      left: theme.spacing(1),
       opacity: 0,
-      left: 'initial',
+      width: 14,
+      height: 14,
     },
-  },
-  fixedIcon: {
-    display: 'inline-block',
-    fontSize: '0.8em',
-  },
-  black: {
-    color: theme.palette.text.primary,
-  },
-}));
+    absoluteIcon: {
+      display: 'inline',
+      position: 'relative',
+      paddingRight: 26,
+      [`& .${classes.icon}`]: {
+        position: 'absolute',
+        right: 0,
+        bottom: 2,
+        opacity: 0,
+        left: 'initial',
+      },
+    },
+    fixedIcon: {
+      display: 'inline-block',
+      fontSize: '0.8em',
+    },
+    black: {
+      color: theme.palette.text.primary,
+    },
+  })
+);
 
 interface Props {
   link: string;
@@ -55,8 +58,8 @@ interface Props {
   onClick?: () => void;
 }
 
-const ExternalLink: React.FC<Props> = (props) => {
-  const classes = useStyles();
+const ExternalLink = (props: Props) => {
+  const { classes, cx } = useStyles();
   const {
     link,
     text,
@@ -75,7 +78,7 @@ const ExternalLink: React.FC<Props> = (props) => {
       aria-describedby="external-site"
       rel="noopener noreferrer"
       href={link}
-      className={classNames(
+      className={cx(
         {
           [classes.root]: true,
           [classes.absoluteIcon]: absoluteIcon,

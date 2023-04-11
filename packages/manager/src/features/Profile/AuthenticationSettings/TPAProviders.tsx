@@ -9,7 +9,8 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
@@ -156,6 +157,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             return (
               <Grid item md={4} key={thisProvider.displayName}>
                 <Button
+                  data-testid={`Button-${thisProvider.displayName}`}
                   className={classNames({
                     [classes.button]: true,
                     [classes.isButtonEnabled]: isProviderEnabled,
@@ -181,7 +183,12 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                       <ProviderIcon className={classes.providerIcon} />
                       {thisProvider.displayName}
                       {isProviderEnabled ? (
-                        <span className={classes.enabledText}>(Enabled)</span>
+                        <span
+                          className={classes.enabledText}
+                          data-testid={`Enabled-${thisProvider.displayName}`}
+                        >
+                          (Enabled)
+                        </span>
                       ) : null}
                     </Box>
                     {isProviderEnabled ? <EnabledIcon /> : null}
@@ -192,7 +199,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           })}
         </Grid>
         {isThirdPartyAuthEnabled ? (
-          <>
+          <div data-testid={`Notice-${currentProvider.displayName}`}>
             <Divider spacingTop={24} spacingBottom={16} />
             <Typography variant="h3">
               {currentProvider.displayName} Authentication
@@ -226,7 +233,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
               We&rsquo;ll send you an e-mail with instructions on how to reset
               your password.
             </Typography>
-          </>
+          </div>
         ) : null}
       </Paper>
       <TPADialog

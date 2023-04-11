@@ -1,10 +1,11 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import Drawer, { DrawerProps } from 'src/components/core/Drawer';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface Props extends DrawerProps {
@@ -12,7 +13,7 @@ export interface Props extends DrawerProps {
   wide?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   paper: {
     width: 300,
     padding: theme.spacing(2),
@@ -36,7 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   drawerHeader: {
-    marginBottom: theme.spacing(2),
+    '&&': {
+      marginBottom: theme.spacing(2),
+    },
   },
   title: {
     wordBreak: 'break-word',
@@ -58,17 +61,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = Props;
-
-const DDrawer: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const Drawer = (props: Props) => {
+  const { classes } = useStyles();
 
   const { title, children, onClose, wide, ...rest } = props;
 
   const titleID = convertForAria(title);
 
   return (
-    <Drawer
+    <_Drawer
       anchor="right"
       classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       onClose={(event, reason) => {
@@ -92,10 +93,9 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
         container
         alignItems="flex-start"
         justifyContent="space-between"
-        updateFor={[title, classes]}
         wrap="nowrap"
       >
-        <Grid item>
+        <Grid>
           <Typography
             id={titleID}
             className={classes.title}
@@ -106,11 +106,11 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
             {title}
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Button
             className={classes.button}
             buttonType="secondary"
-            onClick={props.onClose as (e: any) => void}
+            onClick={onClose as (e: any) => void}
             aria-label="Close drawer"
             data-qa-close-drawer
           >
@@ -119,8 +119,8 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
         </Grid>
       </Grid>
       {children}
-    </Drawer>
+    </_Drawer>
   );
 };
 
-export default DDrawer;
+export default Drawer;

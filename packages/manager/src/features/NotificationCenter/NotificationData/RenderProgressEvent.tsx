@@ -5,7 +5,8 @@ import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import {
   eventLabelGenerator,
@@ -13,8 +14,10 @@ import {
 } from 'src/eventMessageGenerator_CMR';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import useLinodes from 'src/hooks/useLinodes';
-import { useTypes } from 'src/hooks/useTypes';
+import { useSpecificTypes } from 'src/queries/types';
 import { useStyles as useEventStyles } from './RenderEvent';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {
@@ -35,10 +38,12 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { linodes } = useLinodes();
-  const { types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
-  const _types = types.entities;
-  const message = eventMessageGenerator(event, _linodes, _types);
+  const typesQuery = useSpecificTypes(
+    _linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
+  );
+  const types = extendTypesQueryResult(typesQuery);
+  const message = eventMessageGenerator(event, _linodes, types);
 
   if (message === null) {
     return null;

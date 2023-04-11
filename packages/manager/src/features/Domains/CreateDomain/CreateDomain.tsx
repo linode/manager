@@ -12,15 +12,14 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import DocsLink from 'src/components/DocsLink';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
@@ -29,7 +28,7 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
+import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -46,6 +45,7 @@ import {
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { generateDefaultDomainRecords } from '../domainUtils';
+import LandingHeader from 'src/components/LandingHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   radio: {
-    '& label:first-child .MuiButtonBase-root': {
+    '& label:first-of-type .MuiButtonBase-root': {
       marginLeft: -10,
     },
   },
@@ -282,9 +282,6 @@ export const CreateDomain = () => {
   const updateSelectedLinode = (linode: Linode) =>
     setSelectedDefaultLinode(linode);
 
-  const updateSelectedNodeBalancer = (nodebalancer: NodeBalancer) =>
-    setSelectedDefaultNodeBalancer(nodebalancer);
-
   const updateInsertDefaultRecords = (value: Item<DefaultRecordsType>) =>
     setDefaultRecordsSetting(value);
 
@@ -307,19 +304,11 @@ export const CreateDomain = () => {
   return (
     <Grid container>
       <DocumentTitleSegment segment="Create Domain" />
-      <Grid container alignItems="center" justifyContent="space-between">
-        <Grid item className="p0">
-          <Breadcrumb
-            pathname={location.pathname}
-            labelTitle="Create"
-            labelOptions={{ noCap: true }}
-          />
-        </Grid>
-        <Grid item className="p0">
-          <DocsLink href="https://www.linode.com/docs/guides/dns-manager/" />
-        </Grid>
-      </Grid>
-
+      <LandingHeader
+        title="Create"
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/dns-manager/"
+      />
       <Grid item className={classes.main}>
         {generalError && !disabled && (
           <Notice error spacingTop={8}>
@@ -463,13 +452,11 @@ export const CreateDomain = () => {
               defaultRecordsSetting.value === 'nodebalancer' && (
                 <React.Fragment>
                   <NodeBalancerSelect
-                    nodeBalancerError={errorMap.defaultNodeBalancer}
-                    handleChange={updateSelectedNodeBalancer}
-                    selectedNodeBalancer={
-                      selectedDefaultNodeBalancer
-                        ? selectedDefaultNodeBalancer.id
-                        : null
+                    error={errorMap.defaultNodeBalancer}
+                    onChange={(_, nodebalancer) =>
+                      setSelectedDefaultNodeBalancer(nodebalancer)
                     }
+                    value={selectedDefaultNodeBalancer?.id}
                     disabled={disabled}
                   />
                   {!errorMap.defaultNodeBalancer && (

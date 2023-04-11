@@ -10,7 +10,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { useAccount } from 'src/queries/account';
-import { getGrantData, useProfile } from 'src/queries/profile';
+import { getGrantData } from 'src/queries/profile';
 import AccountLogins from './AccountLogins';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
@@ -23,10 +23,9 @@ const MaintenanceLanding = React.lazy(
   () => import('./Maintenance/MaintenanceLanding')
 );
 
-const AccountLanding: React.FC = () => {
+const AccountLanding = () => {
   const history = useHistory();
   const location = useLocation();
-  const { data: profile } = useProfile();
   const { data: account } = useAccount();
 
   const grantData = getGrantData();
@@ -107,7 +106,7 @@ const AccountLanding: React.FC = () => {
       'https://www.linode.com/docs/guides/how-linode-billing-works/';
     landingHeaderProps.createButtonText = 'Make a Payment';
     if (!isAkamaiAccount) {
-      landingHeaderProps.onAddNew = () =>
+      landingHeaderProps.onButtonClick = () =>
         history.replace('/account/billing/make-payment');
     }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
@@ -127,7 +126,7 @@ const AccountLanding: React.FC = () => {
               <Billing />
             </SafeTabPanel>
             <SafeTabPanel index={++idx}>
-              <Users isRestrictedUser={profile?.restricted || false} />
+              <Users />
             </SafeTabPanel>
             <SafeTabPanel index={++idx}>
               <AccountLogins />

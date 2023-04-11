@@ -7,12 +7,8 @@ import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -634,11 +630,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
           ]}
           container
         >
-          <Grid item xs={12}>
-            <Typography variant="h2" data-qa-port-config-header>
-              Port Configuration
-            </Typography>
-          </Grid>
           <Grid item xs={6} md={3}>
             <TextField
               type="number"
@@ -816,6 +807,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         </Grid>
 
         <Grid
+          container
           updateFor={[
             nodes,
             errors,
@@ -824,7 +816,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             errorMap.nodes,
             this.props.nodeBalancerRegion,
           ]}
-          container
         >
           <Grid item xs={12}>
             <Grid updateFor={[nodeMessage, classes]} item xs={12}>

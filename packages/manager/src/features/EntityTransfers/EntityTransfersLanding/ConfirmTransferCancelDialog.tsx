@@ -8,7 +8,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';

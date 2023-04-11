@@ -8,16 +8,13 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -37,14 +34,17 @@ import {
   UpdateLinodeDisk,
   withLinodeDetailContext,
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import userSSHKeyHoc, {
-  UserSSHKeyProps,
-} from 'src/features/linodes/userSSHKeyHoc';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendEvent } from 'src/utilities/ga';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
 
-type ClassNames = 'root' | 'headline' | 'addNewWrapper' | 'emptyCell';
+type ClassNames =
+  | 'root'
+  | 'headline'
+  | 'addNewWrapper'
+  | 'addNewWrapperContainer'
+  | 'emptyCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -59,10 +59,13 @@ const styles = (theme: Theme) =>
       marginLeft: 15,
       lineHeight: '1.5rem',
     },
+    addNewWrapperContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
     addNewWrapper: {
       [theme.breakpoints.down('sm')]: {
         marginLeft: `-${theme.spacing(1.5)}`,
-        marginTop: `-${theme.spacing(1)}`,
       },
       '&.MuiGrid-item': {
         padding: 5,
@@ -96,6 +99,7 @@ interface State {
   drawer: DrawerState;
   imagizeDrawer: ImagizeDrawerState;
   confirmDelete: ConfirmDeleteState;
+  authorized_users: string[];
 }
 
 interface Props {
@@ -103,7 +107,6 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  UserSSHKeyProps &
   LinodeContextProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
@@ -139,6 +142,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       drawer: defaultDrawerState,
       imagizeDrawer: defaultImagizeDrawerState,
       confirmDelete: defaultConfirmDeleteState,
+      authorized_users: [],
     };
   }
 
@@ -170,16 +174,28 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               Disks
             </Typography>
           </Grid>
-          <Grid item className={classes.addNewWrapper}>
-            <AddNewLink
-              onClick={this.openDrawerForCreation}
-              label="Add a Disk"
-              disabled={readOnly || !freeDiskSpace}
-              disabledReason={
-                !freeDiskSpace ? noFreeDiskSpaceWarning : undefined
-              }
-            />
-          </Grid>
+          <span className={classes.addNewWrapperContainer}>
+            {!freeDiskSpace ? (
+              <TooltipIcon
+                text={noFreeDiskSpaceWarning}
+                status="help"
+                tooltipGAEvent={() =>
+                  sendEvent({
+                    category: `Disk Resize Flow`,
+                    action: `Open:tooltip`,
+                    label: `Add a Disk help icon tooltip`,
+                  })
+                }
+              />
+            ) : undefined}
+            <Grid item className={classes.addNewWrapper}>
+              <AddNewLink
+                onClick={this.openDrawerForCreation}
+                label="Add a Disk"
+                disabled={readOnly || !freeDiskSpace}
+              />
+            </Grid>
+          </span>
         </Grid>
         <OrderBy
           data={disks}
@@ -431,6 +447,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     });
   };
 
+  setAuthorizedUsers = (value: string[]) => {
+    this.setState({ authorized_users: value });
+  };
+
   drawer = () => {
     const { diskId, mode, open, maximumSize } = this.state.drawer;
     const { disks } = this.props;
@@ -443,8 +463,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         maximumSize={maximumSize}
         onClose={this.closeDrawer}
         onSubmit={this.onDrawerSubmit}
-        userSSHKeys={this.props.userSSHKeys}
-        requestKeys={this.props.requestKeys}
+        setAuthorizedUsers={this.setAuthorizedUsers}
+        authorizedUsers={this.state.authorized_users}
       />
     );
   };
@@ -477,7 +497,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   createDisk = (values: any) => {
-    const { linodeId, userSSHKeys, createLinodeDisk } = this.props;
+    const { linodeId, createLinodeDisk } = this.props;
     const { label, size, filesystem, image, root_pass } = values;
     if (!linodeId) {
       // Safety check; should never happen.
@@ -490,9 +510,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       filesystem: filesystem === '_none_' ? undefined : filesystem,
       image: Boolean(image) ? image : undefined,
       root_pass: Boolean(root_pass) ? root_pass : undefined,
-      authorized_users: userSSHKeys
-        ? userSSHKeys.filter((u) => u.selected).map((u) => u.username)
-        : undefined,
+      authorized_users: this.state.authorized_users,
     }).then((_) => resetEventsPolling());
   };
 
@@ -620,7 +638,6 @@ const linodeContext = withLinodeDetailContext(
 const enhanced = compose<CombinedProps, {}>(
   styled,
   linodeContext,
-  userSSHKeyHoc,
   withSnackbar
 );
 

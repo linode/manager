@@ -26,7 +26,12 @@ import {
   UpdateDatabasePayload,
   UpdateDatabaseResponse,
 } from '@linode/api-v4/lib/databases/types';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryClient, queryPresets, updateInPaginatedStore } from './base';
@@ -45,7 +50,7 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
     { refetchInterval: 20000 }
   );
 
-export const useDatabasesQuery = (params: any, filter: any) =>
+export const useDatabasesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getDatabases(params, filter),

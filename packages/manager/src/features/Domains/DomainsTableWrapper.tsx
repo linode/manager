@@ -1,10 +1,6 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Table from 'src/components/Table';
@@ -22,13 +18,14 @@ const styles = () =>
 
 interface Props {
   dataLength: number;
+  children: React.ReactNode;
 }
 
-type CombinedProps = Omit<OrderByProps, 'data'> &
+type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> &
   WithStyles<ClassNames> &
   Props;
 
-const DomainsTableWrapper: React.FC<CombinedProps> = (props) => {
+const DomainsTableWrapper = <T extends unknown>(props: CombinedProps<T>) => {
   const { order, orderBy, handleOrderChange, classes, dataLength } = props;
 
   return (

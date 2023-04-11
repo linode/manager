@@ -1,21 +1,17 @@
 import classNames from 'classnames';
-import { LinodeType, LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
+import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
@@ -27,11 +23,7 @@ import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
-
-export interface ExtendedType extends LinodeType {
-  heading: string;
-  subHeadings: string[];
-}
+import { ExtendedType } from 'src/utilities/extendType';
 
 type ClassNames =
   | 'root'
@@ -155,7 +147,7 @@ export class SelectPlanPanel extends React.Component<
     const subHeadings = type.subHeadings.slice(0, -2);
 
     const renderVariant = () => (
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <div className={classes.enhancedInputOuter}>
           <EnhancedNumberInput
             value={type.count}
@@ -180,7 +172,7 @@ export class SelectPlanPanel extends React.Component<
         {/* Displays Table Row for larger screens */}
         <Hidden mdDown>
           <TableRow
-            data-qa-plan-row={type.label}
+            data-qa-plan-row={type.formattedLabel}
             key={type.id}
             className={classNames({
               [classes.disabledRow]: disabled,
@@ -270,10 +262,10 @@ export class SelectPlanPanel extends React.Component<
     );
 
     return (
-      <Grid container>
+      <Grid container spacing={2}>
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden mdDown>
-          <Grid item xs={12} lg={12}>
+          <Grid xs={12} lg={12}>
             <Table aria-label="List of Linode Plans" spacingBottom={16}>
               {tableHeader}
               <TableBody role="grid">

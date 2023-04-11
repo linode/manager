@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { oneClickApps } from './FakeSpec';
 import Close from '@mui/icons-material/Close';
@@ -8,6 +9,7 @@ import Box from 'src/components/core/Box';
 import Drawer from 'src/components/core/Drawer';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
+import { OCA } from 'src/features/OneClickApps/FakeSpec';
 import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -82,17 +84,33 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   const { oneClickAppsDocsOverride } = useFlags();
 
-  const app = oneClickApps.find((app) => {
-    const cleanedStackScriptLabel = stackScriptLabel
-      .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
-      .trim();
-    const cleanedAppName = app.name.replace('&reg;', '');
-    return cleanedStackScriptLabel === cleanedAppName;
-  });
+  const [selectedApp, setSelectedApp] = React.useState<OCA | null>(null);
 
   const gradient = {
-    backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${app?.colors.start}, #${app?.colors.end})`,
+    backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${selectedApp?.colors.start}, #${selectedApp?.colors.end})`,
   };
+
+  React.useEffect(() => {
+    const app = oneClickApps.find((app) => {
+      const cleanedStackScriptLabel = stackScriptLabel
+        .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
+        .trim();
+
+      const cleanedAppName = app.name.replace('&reg;', '');
+
+      return cleanedStackScriptLabel === cleanedAppName;
+    });
+
+    if (!app) {
+      return;
+    }
+
+    setSelectedApp(app);
+
+    return () => {
+      setSelectedApp(null);
+    };
+  }, [stackScriptLabel]);
 
   return (
     <Drawer
@@ -110,7 +128,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
           <Close />
         </Button>
       </Box>
-      {app ? (
+      {selectedApp ? (
         <>
           <Box
             display="flex"
@@ -122,47 +140,54 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
           >
             <img
               className={classes.image}
-              src={`/assets/white/${app.logo_url}`}
-              alt={`${app.name} logo`}
+              src={`/assets/white/${
+                REUSE_WHITE_ICONS[selectedApp?.logo_url] ||
+                selectedApp?.logo_url
+              }`}
+              alt={`${selectedApp.name} logo`}
             />
             <Typography
               variant="h2"
               className={classes.appName}
-              dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.name) }}
+              data-testid="app-name"
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHTML(selectedApp.name),
+              }}
             />
           </Box>
           <Box className={classes.container}>
             <Box>
-              <Typography variant="h3">{app.summary}</Typography>
+              <Typography variant="h3">{selectedApp.summary}</Typography>
               <Typography
                 variant="body1"
                 className={classes.description}
                 dangerouslySetInnerHTML={{
-                  __html: sanitizeHTML(app.description),
+                  __html: sanitizeHTML(selectedApp.description),
                 }}
               />
             </Box>
-            {app.website ? (
+            {selectedApp.website ? (
               <Box>
                 <Typography variant="h3">Website</Typography>
                 <ExternalLink
                   className={classes.link}
-                  link={app.website}
-                  text={app.website}
+                  link={selectedApp.website}
+                  text={selectedApp.website}
                   hideIcon
                 />
               </Box>
             ) : null}
-            {app.related_guides ? (
+            {selectedApp.related_guides ? (
               <Box>
                 <Typography variant="h3">Guides</Typography>
                 <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
                   {(
-                    oneClickAppsDocsOverride?.[app.name] ?? app.related_guides
+                    oneClickAppsDocsOverride?.[selectedApp.name] ??
+                    selectedApp.related_guides
                   ).map((link, idx) => (
                     <ExternalLink
                       className={classes.link}
-                      key={`${app.name}-guide-${idx}`}
+                      key={`${selectedApp.name}-guide-${idx}`}
                       text={link.title}
                       link={link.href}
                       hideIcon
@@ -171,12 +196,15 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                 </Box>
               </Box>
             ) : null}
-            {app.tips ? (
+            {selectedApp.tips ? (
               <Box>
                 <Typography variant="h3">Tips</Typography>
                 <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
-                  {app.tips.map((tip, idx) => (
-                    <Typography variant="body1" key={`${app.name}-tip-${idx}`}>
+                  {selectedApp.tips.map((tip, idx) => (
+                    <Typography
+                      variant="body1"
+                      key={`${selectedApp.name}-tip-${idx}`}
+                    >
                       {tip}
                     </Typography>
                   ))}
@@ -204,6 +232,13 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
       )}
     </Drawer>
   );
+};
+
+// remove this when we make the svgs white via css
+const REUSE_WHITE_ICONS = {
+  'mongodbmarketplaceocc.svg': 'mongodb.svg',
+  'postgresqlmarketplaceocc.svg': 'postgresql.svg',
+  'redissentinelmarketplaceocc.svg': 'redis.svg',
 };
 
 export default AppDetailDrawer;

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import { OrderByProps } from 'src/components/OrderBy';
 import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag';
 import ListEntities from './ListEntities';
-import type { BaseProps, PageyIntegrationProps } from './types';
+import type { BaseProps, Entity, PageyIntegrationProps } from './types';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -28,8 +28,8 @@ interface Props {
   row: EntityTableRow<any>;
   emptyMessage?: string;
   initialOrder?: {
-    order: OrderByProps['order'];
-    orderBy: OrderByProps['orderBy'];
+    order: OrderByProps<Entity>['order'];
+    orderBy: OrderByProps<Entity>['orderBy'];
   };
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;

@@ -133,6 +133,7 @@ const color = {
   disabledText: '#c9cacb',
   tagButton: '#f1f7fd',
   tagIcon: '#7daee8',
+  blue: '#3683dc',
 } as const;
 
 const textColors = {
@@ -461,6 +462,27 @@ export const base: ThemeOptions = {
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        listbox: {
+          backgroundColor: bg.white,
+          border: `1px solid ${primaryColors.main}`,
+        },
+        endAdornment: {
+          top: 'unset',
+          paddingRight: 8,
+        },
+        inputRoot: {
+          paddingLeft: 8,
+        },
+        loading: {
+          border: `1px solid ${primaryColors.main}`,
+        },
+        noOptions: {
+          border: `1px solid ${primaryColors.main}`,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -497,7 +519,7 @@ export const base: ThemeOptions = {
           backgroundColor: 'transparent',
           color: textColors.linkActiveLight,
           '&:hover, &:focus': {
-            backgroundColor: 'transparent !important',
+            backgroundColor: 'transparent',
             color: textColors.linkActiveLight,
           },
           '&:active': {
@@ -521,7 +543,7 @@ export const base: ThemeOptions = {
           color: textColors.linkActiveLight,
           minHeight: 34,
           '&:hover, &:focus': {
-            backgroundColor: '#f5f8ff !important',
+            backgroundColor: '#f5f8ff',
             border: '1px solid #d7dfed',
             color: '#2575d0',
           },
@@ -1297,7 +1319,7 @@ export const base: ThemeOptions = {
           boxShadow: 'inset 0 -1px 0 #c5c6c8',
           minHeight: 48,
           position: 'relative',
-          '& $scrollButtons:first-child': {
+          '& $scrollButtons:first-of-type': {
             position: 'absolute',
             bottom: 6,
             zIndex: 2,

@@ -7,7 +7,8 @@ import {
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -24,6 +25,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
+import Grid from '@mui/material/Unstable_Grid2';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {
@@ -39,10 +41,10 @@ import {
 } from 'src/queries/accountBilling';
 import { isAfter, parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
-import { getAllWithArguments } from 'src/utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     padding: '8px 0',
   },
@@ -177,13 +179,13 @@ export interface Props {
   accountActiveSince?: string;
 }
 
-export const BillingActivityPanel: React.FC<Props> = (props) => {
+export const BillingActivityPanel = (props: Props) => {
   const { accountActiveSince } = props;
 
   const { data: account } = useAccount();
   const isAkamaiCustomer = account?.billing_source === 'akamai';
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const flags = useFlags();
 
   const pdfErrors = useSet();
@@ -237,11 +239,10 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       pdfErrors.delete(id);
       pdfLoading.add(id);
 
-      getAllInvoiceItems([invoiceId])
-        .then((response) => {
+      getAllInvoiceItems(invoiceId)
+        .then((invoiceItems) => {
           pdfLoading.delete(id);
 
-          const invoiceItems = response.data;
           const result = printInvoice(account!, invoice, invoiceItems, taxes);
 
           if (result.status === 'error') {
@@ -334,165 +335,168 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
 
   return (
-    <div className={classes.root}>
-      <div className={classes.headerContainer}>
-        <Typography variant="h2" className={classes.headline}>
-          {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
-        </Typography>
-        {isAkamaiCustomer ? (
-          <div className={classes.headerLeft}>
-            <TextTooltip
-              displayText="Usage History may not reflect finalized invoice"
-              tooltipText={AkamaiBillingInvoiceText}
-            />
-          </div>
-        ) : null}
-        <div className={classes.headerRight}>
-          {accountActiveSince && (
-            <div className={classes.flexContainer}>
-              <Typography variant="body1" className={classes.activeSince}>
-                Account active since{' '}
-                {formatDate(accountActiveSince, {
-                  displayTime: false,
-                })}
-              </Typography>
+    <Grid xs={12}>
+      <div className={classes.root}>
+        <div className={classes.headerContainer}>
+          <Typography variant="h2" className={classes.headline}>
+            {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
+          </Typography>
+          {isAkamaiCustomer ? (
+            <div className={classes.headerLeft}>
+              <TextTooltip
+                displayText="Usage History may not reflect finalized invoice"
+                tooltipText={AkamaiBillingInvoiceText}
+                sxTypography={{ paddingLeft: '4px' }}
+              />
             </div>
-          )}
-          <div className={classes.flexContainer}>
-            <Select
-              className={classes.transactionType}
-              label="Transaction Types"
-              onChange={handleTransactionTypeChange}
-              value={
-                transactionTypeOptions.find(
-                  (thisOption) => thisOption.value === selectedTransactionType
-                ) || null
-              }
-              isClearable={false}
-              isSearchable={false}
-              options={transactionTypeOptions}
-              inline
-              small
-              hideLabel
-            />
-            <Select
-              className={classes.transactionDate}
-              label="Transaction Dates"
-              onChange={handleTransactionDateChange}
-              value={
-                transactionDateOptions.find(
-                  (thisOption) => thisOption.value === selectedTransactionDate
-                ) || null
-              }
-              isClearable={false}
-              isSearchable={false}
-              options={transactionDateOptions}
-              inline
-              small
-              hideLabel
-            />
+          ) : null}
+          <div className={classes.headerRight}>
+            {accountActiveSince && (
+              <div className={classes.flexContainer}>
+                <Typography variant="body1" className={classes.activeSince}>
+                  Account active since{' '}
+                  {formatDate(accountActiveSince, {
+                    displayTime: false,
+                  })}
+                </Typography>
+              </div>
+            )}
+            <div className={classes.flexContainer}>
+              <Select
+                className={classes.transactionType}
+                label="Transaction Types"
+                onChange={handleTransactionTypeChange}
+                value={
+                  transactionTypeOptions.find(
+                    (thisOption) => thisOption.value === selectedTransactionType
+                  ) || null
+                }
+                isClearable={false}
+                isSearchable={false}
+                options={transactionTypeOptions}
+                inline
+                small
+                hideLabel
+              />
+              <Select
+                className={classes.transactionDate}
+                label="Transaction Dates"
+                onChange={handleTransactionDateChange}
+                value={
+                  transactionDateOptions.find(
+                    (thisOption) => thisOption.value === selectedTransactionDate
+                  ) || null
+                }
+                isClearable={false}
+                isSearchable={false}
+                options={transactionDateOptions}
+                inline
+                small
+                hideLabel
+              />
+            </div>
           </div>
         </div>
+        <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
+          {React.useCallback(
+            ({ data: orderedData }) => (
+              <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
+                {({
+                  data: paginatedAndOrderedData,
+                  count,
+                  handlePageChange,
+                  handlePageSizeChange,
+                  page,
+                  pageSize,
+                }) => (
+                  <>
+                    <Table aria-label="List of Invoices and Payments">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell className={classes.descriptionColumn}>
+                            Description
+                          </TableCell>
+                          <TableCell className={classes.dateColumn}>
+                            Date
+                          </TableCell>
+                          <TableCell className={classes.totalColumn}>
+                            Amount
+                          </TableCell>
+                          <TableCell className={classes.pdfDownloadColumn} />
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableContentWrapper
+                          loadingProps={{
+                            columns: 4,
+                          }}
+                          length={paginatedAndOrderedData.length}
+                          loading={
+                            accountPaymentsLoading || accountInvoicesLoading
+                          }
+                          error={
+                            accountPaymentsError || accountInvoicesError
+                              ? [
+                                  {
+                                    reason:
+                                      'There was an error retrieving your billing activity.',
+                                  },
+                                ]
+                              : undefined
+                          }
+                        >
+                          {paginatedAndOrderedData.map((thisItem) => {
+                            return (
+                              <ActivityFeedItem
+                                key={`${thisItem.type}-${thisItem.id}`}
+                                downloadPDF={
+                                  thisItem.type === 'invoice'
+                                    ? downloadInvoicePDF
+                                    : downloadPaymentPDF
+                                }
+                                hasError={pdfErrors.has(
+                                  `${thisItem.type}-${thisItem.id}`
+                                )}
+                                isLoading={pdfLoading.has(
+                                  `${thisItem.type}-${thisItem.id}`
+                                )}
+                                {...thisItem}
+                              />
+                            );
+                          })}
+                        </TableContentWrapper>
+                      </TableBody>
+                    </Table>
+                    <PaginationFooter
+                      count={count}
+                      handlePageChange={handlePageChange}
+                      handleSizeChange={handlePageSizeChange}
+                      page={page}
+                      pageSize={pageSize}
+                      eventCategory="Billing Activity Table"
+                    />
+                  </>
+                )}
+              </Paginate>
+            ),
+            [
+              classes.descriptionColumn,
+              classes.dateColumn,
+              classes.totalColumn,
+              classes.pdfDownloadColumn,
+              accountPaymentsLoading,
+              accountInvoicesLoading,
+              accountPaymentsError,
+              accountInvoicesError,
+              downloadInvoicePDF,
+              downloadPaymentPDF,
+              pdfErrors,
+              pdfLoading,
+            ]
+          )}
+        </OrderBy>
       </div>
-      <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
-        {React.useCallback(
-          ({ data: orderedData }) => (
-            <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
-              {({
-                data: paginatedAndOrderedData,
-                count,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-              }) => (
-                <>
-                  <Table aria-label="List of Invoices and Payments">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell className={classes.descriptionColumn}>
-                          Description
-                        </TableCell>
-                        <TableCell className={classes.dateColumn}>
-                          Date
-                        </TableCell>
-                        <TableCell className={classes.totalColumn}>
-                          Amount
-                        </TableCell>
-                        <TableCell className={classes.pdfDownloadColumn} />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        loadingProps={{
-                          columns: 4,
-                        }}
-                        length={paginatedAndOrderedData.length}
-                        loading={
-                          accountPaymentsLoading || accountInvoicesLoading
-                        }
-                        error={
-                          accountPaymentsError || accountInvoicesError
-                            ? [
-                                {
-                                  reason:
-                                    'There was an error retrieving your billing activity.',
-                                },
-                              ]
-                            : undefined
-                        }
-                      >
-                        {paginatedAndOrderedData.map((thisItem) => {
-                          return (
-                            <ActivityFeedItem
-                              key={`${thisItem.type}-${thisItem.id}`}
-                              downloadPDF={
-                                thisItem.type === 'invoice'
-                                  ? downloadInvoicePDF
-                                  : downloadPaymentPDF
-                              }
-                              hasError={pdfErrors.has(
-                                `${thisItem.type}-${thisItem.id}`
-                              )}
-                              isLoading={pdfLoading.has(
-                                `${thisItem.type}-${thisItem.id}`
-                              )}
-                              {...thisItem}
-                            />
-                          );
-                        })}
-                      </TableContentWrapper>
-                    </TableBody>
-                  </Table>
-                  <PaginationFooter
-                    count={count}
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                    eventCategory="Billing Activity Table"
-                  />
-                </>
-              )}
-            </Paginate>
-          ),
-          [
-            classes.descriptionColumn,
-            classes.dateColumn,
-            classes.totalColumn,
-            classes.pdfDownloadColumn,
-            accountPaymentsLoading,
-            accountInvoicesLoading,
-            accountPaymentsError,
-            accountInvoicesError,
-            downloadInvoicePDF,
-            downloadPaymentPDF,
-            pdfErrors,
-            pdfLoading,
-          ]
-        )}
-      </OrderBy>
-    </div>
+    </Grid>
   );
 };
 
@@ -505,68 +509,69 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
   isLoading: boolean;
 }
 
-export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
-  (props) => {
-    const classes = useStyles();
+export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
+  const { classes } = useStyles();
 
-    const {
-      date,
-      label,
-      total,
-      id,
-      type,
-      downloadPDF,
-      hasError,
-      isLoading,
-    } = props;
+  const {
+    date,
+    label,
+    total,
+    id,
+    type,
+    downloadPDF,
+    hasError,
+    isLoading,
+  } = props;
 
-    const handleClick = React.useCallback(
-      (e: React.MouseEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-        downloadPDF(id);
-      },
-      [id, downloadPDF]
-    );
+  const handleClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      downloadPDF(id);
+    },
+    [id, downloadPDF]
+  );
 
-    const action = {
-      title: hasError ? 'Error. Click to try again.' : 'Download PDF',
-      className: hasError ? classes.pdfError : '',
-      onClick: handleClick,
-    };
+  const action = {
+    title: hasError ? 'Error. Click to try again.' : 'Download PDF',
+    className: hasError ? classes.pdfError : '',
+    onClick: handleClick,
+  };
 
-    return (
-      <TableRow data-testid={`${type}-${id}`}>
-        <TableCell>
-          {type === 'invoice' ? (
-            <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
-          ) : (
-            label
-          )}
-        </TableCell>
-        <TableCell>
-          <DateTimeDisplay value={date} />
-        </TableCell>
-        <TableCell className={classes.totalColumn}>
-          <Currency quantity={total} wrapInParentheses={total < 0} />
-        </TableCell>
-        <TableCell className={classes.pdfDownloadColumn}>
-          <InlineMenuAction
-            actionText={action.title}
-            className={action.className}
-            onClick={action.onClick}
-            loading={isLoading}
-          />
-        </TableCell>
-      </TableRow>
-    );
-  }
-);
+  return (
+    <TableRow data-testid={`${type}-${id}`}>
+      <TableCell>
+        {type === 'invoice' ? (
+          <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
+        ) : (
+          label
+        )}
+      </TableCell>
+      <TableCell>
+        <DateTimeDisplay value={date} />
+      </TableCell>
+      <TableCell className={classes.totalColumn}>
+        <Currency quantity={total} wrapInParentheses={total < 0} />
+      </TableCell>
+      <TableCell className={classes.pdfDownloadColumn}>
+        <InlineMenuAction
+          actionText={action.title}
+          className={action.className}
+          onClick={action.onClick}
+          loading={isLoading}
+        />
+      </TableCell>
+    </TableRow>
+  );
+});
 
 // =============================================================================
 // Utilities
 // =============================================================================
-const getAllInvoiceItems = getAllWithArguments<InvoiceItem>(getInvoiceItems);
+const getAllInvoiceItems = (invoiceId: number) =>
+  getAll<InvoiceItem>((params, filter) =>
+    getInvoiceItems(invoiceId, params, filter)
+  )().then((data) => data.data);
 
 export const invoiceToActivityFeedItem = (
   invoice: Invoice

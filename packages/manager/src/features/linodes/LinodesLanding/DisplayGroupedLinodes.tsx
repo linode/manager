@@ -4,7 +4,8 @@ import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
 import IconButton from 'src/components/core/IconButton';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Tooltip from 'src/components/core/Tooltip';
@@ -22,8 +23,9 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
-import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { RenderLinodesProps } from './DisplayLinodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tagGridRow: {
@@ -79,8 +81,8 @@ interface Props {
     linodeConfigs: Config[]
   ) => void;
   display: 'grid' | 'list';
-  component: any;
-  data: ExtendedLinode[];
+  component: React.ComponentType<RenderLinodesProps>;
+  data: LinodeWithMaintenance[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
@@ -89,7 +91,7 @@ interface Props {
   isVLAN?: boolean;
 }
 
-type CombinedProps = Props & OrderByProps;
+type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
 
 const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -224,6 +226,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                     order,
                     orderBy,
                     isVLAN,
+                    count,
                   };
                   return (
                     <React.Fragment>
@@ -291,6 +294,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                     order,
                     orderBy,
                     isVLAN,
+                    count,
                   };
                   return (
                     <TableBody

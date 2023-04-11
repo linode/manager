@@ -7,7 +7,10 @@ import useFlags from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import Grid from 'src/components/core/Grid';
 
-const options: { label: string; flag: keyof Flags }[] = [];
+const options: { label: string; flag: keyof Flags }[] = [
+  { label: 'Metadata', flag: 'metadata' },
+  { label: 'Database Beta', flag: 'databaseBeta' },
+];
 
 const FeatureFlagTool: React.FC<{}> = () => {
   const dispatch: Dispatch = useDispatch();

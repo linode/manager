@@ -1,18 +1,21 @@
 import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import Link from 'src/components/Link';
-import { dcDisplayNames } from 'src/constants';
 import { formatEventWithAPIMessage } from 'src/eventMessageGenerator';
+import { ExtendedType } from './utilities/extendType';
+import { Region } from '@linode/api-v4/lib/regions';
 
 export const eventMessageGenerator = (
   e: Event,
   linodes: Linode[] = [],
-  types: LinodeType[] = []
+  types: ExtendedType[] = [],
+  regions: Region[] = []
 ) => {
   const eventLinode = linodes.find(
     (thisLinode) => thisLinode.id === e.entity?.id
   );
+
   if (e.message) {
     return formatEventWithAPIMessage(e);
   }
@@ -22,12 +25,13 @@ export const eventMessageGenerator = (
         (thisType) => thisType.id === eventLinode?.type
       );
       return `resize ${
-        eventLinodeType ? `to ${eventLinodeType.label} Plan` : ''
+        eventLinodeType ? `to ${eventLinodeType.formattedLabel} Plan` : ''
       }`;
     case 'linode_migrate':
     case 'linode_migrate_datacenter':
+      const region = regions.find((r) => r.id === eventLinode?.region);
       return `migrate ${
-        eventLinode ? `to ${dcDisplayNames[eventLinode.region]}` : ''
+        eventLinode ? `to ${region?.label ?? eventLinode.region}` : ''
       }`;
     case 'disk_imagize':
       return `create from ${e.entity?.label}`;

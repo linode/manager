@@ -10,12 +10,13 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Form from 'src/components/core/Form';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
-import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
+import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
@@ -44,6 +45,7 @@ import ConfigSelect, {
 import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
+import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -57,11 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   select: {
     width: 320,
-  },
-  helpIcon: {
-    marginBottom: 6,
-    marginLeft: theme.spacing(),
-    padding: 0,
   },
   tooltip: {
     '& .MuiTooltip-tooltip': {
@@ -118,11 +115,14 @@ interface Props {
 type CombinedProps = Props & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
+  const theme = useTheme();
   const classes = useStyles();
-  const { onSuccess, origin, history, regions } = props;
+  const { onSuccess, origin, history } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+
+  const { data: regions } = useRegionsQuery();
 
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
@@ -141,20 +141,28 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
     ? 'Unable to load configs for this Linode.' // More specific than the API error message
     : undefined;
 
-  const regionsWithBlockStorage = regions
-    .filter((thisRegion) => thisRegion.capabilities.includes('Block Storage'))
-    .map((thisRegion) => thisRegion.id);
+  const regionsWithBlockStorage =
+    regions
+      ?.filter((thisRegion) =>
+        thisRegion.capabilities.includes('Block Storage')
+      )
+      .map((thisRegion) => thisRegion.id) ?? [];
 
   const doesNotHavePermission =
     profile?.restricted && !hasGrant('add_volumes', grants);
 
   const renderSelectTooltip = (tooltipText: string) => {
     return (
-      <HelpIcon
+      <TooltipIcon
         classes={{ popper: classes.tooltip }}
-        className={classes.helpIcon}
+        sxTooltipIcon={{
+          marginBottom: '6px',
+          marginLeft: theme.spacing(),
+          padding: 0,
+        }}
         text={tooltipText}
         tooltipPosition="right"
+        status="help"
       />
     );
   };
@@ -325,16 +333,13 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     }}
                     isClearable
                     onBlur={handleBlur}
-                    regions={props.regions
-                      .filter((eachRegion) =>
+                    regions={
+                      regions?.filter((eachRegion) =>
                         eachRegion.capabilities.some((eachCape) =>
                           eachCape.match(/block/i)
                         )
-                      )
-                      .map((eachRegion) => ({
-                        ...eachRegion,
-                        display: dcDisplayNames[eachRegion.id],
-                      }))}
+                      ) ?? []
+                    }
                     selectedID={values.region}
                     width={320}
                   />

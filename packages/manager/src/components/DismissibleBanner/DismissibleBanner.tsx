@@ -1,14 +1,15 @@
 import Close from '@mui/icons-material/Close';
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice, { NoticeProps } from 'src/components/Notice';
+import { SxProps } from '@mui/system';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -32,13 +33,14 @@ interface Props {
   children: JSX.Element;
   className?: string;
   options?: DismissibleNotificationOptions;
+  sx?: SxProps;
 }
 
 type CombinedProps = Props & Partial<NoticeProps>;
 
 export const DismissibleBanner = (props: CombinedProps) => {
   const { className, preferenceKey, options, children, ...rest } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
     preferenceKey,
@@ -50,7 +52,7 @@ export const DismissibleBanner = (props: CombinedProps) => {
   }
 
   const dismissibleButton = (
-    <Grid item>
+    <Grid>
       <button
         className={classes.closeIcon}
         aria-label={`Dismiss ${preferenceKey} banner`}
@@ -64,12 +66,7 @@ export const DismissibleBanner = (props: CombinedProps) => {
 
   return (
     <Notice
-      className={classNames(
-        {
-          [classes.root]: true,
-        },
-        className
-      )}
+      className={cx(classes.root, className)}
       dismissibleButton={dismissibleButton}
       {...rest}
     >

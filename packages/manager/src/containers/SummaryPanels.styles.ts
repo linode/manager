@@ -1,4 +1,5 @@
-import { createStyles, Theme, WithStyles } from 'src/components/core/styles';
+import { createStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 type ClassNames =
   | 'region'

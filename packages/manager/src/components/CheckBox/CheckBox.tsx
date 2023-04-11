@@ -1,77 +1,52 @@
-import classNames from 'classnames';
+import { styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import * as React from 'react';
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 import Checkbox, { CheckboxProps } from 'src/components/core/Checkbox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import HelpIcon from 'src/components/HelpIcon';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    color: '#ccc',
-    transition: theme.transitions.create(['color']),
-    '& .defaultFill': {
-      transition: theme.transitions.create(['fill']),
-    },
-    '&:hover': {
-      color: theme.palette.primary.main,
-    },
-  },
-  checked: {
-    color: theme.palette.primary.main,
-  },
-  disabled: {
-    color: '#ccc !important',
-    fill: `${theme.bg.main} !important`,
-    pointerEvents: 'none',
-    '& .defaultFill': {
-      opacity: 0.5,
-      fill: `${theme.bg.main}`,
-    },
-  },
-}));
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 
 interface Props extends CheckboxProps {
   text?: string | JSX.Element;
-  toolTipText?: string;
+  toolTipText?: string | JSX.Element;
+  toolTipInteractive?: boolean;
+  sxFormLabel?: SxProps;
 }
 
-const LinodeCheckBox: React.FC<Props> = (props) => {
-  const { toolTipText, text, ...rest } = props;
-  const classes = useStyles();
-
-  const classnames = classNames({
-    [classes.root]: true,
-    [classes.disabled]: props.disabled === true,
-    [classes.checked]: Boolean(props.checked),
-  });
+const LinodeCheckBox = (props: Props) => {
+  const { toolTipInteractive, toolTipText, text, sxFormLabel, ...rest } = props;
 
   if (props.text) {
     return (
-      <React.Fragment>
-        <FormControlLabel
+      <>
+        <StyledFormControlLabel
           control={
-            <Checkbox
+            <StyledCheckbox
               color="primary"
-              className={classnames}
               icon={<CheckboxIcon />}
               checkedIcon={<CheckboxCheckedIcon />}
               data-qa-checked={props.checked}
               {...rest}
             />
           }
-          label={props.text}
+          label={text}
+          sx={sxFormLabel}
         />
-        {toolTipText && <HelpIcon text={toolTipText} />}
-      </React.Fragment>
+        {toolTipText ? (
+          <TooltipIcon
+            interactive={toolTipInteractive}
+            text={toolTipText}
+            status="help"
+          />
+        ) : null}
+      </>
     );
   }
 
   return (
-    <Checkbox
+    <StyledCheckbox
       color="primary"
-      className={classnames}
       icon={<CheckboxIcon />}
       checkedIcon={<CheckboxCheckedIcon />}
       data-qa-checked={props.checked}
@@ -81,3 +56,30 @@ const LinodeCheckBox: React.FC<Props> = (props) => {
 };
 
 export default LinodeCheckBox;
+
+const StyledCheckbox = styled(Checkbox)(({ theme, ...props }) => ({
+  color: '#ccc',
+  transition: theme.transitions.create(['color']),
+  '& .defaultFill': {
+    transition: theme.transitions.create(['fill']),
+  },
+  '&:hover': {
+    color: theme.palette.primary.main,
+  },
+  ...(props.checked && {
+    color: theme.palette.primary.main,
+  }),
+  ...(props.disabled && {
+    color: '#ccc !important',
+    fill: `${theme.bg.main} !important`,
+    pointerEvents: 'none',
+    '& .defaultFill': {
+      opacity: 0.5,
+      fill: `${theme.bg.main}`,
+    },
+  }),
+}));
+
+const StyledFormControlLabel = styled(FormControlLabel)(() => ({
+  marginRight: 0,
+}));

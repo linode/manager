@@ -1,4 +1,4 @@
-import { Config, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -11,6 +11,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
+import { ExtendedType } from 'src/utilities/extendType';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
@@ -170,7 +171,7 @@ interface ContextProps {
   linodeLabel: string;
   linodeRegion: string;
   linodeCreated: string;
-  linodeType?: LinodeType | null | undefined;
+  linodeType?: ExtendedType | null | undefined;
   readOnly: boolean;
 }
 

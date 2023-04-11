@@ -1,8 +1,9 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import AccessPanel from 'src/components/AccessPanel/AccessPanel';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { ImageSelect } from 'src/features/Images';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -29,9 +30,8 @@ interface Props {
   passwordError?: string;
   onPasswordChange: (password: string) => void;
 
-  userSSHKeys: UserSSHKeyObject[];
-  requestKeys: () => void;
-  sshError?: string;
+  setAuthorizedUsers: (usernames: string[]) => void;
+  authorizedUsers: string[];
 }
 
 type CombinedProps = Props & ContextProps;
@@ -43,9 +43,8 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
     onPasswordChange,
     password,
     passwordError,
-    requestKeys,
-    userSSHKeys,
-    sshError,
+    setAuthorizedUsers,
+    authorizedUsers,
     permissions,
   } = props;
 
@@ -73,9 +72,8 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
         password={password || ''}
         handleChange={onPasswordChange}
         error={passwordError}
-        users={userSSHKeys}
-        requestKeys={requestKeys}
-        sshKeyError={sshError}
+        authorizedUsers={authorizedUsers}
+        setAuthorizedUsers={setAuthorizedUsers}
         disabled={disabled}
         disabledReason={
           disabled

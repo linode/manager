@@ -7,9 +7,8 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu from './ClusterActionMenu';
 import { Link } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import { dcDisplayNames } from 'src/constants';
-import { useAllLinodeTypesQuery } from 'src/queries/linodes';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import {
   getNextVersion,
@@ -19,6 +18,9 @@ import {
   useAllKubernetesNodePoolQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
+import { useSpecificTypes } from 'src/queries/types';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -64,7 +66,11 @@ export const KubernetesClusterRow = (props: Props) => {
 
   const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
-  const { data: types } = useAllLinodeTypesQuery();
+  const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
+  const types = extendTypesQueryResult(typesQuery);
+  const { data: regions } = useRegionsQuery();
+
+  const region = regions?.find((r) => r.id === cluster.region);
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 
@@ -134,7 +140,7 @@ export const KubernetesClusterRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell data-qa-cluster-region>
-        {dcDisplayNames[cluster.region] ?? cluster.region}
+        {region?.label ?? cluster.region}
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-cluster-memory>{`${RAM / 1024} GB`}</TableCell>

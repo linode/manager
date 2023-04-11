@@ -1,16 +1,19 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import { useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import SelectableTableRow from 'src/components/SelectableTableRow';
 import TableCell from 'src/components/TableCell/TableCell';
-import { dcDisplayNames } from 'src/constants';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import { useTypes } from 'src/hooks/useTypes';
+import { useSpecificTypes } from 'src/queries/types';
 import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
 import { useLinodesByIdQuery } from 'src/queries/linodes';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRegionsQuery } from 'src/queries/regions';
+import { extendType } from 'src/utilities/extendType';
 
 interface Props {
   selectedLinodes: TransferEntity;
@@ -106,9 +109,13 @@ interface RowProps {
 
 const LinodeRow: React.FC<RowProps> = (props) => {
   const { linode, isChecked, handleToggleCheck } = props;
-  const { typesMap } = useTypes();
-  const displayRegion = dcDisplayNames[linode.region] ?? linode.region;
-  const displayType = typesMap[linode.type ?? '']?.label ?? linode.type;
+  const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
+  const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
+  const displayType = type?.formattedLabel ?? linode.type;
+
+  const { data: regions } = useRegionsQuery();
+  const region = regions?.find((r) => r.id === linode.region);
+  const displayRegion = region?.label ?? linode.region;
   return (
     <SelectableTableRow
       isChecked={isChecked}

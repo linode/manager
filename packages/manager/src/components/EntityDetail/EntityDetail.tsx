@@ -7,8 +7,9 @@
  */
 
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 
 export interface EntityDetailProps {
   header: JSX.Element;
@@ -46,12 +47,11 @@ export const EntityDetail: React.FC<EntityDetailProps> = (props) => {
       {header}
 
       {body !== undefined && (
-        <Grid item xs={12} className={classes.body}>
+        <Grid xs={12} className={classes.body}>
           {body}
         </Grid>
       )}
       <Grid
-        item
         xs={12}
         className={`${classes.footer} ${
           body === undefined && classes.footerBorder

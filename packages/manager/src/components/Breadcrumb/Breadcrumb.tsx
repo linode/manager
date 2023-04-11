@@ -1,24 +1,22 @@
-import classNames from 'classnames';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import Crumbs, { CrumbOverridesProps } from './Crumbs';
-
 import { EditableProps, LabelProps } from './types';
 
-export interface Props {
-  labelTitle?: string;
-  labelOptions?: LabelProps;
-  onEditHandlers?: EditableProps;
-  removeCrumbX?: number;
-  firstAndLastOnly?: boolean;
-  crumbOverrides?: CrumbOverridesProps[];
+export interface BreadcrumbProps {
+  breadcrumbDataAttrs?: { [key: string]: boolean };
   className?: string;
+  crumbOverrides?: CrumbOverridesProps[];
+  firstAndLastOnly?: boolean;
+  labelOptions?: LabelProps;
+  labelTitle?: string;
+  onEditHandlers?: EditableProps;
   pathname: string;
+  removeCrumbX?: number;
 }
 
-export type CombinedProps = Props;
-
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -43,18 +41,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Breadcrumb: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const Breadcrumb = (props: BreadcrumbProps) => {
+  const { classes, cx } = useStyles();
 
   const {
-    labelTitle,
-    labelOptions,
-    onEditHandlers,
-    removeCrumbX,
-    firstAndLastOnly,
-    crumbOverrides,
+    breadcrumbDataAttrs,
     className,
+    crumbOverrides,
+    firstAndLastOnly,
+    labelOptions,
+    labelTitle,
+    onEditHandlers,
     pathname,
+    removeCrumbX,
   } = props;
 
   const url = pathname && pathname.slice(1);
@@ -68,16 +67,17 @@ export const Breadcrumb: React.FC<CombinedProps> = (props) => {
 
   return (
     <div
-      className={classNames(
+      className={cx(
         {
           [classes.root]: true,
           [classes.hasError]: hasError,
         },
         className
       )}
+      {...breadcrumbDataAttrs}
     >
       <div
-        className={classNames({
+        className={cx({
           [classes.preContainer]: true,
           [classes.editablePreContainer]: onEditHandlers !== undefined,
         })}
@@ -101,4 +101,4 @@ const removeByIndex = (list: string[], indexToRemove: number) => {
   });
 };
 
-export default Breadcrumb;
+export { Breadcrumb };

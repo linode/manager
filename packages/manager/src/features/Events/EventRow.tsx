@@ -3,7 +3,8 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -12,9 +13,8 @@ import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
-import getEventsActionLink from 'src/utilities/getEventsActionLink';
+import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import { GravatarByUsername } from '../../components/GravatarByUsername';
-import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   row: {
@@ -42,7 +42,7 @@ type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
   const { event, entityId } = props;
-  const link = getEventsActionLink(event.action, event.entity, event._deleted);
+  const link = getLinkForEvent(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
@@ -89,13 +89,11 @@ export const Row: React.FC<RowProps> = (props) => {
     return null;
   }
 
-  const displayedMessage = formatEventWithUsername(action, username, message);
-
   return (
     <TableRow
       data-qa-event-row
       data-test-id={action}
-      ariaLabel={`Event ${displayedMessage}`}
+      ariaLabel={`Event ${message}`}
       className={classes.row}
     >
       <Hidden smDown>
@@ -108,7 +106,7 @@ export const Row: React.FC<RowProps> = (props) => {
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
         <HighlightedMarkdown
-          textOrMarkdown={displayedMessage}
+          textOrMarkdown={message}
           sanitizeOptions={{
             allowedTags: ['a'],
             disallowedTagsMode: 'discard',

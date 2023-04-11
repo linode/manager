@@ -1,4 +1,4 @@
-import { Config, Linode } from '@linode/api-v4/lib/linodes/types';
+import { Config } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -9,7 +9,6 @@ import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import CSVLink from 'src/components/DownloadCSV';
 import ErrorState from 'src/components/ErrorState';
@@ -20,12 +19,11 @@ import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
-import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import { DialogType } from 'src/features/linodes/types';
+import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
 import formatDate, { formatDateISO } from 'src/utilities/formatDate';
 import {
@@ -37,7 +35,7 @@ import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDial
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
 import LinodeResize from '../LinodesDetail/LinodeResize';
-import MigrateLinode from '../MigrateLanding/MigrateLinode';
+import MigrateLinode from '../MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
@@ -72,11 +70,9 @@ interface Params {
 type RouteProps = RouteComponentProps<Params>;
 
 export interface Props {
-  filterLinodesFn?: (linode: Linode) => boolean;
-  extendLinodesFn?: (linode: Linode) => any;
   LandingHeader?: React.ReactElement;
   someLinodesHaveScheduledMaintenance: boolean;
-  linodesData: LinodeWithMaintenance[];
+  linodesData: ExtendedLinode[];
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
 }
@@ -86,7 +82,6 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   StyleProps &
-  SetDocsProps &
   WithSnackbarProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
@@ -100,8 +95,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     linodeResizeOpen: false,
     linodeMigrateOpen: false,
   };
-
-  static docs = [LinodeGettingStarted, SecuringYourServer];
 
   /**
    * when you change the linode view, instantly update the query params
@@ -209,15 +202,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       params.has('view') && ['grid', 'list'].includes(params.get('view')!)
         ? (params.get('view') as 'grid' | 'list')
         : undefined;
-
-    // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
-    const filteredLinodes = this.props.filterLinodesFn
-      ? linodesData.filter(this.props.filterLinodesFn)
-      : linodesData;
-
-    const extendedLinodes = this.props.extendLinodesFn
-      ? filteredLinodes.map(this.props.extendLinodesFn)
-      : filteredLinodes;
 
     const componentProps = {
       count: linodesCount,
@@ -343,7 +327,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                             <LandingHeader
                               title="Linodes"
                               entity="Linode"
-                              onAddNew={() =>
+                              onButtonClick={() =>
                                 this.props.history.push('/linodes/create')
                               }
                               docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
@@ -354,7 +338,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
                       <OrderBy
                         preferenceKey={'linodes-landing'}
-                        data={extendedLinodes.map((linode) => {
+                        data={linodesData.map((linode) => {
                           // Determine the priority of this Linode's status.
                           // We have to check for "Maintenance" and "Busy" since these are
                           // not actual Linode statuses (we derive them client-side).
@@ -545,7 +529,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const enhanced = compose<CombinedProps, Props>(
   withRouter,
-  setDocs(ListLinodes.docs),
   withSnackbar,
   connected,
   styled,

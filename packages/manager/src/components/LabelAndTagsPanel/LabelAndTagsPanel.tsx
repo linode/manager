@@ -1,12 +1,8 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TagsInput, { TagsInputProps } from 'src/components/TagsInput';
@@ -50,6 +46,7 @@ export class InfoPanel extends React.Component<CombinedProps> {
             placeholder: 'Enter a label',
           })}
           data-qa-label-input
+          noMarginTop
         />
         {tagsInputProps && <TagsInput {...tagsInputProps} />}
       </Paper>

@@ -4,7 +4,8 @@ import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -23,7 +24,7 @@ import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDra
 import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
 import VolumeTableRow from 'src/features/Volumes/VolumeTableRow';
 import { useOrder } from 'src/hooks/useOrder';
-import usePagination from 'src/hooks/usePagination';
+import { usePagination } from 'src/hooks/usePagination';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import {
@@ -300,7 +301,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
-              label="Status"
+              label="status"
               handleClick={handleOrderChange}
             >
               Status

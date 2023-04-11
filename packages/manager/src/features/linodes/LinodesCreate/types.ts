@@ -4,12 +4,11 @@ import {
   Linode,
   LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
-import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/utilities/extendType';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -21,6 +20,7 @@ export type TypeInfo =
       title: string;
       details: string;
       monthly: number;
+      hourly: number;
       backupsMonthly: number | null;
     }
   | undefined;
@@ -44,25 +44,13 @@ export interface WithLinodesProps {
   linodesError?: APIError[];
 }
 
-export interface WithRegionsProps {
-  regionsData: ExtendedRegion[];
-  regionsLoading: boolean;
-  regionsError?: APIError[];
-}
-
-export interface WithTypesProps {
-  typesData?: ExtendedType[];
-  typesLoading: boolean;
-  typesError?: APIError[];
-}
-
 /**
  * Pure Data without the loading and error
  * keys. Component with these props have already been
  * safe-guarded with null, loading, and error checking
  */
 export interface WithTypesRegionsAndImages {
-  regionsData: ExtendedRegion[];
+  regionsData: Region[];
   typesData?: ExtendedType[];
   imagesData: Record<string, Image>;
 }
@@ -127,7 +115,8 @@ export interface BaseFormStateAndHandlers {
   tags?: Tag[];
   updateTags: (tags: Tag[]) => void;
   resetCreationState: () => void;
-  resetSSHKeys: () => void;
+  authorized_users: string[];
+  setAuthorizedUsers: (usernames: string[]) => void;
   selectedVlanIDs: number[];
   setVlanID: (ids: number[]) => void;
 }
@@ -185,9 +174,3 @@ export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
   CloneFormStateHandlers &
   StackScriptFormStateHandlers &
   BackupFormStateHandlers;
-
-/**
- * Additional props that don't have a logic place to live under but still
- * need to be passed down to the children
- */
-export type ReduxStatePropsAndSSHKeys = ReduxStateProps & userSSHKeysProps;

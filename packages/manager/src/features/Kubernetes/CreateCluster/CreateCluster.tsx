@@ -6,13 +6,11 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
+import { useHistory } from 'react-router-dom';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import DocsLink from 'src/components/DocsLink';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -20,7 +18,6 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
@@ -30,11 +27,14 @@ import {
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
+import LandingHeader from 'src/components/LandingHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -105,11 +105,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = RouteComponentProps<{}> & WithTypesProps;
-
-export const CreateCluster: React.FC<CombinedProps> = (props) => {
+export const CreateCluster = () => {
   const classes = useStyles();
-  const { typesData: allTypes, typesLoading, typesError } = props;
+  const {
+    data: allTypes,
+    isLoading: typesLoading,
+    error: typesError,
+  } = useAllTypes();
 
   const {
     mutateAsync: createKubernetesCluster,
@@ -119,7 +121,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const regionsData = data ?? [];
 
   // Only want to use current types here.
-  const typesData = filterCurrentTypes(allTypes);
+  const typesData = filterCurrentTypes(allTypes?.map(extendType));
 
   // Only include regions that have LKE capability
   const filteredRegions = React.useMemo(() => {
@@ -149,6 +151,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
     value: thisVersion.id,
     label: thisVersion.id,
   }));
+  const history = useHistory();
 
   React.useEffect(() => {
     if (filteredRegions.length === 1 && !selectedRegion) {
@@ -157,9 +160,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   }, [filteredRegions, selectedRegion]);
 
   const createCluster = () => {
-    const {
-      history: { push },
-    } = props;
+    const { push } = history;
 
     setErrors(undefined);
     setSubmitting(true);
@@ -243,24 +244,11 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   return (
     <Grid container className={classes.root}>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-      <Grid
-        container
-        className="m0"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Grid item className="p0">
-          <Breadcrumb
-            pathname={location.pathname}
-            labelTitle="Create Cluster"
-            labelOptions={{ noCap: true }}
-          />
-        </Grid>
-        <Grid item className="p0">
-          <DocsLink href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
-        </Grid>
-      </Grid>
-
+      <LandingHeader
+        title="Create Cluster"
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
+      />
       <Grid item className={`mlMain py0`}>
         {errorMap.none && <Notice error text={errorMap.none} />}
         <Paper data-qa-label-header>
@@ -365,6 +353,4 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withRouter, withTypes);
-
-export default enhanced(CreateCluster);
+export default CreateCluster;

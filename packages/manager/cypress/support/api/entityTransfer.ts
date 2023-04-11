@@ -1,0 +1,49 @@
+import {
+  getEntityTransfers,
+  cancelTransfer,
+  getLinodes,
+  Linode,
+  EntityTransfer,
+} from '@linode/api-v4';
+import { pageSize } from 'support/constants/api';
+import { depaginate } from 'support/util/paginate';
+import { isTestLabel } from './common';
+
+/**
+ * Cancel all entity transfers whose labels are prefixed "cy-test-".
+ *
+ * @returns Promise that resolves when entity transfers have been cancelled or rejects on HTTP error.
+ */
+export const cancelAllTestEntityTransfers = async (): Promise<void> => {
+  const linodes = await depaginate<Linode>((page: number) =>
+    getLinodes({ page_size: pageSize, page })
+  );
+
+  const entityTransfers = (
+    await depaginate<EntityTransfer>((page: number) =>
+      getEntityTransfers({ page_size: pageSize, page })
+    )
+  ).filter(
+    (entityTransfer: EntityTransfer) => entityTransfer.status === 'pending'
+  );
+
+  const deletionPromises = entityTransfers.map(
+    async (entityTransfer: EntityTransfer) => {
+      const transferLinodeIds: number[] =
+        entityTransfer?.entities?.linodes || [];
+      const allLinodesAreTestLinodes = transferLinodeIds.every(
+        (transferLinodeId: number) => {
+          const existingLinode = linodes.find(
+            (linode: Linode) => linode.id === transferLinodeId
+          );
+          return !!existingLinode && isTestLabel(existingLinode.label);
+        }
+      );
+      if (allLinodesAreTestLinodes) {
+        await cancelTransfer(entityTransfer.token);
+      }
+    }
+  );
+
+  await Promise.all(deletionPromises);
+};

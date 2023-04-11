@@ -11,7 +11,8 @@ import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -44,6 +45,7 @@ import SupportTicketSMTPFields, {
   fieldNameToLabelMap,
   smtpHelperText,
 } from './SupportTicketSMTPFields';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -253,6 +255,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const { data: domains, isLoading: domainsLoading } = useAllDomainsQuery(
     entityType === 'domain_id'
   );
+  const {
+    data: nodebalancers,
+    isLoading: nodebalancersLoading,
+  } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
 
   const {
     data: clusters,
@@ -311,10 +317,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         handleSetOrRequestEntities(entities.linodes, _entityType);
         return;
       }
-      case 'nodebalancer_id': {
-        handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
-        return;
-      }
+      case 'nodebalancer_id':
       case 'lkecluster_id':
       case 'volume_id':
       case 'firewall_id':
@@ -568,6 +571,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       domain_id: domains,
       volume_id: volumes,
       lkecluster_id: clusters,
+      nodebalancer_id: nodebalancers,
     };
 
     if (!reactQueryEntityDataMap[entityType]) {
@@ -610,6 +614,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     }
     if (entityType === 'lkecluster_id') {
       return clustersLoading;
+    }
+    if (entityType === 'nodebalancer_id') {
+      return nodebalancersLoading;
     }
     return entitiesLoading;
   };

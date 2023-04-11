@@ -1,25 +1,25 @@
-import { getAll, deleteById, apiCheckErrors } from './common';
+import { apiCheckErrors } from './common';
 import { isTestLabel } from 'support/api/common';
 import { randomDomainName } from 'support/util/random';
-
-const oauthtoken = Cypress.env('MANAGER_OAUTH');
-const relativeApiPath = 'domains';
-
-export const getDomains = () => getAll(relativeApiPath);
-
-export const deleteDomainById = (id) => deleteById(relativeApiPath, id);
+import { Domain, getDomains, deleteDomain } from '@linode/api-v4';
+import { depaginate } from 'support/util/paginate';
+import { oauthToken, pageSize } from 'support/constants/api';
 
 /**
  * Deletes all domains which are prefixed with the test entity prefix.
+ *
+ * @returns Promise that resolves when domains have been deleted.
  */
-export const deleteAllTestDomains = () => {
-  getDomains().then((resp) => {
-    resp.body.data.forEach((domain) => {
-      if (isTestLabel(domain.domain)) {
-        deleteDomainById(domain.id);
-      }
-    });
-  });
+export const deleteAllTestDomains = async (): Promise<void> => {
+  const domains = await depaginate<Domain>((page: number) =>
+    getDomains({ page_size: pageSize, page })
+  );
+
+  const deletionPromises = domains
+    .filter((domain: Domain) => isTestLabel(domain.domain))
+    .map((domain: Domain) => deleteDomain(domain.id));
+
+  await Promise.all(deletionPromises);
 };
 
 const makeDomainCreateReq = (domain) => {
@@ -36,7 +36,7 @@ const makeDomainCreateReq = (domain) => {
     url: Cypress.env('REACT_APP_API_ROOT') + '/domains',
     body: domainData,
     auth: {
-      bearer: oauthtoken,
+      bearer: oauthToken,
     },
   });
 };

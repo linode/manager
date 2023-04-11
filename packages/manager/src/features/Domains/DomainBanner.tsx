@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
@@ -10,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
   },
   dnsWarning: {
-    '& h3:first-child': {
+    '& h3:first-of-type': {
       marginBottom: theme.spacing(1),
     },
   },

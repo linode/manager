@@ -2,22 +2,24 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import TableBody from 'src/components/core/TableBody';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
-import Paginate from 'src/components/Paginate';
+import Paginate, { PaginationProps } from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -39,6 +41,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+export interface RenderLinodesProps extends PaginationProps {
+  data: Props['data'];
+  showHead?: boolean;
+  openDialog: Props['openDialog'];
+  openPowerActionDialog: Props['openPowerActionDialog'];
+}
+
 interface Props {
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
@@ -49,8 +58,8 @@ interface Props {
   ) => void;
   count: number;
   display: 'grid' | 'list';
-  component: any;
-  data: ExtendedLinode[];
+  component: React.ComponentType<RenderLinodesProps>;
+  data: (ExtendedLinode & LinodeWithMaintenanceAndDisplayStatus)[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
@@ -59,7 +68,8 @@ interface Props {
   updatePageUrl: (page: number) => void;
 }
 
-type CombinedProps = Props & OrderByProps;
+type CombinedProps = Props &
+  OrderByProps<LinodeWithMaintenanceAndDisplayStatus>;
 
 const DisplayLinodes = (props: CombinedProps) => {
   const classes = useStyles();
@@ -117,6 +127,7 @@ const DisplayLinodes = (props: CombinedProps) => {
       }) => {
         const componentProps = {
           ...rest,
+          count,
           data: paginatedData,
           pageSize,
           page,

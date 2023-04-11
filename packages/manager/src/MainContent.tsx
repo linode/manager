@@ -3,14 +3,10 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
-import Logo from 'src/assets/logo/logo.svg';
+import Logo from 'src/assets/logo/akamai-logo.svg';
 import Box from 'src/components/core/Box';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme,
-} from 'src/components/core/styles';
+import { makeStyles, withTheme, WithTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
@@ -129,6 +125,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: '0 auto',
     },
   },
+  bgStyling: {
+    backgroundColor: theme.bg.main,
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
 }));
 
 interface Props {
@@ -148,7 +151,9 @@ const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile'));
-const NodeBalancers = React.lazy(() => import('src/features/NodeBalancers'));
+const NodeBalancers = React.lazy(
+  () => import('src/features/NodeBalancers/NodeBalancers')
+);
 const StackScripts = React.lazy(() => import('src/features/StackScripts'));
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
@@ -213,19 +218,15 @@ const MainContent: React.FC<CombinedProps> = (props) => {
    */
   if (props.globalErrors.account_unactivated) {
     return (
-      <div
-        style={{
-          backgroundColor: props.theme.bg.main,
-          minHeight: '100vh',
-        }}
-      >
+      <div className={classes.bgStyling}>
         <div className={classes.activationWrapper}>
           <Box
             style={{
               display: 'flex',
+              justifyContent: 'center',
             }}
           >
-            <Logo className={classes.logo} />
+            <Logo width={215} className={classes.logo} />
           </Box>
           <Switch>
             <Route

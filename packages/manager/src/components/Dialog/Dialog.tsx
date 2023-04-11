@@ -4,12 +4,12 @@ import Button from 'src/components/Button';
 import MUIDialog, {
   DialogProps as _DialogProps,
 } from 'src/components/core/Dialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 import Notice from 'src/components/Notice';
-import classNames from 'classnames';
 
 export interface DialogProps extends _DialogProps {
   className?: string;
@@ -45,10 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   drawerHeader: {
     padding: theme.spacing(2),
   },
-  dialogContent: {
-    padding: theme.spacing(2),
-    paddingTop: 0,
-  },
   button: {
     minWidth: 'auto',
     minHeight: 'auto',
@@ -68,9 +64,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.bgPaper,
     position: 'sticky',
     top: 0,
-    padding: theme.spacing(),
+    padding: `${theme.spacing(1.5)} 0`,
     paddingTop: theme.spacing(4),
-    marginBottom: 20,
     zIndex: 1,
     width: '100%',
     display: 'flex',
@@ -121,14 +116,9 @@ const Dialog: React.FC<DialogProps> = (props) => {
       }}
       className={fullHeight ? classes.fullHeight : undefined}
     >
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        updateFor={[title, props.children]}
-      >
+      <Grid container alignItems="center">
         <div className={classes.sticky}>
-          <Grid item>
+          <Grid>
             <Typography
               variant="h2"
               id={titleID}
@@ -138,7 +128,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
               {title}
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Button
               buttonType="secondary"
               onClick={props.onClose as (e: any) => void}
@@ -152,7 +142,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
         </div>
         {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
         <Grid container>
-          <div className={classNames(classes.dialogContent, className)}>
+          <div className={className}>
             {error && <Notice text={error} error />}
             {children}
           </div>

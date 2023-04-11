@@ -3,11 +3,13 @@ import classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import IconButton from 'src/components/core/IconButton';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import Tag from 'src/components/Tag';
 import CircleProgress from '../CircleProgress';
 import AddTag from './AddTag';
+import Box from '@mui/material/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -200,7 +202,7 @@ export const TagCell: React.FC<Props> = (props) => {
           </div>
 
           {hasOverflow ? (
-            <Grid item className="py0">
+            <Box className="py0">
               <IconButton
                 onKeyPress={() => props.listAllTags(tags)}
                 onClick={() => props.listAllTags(tags)}
@@ -211,7 +213,7 @@ export const TagCell: React.FC<Props> = (props) => {
               >
                 <MoreHoriz />
               </IconButton>
-            </Grid>
+            </Box>
           ) : null}
           <button
             className={classes.addTagButton}

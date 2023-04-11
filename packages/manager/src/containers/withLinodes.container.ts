@@ -1,5 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { path } from 'ramda';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
@@ -10,7 +10,10 @@ import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
-  getLinodes: (params?: any, filters?: any) => Promise<GetAllData<Linode>>;
+  getLinodes: (
+    params?: Params,
+    filters?: Filter
+  ) => Promise<GetAllData<Linode>>;
 }
 
 /* tslint:disable-next-line */

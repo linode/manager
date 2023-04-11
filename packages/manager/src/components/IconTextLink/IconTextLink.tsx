@@ -3,80 +3,66 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import ConditionalWrapper from 'src/components/ConditionalWrapper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
 
-type CSSClasses =
-  | 'root'
-  | 'active'
-  | 'disabled'
-  | 'icon'
-  | 'left'
-  | 'label'
-  | 'linkWrapper';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      cursor: 'pointer',
-      padding: theme.spacing(1) + theme.spacing(0.5),
-      color: theme.textColors.linkActiveLight,
-      transition: 'none',
-      margin: `0 -calc(${theme.spacing(1) + theme.spacing(1)} / 2) 2px 0`,
-      minHeight: 'auto',
-      borderRadius: 0,
-      '&:hover': {
-        color: theme.palette.primary.light,
-        backgroundColor: 'transparent',
-        '& .border': {
-          color: theme.palette.primary.light,
-        },
-      },
-      '&:focus': { outline: '1px dotted #999' },
-    },
-    active: {
-      color: '#1f64b6',
-    },
-    disabled: {
-      color: '#939598',
-      pointerEvents: 'none',
-      '& $icon': {
-        color: '#939598',
-        borderColor: '#939598',
-      },
-    },
-    icon: {
-      transition: 'none',
-      fontSize: 18,
-      marginRight: theme.spacing(0.5),
-      color: 'inherit',
+const useStyles = makeStyles()((theme: Theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    cursor: 'pointer',
+    padding: theme.spacing(1) + theme.spacing(0.5),
+    color: theme.textColors.linkActiveLight,
+    transition: 'none',
+    margin: `0 ${theme.spacing(1)} 2px 0`,
+    minHeight: 'auto',
+    borderRadius: 0,
+    '&:hover': {
+      color: theme.palette.primary.light,
+      backgroundColor: 'transparent',
       '& .border': {
-        transition: 'none',
+        color: theme.palette.primary.light,
       },
     },
-    left: {
-      left: -(theme.spacing(1) + theme.spacing(0.5)),
+    '&:focus': { outline: '1px dotted #999' },
+  },
+  active: {
+    color: '#1f64b6',
+  },
+  disabled: {
+    color: '#939598',
+    pointerEvents: 'none',
+    '& $icon': {
+      color: '#939598',
+      borderColor: '#939598',
     },
-    label: {
-      whiteSpace: 'nowrap',
-      position: 'relative',
-      top: -1,
+  },
+  icon: {
+    transition: 'none',
+    fontSize: 18,
+    marginRight: theme.spacing(0.5),
+    color: 'inherit',
+    '& .border': {
+      transition: 'none',
     },
-    linkWrapper: {
-      display: 'flex',
-      justifyContent: 'center',
-      '&:hover, &:focus': {
-        textDecoration: 'none',
-      },
+  },
+  left: {
+    left: -(theme.spacing(1) + theme.spacing(0.5)),
+  },
+  label: {
+    whiteSpace: 'nowrap',
+    position: 'relative',
+    top: -1,
+  },
+  linkWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    '&:hover, &:focus': {
+      textDecoration: 'none',
     },
-  });
+  },
+}));
 
 export interface Props {
   SideIcon: typeof SvgIcon | React.ComponentClass;
@@ -86,17 +72,17 @@ export interface Props {
   disabled?: boolean;
   title: string;
   left?: boolean;
-  className?: any;
+  className?: string;
   to?: string;
   hideText?: boolean;
+  children?: string;
 }
 
-type FinalProps = Props & WithStyles<CSSClasses>;
+const IconTextLink = (props: Props) => {
+  const { classes } = useStyles();
 
-const IconTextLink: React.FC<FinalProps> = (props) => {
   const {
     SideIcon,
-    classes,
     text,
     onClick,
     active,
@@ -147,4 +133,4 @@ const IconTextLink: React.FC<FinalProps> = (props) => {
   );
 };
 
-export default withStyles(styles)(IconTextLink);
+export default IconTextLink;
