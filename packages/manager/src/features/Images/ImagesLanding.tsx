@@ -289,7 +289,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     });
   };
 
-  const onCancelFailedClick = (imageId: string) => {
+  const onCancelFailedClick = () => {
     removeImageFromCache(queryClient);
   };
 
