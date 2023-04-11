@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
   },
   displayTable: {
+    padding: '8px 8px 0px',
     width: '100%',
     '& > div': {
       marginBottom: theme.spacing(3),
@@ -150,7 +151,7 @@ export const NodePoolsDisplay = (props: Props) => {
           <ErrorState errorText={poolsError?.[0].reason} />
         ) : (
           <Grid container direction="column">
-            <Grid item xs={12} className={classes.displayTable}>
+            <Grid xs={12} className={classes.displayTable}>
               {_pools?.map((thisPool) => {
                 const { id, nodes } = thisPool;
 
