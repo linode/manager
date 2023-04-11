@@ -30,5 +30,8 @@ import './request-tracking';
 
 // Runs before each test file.
 before(() => {
-  deleteAllTestData();
+  cy.wrap(deleteAllTestData(), {
+    // Make sure there's enough time to accommodate retries when necessary.
+    timeout: 120000,
+  });
 });

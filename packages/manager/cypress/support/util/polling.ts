@@ -1,46 +1,32 @@
-import { LinodeStatus, ImageStatus } from '@linode/api-v4/types';
-import { getImage } from '@linode/api-v4/lib/images';
-import { getLinode } from '@linode/api-v4/lib/linodes';
-
 /**
  * @file Utilities for polling APIs and other resources.
  */
 
-export interface PollingOptions {
-  // Poll label. Used for logging and error troubleshooting.
-  label?: string;
+import {
+  BackoffOptions,
+  BackoffMethod,
+  FibonacciBackoffMethod,
+  attemptWithBackoff,
+} from './backoff';
+import { LinodeStatus, ImageStatus, getImage, getLinode } from '@linode/api-v4';
 
-  // Initial delay (in MS) before executing callback. Useful for operations
-  // that are known to fail immediately.
-  initialDelay: number;
+/// Describes a backoff configuration for a poll. This may be a partial BackoffOptions object,
+/// an instance of a BackoffMethod implementation, or undefined.
+export type PollBackoffConfiguration =
+  | Partial<BackoffOptions>
+  | BackoffMethod
+  | undefined;
 
-  // Maximum polling attempts before failing.
-  maxAttempts: number;
-
-  // Fibonacci number offset. Useful for increasing the delays between attempts.
-  fibonacciOffset: number;
-}
-
-const defaultPollingOptions = {
-  label: undefined,
-  initialDelay: 0,
+// Default backoff options for a poll.
+const defaultBackoffOptions: BackoffOptions = {
   maxAttempts: 10,
-  fibonacciOffset: 0,
+  initialDelay: 0,
 };
 
-/**
- * Get a fibonacci number with the given index.
- *
- * @param index - Index of fibonacci number to retrieve.
- *
- * @returns Fibonacci number for `index`.
- */
-const fibonacci = (index: number): number => {
-  if (index <= 1) {
-    return 1;
-  }
-  return fibonacci(index - 1) + fibonacci(index - 2);
-};
+// Default backoff method for a poll, which uses the default backoff options.
+const defaultBackoffMethod: BackoffMethod = new FibonacciBackoffMethod(
+  defaultBackoffOptions
+);
 
 /**
  * Executes a callback repeatedly until a desired result is achieved.
@@ -50,45 +36,50 @@ const fibonacci = (index: number): number => {
  *
  * @param callback - Callback that returns a Promise to retrieve some data.
  * @param evaluator - Callback to evaluate whether the data matches some condition.
- * @param options - Polling options.
+ * @param backoffOptions - Backoff method configuration to manage re-attempts.
+ * @param label - Optional label to assign to poll for logging and troubleshooting.
  *
- * @returns A Promise that resolves to the retrieved data upon successful evaluation.
+ * @returns A Promise that resolves to the retrieved result upon successful evaluation or rejects on timeout.
  */
 export const poll = async <T>(
   callback: () => Promise<T>,
   evaluator: (T) => boolean,
-  options?: Partial<PollingOptions>
+  backoffOptions: PollBackoffConfiguration = undefined,
+  label: string | undefined = undefined
 ): Promise<T> => {
-  const { label, maxAttempts, initialDelay, fibonacciOffset } = {
-    ...defaultPollingOptions,
-    ...options,
-  };
-
-  if (initialDelay) {
-    await new Promise((resolve) => setTimeout(resolve, initialDelay));
-  }
-
-  let attempt = 1;
-
-  // Disable ESLint rule because we do not want to parallelize the async
-  // operations in this case.
-  /* eslint-disable no-await-in-loop */
-  while (attempt < maxAttempts + 1) {
+  const pollPromise = async () => {
     const result = await callback();
     if (evaluator(result)) {
       return result;
+    } else {
+      throw new Error();
     }
-    attempt++;
-    const fibonacciNum = fibonacci(attempt + fibonacciOffset);
-    const fibonacciMs = fibonacciNum * 1000;
-    await new Promise((resolve) => setTimeout(resolve, fibonacciMs));
+  };
+
+  const backoff: BackoffMethod = (() => {
+    if (backoffOptions instanceof BackoffMethod) {
+      return backoffOptions;
+    }
+    if (backoffOptions === undefined) {
+      return defaultBackoffMethod;
+    }
+    return new FibonacciBackoffMethod({
+      ...defaultBackoffOptions,
+      ...backoffOptions,
+    });
+  })();
+
+  let result: T | null = null;
+  try {
+    result = await attemptWithBackoff(backoff, pollPromise);
+  } catch (_e) {
+    const errorMessage = label
+      ? `Poll '${label}' failed after ${backoff.options.maxAttempts} attempt(s)`
+      : `Poll failed after ${backoff.options.maxAttempts} attempt(s)`;
+
+    throw new Error(errorMessage);
   }
-
-  const errorMessage = label
-    ? `Poll '${label}' failed after ${maxAttempts} attempt(s)`
-    : `Poll failed after ${maxAttempts} attempt(s)`;
-
-  throw new Error(errorMessage);
+  return result;
 };
 
 /**
@@ -96,20 +87,17 @@ export const poll = async <T>(
  *
  * @param linodeId - ID of Linode whose status should be polled.
  * @param desiredStatus - Desired status of Linode that is being polled.
- * @param options - Polling options.
+ * @param backoffMethod - Backoff method implementation to manage re-attempts.
+ * @param label - Optional label to assign to poll for logging and troubleshooting.
  *
- * @returns A Promise that resolves to the polled Linode's status.
+ * @returns A Promise that resolves to the polled Linode's status or rejects on timeout.
  */
 export const pollLinodeStatus = async (
   linodeId: number,
   desiredStatus: LinodeStatus,
-  options?: Partial<PollingOptions>
+  backoffOptions: PollBackoffConfiguration = undefined,
+  label: string | undefined = undefined
 ) => {
-  const resolvedOptions = {
-    label: 'Linode Status',
-    ...options,
-  };
-
   const getLinodeStatus = async () => {
     const linode = await getLinode(linodeId);
     return linode.status;
@@ -118,7 +106,7 @@ export const pollLinodeStatus = async (
   const checkLinodeStatus = (status: LinodeStatus): boolean =>
     status === desiredStatus;
 
-  return poll(getLinodeStatus, checkLinodeStatus, resolvedOptions);
+  return poll(getLinodeStatus, checkLinodeStatus, backoffOptions, label);
 };
 
 /**
@@ -126,20 +114,17 @@ export const pollLinodeStatus = async (
  *
  * @param imageId - ID of Image whose status should be polled.
  * @param desiredStatus - Desired status of Image that is being polled.
- * @param options - Polling options.
+ * @param backoffMethod - Backoff method implementation to manage re-attempts.
+ * @param label - Optional label to assign to poll for logging and troubleshooting.
  *
- * @returns A Promise that resolves to the polled Image's status.
+ * @returns A Promise that resolves to the polled Image's status or rejects on timeout.
  */
 export const pollImageStatus = async (
   imageId: string,
   desiredStatus: ImageStatus,
-  options?: Partial<PollingOptions>
+  backoffOptions: PollBackoffConfiguration = undefined,
+  label: string | undefined = undefined
 ) => {
-  const resolvedOptions = {
-    label: 'Image Status',
-    ...options,
-  };
-
   const getImageStatus = async () => {
     const image = await getImage(imageId);
     return image.status;
@@ -148,5 +133,5 @@ export const pollImageStatus = async (
   const checkImageStatus = (status: ImageStatus): boolean =>
     status === desiredStatus;
 
-  return poll(getImageStatus, checkImageStatus, resolvedOptions);
+  return poll(getImageStatus, checkImageStatus, backoffOptions, label);
 };

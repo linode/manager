@@ -1,8 +1,8 @@
-import { entityPrefix } from '../constants/cypress';
+import { oauthToken } from 'support/constants/api';
+import { entityTag, entityPrefix } from 'support/constants/cypress';
 
 const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 const apirootBeta = Cypress.env('REACT_APP_API_ROOT') + 'beta/';
-const oauthtoken = Cypress.env('MANAGER_OAUTH');
 
 export const apiCheckErrors = (resp, failOnError = true) => {
   let errs = undefined;
@@ -11,7 +11,7 @@ export const apiCheckErrors = (resp, failOnError = true) => {
   }
   if (failOnError) {
     if (errs) {
-      expect(errs[0].ERRORMESSAGE).not.to.be.exist;
+      expect((errs[0] as any).ERRORMESSAGE).not.to.be.exist;
     } else {
       expect(!!errs).to.be.false;
     }
@@ -25,7 +25,7 @@ export const getAll = (path: string, headers = {}) => {
     url: `${apiroot}${path}`,
     headers,
     auth: {
-      bearer: oauthtoken,
+      bearer: oauthToken,
     },
   });
 };
@@ -35,7 +35,7 @@ export const getAllBeta = (path: string) => {
     method: 'GET',
     url: `${apirootBeta}${path}`,
     auth: {
-      bearer: oauthtoken,
+      bearer: oauthToken,
     },
   });
 };
@@ -55,7 +55,7 @@ export const deleteById = (path: string, id: number) => {
     method: 'DELETE',
     url: `${apiroot}${path}/${id}`,
     auth: {
-      bearer: oauthtoken,
+      bearer: oauthToken,
     },
     // Sometimes a entity may fail to delete. This should not fail a test.
     // Ex. A Linode created by Cypress may be cloning due to another E2E test
@@ -70,7 +70,7 @@ export const deleteByIdBeta = (path: string, id: number) => {
     method: 'DELETE',
     url: `${apirootBeta}${path}/${id}`,
     auth: {
-      bearer: oauthtoken,
+      bearer: oauthToken,
     },
   });
 };
@@ -90,20 +90,17 @@ export const deleteByLabel = (path: string, label: string) => {
     method: 'DELETE',
     url: `${apiroot}${path}/${label}`,
     auth: {
-      bearer: oauthtoken,
+      bearer: oauthToken,
     },
     failOnStatusCode: false,
   });
 };
 
-// @TODO Remove this in favor of constants defined in `../constants/cypress.ts`.
-export const testTag = 'cy-test';
-
 // Images do not have tags
 export const isTestEntity = (entity) =>
-  entity.tags?.includes(testTag) ||
+  entity.tags?.includes(entityTag) ||
   entity.label?.startsWith(entityPrefix) ||
-  entity.summary?.includes(testTag);
+  entity.summary?.includes(entityTag);
 
 /**
  * Determines whether or not a label is a test label.
