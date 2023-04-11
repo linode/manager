@@ -4,7 +4,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import getUserTimezone from 'src/utilities/getUserTimezone';
@@ -151,20 +150,16 @@ const TablesPanel = () => {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'Connections',
-                    legendColor: 'purple',
-                    data: metrics,
-                    format: formatNumber,
-                  },
-                ]}
-              />
-            </Grid>
-          </Grid>
+          <MetricsDisplay
+            rows={[
+              {
+                legendTitle: 'Connections',
+                legendColor: 'purple',
+                data: metrics,
+                format: formatNumber,
+              },
+            ]}
+          />
         </div>
       </React.Fragment>
     );

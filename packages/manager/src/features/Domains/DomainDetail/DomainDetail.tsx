@@ -7,7 +7,7 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import LandingHeader from 'src/components/LandingHeader';
-import Grid from 'src/components/Grid/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tagsSection: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(1),
+      marginTop: theme.spacing(2),
       order: 2,
     },
     '&.MuiGrid-item': {
@@ -144,7 +144,7 @@ export const DomainDetail = () => {
         />
       )}
       <Grid container className={classes.root}>
-        <Grid item xs={12} className={classes.main}>
+        <Grid xs={12} className={classes.main}>
           <DomainRecords
             domain={domain}
             updateDomain={updateDomain}
@@ -152,7 +152,7 @@ export const DomainDetail = () => {
             updateRecords={refetchRecords}
           />
         </Grid>
-        <Grid item xs={12} className={classes.tagsSection}>
+        <Grid xs={12} className={classes.tagsSection}>
           <Paper className={classes.summarySection}>
             <Typography variant="h3" className={classes.title} data-qa-title>
               Tags

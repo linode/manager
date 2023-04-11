@@ -6,7 +6,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -60,15 +60,15 @@ const ObjectTableRow: React.FC<Props> = (props) => {
       className={manuallyCreated ? classes.manuallyCreated : ''}
     >
       <TableCell>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
+        <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+          <Grid className="py0">
             <EntityIcon
               variant="object"
               size={20}
               className={manuallyCreated ? classes.manuallyCreatedIcon : ''}
             />
           </Grid>
-          <Grid item>
+          <Grid>
             <Box display="flex" alignItems="center">
               <Typography>
                 <button

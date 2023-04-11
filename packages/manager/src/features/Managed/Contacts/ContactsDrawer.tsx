@@ -7,7 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
@@ -154,8 +154,8 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                   value={values.email}
                 />
 
-                <Grid container>
-                  <Grid item xs={12} md={6}>
+                <Grid container spacing={2}>
+                  <Grid xs={12} md={6}>
                     <TextField
                       name="phone.primary"
                       label="Primary Phone"
@@ -166,7 +166,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                       onBlur={handleBlur}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <TextField
                       name="phone.secondary"
                       label="Secondary Phone"

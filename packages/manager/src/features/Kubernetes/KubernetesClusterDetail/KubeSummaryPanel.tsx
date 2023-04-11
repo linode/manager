@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TagsPanel from 'src/components/TagsPanel';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import useFlags from 'src/hooks/useFlags';
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   mainGridContainer: {
     position: 'relative',
-    justifyContent: 'space-between',
   },
   tags: {
     display: 'flex',
@@ -144,15 +143,14 @@ export const KubeSummaryPanel = (props: Props) => {
   return (
     <>
       <Paper className={classes.root}>
-        <Grid container className={classes.mainGridContainer}>
+        <Grid container className={classes.mainGridContainer} spacing={2}>
           <KubeClusterSpecs cluster={cluster} />
           <Grid
-            item
             container
             direction="column"
-            justifyContent="space-between"
             xs={12}
             lg={4}
+            sx={{ paddingLeft: 2 }} // We should probably just remove this and let the grid do it's thing.
           >
             <KubeConfigDisplay
               clusterId={cluster.id}
@@ -163,14 +161,13 @@ export const KubeSummaryPanel = (props: Props) => {
             />
           </Grid>
           <Grid
-            item
             container
             xs={12}
             lg={5}
             justifyContent="flex-start"
             direction="column"
           >
-            <Grid item className={classes.actionRow}>
+            <Grid className={classes.actionRow}>
               {cluster.control_plane.high_availability ? (
                 <Chip
                   label="HA CLUSTER"
@@ -202,7 +199,7 @@ export const KubeSummaryPanel = (props: Props) => {
                 Delete Cluster
               </Button>
             </Grid>
-            <Grid item className={classes.tags}>
+            <Grid className={classes.tags}>
               <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
             </Grid>
           </Grid>

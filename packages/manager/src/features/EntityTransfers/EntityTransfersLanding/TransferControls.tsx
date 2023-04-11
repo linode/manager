@@ -5,7 +5,7 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import TextField from 'src/components/TextField';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
@@ -13,7 +13,6 @@ import ConfirmTransferDialog from './ConfirmTransferDialog';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     margin: `${theme.spacing(2)} 0`,
-    width: '100%',
     [theme.breakpoints.down('lg')]: {
       alignItems: 'flex-end',
     },
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelWrapper: {
     margin: 0,
-    width: '100%',
     [theme.breakpoints.down('lg')]: {
       flexWrap: 'wrap',
     },
@@ -70,6 +68,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   makeTransfer: {
+    paddingRight: 0,
+    paddingLeft: 0,
     [theme.breakpoints.up('md')]: {
       '&.MuiGrid-item': {
         paddingRight: 0,
@@ -127,10 +127,10 @@ export const TransferControls: React.FC<{}> = (_) => {
         alignItems="center"
         justifyContent="space-between"
         wrap="nowrap"
+        spacing={2}
       >
         <Grid
           container
-          item
           className={`px0 ${classes.labelWrapper}`}
           alignItems="center"
           wrap="nowrap"
@@ -140,7 +140,6 @@ export const TransferControls: React.FC<{}> = (_) => {
           </Typography>
           <Grid
             container
-            item
             className={classes.transferInputWrapper}
             direction="row"
             alignItems="center"
@@ -169,7 +168,7 @@ export const TransferControls: React.FC<{}> = (_) => {
             </Hidden>
           </Grid>
         </Grid>
-        <Grid item className={classes.makeTransfer}>
+        <Grid className={classes.makeTransfer}>
           <Button
             buttonType="primary"
             className={classes.makeTransferButton}

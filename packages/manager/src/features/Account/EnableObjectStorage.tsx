@@ -11,7 +11,7 @@ import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
 import { usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';
@@ -31,15 +31,15 @@ export const ObjectStorageContent = (props: ContentProps) => {
 
   if (object_storage !== 'disabled') {
     return (
-      <Grid container direction="column">
-        <Grid item>
+      <Grid container direction="column" spacing={2}>
+        <Grid>
           <Typography variant="body1">
             Object Storage is enabled on your account. Upon cancellation, all
             Object Storage Access Keys will be revoked, all buckets will be
             removed, and their objects deleted.
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Button
             data-testid="open-dialog-button"
             buttonType="outlined"

@@ -1,41 +1,16 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
 import { useRegionsQuery } from 'src/queries/regions';
 
-interface Props {
+interface DNSResolversProps {
   region: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    overflowX: 'auto',
-    overflowY: 'hidden',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  wrapper: {
-    marginTop: 2,
-    marginRight: 0,
-    width: '100%',
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'space-between',
-    },
-  },
-  header: {
-    position: 'absolute',
-  },
-  ipAddress: {
-    lineHeight: 1.43,
-  },
-}));
-
-export const DNSResolvers: React.FC<Props> = (props) => {
+export const DNSResolvers = (props: DNSResolversProps) => {
   const { region } = props;
-  const classes = useStyles();
+  const theme = useTheme();
   const regions = useRegionsQuery().data ?? [];
 
   const linodeRegion = regions.find((thisRegion) => thisRegion.id === region);
@@ -43,40 +18,63 @@ export const DNSResolvers: React.FC<Props> = (props) => {
   const v4Resolvers = linodeRegion?.resolvers?.ipv4.split(',') ?? [];
   const v6Resolvers = linodeRegion?.resolvers?.ipv6.split(',') ?? [];
 
-  return (
-    <div className={classes.root}>
-      <Typography className={classes.header}>
-        <strong>DNS Resolvers</strong>
-      </Typography>
-      <Grid
-        container
-        direction="row"
-        wrap="nowrap"
-        spacing={4}
-        className={classes.wrapper}
+  const renderIPResolvers = (resolvers: string[]) => {
+    return resolvers.map((thisAddress) => (
+      <Typography
+        key={`ip-resolver-item-${thisAddress}`}
+        sx={{
+          lineHeight: 1.43,
+        }}
       >
-        <Grid item>
-          {v4Resolvers.map((thisAddress) => (
-            <Typography
-              key={`ip-resolver-item-${thisAddress}`}
-              className={classes.ipAddress}
-            >
-              {thisAddress}
-            </Typography>
-          ))}
-        </Grid>
-        <Grid item style={{ paddingRight: 0 }}>
-          {v6Resolvers.map((thisAddress) => (
-            <Typography
-              key={`ip-resolver-item-${thisAddress}`}
-              className={classes.ipAddress}
-            >
-              {thisAddress}
-            </Typography>
-          ))}
-        </Grid>
+        {thisAddress}
+      </Typography>
+    ));
+  };
+
+  return (
+    <Grid
+      container
+      spacing={4}
+      sx={{
+        display: 'grid',
+        gridTemplateAreas: `
+            'one one'
+            'two three'
+          `,
+        [theme.breakpoints.down('sm')]: {
+          flex: 1,
+        },
+      }}
+    >
+      <Grid
+        xs={12}
+        sx={{
+          paddingTop: 0,
+          paddingBottom: 0,
+          gridArea: 'one',
+        }}
+      >
+        <Typography>
+          <strong>DNS Resolvers</strong>
+        </Typography>
       </Grid>
-    </div>
+      <Grid
+        xs="auto"
+        sx={{
+          gridArea: 'two',
+        }}
+      >
+        {renderIPResolvers(v4Resolvers)}
+      </Grid>
+      <Grid
+        xs="auto"
+        sx={{
+          gridArea: 'three',
+        }}
+      >
+        {renderIPResolvers(v6Resolvers)}
+      </Grid>
+    </Grid>
   );
 };
 

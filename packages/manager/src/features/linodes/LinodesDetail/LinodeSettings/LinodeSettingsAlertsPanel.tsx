@@ -295,7 +295,6 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         {generalError && <Notice error>{generalError}</Notice>}
         {alertSections.map((p, idx) => (
           <AlertSection
-            updateFor={[p.state, p.value, this.state.errors]}
             key={idx}
             {...p}
             readOnly={permissions === 'read_only'}

@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
@@ -119,13 +119,8 @@ export const NodePoolsDisplay = (props: Props) => {
 
   return (
     <>
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="space-between"
-        updateFor={[classes]}
-      >
-        <Grid item>
+      <Grid container alignItems="center" justifyContent="space-between">
+        <Grid>
           <Typography
             variant="h2"
             className={classNames(
@@ -136,7 +131,7 @@ export const NodePoolsDisplay = (props: Props) => {
             Node Pools
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Button
             buttonType="secondary"
             className={classNames(classes.button, classes.mobileSpacing)}
@@ -158,7 +153,7 @@ export const NodePoolsDisplay = (props: Props) => {
           <ErrorState errorText={poolsError?.[0].reason} />
         ) : (
           <Grid container direction="column">
-            <Grid item xs={12} className={classes.displayTable}>
+            <Grid xs={12} className={classes.displayTable}>
               {_pools?.map((thisPool) => {
                 const { id, nodes } = thisPool;
 

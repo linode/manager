@@ -7,7 +7,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import NodeTable from './NodeTable';
 import Tooltip from 'src/components/core/Tooltip';
 
@@ -69,11 +69,12 @@ const NodePool: React.FC<Props> = (props) => {
         className="my0"
         alignItems="center"
         justifyContent="space-between"
+        spacing={2}
       >
-        <Grid item>
+        <Grid>
           <Typography variant="h2">{typeLabel}</Typography>
         </Grid>
-        <Grid item style={{ display: 'flex' }}>
+        <Grid style={{ display: 'flex' }}>
           <Button
             className={`${autoscaler.enabled ? classes.button : ''}`}
             buttonType="secondary"

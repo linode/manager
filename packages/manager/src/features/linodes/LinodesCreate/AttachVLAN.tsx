@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -87,7 +87,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
         {helperText ? <TooltipIcon text={helperText} status="help" /> : null}
       </Typography>
       <Grid container>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <Typography>{regionalAvailabilityMessage}</Typography>
           <Typography variant="body1" className={classes.paragraphBreak}>
             VLANs are used to create a private L2 Virtual Local Area Network

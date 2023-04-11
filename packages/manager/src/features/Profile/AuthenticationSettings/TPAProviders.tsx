@@ -13,7 +13,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import useFlags from 'src/hooks/useFlags';
@@ -149,13 +149,13 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (2FA).
         </Typography>
-        <Grid container className={classes.providersList}>
+        <Grid container className={classes.providersList} spacing={2}>
           {providersIncludingLinode.map((thisProvider) => {
             const ProviderIcon = icons[thisProvider.name];
             const isProviderEnabled = props.authType === thisProvider.name;
 
             return (
-              <Grid item md={4} key={thisProvider.displayName}>
+              <Grid md={4} key={thisProvider.displayName}>
                 <Button
                   data-testid={`Button-${thisProvider.displayName}`}
                   className={classNames({

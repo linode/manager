@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import Toggle from 'src/components/Toggle';
@@ -46,8 +46,8 @@ const AutoBackups = (props: Props) => {
 
   return (
     <Accordion heading="Backup Auto Enrollment" defaultExpanded={true}>
-      <Grid container direction="column">
-        <Grid item>
+      <Grid container direction="column" spacing={2}>
+        <Grid>
           {!!isManagedCustomer ? (
             <Notice success spacingBottom={20}>
               You&rsquo;re a Managed customer, which means your Linodes are
@@ -72,8 +72,8 @@ const AutoBackups = (props: Props) => {
             .
           </Typography>
         </Grid>
-        <Grid item container direction="row" alignItems="center">
-          <Grid item>
+        <Grid container direction="row" alignItems="center">
+          <Grid>
             <FormControlLabel
               control={
                 <Toggle
@@ -92,7 +92,7 @@ const AutoBackups = (props: Props) => {
           </Grid>
         </Grid>
         {!isManagedCustomer && !backups_enabled && hasLinodesWithoutBackups && (
-          <Grid item>
+          <Grid>
             <Typography variant="body1" className={classes.footnote}>
               For existing Linodes without backups,&nbsp;
               <button

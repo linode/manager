@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
 import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
@@ -119,10 +119,10 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
         container
         wrap="wrap"
         direction="row"
-        spacing={2}
+        spacing={3}
         className={classes.root}
       >
-        <Grid item xs={12} md={8} lg={9}>
+        <Grid xs={12} md={8} lg={9}>
           <TransferHeader />
           <LinodeTransferTable
             selectedLinodes={state.linodes}
@@ -131,13 +131,7 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
             handleToggle={toggleEntity('linodes')}
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          md={4}
-          lg={3}
-          className={`mlSidebar ${classes.sidebar}`}
-        >
+        <Grid xs={12} md={4} lg={3} className={classes.sidebar}>
           <TransferCheckoutBar
             isCreating={isLoading}
             selectedEntities={state}

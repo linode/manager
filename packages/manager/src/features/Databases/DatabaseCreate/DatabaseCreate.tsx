@@ -31,7 +31,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
@@ -462,7 +462,7 @@ const DatabaseCreate = () => {
       />
       <Paper>
         {createError ? <Notice error text={createError} /> : null}
-        <Grid item>
+        <Grid>
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
             data-qa-label-input
@@ -475,7 +475,7 @@ const DatabaseCreate = () => {
           />
         </Grid>
         <Divider spacingTop={38} spacingBottom={12} />
-        <Grid item>
+        <Grid>
           <Typography variant="h2">Select Engine and Region</Typography>
           <Select
             label="Database Engine"
@@ -494,7 +494,7 @@ const DatabaseCreate = () => {
             isClearable={false}
           />
         </Grid>
-        <Grid item>
+        <Grid>
           <RegionSelect
             errorText={errors.region}
             handleSelection={(selected: string) =>
@@ -506,7 +506,7 @@ const DatabaseCreate = () => {
           <div style={{ marginTop: 8 }}>{regionHelperText()}</div>
         </Grid>
         <Divider spacingTop={38} spacingBottom={12} />
-        <Grid item>
+        <Grid>
           <SelectPlanPanel
             data-qa-select-plan
             error={errors.type}
@@ -522,7 +522,7 @@ const DatabaseCreate = () => {
           />
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
-        <Grid item>
+        <Grid>
           <Typography variant="h2" style={{ marginBottom: 4 }}>
             Set Number of Nodes{' '}
           </Typography>
@@ -559,7 +559,7 @@ const DatabaseCreate = () => {
               ))}
             </RadioGroup>
           </FormControl>
-          <Grid item xs={12} md={8}>
+          <Grid xs={12} md={8}>
             {flags.databaseBeta ? (
               <Notice success className={classes.notice}>
                 <strong>
@@ -576,7 +576,7 @@ const DatabaseCreate = () => {
           </Grid>
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
-        <Grid item>
+        <Grid>
           <Typography variant="h2" style={{ marginBottom: 4 }}>
             Add Access Controls
           </Typography>

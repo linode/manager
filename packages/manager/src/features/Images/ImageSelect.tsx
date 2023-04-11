@@ -4,7 +4,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -84,15 +84,14 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <Grid
+    <Box
       className={classes.root}
-      container
-      wrap="nowrap"
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="flex-start"
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
     >
-      <Grid item className={classes.selectContainer}>
+      <Box className={classes.selectContainer}>
         <Select
           id={'image-select'}
           isLoading={imagesLoading}
@@ -108,18 +107,18 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
           }}
           label={label || 'Image'}
         />
-      </Grid>
-      <Grid item xs={1}>
+      </Box>
+      <Box>
         <TooltipIcon
           sxTooltipIcon={{
-            marginTop: '30px',
+            transform: 'translateY(50%)',
             marginLeft: '-20px',
           }}
           text={helperText || 'Choosing a 64-bit distro is recommended.'}
           status="help"
         />
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

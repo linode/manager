@@ -5,7 +5,7 @@ import { compose as recompose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Toggle from 'src/components/Toggle';
@@ -67,9 +67,9 @@ export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
       defaultExpanded
       data-qa-watchdog-panel
     >
-      <Grid container alignItems="center">
+      <Grid container alignItems="center" spacing={2}>
         {(success || errors) && (
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Notice
               success={Boolean(success)}
               error={Boolean(errors)}
@@ -77,7 +77,7 @@ export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
             />
           </Grid>
         )}
-        <Grid item xs={12} md={2}>
+        <Grid xs={12} md={2}>
           <FormControlLabel
             control={
               <Toggle
@@ -95,7 +95,7 @@ export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
             disabled={submitting || disabled}
           />
         </Grid>
-        <Grid item xs={12} md={10} lg={8} xl={6}>
+        <Grid xs={12} md={10} lg={8} xl={6}>
           <Typography data-qa-watchdog-desc>
             Shutdown Watchdog, also known as Lassie, is a Linode Manager feature
             capable of automatically rebooting your Linode if it powers off

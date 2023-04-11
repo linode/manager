@@ -4,7 +4,7 @@ import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'src/components/TextField';
 import { useVlansQuery } from 'src/queries/vlans';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
@@ -152,7 +152,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <Select
             options={
               // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
@@ -174,14 +174,13 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
         </Grid>
       )}
       {purpose === 'vlan' ? (
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <Grid
             container
             direction={fromAddonsPanel ? 'row' : 'column'}
             className={fromAddonsPanel ? classes.vlanGrid : ''}
           >
             <Grid
-              item
               className={!fromAddonsPanel ? classes.configsWrapper : ''}
               xs={12}
               sm={fromAddonsPanel ? 6 : 12}
@@ -211,7 +210,6 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
               />
             </Grid>
             <Grid
-              item
               xs={12}
               sm={fromAddonsPanel ? 6 : 12}
               className={fromAddonsPanel ? '' : 'py0'}

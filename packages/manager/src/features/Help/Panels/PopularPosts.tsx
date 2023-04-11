@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -26,9 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   withSeparator: {
     borderLeft: `1px solid ${theme.palette.divider}`,
-    '&.MuiGrid-item': {
-      paddingLeft: theme.spacing(4),
-    },
+    paddingLeft: theme.spacing(4),
   },
 }));
 
@@ -100,14 +98,13 @@ const PopularPosts: React.FC = () => {
   return (
     <Paper className={classes.root} variant="outlined">
       <Grid container>
-        <Grid item xs={12} sm={6} data-qa-documentation-link>
+        <Grid xs={12} sm={6} data-qa-documentation-link>
           <Typography variant="h3" className={classes.postTitle}>
             Most Popular Documentation:
           </Typography>
           {renderPopularDocs()}
         </Grid>
         <Grid
-          item
           xs={12}
           sm={6}
           className={classes.withSeparator}

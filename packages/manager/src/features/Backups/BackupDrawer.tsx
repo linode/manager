@@ -9,7 +9,7 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import {
@@ -166,8 +166,8 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
     const linodeCount = extendedLinodes.length;
     return (
       <Drawer title="Enable All Backups" open={open} onClose={close}>
-        <Grid container direction={'column'}>
-          <Grid item>
+        <Grid container direction={'column'} spacing={2}>
+          <Grid>
             <Typography variant="body1">
               Three backup slots are executed and rotated automatically: a daily
               backup, a 2-7 day old backup, and an 8-14 day old backup. See our
@@ -186,7 +186,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
             </Typography>
           </Grid>
           {enableErrors && !isEmpty(enableErrors) && (
-            <Grid item data-testid={'result-notice'}>
+            <Grid data-testid={'result-notice'}>
               <Notice error spacingBottom={0}>
                 {getFailureNotificationText(updatedCount, enableErrors.length)}
               </Notice>
@@ -194,7 +194,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
           )}
           {/* Don't show this if the setting is already active. */}
           {!accountBackups && (
-            <Grid item>
+            <Grid>
               <AutoEnroll
                 enabled={autoEnroll}
                 error={autoEnrollError}
@@ -202,13 +202,13 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               />
             </Grid>
           )}
-          <Grid item>
+          <Grid>
             <DisplayPrice
               price={getTotalPrice(extendedLinodes)}
               interval="mo"
             />
           </Grid>
-          <Grid item>
+          <Grid>
             <ActionsPanel style={{ padding: 0, margin: 0 }}>
               <Button
                 onClick={close}
@@ -230,7 +230,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               </Button>
             </ActionsPanel>
           </Grid>
-          <Grid item>
+          <Grid>
             <BackupsTable linodes={extendedLinodes} loading={loading} />
           </Grid>
         </Grid>
