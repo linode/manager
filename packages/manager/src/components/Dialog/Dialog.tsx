@@ -136,7 +136,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
           </Button>
         </div>
         {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
-        <Grid container sx={{ margin: '0 32px 0 32px' }}>
+        <Grid container sx={{ margin: '0 32px' }}>
           <div className={className}>
             {error && <Notice text={error} error />}
             {children}
