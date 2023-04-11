@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ipCell: {
     ...theme.applyTableHeaderStyles,
-    width: '25%',
+    width: '35%',
   },
   row: {
     '&:hover': {
