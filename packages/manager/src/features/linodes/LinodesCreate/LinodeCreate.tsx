@@ -68,7 +68,7 @@ import {
   WithLinodesProps,
   WithTypesRegionsAndImages,
 } from './types';
-import UserDataAccordion from './UserDataAccordion/UserDataAccordion';
+import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { extendType } from 'src/utilities/extendType';
 import { WithTypesProps } from 'src/containers/types.container';
 import { RegionsProps } from 'src/containers/regions.container';
