@@ -13,14 +13,22 @@ import {
   SSHKey,
   deleteSSHKey,
   updateSSHKey,
+  getTrustedDevices,
+  TrustedDevice,
+  deleteTrustedDevice,
 } from '@linode/api-v4/lib/profile';
-import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
 } from 'react-query';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { Grants } from '../../../api-v4/lib';
 import { queryPresets } from './base';
 import { queryKey as accountQueryKey } from './account';
@@ -144,4 +152,22 @@ export const sshKeyEventHandler = (event: EventWithStore) => {
   event.queryClient.invalidateQueries([queryKey, 'ssh-keys']);
   // also invalidate the /account/users data because that endpoint returns some SSH key data
   event.queryClient.invalidateQueries([accountQueryKey, 'users']);
+};
+
+export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
+  useQuery<ResourcePage<TrustedDevice>, APIError[]>(
+    [queryKey, 'trusted-devices', 'paginated', params, filter],
+    () => getTrustedDevices(params, filter),
+    {
+      keepPreviousData: true,
+    }
+  );
+
+export const useRevokeTrustedDeviceMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteTrustedDevice(id), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey, 'trusted-devices']);
+    },
+  });
 };

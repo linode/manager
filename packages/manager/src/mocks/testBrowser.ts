@@ -5,7 +5,6 @@ import { MockData, mockDataController } from 'src/dev-tools/mockDataController';
 import { queryClientFactory } from 'src/queries/base';
 import { ApplicationState, storeFactory } from 'src/store';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
-import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { handlers, mockDataHandlers } from './serverHandlers';
 
 const store = storeFactory(queryClientFactory());
@@ -34,9 +33,6 @@ const requestEntities = (mockData: MockData, reduxState: ApplicationState) => {
   // we should handle this update at that time.
   if (mockData.linode && !reduxState.__resources.linodes.loading) {
     store.dispatch(requestLinodes({}) as any);
-  }
-  if (mockData.nodeBalancer && !reduxState.__resources.nodeBalancers.loading) {
-    store.dispatch(getAllNodeBalancers() as any);
   }
 };
 

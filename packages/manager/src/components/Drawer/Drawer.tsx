@@ -5,7 +5,7 @@ import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface Props extends DrawerProps {
@@ -93,10 +93,9 @@ const Drawer = (props: Props) => {
         container
         alignItems="flex-start"
         justifyContent="space-between"
-        updateFor={[title, classes]}
         wrap="nowrap"
       >
-        <Grid item>
+        <Grid>
           <Typography
             id={titleID}
             className={classes.title}
@@ -107,7 +106,7 @@ const Drawer = (props: Props) => {
             {title}
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Button
             className={classes.button}
             buttonType="secondary"

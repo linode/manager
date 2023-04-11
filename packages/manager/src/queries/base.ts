@@ -137,7 +137,7 @@ export const itemInListMutationHandler = <
   V,
   E = APIError[]
 >(
-  queryKey: string,
+  queryKey: QueryKey,
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {

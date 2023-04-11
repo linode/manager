@@ -9,13 +9,20 @@ import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 import { SxProps } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 
-type TooltipIconStatus = 'success' | 'error' | 'warning' | 'info' | 'help';
+type TooltipIconStatus =
+  | 'success'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'help'
+  | 'other';
 
 interface Props
   extends Omit<TooltipProps, 'leaveDelay' | 'title' | 'children'> {
   sx?: SxProps;
   sxTooltipIcon?: SxProps;
   text: string | JSX.Element;
+  icon?: JSX.Element;
   className?: string;
   interactive?: boolean;
   status: TooltipIconStatus;
@@ -30,6 +37,7 @@ export const TooltipIcon = (props: Props) => {
   const {
     classes,
     text,
+    icon,
     tooltipPosition,
     interactive,
     status,
@@ -51,8 +59,15 @@ export const TooltipIcon = (props: Props) => {
     height: 20,
     width: 20,
     color: '#888f91',
+    '&&': {
+      fill: '#888f91',
+      stroke: '#888f91',
+      strokeWidth: 0,
+    },
     '&:hover': {
       color: '#3683dc',
+      fill: '#3683dc',
+      stroke: '#3683dc',
     },
   };
 
@@ -71,6 +86,9 @@ export const TooltipIcon = (props: Props) => {
       break;
     case 'help':
       renderIcon = <HelpOutline sx={sxRootStyle} />;
+      break;
+    case 'other':
+      renderIcon = icon ?? null;
       break;
     default:
       renderIcon = null;

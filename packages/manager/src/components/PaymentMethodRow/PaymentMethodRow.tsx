@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Paper from 'src/components/core/Paper';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import Chip from 'src/components/core/Chip';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment from './ThirdPartyPayment';
@@ -14,35 +13,15 @@ import { useSnackbar } from 'notistack';
 import { queryKey } from 'src/queries/accountPayment';
 import { useQueryClient } from 'react-query';
 
-export const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(),
-    padding: 0,
-  },
-  actions: {
-    marginLeft: 'auto',
-    '& button': {
-      margin: 0,
-    },
-  },
-  item: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  container: {
-    flexWrap: 'nowrap',
-  },
-}));
-
 interface Props {
   paymentMethod: PaymentMethod;
   onDelete: () => void;
 }
 
-const PaymentMethodRow: React.FC<Props> = (props) => {
+const PaymentMethodRow = (props: Props) => {
+  const theme = useTheme();
   const { paymentMethod, onDelete } = props;
   const { type, is_default } = paymentMethod;
-  const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -96,31 +75,51 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
     }
   };
 
+  const sxBoxFlex = {
+    display: 'flex',
+    alignItems: 'center',
+  };
+
   return (
     <Paper
-      className={classes.root}
       variant="outlined"
       data-testid={`payment-method-row-${paymentMethod.id}`}
       data-qa-payment-row={type}
+      sx={{
+        '&:not(:last-of-type)': {
+          marginBottom: theme.spacing(),
+        },
+        '&&': {
+          // TODO: Remove "&&" when Paper has been refactored
+          padding: 0,
+        },
+      }}
     >
-      <Grid container className={classes.container}>
-        <Grid item className={classes.item}>
+      <Box sx={sxBoxFlex}>
+        <Box sx={{ ...sxBoxFlex, paddingRight: theme.spacing(2) }}>
           {paymentMethod.type === 'credit_card' ? (
             <CreditCard creditCard={paymentMethod.data} />
           ) : (
             <ThirdPartyPayment paymentMethod={paymentMethod} />
           )}
-        </Grid>
-        <Grid item className={classes.item} style={{ paddingRight: 0 }}>
+        </Box>
+        <Box sx={sxBoxFlex}>
           {is_default && <Chip label="DEFAULT" component="span" size="small" />}
-        </Grid>
-        <Grid item className={classes.actions}>
+        </Box>
+        <Box
+          sx={{
+            marginLeft: 'auto',
+            '& button': {
+              margin: 0,
+            },
+          }}
+        >
           <ActionMenu
             actionsList={actions}
             ariaLabel={getActionMenuAriaLabel(paymentMethod)}
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Paper>
   );
 };

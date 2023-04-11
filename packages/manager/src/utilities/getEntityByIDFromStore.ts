@@ -24,12 +24,10 @@ export const getEntityByIDFromStore = (
     return;
   }
   const _store = store.getState();
-  const { linodes, nodeBalancers } = _store.__resources;
+  const { linodes } = _store.__resources;
   switch (entityType) {
     case 'linode':
       return linodes.itemsById[entityID];
-    case 'nodebalancer':
-      return nodeBalancers.itemsById[entityID];
     default:
       return;
   }

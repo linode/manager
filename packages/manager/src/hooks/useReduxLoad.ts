@@ -7,19 +7,17 @@ import { ApplicationState, useApplicationStore } from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
-import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
 }
 
-export type ReduxEntity = 'linodes' | 'nodeBalancers' | 'events' | 'longview';
+export type ReduxEntity = 'linodes' | 'events' | 'longview';
 
 type RequestMap = Record<ReduxEntity, any>;
 
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
-  nodeBalancers: getAllNodeBalancers,
   events: getEvents,
   longview: getAllLongviewClients,
 };

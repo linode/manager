@@ -20,10 +20,6 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState,
 } from 'src/store/backupDrawer';
-import bucketDrawer, {
-  defaultState as bucketDrawerDefaultState,
-  State as BucketDrawerState,
-} from 'src/store/bucketDrawer/bucketDrawer.reducer';
 import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
@@ -59,14 +55,6 @@ import longviewStats, {
   defaultState as defaultLongviewStatsState,
   State as LongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
-import nodeBalancers, {
-  defaultState as defaultNodeBalancerState,
-  State as NodeBalancersState,
-} from 'src/store/nodeBalancer/nodeBalancer.reducer';
-import nodeBalancerConfigs, {
-  defaultState as defaultNodeBalancerConfigState,
-  State as NodeBalancerConfigsState,
-} from 'src/store/nodeBalancerConfig/nodeBalancerConfig.reducer';
 import stackScriptDialog, {
   defaultState as stackScriptDialogDefaultState,
   State as StackScriptDialogState,
@@ -89,8 +77,6 @@ import mockFeatureFlags, {
   defaultMockFeatureFlagState,
   MockFeatureFlagState,
 } from './mockFeatureFlags';
-import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
-import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import pendingUpload, {
   defaultState as pendingUploadState,
   State as PendingUploadState,
@@ -108,8 +94,6 @@ const __resourcesDefaultState = {
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
-  nodeBalancerConfigs: defaultNodeBalancerConfigState,
-  nodeBalancers: defaultNodeBalancerState,
 };
 
 export interface ResourcesState {
@@ -117,8 +101,6 @@ export interface ResourcesState {
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
-  nodeBalancerConfigs: NodeBalancerConfigsState;
-  nodeBalancers: NodeBalancersState;
 }
 
 export interface ApplicationState {
@@ -128,7 +110,6 @@ export interface ApplicationState {
   events: EventsState;
   stackScriptDialog: StackScriptDialogState;
   volumeDrawer: VolumeDrawerState;
-  bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
   pendingUpload: PendingUploadState;
   initialLoad: InitialLoadState;
@@ -146,7 +127,6 @@ export const defaultState: ApplicationState = {
   events: eventsDefaultState,
   stackScriptDialog: stackScriptDialogDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
-  bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
   pendingUpload: pendingUploadState,
   initialLoad: initialLoadState,
@@ -165,8 +145,6 @@ const __resources = combineReducers({
   linodes,
   linodeConfigs,
   linodeDisks,
-  nodeBalancers,
-  nodeBalancerConfigs,
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -175,7 +153,6 @@ const reducers = combineReducers<ApplicationState>({
   backups,
   stackScriptDialog,
   volumeDrawer,
-  bucketDrawer,
   events,
   createLinode: linodeCreateReducer,
   pendingUpload,
@@ -192,14 +169,7 @@ const enhancersFactory = (queryClient: QueryClient) =>
     applyMiddleware(
       thunk,
       combineEventsMiddleware(
-        [
-          linodeEvents,
-          longviewEvents,
-          nodeBalancerEvents,
-          nodeBalancerConfigEvents,
-          diskEvents,
-          linodeConfigEvents,
-        ],
+        [linodeEvents, longviewEvents, diskEvents, linodeConfigEvents],
         queryClient
       )
     ),

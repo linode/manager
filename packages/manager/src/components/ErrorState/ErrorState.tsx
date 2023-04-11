@@ -2,7 +2,7 @@ import * as React from 'react';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import classNames from 'classnames';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { Theme } from '@mui/material/styles';
@@ -51,7 +51,7 @@ const ErrorState = (props: Props) => {
       justifyContent="center"
       alignItems="center"
     >
-      <Grid item data-testid="error-state">
+      <Grid data-testid="error-state">
         <div className={classes.iconContainer}>
           {CustomIcon ? (
             <CustomIcon

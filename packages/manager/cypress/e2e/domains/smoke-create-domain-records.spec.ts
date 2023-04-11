@@ -1,12 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import {
-  createDomain,
-  deleteDomainById,
-  deleteAllTestDomains,
-} from 'support/api/domains';
+import { createDomain, deleteAllTestDomains } from 'support/api/domains';
 import { randomIp, randomLabel, randomDomainName } from 'support/util/random';
 import { fbtClick, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
+import { authenticate } from 'support/api/authentication';
 
 const createRecords = () => [
   {
@@ -91,8 +88,12 @@ const createRecords = () => [
   },
 ];
 
+authenticate();
 describe('Creates Domains record with Form', () => {
-  before(deleteAllTestDomains);
+  beforeEach(() => {
+    cy.wrap(deleteAllTestDomains());
+  });
+
   createRecords().forEach((rec) => {
     return it(rec.name, () => {
       createDomain().then((domain) => {
@@ -119,7 +120,6 @@ describe('Creates Domains record with Form', () => {
             cy.findByText(f.value, { exact: !f.approximate });
           });
         });
-        deleteDomainById(domain.id);
       });
     });
   });

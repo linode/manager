@@ -27,7 +27,7 @@ import {
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
-import withRegions from 'src/containers/regions.container';
+import { withRegions, RegionsProps } from 'src/containers/regions.container';
 import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
@@ -67,7 +67,6 @@ import {
   Info,
   TypeInfo,
   WithLinodesProps,
-  WithRegionsProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
@@ -122,7 +121,7 @@ type CombinedProps = WithSnackbarProps &
   ImagesProps &
   WithTypesProps &
   WithLinodesProps &
-  WithRegionsProps &
+  RegionsProps &
   DispatchProps &
   LabelProps &
   FeatureFlagConsumerProps &
