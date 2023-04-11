@@ -7,6 +7,7 @@ import {
   formatEventWithUsername,
   formatEventWithAppendedText,
 } from './features/Events/Event.helpers';
+// import React from 'react';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -272,7 +273,16 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   image_upload: {
     scheduled: (e) => `Image ${e.entity?.label ?? ''} scheduled for upload.`,
     started: (e) => `Image ${e.entity?.label ?? ''} is being uploaded.`,
-    failed: (e) => `There was a problem uploading ${e.entity?.label ?? ''}.`,
+    failed: (e) =>
+      `There was a problem uploading ${e.entity?.label ?? ''}: ${e?.message}.`,
+    // `${formatEventWithAppendedText(
+    //   e,
+    //   `There was a problem uploading ${e.entity?.label ?? ''}: ${
+    //     e?.message
+    //   }.`,
+    //   'Please open a support ticket',
+    //   '/support/ticket'
+    // )}`,
     finished: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
     notification: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
   },
@@ -860,6 +870,13 @@ export function applyLinking(event: Event, message: string) {
 
   let newMessage = message;
 
+  // if (newMessage.match(/Support/i)) {
+  //   newMessage = newMessage.replace(
+  //     /; please contact Support/,
+  //     ''
+  //     // `<a href="/support/tickets">open a support ticket</a>`
+  //   );
+  //
   if (event.entity && entityLinkTarget) {
     const label = event.entity.label;
     const nonTickedLabels = new RegExp(`(?<!\`)${label}`, 'g');

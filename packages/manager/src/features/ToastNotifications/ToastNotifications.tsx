@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import Link from 'src/components/Link';
+import SupportLink from 'src/components/SupportLink';
 import { events$ } from 'src/events';
 import { sendEvent } from 'src/utilities/ga';
 
@@ -29,10 +30,10 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
     persistFailureMessage,
     successMessage,
     failureMessage,
-    includesLink,
     link,
   } = options;
-  let linkedMessage;
+  let formattedFailureMessage;
+  // console.log({ failureMessage });
 
   if (
     ['finished', 'notification'].includes(eventStatus) &&
@@ -43,15 +44,24 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
       persist: persistSuccessMessage,
     });
   } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
-    if (includesLink) {
-      linkedMessage = (
-        <>
-          {failureMessage}&nbsp;
-          {link}
-        </>
-      );
-    }
-    return enqueueSnackbar(linkedMessage ?? failureMessage, {
+    const hasSupportLink = failureMessage?.includes('contact Support') ?? false;
+    formattedFailureMessage =
+      failureMessage?.replace(/ contact Support/i, '') ?? failureMessage;
+
+    formattedFailureMessage = (
+      <>
+        {formattedFailureMessage}&nbsp;
+        {hasSupportLink ? (
+          <SupportLink
+            text="open a support ticket"
+            title={`Image Upload Failure`}
+          />
+        ) : null}
+        .{link ? link : null}
+      </>
+    );
+
+    return enqueueSnackbar(formattedFailureMessage ?? failureMessage, {
       variant: 'error',
       persist: persistFailureMessage,
     });
@@ -63,6 +73,28 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
   event.secondary_entity?.label ?? '';
+// const getMessage = (event: Event) => {
+//   // console.log({ event });
+//   const hasSupportLink = event?.message?.includes('contact Support') ?? false;
+//   const message = event.message
+//     ? event.message
+//         .replace(/contact Support/i, '')
+//         .replace('cancelled', 'canceled')
+//     : null;
+//   // console.log({ message });
+//   return (
+//     <>
+//       {message}
+//       {hasSupportLink ? (
+//         <SupportLink
+//           text="open a support ticket"
+//           title={`Image Upload Failure`}
+//         />
+//       ) : null}
+//       .
+//     </>
+//   );
+// };
 
 class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
   subscription: Subscription;
@@ -74,6 +106,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
         const { enqueueSnackbar } = this.props;
         const label = getLabel(event);
         const secondaryLabel = getSecondaryLabel(event);
+        // const message = getMessage(event);
         switch (event.action) {
           case 'volume_attach':
             return toastSuccessAndFailure({
@@ -107,6 +140,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return toastSuccessAndFailure({
               enqueueSnackbar,
               eventStatus: event.status,
+              persistFailureMessage: true,
               successMessage: `Image ${secondaryLabel} created successfully.`,
               failureMessage: `Error creating Image ${secondaryLabel}.`,
             });
@@ -137,10 +171,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               successMessage: `Image ${label} is now available.`,
               failureMessage: isDeletion
                 ? undefined
-                : `There was a problem processing image ${label}: ${event.message?.replace(
-                    'cancelled',
-                    'canceled'
-                  )}`,
+                : `There was a problem processing image ${label}: ${event.message}`,
             });
           case 'image_delete':
             return toastSuccessAndFailure({
