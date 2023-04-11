@@ -145,7 +145,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           Google or GitHub to log in to your Cloud Manager account. More
           information is available in{' '}
           <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
-            How to Enable Third Party Authentication on Your Linode Account
+            How to Enable Third Party Authentication on Your User Account
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (2FA).
         </Typography>
