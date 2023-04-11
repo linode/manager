@@ -38,7 +38,7 @@ describe('UserDataAccordion', () => {
 
     expect(onChange).toHaveBeenCalledWith(inputValue);
     expect(
-      getByText('This user data may not be in a format accepted by cloud-init.')
+      getByText('The user data may be formatted incorrectly.')
     ).toBeInTheDocument();
   });
 
@@ -48,7 +48,7 @@ describe('UserDataAccordion', () => {
     );
 
     const headerWarningMessage = screen.getByText(
-      'Existing user data is not available when creating a Linode from a backup.'
+      'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.'
     );
 
     expect(headerWarningMessage).toBeInTheDocument();
