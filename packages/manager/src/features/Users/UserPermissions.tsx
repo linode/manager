@@ -574,7 +574,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['grants', entity, idx, 'permissions']), value));
   };
 
-  setAllEntitiesTo = (e: Item) => {
+  setAllEntitiesTo = (e: Item<string>) => {
     const value = e.value === 'null' ? null : e.value;
     this.entityPerms.map((entity: GrantType) =>
       this.entitySetAllTo(entity, value as GrantLevel)()

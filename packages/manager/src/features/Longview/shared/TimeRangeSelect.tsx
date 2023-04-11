@@ -9,7 +9,10 @@ import Select, {
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 interface Props
-  extends Omit<BaseSelectProps<false>, 'onChange' | 'defaultValue'> {
+  extends Omit<
+    BaseSelectProps<Item<Labels, Labels>, false>,
+    'onChange' | 'defaultValue'
+  > {
   handleStatsChange?: (start: number, end: number) => void;
   defaultValue?: Labels;
 }

@@ -459,11 +459,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           name="protocol"
           placeholder="Select a protocol..."
           aria-label="Select rule protocol."
-          value={
-            values.protocol
-              ? { label: values.protocol, value: values.protocol }
-              : undefined
-          }
+          value={protocolOptions.find((p) => p.value === values.protocol)}
           errorText={errors.protocol}
           options={protocolOptions}
           onChange={handleProtocolChange}

@@ -8,7 +8,6 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import EnhancedSelect from 'src/components/EnhancedSelect';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
@@ -156,11 +155,11 @@ const AccessSelect: React.FC<CombinedProps> = (props) => {
         options={_options}
         isLoading={accessLoading}
         disabled={accessLoading}
-        onChange={(selected: Item<ACLType> | null) => {
+        onChange={(selected) => {
           if (selected) {
             setUpdateAccessSuccess(false);
             setUpdateAccessError('');
-            setSelectedACL(selected.value);
+            setSelectedACL(selected.value as ACLType);
           }
         }}
         value={_options.find(

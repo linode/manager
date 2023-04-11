@@ -15,16 +15,20 @@ import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
   GroupType,
+  Item,
 } from 'src/components/EnhancedSelect/Select';
 import RegionOption, { RegionItem } from './RegionOption';
 
-interface Props extends Omit<BaseSelectProps<false>, 'onChange' | 'label'> {
+interface Props<IsClearable extends boolean>
+  extends Omit<
+    BaseSelectProps<Item<string>, false, IsClearable>,
+    'onChange' | 'label'
+  > {
   label?: string;
   regions: Region[];
   handleSelection: (id: string) => void;
   selectedID: string | null;
   helperText?: string;
-  isClearable?: boolean;
   required?: boolean;
   width?: number;
 }
@@ -110,7 +114,7 @@ export const getRegionOptions = (regions: Region[]) => {
 
 export const getSelectedRegionById = (
   regionID: string,
-  options: GroupType[]
+  options: GroupType<string>[]
 ) => {
   const regions = options.reduce(
     (accum, thisGroup) => [...accum, ...thisGroup.options],
@@ -137,7 +141,9 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
-const SelectRegionPanel: React.FC<Props> = (props) => {
+const SelectRegionPanel = <IsClearable extends boolean>(
+  props: Props<IsClearable>
+) => {
   const {
     label,
     disabled,

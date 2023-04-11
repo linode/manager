@@ -1,6 +1,10 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import ReactSelect, { NamedProps as SelectProps } from 'react-select';
+import ReactSelect, {
+  ActionMeta,
+  NamedProps as SelectProps,
+  ValueType,
+} from 'react-select';
 import CreatableSelect, {
   CreatableProps as CreatableSelectProps,
 } from 'react-select/creatable';
@@ -64,9 +68,12 @@ interface ModifiedTextFieldProps extends Omit<TextFieldProps, 'label'> {
   label?: string;
 }
 
-export interface BaseSelectProps<isMulti extends boolean>
-  extends SelectProps<Item, isMulti>,
-    CreatableSelectProps<Item, isMulti> {
+export interface BaseSelectProps<
+  I extends Item,
+  isMulti extends boolean = false,
+  Clearable extends boolean = false
+> extends Omit<SelectProps<I, isMulti>, 'onChange'>,
+    CreatableSelectProps<I, isMulti> {
   classes?: any;
   /*
    textFieldProps isn't native to react-select
@@ -89,6 +96,12 @@ export interface BaseSelectProps<isMulti extends boolean>
   // value?: Item | Item[] | null;
   /** making this required */
   // onChange: (selected: Item | Item[] | null, actionMeta?: ActionMeta) => void;
+  onChange: Clearable extends true
+    ? SelectProps<I, isMulti>['onChange']
+    : (
+        value: Exclude<ValueType<I, isMulti>, null | undefined>,
+        action: ActionMeta<I>
+      ) => void;
   /** alias for onCreateOption */
   createNew?: (inputValue: string) => void;
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
@@ -104,13 +117,18 @@ export interface BaseSelectProps<isMulti extends boolean>
   required?: boolean;
   creatable?: boolean;
   variant?: 'creatable';
+  isClearable?: Clearable;
   // Set this prop to `true` when using a <Select /> on a modal. It attaches the <Select /> to the
   // document body directly, so the overflow is visible over the edge of the modal.
   overflowPortal?: boolean;
 }
 
-const Select = <isMulti extends boolean = false>(
-  props: BaseSelectProps<isMulti>
+const Select = <
+  I extends Item,
+  isMulti extends boolean = false,
+  Clearable extends boolean = false
+>(
+  props: BaseSelectProps<I, isMulti, Clearable>
 ) => {
   const theme = useTheme<Theme>();
   const classes = useStyles();
@@ -188,8 +206,8 @@ const Select = <isMulti extends boolean = false>(
   // (AsyncCreatable exists, but we have not adapted it.)
 
   const BaseSelect = creatable
-    ? (CreatableSelect as React.ComponentClass<BaseSelectProps<any>>)
-    : (ReactSelect as React.ComponentClass<BaseSelectProps<any>>);
+    ? (CreatableSelect as React.ComponentClass<BaseSelectProps<I, any, any>>)
+    : (ReactSelect as React.ComponentClass<BaseSelectProps<I, any, any>>);
 
   if (creatable) {
     restOfProps.variant = 'creatable';

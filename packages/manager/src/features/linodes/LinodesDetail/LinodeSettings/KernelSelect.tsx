@@ -39,7 +39,7 @@ export const KernelSelect: React.FC<Props> = (props) => {
 
 export const getSelectedKernelId = (
   kernelID: string | undefined,
-  options: GroupType[]
+  options: GroupType<string>[]
 ) => {
   if (!kernelID) {
     return null;

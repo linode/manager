@@ -6,7 +6,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -197,8 +197,8 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                     label: group.groupName,
                     value: group.groupName,
                   }))}
-                  onChange={(selectedGroup: Item) =>
-                    setFieldValue('group', selectedGroup.value)
+                  onChange={(selectedGroup) =>
+                    setFieldValue('group', selectedGroup?.value)
                   }
                   errorText={errors.group}
                 />
