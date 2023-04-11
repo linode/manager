@@ -42,7 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   nodePoolHeader: {
     marginBottom: theme.spacing(),
-    marginLeft: '15px',
+    [theme.breakpoints.only('sm')]: {
+      marginLeft: theme.spacing(),
+    },
+    [theme.breakpoints.only('xs')]: {
+      marginLeft: theme.spacing(),
+    },
   },
   nodePoolHeaderOuter: {
     display: 'flex',
