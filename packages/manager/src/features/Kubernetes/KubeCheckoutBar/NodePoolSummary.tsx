@@ -87,6 +87,7 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
             className={classes.button}
             onClick={onRemove}
             data-testid="remove-pool-button"
+            title={`Remove ${poolType.label} Node Pool`}
             size="large"
           >
             <Close />
