@@ -5,7 +5,7 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
-import UserDataAccordionHeading from './UserDataAccordionHeading';
+import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
@@ -18,7 +18,7 @@ interface Props {
   renderCheckbox?: JSX.Element;
 }
 
-const UserDataAccordion = (props: Props) => {
+export const UserDataAccordion = (props: Props) => {
   const { expandIconStyles } = useExpandIconStyles();
   const {
     createType,
@@ -115,5 +115,3 @@ const UserDataAccordion = (props: Props) => {
     </Accordion>
   );
 };
-
-export default UserDataAccordion;

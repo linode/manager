@@ -9,8 +9,8 @@ interface Props {
   createType?: CreateTypes;
 }
 
-const UserDataAccordionHeading = ({ createType }: Props) => {
-  const warningMessageMap = {
+export const UserDataAccordionHeading = ({ createType }: Props) => {
+  const warningMessageMap: Record<CreateTypes, string | null> = {
     fromBackup:
       'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.',
     fromLinode:
@@ -47,5 +47,3 @@ const UserDataAccordionHeading = ({ createType }: Props) => {
     </>
   );
 };
-
-export default UserDataAccordionHeading;

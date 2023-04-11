@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import UserDataAccordion from './UserDataAccordion';
+import { UserDataAccordion } from './UserDataAccordion';
 
 describe('UserDataAccordion', () => {
   const onChange = jest.fn();
