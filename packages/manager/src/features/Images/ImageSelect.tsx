@@ -50,7 +50,7 @@ interface MultiProps {
   anyAllOption?: boolean;
 }
 
-export function ImageSelect(props: Props | MultiProps) {
+export const ImageSelect = (props: Props | MultiProps) => {
   const {
     helperText,
     images,
@@ -133,7 +133,7 @@ export function ImageSelect(props: Props | MultiProps) {
       </Grid>
     </Grid>
   );
-}
+};
 
 export const getImagesOptions = (images: Image[]) => {
   const groupedImages = groupImages(images);
