@@ -1,14 +1,16 @@
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Accordion from 'src/components/Accordion';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
-import { useExpandIconStyles } from './UserDataAccordion.styles';
 import UserDataAccordionHeading from './UserDataAccordionHeading';
-import Box from 'src/components/core/Box';
+import { useExpandIconStyles } from './UserDataAccordion.styles';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+
 interface Props {
-  createType?: string;
+  createType?: CreateTypes;
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
