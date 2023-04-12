@@ -1,18 +1,13 @@
-import {
-  apiCheckErrors,
-  testTag,
-  getAll,
-  deleteById,
-  isTestEntity,
-} from './common';
-import { randomLabel, randomString } from 'support/util/random';
+import { apiCheckErrors, deleteById, isTestLabel } from './common';
 
 import { CreateLinodeRequest } from '@linode/api-v4/types';
 import { linodeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-
-const oauthtoken = Cypress.env('MANAGER_OAUTH');
-const testLinodeTag = testTag;
+import { oauthToken, pageSize } from 'support/constants/api';
+import { entityTag } from 'support/constants/cypress';
+import { getLinodes, Linode, deleteLinode } from '@linode/api-v4';
+import { depaginate } from 'support/util/paginate';
+import { randomLabel, randomString } from 'support/util/random';
 
 export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
   return makeResourcePage(
@@ -24,7 +19,7 @@ export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
 
 const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
   type: 'g6-standard-2',
-  tags: [testLinodeTag],
+  tags: [entityTag],
   private_ip: true,
   image: 'linode/debian10',
   region: 'us-east',
@@ -40,7 +35,7 @@ const linodeRequest = (linodeData) => {
     url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
     body: linodeData,
     auth: {
-      bearer: oauthtoken,
+      bearer: oauthToken,
     },
   });
 };
@@ -58,30 +53,22 @@ export const createLinode = (data = {}) => {
   });
 };
 
-export const getLinodes = (page: number = 1) =>
-  getAll(`linode/instances?page=${page}`);
-
 export const deleteLinodeById = (linodeId: number) =>
   deleteById('linode/instances', linodeId);
 
-export const deleteLinodeByLabel = (label = undefined) => {
-  getLinodes().then((resp) => {
-    const linodeToDelete = resp.body.data.find((l) => l.label === label);
-    deleteLinodeById(linodeToDelete.id);
-  });
-};
+/**
+ * Deletes all Linodes whose labels are prefixed "cy-test-".
+ *
+ * @returns Promise that resolves when Linodes have been deleted or rejects on HTTP error.
+ */
+export const deleteAllTestLinodes = async (): Promise<void> => {
+  const linodes = await depaginate<Linode>((page: number) =>
+    getLinodes({ page_size: pageSize, page })
+  );
 
-export const deleteAllTestLinodes = () => {
-  getLinodes().then((resp) => {
-    const pages = resp.body.pages;
-    for (let page = 1; page <= pages; page++) {
-      getLinodes(page).then((resp) => {
-        resp.body.data.forEach((linode) => {
-          if (isTestEntity(linode)) {
-            deleteLinodeById(linode.id);
-          }
-        });
-      });
-    }
-  });
+  const deletePromises = linodes
+    .filter((linode: Linode) => isTestLabel(linode.label))
+    .map((linode: Linode) => deleteLinode(linode.id));
+
+  await Promise.all(deletePromises);
 };

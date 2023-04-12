@@ -9,6 +9,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
@@ -78,6 +79,7 @@ const renderField = (
   if (isHeader(field)) {
     return (
       <Grid xs={12} lg={5} key={field.name} style={{ marginTop: 24 }}>
+        <Divider />
         <Typography variant="h2">{field.label}</Typography>
       </Grid>
     );

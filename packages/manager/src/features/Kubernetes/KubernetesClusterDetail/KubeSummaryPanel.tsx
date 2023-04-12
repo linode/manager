@@ -26,7 +26,9 @@ import {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
+    padding: `${theme.spacing(2.5)} ${theme.spacing(1)} ${theme.spacing(
+      2.5
+    )} ${theme.spacing(3)}`,
   },
   mainGridContainer: {
     position: 'relative',
@@ -73,12 +75,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 4,
     },
   },
+  deleteClusterBtn: {
+    paddingRight: '0px',
+    [theme.breakpoints.up('md')]: {
+      paddingRight: '8px',
+    },
+  },
   actionRow: {
     display: 'flex',
     flexDirection: 'row',
     alignSelf: 'stretch',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
+    padding: '8px 0px',
     '& button': {
       alignItems: 'flex-start',
     },
@@ -164,7 +173,7 @@ export const KubeSummaryPanel = (props: Props) => {
             container
             xs={12}
             lg={5}
-            justifyContent="flex-start"
+            justifyContent="space-between"
             direction="column"
           >
             <Grid className={classes.actionRow}>
@@ -192,9 +201,9 @@ export const KubeSummaryPanel = (props: Props) => {
               ) : null}
               <Button
                 buttonType="secondary"
+                className={classes.deleteClusterBtn}
                 compactY
                 onClick={() => setIsDeleteDialogOpen(true)}
-                style={{ paddingRight: 0 }}
               >
                 Delete Cluster
               </Button>
