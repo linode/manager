@@ -10,7 +10,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import Grid from 'src/components/Grid/Grid';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import TagsPanel from 'src/components/TagsPanel';
+import { TagsPanel } from 'src/components/TagsPanel';
 import DomainRecords from '../DomainRecords';
 import DeleteDomain from '../DeleteDomain';
 import {

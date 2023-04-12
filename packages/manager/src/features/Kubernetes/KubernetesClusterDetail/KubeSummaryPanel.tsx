@@ -8,7 +8,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
-import TagsPanel from 'src/components/TagsPanel';
+import { TagsPanel } from 'src/components/TagsPanel';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import useFlags from 'src/hooks/useFlags';
 import { makeStyles } from '@mui/styles';

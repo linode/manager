@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Drawer from 'src/components/Drawer';
-import TagsPanel from '../TagsPanel';
+import { TagsPanel } from '../TagsPanel';
 
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
 
