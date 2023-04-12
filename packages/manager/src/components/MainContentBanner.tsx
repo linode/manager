@@ -2,7 +2,7 @@ import * as React from 'react';
 import Close from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
@@ -75,7 +75,7 @@ const MainContentBanner: React.FC<Props> = (props) => {
   };
 
   return (
-    <Grid className={classes.bannerOuter} item xs={12}>
+    <Grid className={classes.bannerOuter} xs={12}>
       <Typography variant="h2" className={classes.header}>
         {bannerText}&nbsp;
         {linkText && url && (

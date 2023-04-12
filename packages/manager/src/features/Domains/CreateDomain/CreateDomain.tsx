@@ -15,7 +15,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles } from '@mui/styles';
@@ -309,7 +309,7 @@ export const CreateDomain = () => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/dns-manager/"
       />
-      <Grid item className={classes.main}>
+      <Grid className={classes.main}>
         {generalError && !disabled && (
           <Notice error spacingTop={8}>
             {generalError}

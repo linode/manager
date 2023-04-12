@@ -7,7 +7,8 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
+import Box from '@mui/material/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -249,11 +250,11 @@ export const CreateCluster = () => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
       />
-      <Grid item className={`mlMain py0`}>
+      <Grid className={`mlMain py0`}>
         {errorMap.none && <Notice error text={errorMap.none} />}
         <Paper data-qa-label-header>
           <div className={classes.inner}>
-            <Grid item>
+            <Box>
               <TextField
                 className={classes.inputWidth}
                 data-qa-label-input
@@ -264,8 +265,8 @@ export const CreateCluster = () => {
                 }
                 value={label || ''}
               />
-            </Grid>
-            <Grid item>
+            </Box>
+            <Box>
               <RegionSelect
                 className={classes.regionSubtitle}
                 errorText={errorMap.region}
@@ -279,8 +280,8 @@ export const CreateCluster = () => {
                   helperTextPosition: 'top',
                 }}
               />
-            </Grid>
-            <Grid item>
+            </Box>
+            <Box>
               <Select
                 className={classes.inputWidth}
                 label="Kubernetes Version"
@@ -291,9 +292,9 @@ export const CreateCluster = () => {
                 onChange={(selected: Item<string>) => setVersion(selected)}
                 isClearable={false}
               />
-            </Grid>
+            </Box>
           </div>
-          <Grid item>
+          <Box>
             <NodePoolPanel
               types={typesData || []}
               apiError={errorMap.node_pools}
@@ -316,11 +317,10 @@ export const CreateCluster = () => {
               ]}
               isOnCreate
             />
-          </Grid>
+          </Box>
         </Paper>
       </Grid>
       <Grid
-        item
         className={`mlSidebar ${classes.sidebar}`}
         data-testid="kube-checkout-bar"
       >
