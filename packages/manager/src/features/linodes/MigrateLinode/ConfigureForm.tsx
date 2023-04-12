@@ -3,12 +3,10 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import {
-  RegionSelect,
-  flags,
-} from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getHumanReadableCountry } from 'src/utilities/formatRegion';
+import { Flag } from 'src/components/Flag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -23,13 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   currentRegion: {
     display: 'flex',
+    gap: theme.spacing(),
     alignItems: 'center',
     flexDirection: 'row',
     marginBottom: theme.spacing(4),
-    '& svg': {
-      marginRight: theme.spacing(),
-      marginLeft: 14,
-    },
   },
 }));
 
@@ -58,7 +53,7 @@ const ConfigureForm = (props: Props) => {
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region</Typography>
       <div className={classes.currentRegion}>
-        {flags[country]?.()}
+        <Flag country={country.toLowerCase()} />
         <Typography>{`${getHumanReadableCountry(props.currentRegion)}: ${
           currentActualRegion?.label ?? currentRegion
         }`}</Typography>

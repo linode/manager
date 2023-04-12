@@ -6,7 +6,7 @@ import * as React from 'react';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { Region } from '@linode/api-v4/lib/regions';
 import RegionOption, { RegionItem } from './RegionOption';
-import 'flag-icons/css/flag-icons.min.css';
+import { Flag } from 'src/components/Flag';
 
 interface Props extends Omit<BaseSelectProps, 'onChange'> {
   regions: Region[];
@@ -46,22 +46,13 @@ export const getRegionOptions = (regions: Region[]) => {
     au: 'Asia Pacific',
   };
 
-  const countryFlagOverrides = {
-    uk: 'fake',
-  };
-
   for (const region of regions) {
     const country = region.country.toLowerCase();
 
     groups[countryToGroupMap[country]].push({
       label: `${region.label} (${region.id})`,
       value: region.id,
-      flag: (
-        <div
-          className={`fi fi-${countryFlagOverrides[country] ?? country} fi-xx`}
-          style={{ fontSize: '1.5rem', verticalAlign: 'top' }}
-        />
-      ),
+      flag: <Flag country={country} />,
       country: region.country,
     });
   }
