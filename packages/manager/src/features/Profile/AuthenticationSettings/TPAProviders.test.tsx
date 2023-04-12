@@ -12,7 +12,7 @@ jest.mock('src/hooks/useFlags', () => ({
         displayName: 'Google',
         name: 'google',
         href: 'https://google.com',
-        icon: '"GoogleIcon"',
+        icon: 'GoogleIcon',
       },
       {
         displayName: 'GitHub',
@@ -28,8 +28,8 @@ describe('TPAProviders component', () => {
   it('Should render login method with Linode button', () => {
     const authType = 'password';
     renderWithTheme(<TPAProviders authType={authType} />);
-    const linodeButton = screen.getByTestId('Button-Linode');
-    const LinodeButtonEnabled = screen.getByTestId('Enabled-Linode');
+    const linodeButton = screen.getByTestId('Button-Cloud Manager');
+    const LinodeButtonEnabled = screen.getByTestId('Enabled-Cloud Manager');
     expect(linodeButton).toBeInTheDocument();
     expect(linodeButton).toBeDisabled();
     expect(LinodeButtonEnabled).toBeInTheDocument();
