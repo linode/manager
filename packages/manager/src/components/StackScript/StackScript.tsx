@@ -73,7 +73,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export interface Props {
+export interface StackScriptProps {
   data: StackScriptType;
   userCanModify: boolean;
 }
@@ -83,7 +83,7 @@ interface StackScriptImages {
   deprecated: JSX.Element[];
 }
 
-export const StackScript = (props: Props) => {
+export const StackScript = (props: StackScriptProps) => {
   const {
     data: {
       username,
