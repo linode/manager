@@ -228,9 +228,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
             label="Country"
             errorText={errorMap.country}
             isClearable={false}
-            onChange={(item: Item) =>
-              formik.setFieldValue('country', item.value)
-            }
+            onChange={(item) => formik.setFieldValue('country', item.value)}
             options={countryResults}
             placeholder="Select a Country"
             required={flags.regionDropdown}
@@ -251,9 +249,7 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
               label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
               errorText={errorMap.state}
               isClearable={false}
-              onChange={(item: Item) =>
-                formik.setFieldValue('state', item.value)
-              }
+              onChange={(item) => formik.setFieldValue('state', item.value)}
               options={filteredRegionResults}
               placeholder={
                 formik.values.country === 'US' ? 'state' : 'province'
