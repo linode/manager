@@ -1,5 +1,10 @@
 import { DateTime } from 'luxon';
-import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 import {
@@ -18,7 +23,6 @@ import {
   NodeBalancerStats,
   updateNodeBalancer,
   updateNodeBalancerConfig,
-  Event,
 } from '@linode/api-v4';
 import {
   APIError,
@@ -26,11 +30,8 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import {
-  itemInListCreationHandler,
-  itemInListMutationHandler,
-  queryClient,
-} from './base';
+import { itemInListCreationHandler, itemInListMutationHandler } from './base';
+import { EventWithStore } from 'src/events';
 
 export const queryKey = 'nodebalancers';
 
@@ -74,8 +75,9 @@ export const useNodeBalancerQuery = (id: number, enabled = true) =>
     { enabled }
   );
 
-export const useNodebalancerUpdateMutation = (id: number) =>
-  useMutation<NodeBalancer, APIError[], Partial<NodeBalancer>>(
+export const useNodebalancerUpdateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<NodeBalancer, APIError[], Partial<NodeBalancer>>(
     (data) => updateNodeBalancer(id, data),
     {
       onSuccess(data) {
@@ -84,17 +86,21 @@ export const useNodebalancerUpdateMutation = (id: number) =>
       },
     }
   );
+};
 
-export const useNodebalancerDeleteMutation = (id: number) =>
-  useMutation<{}, APIError[]>(() => deleteNodeBalancer(id), {
+export const useNodebalancerDeleteMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteNodeBalancer(id), {
     onSuccess() {
       queryClient.removeQueries([queryKey, 'nodebalancer', id]);
       queryClient.invalidateQueries([queryKey]);
     },
   });
+};
 
-export const useNodebalancerCreateMutation = () =>
-  useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>(
+export const useNodebalancerCreateMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>(
     createNodeBalancer,
     {
       onSuccess(data) {
@@ -103,31 +109,38 @@ export const useNodebalancerCreateMutation = () =>
       },
     }
   );
+};
 
-export const useNodebalancerConfigCreateMutation = (id: number) =>
-  useMutation<NodeBalancerConfig, APIError[], CreateNodeBalancerConfig>(
+export const useNodebalancerConfigCreateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<NodeBalancerConfig, APIError[], CreateNodeBalancerConfig>(
     (data) => createNodeBalancerConfig(id, data),
-    itemInListCreationHandler([queryKey, 'nodebalancer', id, 'configs'])
+    itemInListCreationHandler(
+      [queryKey, 'nodebalancer', id, 'configs'],
+      queryClient
+    )
   );
+};
 
-export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) =>
-  useMutation<
+export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<
     NodeBalancerConfig,
     APIError[],
     Partial<CreateNodeBalancerConfig> & { configId: number }
   >(
     ({ configId, ...data }) =>
       updateNodeBalancerConfig(nodebalancerId, configId, data),
-    itemInListMutationHandler([
-      queryKey,
-      'nodebalancer',
-      nodebalancerId,
-      'configs',
-    ])
+    itemInListMutationHandler(
+      [queryKey, 'nodebalancer', nodebalancerId, 'configs'],
+      queryClient
+    )
   );
+};
 
-export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) =>
-  useMutation<{}, APIError[], { configId: number }>(
+export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { configId: number }>(
     ({ configId }) => deleteNodeBalancerConfig(nodebalancerId, configId),
     {
       onSuccess(_, vars) {
@@ -142,6 +155,7 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) =>
       },
     }
   );
+};
 
 export const useAllNodeBalancerConfigsQuery = (id: number) =>
   useQuery<NodeBalancerConfig[], APIError[]>(
@@ -181,7 +195,10 @@ export const useInfiniteNodebalancersQuery = (filter: Filter) =>
     }
   );
 
-export const nodebalanacerEventHandler = (event: Event) => {
+export const nodebalanacerEventHandler = ({
+  event,
+  queryClient,
+}: EventWithStore) => {
   if (event.action.startsWith('nodebalancer_config')) {
     queryClient.invalidateQueries([
       queryKey,

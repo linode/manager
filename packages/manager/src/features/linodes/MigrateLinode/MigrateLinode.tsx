@@ -157,6 +157,7 @@ const MigrateLinode = (props: Props) => {
           region,
           selectedRegion,
           +formatDate(new Date().toISOString(), {
+            timezone: profile?.timezone,
             format: 'H',
           })
         );

@@ -23,7 +23,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
@@ -32,6 +35,10 @@ import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
 import Reply from './TabbedReply';
 import LandingHeader from 'src/components/LandingHeader';
+import {
+  withApplicationStore,
+  WithApplicationStoreProps,
+} from 'src/containers/withApplicationStore.container';
 
 export type ClassNames =
   | 'title'
@@ -104,7 +111,10 @@ interface State {
   ticketCloseSuccess: boolean;
 }
 
-export type CombinedProps = RouteProps & ProfileProps & WithStyles<ClassNames>;
+export type CombinedProps = RouteProps &
+  WithProfileProps &
+  WithApplicationStoreProps &
+  WithStyles<ClassNames>;
 
 export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -220,13 +230,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   renderEntityLabelWithIcon = () => {
-    const { classes } = this.props;
+    const { classes, store } = this.props;
     const { entity } = this.state.ticket!;
     if (!entity) {
       return null;
     }
     const icon: JSX.Element = this.getEntityIcon(entity.type);
-    const target = getLinkTargets(entity);
+    const target = getLinkTargets(entity, store);
     return (
       <Grid
         container
@@ -308,7 +318,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     }
 
     // Format date for header
-    const formattedDate = formatDate(ticket.updated);
+    const formattedDate = formatDate(ticket.updated, {
+      timezone: profile.data?.timezone,
+    });
     const status = ticket.status === 'closed' ? 'Closed' : 'Last updated';
 
     const _Chip = () => (
@@ -405,4 +417,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 }
 const styled = withStyles(styles);
 
-export default compose(withProfile, styled)(SupportTicketDetail);
+export default compose(
+  withProfile,
+  withApplicationStore,
+  styled
+)(SupportTicketDetail);

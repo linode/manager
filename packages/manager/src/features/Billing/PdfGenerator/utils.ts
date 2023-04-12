@@ -16,13 +16,16 @@ import { getShouldUseAkamaiBilling } from '../billingUtils';
  */
 export const pageMargin = 30;
 
-const formatDateForTable = (date: string): [string, string] => {
+const formatDateForTable = (
+  date: string,
+  timezone?: string
+): [string, string] => {
   if (!date) {
     // Probably the to or from value is null (this is the case with credits/promos)
     return ['', ''];
   }
   /** gives us a datetime separated by a space. e.g. 2019-09-30 08:25:00 */
-  const res = formatDate(date);
+  const res = formatDate(date, { timezone });
 
   /** basically, if we have an invalid date, return empty strings */
   return !!res.match(/invalid/gim)
@@ -33,7 +36,11 @@ const formatDateForTable = (date: string): [string, string] => {
 /**
  * Creates the table header and rows for a payment PDF
  */
-export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
+export const createPaymentsTable = (
+  doc: JSPDF,
+  payment: Payment,
+  timezone?: string
+) => {
   autoTable(doc, {
     startY: 165,
     styles: {
@@ -46,7 +53,12 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
     body: [
       [
         { content: 'Payment: Thank You' },
-        { content: formatDate(payment.date, { displayTime: true }) },
+        {
+          content: formatDate(payment.date, {
+            displayTime: true,
+            timezone,
+          }),
+        },
         { content: `$${Number(payment.usd).toFixed(2)}` },
       ],
     ],
@@ -73,7 +85,11 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
 /**
  * Creates the table header and rows for an Invoice PDF
  */
-export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
+export const createInvoiceItemsTable = (
+  doc: JSPDF,
+  items: InvoiceItem[],
+  timezone?: string
+) => {
   autoTable(doc, {
     startY: 165,
     styles: {
@@ -95,8 +111,11 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
       ],
     ],
     body: items.map((item) => {
-      const [toDate, toTime] = formatDateForTable(item.to || '');
-      const [fromDate, fromTime] = formatDateForTable(item.from || '');
+      const [toDate, toTime] = formatDateForTable(item.to || '', timezone);
+      const [fromDate, fromTime] = formatDateForTable(
+        item.from || '',
+        timezone
+      );
       return [
         {
           styles: { fontSize: 8, cellWidth: 85, overflow: 'linebreak' },

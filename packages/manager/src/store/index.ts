@@ -1,4 +1,12 @@
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import { QueryClient } from 'react-query';
+import { useStore } from 'react-redux';
+import {
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore,
+  Store,
+} from 'redux';
 import thunk from 'redux-thunk';
 import accountManagement, {
   defaultState as defaultAccountManagementState,
@@ -156,17 +164,23 @@ const reducers = combineReducers<ApplicationState>({
   mockFeatureFlags,
 });
 
-const enhancers = compose(
-  applyMiddleware(
-    thunk,
-    combineEventsMiddleware(
-      linodeEvents,
-      longviewEvents,
-      diskEvents,
-      linodeConfigEvents
-    )
-  ),
-  reduxDevTools ? reduxDevTools() : (f: any) => f
-) as any;
+const enhancersFactory = (queryClient: QueryClient) =>
+  compose(
+    applyMiddleware(
+      thunk,
+      combineEventsMiddleware(
+        [linodeEvents, longviewEvents, diskEvents, linodeConfigEvents],
+        queryClient
+      )
+    ),
+    reduxDevTools ? reduxDevTools() : (f: any) => f
+  ) as any;
 
-export default createStore(reducers, defaultState, enhancers);
+// We need an instance of the query client for some event event handlers
+export const storeFactory = (queryClient: QueryClient) =>
+  createStore(reducers, defaultState, enhancersFactory(queryClient));
+
+export type ApplicationStore = Store<ApplicationState>;
+
+export const useApplicationStore = (): ApplicationStore =>
+  useStore<ApplicationState>();

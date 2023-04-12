@@ -10,7 +10,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { useAccount } from 'src/queries/account';
-import { getGrantData } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 import AccountLogins from './AccountLogins';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
@@ -27,9 +27,9 @@ const AccountLanding = () => {
   const history = useHistory();
   const location = useLocation();
   const { data: account } = useAccount();
+  const { data: grants } = useGrants();
 
-  const grantData = getGrantData();
-  const accountAccessGrant = grantData?.global?.account_access;
+  const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
   const isAkamaiAccount = account?.billing_source === 'akamai';
 

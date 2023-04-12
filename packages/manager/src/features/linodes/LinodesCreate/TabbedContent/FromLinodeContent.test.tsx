@@ -5,8 +5,11 @@ import { linodes } from 'src/__data__/linodes';
 
 import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
 import { Provider } from 'react-redux';
-import store from 'src/store';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { storeFactory } from 'src/store';
+import { queryClientFactory } from 'src/queries/base';
+
+const store = storeFactory(queryClientFactory());
 
 const mockProps: CombinedProps = {
   updateDiskSize: jest.fn(),

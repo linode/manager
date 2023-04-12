@@ -8,7 +8,6 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/profile';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -16,6 +15,7 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import DisableTwoFactorDialog from './DisableTwoFactorDialog';
 import EnableTwoFactorForm from './EnableTwoFactorForm';
 import ScratchDialog from './ScratchCodeDialog';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -55,6 +55,8 @@ export const TwoFactor: React.FC<Props> = (props) => {
     'To use two-factor authentication you must set up your security questions listed below.';
 
   const { disabled, twoFactor, username } = props;
+
+  const queryClient = useQueryClient();
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);

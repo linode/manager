@@ -4,13 +4,15 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { Grants, Profile } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 
-export interface ProfileProps {
+export interface WithProfileProps {
   profile: UseQueryResult<Profile, APIError[]>;
   grants: UseQueryResult<Grants, APIError[]>;
 }
 
-export default (Component: React.ComponentType<any>) => {
-  return (props: any) => {
+export const withProfile = <Props>(
+  Component: React.ComponentType<Props & WithProfileProps>
+) => {
+  return (props: Props) => {
     const profile = useProfile();
     const grants = useGrants();
 

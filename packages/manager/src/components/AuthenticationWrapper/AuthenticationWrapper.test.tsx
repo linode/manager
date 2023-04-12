@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
+import { queryClientFactory } from 'src/queries/base';
+import { storeFactory } from 'src/store';
+
+const queryClient = queryClientFactory();
+const store = storeFactory(queryClient);
 
 const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
@@ -13,6 +18,8 @@ const component = shallow<AuthenticationWrapper>(
     checkAccountSize={jest.fn()}
     pendingUpload={false}
     linodes={[]}
+    queryClient={queryClient}
+    store={store}
   >
     <div />
   </AuthenticationWrapper>

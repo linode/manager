@@ -53,8 +53,11 @@ import {
   parseAddresses,
   transformConfigsForRequest,
 } from '../utils';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/nodebalancers';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
 
 type ClassNames = 'title' | 'port' | 'nbStatuses' | 'button';
 
@@ -120,7 +123,8 @@ interface State {
 type CombinedProps = Props &
   RouteProps &
   WithStyles<ClassNames> &
-  PreloadedProps;
+  PreloadedProps &
+  WithQueryClientProps;
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -307,7 +311,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       configPayload
     )
       .then((nodeBalancerConfig) => {
-        queryClient.invalidateQueries([
+        this.props.queryClient.invalidateQueries([
           queryKey,
           'nodebalancer',
           Number(nodeBalancerId),
@@ -429,7 +433,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     createNodeBalancerConfig(Number(nodeBalancerId), configPayload)
       .then((nodeBalancerConfig) => {
-        queryClient.invalidateQueries([
+        this.props.queryClient.invalidateQueries([
           queryKey,
           'nodebalancer',
           Number(nodeBalancerId),
@@ -601,7 +605,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     // actually delete a real config
     deleteNodeBalancerConfig(Number(nodeBalancerId), config.id)
       .then((_) => {
-        queryClient.invalidateQueries([
+        this.props.queryClient.invalidateQueries([
           queryKey,
           'nodebalancer',
           Number(nodeBalancerId),
@@ -1171,6 +1175,11 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-const enhanced = composeC<CombinedProps, Props>(styled, withRouter, preloaded);
+const enhanced = composeC<CombinedProps, Props>(
+  styled,
+  withRouter,
+  preloaded,
+  withQueryClient
+);
 
 export default enhanced(NodeBalancerConfigurations);

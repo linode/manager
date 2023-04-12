@@ -10,8 +10,8 @@ import ThirdPartyPayment from './ThirdPartyPayment';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
 import { useSnackbar } from 'notistack';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountPayment';
+import { useQueryClient } from 'react-query';
 
 interface Props {
   paymentMethod: PaymentMethod;
@@ -24,6 +24,7 @@ const PaymentMethodRow = (props: Props) => {
   const { type, is_default } = paymentMethod;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
 
   const makeDefault = (id: number) => {
     makeDefaultPaymentMethod(id)

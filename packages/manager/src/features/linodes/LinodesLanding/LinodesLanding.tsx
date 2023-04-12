@@ -3,6 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -18,6 +19,10 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups';
 import { DialogType } from 'src/features/linodes/types';
@@ -82,7 +87,8 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   StyleProps &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  WithProfileProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
@@ -194,6 +200,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesData,
       classes,
       linodesInTransition,
+      profile,
     } = this.props;
 
     const params = new URLSearchParams(this.props.location.search);
@@ -456,7 +463,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 : headers
                             }
                             filename={`linodes-${formatDate(
-                              DateTime.local().toISO()
+                              DateTime.local().toISO(),
+                              {
+                                timezone: profile.data?.timezone,
+                              }
                             )}.csv`}
                             className={classes.CSVlink}
                           >
@@ -516,13 +526,17 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => {
 };
 
 interface DispatchProps {
-  deleteLinode: (linodeId: number) => Promise<Record<string, never>>;
+  deleteLinode: (
+    linodeId: number,
+    queryClient: QueryClient
+  ) => Promise<Record<string, never>>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
-  deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId })),
+  deleteLinode: (linodeId: number, queryClient: QueryClient) =>
+    dispatch(deleteLinode({ linodeId, queryClient })),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
@@ -532,7 +546,8 @@ export const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
   connected,
   styled,
-  withFeatureFlagConsumer
+  withFeatureFlagConsumer,
+  withProfile
 );
 
 export default enhanced(ListLinodes);

@@ -4,8 +4,8 @@ import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+import { AttachmentError } from '../Support/SupportTicketDetail/SupportTicketDetail';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

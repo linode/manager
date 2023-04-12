@@ -60,6 +60,10 @@ import BackupsPlaceholder from './BackupsPlaceholder';
 import BackupTableRow from './BackupTableRow';
 import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 
 type ClassNames =
   | 'paper'
@@ -174,7 +178,8 @@ type CombinedProps = PreloadedProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   ContextProps &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  WithProfileProps;
 
 const isReadOnly = (permissions: GrantLevel) => {
   return permissions === 'read_only';
@@ -227,15 +232,15 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.eventSubscription = events$
-      .filter((e) =>
+      .filter(({ event }) =>
         [
           'linode_snapshot',
           'backups_enable',
           'backups_cancel',
           'backups_restore',
-        ].includes(e.action)
+        ].includes(event.action)
       )
-      .filter((e) => !e._initial && e.status === 'finished')
+      .filter(({ event }) => !event._initial && event.status === 'finished')
       .subscribe((_) => {
         getLinodeBackups(this.props.linodeID)
           .then((data) => {
@@ -282,7 +287,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
 
-    this.windows = initWindows(getUserTimezone(), true);
+    this.windows = initWindows(
+      getUserTimezone(props.profile.data?.timezone),
+      true
+    );
 
     this.days = [
       ['Choose a day', 'Scheduling'],
@@ -497,7 +505,12 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   handleRestore = (backup: LinodeBackup) => {
-    this.openRestoreDrawer(backup.id, formatDate(backup.created));
+    this.openRestoreDrawer(
+      backup.id,
+      formatDate(backup.created, {
+        timezone: this.props.profile.data?.timezone,
+      })
+    );
   };
 
   handleRestoreSubmit = () => {
@@ -611,7 +624,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   SettingsForm = (): JSX.Element | null => {
-    const { classes, backupsSchedule, permissions } = this.props;
+    const { classes, backupsSchedule, permissions, profile } = this.props;
     const { settingsForm } = this.state;
     const getErrorFor = getAPIErrorFor(
       {
@@ -698,7 +711,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             noMarginTop
           />
           <FormHelperText>
-            Time displayed in {getUserTimezone().replace('_', ' ')}
+            Time displayed in{' '}
+            {getUserTimezone(profile.data?.timezone).replace('_', ' ')}
           </FormHelperText>
         </FormControl>
         <ActionsPanel className={classes.scheduleAction}>
@@ -867,5 +881,6 @@ export default compose<CombinedProps, {}>(
   styled,
   withRouter,
   withSnackbar,
-  withLinodeActions
+  withLinodeActions,
+  withProfile
 )(_LinodeBackup);

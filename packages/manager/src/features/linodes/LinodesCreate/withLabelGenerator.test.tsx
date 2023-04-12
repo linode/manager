@@ -1,12 +1,14 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import store from 'src/store';
+import { queryClientFactory } from 'src/queries/base';
+import { storeFactory } from 'src/store';
 import {
   dedupeLabel,
   LabelProps,
   withLabelGenerator,
 } from './withLabelGenerator';
 
+const store = storeFactory(queryClientFactory());
 const RawComponent = withLabelGenerator(() => <div />);
 
 describe('withLabelGenerator HOC', () => {
@@ -22,11 +24,9 @@ describe('withLabelGenerator HOC', () => {
   });
 
   it('updates custom label', () => {
-    nestedComponent
-      .props()
-      .updateCustomLabel({
-        target: { value: '' },
-      } as React.ChangeEvent<HTMLInputElement>);
+    nestedComponent.props().updateCustomLabel({
+      target: { value: '' },
+    } as React.ChangeEvent<HTMLInputElement>);
     expect(nestedComponent.props().customLabel).toBe('');
     nestedComponent.props().updateCustomLabel({
       target: { value: 'hello world' },

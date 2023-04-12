@@ -3,11 +3,19 @@ import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import {
+  WithApplicationStoreProps,
+  withApplicationStore,
+} from 'src/containers/withApplicationStore.container';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
 import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
-import { queryClient } from 'src/queries/base';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { checkAccountSize } from 'src/store/accountManagement/accountManagement.requests';
@@ -18,7 +26,15 @@ import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { MapState } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
-type CombinedProps = DispatchProps & StateProps & { children: any };
+interface Props {
+  children: React.ReactNode;
+}
+
+type CombinedProps = Props &
+  DispatchProps &
+  StateProps &
+  WithQueryClientProps &
+  WithApplicationStoreProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
@@ -47,19 +63,19 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     // Initial Requests: Things we need immediately (before rendering the app)
     const dataFetchingPromises: Promise<any>[] = [
       // Fetch user's account information
-      queryClient.prefetchQuery({
+      this.props.queryClient.prefetchQuery({
         queryFn: getAccountInfo,
         queryKey: accountQueryKey,
       }),
 
       // Username and whether a user is restricted
-      queryClient.prefetchQuery({
+      this.props.queryClient.prefetchQuery({
         queryFn: getProfile,
         queryKey: 'profile',
       }),
 
       // Is a user managed
-      queryClient.prefetchQuery({
+      this.props.queryClient.prefetchQuery({
         queryKey: 'account-settings',
         queryFn: getAccountSettings,
       }),
@@ -69,7 +85,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     ];
 
     // Start events polling
-    startEventsInterval();
+    startEventsInterval(this.props.store, this.props.queryClient);
 
     try {
       await Promise.all(dataFetchingPromises);
@@ -170,4 +186,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default connected(AuthenticationWrapper);
+export default compose(
+  connected,
+  withQueryClient,
+  withApplicationStore
+)(AuthenticationWrapper);

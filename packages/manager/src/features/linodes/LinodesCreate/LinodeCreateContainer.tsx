@@ -20,7 +20,10 @@ import { compose as recompose } from 'recompose';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
@@ -37,14 +40,12 @@ import withAgreements, {
 import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import {
   queryKey as accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
-import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
-import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import { simpleMutationHandlers } from 'src/queries/base';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
@@ -70,6 +71,14 @@ import {
 import { getRegionIDFromLinodeID } from './utilities';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import LandingHeader from 'src/components/LandingHeader';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
+import {
+  withAccountSettings,
+  WithAccountSettingsProps,
+} from 'src/containers/accountSettings.container';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -117,8 +126,10 @@ type CombinedProps = WithSnackbarProps &
   LabelProps &
   FeatureFlagConsumerProps &
   RouteComponentProps<{}, any, any> &
-  ProfileProps &
-  AgreementsProps;
+  WithProfileProps &
+  AgreementsProps &
+  WithQueryClientProps &
+  WithAccountSettingsProps;
 
 const defaultState: State = {
   privateIPEnabled: false,
@@ -238,7 +249,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }
     this.setState({ appInstancesLoading: true });
 
-    queryClient
+    this.props.queryClient
       .fetchQuery('stackscripts-oca-all', () => getAllOCAsRequest())
       .then((res: StackScript[]) => {
         // Don't display One-Click Helpers to the user
@@ -595,12 +606,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         if (signedAgreement) {
-          queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
+          this.props.queryClient.executeMutation<
+            {},
+            APIError[],
+            Partial<Agreements>
+          >({
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
             mutationKey: accountAgreementsQueryKey,
             onError: reportAgreementSigningError,
-            ...simpleMutationHandlers(accountAgreementsQueryKey),
+            ...simpleMutationHandlers(
+              accountAgreementsQueryKey,
+              this.props.queryClient
+            ),
           });
         }
 
@@ -734,8 +752,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const extendedTypeData = typesData?.map(extendType);
 
     const userCannotCreateLinode =
-      Boolean(profile.data?.restricted) &&
-      !hasGrant('add_linodes', grants.data);
+      Boolean(profile.data?.restricted) && !grants.data?.global.add_linodes;
 
     // If the selected type is a GPU plan, only display region
     // options that support GPUs.
@@ -803,7 +820,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleAgreementChange={this.handleAgreementChange}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             userCannotCreateLinode={userCannotCreateLinode}
-            accountBackupsEnabled={getAccountBackupsEnabled()}
+            accountBackupsEnabled={
+              this.props.accountSettings.data?.backups_enabled ?? false
+            }
             setAuthorizedUsers={this.setAuthorizedUsers}
             updateUserData={this.setUserData}
             {...restOfProps}
@@ -844,7 +863,9 @@ export default recompose<CombinedProps, {}>(
   withLabelGenerator,
   withFlags,
   withProfile,
-  withAgreements
+  withAgreements,
+  withQueryClient,
+  withAccountSettings
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {

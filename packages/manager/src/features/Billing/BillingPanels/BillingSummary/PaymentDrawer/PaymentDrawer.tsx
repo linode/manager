@@ -21,7 +21,6 @@ import TextField from 'src/components/TextField';
 import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
-import { queryClient } from 'src/queries/base';
 import isCreditCardExpired from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import GooglePayButton from './GooglePayButton';
@@ -29,6 +28,7 @@ import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import PayPalButton from './PayPalButton';
 import { SetSuccess } from './types';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   currentBalance: {
@@ -88,6 +88,8 @@ export const PaymentDrawer = (props: Props) => {
 
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
 
   const hasPaymentMethods = paymentMethods && paymentMethods.length > 0;
 

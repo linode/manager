@@ -9,12 +9,12 @@ import Button from 'src/components/Button';
 import { addPaymentMethod } from '@linode/api-v4/lib';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
-import { queryClient } from 'src/queries/base';
 import { CreditCardSchema } from '@linode/validation';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   error: {
@@ -51,6 +51,7 @@ const AddCreditCardForm = (props: Props) => {
   const [error, setError] = React.useState<string>();
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
   const expiryRef = React.useRef<HTMLInputElement>(null);
 
   const addCreditCard = async (

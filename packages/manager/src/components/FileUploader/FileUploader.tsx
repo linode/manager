@@ -27,7 +27,7 @@ import {
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
 import { useUploadImageQuery, queryKey } from 'src/queries/images';
-import { queryClient } from 'src/queries/base';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -143,6 +143,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
+  const queryClient = useQueryClient();
   const { mutateAsync: uploadImage } = useUploadImageQuery({
     label,
     region,

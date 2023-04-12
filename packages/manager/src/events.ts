@@ -10,7 +10,8 @@
  * The next step is to move this logic into a Redux connected component so we can more easily
  * access Redux and control the start of the event loop.
  */
-import { Event } from '@linode/api-v4/lib/account';
+import { EntityEvent, Event } from '@linode/api-v4/lib/account';
+import { QueryClient } from 'react-query';
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
 import {
@@ -19,15 +20,28 @@ import {
   setPollingInterval,
   setRequestDeadline,
 } from 'src/eventsPolling';
-import store from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
+import { ApplicationStore } from './store';
 
-export const events$ = new Subject<Event>();
+export interface EventWithStore {
+  event: Event;
+  store: ApplicationStore;
+  queryClient: QueryClient;
+}
+
+export interface EntityEventWithStore extends EventWithStore {
+  event: EntityEvent;
+}
+
+export const events$ = new Subject<EventWithStore>();
 
 let inProgress = false;
 
-export const requestEvents = () => {
+export const requestEvents = (
+  store: ApplicationStore,
+  queryClient: QueryClient
+) => {
   inProgress = true;
   return (store.dispatch as ThunkDispatch)(getEvents())
     .then((events: Event[]) => {
@@ -37,15 +51,18 @@ export const requestEvents = () => {
        * This feeds the stream for consumers of events$. We're simply pushing the events from the
        * request response onto the stream one at a time.
        */
-      reversed.forEach((linodeEvent: Event) => {
-        events$.next(linodeEvent);
+      reversed.forEach((event: Event) => {
+        events$.next({ event, store, queryClient });
       });
       inProgress = false;
     })
     .catch((e) => e);
 };
 
-export const startEventsInterval = () =>
+export const startEventsInterval = (
+  store: ApplicationStore,
+  queryClient: QueryClient
+) =>
   setInterval(
     () => {
       const now = Date.now();
@@ -68,7 +85,7 @@ export const startEventsInterval = () =>
           return;
         }
 
-        requestEvents();
+        requestEvents(store, queryClient);
 
         if (DISABLE_EVENT_THROTTLE) {
           /*

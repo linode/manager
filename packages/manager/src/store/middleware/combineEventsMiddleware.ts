@@ -1,4 +1,5 @@
 import { compose, equals, uniqWith } from 'ramda';
+import { QueryClient } from 'react-query';
 import { Middleware } from 'redux';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
@@ -12,7 +13,8 @@ import { addEvents } from '../events/event.actions';
 import { ExtendedEvent } from '../events/event.types';
 
 const eventsMiddlewareFactory = (
-  ...eventHandlers: EventHandler[]
+  eventHandlers: EventHandler[],
+  queryClient: QueryClient
 ): Middleware => ({ dispatch, getState }) => (next) => (action: any) => {
   if (isType(action, addEvents)) {
     const { payload } = action;
@@ -46,7 +48,7 @@ const eventsMiddlewareFactory = (
        * Having an event we care about, we can call the handlers with the event and dispatch.
        */
       for (const handler of eventHandlers) {
-        handler(event, dispatch, getState);
+        handler(event, dispatch, getState, queryClient);
       }
 
       /**

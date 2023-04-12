@@ -40,7 +40,6 @@ import DeviceSelection, {
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/linodes/presentation';
 import { useAccount } from 'src/queries/account';
-import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
@@ -62,6 +61,7 @@ import {
 } from '../linodeDetailContext';
 import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
 import KernelSelect from './KernelSelect';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -234,6 +234,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];
+
+  const queryClient = useQueryClient();
 
   const { data: account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(
