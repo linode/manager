@@ -7,7 +7,6 @@ import { Theme } from '@mui/material/styles';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
-import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'radioGroupLabel';
@@ -34,88 +33,73 @@ interface Props {
   error?: string;
 }
 
-interface State {
-  oneof: string[];
-  selectedOption: string;
-}
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UserDefinedSelect extends React.Component<CombinedProps, State> {
-  state: State = {
-    oneof: this.props.field.oneof!.split(','),
-    selectedOption: '',
+const UserDefinedSelect = (props: CombinedProps) => {
+  const { field, value, error, classes, isOptional, updateFormState } = props;
+
+  const [oneof, setOneof] = React.useState<string[]>(field.oneof!.split(','));
+
+  React.useEffect(() => {
+    setOneof(field.oneof!.split(','));
+  }, [field.oneof]);
+
+  const handleSelectOneOf = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedValue = e.target.value;
+    updateFormState(field.name, selectedValue);
   };
 
-  handleSelectOneOf = (e: any) => {
-    const { updateFormState, field } = this.props;
-    updateFormState(field.name, e.target.value);
-  };
-
-  render() {
-    const { oneof } = this.state;
-    const { value, error, field, classes, isOptional } = this.props;
-
-    /* Display a select if there are more than 2 oneof options, otherwise display as radio. */
-    if (oneof.length > 4) {
-      return (
-        <div>
-          {error && <Notice error text={error} spacingTop={8} />}
-          <TextField
-            label={field.label}
-            onChange={this.handleSelectOneOf}
-            value={value}
-            select
-          >
-            {oneof.map((choice: string, index) => {
-              return (
-                <MenuItem value={choice} key={index}>
-                  {choice}
-                </MenuItem>
-              );
-            })}
-          </TextField>
-        </div>
-      );
-    } else {
-      return (
-        <div className={classes.root}>
-          {error && <Notice error text={error} spacingTop={8} />}
-          <InputLabel className={classes.radioGroupLabel}>
-            {field.label}
-            {!isOptional && '*'}
-          </InputLabel>
-
+  if (oneof.length > 4) {
+    return (
+      <div>
+        {error && <Notice error text={error} spacingTop={8} />}
+        <TextField
+          label={field.label}
+          onChange={handleSelectOneOf}
+          value={value}
+          select
+        >
           {oneof.map((choice: string, index) => {
             return (
-              <React.Fragment key={index}>
-                <FormControlLabel
-                  value={choice}
-                  control={
-                    <Radio
-                      name={choice}
-                      checked={!!value && value === choice}
-                      /*
-                      NOTE: Although the API returns a default value and we're auto selecting
-                      a value for the user, it is not necessary to store this value
-                      in the state because it's not necessary for the POST request, since
-                      the backend will automatically POST with that default value
-                    */
-                      onChange={this.handleSelectOneOf}
-                      data-qa-perm-none-radio
-                    />
-                  }
-                  label={choice}
-                />
-              </React.Fragment>
+              <MenuItem value={choice} key={index}>
+                {choice}
+              </MenuItem>
             );
           })}
-        </div>
-      );
-    }
+        </TextField>
+      </div>
+    );
   }
-}
+  return (
+    <div className={classes.root}>
+      {error && <Notice error text={error} spacingTop={8} />}
+      <InputLabel className={classes.radioGroupLabel}>
+        {field.label}
+        {!isOptional && '*'}
+      </InputLabel>
+
+      {oneof.map((choice: string, index) => {
+        return (
+          <React.Fragment key={index}>
+            <FormControlLabel
+              value={choice}
+              control={
+                <Radio
+                  name={choice}
+                  checked={!!value && value === choice}
+                  onChange={handleSelectOneOf}
+                  data-qa-perm-none-radio
+                />
+              }
+              label={choice}
+            />
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+};
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<CombinedProps>(UserDefinedSelect));
+export default styled(UserDefinedSelect);

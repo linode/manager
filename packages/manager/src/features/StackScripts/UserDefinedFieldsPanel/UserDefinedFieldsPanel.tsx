@@ -107,7 +107,6 @@ const renderField = (
           field={field}
           updateFormState={handleChange}
           value={udf_data[field.name] || ''}
-          updateFor={[field.label, udf_data[field.name], error]}
           isOptional={isOptional}
           key={field.name}
           error={error}
