@@ -10,8 +10,6 @@ import CreatableSelect, {
 } from 'react-select/creatable';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
-/* TODO will be refactoring enhanced select to be an abstraction.
-Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
 import Input from './components/Input';
 import LoadingIndicator from './components/LoadingIndicator';
@@ -34,13 +32,6 @@ export interface Item<T = string | number, L = string> {
 export interface GroupType<T = string | number> {
   label: string;
   options: Item<T>[];
-}
-
-export interface SelectState {
-  data: any;
-  isDisabled: boolean;
-  isFocused: boolean;
-  isSelected: boolean;
 }
 
 export interface NoOptionsMessageProps {
@@ -70,10 +61,10 @@ interface ModifiedTextFieldProps extends Omit<TextFieldProps, 'label'> {
 
 export interface BaseSelectProps<
   I extends Item,
-  isMulti extends boolean = false,
+  IsMulti extends boolean = false,
   Clearable extends boolean = false
-> extends Omit<SelectProps<I, isMulti>, 'onChange'>,
-    CreatableSelectProps<I, isMulti> {
+> extends Omit<SelectProps<I, IsMulti>, 'onChange'>,
+    CreatableSelectProps<I, IsMulti> {
   classes?: any;
   /*
    textFieldProps isn't native to react-select
@@ -90,22 +81,17 @@ export interface BaseSelectProps<
    * We require label for accessibility purpose
    */
   label?: string;
-  /** alias for isDisabled */
-  disabled?: boolean;
-  /** retyped this */
-  // value?: Item | Item[] | null;
-  /** making this required */
-  // onChange: (selected: Item | Item[] | null, actionMeta?: ActionMeta) => void;
-  onChange: Clearable extends true
-    ? SelectProps<I, isMulti>['onChange']
+
+  /** onChange is called when the user selectes a new value / new values */
+  onChange: Clearable extends true // if the Select is NOT clearable, the value passed in the onChange function must be defined
+    ? Exclude<SelectProps<I, IsMulti>['onChange'], undefined>
     : (
-        value: Exclude<ValueType<I, isMulti>, null | undefined>,
+        value: Exclude<ValueType<I, IsMulti>, null | undefined>,
         action: ActionMeta<I>
       ) => void;
-  /** alias for onCreateOption */
-  createNew?: (inputValue: string) => void;
-  loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
+
   /** the rest are props we've added ourselves */
+  disabled?: boolean;
   medium?: boolean;
   small?: boolean;
   noMarginTop?: boolean;
@@ -125,22 +111,19 @@ export interface BaseSelectProps<
 
 const Select = <
   I extends Item,
-  isMulti extends boolean = false,
+  IsMulti extends boolean = false,
   Clearable extends boolean = false
 >(
-  props: BaseSelectProps<I, isMulti, Clearable>
+  props: BaseSelectProps<I, IsMulti, Clearable>
 ) => {
   const theme = useTheme<Theme>();
   const classes = useStyles();
   const {
     className,
     components,
-    createNew,
-    disabled,
     errorText,
     filterOption,
     label,
-    loadOptions,
     isClearable,
     isMulti,
     isLoading,
@@ -175,18 +158,18 @@ const Select = <
   //
   // This essentially reverts the behavior of the v3 React-Select update. Long term, we should
   // probably re-write our component handlers to expect EITHER an array OR `null`.
-  // const _onChange = (
-  //   selected: Item | Item[] | null,
-  //   actionMeta?: ActionMeta
-  // ) => {
-  //   const { isMulti, onChange } = props;
-
-  //   if (isMulti && !selected) {
-  //     return onChange([], actionMeta);
-  //   }
-
-  //   onChange(selected, actionMeta);
-  // };
+  const _onChange = (
+    selected: ValueType<I, IsMulti>,
+    actionMeta: ActionMeta<I>
+  ) => {
+    if (isMulti && !selected) {
+      // @ts-expect-error I'm sorry, but trust me I made this component much better
+      onChange([], actionMeta);
+    } else {
+      // @ts-expect-error I'm sorry, but trust me I made this component much better
+      onChange(selected, actionMeta);
+    }
+  };
 
   /*
    * By default, we use the built-in Option component from React-Select, along with several Material-UI based
@@ -229,19 +212,12 @@ const Select = <
       isSearchable
       blurInputOnSelect={blurInputOnSelect}
       isLoading={isLoading}
+      isDisabled={props.disabled || props.isDisabled}
       filterOption={filterOption}
       isMulti={isMulti}
-      isDisabled={disabled}
       classes={classes}
-      className={classNames(className, {
-        [classes.root]: true,
-      })}
+      className={classNames(className, classes.root)}
       classNamePrefix="react-select"
-      /*
-          textFieldProps isn't native to react-select
-          but we're using the MUI select element so any props that
-          can be passed to the MUI TextField element can be passed here
-         */
       inputId={
         inputId
           ? inputId
@@ -249,13 +225,18 @@ const Select = <
           ? convertToKebabCase(label)
           : null
       }
+      /*
+        textFieldProps isn't native to react-select
+        but we're using the MUI select element so any props that
+        can be passed to the MUI TextField element can be passed here
+      */
       textFieldProps={{
         ...textFieldProps,
         label,
         hideLabel,
         errorText,
         errorGroup,
-        disabled,
+        disabled: props.isDisabled || props.disabled,
         noMarginTop,
         InputLabelProps: {
           shrink: true,
@@ -270,19 +251,14 @@ const Select = <
         ),
         required,
       }}
-      /**
-       * react-select wants you to pass "null" to clear out the value
-       * so we need to allow the parent to pass that if it wants
-       */
-      value={typeof value === 'undefined' ? undefined : value}
+      value={value}
       onBlur={onBlur}
       options={options}
       components={combinedComponents}
-      onChange={onChange}
+      onChange={_onChange}
       onInputChange={onInputChange}
-      onCreateOption={createNew}
       placeholder={placeholder || 'Select a value...'}
-      noOptionsMessage={props.noOptionsMessage || (() => 'No results')}
+      noOptionsMessage={noOptionsMessage || (() => 'No results')}
       menuPlacement={props.menuPlacement || 'auto'}
       onMenuClose={onMenuClose}
       onFocus={onFocus}

@@ -104,9 +104,9 @@ const TagsInput = (props: Props) => {
       errorText={error}
       value={value}
       onChange={onChange}
-      createNew={createTag}
+      onCreateOption={createTag}
       noOptionsMessage={getEmptyMessage}
-      disabled={disabled}
+      isDisabled={disabled}
       menuPlacement={menuPlacement}
     />
   );
