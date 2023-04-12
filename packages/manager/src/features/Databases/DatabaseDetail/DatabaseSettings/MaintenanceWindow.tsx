@@ -80,7 +80,7 @@ export const MaintenanceWindow = (props: Props) => {
   const [
     modifiedWeekSelectionMap,
     setModifiedWeekSelectionMap,
-  ] = React.useState<Item[]>([]);
+  ] = React.useState<Item<number>[]>([]);
 
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -90,7 +90,10 @@ export const MaintenanceWindow = (props: Props) => {
     database.id
   );
 
-  const weekSelectionModifier = (day: string, weekSelectionMap: Item[]) => {
+  const weekSelectionModifier = (
+    day: string,
+    weekSelectionMap: Item<number>[]
+  ) => {
     const modifiedMap = weekSelectionMap.map((weekSelectionElement) => {
       return {
         label: `${weekSelectionElement.label} ${day} of each month`,
@@ -203,7 +206,7 @@ export const MaintenanceWindow = (props: Props) => {
                 value={daySelectionMap.find(
                   (thisOption) => thisOption.value === values.day_of_week
                 )}
-                onChange={(e: Item) => {
+                onChange={(e) => {
                   setFormTouched(true);
                   setFieldValue('day_of_week', e.value);
                   weekSelectionModifier(e.label, weekSelectionMap);
@@ -238,9 +241,9 @@ export const MaintenanceWindow = (props: Props) => {
                   value={hourSelectionMap.find(
                     (thisOption) => thisOption.value === values.hour_of_day
                   )}
-                  onChange={(e: Item) => {
+                  onChange={(e) => {
                     setFormTouched(true);
-                    setFieldValue('hour_of_day', +e.value);
+                    setFieldValue('hour_of_day', e.value);
                   }}
                   label="Time of Day (UTC)"
                   placeholder="Choose a time"
@@ -325,9 +328,9 @@ export const MaintenanceWindow = (props: Props) => {
                   value={modifiedWeekSelectionMap.find(
                     (thisOption) => thisOption.value === values.week_of_month
                   )}
-                  onChange={(e: Item) => {
+                  onChange={(e) => {
                     setFormTouched(true);
-                    setFieldValue('week_of_month', +e.value);
+                    setFieldValue('week_of_month', e.value);
                   }}
                   label="Repeats on"
                   placeholder="Repeats on"
