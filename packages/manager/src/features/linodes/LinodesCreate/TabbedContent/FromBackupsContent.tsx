@@ -174,6 +174,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       selectedLinodeID,
       setBackupID,
       typesData,
+      regionsData,
     } = this.props;
 
     const extendedTypes = typesData?.map(extendType);
@@ -204,7 +205,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               error={hasErrorFor('linode_id')}
               linodes={ramdaCompose(
                 (linodes: Linode[]) =>
-                  extendLinodes(linodes, imagesData, extendedTypes),
+                  extendLinodes(
+                    linodes,
+                    imagesData,
+                    extendedTypes,
+                    regionsData
+                  ),
                 filterLinodesWithBackups
               )(linodesData)}
               selectedLinodeID={selectedLinodeID}

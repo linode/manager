@@ -9,19 +9,20 @@ import Typography from 'src/components/core/Typography';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useAllImagesQuery } from 'src/queries/images';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
-import ImageOption from './ImageOption';
+import { ImageOption } from 'src/components/ImageSelect/ImageOption';
 
 export type Variant = 'public' | 'private' | 'all';
 
 interface ImageItem extends Item<string> {
   created: string;
   className: string;
+  isCloudInitCompatible: boolean;
 }
 
 interface Props {
@@ -87,7 +88,14 @@ export const imagesToGroupedItems = (images: Image[]) => {
           label: thisGroup,
           options: group
             .reduce((acc: ImageItem[], thisImage) => {
-              const { created, eol, id, label, vendor } = thisImage;
+              const {
+                created,
+                eol,
+                id,
+                label,
+                vendor,
+                capabilities,
+              } = thisImage;
               const differenceInMonths = DateTime.now().diff(
                 DateTime.fromISO(eol!),
                 'months'
@@ -96,10 +104,11 @@ export const imagesToGroupedItems = (images: Image[]) => {
               if (!eol || differenceInMonths < MAX_MONTHS_EOL_FILTER) {
                 acc.push({
                   created,
-                  // Add suffix 'depricated' to the image at end of life.
+                  // Add suffix 'deprecated' to the image at end of life.
                   label:
                     differenceInMonths > 0 ? `${label} (deprecated)` : label,
                   value: id,
+                  isCloudInitCompatible: capabilities?.includes('cloud-init'),
                   className: vendor
                     ? // Use Tux as a fallback.
                       `fl-${distroIcons[vendor] ?? 'tux'}`
@@ -174,28 +183,24 @@ export const ImageSelect: React.FC<Props> = (props) => {
       <Typography variant="h2" data-qa-tp={title}>
         {title}
       </Typography>
-      <Grid container direction="row" wrap="nowrap" spacing={4}>
-        <Grid container item direction="column">
-          <Grid container item direction="row">
-            <Grid item xs={12}>
-              <Select
-                disabled={disabled}
-                label="Images"
-                isLoading={_loading}
-                placeholder="Choose an image"
-                options={options}
-                onChange={onChange}
-                value={getSelectedOptionFromGroupedOptions(
-                  selectedImageID || '',
-                  options
-                )}
-                errorText={error || imageError}
-                components={{ Option: ImageOption, SingleValue }}
-                {...reactSelectProps}
-                className={classNames}
-              />
-            </Grid>
-          </Grid>
+      <Grid container>
+        <Grid xs={12}>
+          <Select
+            disabled={disabled}
+            label="Images"
+            isLoading={_loading}
+            placeholder="Choose an image"
+            options={options}
+            onChange={onChange}
+            value={getSelectedOptionFromGroupedOptions(
+              selectedImageID || '',
+              options
+            )}
+            errorText={error || imageError}
+            components={{ Option: ImageOption, SingleValue }}
+            {...reactSelectProps}
+            className={classNames}
+          />
         </Grid>
       </Grid>
     </Paper>

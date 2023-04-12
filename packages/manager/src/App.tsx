@@ -39,6 +39,8 @@ import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
 import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
+import { nodebalanacerEventHandler } from './queries/nodebalancers';
+import { oauthClientsEventHandler } from './queries/accountOAuth';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -97,30 +99,18 @@ export class App extends React.Component<CombinedProps, State> {
     // eslint-disable-next-line
     document.addEventListener('keydown', this.keyboardListener);
 
-    /*
-     * Send any Database events to the Database events handler in the queries file
-     */
     events$
       .filter((event) => event.action.startsWith('database') && !event._initial)
       .subscribe(databaseEventsHandler);
 
-    /*
-     * Send any Domain events to the Domain events handler in the queries file
-     */
     events$
       .filter((event) => event.action.startsWith('domain') && !event._initial)
       .subscribe(domainEventsHandler);
 
-    /*
-     * Send any Volume events to the Volume events handler in the queries file
-     */
     events$
       .filter((event) => event.action.startsWith('volume') && !event._initial)
       .subscribe(volumeEventsHandler);
 
-    /*
-      Send any Image events to the Image events handler in the queries file.
-    */
     events$
       .filter(
         (event) =>
@@ -130,16 +120,10 @@ export class App extends React.Component<CombinedProps, State> {
       )
       .subscribe(imageEventsHandler);
 
-    /*
-      Send any Token events to the Token events handler in the queries file
-     */
     events$
       .filter((event) => event.action.startsWith('token') && !event._initial)
       .subscribe(tokenEventHandler);
 
-    /*
-      Send any SSH Key events to the SSH Key events handler in the queries file
-     */
     events$
       .filter(
         (event) => event.action.startsWith('user_ssh_key') && !event._initial
@@ -149,6 +133,18 @@ export class App extends React.Component<CombinedProps, State> {
     events$
       .filter((event) => event.action.startsWith('firewall') && !event._initial)
       .subscribe(firewallEventsHandler);
+
+    events$
+      .filter(
+        (event) => event.action.startsWith('nodebalancer') && !event._initial
+      )
+      .subscribe(nodebalanacerEventHandler);
+
+    events$
+      .filter(
+        (event) => event.action.startsWith('oauth_client') && !event._initial
+      )
+      .subscribe(oauthClientsEventHandler);
 
     /*
      * We want to listen for migration events side-wide
@@ -214,7 +210,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { hasError } = this.state;
-    const { linodesError, nodeBalancersError } = this.props;
+    const { linodesError } = this.props;
 
     if (hasError) {
       return <TheApplicationIsOnFire />;
@@ -225,7 +221,7 @@ export class App extends React.Component<CombinedProps, State> {
      * error from the API, just render nothing because the user is
      * about to get shot off to login
      */
-    if (hasOauthError(linodesError, nodeBalancersError)) {
+    if (hasOauthError(linodesError)) {
       return null;
     }
 
@@ -261,11 +257,9 @@ export class App extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   linodes: Linode[];
-  documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   linodesLoading: boolean;
   linodesError?: APIError[];
-  nodeBalancersError?: APIError[];
   bucketsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
@@ -275,19 +269,17 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
-  documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
     ['authentication', 'loggedInAsCustomer'],
     state
   ),
   linodesLoading: state.__resources.linodes.loading,
-  nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
 });
 
-export const connected = connect(mapStateToProps);
+const connected = connect(mapStateToProps);
 
 export default compose(
   connected,

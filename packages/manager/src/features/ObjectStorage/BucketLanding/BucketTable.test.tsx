@@ -11,7 +11,6 @@ describe('BucketTable', () => {
       orderBy="label"
       order="asc"
       handleOrderChange={vi.fn()}
-      openBucketDrawer={vi.fn()}
       handleClickRemove={vi.fn()}
       handleClickDetails={vi.fn()}
     />

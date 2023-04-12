@@ -14,13 +14,13 @@ const mockProps: CombinedProps = {
   updateLinodeID: vi.fn(),
   updateRegionID: vi.fn(),
   updateTypeID: vi.fn(),
+  setBackupID: vi.fn(),
   accountBackupsEnabled: false,
   imagesData: {},
   regionsData: [],
   typesData: [],
   userCannotCreateLinode: false,
   linodesData: [],
-  setBackupID: vi.fn(),
 };
 
 describe('FromBackupsContent', () => {
@@ -36,7 +36,7 @@ describe('FromBackupsContent', () => {
   describe.skip('FromBackupsContent When Valid Backups Exist', () => {
     beforeAll(async () => {
       component.setState({ linodesWithBackups: LinodesWithBackups });
-      await component.update();
+      component.update();
     });
 
     it('should render SelectLinode panel', () => {

@@ -24,7 +24,7 @@ import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
-import withRegions from 'src/containers/regions.container';
+import { withRegions, RegionsProps } from 'src/containers/regions.container';
 import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
@@ -66,7 +66,6 @@ import {
   Info,
   TypeInfo,
   WithLinodesProps,
-  WithRegionsProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
@@ -113,7 +112,7 @@ type CombinedProps = WithSnackbarProps &
   ImagesProps &
   WithTypesProps &
   WithLinodesProps &
-  WithRegionsProps &
+  RegionsProps &
   DispatchProps &
   LabelProps &
   FeatureFlagConsumerProps &
@@ -133,7 +132,7 @@ const defaultState: State = {
   selectedStackScriptID: undefined,
   selectedStackScriptLabel: '',
   selectedStackScriptUsername: '',
-  selectedRegionID: undefined,
+  selectedRegionID: '',
   selectedTypeID: undefined,
   tags: [],
   authorized_users: [],
@@ -218,6 +217,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      */
     if (isNonDefaultImageType(prevProps.createType, this.props.createType)) {
       this.setState({ selectedImageID: undefined });
+    }
+
+    // Update search params for Linode Clone
+    if (prevProps.location.search !== this.props.history.location.search) {
+      this.params = getParamsFromUrl(this.props.location.search) as Record<
+        string,
+        string
+      >;
     }
   }
 

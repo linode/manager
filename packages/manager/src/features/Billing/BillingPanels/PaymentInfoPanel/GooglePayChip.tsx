@@ -9,12 +9,12 @@ import {
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
+import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles()(() => ({
   button: {
     border: 0,
     padding: 0,
-    marginRight: -8,
     backgroundColor: 'transparent',
     cursor: 'pointer',
     '&:hover': {
@@ -96,21 +96,27 @@ export const GooglePayChip = (props: Props) => {
   }
 
   if (isLoading) {
-    return <CircleProgress mini />;
+    return (
+      <Grid>
+        <CircleProgress mini />
+      </Grid>
+    );
   }
 
   return (
-    <button
-      className={cx({
-        [classes.button]: true,
-        [classes.disabled]: disabledDueToProcessing,
-      })}
-      onClick={handlePay}
-      disabled={disabledDueToProcessing}
-      data-qa-button="gpayChip"
-    >
-      <GooglePayIcon width="49" height="26" />
-    </button>
+    <Grid>
+      <button
+        className={cx({
+          [classes.button]: true,
+          [classes.disabled]: disabledDueToProcessing,
+        })}
+        onClick={handlePay}
+        disabled={disabledDueToProcessing}
+        data-qa-button="gpayChip"
+      >
+        <GooglePayIcon width="49" height="26" />
+      </button>
+    </Grid>
   );
 };
 

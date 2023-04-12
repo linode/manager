@@ -30,7 +30,6 @@ it('renders without crashing.', () => {
               search: '',
               state: {},
             }}
-            documentation={[]}
             appIsLoading={false}
             preferences={preferencesFactory.build()}
             getUserPreferences={vi.fn()}

@@ -14,9 +14,6 @@ describe('Select Plan Panel', () => {
         currentPlanHeading="Linode 2GB"
         selectedID="test"
         onSelect={vi.fn()}
-        regionsData={[]}
-        regionsLoading={false}
-        regionsLastUpdated={0}
       />
     );
     getByText(/linode plan/i);

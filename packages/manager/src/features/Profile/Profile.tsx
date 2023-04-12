@@ -7,7 +7,7 @@ import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
-const OAuthClients = React.lazy(() => import('./OAuthClients'));
+const OAuthClients = React.lazy(() => import('./OAuthClients/OAuthClients'));
 const LishSettings = React.lazy(() => import('./LishSettings'));
 const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
 const AuthenticationSettings = React.lazy(

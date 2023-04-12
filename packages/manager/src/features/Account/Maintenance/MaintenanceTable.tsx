@@ -9,10 +9,10 @@ import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import PaginationFooter from 'src/components/PaginationFooter';
 import TableRowError from 'src/components/TableRowError';
-import usePagination from 'src/hooks/usePagination';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Typography from 'src/components/core/Typography';
+import { usePagination } from 'src/hooks/usePagination';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { CSVLink } from 'react-csv';
 import { makeStyles } from 'tss-react/mui';
@@ -66,7 +66,7 @@ interface Props {
 const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const { classes } = useStyles();
-  const pagination = usePagination(1, `${preferenceKey}-${type}`);
+  const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {

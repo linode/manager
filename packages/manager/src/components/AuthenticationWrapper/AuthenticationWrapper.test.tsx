@@ -1,7 +1,6 @@
 import { vi } from 'vitest';
-import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import { shallow } from 'enzyme';
 import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
 
 const component = shallow<AuthenticationWrapper>(
@@ -11,7 +10,6 @@ const component = shallow<AuthenticationWrapper>(
     linodesLoading={false}
     initSession={vi.fn()}
     requestLinodes={vi.fn()}
-    requestRegions={vi.fn()}
     markAppAsDoneLoading={vi.fn()}
     checkAccountSize={vi.fn()}
     pendingUpload={false}

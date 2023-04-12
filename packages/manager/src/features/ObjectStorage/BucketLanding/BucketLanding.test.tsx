@@ -1,4 +1,3 @@
-import { vi } from 'vitest';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -10,16 +9,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { queryPresets } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import BucketLanding, { CombinedProps } from './BucketLanding';
-
-const mockCloseBucketDrawer = vi.fn();
-const mockOpenBucketDrawer = vi.fn();
-
-const props: CombinedProps = {
-  isRestrictedUser: false,
-  openBucketDrawer: mockOpenBucketDrawer,
-  closeBucketDrawer: mockCloseBucketDrawer,
-};
+import BucketLanding from './BucketLanding';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: queryPresets.oneTimeFetch },
@@ -38,7 +28,7 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />);
+    renderWithTheme(<BucketLanding />);
 
     screen.getByTestId('circle-progress');
   });
@@ -59,7 +49,7 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+    renderWithTheme(<BucketLanding />, { queryClient });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
@@ -103,7 +93,7 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+    renderWithTheme(<BucketLanding />, { queryClient });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
@@ -125,7 +115,7 @@ describe('ObjectStorageLanding', () => {
         return res(ctx.status(500), ctx.json([{ reason: 'Cluster offline!' }]));
       })
     );
-    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+    renderWithTheme(<BucketLanding />, { queryClient });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
@@ -150,7 +140,7 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+    renderWithTheme(<BucketLanding />, { queryClient });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
@@ -178,7 +168,7 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+    renderWithTheme(<BucketLanding />, { queryClient });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
