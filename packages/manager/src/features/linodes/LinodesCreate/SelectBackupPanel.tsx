@@ -16,6 +16,10 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import { aggregateBackups } from 'src/features/linodes/LinodesDetail/LinodeBackup';
 import { formatDate } from 'src/utilities/formatDate';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 
 export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
@@ -62,7 +66,7 @@ interface State {
 
 type StyledProps = Props & WithStyles<ClassNames>;
 
-type CombinedProps = StyledProps;
+type CombinedProps = StyledProps & WithProfileProps;
 
 class SelectBackupPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -75,7 +79,9 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       : backup.type === 'auto'
       ? 'Automatic'
       : 'Snapshot';
-    const subheading = formatDate(backup.created);
+    const subheading = formatDate(backup.created, {
+      timezone: this.props.profile.data?.timezone,
+    });
     const infoName =
       heading === 'Automatic'
         ? 'From automatic backup'
@@ -156,5 +162,6 @@ const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
-  styled
+  styled,
+  withProfile
 )(SelectBackupPanel);

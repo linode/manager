@@ -25,7 +25,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 import { Toggle } from 'src/components/Toggle';
-import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -39,6 +38,11 @@ import Tab from 'src/components/core/ReachTab';
 import SafeTabPanel from 'src/components/SafeTabPanel/SafeTabPanel';
 import TabList from 'src/components/core/ReachTabList';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
+import { compose as recompose } from 'recompose';
 
 type ClassNames =
   | 'title'
@@ -122,7 +126,7 @@ interface State {
   tabs?: string[];
 }
 
-type CombinedProps = Props & WithSnackbarProps;
+type CombinedProps = Props & WithSnackbarProps & WithQueryClientProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
@@ -367,7 +371,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           // unconditionally sets this.state.loadingGrants to false
           this.getUserGrants();
           // refresh the data on /account/users so it is accurate
-          queryClient.invalidateQueries('account-users');
+          this.props.queryClient.invalidateQueries('account-users');
         })
         .catch((errResponse) => {
           this.setState({
@@ -757,4 +761,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withSnackbar(withStyles(UserPermissions, styles));
+export default recompose<CombinedProps, Props>(
+  withSnackbar,
+  withQueryClient
+)(withStyles(UserPermissions, styles));

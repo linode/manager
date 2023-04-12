@@ -16,8 +16,11 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
+import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
@@ -63,13 +66,17 @@ export interface State {
   successMessage: string;
 }
 
-type CombinedProps = StyleProps &
+interface Props {
+  publicImages: Record<string, Image>;
+  category: string;
+  request: StackScriptsRequest;
+}
+
+type CombinedProps = Props &
+  StyleProps &
   RouteComponentProps &
-  ProfileProps & {
-    publicImages: Record<string, Image>;
-    category: string;
-    request: StackScriptsRequest;
-  };
+  WithProfileProps &
+  WithQueryClientProps;
 
 interface HelperFunctions {
   getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any;
@@ -431,7 +438,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       const userCannotCreateStackScripts =
         Boolean(profile.data?.restricted) &&
-        !hasGrant('add_stackscripts', grants.data);
+        !grants.data?.global.add_stackscripts;
 
       if (error) {
         return (
