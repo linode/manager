@@ -10,7 +10,8 @@ interface Props {
   country: string;
 }
 
-export const Flag = ({ country }: Props) => {
+export const Flag = (props: Props) => {
+  const country = props.country.toLowerCase();
   return (
     <div
       className={`fi fi-${countryFlagOverrides[country] ?? country} fi-xx`}

@@ -7,6 +7,11 @@ import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { Region } from '@linode/api-v4/lib/regions';
 import RegionOption, { RegionItem } from './RegionOption';
 import { Flag } from 'src/components/Flag';
+import {
+  CONTINENT_CODE_TO_CONTINENT,
+  COUNTRY_CODE_TO_CONTINENT_CODE,
+  ContinentNames,
+} from './utils';
 
 interface Props extends Omit<BaseSelectProps, 'onChange'> {
   regions: Region[];
@@ -23,41 +28,41 @@ export const selectStyles = {
   menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` }),
 };
 
-type RegionGroups = 'North America' | 'Europe' | 'Asia Pacific' | 'Other';
+type RegionGroup = ContinentNames | 'Other';
 
 export const getRegionOptions = (regions: Region[]) => {
-  const groups: Record<RegionGroups, RegionItem[]> = {
+  const groups: Record<RegionGroup, RegionItem[]> = {
     'North America': [],
     Europe: [],
-    'Asia Pacific': [],
+    Asia: [],
+    'South America': [],
+    Oceania: [],
+    Africa: [],
+    Antartica: [],
     Other: [],
   };
 
-  const countryToGroupMap: Record<string, RegionGroups> = {
-    ca: 'North America',
-    us: 'North America',
-    de: 'Europe',
-    uk: 'Europe',
-    eu: 'Europe',
-    fr: 'Europe',
-    jp: 'Asia Pacific',
-    sg: 'Asia Pacific',
-    in: 'Asia Pacific',
-    au: 'Asia Pacific',
-  };
-
   for (const region of regions) {
-    const country = region.country.toLowerCase();
+    const country = region.country.toUpperCase();
 
-    groups[countryToGroupMap[country]].push({
+    const continentCode =
+      COUNTRY_CODE_TO_CONTINENT_CODE[
+        country as keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE
+      ];
+
+    const group = continentCode
+      ? CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other'
+      : 'Other';
+
+    groups[group].push({
       label: `${region.label} (${region.id})`,
       value: region.id,
-      flag: <Flag country={country} />,
+      flag: <Flag country={region.country} />,
       country: region.country,
     });
   }
 
-  return Object.keys(groups).map((group: RegionGroups) => ({
+  return Object.keys(groups).map((group: RegionGroup) => ({
     label: group,
     options: groups[group].sort(sortRegions),
   }));
