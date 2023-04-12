@@ -96,8 +96,6 @@
     "build": "node scripts/prebuild.mjs && vite build",
     "precommit": "lint-staged && yarn typecheck",
     "test": "yarn vitest run",
-    "test:jest": "yarn jest --maxWorkers=4",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",
     "build-storybook": "storybook build",
@@ -126,8 +124,6 @@
     "@storybook/react": "~7.0.0-beta.60",
     "@storybook/react-vite": "^7.0.0-beta.60",
     "@storybook/theming": "^7.0.0-beta.60",
-    "@swc/core": "^1.3.1",
-    "@swc/jest": "^0.2.22",
     "@testing-library/cypress": "^9.0.0",
     "@testing-library/jest-dom": "~5.11.3",
     "@testing-library/react": "~10.4.9",
@@ -140,8 +136,6 @@
     "@types/enzyme": "^3.9.3",
     "@types/he": "^1.1.0",
     "@types/highlight.js": "~10.1.0",
-    "@types/jest": "^26.0.13",
-    "@types/jest-axe": "^3.2.1",
     "@types/jspdf": "^1.3.3",
     "@types/luxon": "^3.2.0",
     "@types/markdown-it": "^10.0.2",
@@ -186,7 +180,6 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "~8.1.0",
     "eslint-plugin-cypress": "^2.11.3",
-    "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-prettier": "~3.3.1",
@@ -198,11 +191,6 @@
     "eslint-plugin-testing-library": "^3.1.2",
     "eslint-plugin-xss": "^0.1.10",
     "factory.ts": "^0.5.1",
-    "jest": "~26.4.2",
-    "jest-axe": "^3.3.0",
-    "jest-junit": "^10.0.0",
-    "jest-sonar-reporter": "^2.0.0",
-    "jest_workaround": "^0.1.10",
     "lint-staged": "^13.2.0",
     "msw": "~0.20.5",
     "prettier": "~2.2.1",
@@ -214,98 +202,6 @@
     "vite": "^4.2.1",
     "vite-plugin-svgr": "^2.4.0",
     "vitest": "^0.29.7"
-  },
-  "jest": {
-    "testResultsProcessor": "jest-sonar-reporter",
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.stories.{js,jsx,ts,tsx}"
-    ],
-    "coverageReporters": [
-      "clover",
-      "json",
-      "text",
-      "lcov",
-      "cobertura"
-    ],
-    "setupFiles": [
-      "<rootDir>/config/polyfills.js"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/config/testSetup.js",
-      "<rootDir>/src/testSetup.ts"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-      "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
-    ],
-    "testEnvironment": "jsdom",
-    "testURL": "https://api.linode.com",
-    "transform": {
-      "^.+\\.tsx?$": [
-        "@swc/jest",
-        {
-          "$schema": "http://json.schemastore.org/swcrc",
-          "jsc": {
-            "transform": {
-              "optimizer": {
-                "globals": {
-                  "vars": {
-                    "import.meta.env": "{}"
-                  }
-                }
-              }
-            },
-            "experimental": {
-              "plugins": [
-                [
-                  "jest_workaround",
-                  {}
-                ]
-              ]
-            }
-          },
-          "module": {
-            "type": "commonjs"
-          }
-        }
-      ],
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
-    ],
-    "moduleNameMapper": {
-      "\\.svg$": "<rootDir>/src/components/NullComponent",
-      "^react-native$": "react-native-web",
-      "ramda": "ramda/src/index.js",
-      "^src/(.*)": "<rootDir>/src/$1",
-      "@linode/api-v4/lib(.*)$": "<rootDir>/../api-v4/src/$1",
-      "@linode/validation/lib(.*)$": "<rootDir>/../validation/src/$1",
-      "@linode/api-v4": "<rootDir>/../api-v4/src/index.ts",
-      "@linode/validation": "<rootDir>/../validation/src/index.ts"
-    },
-    "moduleFileExtensions": [
-      "mjs",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "web.js",
-      "js",
-      "web.jsx",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "reporters": [
-      "default",
-      "jest-junit"
-    ]
   },
   "browserslist": [
     ">1%",
