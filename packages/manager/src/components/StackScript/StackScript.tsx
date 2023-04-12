@@ -1,12 +1,12 @@
 import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
+import Box from '@mui/material/Box';
+import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import H1Header from 'src/components/H1Header';
@@ -14,10 +14,10 @@ import ScriptCode from 'src/components/ScriptCode';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import Box from '@mui/material/Box';
+import { makeStyles } from 'tss-react/mui';
 import TooltipIcon from '../TooltipIcon';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.bgPaper,
     '.detailsWrapper &': {
@@ -83,7 +83,7 @@ interface StackScriptImages {
   deprecated: JSX.Element[];
 }
 
-export const StackScript: React.FC<Props> = (props) => {
+export const StackScript = (props: Props) => {
   const {
     data: {
       username,
@@ -99,10 +99,11 @@ export const StackScript: React.FC<Props> = (props) => {
     userCanModify,
   } = props;
 
-  const theme = useTheme();
-  const classes = useStyles();
-  const history = useHistory();
+  const { classes } = useStyles();
   const { profile } = useAccountManagement();
+
+  const theme = useTheme();
+  const history = useHistory();
 
   const { data: imagesData } = useAllImagesQuery(
     {},
