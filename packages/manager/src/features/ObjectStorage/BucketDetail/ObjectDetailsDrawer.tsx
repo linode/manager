@@ -14,6 +14,7 @@ import formatDate from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import AccessSelect from './AccessSelect';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles(() => ({
   copy: {
@@ -40,6 +41,8 @@ export interface Props {
 const ObjectDetailsDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
+  const { data: profile } = useProfile();
+
   const {
     open,
     onClose,
@@ -55,7 +58,9 @@ const ObjectDetailsDrawer: React.FC<Props> = (props) => {
   let formattedLastModified;
   try {
     if (lastModified) {
-      formattedLastModified = formatDate(lastModified);
+      formattedLastModified = formatDate(lastModified, {
+        timezone: profile?.timezone,
+      });
     }
   } catch {}
 

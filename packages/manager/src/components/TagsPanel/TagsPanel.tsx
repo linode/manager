@@ -1,5 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import Plus from 'src/assets/icons/plusSign.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
@@ -132,6 +133,8 @@ const TagsPanel = (props: TagsPanelProps) => {
   const { classes, cx } = useStyles();
   const { tags, disabled, updateTags } = props;
 
+  const queryClient = useQueryClient();
+
   const [tagError, setTagError] = React.useState<string>('');
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
   const [tagInputValue, setTagInputValue] = React.useState('');
@@ -225,7 +228,7 @@ const TagsPanel = (props: TagsPanelProps) => {
           // set the input value to blank on submit
           setTagInputValue('');
           if (userTags) {
-            updateTagsSuggestionsData([...userTags, value]);
+            updateTagsSuggestionsData([...userTags, value], queryClient);
           }
         })
         .catch((e) => {

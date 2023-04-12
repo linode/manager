@@ -18,6 +18,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import AccessSelect from '../BucketDetail/AccessSelect';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles(() => ({
   copy: {
@@ -54,6 +55,7 @@ const BucketDetailsDrawer: React.FC<Props> = (props) => {
 
   const { data: clusters } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();
+  const { data: profile } = useProfile();
 
   const actualCluster = clusters?.find((c) => c.id === cluster);
   const region = regions?.find((r) => r.id === actualCluster?.region);
@@ -61,7 +63,9 @@ const BucketDetailsDrawer: React.FC<Props> = (props) => {
   let formattedCreated;
   try {
     if (created) {
-      formattedCreated = formatDate(created);
+      formattedCreated = formatDate(created, {
+        timezone: profile?.timezone,
+      });
     }
   } catch {}
 

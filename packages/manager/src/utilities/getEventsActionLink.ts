@@ -1,5 +1,6 @@
 import { Entity, EventAction } from '@linode/api-v4/lib/account';
 import { nonClickEvents } from 'src/constants';
+import { ApplicationStore } from 'src/store';
 import {
   EntityType,
   getEntityByIDFromStore,
@@ -115,14 +116,18 @@ export const getLinkForEvent = (
   }
 };
 
-export const getLinkTargets = (entity: Entity | null) => {
+export const getLinkTargets = (
+  entity: Entity | null,
+  store: ApplicationStore
+) => {
   if (entity === null) {
     return null;
   }
 
   const entityInStore = getEntityByIDFromStore(
     entity.type as EntityType,
-    entity.id
+    entity.id,
+    store
   );
   /**
    * If the entity doesn't exist in the store, don't link to it
