@@ -48,7 +48,7 @@
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
-    "test": "jest",
+    "test": "yarn vitest run",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
@@ -58,8 +58,6 @@
     "lib"
   ],
   "devDependencies": {
-    "@swc/jest": "^0.2.22",
-    "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "@types/yup": "^0.29.13",
     "axios-mock-adapter": "^1.18.1",
@@ -67,10 +65,10 @@
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
-    "jest": "~26.4.2",
     "lint-staged": "^13.2.0",
     "prettier": "~2.2.1",
-    "tsup": "^6.6.3"
+    "tsup": "^6.6.3",
+    "vitest": "^0.30.1"
   },
   "resolutions": {
     "handlebars": "^4.4.3"
@@ -82,20 +80,6 @@
     ],
     ".{ts,tsx}": [
       "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"
-    ]
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.(t)sx?$": "@swc/jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
     ]
   }
 }
