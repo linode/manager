@@ -5,7 +5,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import TagsInput, { TagsInputProps } from 'src/components/TagsInput';
+import { TagsInput, TagsInputProps } from 'src/components/TagsInput';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 type ClassNames = 'root' | 'inner' | 'expPanelButton';

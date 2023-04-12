@@ -11,7 +11,7 @@ import Form from 'src/components/core/Form';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
+import { TagsInput, Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
@@ -82,7 +82,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const extendedCreateVolumeSchema = CreateVolumeSchema.concat(
     object({
       tags: array()
-        .transform((tagItems: _Tag[]) =>
+        .transform((tagItems: Tag[]) =>
           tagItems.map((thisTagItem) => thisTagItem.value)
         )
         .of(string()),
@@ -269,7 +269,7 @@ interface FormState {
   region: string;
   linode_id: number;
   config_id: number;
-  tags: _Tag[];
+  tags: Tag[];
 }
 
 const initialValues: FormState = {

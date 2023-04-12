@@ -14,7 +14,7 @@ export interface Tag {
   label: string;
 }
 
-export interface Props {
+export interface TagsInputProps {
   label?: string;
   hideLabel?: boolean;
   name?: string;
@@ -25,7 +25,7 @@ export interface Props {
   menuPlacement?: 'bottom' | 'top' | 'auto' | undefined;
 }
 
-const TagsInput: React.FC<Props> = (props) => {
+const TagsInput = (props: TagsInputProps) => {
   const {
     label,
     hideLabel,
@@ -110,4 +110,4 @@ const TagsInput: React.FC<Props> = (props) => {
   );
 };
 
-export default TagsInput;
+export { TagsInput };
