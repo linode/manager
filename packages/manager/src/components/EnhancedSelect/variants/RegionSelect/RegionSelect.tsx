@@ -9,8 +9,6 @@ import SG from 'flag-icons/flags/4x3/sg.svg';
 import US from 'flag-icons/flags/4x3/us.svg';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
@@ -32,16 +30,8 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
 export const flags = {
   au: () => <AU width="32" height="24" viewBox="0 0 640 480" />,
   us: () => <US width="32" height="24" viewBox="0 0 640 480" />,
-  sg: () => <SG id="singapore" width="32" height="24" viewBox="0 0 640 480" />,
-  jp: () => (
-    <JP
-      id="japan"
-      width="32"
-      height="24"
-      viewBox="0 0 640 480"
-      style={{ backgroundColor: '#fff' }}
-    />
-  ),
+  sg: () => <SG width="32" height="24" viewBox="0 0 640 480" />,
+  jp: () => <JP width="32" height="24" viewBox="0 0 640 480" />,
   uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   eu: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   de: () => <DE width="32" height="24" viewBox="0 0 640 480" />,
@@ -52,33 +42,22 @@ export const flags = {
 export const selectStyles = {
   menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` }),
 };
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& svg': {
-      '& g': {
-        // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
-        clipPath: 'none !important' as 'none',
-      },
-    },
-    '& #singapore, #japan': {
-      border: `1px solid ${theme.color.border3}`,
-    },
-  },
-}));
 
 export const getRegionOptions = (regions: Region[]) => {
-  const groupedRegions = groupBy<Region>((thisRegion) => {
-    if (thisRegion.country.match(/(us|ca)/)) {
+  const groupedRegions = groupBy<Region>((region) => {
+    const country = region.country.toLowerCase();
+    if (['us', 'ca'].includes(country)) {
       return 'North America';
     }
-    if (thisRegion.country.match(/(de|uk|eu)/)) {
+    if (['de', 'uk', 'eu', 'fr'].includes(country)) {
       return 'Europe';
     }
-    if (thisRegion.country.match(/(jp|sg|in|au)/)) {
+    if (['jp', 'sg', 'in', 'au'].includes(country)) {
       return 'Asia Pacific';
     }
     return 'Other';
   }, regions);
+
   return ['North America', 'Europe', 'Asia Pacific', 'Other'].reduce(
     (accum, thisGroup) => {
       if (
@@ -137,7 +116,7 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
-const SelectRegionPanel: React.FC<Props> = (props) => {
+export const RegionSelect = React.memo((props: Props) => {
   const {
     label,
     disabled,
@@ -168,12 +147,10 @@ const SelectRegionPanel: React.FC<Props> = (props) => {
     [handleSelection]
   );
 
-  const classes = useStyles();
-
   const options = React.useMemo(() => getRegionOptions(regions), [regions]);
 
   return (
-    <div className={classes.root} style={{ width }}>
+    <div style={{ width }}>
       <Select
         isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
         value={getSelectedRegionById(selectedID || '', options) ?? ''}
@@ -195,6 +172,4 @@ const SelectRegionPanel: React.FC<Props> = (props) => {
       />
     </div>
   );
-};
-
-export default React.memo(SelectRegionPanel);
+});
