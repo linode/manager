@@ -1,20 +1,12 @@
-import { Region } from '@linode/api-v4/lib/regions';
-import AU from 'flag-icons/flags/4x3/au.svg';
-import CA from 'flag-icons/flags/4x3/ca.svg';
-import DE from 'flag-icons/flags/4x3/de.svg';
-import UK from 'flag-icons/flags/4x3/gb.svg';
-import IN from 'flag-icons/flags/4x3/in.svg';
-import JP from 'flag-icons/flags/4x3/jp.svg';
-import SG from 'flag-icons/flags/4x3/sg.svg';
-import US from 'flag-icons/flags/4x3/us.svg';
-import { groupBy } from 'ramda';
-import * as React from 'react';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
   GroupType,
 } from 'src/components/EnhancedSelect/Select';
+import * as React from 'react';
+import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { Region } from '@linode/api-v4/lib/regions';
 import RegionOption, { RegionItem } from './RegionOption';
+import 'flag-icons/css/flag-icons.min.css';
 
 interface Props extends Omit<BaseSelectProps, 'onChange'> {
   regions: Region[];
@@ -27,64 +19,57 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
   width?: number;
 }
 
-export const flags = {
-  au: () => <AU width="32" height="24" viewBox="0 0 640 480" />,
-  us: () => <US width="32" height="24" viewBox="0 0 640 480" />,
-  sg: () => <SG width="32" height="24" viewBox="0 0 640 480" />,
-  jp: () => <JP width="32" height="24" viewBox="0 0 640 480" />,
-  uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
-  eu: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
-  de: () => <DE width="32" height="24" viewBox="0 0 640 480" />,
-  ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />,
-  in: () => <IN width="32" height="24" viewBox="0 0 640 480" />,
-};
-
 export const selectStyles = {
   menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` }),
 };
 
+type RegionGroups = 'North America' | 'Europe' | 'Asia Pacific' | 'Other';
+
 export const getRegionOptions = (regions: Region[]) => {
-  const groupedRegions = groupBy<Region>((region) => {
+  const groups: Record<RegionGroups, RegionItem[]> = {
+    'North America': [],
+    Europe: [],
+    'Asia Pacific': [],
+    Other: [],
+  };
+
+  const countryToGroupMap: Record<string, RegionGroups> = {
+    ca: 'North America',
+    us: 'North America',
+    de: 'Europe',
+    uk: 'Europe',
+    eu: 'Europe',
+    fr: 'Europe',
+    jp: 'Asia Pacific',
+    sg: 'Asia Pacific',
+    in: 'Asia Pacific',
+    au: 'Asia Pacific',
+  };
+
+  const countryFlagOverrides = {
+    uk: 'fake',
+  };
+
+  for (const region of regions) {
     const country = region.country.toLowerCase();
-    if (['us', 'ca'].includes(country)) {
-      return 'North America';
-    }
-    if (['de', 'uk', 'eu', 'fr'].includes(country)) {
-      return 'Europe';
-    }
-    if (['jp', 'sg', 'in', 'au'].includes(country)) {
-      return 'Asia Pacific';
-    }
-    return 'Other';
-  }, regions);
 
-  return ['North America', 'Europe', 'Asia Pacific', 'Other'].reduce(
-    (accum, thisGroup) => {
-      if (
-        !groupedRegions[thisGroup] ||
-        groupedRegions[thisGroup].length === 0
-      ) {
-        return accum;
-      }
-      return [
-        ...accum,
-        {
-          label: thisGroup,
-          options: groupedRegions[thisGroup]
-            .map((thisRegion) => ({
-              label: `${thisRegion.label} (${thisRegion.id})`,
-              value: thisRegion.id,
-              flag:
-                flags[thisRegion.country.toLocaleLowerCase()] ?? (() => null),
-              country: thisRegion.country,
-            }))
+    groups[countryToGroupMap[country]].push({
+      label: `${region.label} (${region.id})`,
+      value: region.id,
+      flag: (
+        <div
+          className={`fi fi-${countryFlagOverrides[country] ?? country} fi-xx`}
+          style={{ fontSize: '1.5rem', verticalAlign: 'top' }}
+        />
+      ),
+      country: region.country,
+    });
+  }
 
-            .sort(sortRegions),
-        },
-      ];
-    },
-    []
-  );
+  return Object.keys(groups).map((group: RegionGroups) => ({
+    label: group,
+    options: groups[group].sort(sortRegions),
+  }));
 };
 
 export const getSelectedRegionById = (

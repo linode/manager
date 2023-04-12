@@ -1,1 +1,1 @@
-export { flags, RegionSelect } from './RegionSelect';
+export { RegionSelect } from './RegionSelect';
