@@ -16,7 +16,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
-import SupportLink from 'src/components/SupportLink';
+import { SupportLink } from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
 import { useAccount } from 'src/queries/account';

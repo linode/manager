@@ -6,7 +6,7 @@ import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
-import SupportLink from 'src/components/SupportLink';
+import { SupportLink } from 'src/components/SupportLink';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';

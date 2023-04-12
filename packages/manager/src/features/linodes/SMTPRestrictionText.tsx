@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import SupportLink from 'src/components/SupportLink';
+import { SupportLink } from 'src/components/SupportLink';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { useAccount } from 'src/queries/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
