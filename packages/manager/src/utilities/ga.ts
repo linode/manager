@@ -12,6 +12,12 @@ interface AnalyticsEvent {
  * Will throw error unless analytics is initialized
  */
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
+  // Send a Direct Call Rule to Adobe
+  (window as any)._satellite.track(eventPayload.category, {
+    label: eventPayload.label,
+    action: eventPayload.action,
+  });
+
   /** only send events if we have a GA ID */
   return !!GA_ID ? event(eventPayload) : undefined;
 };
