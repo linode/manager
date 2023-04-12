@@ -162,11 +162,12 @@ export const PhoneVerification = () => {
       marginLeft: '-1px !important',
       marginTop: '0px !important',
     }),
-    singleValue: (provided: React.CSSProperties) => ({
-      ...provided,
-      textAlign: 'center' as React.CSSProperties['textAlign'],
-      fontSize: '20px',
-    }),
+    singleValue: (provided: React.CSSProperties) =>
+      ({
+        ...provided,
+        textAlign: 'center',
+        fontSize: '20px',
+      } as const),
   };
 
   const selectedCountry = countries.find(

@@ -22,32 +22,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+interface BaseProps {
   images: Image[];
   imageError?: string;
   imageFieldError?: string;
-  isMulti?: false;
-  helperText?: string;
-  value?: Item;
   disabled?: boolean;
-  onSelect: (selected: Item) => void;
   label?: string;
   required?: boolean;
   anyAllOption?: boolean;
+  helperText?: string;
 }
 
-interface MultiProps {
-  images: Image[];
-  imageError?: string;
-  imageFieldError?: string;
+interface Props extends BaseProps {
+  isMulti?: false;
+  value?: Item;
+  onSelect: (selected: Item) => void;
+}
+
+interface MultiProps extends BaseProps {
   isMulti: true;
-  helperText?: string;
   value?: Item[];
-  disabled?: boolean;
   onSelect: (selected: Item[]) => void;
-  label?: string;
-  required?: boolean;
-  anyAllOption?: boolean;
 }
 
 export const ImageSelect = (props: Props | MultiProps) => {
