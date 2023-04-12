@@ -20,7 +20,7 @@ export const RenderIPs: React.FC<CombinedProps> = (props) => {
     <>
       {ipv4Slice.map((thisIP) => {
         return (
-          <Grid key={thisIP} data-testid="ipv4-list-">
+          <Grid key={thisIP} data-testid="ipv4-list-item">
             {thisIP}
           </Grid>
         );
