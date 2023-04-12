@@ -4,7 +4,6 @@ import {
   APIError,
   createOAuthClient,
   deleteOAuthClient,
-  Event,
   Filter,
   getOAuthClients,
   OAuthClient,
@@ -13,7 +12,7 @@ import {
   resetOAuthClientSecret,
   updateOAuthClient,
 } from '@linode/api-v4';
-import { queryClient } from './base';
+import { EventWithStore } from 'src/events';
 
 const queryKey = [accountQueryKey, 'oauth'];
 
@@ -65,7 +64,7 @@ export const useUpdateOAuthClientMutation = (id: string) => {
   );
 };
 
-export const oauthClientsEventHandler = (event: Event) => {
+export const oauthClientsEventHandler = ({ queryClient }: EventWithStore) => {
   // We may over-fetch because on `onSuccess` also invalidates, but this will be
   // good for UX because Cloud will always be up to date
   queryClient.invalidateQueries(queryKey);

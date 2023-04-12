@@ -1,7 +1,7 @@
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { QueryClient, useQuery } from 'react-query';
 import { getTags, Tag } from '@linode/api-v4';
-import { queryClient, queryPresets } from './base';
+import { queryPresets } from './base';
 import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'tags';
@@ -20,7 +20,10 @@ const getAllTagSuggestions = (
     getTags({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
 
-export const updateTagsSuggestionsData = (newData: Tag[]): void => {
+export const updateTagsSuggestionsData = (
+  newData: Tag[],
+  queryClient: QueryClient
+): void => {
   const uniqueTags = Array.from(new Set(newData.map((tag) => tag.label)))
     .sort()
     .map((label) => ({ label }));

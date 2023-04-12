@@ -7,7 +7,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountPayment';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import {
@@ -15,6 +14,7 @@ import {
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
+import { useQueryClient } from 'react-query';
 
 interface Props {
   error?: APIError[] | null;
@@ -37,6 +37,7 @@ const PaymentInformation = (props: Props) => {
     setDeletePaymentMethodSelection,
   ] = React.useState<PaymentMethod | undefined>();
   const { replace } = useHistory();
+  const queryClient = useQueryClient();
 
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
