@@ -1,3 +1,4 @@
 module.exports = {
-  root: true
+  root: true,
+  ignorePatterns: ["**/node_modules/", "**/build/"],
 };
