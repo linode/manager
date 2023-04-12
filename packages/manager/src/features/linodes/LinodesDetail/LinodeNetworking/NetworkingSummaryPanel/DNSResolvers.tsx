@@ -34,7 +34,7 @@ export const DNSResolvers = (props: DNSResolversProps) => {
   return (
     <Grid
       container
-      spacing={4}
+      spacing={2}
       sx={{
         display: 'grid',
         gridTemplateAreas: `
@@ -43,6 +43,8 @@ export const DNSResolvers = (props: DNSResolversProps) => {
           `,
         [theme.breakpoints.down('sm')]: {
           flex: 1,
+          paddingLeft: 0,
+          paddingRight: 0,
         },
       }}
     >
@@ -62,6 +64,7 @@ export const DNSResolvers = (props: DNSResolversProps) => {
         xs="auto"
         sx={{
           gridArea: 'two',
+          paddingRight: theme.spacing(2),
         }}
       >
         {renderIPResolvers(v4Resolvers)}
@@ -70,6 +73,7 @@ export const DNSResolvers = (props: DNSResolversProps) => {
         xs="auto"
         sx={{
           gridArea: 'three',
+          paddingLeft: theme.spacing(2),
         }}
       >
         {renderIPResolvers(v6Resolvers)}

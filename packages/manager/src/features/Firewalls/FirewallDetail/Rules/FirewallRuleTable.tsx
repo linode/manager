@@ -31,7 +31,6 @@ import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   header: {
     display: 'flex',
     justifyContent: 'space-between',
