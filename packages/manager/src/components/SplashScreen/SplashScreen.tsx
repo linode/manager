@@ -33,8 +33,8 @@ const connected = connect(mapStateToProps);
 
 export default compose<StateProps, {}>(connected, React.memo)(SplashScreen);
 
-const StyledDiv = styled('div')({
-  backgroundColor: '#f4f4f4',
+const StyledDiv = styled('div')(({ theme }) => ({
+  backgroundColor: theme.bg.main,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -44,4 +44,4 @@ const StyledDiv = styled('div')({
   zIndex: 100,
   top: 0,
   left: 0,
-});
+}));
