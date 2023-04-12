@@ -115,7 +115,7 @@ export const pages = [
           loadAppNoLogin(url);
           getVisible('[data-qa-header="My Profile"]');
           containsVisible(
-            'How to Enable Third Party Authentication on Your Linode Account'
+            'How to Enable Third Party Authentication on Your User Account'
           );
           waitDoubleRerender();
           cy.contains('Display').should('be.visible').click();
