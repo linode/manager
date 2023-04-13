@@ -7,7 +7,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Tile from 'src/components/Tile';
+import { Tile } from 'src/components/Tile/Tile';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
