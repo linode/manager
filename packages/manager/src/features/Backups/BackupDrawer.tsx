@@ -2,6 +2,7 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -13,10 +14,17 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import {
+  withAccountSettings,
+  WithAccountSettingsProps,
+} from 'src/containers/accountSettings.container';
+import {
   withSpecificTypes,
   WithSpecificTypesProps,
 } from 'src/containers/types.container';
-import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
 import { ApplicationState } from 'src/store';
 import {
   BackupError,
@@ -39,7 +47,7 @@ import { ExtendedLinode, LinodeWithTypeInfo } from './types';
 interface DispatchProps {
   actions: {
     enable: () => void;
-    enroll: () => void;
+    enroll: (backupsEnabled: boolean, queryClient: QueryClient) => void;
     close: () => void;
     dismissError: () => void;
     dismissSuccess: () => void;
@@ -48,7 +56,6 @@ interface DispatchProps {
 }
 
 interface StateProps {
-  accountBackups: boolean;
   open: boolean;
   loading: boolean;
   enabling: boolean;
@@ -66,7 +73,9 @@ interface StateProps {
 type CombinedProps = DispatchProps &
   StateProps &
   WithSnackbarProps &
-  WithSpecificTypesProps;
+  WithSpecificTypesProps &
+  WithQueryClientProps &
+  WithAccountSettingsProps;
 
 const getFailureNotificationText = (
   success: number,
@@ -133,18 +142,18 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
   handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     const {
       actions: { enable, enroll },
-      accountBackups,
+      accountSettings,
+      queryClient,
     } = this.props;
-    if (accountBackups) {
+    if (accountSettings.data?.backups_enabled) {
       enable();
     } else {
-      enroll();
+      enroll(accountSettings.data?.backups_enabled ?? false, queryClient);
     }
   };
 
   render() {
     const {
-      accountBackups,
       actions: { close, toggle },
       autoEnroll,
       autoEnrollError,
@@ -155,6 +164,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       open,
       updatedCount,
       requestedTypesData,
+      accountSettings,
     } = this.props;
 
     const extendedTypeData = requestedTypesData.map(extendType);
@@ -193,7 +203,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
             </Grid>
           )}
           {/* Don't show this if the setting is already active. */}
-          {!accountBackups && (
+          {!accountSettings.data?.backups_enabled && (
             <Grid>
               <AutoEnroll
                 enabled={autoEnroll}
@@ -248,7 +258,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       close: () => dispatch(handleClose()),
       dismissError: () => dispatch(handleResetError()),
       dismissSuccess: () => dispatch(handleResetSuccess()),
-      enroll: () => dispatch(enableAutoEnroll()),
+      enroll: (backupsEnabled: boolean, queryClient: QueryClient) =>
+        dispatch(enableAutoEnroll({ backupsEnabled, queryClient })),
       toggle: () => dispatch(handleAutoEnrollToggle()),
     },
   };
@@ -299,7 +310,6 @@ const mapStateToProps: MapStateToProps<
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = getLinodesWithoutBackups(state.__resources);
   return {
-    accountBackups: getAccountBackupsEnabled(),
     backupLoadError: pathOr('', ['backups', 'error'], state),
     backupsLoading: pathOr(false, ['backups', 'loading'], state),
     enableErrors,
@@ -322,7 +332,9 @@ const enhanced = compose<CombinedProps, {}>(
   // this awkward line avoids fetching all types until this dialog is opened
   (comp: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
     withSpecificTypes(comp, props.open)(props),
-  withSnackbar
+  withSnackbar,
+  withAccountSettings,
+  withQueryClient
 );
 
 export default enhanced(BackupDrawer);

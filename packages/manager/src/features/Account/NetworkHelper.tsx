@@ -3,7 +3,7 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
 import Grid from '@mui/material/Unstable_Grid2';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 
 interface Props {
   onChange: () => void;

@@ -22,6 +22,8 @@ import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { Profile } from '@linode/api-v4';
+import { useProfile } from 'src/queries/profile';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
@@ -35,6 +37,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
   } = useDismissibleNotifications();
 
   const { data: regions } = useRegionsQuery();
+  const { data: profile } = useProfile();
 
   const { data: notifications } = useNotificationsQuery();
 
@@ -68,8 +71,8 @@ export const useFormattedNotifications = (): NotificationItem[] => {
     );
   });
 
-  if (volumeMigrationScheduledIsPresent) {
-    filteredNotifications?.push({
+  if (volumeMigrationScheduledIsPresent && filteredNotifications) {
+    filteredNotifications.push({
       type: 'volume_migration_scheduled' as NotificationType,
       entity: null,
       when: null,
@@ -85,7 +88,12 @@ export const useFormattedNotifications = (): NotificationItem[] => {
   return (
     filteredNotifications?.map((notification, idx) =>
       formatNotificationForDisplay(
-        interceptNotification(notification, handleClose, regions ?? []),
+        interceptNotification(
+          notification,
+          handleClose,
+          regions ?? [],
+          profile
+        ),
         idx,
         handleClose,
         !hasDismissedNotifications([notification], 'notificationMenu')
@@ -106,7 +114,8 @@ export const useFormattedNotifications = (): NotificationItem[] => {
 const interceptNotification = (
   notification: Notification,
   onClose: () => void,
-  regions: Region[]
+  regions: Region[],
+  profile: Profile | undefined
 ): ExtendedNotification => {
   // Ticket interceptions
   if (notification.type === 'ticket_abuse') {
@@ -198,7 +207,10 @@ const interceptNotification = (
           {notification.entity?.label}
         </Link>
         , which will automatically execute on{' '}
-        {formatDate(notification.when as string)}.
+        {formatDate(notification.when as string, {
+          timezone: profile?.timezone,
+        })}
+        .
       </Typography>
     );
 

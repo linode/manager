@@ -51,6 +51,7 @@ import { GrantLevel } from '@linode/api-v4/lib/account';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
+import { useProfile } from 'src/queries/profile';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -775,6 +776,8 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const theme = useTheme();
 
+  const { data: profile } = useProfile();
+
   const {
     linodePlan,
     linodeRegionDisplay,
@@ -907,7 +910,10 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
               ...sxLastListItem,
             }}
           >
-            <Box sx={sxLabel}>Created:</Box> {formatDate(linodeCreated)}
+            <Box sx={sxLabel}>Created:</Box>{' '}
+            {formatDate(linodeCreated, {
+              timezone: profile?.timezone,
+            })}
           </Typography>
         </Box>
       </Grid>

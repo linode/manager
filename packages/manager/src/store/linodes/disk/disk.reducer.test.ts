@@ -1,4 +1,5 @@
 import { linodeDiskFactory } from 'src/factories/disk';
+import { queryClientFactory } from 'src/queries/base';
 import { deleteLinodeActions } from '../linodes.actions';
 import {
   createLinodeDiskActions,
@@ -9,6 +10,8 @@ import {
 } from './disk.actions';
 import reducer, { State } from './disk.reducer';
 import { Entity } from './disk.types';
+
+const queryClient = queryClientFactory();
 
 describe('Disk reducer', () => {
   const defaultState: State = {};
@@ -195,7 +198,7 @@ describe('Disk reducer', () => {
       const newState = reducer(
         state,
         deleteLinodeActions.done({
-          params: { linodeId: mockDisk1.linode_id },
+          params: { linodeId: mockDisk1.linode_id, queryClient },
           result: {},
         })
       );

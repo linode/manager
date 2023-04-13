@@ -1,5 +1,6 @@
 import { Entity as EventEntity, Event } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { QueryClient } from 'react-query';
 import { MapStateToProps as _MapStateToProps } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { ThunkAction, ThunkDispatch as _ThunkDispatch } from 'redux-thunk';
@@ -102,7 +103,8 @@ export interface RequestableRequiredData<D> extends RequestableData<D> {
 export type EventHandler = (
   event: EntityEvent,
   dispatch: Dispatch<any>,
-  getState: () => ApplicationState
+  getState: () => ApplicationState,
+  queryClient: QueryClient
 ) => void;
 
 export interface EntitiesAsObjectState<T> {

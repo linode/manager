@@ -14,6 +14,10 @@ import { profileFactory } from 'src/factories';
 import { UseQueryResult } from 'react-query';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Grants, Profile } from '@linode/api-v4/lib';
+import { storeFactory } from 'src/store';
+import { queryClientFactory } from 'src/queries/base';
+
+const store = storeFactory(queryClientFactory());
 
 const classes: Record<ClassNames, string> = {
   title: '',
@@ -28,6 +32,7 @@ const classes: Record<ClassNames, string> = {
 
 const props: CombinedProps = {
   classes,
+  store,
   profile: { data: profileFactory.build() } as UseQueryResult<
     Profile,
     APIError[]

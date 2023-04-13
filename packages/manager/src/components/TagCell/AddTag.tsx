@@ -5,6 +5,7 @@ import { Theme } from '@mui/material/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((_: Theme) => ({
   root: {
@@ -39,6 +40,7 @@ export const AddTag: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
 
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState(false);
   const { data: profile } = useProfile();
   const {
@@ -59,7 +61,7 @@ export const AddTag: React.FC<Props> = (props) => {
       addTag(newTag.value)
         .then(() => {
           if (accountTags) {
-            updateTagsSuggestionsData([...accountTags, newTag]);
+            updateTagsSuggestionsData([...accountTags, newTag], queryClient);
           }
           if (onClose) {
             onClose();

@@ -12,7 +12,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import IPSelect from 'src/components/IPSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import {
   handleFieldErrors,
   handleGeneralErrors,

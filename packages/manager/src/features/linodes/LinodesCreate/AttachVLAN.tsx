@@ -6,7 +6,6 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
@@ -15,6 +14,7 @@ import {
   regionsWithFeature,
 } from 'src/utilities/doesRegionSupportFeature';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -56,6 +56,8 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+
+  const queryClient = useQueryClient();
 
   React.useEffect(() => {
     // Ensure VLANs are fresh.

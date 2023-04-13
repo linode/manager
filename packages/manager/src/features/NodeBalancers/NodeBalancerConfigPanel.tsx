@@ -15,7 +15,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';

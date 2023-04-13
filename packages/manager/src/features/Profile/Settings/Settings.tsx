@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';

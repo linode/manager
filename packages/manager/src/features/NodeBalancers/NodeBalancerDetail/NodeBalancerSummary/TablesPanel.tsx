@@ -79,7 +79,7 @@ const TablesPanel = () => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const { data: profile } = useProfile();
-  const timezone = getUserTimezone(profile);
+  const timezone = getUserTimezone(profile?.timezone);
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
