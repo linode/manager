@@ -15,7 +15,6 @@ describe('UserDefinedSelect', () => {
         field={field}
         value=""
         updateFormState={() => {}}
-        classes={{} as any}
         isOptional={false}
       />
     );
@@ -38,7 +37,6 @@ describe('UserDefinedSelect', () => {
         field={field}
         value=""
         updateFormState={updateFormState}
-        classes={{} as any}
         isOptional={false}
       />
     );
@@ -60,7 +58,6 @@ describe('UserDefinedSelect', () => {
         field={field}
         value=""
         updateFormState={updateFormState}
-        classes={{} as any}
         isOptional={false}
       />
     );

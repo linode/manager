@@ -2,28 +2,25 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputLabel from 'src/components/core/InputLabel';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 
-type ClassNames = 'root' | 'radioGroupLabel';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      margin: `${theme.spacing(3)} 0 0`,
-      display: 'flex',
-      flexDirection: 'column',
-      marginTop: '16px',
-    },
-    radioGroupLabel: {
-      display: 'block',
-      marginBottom: '4px',
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    margin: `${theme.spacing(3)} 0 0`,
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '16px',
+  },
+  radioGroupLabel: {
+    display: 'block',
+    marginBottom: '4px',
+  },
+}));
 
 interface Props {
   updateFormState: (key: string, value: any) => void;
@@ -33,10 +30,10 @@ interface Props {
   error?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+const UserDefinedSelect = (props: Props) => {
+  const classes = useStyles();
 
-const UserDefinedSelect = (props: CombinedProps) => {
-  const { field, value, error, classes, isOptional, updateFormState } = props;
+  const { field, value, error, isOptional, updateFormState } = props;
 
   const [oneof, setOneof] = React.useState<string[]>(field.oneof!.split(','));
 
@@ -100,6 +97,4 @@ const UserDefinedSelect = (props: CombinedProps) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(UserDefinedSelect);
+export default UserDefinedSelect;
