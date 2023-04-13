@@ -1,2 +1,1 @@
-import TextTooltip from './TextTooltip';
-export default TextTooltip;
+export { TextTooltip } from './TextTooltip';

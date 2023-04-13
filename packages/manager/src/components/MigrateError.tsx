@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Typography from 'src/components/core/Typography';
-import SupportLink from 'src/components/SupportLink';
+import { SupportLink } from 'src/components/SupportLink';
 
 export const MigrateError: React.FC<{}> = () => {
   return (

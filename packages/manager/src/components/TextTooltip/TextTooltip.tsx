@@ -1,17 +1,17 @@
 import { SxProps } from '@mui/material';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 
-interface Props {
+interface TextTooltipProps {
   displayText: string;
   tooltipText: JSX.Element | string;
   sxTypography?: SxProps;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     position: 'relative',
     borderRadius: 4,
@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const TextTooltip = (props: Props) => {
-  const classes = useStyles();
+const TextTooltip = (props: TextTooltipProps) => {
+  const { classes } = useStyles();
   const { displayText, tooltipText, sxTypography } = props;
 
   return (
@@ -49,4 +49,4 @@ export const TextTooltip = (props: Props) => {
   );
 };
 
-export default TextTooltip;
+export { TextTooltip };

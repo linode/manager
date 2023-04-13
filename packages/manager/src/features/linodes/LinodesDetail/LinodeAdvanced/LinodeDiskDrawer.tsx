@@ -21,7 +21,7 @@ import { Link } from 'src/components/Link';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import TextTooltip from 'src/components/TextTooltip';
+import { TextTooltip } from 'src/components/TextTooltip';
 import {
   handleFieldErrors,
   handleGeneralErrors,
