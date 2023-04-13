@@ -10,6 +10,7 @@ import Tag from 'src/components/Tag';
 import CircleProgress from '../CircleProgress';
 import AddTag from './AddTag';
 import Box from '@mui/material/Box';
+import { SxProps } from '@mui/system';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -107,6 +108,7 @@ interface Props {
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
   listAllTags: (tags: string[]) => void;
+  sx?: SxProps;
 }
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
@@ -129,7 +131,7 @@ export type CombinedProps = Props;
 export const TagCell: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { updateTags, tags } = props;
+  const { updateTags, tags, sx } = props;
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
@@ -168,6 +170,7 @@ export const TagCell: React.FC<Props> = (props) => {
       direction="row"
       alignItems="center"
       wrap="nowrap"
+      sx={sx}
     >
       {loading ? (
         <div className={classes.progress}>

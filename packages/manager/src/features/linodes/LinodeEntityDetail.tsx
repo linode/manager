@@ -931,6 +931,12 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
           tags={linodeTags}
           updateTags={updateTags}
           listAllTags={openTagDrawer}
+          sx={{
+            flexDirection: 'row-reverse',
+            '& > button': {
+              marginRight: theme.spacing(0.5),
+            },
+          }}
         />
       </Grid>
     </Grid>
