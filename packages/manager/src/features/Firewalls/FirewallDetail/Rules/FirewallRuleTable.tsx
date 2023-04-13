@@ -518,7 +518,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     textAlign: 'right',
     padding: '0px 15px 0px 15px',
 
-    gridArea: '1 / 1 / 1 / 1 / 5',
+    gridArea: '1 / 1 / 1 / 5',
     [theme.breakpoints.down('lg')]: {
       gridArea: '1 / 1 / 1 / 4',
     },
