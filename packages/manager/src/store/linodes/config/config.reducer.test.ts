@@ -1,4 +1,5 @@
 import { configFactory } from 'src/factories/config';
+import { queryClientFactory } from 'src/queries/base';
 import { deleteLinodeActions } from '../linodes.actions';
 import {
   createLinodeConfigActions,
@@ -9,6 +10,8 @@ import {
 } from './config.actions';
 import reducer, { State } from './config.reducer';
 import { Entity } from './config.types';
+
+const queryClient = queryClientFactory();
 
 describe('config reducer', () => {
   const defaultState: State = {};
@@ -196,7 +199,7 @@ describe('config reducer', () => {
       const newState = reducer(
         state,
         deleteLinodeActions.done({
-          params: { linodeId: mockConfig1.linode_id },
+          params: { linodeId: mockConfig1.linode_id, queryClient },
           result: {},
         })
       );

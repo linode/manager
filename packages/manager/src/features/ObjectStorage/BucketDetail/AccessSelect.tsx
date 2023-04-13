@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import useOpenClose from 'src/hooks/useOpenClose';
 import capitalize from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

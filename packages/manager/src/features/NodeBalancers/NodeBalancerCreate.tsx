@@ -17,8 +17,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import TagsInput, { Tag } from 'src/components/TagsInput';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
@@ -102,8 +101,7 @@ const NodeBalancerCreate = () => {
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
-  const disabled =
-    Boolean(profile?.restricted) && !hasGrant('add_nodebalancers', grants);
+  const disabled = Boolean(profile?.restricted) && !grants?.global.add_domains;
 
   const addNodeBalancer = () => {
     if (disabled) {

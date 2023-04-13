@@ -1,13 +1,11 @@
-import { useMutation, useQuery } from 'react-query';
-import { queryClient } from './base';
 import { getAll } from 'src/utilities/getAll';
-import { Event } from '@linode/api-v4/lib/account/types';
 import {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   cloneDomain,
   createDomain,
@@ -24,6 +22,7 @@ import {
   getDomainRecords,
   DomainRecord,
 } from '@linode/api-v4/lib/domains';
+import { EventWithStore } from 'src/events';
 
 export const queryKey = 'domains';
 
@@ -48,16 +47,19 @@ export const useDomainRecordsQuery = (id: number) =>
     () => getAllDomainRecords(id)
   );
 
-export const useCreateDomainMutation = () =>
-  useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
+export const useCreateDomainMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
     onSuccess: (domain) => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
     },
   });
+};
 
-export const useCloneDomainMutation = (id: number) =>
-  useMutation<Domain, APIError[], CloneDomainPayload>(
+export const useCloneDomainMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Domain, APIError[], CloneDomainPayload>(
     (data) => cloneDomain(id, data),
     {
       onSuccess: (domain) => {
@@ -66,9 +68,11 @@ export const useCloneDomainMutation = (id: number) =>
       },
     }
   );
+};
 
-export const useImportZoneMutation = () =>
-  useMutation<Domain, APIError[], ImportZonePayload>(
+export const useImportZoneMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Domain, APIError[], ImportZonePayload>(
     (data) => importZone(data),
     {
       onSuccess: (domain) => {
@@ -77,17 +81,21 @@ export const useImportZoneMutation = () =>
       },
     }
   );
+};
 
-export const useDeleteDomainMutation = (id: number) =>
-  useMutation<{}, APIError[]>(() => deleteDomain(id), {
+export const useDeleteDomainMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteDomain(id), {
     onSuccess: () => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.removeQueries([queryKey, 'domain', id]);
     },
   });
+};
 
-export const useUpdateDomainMutation = () =>
-  useMutation<Domain, APIError[], { id: number } & UpdateDomainPayload>(
+export const useUpdateDomainMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Domain, APIError[], { id: number } & UpdateDomainPayload>(
     (data) => {
       const { id, ...rest } = data;
       return updateDomain(id, rest);
@@ -102,8 +110,9 @@ export const useUpdateDomainMutation = () =>
       },
     }
   );
+};
 
-export const domainEventsHandler = (event: Event) => {
+export const domainEventsHandler = ({ queryClient }: EventWithStore) => {
   // Invalidation is agressive beacuse it will invalidate on every domain event, but
   // it is worth it for the UX benefits. We can fine tune this later if we need to.
   queryClient.invalidateQueries([queryKey]);

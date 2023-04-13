@@ -18,7 +18,10 @@ import ExternalLink from 'src/components/ExternalLink';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
@@ -117,7 +120,7 @@ type CombinedProps = Props &
   PreferencesProps &
   WithSnackbarProps &
   StateProps &
-  ProfileProps;
+  WithProfileProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {

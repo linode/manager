@@ -1,6 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { concat } from 'ramda';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import Select, {
   Item,
   NoOptionsMessageProps,
@@ -14,7 +15,7 @@ export interface Tag {
   label: string;
 }
 
-export interface Props {
+export interface TagsInputProps {
   label?: string;
   hideLabel?: boolean;
   name?: string;
@@ -22,10 +23,10 @@ export interface Props {
   value: Item[];
   onChange: (selected: Item[]) => void;
   disabled?: boolean;
-  menuPlacement?: 'bottom' | 'top' | 'auto' | undefined;
+  menuPlacement?: 'bottom' | 'top' | 'auto';
 }
 
-const TagsInput = (props: Props) => {
+const TagsInput = (props: TagsInputProps) => {
   const {
     label,
     hideLabel,
@@ -43,6 +44,8 @@ const TagsInput = (props: Props) => {
   const { data: accountTags, error: accountTagsError } = useTagSuggestions(
     !profile?.restricted
   );
+
+  const queryClient = useQueryClient();
 
   const accountTagItems: Item[] =
     accountTags?.map((tag) => ({
@@ -65,7 +68,7 @@ const TagsInput = (props: Props) => {
       setErrors([]);
       onChange(updatedSelectedTags);
       if (accountTags) {
-        updateTagsSuggestionsData([...accountTags, newTag]);
+        updateTagsSuggestionsData([...accountTags, newTag], queryClient);
       }
     }
   };
@@ -112,4 +115,4 @@ const TagsInput = (props: Props) => {
   );
 };
 
-export default TagsInput;
+export { TagsInput };

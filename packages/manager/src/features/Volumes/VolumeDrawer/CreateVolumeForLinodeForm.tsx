@@ -11,10 +11,9 @@ import Form from 'src/components/core/Form';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
+import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { MapState } from 'src/store/types';
@@ -75,14 +74,14 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
-  const disabled = profile?.restricted && !hasGrant('add_volumes', grants);
+  const disabled = profile?.restricted && !grants?.global.add_volumes;
 
   // The original schema expects tags to be an array of strings, but Formik treats
   // tags as _Tag[], so we extend the schema to transform tags before validation.
   const extendedCreateVolumeSchema = CreateVolumeSchema.concat(
     object({
       tags: array()
-        .transform((tagItems: _Tag[]) =>
+        .transform((tagItems: Tag[]) =>
           tagItems.map((thisTagItem) => thisTagItem.value)
         )
         .of(string()),
@@ -269,7 +268,7 @@ interface FormState {
   region: string;
   linode_id: number;
   config_id: number;
-  tags: _Tag[];
+  tags: Tag[];
 }
 
 const initialValues: FormState = {

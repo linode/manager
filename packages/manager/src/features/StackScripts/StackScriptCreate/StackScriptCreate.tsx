@@ -24,21 +24,23 @@ import Notice from 'src/components/Notice';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
-import {
-  getGrants,
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/profile';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import LandingHeader from 'src/components/LandingHeader';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
+import { QueryClient } from 'react-query';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -73,9 +75,10 @@ interface Props {
 
 type CombinedProps = Props &
   ImagesProps &
-  ProfileProps &
+  WithProfileProps &
   WithStyles<ClassNames> &
-  RouteComponentProps<{ stackScriptID: string }>;
+  RouteComponentProps<{ stackScriptID: string }> &
+  WithQueryClientProps;
 
 const errorResources = {
   label: 'A label',
@@ -107,7 +110,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       },
     } = this.props;
     const valuesFromStorage = storage.stackScriptInProgress.get();
-    const account = queryClient.getQueryData<Account>('account');
+    const account = this.props.queryClient.getQueryData<Account>('account');
 
     if (stackScriptID) {
       // If we have a stackScriptID we're in the edit flow and
@@ -168,7 +171,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  _saveStateToLocalStorage = () => {
+  _saveStateToLocalStorage = (queryClient: QueryClient) => {
     const {
       label,
       description,
@@ -205,13 +208,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   saveStateToLocalStorage = debounce(1000, this._saveStateToLocalStorage);
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ label: e.target.value }, this.saveStateToLocalStorage);
+    this.setState({ label: e.target.value }, () =>
+      this.saveStateToLocalStorage(this.props.queryClient)
+    );
   };
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(
-      { description: e.target.value },
-      this.saveStateToLocalStorage
+    this.setState({ description: e.target.value }, () =>
+      this.saveStateToLocalStorage(this.props.queryClient)
     );
   };
 
@@ -228,18 +232,19 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         */
         images: anyAllOptionChosen ? ['any/all'] : imageList,
       },
-      this.saveStateToLocalStorage
+      () => this.saveStateToLocalStorage(this.props.queryClient)
     );
   };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ script: e.target.value }, this.saveStateToLocalStorage);
+    this.setState({ script: e.target.value }, () =>
+      this.saveStateToLocalStorage(this.props.queryClient)
+    );
   };
 
   handleChangeRevisionNote = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(
-      { revisionNote: e.target.value },
-      this.saveStateToLocalStorage
+    this.setState({ revisionNote: e.target.value }, () =>
+      this.saveStateToLocalStorage(this.props.queryClient)
     );
   };
 
@@ -253,7 +258,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         description: payload?.description ?? '',
         revisionNote: payload?.rev_note ?? '',
       },
-      this.saveStateToLocalStorage
+      () => this.saveStateToLocalStorage(this.props.queryClient)
     );
   };
 
@@ -295,7 +300,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       .catch(this.handleError);
   };
 
-  handleCreateStackScript = (payload: StackScriptPayload) => {
+  handleCreateStackScript = (
+    payload: StackScriptPayload,
+    queryClient: QueryClient
+  ) => {
     const { history, profile } = this.props;
     createStackScript(payload)
       .then((stackScript: StackScript) => {
@@ -364,7 +372,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ isSubmitting: true });
 
     if (mode === 'create') {
-      this.handleCreateStackScript(payload);
+      this.handleCreateStackScript(payload, this.props.queryClient);
     } else {
       this.handleUpdateStackScript(payload);
     }
@@ -452,16 +460,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         !thisImage.label.match(/kube/i)
     );
 
-    const stackScriptGrants = getGrants(grants.data, 'stackscript');
+    const stackScriptGrants = grants.data?.stackscript;
 
-    const grantsForThisStackScript = stackScriptGrants.find(
+    const grantsForThisStackScript = stackScriptGrants?.find(
       (eachGrant: Grant) => eachGrant.id === Number(stackScriptID)
     );
 
     const userCannotCreateStackScripts =
-      isRestrictedUser() && !hasGrant('add_stackscripts');
+      profile.data?.restricted && !grants.data?.global.add_stackscripts;
     const userCannotModifyStackScript =
-      isRestrictedUser() &&
+      profile.data?.restricted &&
       grantsForThisStackScript?.permissions !== 'read_write';
 
     const shouldDisable =
@@ -553,7 +561,8 @@ const enhanced = compose<CombinedProps, Props>(
   withImages,
   styled,
   withRouter,
-  withProfile
+  withProfile,
+  withQueryClient
 );
 
 export default enhanced(StackScriptCreate);
