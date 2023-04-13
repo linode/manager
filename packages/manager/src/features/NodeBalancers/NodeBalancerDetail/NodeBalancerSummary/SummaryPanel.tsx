@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { TagsPanel } from 'src/components/TagsPanel';
+import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { Link, useParams } from 'react-router-dom';

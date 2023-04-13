@@ -2,7 +2,7 @@ import { UpdateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import Notice from 'src/components/Notice';
-import { TagsInput, Tag } from 'src/components/TagsInput';
+import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
 import { useUpdateVolumeMutation } from 'src/queries/volumes';
 import {
   handleFieldErrors,

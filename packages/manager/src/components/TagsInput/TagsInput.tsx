@@ -23,7 +23,7 @@ export interface TagsInputProps {
   value: Item[];
   onChange: (selected: Item[]) => void;
   disabled?: boolean;
-  menuPlacement?: 'bottom' | 'top' | 'auto' | undefined;
+  menuPlacement?: 'bottom' | 'top' | 'auto';
 }
 
 const TagsInput = (props: TagsInputProps) => {
