@@ -7,6 +7,7 @@ import {
 } from 'src/utilities/getEntityByIDFromStore';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 import { Variant } from 'src/components/EntityIcon';
+import { ApplicationStore } from 'src/store';
 
 /**
  * Shared helper logic for rendering events
@@ -20,13 +21,17 @@ export interface EventInfo {
   status?: string;
 }
 
-export const useEventInfo = (event: Event): EventInfo => {
+export const useEventInfo = (
+  event: Event,
+  store: ApplicationStore
+): EventInfo => {
   const message = eventMessageGenerator(event);
   const type = (event.entity?.type ?? 'linode') as Variant;
 
   const entity = getEntityByIDFromStore(
     type as EntityType,
-    event.entity?.id ?? -1
+    event.entity?.id ?? -1,
+    store
   );
 
   const status = path<string>(['status'], entity);
