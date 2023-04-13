@@ -11,7 +11,6 @@ import {
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Button from 'src/components/Button';
-import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, useTheme } from '@mui/styles';
@@ -127,6 +126,10 @@ const sxBox = {
   width: '100%',
 };
 
+const sxItemSpacing = {
+  padding: `0 8px`,
+};
+
 interface RuleRow {
   type: string;
   label?: string;
@@ -230,27 +233,31 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
           sx={sxBox}
         >
           <Box
-            style={{
-              paddingLeft: 27,
-              width: xsDown ? '50%' : '30%',
+            sx={{
+              ...sxItemSpacing,
+              paddingLeft: '27px',
+              width: xsDown ? '50%' : '32%',
             }}
           >
             Label
           </Box>
           <Hidden lgDown>
-            <Box style={{ width: '10%' }}>Protocol</Box>
+            <Box sx={{ ...sxItemSpacing, width: '10%' }}>Protocol</Box>
           </Hidden>
           <Hidden smDown>
             <Box
-              style={{
-                width: '10%',
+              sx={{
+                ...sxItemSpacing,
+                width: '15%',
               }}
             >
               Port Range
             </Box>
-            <Box style={{ width: '15%' }}>{capitalize(addressColumnLabel)}</Box>
+            <Box sx={{ ...sxItemSpacing, width: '15%' }}>
+              {capitalize(addressColumnLabel)}
+            </Box>
           </Hidden>
-          <Box style={{ width: '5%' }}>Action</Box>
+          <Box sx={{ ...sxItemSpacing, width: '5%' }}>Action</Box>
         </Box>
         <Box sx={{ ...sxBox, flexDirection: 'column' }}>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -375,8 +382,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     };
 
     return (
-      <Grid
-        container
+      <Box
         key={id}
         aria-label={label}
         className={classNames({
@@ -391,17 +397,18 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           [classes.disabled]: status === 'PENDING_DELETION' || disabled,
         })}
         sx={{
-          alignItems: 'center',
+          ...sxBox,
           fontSize: '0.875rem',
         }}
       >
-        <Grid
-          style={{
-            paddingLeft: 8,
-            width: xsDown ? '50%' : '30%',
+        <Box
+          aria-label={`Label: ${label}`}
+          sx={{
+            ...sxItemSpacing,
+            paddingLeft: '8px',
+            width: xsDown ? '50%' : '32%',
             overflowWrap: 'break-word',
           }}
-          aria-label={`Label: ${label}`}
         >
           <DragIndicator
             className={classes.dragIcon}
@@ -419,27 +426,39 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
               Add a label
             </button>
           )}{' '}
-        </Grid>
+        </Box>
         <Hidden lgDown>
-          <Grid style={{ width: '10%' }} aria-label={`Protocol: ${protocol}`}>
+          <Box
+            aria-label={`Protocol: ${protocol}`}
+            sx={{ ...sxItemSpacing, width: '10%' }}
+          >
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
-          </Grid>
+          </Box>
         </Hidden>
         <Hidden smDown>
-          <Grid style={{ width: '10%' }} aria-label={`Ports: ${ports}`}>
+          <Box
+            aria-label={`Ports: ${ports}`}
+            sx={{ ...sxItemSpacing, width: '15%' }}
+          >
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
-          </Grid>
-          <Grid style={{ width: '15%' }} aria-label={`Addresses: ${addresses}`}>
+          </Box>
+          <Box
+            aria-label={`Addresses: ${addresses}`}
+            sx={{ ...sxItemSpacing, width: '15%' }}
+          >
             {addresses}{' '}
             <ConditionalError errors={errors} formField="addresses" />
-          </Grid>
+          </Box>
         </Hidden>
-        <Grid style={{ width: '5%' }} aria-label={`Action: ${action}`}>
+        <Box
+          aria-label={`Action: ${action}`}
+          sx={{ ...sxItemSpacing, width: '5%' }}
+        >
           {capitalize(action?.toLocaleLowerCase() ?? '')}
-        </Grid>
-        <Grid style={{ marginLeft: 'auto' }}>
+        </Box>
+        <Box sx={{ ...sxItemSpacing, marginLeft: 'auto' }}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
               <button
@@ -458,8 +477,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           ) : (
             <FirewallRuleActionMenu {...actionMenuProps} />
           )}
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     );
   }
 );
@@ -499,14 +518,14 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     display: 'grid',
     fontSize: '.875rem',
     gridTemplateAreas: `'one two three four five'`,
-    gridTemplateColumns: '30% 10% 10% 15% 120px',
+    gridTemplateColumns: '32% 10% 10% 15% 120px',
     height: '40px',
     alignItems: 'center',
     marginTop: '10px',
     width: '100%',
     [theme.breakpoints.down('lg')]: {
       gridTemplateAreas: `'one two three four'`,
-      gridTemplateColumns: '30% 10% 15% 120px',
+      gridTemplateColumns: '32% 15% 15% 120px',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateAreas: `'one two'`,
