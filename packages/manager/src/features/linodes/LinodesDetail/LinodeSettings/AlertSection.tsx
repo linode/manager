@@ -60,7 +60,8 @@ export const AlertSection = (props: Props) => {
       >
         <Grid
           xs={12}
-          md={7}
+          md={9}
+          lg={7}
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -100,7 +101,8 @@ export const AlertSection = (props: Props) => {
         </Grid>
         <Grid
           xs={12}
-          md={5}
+          md={3}
+          lg={5}
           sx={{
             paddingTop: '0',
             paddingBottom: '0',
