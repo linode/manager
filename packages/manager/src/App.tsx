@@ -41,7 +41,6 @@ import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
-import { ADOBE_ANALYTICS_DEV, ADOBE_ANALYTICS_STAGING } from './constants';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -87,13 +86,7 @@ export class App extends React.Component<CombinedProps, State> {
     // Load Adobe Analytics Launch Script
     const script = document.createElement('script');
     // eslint-disable-next-line scanjs-rules/assign_to_src
-    script.src = `${
-      import.meta.env.PROD
-        ? ADOBE_ANALYTICS_STAGING // TODO: update with prod launch script url
-        : import.meta.env.DEV
-        ? ADOBE_ANALYTICS_DEV
-        : undefined
-    }`;
+    script.src = `${import.meta.env.REACT_APP_ADOBE_ANALYTICS_URL}`;
     script.async = true;
     document.head.appendChild(script);
 
