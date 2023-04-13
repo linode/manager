@@ -127,7 +127,7 @@ export const Referrals: React.FC<{}> = () => {
   return (
     <Paper>
       <DocumentTitleSegment segment="Referrals" />
-      <Grid container className={classes.root}>
+      <Grid container className={classes.root} spacing={2}>
         <Grid>
           <Typography variant="body1" style={{ marginBottom: 12 }}>
             When you refer friends or colleagues to Linode using your referral
@@ -194,6 +194,12 @@ export const Referrals: React.FC<{}> = () => {
               className={classes.limitNotice}
               spacingTop={8}
               spacingBottom={0}
+              sx={{
+                '&&': {
+                  // '&&' is only needed because Notice is using makeStyles
+                  padding: '8px',
+                },
+              }}
             >
               Spend $25 with Linode to activate your personal referral link
             </Notice>
@@ -204,7 +210,10 @@ export const Referrals: React.FC<{}> = () => {
             justifyContent="space-between"
             wrap="nowrap"
             className={classes.images}
-            spacing={2}
+            sx={{
+              width: '100%',
+              padding: 0,
+            }}
           >
             <Grid className={classes.image}>
               <Step1 />
