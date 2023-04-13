@@ -1,32 +1,12 @@
 import Close from '@mui/icons-material/Close';
-import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice, { NoticeProps } from 'src/components/Notice';
 import { SxProps } from '@mui/system';
+import * as React from 'react';
+import Notice, { NoticeProps } from 'src/components/Notice';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    flexFlow: 'row nowrap',
-    justifyContent: 'space-between',
-    borderRadius: 1,
-    marginBottom: theme.spacing(),
-    padding: theme.spacing(2),
-    background: theme.bg.bgPaper,
-  },
-  closeIcon: {
-    ...theme.applyLinkStyles,
-    display: 'flex',
-    color: theme.textColors.tableStatic,
-    marginLeft: 20,
-  },
-}));
 
 interface Props {
   preferenceKey: string;
@@ -40,7 +20,6 @@ type CombinedProps = Props & Partial<NoticeProps>;
 
 export const DismissibleBanner = (props: CombinedProps) => {
   const { className, preferenceKey, options, children, ...rest } = props;
-  const { classes, cx } = useStyles();
 
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
     preferenceKey,
@@ -53,25 +32,24 @@ export const DismissibleBanner = (props: CombinedProps) => {
 
   const dismissibleButton = (
     <Grid>
-      <button
-        className={classes.closeIcon}
+      <StyledButton
         aria-label={`Dismiss ${preferenceKey} banner`}
         onClick={handleDismiss}
         data-testid="notice-dismiss"
       >
         <Close />
-      </button>
+      </StyledButton>
     </Grid>
   );
 
   return (
-    <Notice
-      className={cx(classes.root, className)}
+    <StyledNotice
+      className={className}
       dismissibleButton={dismissibleButton}
       {...rest}
     >
       {children}
-    </Notice>
+    </StyledNotice>
   );
 };
 
@@ -96,3 +74,21 @@ export const useDismissibleBanner = (
 
   return { hasDismissedBanner, handleDismiss };
 };
+
+const StyledNotice = styled(Notice)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  flexFlow: 'row nowrap',
+  justifyContent: 'space-between',
+  borderRadius: 1,
+  marginBottom: theme.spacing(),
+  padding: theme.spacing(2),
+  background: theme.bg.bgPaper,
+}));
+
+const StyledButton = styled('button')(({ theme }) => ({
+  ...theme.applyLinkStyles,
+  display: 'flex',
+  color: theme.textColors.tableStatic,
+  marginLeft: 20,
+}));
