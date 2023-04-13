@@ -2,19 +2,19 @@ import * as React from 'react';
 import { useFormik, yupToFormErrors } from 'formik';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { addPaymentMethod } from '@linode/api-v4/lib';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
-import { queryClient } from 'src/queries/base';
 import { CreditCardSchema } from '@linode/validation';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   error: {
@@ -51,6 +51,7 @@ const AddCreditCardForm = (props: Props) => {
   const [error, setError] = React.useState<string>();
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
   const expiryRef = React.useRef<HTMLInputElement>(null);
 
   const addCreditCard = async (
@@ -160,12 +161,12 @@ const AddCreditCardForm = (props: Props) => {
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <Grid item xs={12} className={classes.error}>
+        <Grid xs={12} className={classes.error}>
           <Notice error text={error} />
         </Grid>
       )}
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <TextField
             name="card_number"
             value={values.card_number}
@@ -179,7 +180,7 @@ const AddCreditCardForm = (props: Props) => {
             }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             inputRef={expiryRef}
             name="expiry"
@@ -198,7 +199,7 @@ const AddCreditCardForm = (props: Props) => {
             disabled={disableInput}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             name="cvv"
             value={values.cvv}

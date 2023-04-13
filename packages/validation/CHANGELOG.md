@@ -1,4 +1,9 @@
 
+## [2023-04-03] - v0.21.0
+
+### Added:
+- React Query for SSH Keys [#8892](https://github.com/linode/manager/pull/8892)
+
 ## [2023-03-20] - v0.20.0
 
 ### Changed:

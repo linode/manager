@@ -1,5 +1,6 @@
 import * as actionMenu from './action-menu';
 import * as autocompletePopper from './autocomplete-popper';
+import * as breadcrumb from './breadcrumb';
 import * as buttons from './buttons';
 import * as dialog from './dialog';
 import * as drawer from './drawer';
@@ -14,6 +15,7 @@ import * as toggle from './toggle';
 export const ui = {
   ...actionMenu,
   ...autocompletePopper,
+  ...breadcrumb,
   ...buttons,
   ...dialog,
   ...drawer,

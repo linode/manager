@@ -9,7 +9,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .toggleLabel': {
       display: 'flex',
       flexDirection: 'row',
-      '& > span:first-child': {
+      '& > span:first-of-type': {
         marginTop: -6,
       },
       '& > span:last-child': {

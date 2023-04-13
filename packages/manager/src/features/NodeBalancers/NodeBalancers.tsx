@@ -1,37 +1,32 @@
 import * as React from 'react';
-import {
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter,
-} from 'react-router-dom';
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import { Route, Switch } from 'react-router-dom';
+import CircleProgress from 'src/components/CircleProgress';
 
-const NodeBalancerDetail = React.lazy(() => import('./NodeBalancerDetail'));
-const NodeBalancersLanding = React.lazy(() => import('./NodeBalancersLanding'));
+const NodeBalancerDetail = React.lazy(
+  () => import('./NodeBalancerDetail/NodeBalancerDetail')
+);
+const NodeBalancersLanding = React.lazy(
+  () => import('./NodeBalancersLanding/NodeBalancersLanding')
+);
 const NodeBalancerCreate = React.lazy(() => import('./NodeBalancerCreate'));
 
-type Props = RouteComponentProps<{}>;
+const NodeBalancers = () => {
+  return (
+    <React.Suspense fallback={<CircleProgress />}>
+      <Switch>
+        <Route component={NodeBalancersLanding} path="/nodebalancers" exact />
+        <Route
+          component={NodeBalancerCreate}
+          path="/nodebalancers/create"
+          exact
+        />
+        <Route
+          component={NodeBalancerDetail}
+          path="/nodebalancers/:nodeBalancerId?/:tab?/:configId?"
+        />
+      </Switch>
+    </React.Suspense>
+  );
+};
 
-class NodeBalancers extends React.Component<Props> {
-  render() {
-    const {
-      match: { path },
-    } = this.props;
-
-    return (
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route component={NodeBalancersLanding} path={path} exact />
-          <Route component={NodeBalancerCreate} path={`${path}/create`} exact />
-          <Route
-            component={NodeBalancerDetail}
-            path={`${path}/:nodeBalancerId`}
-          />
-        </Switch>
-      </React.Suspense>
-    );
-  }
-}
-
-export default withRouter(NodeBalancers);
+export default NodeBalancers;

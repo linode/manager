@@ -8,12 +8,13 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import SupportLink from 'src/components/SupportLink';
+import { SupportLink } from 'src/components/SupportLink';
 import withLinodes, {
   DispatchProps,
 } from 'src/containers/withLinodes.container';
 import { pluralize } from 'src/utilities/pluralize';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import { useQueryClient } from 'react-query';
 
 interface Props {
   isManaged: boolean;
@@ -67,6 +68,7 @@ export const ManagedContent = (props: ContentProps) => {
 
 export const EnableManaged = (props: CombinedProps) => {
   const { isManaged, linodeCount } = props;
+  const queryClient = useQueryClient();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -87,7 +89,7 @@ export const EnableManaged = (props: CombinedProps) => {
     enableManaged()
       .then(() => {
         handleClose();
-        updateAccountSettingsData({ managed: true });
+        updateAccountSettingsData({ managed: true }, queryClient);
       })
       .catch(handleError);
   };

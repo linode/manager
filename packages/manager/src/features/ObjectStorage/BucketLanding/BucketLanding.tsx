@@ -5,7 +5,6 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import * as React from 'react';
-import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
@@ -19,9 +18,6 @@ import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import TransferDisplay from 'src/components/TransferDisplay';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
-import bucketDrawerContainer, {
-  DispatchProps,
-} from 'src/containers/bucketDrawer.container';
 import useOpenClose from 'src/hooks/useOpenClose';
 import {
   BucketError,
@@ -39,6 +35,8 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import CancelNotice from '../CancelNotice';
 import BucketDetailsDrawer from './BucketDetailsDrawer';
 import BucketTable from './BucketTable';
+import { useProfile } from 'src/queries/profile';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -58,14 +56,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  isRestrictedUser: boolean;
-}
+export const BucketLanding = () => {
+  const { data: profile } = useProfile();
 
-export type CombinedProps = Props & DispatchProps;
-
-export const BucketLanding: React.FC<CombinedProps> = (props) => {
-  const { isRestrictedUser, openBucketDrawer } = props;
+  const isRestrictedUser = profile?.restricted;
 
   const {
     data: objectStorageClusters,
@@ -150,11 +144,16 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     ) || [];
 
   if (isRestrictedUser) {
-    return <RenderEmpty onClick={openBucketDrawer} />;
+    return <RenderEmpty />;
   }
 
   if (clustersErrors || bucketsErrors) {
-    return <RenderError data-qa-error-state />;
+    return (
+      <ErrorState
+        data-qa-error-state
+        errorText="There was an error retrieving your buckets. Please reload and try again."
+      />
+    );
   }
 
   if (
@@ -162,7 +161,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     areBucketsLoading ||
     objectStorageBucketsResponse === undefined
   ) {
-    return <RenderLoading />;
+    return <CircleProgress />;
   }
 
   if (objectStorageBucketsResponse?.buckets.length === 0) {
@@ -173,7 +172,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
             unavailableClusters={unavailableClusters}
           />
         )}
-        <RenderEmpty onClick={openBucketDrawer} />
+        <RenderEmpty />
       </>
     );
   }
@@ -200,7 +199,6 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
               handleOrderChange,
               handleClickRemove,
               handleClickDetails,
-              openBucketDrawer,
               data: orderedData,
             };
             return <BucketTable {...bucketTableProps} />;
@@ -280,20 +278,9 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const RenderLoading: React.FC<{}> = () => {
-  return <CircleProgress />;
-};
-
-const RenderError: React.FC<{}> = () => {
-  return (
-    <ErrorState errorText="There was an error retrieving your buckets. Please reload and try again." />
-  );
-};
-
-const RenderEmpty: React.FC<{
-  onClick: () => void;
-}> = (props) => {
+const RenderEmpty = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <React.Fragment>
@@ -309,7 +296,7 @@ const RenderEmpty: React.FC<{
         renderAsSecondary
         buttonProps={[
           {
-            onClick: props.onClick,
+            onClick: () => history.replace('/object-storage/buckets/create'),
             children: 'Create Bucket',
           },
         ]}
@@ -334,12 +321,7 @@ const RenderEmpty: React.FC<{
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  bucketDrawerContainer
-);
-
-export default enhanced(BucketLanding);
+export default BucketLanding;
 
 interface UnavailableClustersDisplayProps {
   unavailableClusters: ObjectStorageCluster[];

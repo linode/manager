@@ -1,24 +1,23 @@
 import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
+import Box from '@mui/material/Box';
+import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import Box from '../core/Box';
-import HelpIcon from '../HelpIcon';
+import { makeStyles } from 'tss-react/mui';
+import TooltipIcon from '../TooltipIcon';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.bgPaper,
     '.detailsWrapper &': {
@@ -26,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   headerLabel: {
-    marginLeft: '0.25em',
     maxWidth: 'calc(100% - 80px)',
   },
   editBtn: {
@@ -73,13 +71,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     marginTop: theme.spacing(1),
   },
-  helpIcon: {
-    padding: 0,
-    marginLeft: theme.spacing(),
-  },
 }));
 
-export interface Props {
+export interface StackScriptProps {
   data: StackScriptType;
   userCanModify: boolean;
 }
@@ -89,7 +83,7 @@ interface StackScriptImages {
   deprecated: JSX.Element[];
 }
 
-export const StackScript: React.FC<Props> = (props) => {
+export const StackScript = (props: StackScriptProps) => {
   const {
     data: {
       username,
@@ -105,9 +99,11 @@ export const StackScript: React.FC<Props> = (props) => {
     userCanModify,
   } = props;
 
-  const classes = useStyles();
-  const history = useHistory();
+  const { classes } = useStyles();
   const { profile } = useAccountManagement();
+
+  const theme = useTheme();
+  const history = useHistory();
 
   const { data: imagesData } = useAllImagesQuery(
     {},
@@ -158,7 +154,13 @@ export const StackScript: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="flex-start" justifyContent="space-between">
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+        }}
+      >
         <H1Header
           className={classes.headerLabel}
           title={label}
@@ -175,7 +177,7 @@ export const StackScript: React.FC<Props> = (props) => {
             Edit
           </Button>
         ) : null}
-      </Grid>
+      </Box>
       <Typography
         variant="h2"
         className={classes.author}
@@ -249,10 +251,14 @@ export const StackScript: React.FC<Props> = (props) => {
                 className={classes.heading}
               >
                 <Typography variant="h3">Deprecated Images</Typography>
-                <HelpIcon
+                <TooltipIcon
                   text="You must update your StackScript to use a compatible Image to deploy it"
                   tooltipPosition="bottom"
-                  className={classes.helpIcon}
+                  sxTooltipIcon={{
+                    padding: 0,
+                    marginLeft: theme.spacing(),
+                  }}
+                  status="help"
                 />
               </Box>
               {imageChips.deprecated}

@@ -2,8 +2,9 @@ import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice, { NoticeProps } from 'src/components/Notice';
+import { SxProps } from '@mui/system';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
@@ -32,6 +33,7 @@ interface Props {
   children: JSX.Element;
   className?: string;
   options?: DismissibleNotificationOptions;
+  sx?: SxProps;
 }
 
 type CombinedProps = Props & Partial<NoticeProps>;
@@ -50,7 +52,7 @@ export const DismissibleBanner = (props: CombinedProps) => {
   }
 
   const dismissibleButton = (
-    <Grid item>
+    <Grid>
       <button
         className={classes.closeIcon}
         aria-label={`Dismiss ${preferenceKey} banner`}

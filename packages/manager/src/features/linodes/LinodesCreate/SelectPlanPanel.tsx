@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
@@ -15,11 +14,11 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Grid from '@mui/material/Unstable_Grid2';
-import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
@@ -27,14 +26,12 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import withRegions, {
-  DefaultProps as RegionsProps,
-} from 'src/containers/regions.container';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
+import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -153,9 +150,7 @@ const getMetal = (types: PlanSelectionType[]) =>
 const getPremium = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => t.class === 'premium');
 
-type CombinedProps = Props & RegionsProps;
-
-export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
+export const SelectPlanPanel = (props: Props) => {
   const {
     selectedID,
     currentPlanHeading,
@@ -170,6 +165,8 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     error,
     docsLink,
   } = props;
+
+  const { data: regions } = useRegionsQuery();
 
   const selectedLinodePlanType = useSelector((state: ApplicationState) => {
     if (linodeID) {
@@ -188,11 +185,10 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const getRegionsWithCapability = (capability: Capabilities) => {
-    const regions = props.regionsData ?? [];
     const withCapability = regions
-      .filter((thisRegion) => thisRegion.capabilities.includes(capability))
+      ?.filter((thisRegion) => thisRegion.capabilities.includes(capability))
       .map((thisRegion) => thisRegion.label);
-    return arrayToList(withCapability);
+    return arrayToList(withCapability ?? []);
   };
 
   const renderSelection = (type: PlanSelectionType, idx: number) => {
@@ -264,10 +260,14 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                   />
                 )}
                 {tooltip && (
-                  <HelpIcon
+                  <TooltipIcon
                     text={tooltip}
                     tooltipPosition="right-end"
-                    className="py0"
+                    sxTooltipIcon={{
+                      paddingTop: '0px !important',
+                      paddingBottom: '0px !important',
+                    }}
+                    status="help"
                   />
                 )}
               </div>
@@ -345,7 +345,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                 <TableRow>
                   <TableCell className={classes.headerCell} />
                   <TableCell className={classes.headerCell} data-qa-plan-header>
-                    {header}
+                    Plan
                   </TableCell>
                   <TableCell
                     className={classes.headerCell}
@@ -622,7 +622,4 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  withRegions
-)(SelectPlanPanel);
+export default RenderGuard(SelectPlanPanel);

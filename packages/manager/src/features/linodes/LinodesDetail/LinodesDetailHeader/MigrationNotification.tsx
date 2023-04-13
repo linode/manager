@@ -15,6 +15,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
@@ -41,6 +42,8 @@ const MigrationNotification: React.FC<Props> = (props) => {
     notificationType,
     migrationTime,
   } = props;
+
+  const { data: profile } = useProfile();
 
   const {
     dialog,
@@ -98,7 +101,9 @@ const MigrationNotification: React.FC<Props> = (props) => {
 
     const migrationTimeObject = parseAPIDate(migrationTime as string).toLocal();
 
-    const formattedMigrationTime = formatDate(migrationTime as string);
+    const formattedMigrationTime = formatDate(migrationTime as string, {
+      timezone: profile?.timezone,
+    });
 
     const now = DateTime.local();
     const roundedHourDifference = Math.round(

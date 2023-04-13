@@ -2,11 +2,12 @@ import { setupWorker } from 'msw';
 import { SetupWorkerApi } from 'msw/lib/types/setupWorker/setupWorker';
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import { MockData, mockDataController } from 'src/dev-tools/mockDataController';
-import store, { ApplicationState } from 'src/store';
+import { queryClientFactory } from 'src/queries/base';
+import { ApplicationState, storeFactory } from 'src/store';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
-import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { handlers, mockDataHandlers } from './serverHandlers';
 
+const store = storeFactory(queryClientFactory());
 let worker: SetupWorkerApi;
 
 if (!isProductionBuild || ENABLE_DEV_TOOLS) {
@@ -32,9 +33,6 @@ const requestEntities = (mockData: MockData, reduxState: ApplicationState) => {
   // we should handle this update at that time.
   if (mockData.linode && !reduxState.__resources.linodes.loading) {
     store.dispatch(requestLinodes({}) as any);
-  }
-  if (mockData.nodeBalancer && !reduxState.__resources.nodeBalancers.loading) {
-    store.dispatch(getAllNodeBalancers() as any);
   }
 };
 

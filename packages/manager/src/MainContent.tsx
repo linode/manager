@@ -151,7 +151,9 @@ const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile'));
-const NodeBalancers = React.lazy(() => import('src/features/NodeBalancers'));
+const NodeBalancers = React.lazy(
+  () => import('src/features/NodeBalancers/NodeBalancers')
+);
 const StackScripts = React.lazy(() => import('src/features/StackScripts'));
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')

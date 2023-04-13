@@ -20,7 +20,7 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
-import UserDataAccordion from 'src/features/linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
+import { UserDataAccordion } from 'src/features/linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import useFlags from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
@@ -266,7 +266,7 @@ export const RebuildFromImage = (props: Props) => {
                         <CheckBox
                           checked={shouldReuseUserData}
                           onChange={handleShouldReuseUserDataChange}
-                          text="Reuse user data previously provided for this Linode."
+                          text={`Reuse user data previously provided for ${linodeLabel}`}
                           sxFormLabel={{ paddingLeft: '2px' }}
                         />
                       </Box>

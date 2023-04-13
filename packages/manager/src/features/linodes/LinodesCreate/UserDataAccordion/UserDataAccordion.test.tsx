@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import UserDataAccordion from './UserDataAccordion';
-import { LINODE_CREATE_FROM } from './UserDataAccordionHeading';
+import { UserDataAccordion } from './UserDataAccordion';
 
 describe('UserDataAccordion', () => {
   const onChange = jest.fn();
   const props = {
     userData: 'test data',
     onChange,
-    createType: '',
-  };
+    createType: 'fromImage',
+  } as const;
+
   it('should render without errors', () => {
     const { container } = renderWithTheme(<UserDataAccordion {...props} />);
     expect(container).toBeInTheDocument();
@@ -38,17 +38,15 @@ describe('UserDataAccordion', () => {
 
     expect(onChange).toHaveBeenCalledWith(inputValue);
     expect(
-      getByText('This user data may not be in a format accepted by cloud-init.')
+      getByText('The user data may be formatted incorrectly.')
     ).toBeInTheDocument();
   });
 
   it('should display a custom header warning message', () => {
-    renderWithTheme(
-      <UserDataAccordion {...props} createType={LINODE_CREATE_FROM.BACKUPS} />
-    );
+    renderWithTheme(<UserDataAccordion {...props} createType="fromBackup" />);
 
     const headerWarningMessage = screen.getByText(
-      'Existing user data is not available when creating a Linode from a backup.'
+      'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.'
     );
 
     expect(headerWarningMessage).toBeInTheDocument();

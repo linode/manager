@@ -15,7 +15,7 @@ import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
@@ -630,11 +630,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
           ]}
           container
         >
-          <Grid item xs={12}>
-            <Typography variant="h2" data-qa-port-config-header>
-              Port Configuration
-            </Typography>
-          </Grid>
           <Grid item xs={6} md={3}>
             <TextField
               type="number"
@@ -812,6 +807,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         </Grid>
 
         <Grid
+          container
           updateFor={[
             nodes,
             errors,
@@ -820,7 +816,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             errorMap.nodes,
             this.props.nodeBalancerRegion,
           ]}
-          container
         >
           <Grid item xs={12}>
             <Grid updateFor={[nodeMessage, classes]} item xs={12}>

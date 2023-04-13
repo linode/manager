@@ -6,12 +6,16 @@ import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
 import { deleteLinode } from './linodes.actions';
-import { queryClient } from 'src/queries/base';
-import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
 import { EntityEvent } from '../events/event.types';
+import type { QueryClient } from 'react-query';
 
-const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
+const linodeEventsHandler: EventHandler = (
+  event,
+  dispatch,
+  getState,
+  queryClient
+) => {
   const { action, entity, percent_complete, status, id: eventID } = event;
   const { id } = entity;
 
@@ -32,7 +36,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_migrate':
     case 'linode_migrate_datacenter':
     case 'linode_resize':
-      return handleLinodeMigrate(dispatch, status, id, prevStatus);
+      return handleLinodeMigrate(dispatch, status, id, queryClient, prevStatus);
     case 'linode_reboot':
     case 'linode_shutdown':
     case 'linode_snapshot':
@@ -125,6 +129,7 @@ const handleLinodeMigrate = (
   dispatch: Dispatch<any>,
   status: EventStatus,
   id: number,
+  queryClient: QueryClient,
   prevStatus?: EventStatus
 ) => {
   updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
@@ -179,13 +184,6 @@ const handleLinodeDelete = (
   state: ApplicationState
 ) => {
   const found = state.__resources.linodes.itemsById[id];
-
-  // Removed unneeded volume stores
-  queryClient.removeQueries([`${volumesQueryKey}-list`, 'linode', id]);
-
-  // A Linode that was deleted may have had volumes attached.
-  // Invalidate paginated volume stores so they will reflect there is no attached Linode.
-  queryClient.invalidateQueries([`${volumesQueryKey}-list`]);
 
   if (!found) {
     return;

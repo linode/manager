@@ -69,8 +69,8 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
 
   componentDidMount() {
     this.subscription = events$
-      .filter((e) => !e._initial)
-      .map((event) => {
+      .filter(({ event }) => !event._initial)
+      .map(({ event }) => {
         const { enqueueSnackbar } = this.props;
         const label = getLabel(event);
         const secondaryLabel = getSecondaryLabel(event);

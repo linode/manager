@@ -44,12 +44,6 @@ export interface WithLinodesProps {
   linodesError?: APIError[];
 }
 
-export interface WithRegionsProps {
-  regionsData: Region[];
-  regionsLoading: boolean;
-  regionsError?: APIError[];
-}
-
 /**
  * Pure Data without the loading and error
  * keys. Component with these props have already been

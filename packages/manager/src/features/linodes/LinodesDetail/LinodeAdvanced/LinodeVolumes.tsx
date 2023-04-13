@@ -24,7 +24,7 @@ import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDra
 import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
 import VolumeTableRow from 'src/features/Volumes/VolumeTableRow';
 import { useOrder } from 'src/hooks/useOrder';
-import usePagination from 'src/hooks/usePagination';
+import { usePagination } from 'src/hooks/usePagination';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import {
@@ -301,7 +301,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
-              label="Status"
+              label="status"
               handleClick={handleOrderChange}
             >
               Status
