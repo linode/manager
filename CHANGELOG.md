@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Tech Stories:
+- MUIv5 Migration - Components > TagsInput, TagsPanel #8995
+
 ## [2023-04-03] - v1.90.0
 
 ### Added:
