@@ -5,7 +5,7 @@ import {
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
-interface Props {
+interface SupportLinkProps {
   title?: string;
   description?: string;
   text: string;
@@ -19,7 +19,7 @@ export interface EntityForTicketDetails {
   type: EntityType;
 }
 
-const SupportLink = (props: Props) => {
+const SupportLink = (props: SupportLinkProps) => {
   const { description, text, title, entity, ticketType, onClick } = props;
   return (
     <Link
@@ -40,4 +40,4 @@ const SupportLink = (props: Props) => {
   );
 };
 
-export default SupportLink;
+export { SupportLink };
