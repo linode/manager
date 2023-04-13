@@ -24,13 +24,9 @@ import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import App from './App';
-import { queryPresets } from './queries/base';
-import { QueryClient } from 'react-query';
+import { queryClientFactory } from './queries/base';
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: queryPresets.longLived },
-});
-
+const queryClient = queryClientFactory();
 const store = storeFactory(queryClient);
 
 setupInterceptors(store);
