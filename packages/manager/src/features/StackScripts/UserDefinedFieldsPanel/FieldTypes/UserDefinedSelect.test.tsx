@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import UserDefinedSelect from './UserDefinedSelect';
+import { UserDefinedSelect } from './UserDefinedSelect';
 
 describe('UserDefinedSelect', () => {
   it('renders select when oneof has more than 4 options', () => {

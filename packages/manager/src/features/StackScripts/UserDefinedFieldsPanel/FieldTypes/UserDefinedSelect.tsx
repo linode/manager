@@ -30,7 +30,7 @@ interface Props {
   error?: string;
 }
 
-const UserDefinedSelect = (props: Props) => {
+export const UserDefinedSelect = (props: Props) => {
   const classes = useStyles();
 
   const { field, value, error, isOptional, updateFormState } = props;
@@ -93,5 +93,3 @@ const UserDefinedSelect = (props: Props) => {
     </div>
   );
 };
-
-export default UserDefinedSelect;
