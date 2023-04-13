@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
     padding: `${theme.spacing(3)} 0`,
-    paddingTop: 20,
+    paddingTop: 12,
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('md')]: {
       paddingTop: theme.spacing(2),
