@@ -46,38 +46,50 @@ export const AppPanelSection: React.FC<Props> = (props) => {
         <Divider spacingTop={16} spacingBottom={16} />
       ) : null}
       <AppPanelGrid container spacing={2}>
-        {apps.map((eachApp) => {
-          const decodedLabel = decode(eachApp.label);
-          const isCluster =
-            decodedLabel.endsWith('Cluster ') &&
-            eachApp.user_defined_fields.some(
-              (field) => field.name === 'cluster_size'
+        {apps.length > 0 ? (
+          apps.map((eachApp) => {
+            const decodedLabel = decode(eachApp.label);
+            const isCluster =
+              decodedLabel.endsWith('Cluster ') &&
+              eachApp.user_defined_fields.some(
+                (field) => field.name === 'cluster_size'
+              );
+
+            const label = isCluster
+              ? decodedLabel.split(' Cluster')[0]
+              : decodedLabel;
+
+            return (
+              <SelectionCardWrapper
+                id={eachApp.id}
+                key={eachApp.id}
+                checked={eachApp.id === selectedStackScriptID}
+                // Decode App labels since they may contain HTML entities.
+                label={label}
+                clusterLabel={decodedLabel}
+                availableImages={eachApp.images}
+                userDefinedFields={eachApp.user_defined_fields}
+                handleClick={handleClick}
+                openDrawer={openDrawer}
+                disabled={disabled}
+                iconUrl={eachApp.logo_url.toLowerCase() || ''}
+                labelDecoration={
+                  isCluster ? <Chip size="small" label="CLUSTER" /> : undefined
+                }
+              />
             );
-
-          const label = isCluster
-            ? decodedLabel.split(' Cluster')[0]
-            : decodedLabel;
-
-          return (
-            <SelectionCardWrapper
-              id={eachApp.id}
-              key={eachApp.id}
-              checked={eachApp.id === selectedStackScriptID}
-              // Decode App labels since they may contain HTML entities.
-              label={label}
-              clusterLabel={decodedLabel}
-              availableImages={eachApp.images}
-              userDefinedFields={eachApp.user_defined_fields}
-              handleClick={handleClick}
-              openDrawer={openDrawer}
-              disabled={disabled}
-              iconUrl={eachApp.logo_url.toLowerCase() || ''}
-              labelDecoration={
-                isCluster ? <Chip size="small" label="CLUSTER" /> : undefined
-              }
-            />
-          );
-        })}
+          })
+        ) : (
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            xs={8}
+            spacing={2}
+          >
+            No Results
+          </Grid>
+        )}
       </AppPanelGrid>
     </>
   );
