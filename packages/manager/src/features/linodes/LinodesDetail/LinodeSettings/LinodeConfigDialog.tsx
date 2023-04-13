@@ -34,7 +34,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import DeviceSelection, {
   ExtendedDisk,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';

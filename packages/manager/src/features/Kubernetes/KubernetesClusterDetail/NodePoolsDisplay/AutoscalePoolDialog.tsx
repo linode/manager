@@ -13,7 +13,7 @@ import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSnackbar } from 'notistack';

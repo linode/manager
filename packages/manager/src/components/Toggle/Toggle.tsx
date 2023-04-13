@@ -1,16 +1,15 @@
 import * as React from 'react';
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
-import Switch, { SwitchProps } from 'src/components/core/Switch';
+import Switch, { SwitchProps } from '@mui/material/Switch';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import './toggle.css';
 
-interface Props extends SwitchProps {
+export interface ToggleProps extends SwitchProps {
   tooltipText?: JSX.Element | string;
   interactive?: boolean;
 }
 
-const Toggle: React.FC<Props> = (props) => {
+export const Toggle = (props: ToggleProps) => {
   const { tooltipText, interactive, ...rest } = props;
 
   return (
@@ -32,5 +31,3 @@ const Toggle: React.FC<Props> = (props) => {
     </React.Fragment>
   );
 };
-
-export default Toggle;

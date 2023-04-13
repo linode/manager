@@ -12,7 +12,7 @@ import Grid from 'src/components/Grid';
 import IPSelect from 'src/components/IPSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import {
   handleFieldErrors,
   handleGeneralErrors,
