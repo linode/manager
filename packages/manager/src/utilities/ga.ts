@@ -13,12 +13,13 @@ interface AnalyticsEvent {
  */
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
   // Send a Direct Call Rule to Adobe
-  (window as any)._satellite.track('custom event', {
-    category: eventPayload.category,
-    action: eventPayload.action,
-    label: eventPayload.label,
-    value: eventPayload.value,
-  });
+  // TODO: uncomment in forthcoming PR once basic tracking is verified
+  // (window as any)._satellite.track('custom event', {
+  //   category: eventPayload.category,
+  //   action: eventPayload.action,
+  //   label: eventPayload.label,
+  //   value: eventPayload.value,
+  // });
 
   /** only send events if we have a GA ID */
   return !!GA_ID ? event(eventPayload) : undefined;
