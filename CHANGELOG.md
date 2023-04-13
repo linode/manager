@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 - Clear the Kubernetes Delete Dialog when it is re-opened #9000
 
+### Tech Stories:
+- MUIv5 Migration - Components > TagsInput, TagsPanel #8995
+
 ## [2023-04-03] - v1.90.0
 
 ### Added:
