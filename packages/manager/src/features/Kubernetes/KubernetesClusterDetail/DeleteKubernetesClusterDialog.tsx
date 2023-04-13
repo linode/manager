@@ -41,6 +41,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
       onClose();
+      setConfirmText('');
       history.replace('/kubernetes/clusters');
     });
   };
