@@ -55,72 +55,80 @@ const NodePool: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <>
-      <Grid
-        container
-        className="my0"
-        alignItems="center"
-        justifyContent="space-between"
-        spacing={2}
-      >
-        <Grid>
-          <Typography variant="h2">{typeLabel}</Typography>
-        </Grid>
-        <Grid style={{ display: 'flex' }}>
-          <Button
-            className={`${autoscaler.enabled ? classes.button : ''}`}
-            buttonType="secondary"
-            compactY
-            onClick={() => openAutoscalePoolDialog(poolId)}
-          >
-            Autoscale Pool
-          </Button>
-          {autoscaler.enabled ? (
-            <Typography className={classes.autoscaleText}>
-              {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
-            </Typography>
-          ) : null}
-          <Button
-            buttonType="secondary"
-            compactY
-            onClick={() => handleClickResize(poolId)}
-          >
-            Resize Pool
-          </Button>
-          <Button
-            buttonType="secondary"
-            compactY
-            onClick={() => openRecycleAllNodesDialog(poolId)}
-          >
-            Recycle Pool Nodes
-          </Button>
-          <Tooltip
-            title="Clusters must contain at least one node pool."
-            disableFocusListener={!isOnlyNodePool}
-            disableHoverListener={!isOnlyNodePool}
-            disableTouchListener={!isOnlyNodePool}
-          >
-            <div>
-              <Button
-                className={classes.deletePoolBtn}
-                buttonType="secondary"
-                compactY
-                disabled={isOnlyNodePool}
-                onClick={() => openDeletePoolDialog(poolId)}
-              >
-                Delete Pool
-              </Button>
-            </div>
-          </Tooltip>
-        </Grid>
+    <Grid
+      container
+      alignItems="center"
+      justifyContent="space-between"
+      spacing={2}
+    >
+      <Grid>
+        <Typography variant="h2">{typeLabel}</Typography>
       </Grid>
-      <NodeTable
-        poolId={poolId}
-        nodes={nodes}
-        typeLabel={typeLabel}
-        openRecycleNodeDialog={openRecycleNodeDialog}
-      />
-    </>
+      <Grid
+        sx={{
+          display: 'flex',
+        }}
+      >
+        <Button
+          className={`${autoscaler.enabled ? classes.button : ''}`}
+          buttonType="secondary"
+          compactY
+          onClick={() => openAutoscalePoolDialog(poolId)}
+        >
+          Autoscale Pool
+        </Button>
+        {autoscaler.enabled ? (
+          <Typography className={classes.autoscaleText}>
+            {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
+          </Typography>
+        ) : null}
+        <Button
+          buttonType="secondary"
+          compactY
+          onClick={() => handleClickResize(poolId)}
+        >
+          Resize Pool
+        </Button>
+        <Button
+          buttonType="secondary"
+          compactY
+          onClick={() => openRecycleAllNodesDialog(poolId)}
+        >
+          Recycle Pool Nodes
+        </Button>
+        <Tooltip
+          title="Clusters must contain at least one node pool."
+          disableFocusListener={!isOnlyNodePool}
+          disableHoverListener={!isOnlyNodePool}
+          disableTouchListener={!isOnlyNodePool}
+        >
+          <div>
+            <Button
+              className={classes.deletePoolBtn}
+              buttonType="secondary"
+              compactY
+              disabled={isOnlyNodePool}
+              onClick={() => openDeletePoolDialog(poolId)}
+            >
+              Delete Pool
+            </Button>
+          </div>
+        </Tooltip>
+      </Grid>
+      <Grid
+        xs={12}
+        sx={{
+          paddingTop: 0,
+        }}
+      >
+        <NodeTable
+          poolId={poolId}
+          nodes={nodes}
+          typeLabel={typeLabel}
+          openRecycleNodeDialog={openRecycleNodeDialog}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

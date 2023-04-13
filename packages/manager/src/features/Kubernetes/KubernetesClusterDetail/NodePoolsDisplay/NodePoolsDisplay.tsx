@@ -22,10 +22,6 @@ import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(0),
-    paddingTop: '4px',
-  },
   button: {
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(),
@@ -53,9 +49,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  nodePool: {
-    marginBottom: theme.spacing(3),
-  },
 }));
 
 export interface Props {
@@ -65,7 +58,6 @@ export interface Props {
 
 export const NodePoolsDisplay = (props: Props) => {
   const { clusterID, clusterLabel } = props;
-
   const classes = useStyles();
 
   const {
@@ -120,7 +112,12 @@ export const NodePoolsDisplay = (props: Props) => {
 
   return (
     <>
-      <Grid container alignItems="center" justifyContent="space-between">
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="space-between"
+        spacing={2}
+      >
         <Grid>
           <Typography
             variant="h2"
@@ -146,12 +143,12 @@ export const NodePoolsDisplay = (props: Props) => {
           </Button>
         </Grid>
       </Grid>
-      <Paper className={classes.root}>
+      <Paper>
         {poolsError ? (
           <ErrorState errorText={poolsError?.[0].reason} />
         ) : (
           <Grid container direction="column">
-            <Grid xs={12} className={classes.displayTable}>
+            <Grid xs={12}>
               {_pools?.map((thisPool) => {
                 const { id, nodes } = thisPool;
 
@@ -163,7 +160,7 @@ export const NodePoolsDisplay = (props: Props) => {
                   thisPoolType?.formattedLabel ?? 'Unknown type';
 
                 return (
-                  <div key={id} className={classes.nodePool}>
+                  <div key={id}>
                     <NodePool
                       poolId={thisPool.id}
                       typeLabel={typeLabel}
