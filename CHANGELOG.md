@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed:
+- Clear the Kubernetes Delete Dialog when it is opened [#9000](https://github.com/linode/manager/pull/9000)
+
 ## [2023-04-03] - v1.90.0
 
 ### Added:
