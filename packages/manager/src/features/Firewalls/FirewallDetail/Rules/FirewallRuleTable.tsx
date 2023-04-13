@@ -119,19 +119,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: theme.spacing(),
     },
   },
-  policyText: {
-    textAlign: 'right',
-    padding: '0px 15px 0px 15px !important',
-  },
-  policySelectInner: {
-    width: 90,
-  },
-  policyRow: {
-    marginTop: '10px !important',
-    justifyContent: 'center',
-    height: '40px',
-    fontSize: '.875rem',
-  },
 }));
 
 const sxBox = {
@@ -489,16 +476,10 @@ const policyOptions: Item<FirewallPolicyType>[] = [
   { label: 'Drop', value: 'DROP' },
 ];
 
-export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
+export const PolicyRow = React.memo((props: PolicyRowProps) => {
   const { category, policy, disabled, handlePolicyChange } = props;
-  const classes = useStyles();
-
-  // Calculate how many cells the text should span so that the Select lines up
-  // with the Action column
-  const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('lg'));
-  const colSpan = xsDown ? 3 : mdDown ? 5 : 7;
 
   const helperText = mdDown ? (
     <strong>{capitalize(category)} policy:</strong>
@@ -509,26 +490,58 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
     </span>
   );
 
+  // Using a grid here to keep the Select and the helper text aligned
+  // with the Action column.
+  const sxBoxGrid = {
+    backgroundColor: theme.bg.bgPaper,
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    color: theme.textColors.tableStatic,
+    display: 'grid',
+    fontSize: '.875rem',
+    gridTemplateAreas: `'one two three four five'`,
+    gridTemplateColumns: '30% 10% 10% 15% 120px',
+    height: '40px',
+    alignItems: 'center',
+    marginTop: '10px',
+    width: '100%',
+    [theme.breakpoints.down('lg')]: {
+      gridTemplateAreas: `'one two three four'`,
+      gridTemplateColumns: '30% 10% 15% 120px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateAreas: `'one two'`,
+      gridTemplateColumns: '50% 50%',
+    },
+  };
+
+  const sxBoxPolicyText = {
+    textAlign: 'right',
+    padding: '0px 15px 0px 15px',
+
+    gridArea: '1 / 1 / 1 / 1 / 5',
+    [theme.breakpoints.down('lg')]: {
+      gridArea: '1 / 1 / 1 / 4',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridArea: 'one',
+    },
+  };
+
+  const sxBoxPolicySelect = {
+    gridArea: 'five',
+    [theme.breakpoints.down('lg')]: {
+      gridArea: 'four',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridArea: 'two',
+    },
+  };
+
   return (
-    <Grid
-      container
-      className={classNames(
-        classes.policyRow,
-        classes.unmodified,
-        classes.ruleRow
-      )}
-      tabIndex={0}
-      sx={{
-        alignItems: 'center',
-        width: '100%',
-      }}
-    >
-      <Grid xs={colSpan} className={classes.policyText}>
-        {helperText}
-      </Grid>
-      <Grid xs={4}>
+    <Box sx={sxBoxGrid}>
+      <Box sx={sxBoxPolicyText}>{helperText}</Box>
+      <Box sx={sxBoxPolicySelect}>
         <Select
-          className={classes.policySelectInner}
           label={`${category} policy`}
           menuPlacement="top"
           hideLabel
@@ -542,8 +555,8 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
             handlePolicyChange(selected.value)
           }
         />
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 });
 

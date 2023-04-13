@@ -932,9 +932,11 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
           updateTags={updateTags}
           listAllTags={openTagDrawer}
           sx={{
-            flexDirection: 'row-reverse',
-            '& > button': {
-              marginRight: theme.spacing(0.5),
+            [theme.breakpoints.down('lg')]: {
+              flexDirection: 'row-reverse',
+              '& > button': {
+                marginRight: theme.spacing(0.5),
+              },
             },
           }}
         />
