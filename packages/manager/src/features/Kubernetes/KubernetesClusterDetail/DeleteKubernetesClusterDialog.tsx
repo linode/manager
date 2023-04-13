@@ -38,10 +38,15 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const disabled =
     preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
 
+  React.useEffect(() => {
+    if (open && confirmText !== '') {
+      setConfirmText('');
+    }
+  }, [open]);
+
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
       onClose();
-      setConfirmText('');
       history.replace('/kubernetes/clusters');
     });
   };
