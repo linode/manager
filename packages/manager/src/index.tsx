@@ -1,7 +1,7 @@
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { Provider as ReduxStoreProvider } from 'react-redux';
 import {
   BrowserRouter as Router,
   Route,
@@ -65,34 +65,36 @@ const AppWrapper = (props: RouteComponentProps) => (
 );
 
 const ContextWrapper = () => (
-  <QueryClientProvider client={queryClient}>
-    <LinodeThemeWrapper>
-      <React.Suspense fallback={<SplashScreen />}>
-        <Switch>
-          <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-          <Route
-            exact
-            path="/admin/callback"
-            component={LoginAsCustomerCallback}
-          />
-          {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-          <Route exact path="/nullauth" component={NullAuth} />
-          <Route exact path="/logout" component={Logout} />
-          <Route exact path="/cancel" component={Cancel} />
-          <AuthenticationWrapper>
-            <Switch>
-              <Route path="/linodes/:linodeId/lish/:type" component={Lish} />
-              <Route component={AppWrapper} />
-            </Switch>
-          </AuthenticationWrapper>
-        </Switch>
-      </React.Suspense>
-    </LinodeThemeWrapper>
-    <ReactQueryDevtools
-      initialIsOpen={false}
-      toggleButtonProps={{ style: { marginLeft: '3em' } }}
-    />
-  </QueryClientProvider>
+  <ReduxStoreProvider store={store}>
+    <QueryClientProvider client={queryClient}>
+      <LinodeThemeWrapper>
+        <React.Suspense fallback={<SplashScreen />}>
+          <Switch>
+            <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+            <Route
+              exact
+              path="/admin/callback"
+              component={LoginAsCustomerCallback}
+            />
+            {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+            <Route exact path="/nullauth" component={NullAuth} />
+            <Route exact path="/logout" component={Logout} />
+            <Route exact path="/cancel" component={Cancel} />
+            <AuthenticationWrapper>
+              <Switch>
+                <Route path="/linodes/:linodeId/lish/:type" component={Lish} />
+                <Route component={AppWrapper} />
+              </Switch>
+            </AuthenticationWrapper>
+          </Switch>
+        </React.Suspense>
+      </LinodeThemeWrapper>
+      <ReactQueryDevtools
+        initialIsOpen={false}
+        toggleButtonProps={{ style: { marginLeft: '3em' } }}
+      />
+    </QueryClientProvider>
+  </ReduxStoreProvider>
 );
 
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
@@ -101,15 +103,13 @@ const ContextWrapper = () => (
 loadDevTools(store, () => {
   ReactDOM.render(
     navigator.cookieEnabled ? (
-      <Provider store={store}>
-        <Router>
-          <Switch>
-            {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-            <Route exact path="/null" component={Null} />
-            <Route component={ContextWrapper} />
-          </Switch>
-        </Router>
-      </Provider>
+      <Router>
+        <Switch>
+          {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+          <Route exact path="/null" component={Null} />
+          <Route component={ContextWrapper} />
+        </Switch>
+      </Router>
     ) : (
       <CookieWarning />
     ),
