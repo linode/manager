@@ -75,24 +75,21 @@ const UserDefinedSelect = (props: Props) => {
         {!isOptional && '*'}
       </InputLabel>
 
-      {oneof.map((choice: string, index) => {
-        return (
-          <React.Fragment key={index}>
-            <FormControlLabel
-              value={choice}
-              control={
-                <Radio
-                  name={choice}
-                  checked={!!value && value === choice}
-                  onChange={handleSelectOneOf}
-                  data-qa-perm-none-radio
-                />
-              }
-              label={choice}
+      {oneof.map((choice: string, index) => (
+        <FormControlLabel
+          value={choice}
+          key={index}
+          control={
+            <Radio
+              name={choice}
+              checked={!!value && value === choice}
+              onChange={handleSelectOneOf}
+              data-qa-perm-none-radio
             />
-          </React.Fragment>
-        );
-      })}
+          }
+          label={choice}
+        />
+      ))}
     </div>
   );
 };
