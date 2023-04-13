@@ -66,11 +66,6 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Google Analytics and Tag Manager */
 export const GA_ID = import.meta.env.REACT_APP_GA_ID;
 export const GTM_ID = import.meta.env.REACT_APP_GTM_ID;
-/** Adobe Analytics Launch scripts */
-export const ADOBE_ANALYTICS_DEV =
-  'https://assets.adobedtm.com/fcfd3580c848/795fdfec4a0e/launch-09b7ca9d43ad-development.min.js';
-export const ADOBE_ANALYTICS_STAGING =
-  'https://assets.adobedtm.com/fcfd3580c848/795fdfec4a0e/launch-a50be9afbe1d-staging.min.js';
 
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
