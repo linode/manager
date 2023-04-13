@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(2),
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     backgroundColor: theme.color.white,
     border: `1px solid ${theme.color.grey2}`,
     borderRadius: theme.shape.borderRadius,

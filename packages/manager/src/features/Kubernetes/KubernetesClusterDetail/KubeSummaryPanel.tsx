@@ -154,13 +154,7 @@ export const KubeSummaryPanel = (props: Props) => {
       <Paper className={classes.root}>
         <Grid container className={classes.mainGridContainer} spacing={2}>
           <KubeClusterSpecs cluster={cluster} />
-          <Grid
-            container
-            direction="column"
-            xs={12}
-            lg={4}
-            sx={{ paddingLeft: 2 }} // We should probably just remove this and let the grid do it's thing.
-          >
+          <Grid container direction="column" xs={12} lg={4}>
             <KubeConfigDisplay
               clusterId={cluster.id}
               clusterLabel={cluster.label}
