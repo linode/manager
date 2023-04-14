@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface RegionItem extends Item<string> {
-  flag: () => JSX.Element | null;
+  flag: JSX.Element | null;
   country: string;
   disabledMessage?: string | JSX.Element;
 }
@@ -61,7 +61,7 @@ export const RegionOption: React.FC<CombinedProps> = (props) => {
             justifyContent="flex-start"
             spacing={2}
           >
-            <Grid className="py0">{data.flag && data.flag()}</Grid>
+            <Grid className="py0">{data.flag}</Grid>
             <Grid>{label} (Not available)</Grid>
           </Grid>
         </Tooltip>
@@ -73,7 +73,7 @@ export const RegionOption: React.FC<CombinedProps> = (props) => {
           justifyContent="flex-start"
           spacing={2}
         >
-          <Grid className="py0">{data.flag && data.flag()}</Grid>
+          <Grid className="py0">{data.flag}</Grid>
           <Grid>{label}</Grid>
         </Grid>
       )}
