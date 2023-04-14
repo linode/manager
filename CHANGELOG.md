@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `<RegionSelect />` can now dynamically get country flag and group all countrys #8996
 
 ### Fixed:
+- Typesafety of the `<Select />` component #8986
 - Clear the Kubernetes Delete Dialog when it is re-opened #9000
 
 ### Tech Stories:

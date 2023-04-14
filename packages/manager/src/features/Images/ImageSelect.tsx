@@ -22,23 +22,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+interface BaseProps {
   images: Image[];
   imageError?: string;
   imageFieldError?: string;
-  isMulti?: boolean;
-  helperText?: string;
-  value?: Item | Item[];
   disabled?: boolean;
-  onSelect: (selected: Item<any> | Item<any>[]) => void;
   label?: string;
   required?: boolean;
   anyAllOption?: boolean;
+  helperText?: string;
 }
 
-type CombinedProps = Props;
+interface Props extends BaseProps {
+  isMulti?: false;
+  value?: Item;
+  onSelect: (selected: Item) => void;
+}
 
-export const ImageSelect: React.FC<CombinedProps> = (props) => {
+interface MultiProps extends BaseProps {
+  isMulti: true;
+  value?: Item[];
+  onSelect: (selected: Item[]) => void;
+}
+
+export const ImageSelect = (props: Props | MultiProps) => {
   const {
     helperText,
     images,

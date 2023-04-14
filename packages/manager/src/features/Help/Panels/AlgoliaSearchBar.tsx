@@ -169,7 +169,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             hideLabel
             className={classes.enhancedSelectWrapper}
             styles={selectStyles}
-            value={false}
           />
         </div>
       </React.Fragment>

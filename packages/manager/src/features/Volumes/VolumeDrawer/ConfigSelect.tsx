@@ -81,7 +81,7 @@ const ConfigSelect: React.FC<CombinedProps> = (props) => {
           options={configList}
           name={name}
           value={configList.find((thisConfig) => thisConfig.value === value)}
-          onChange={(e: Item) => {
+          onChange={(e: Item<number>) => {
             onChange(+e.value);
           }}
           onBlur={onBlur}

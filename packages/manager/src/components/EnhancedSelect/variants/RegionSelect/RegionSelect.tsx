@@ -1,6 +1,7 @@
 import Select, {
   BaseSelectProps,
   GroupType,
+  Item,
 } from 'src/components/EnhancedSelect/Select';
 import * as React from 'react';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
@@ -13,13 +14,16 @@ import {
   ContinentNames,
 } from './utils';
 
-interface Props extends Omit<BaseSelectProps, 'onChange'> {
+interface Props<IsClearable extends boolean>
+  extends Omit<
+    BaseSelectProps<Item<string>, false, IsClearable>,
+    'onChange' | 'label'
+  > {
+  label?: string;
   regions: Region[];
   handleSelection: (id: string) => void;
   selectedID: string | null;
-  label?: string;
   helperText?: string;
-  isClearable?: boolean;
   required?: boolean;
   width?: number;
 }
@@ -70,7 +74,7 @@ export const getRegionOptions = (regions: Region[]) => {
 
 export const getSelectedRegionById = (
   regionID: string,
-  options: GroupType[]
+  options: GroupType<string>[]
 ) => {
   const regions = options.reduce(
     (accum, thisGroup) => [...accum, ...thisGroup.options],
@@ -97,60 +101,62 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
-export const RegionSelect = React.memo((props: Props) => {
-  const {
-    label,
-    disabled,
-    handleSelection,
-    isClearable,
-    helperText,
-    regions,
-    selectedID,
-    styles,
-    required,
-    width,
-    ...restOfReactSelectProps
-  } = props;
+export const RegionSelect = React.memo(
+  <IsClearable extends boolean>(props: Props<IsClearable>) => {
+    const {
+      label,
+      disabled,
+      handleSelection,
+      isClearable,
+      helperText,
+      regions,
+      selectedID,
+      styles,
+      required,
+      width,
+      ...restOfReactSelectProps
+    } = props;
 
-  const onChange = React.useCallback(
-    (selection: RegionItem | null) => {
-      if (selection === null) {
-        handleSelection('');
-        return;
-      }
-      if (selection.disabledMessage) {
-        // React Select's disabled state should prevent anything
-        // from firing, this is basic paranoia.
-        return;
-      }
-      handleSelection(selection?.value);
-    },
-    [handleSelection]
-  );
-
-  const options = React.useMemo(() => getRegionOptions(regions), [regions]);
-
-  return (
-    <div style={{ width }}>
-      <Select
-        isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
-        value={getSelectedRegionById(selectedID || '', options) ?? ''}
-        label={label ?? 'Region'}
-        disabled={disabled}
-        placeholder="Select a Region"
-        options={options}
-        onChange={onChange}
-        components={{ Option: RegionOption, SingleValue }}
-        isOptionDisabled={(option: RegionItem) =>
-          Boolean(option.disabledMessage)
+    const onChange = React.useCallback(
+      (selection: RegionItem | null) => {
+        if (selection === null) {
+          handleSelection('');
+          return;
         }
-        styles={styles || selectStyles}
-        textFieldProps={{
-          tooltipText: helperText,
-        }}
-        required={required}
-        {...restOfReactSelectProps}
-      />
-    </div>
-  );
-});
+        if (selection.disabledMessage) {
+          // React Select's disabled state should prevent anything
+          // from firing, this is basic paranoia.
+          return;
+        }
+        handleSelection(selection?.value);
+      },
+      [handleSelection]
+    );
+
+    const options = React.useMemo(() => getRegionOptions(regions), [regions]);
+
+    return (
+      <div style={{ width }}>
+        <Select
+          isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
+          value={getSelectedRegionById(selectedID || '', options) ?? null}
+          label={label ?? 'Region'}
+          disabled={disabled}
+          placeholder="Select a Region"
+          options={options}
+          onChange={onChange}
+          components={{ Option: RegionOption, SingleValue }}
+          isOptionDisabled={(option: RegionItem) =>
+            Boolean(option.disabledMessage)
+          }
+          styles={styles || selectStyles}
+          textFieldProps={{
+            tooltipText: helperText,
+          }}
+          required={required}
+          {...restOfReactSelectProps}
+        />
+      </div>
+    );
+  }
+);

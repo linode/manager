@@ -8,7 +8,7 @@ export interface Props {
   selectedKernel?: string;
   readOnly?: boolean;
   errorText?: string;
-  onChange: (selected: Item<string> | void) => void;
+  onChange: (selected: Item<string>) => void;
 }
 
 /**
@@ -39,7 +39,7 @@ export const KernelSelect: React.FC<Props> = (props) => {
 
 export const getSelectedKernelId = (
   kernelID: string | undefined,
-  options: GroupType[]
+  options: GroupType<string>[]
 ) => {
   if (!kernelID) {
     return null;

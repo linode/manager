@@ -137,7 +137,6 @@ const TagsPanel = (props: TagsPanelProps) => {
 
   const [tagError, setTagError] = React.useState<string>('');
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
-  const [tagInputValue, setTagInputValue] = React.useState('');
   const [tagsLoading, setTagsLoading] = React.useState(false);
 
   const { data: profile } = useProfile();
@@ -225,8 +224,6 @@ const TagsPanel = (props: TagsPanelProps) => {
       setTagsLoading(true);
       updateTags([...tags, value.label].sort())
         .then(() => {
-          // set the input value to blank on submit
-          setTagInputValue('');
           if (userTags) {
             updateTagsSuggestionsData([...userTags, value], queryClient);
           }
@@ -255,7 +252,6 @@ const TagsPanel = (props: TagsPanelProps) => {
           placeholder="Create or Select a Tag"
           label="Create or Select a Tag"
           hideLabel
-          value={tagInputValue}
           createOptionPosition="first"
           className={classes.selectTag}
           escapeClearsValue

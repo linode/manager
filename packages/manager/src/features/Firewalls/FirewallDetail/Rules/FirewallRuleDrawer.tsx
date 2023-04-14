@@ -262,7 +262,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
 
     // This is an edge case; if there's an error for the Ports field
     // but CUSTOM isn't selected, the error won't be visible to the user.
-    const generalPortError = !hasCustomInput && errors.ports;
+    const generalPortError = !hasCustomInput ? errors.ports : undefined;
 
     // Set form field errors for each error we have (except "addresses" errors, which are handled
     // by IP Error state).
@@ -459,11 +459,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           name="protocol"
           placeholder="Select a protocol..."
           aria-label="Select rule protocol."
-          value={
-            values.protocol
-              ? { label: values.protocol, value: values.protocol }
-              : undefined
-          }
+          value={protocolOptions.find((p) => p.value === values.protocol)}
           errorText={errors.protocol}
           options={protocolOptions}
           onChange={handleProtocolChange}

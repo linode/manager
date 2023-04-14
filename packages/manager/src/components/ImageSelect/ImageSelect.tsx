@@ -37,7 +37,7 @@ interface Props {
 }
 
 export interface ImageProps
-  extends Omit<BaseSelectProps, 'onChange' | 'variant'> {
+  extends Omit<BaseSelectProps<ImageItem>, 'onChange' | 'variant'> {
   selectedImageID?: string;
   disabled: boolean;
   handleSelectImage: (selection?: string) => void;
@@ -196,7 +196,7 @@ export const ImageSelect: React.FC<Props> = (props) => {
               selectedImageID || '',
               options
             )}
-            errorText={error || imageError}
+            errorText={imageError}
             components={{ Option: ImageOption, SingleValue }}
             {...reactSelectProps}
             className={classNames}

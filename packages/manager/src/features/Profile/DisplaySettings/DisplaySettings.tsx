@@ -16,7 +16,7 @@ import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTe
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import { v4 } from 'uuid';
-import TimezoneForm from './TimezoneForm';
+import { TimezoneForm } from './TimezoneForm';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 const useStyles = makeStyles((theme: Theme) => ({

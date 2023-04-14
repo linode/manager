@@ -335,6 +335,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
               </Box>
               <Box className={classes.filter}>
                 <Select
+                  label="Select category"
                   placeholder="Select category"
                   options={appCategoryOptions}
                   onChange={this.handleSelectCategory}

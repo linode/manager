@@ -53,7 +53,7 @@ export const formatOffset = ({ label, offset }: Timezone) => {
   return `\(GMT ${isPositive}${hours}:${minutes}\) ${label}`;
 };
 
-const renderTimeZonesList = (): Item[] => {
+const renderTimeZonesList = (): Item<string>[] => {
   return timezones
     .map((tz) => ({ ...tz, offset: DateTime.now().setZone(tz.name).offset }))
     .sort((a, b) => a.offset - b.offset)
@@ -71,11 +71,11 @@ export const TimezoneForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile, isLoading, error } = useMutateProfile();
-  const [value, setValue] = React.useState<Item | null>(null);
+  const [value, setValue] = React.useState<Item<string> | null>(null);
 
   const timezone = profile?.timezone ?? '';
 
-  const handleTimezoneChange = (timezone: Item) => {
+  const handleTimezoneChange = (timezone: Item<string>) => {
     setValue(timezone);
   };
 
@@ -85,7 +85,7 @@ export const TimezoneForm = (props: Props) => {
     }
 
     updateProfile({ timezone: String(value.value) }).then(() => {
-      enqueueSnackbar('Successfully update timezone', { variant: 'success' });
+      enqueueSnackbar('Successfully updated timezone', { variant: 'success' });
     });
   };
 
@@ -143,5 +143,3 @@ export const TimezoneForm = (props: Props) => {
     </>
   );
 };
-
-export default TimezoneForm;
