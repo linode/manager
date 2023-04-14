@@ -84,7 +84,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
             container
             direction="row"
             justifyContent="center"
-            xs={8}
+            xs={10}
             spacing={2}
           >
             No Results
