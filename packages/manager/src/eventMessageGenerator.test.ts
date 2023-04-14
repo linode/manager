@@ -4,6 +4,7 @@ import getEventMessage, {
   eventMessageCreators,
   safeSecondaryEntityLabel,
 } from './eventMessageGenerator';
+import { applyLinking } from './eventMessageGenerator';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -85,6 +86,54 @@ describe('Event message generation', () => {
           'booted'
         )
       ).not.toMatch('booted with');
+    });
+  });
+
+  describe('apply linking to labels', () => {
+    it('should return empty string if message is falsy', () => {
+      const mockEvent = {
+        action: 'create',
+        entity: null,
+        secondary_entity: null,
+      };
+      const message = null;
+      const result = applyLinking(mockEvent as Event, message as any);
+
+      expect(result).toEqual('');
+    });
+
+    it('should replace entity label with link if entity and link exist', () => {
+      const entity = { id: '123', label: 'foo', type: 'linode' };
+      const mockEvent = { action: 'create', entity, secondary_entity: null };
+      const message = 'created entity foo';
+      const link = '/linodes/123';
+      const result = applyLinking(mockEvent as any, message);
+
+      expect(result).toEqual(`created entity <a href="${link}">foo</a> `);
+    });
+
+    it('should replace secondary entity label with link if entity and link exist', () => {
+      jest.clearAllMocks();
+
+      const entity = { id: '123', label: 'foo', type: 'linode' };
+      const secondary_entity = { id: '456', label: 'bar' };
+      const mockEvent = { action: 'create', entity, secondary_entity };
+      const message = 'created secondary_entity for foo';
+      const link = '/linodes/123';
+      const result = applyLinking(mockEvent as any, message);
+
+      expect(result).toEqual(
+        `created secondary_entity for <a href="${link}">foo</a> `
+      );
+    });
+
+    it('should not replace entity label if label is inside backticks', () => {
+      const entity = { id: '123', label: 'foo' };
+      const mockEvent = { action: 'create', entity, secondary_entity: null };
+      const message = 'created `foo`';
+      const result = applyLinking(mockEvent as any, message);
+
+      expect(result).toEqual('created `foo`');
     });
   });
 });
