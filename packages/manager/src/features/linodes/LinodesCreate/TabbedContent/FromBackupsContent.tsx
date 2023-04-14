@@ -9,7 +9,7 @@ import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Placeholder from 'src/components/Placeholder';
 import { reportException } from 'src/exceptionReporting';
 import { extendType } from 'src/utilities/extendType';
@@ -186,7 +186,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <Grid item className={`${classes.main} mlMain py0`}>
+      <Grid className={`${classes.main} mlMain py0`}>
         {!userHasBackups ? (
           <Paper>
             <Placeholder

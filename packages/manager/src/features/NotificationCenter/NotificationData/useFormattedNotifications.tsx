@@ -9,12 +9,11 @@ import { path } from 'ramda';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
-import { useStyles } from 'src/features/NotificationCenter/NotificationData/RenderNotification';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatDate } from 'src/utilities/formatDate';
@@ -46,8 +45,6 @@ export const useFormattedNotifications = (): NotificationItem[] => {
     (notification) =>
       notification.type === ('volume_migration_scheduled' as NotificationType)
   );
-
-  const classes = useStyles();
 
   const dayOfMonth = DateTime.local().day;
 
@@ -94,7 +91,6 @@ export const useFormattedNotifications = (): NotificationItem[] => {
         interceptNotification(
           notification,
           handleClose,
-          classes,
           regions ?? [],
           profile
         ),
@@ -118,7 +114,6 @@ export const useFormattedNotifications = (): NotificationItem[] => {
 const interceptNotification = (
   notification: Notification,
   onClose: () => void,
-  classes: any,
   regions: Region[],
   profile: Profile | undefined
 ): ExtendedNotification => {
@@ -294,13 +289,13 @@ const interceptNotification = (
 
     const jsx = (
       <Typography>
-        <Link
+        <StyledLink
           to="/account/billing"
           onClick={onClose}
-          className={criticalSeverity ? classes.redLink : classes.greyLink}
+          severity={notification.severity}
         >
           {notification.message}
-        </Link>{' '}
+        </StyledLink>{' '}
         <Link to="/account/billing/make-payment" onClick={onClose}>
           Make a payment now.
         </Link>
@@ -350,6 +345,17 @@ const interceptNotification = (
   */
   return notification;
 };
+
+const StyledLink = styled(Link)<Pick<Notification, 'severity'>>(
+  ({ theme, ...props }) => ({
+    ...(props.severity === 'critical' && {
+      color: `${theme.color.red} !important`,
+      '&:hover': {
+        textDecoration: `${theme.color.red} underline`,
+      },
+    }),
+  })
+);
 
 const formatNotificationForDisplay = (
   notification: Notification,

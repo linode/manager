@@ -7,7 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 import { withTheme, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
-import Grid, { GridProps } from 'src/components/Grid';
+import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import { SxProps } from '@mui/system';
 
 export const useStyles = makeStyles<
@@ -112,7 +112,7 @@ export const useStyles = makeStyles<
   },
 }));
 
-export interface Props extends GridProps {
+export interface Props extends Grid2Props {
   text?: string;
   error?: boolean;
   errorGroup?: string;
@@ -202,7 +202,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
 
   return (
     <Grid
-      item
       className={cx({
         [classes.root]: true,
         [classes.important]: important,
@@ -229,7 +228,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
       sx={sx}
     >
       {flag && (
-        <Grid item>
+        <Grid>
           <Flag className={classes.flag} />
         </Grid>
       )}

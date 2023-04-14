@@ -5,7 +5,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
@@ -152,7 +152,7 @@ const TransferContent: React.FC<ContentProps> = (props) => {
   if (loading) {
     return (
       <Grid container justifyContent="center">
-        <Grid item>
+        <Grid>
           <CircleProgress mini />
         </Grid>
       </Grid>

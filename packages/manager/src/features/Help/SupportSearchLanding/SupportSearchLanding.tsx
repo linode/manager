@@ -5,7 +5,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
+import Box from '@mui/material/Box';
 import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -107,19 +108,19 @@ export class SupportSearchLanding extends React.Component<
 
     return (
       <Grid container direction="column">
-        <Grid item>
-          <Grid container alignItems="center">
-            <Grid item>
-              <H1Header
-                title={
-                  query.length > 1 ? `Search results for "${query}"` : 'Search'
-                }
-                data-qa-support-search-landing-title
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item>
+        <Box
+          sx={{
+            marginBottom: '16px',
+          }}
+        >
+          <H1Header
+            title={
+              query.length > 1 ? `Search results for "${query}"` : 'Search'
+            }
+            data-qa-support-search-landing-title
+          />
+        </Box>
+        <Box>
           {searchError && <Notice error>{searchError}</Notice>}
           <TextField
             data-qa-search-landing-input
@@ -139,24 +140,22 @@ export class SupportSearchLanding extends React.Component<
               ),
             }}
           />
-        </Grid>
-        <Grid item>
+        </Box>
+        <Box>
           <DocumentationResults
             sectionTitle="Documentation"
             results={docs as SearchResult[]}
             target={DOCS_SEARCH_URL + query}
           />
-        </Grid>
-        <Grid item>
+        </Box>
+        <Box>
           <DocumentationResults
             sectionTitle="Community Posts"
             results={community as SearchResult[]}
             target={COMMUNITY_SEARCH_URL + query}
           />
-        </Grid>
-        <Grid container item>
-          <HelpResources />
-        </Grid>
+        </Box>
+        <HelpResources />
       </Grid>
     );
   }

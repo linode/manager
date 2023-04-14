@@ -9,7 +9,7 @@ import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table/Table';
 import TableCell from 'src/components/TableCell/TableCell';
@@ -273,13 +273,14 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
         justifyContent="space-between"
         alignItems="flex-end"
         className={classes.root}
+        spacing={1}
       >
-        <Grid item className="p0">
+        <Grid className="p0">
           <Typography variant="h3" className={classes.headline}>
             Volumes
           </Typography>
         </Grid>
-        <Grid item className={classes.addNewWrapper}>
+        <Grid className={classes.addNewWrapper}>
           <AddNewLink
             onClick={openCreateVolumeDrawer}
             label="Create Volume"

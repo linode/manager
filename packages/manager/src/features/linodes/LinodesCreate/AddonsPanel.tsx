@@ -9,7 +9,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAccount } from 'src/queries/account';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
@@ -113,7 +113,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     const { backupsMonthly } = props;
     return (
       backupsMonthly && (
-        <Grid item>
+        <Grid>
           <Typography variant="body1">
             <Currency quantity={backupsMonthly} /> per month
           </Typography>
@@ -146,7 +146,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
           ) : null}
         </Typography>
         <Grid container>
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <FormControlLabel
               className={classes.label}
               control={
@@ -163,7 +163,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
               }
               label={
                 <Grid container spacing={2} alignItems="center">
-                  <Grid item>Backups</Grid>
+                  <Grid>Backups</Grid>
                   {renderBackupsPrice()}
                 </Grid>
               }
@@ -190,7 +190,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
           /** /v4/linodes/instances/clone does *not* support the private IP flag */
           hidePrivateIP ? null : (
             <Grid container>
-              <Grid item xs={12}>
+              <Grid xs={12}>
                 <Divider />
                 <FormControlLabel
                   className={classes.label}

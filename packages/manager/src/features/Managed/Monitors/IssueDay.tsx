@@ -8,7 +8,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -47,9 +47,10 @@ const DayDisplay: React.FC<DisplayProps> = (props) => {
       direction="row"
       alignItems="center"
       className={classes.root}
+      spacing={2}
     >
-      <Grid item>{icon}</Grid>
-      <Grid item>
+      <Grid>{icon}</Grid>
+      <Grid>
         <DateTimeDisplay
           value={day}
           className={`${ticketUrl ? classes.failureText : ''}`}

@@ -3,7 +3,7 @@ import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import AddDeviceDrawer from './AddDeviceDrawer';
 import FirewallDevicesTable from './FirewallDevicesTable';
@@ -77,13 +77,13 @@ const FirewallLinodesLanding = (props: Props) => {
         />
       ) : null}
       <Grid container direction="column">
-        <Grid item style={{ paddingBottom: 0 }}>
+        <Grid style={{ paddingBottom: 0 }}>
           <Typography className={classes.copy}>
             The following Linodes have been assigned to this Firewall. A Linode
             can only be assigned to a single Firewall.
           </Typography>
         </Grid>
-        <Grid item className={classes.actions}>
+        <Grid className={classes.actions}>
           <Button
             buttonType="primary"
             disabled={disabled}

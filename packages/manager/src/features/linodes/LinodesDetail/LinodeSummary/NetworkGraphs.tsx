@@ -3,7 +3,7 @@ import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LineGraph from 'src/components/LineGraph';
 import {
   convertNetworkToUnit,
@@ -168,8 +168,8 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
   };
 
   return (
-    <Grid container className={`${classes.graphGrids} p0`}>
-      <Grid item className={classes.grid} xs={12}>
+    <Grid container className={`${classes.graphGrids} p0`} spacing={4}>
+      <Grid className={classes.grid} xs={12}>
         <StatsPanel
           title={`Network — IPv4 (${v4Unit}/s)`}
           renderBody={() => (
@@ -185,7 +185,7 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
           {...rest}
         />
       </Grid>
-      <Grid item className={classes.grid} xs={12}>
+      <Grid className={classes.grid} xs={12}>
         <StatsPanel
           title={`Network — IPv6 (${v6Unit}/s)`}
           renderBody={() => (

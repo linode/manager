@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import Button from 'src/components/Button';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import CloseAccountDialog from './CloseAccountDialog';
 
 const CloseAccountSetting = () => {
@@ -11,7 +11,7 @@ const CloseAccountSetting = () => {
     <>
       <Accordion heading="Close Account" defaultExpanded={true}>
         <Grid container direction="column">
-          <Grid item>
+          <Grid>
             <Button buttonType="outlined" onClick={() => setDialogOpen(true)}>
               Close Account
             </Button>

@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
@@ -20,12 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     to: {
       opacity: 1,
     },
-  },
-  root: {
-    width: '100%',
-    padding: 0,
-    marginBottom: theme.spacing(2),
-    position: 'relative',
   },
   userWrapper: {
     marginTop: theme.spacing(0.5),
@@ -55,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     width: '100%',
     marginTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    padding: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    padding: theme.spacing(1),
     backgroundColor: theme.color.white,
     border: `1px solid ${theme.color.grey2}`,
     borderRadius: theme.shape.borderRadius,
@@ -169,52 +163,36 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <Grid item className={classes.root}>
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-      >
-        <Grid item xs={12}>
-          <Grid container wrap="nowrap">
-            <Grid item>{renderAvatar(data.gravatar_id)}</Grid>
-            <Grid item className={`${classes.content}`}>
-              <Grid container className={classes.header}>
-                <Grid item className={classes.headerInner}>
-                  <Typography className={classes.userName} component="span">
-                    {data.friendly_name}
-                  </Typography>
-                  {data.from_linode &&
-                  !OFFICIAL_USERNAMES.includes(data.username) ? (
-                    <Typography
-                      component="span"
-                      variant="body1"
-                      className={classes.expert}
-                    >
-                      <em>Linode Expert</em>
-                    </Typography>
-                  ) : null}
-                  <Typography variant="body1" component="span">
-                    commented <DateTimeDisplay value={data.date} />
-                  </Typography>
-                </Grid>
-              </Grid>
-              <TicketDetailBody open={open} text={data.description} />
-              {shouldRenderHively(
-                data.from_linode,
-                data.updated,
-                data.username
-              ) && (
-                <Hively
-                  linodeUsername={data.username}
-                  ticketId={data.ticket_id}
-                  replyId={data.reply_id}
-                />
-              )}
-            </Grid>
+    <Grid container wrap="nowrap">
+      <Grid>{renderAvatar(data.gravatar_id)}</Grid>
+      <Grid className={`${classes.content}`}>
+        <Grid container className={classes.header}>
+          <Grid className={classes.headerInner}>
+            <Typography className={classes.userName} component="span">
+              {data.friendly_name}
+            </Typography>
+            {data.from_linode && !OFFICIAL_USERNAMES.includes(data.username) ? (
+              <Typography
+                component="span"
+                variant="body1"
+                className={classes.expert}
+              >
+                <em>Linode Expert</em>
+              </Typography>
+            ) : null}
+            <Typography variant="body1" component="span">
+              commented <DateTimeDisplay value={data.date} />
+            </Typography>
           </Grid>
         </Grid>
+        <TicketDetailBody open={open} text={data.description} />
+        {shouldRenderHively(data.from_linode, data.updated, data.username) && (
+          <Hively
+            linodeUsername={data.username}
+            ticketId={data.ticket_id}
+            replyId={data.reply_id}
+          />
+        )}
       </Grid>
     </Grid>
   );

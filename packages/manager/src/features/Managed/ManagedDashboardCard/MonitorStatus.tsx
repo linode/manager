@@ -7,7 +7,7 @@ import MonitorOK from 'src/assets/icons/monitor-ok.svg';
 import { makeStyles, withTheme, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -68,10 +68,9 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
       alignItems="center"
       justifyContent="center"
       className={classes.root}
-      item
     >
-      <Grid item>
-        <Grid item className={classes.icon}>
+      <Grid>
+        <Grid className={classes.icon}>
           {failedMonitors.length === 0 ? (
             <MonitorOK width={iconSize} height={iconSize} />
           ) : (
@@ -79,7 +78,7 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
           )}
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid>
         <Typography variant="h2">
           {failedMonitors.length === 0
             ? 'All monitored services are up'
@@ -89,7 +88,7 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
         </Typography>
       </Grid>
       {failedMonitors.length > 0 && (
-        <Grid item>
+        <Grid>
           {failedMonitors.map((thisMonitor, idx) => (
             <Typography
               key={`failed-monitor-list-${idx}`}
@@ -101,7 +100,7 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
           ))}
         </Grid>
       )}
-      <Grid item>
+      <Grid>
         <Typography className={classes.text}>
           <Link to="/managed/monitors">View your list of service monitors</Link>
           {` `}

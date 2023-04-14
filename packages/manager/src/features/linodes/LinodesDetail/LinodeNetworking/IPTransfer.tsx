@@ -22,7 +22,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import usePrevious from 'src/hooks/usePrevious';
 import { ipv6RangeQueryKey } from 'src/queries/networking';
@@ -293,15 +293,15 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
 
     return (
       <Grid container key={state.sourceIP}>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <Divider spacingBottom={0} />
         </Grid>
-        <Grid item className={classes.sourceIPWrapper}>
+        <Grid className={classes.sourceIPWrapper}>
           <Typography variant="body1" className={classes.ipField}>
             {state.sourceIP}
           </Typography>
         </Grid>
-        <Grid item xs={12} className={classes.autoGridsm}>
+        <Grid xs={12} className={classes.autoGridsm}>
           <Select
             value={
               state.mode === 'none'
@@ -342,7 +342,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     });
 
     return (
-      <Grid item xs={12} className={classes.autoGridsm}>
+      <Grid xs={12} className={classes.autoGridsm}>
         <Select
           options={linodeList}
           textFieldProps={{
@@ -376,7 +376,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     });
 
     return (
-      <Grid item xs={12} className={classes.autoGridsm}>
+      <Grid xs={12} className={classes.autoGridsm}>
         <Select
           disabled={readOnly}
           value={defaultIP}
@@ -485,18 +485,18 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   return (
     <Dialog title="IP Transfer" open={open} onClose={onClose}>
       {error && (
-        <Grid item xs={12}>
+        <Grid xs={12}>
           {error.map(({ reason }, idx) => (
             <Notice key={idx} error text={reason} />
           ))}
         </Grid>
       )}
       {successMessage && (
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <Notice success text={successMessage} />
         </Grid>
       )}
-      <Grid item sm={12} lg={8} xl={6}>
+      <Grid sm={12} lg={8} xl={6}>
         <Typography className={classes.networkActionText}>
           If you have two Linodes in the same data center, you can use the IP
           transfer feature to switch their IP addresses. This could be useful in
@@ -505,7 +505,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           the DNS records.
         </Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
           <Notice error text={'There was an error loading IPv6 Ranges'} />
         ) : null}
@@ -516,14 +516,10 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         ) : (
           <>
             <Grid container>
-              <Grid
-                item
-                className={classes.ipFieldLabel}
-                data-qa-transfer-ip-label
-              >
+              <Grid className={classes.ipFieldLabel} data-qa-transfer-ip-label>
                 <Typography>IP Address</Typography>
               </Grid>
-              <Grid item className={classes.actionsLabel}>
+              <Grid className={classes.actionsLabel}>
                 <Typography>Actions</Typography>
               </Grid>
             </Grid>

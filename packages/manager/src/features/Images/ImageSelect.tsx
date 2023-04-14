@@ -1,26 +1,12 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { clone, propOr } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-  },
-  selectContainer: {
-    width: `calc(415px + ${theme.spacing(2)})`,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-}));
 
 interface BaseProps {
   images: Image[];
@@ -60,8 +46,6 @@ export const ImageSelect = (props: Props | MultiProps) => {
     anyAllOption,
   } = props;
 
-  const classes = useStyles();
-
   const { isLoading: imagesLoading, isError, error } = useAllImagesQuery(
     {},
     {}
@@ -91,15 +75,18 @@ export const ImageSelect = (props: Props | MultiProps) => {
   }
 
   return (
-    <Grid
-      className={classes.root}
-      container
-      wrap="nowrap"
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="flex-start"
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        width: '100%',
+      }}
     >
-      <Grid item className={classes.selectContainer}>
+      <Box
+        sx={{
+          width: '415px',
+        }}
+      >
         <Select
           id={'image-select'}
           isLoading={imagesLoading}
@@ -115,18 +102,17 @@ export const ImageSelect = (props: Props | MultiProps) => {
           }}
           label={label || 'Image'}
         />
-      </Grid>
-      <Grid item xs={1}>
+      </Box>
+      <Box>
         <TooltipIcon
           sxTooltipIcon={{
-            marginTop: '30px',
-            marginLeft: '-20px',
+            transform: 'translateY(50%)',
           }}
           text={helperText || 'Choosing a 64-bit distro is recommended.'}
           status="help"
         />
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 
