@@ -27,6 +27,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   withSeparator: {
     borderLeft: `1px solid ${theme.palette.divider}`,
     paddingLeft: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+      borderLeft: 'none',
+      paddingLeft: 0,
+      marginTop: theme.spacing(4),
+    },
   },
 }));
 

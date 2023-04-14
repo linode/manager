@@ -155,7 +155,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             const isProviderEnabled = props.authType === thisProvider.name;
 
             return (
-              <Grid md={4} key={thisProvider.displayName}>
+              <Grid xs={12} sm={6} md={4} key={thisProvider.displayName}>
                 <Button
                   data-testid={`Button-${thisProvider.displayName}`}
                   className={classNames({
