@@ -2,7 +2,7 @@
 
 ## Unit Tests
 
-The unit tests for Cloud Manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with either `.test.tsx` or `.test.ts` file extensions and can be found throughout the codebase.
+The unit tests for Cloud Manager are written in Typescript using the [Vitest](https://vitest.dev/) testing framework. Unit tests end with either `.test.tsx` or `.test.ts` file extensions and can be found throughout the codebase.
 
 To run tests, first build the **api-v4** package:
 
@@ -19,7 +19,7 @@ yarn test
 Or you can run the tests in watch mode with:
 
 ```
-yarn test --watch
+yarn test:watch
 ```
 
 To run a specific file or files in a directory:
@@ -29,7 +29,7 @@ yarn test myFile.test.tsx
 yarn test src/some-folder
 ```
 
-Jest has built-in pattern matching, so you can also do things like run all tests whose filename contains "Linode" with:
+Vitest has built-in pattern matching, so you can also do things like run all tests whose filename contains "Linode" with:
 
 ```
 yarn test linode
@@ -45,11 +45,11 @@ Test execution will stop at the debugger statement, and you will be able to use 
 
 ### React Testing Library
 
-We have some older tests that still use the Enzyme framework, but for new tests we generally use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro). This library provides a set of tools to render React components from within the Jest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
+We have some older tests that still use the Enzyme framework, but for new tests we generally use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro). This library provides a set of tools to render React components from within the Vitest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
 
 A simple test using this library will look something like this:
 
-```js
+```ts
 import { renderWithTheme } from "src/utilities/testHelpers";
 import Component from "./wherever";
 
@@ -63,12 +63,13 @@ describe("My component", () => {
 
 Handling events such as clicks is a little more involved:
 
-```js
+```ts
+import { vi } from 'vitest';
 import { fireEvent } from "@testing-library/react";
 import { renderWithTheme } from "src/utilities/testHelpers";
 import Component from "./wherever";
 
-const props = { onClick: jest.fn() };
+const props = { onClick: vi.fn() };
 
 describe("My component", () => {
   it("should have some text", () => {
@@ -82,7 +83,7 @@ describe("My component", () => {
 
 If, while using the Testing Library, your tests trigger a warning in the console from React ("Warning: An update to Component inside a test was not wrapped in act(...)"), first check out the library author's [blog post](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning) about this. Depending on your situation, you probably will have to `wait` for something in your test:
 
-```js
+```ts
 import { fireEvent, wait } from '@testing-library/react';
 
 ...
@@ -92,13 +93,13 @@ await wait(() => fireEvent.click(getByText('Delete')));
 
 ### Mocking
 
-Jest has substantial built-in mocking capabilities, and we use many of the available patterns. We generally use them to avoid making network requests in unit tests, but there are some other cases (mentioned below).
+Vitest has built-in mocking capabilities, and we use many of the available patterns. We generally use them to avoid making network requests in unit tests, but there are some other cases (mentioned below).
 
-In general, components that make network requests should take any request handlers as props. Then testing is as simple as passing `someProp: jest.fn()` and making assertions normally. When that isn't possible, you can do the following:
+In general, components that make network requests should take any request handlers as props. Then testing is as simple as passing `someProp: vi.fn()` and making assertions normally. When that isn't possible, you can do the following:
 
-```js
-jest.mock("@linode/api-v4/lib/kubernetes", () => ({
-  getKubeConfig: () => jest.fn(),
+```ts
+vi.mock("@linode/api-v4/lib/kubernetes", () => ({
+  getKubeConfig: () => vi.fn(),
 }));
 ```
 
@@ -162,7 +163,8 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
 
 ### Running End-to-End Tests
 
-1. In one terminal window, run the app with `yarn up`.
+1. In one terminal window, run the app with `yarn start:manager:ci`.
+    * If necessary, build Cloud Manager first with `yarn && yarn build`.
 2. In another terminal window, run all of the tests with `yarn cy:run`.
     * Alternatively, use Cypress's interactive interface with `yarn cy:debug` if you're focused on a single test suite.
 
