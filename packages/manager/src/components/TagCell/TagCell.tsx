@@ -59,13 +59,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     color: theme.color.tagIcon,
     height: 30,
-    marginLeft: theme.spacing(),
+    marginLeft: theme.spacing(0.5),
     marginRight: theme.spacing(0.5),
     padding: 0,
     width: '40px',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: '#ffff',
+    },
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: 0,
     },
   },
   addTagButton: {
