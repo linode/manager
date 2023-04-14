@@ -1,23 +1,18 @@
-import { Region } from '@linode/api-v4/lib/regions';
-import AU from 'flag-icons/flags/4x3/au.svg';
-import CA from 'flag-icons/flags/4x3/ca.svg';
-import DE from 'flag-icons/flags/4x3/de.svg';
-import UK from 'flag-icons/flags/4x3/gb.svg';
-import IN from 'flag-icons/flags/4x3/in.svg';
-import JP from 'flag-icons/flags/4x3/jp.svg';
-import SG from 'flag-icons/flags/4x3/sg.svg';
-import US from 'flag-icons/flags/4x3/us.svg';
-import { groupBy } from 'ramda';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
   GroupType,
   Item,
 } from 'src/components/EnhancedSelect/Select';
+import * as React from 'react';
+import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { Region } from '@linode/api-v4/lib/regions';
 import RegionOption, { RegionItem } from './RegionOption';
+import { Flag } from 'src/components/Flag';
+import {
+  CONTINENT_CODE_TO_CONTINENT,
+  COUNTRY_CODE_TO_CONTINENT_CODE,
+  ContinentNames,
+} from './utils';
 
 interface Props<IsClearable extends boolean>
   extends Omit<
@@ -33,83 +28,48 @@ interface Props<IsClearable extends boolean>
   width?: number;
 }
 
-export const flags = {
-  au: () => <AU width="32" height="24" viewBox="0 0 640 480" />,
-  us: () => <US width="32" height="24" viewBox="0 0 640 480" />,
-  sg: () => <SG id="singapore" width="32" height="24" viewBox="0 0 640 480" />,
-  jp: () => (
-    <JP
-      id="japan"
-      width="32"
-      height="24"
-      viewBox="0 0 640 480"
-      style={{ backgroundColor: '#fff' }}
-    />
-  ),
-  uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
-  eu: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
-  de: () => <DE width="32" height="24" viewBox="0 0 640 480" />,
-  ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />,
-  in: () => <IN width="32" height="24" viewBox="0 0 640 480" />,
-};
-
 export const selectStyles = {
   menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` }),
 };
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& svg': {
-      '& g': {
-        // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
-        clipPath: 'none !important' as 'none',
-      },
-    },
-    '& #singapore, #japan': {
-      border: `1px solid ${theme.color.border3}`,
-    },
-  },
-}));
+
+type RegionGroup = ContinentNames | 'Other';
 
 export const getRegionOptions = (regions: Region[]) => {
-  const groupedRegions = groupBy<Region>((thisRegion) => {
-    if (thisRegion.country.match(/(us|ca)/)) {
-      return 'North America';
-    }
-    if (thisRegion.country.match(/(de|uk|eu)/)) {
-      return 'Europe';
-    }
-    if (thisRegion.country.match(/(jp|sg|in|au)/)) {
-      return 'Asia Pacific';
-    }
-    return 'Other';
-  }, regions);
-  return ['North America', 'Europe', 'Asia Pacific', 'Other'].reduce(
-    (accum, thisGroup) => {
-      if (
-        !groupedRegions[thisGroup] ||
-        groupedRegions[thisGroup].length === 0
-      ) {
-        return accum;
-      }
-      return [
-        ...accum,
-        {
-          label: thisGroup,
-          options: groupedRegions[thisGroup]
-            .map((thisRegion) => ({
-              label: `${thisRegion.label} (${thisRegion.id})`,
-              value: thisRegion.id,
-              flag:
-                flags[thisRegion.country.toLocaleLowerCase()] ?? (() => null),
-              country: thisRegion.country,
-            }))
+  const groups: Record<RegionGroup, RegionItem[]> = {
+    'North America': [],
+    Europe: [],
+    Asia: [],
+    'South America': [],
+    Oceania: [],
+    Africa: [],
+    Antartica: [],
+    Other: [],
+  };
 
-            .sort(sortRegions),
-        },
+  for (const region of regions) {
+    const country = region.country.toUpperCase();
+
+    const continentCode =
+      COUNTRY_CODE_TO_CONTINENT_CODE[
+        country as keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE
       ];
-    },
-    []
-  );
+
+    const group = continentCode
+      ? CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other'
+      : 'Other';
+
+    groups[group].push({
+      label: `${region.label} (${region.id})`,
+      value: region.id,
+      flag: <Flag country={region.country} />,
+      country: region.country,
+    });
+  }
+
+  return Object.keys(groups).map((group: RegionGroup) => ({
+    label: group,
+    options: groups[group].sort(sortRegions),
+  }));
 };
 
 export const getSelectedRegionById = (
@@ -141,66 +101,62 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
-const SelectRegionPanel = <IsClearable extends boolean>(
-  props: Props<IsClearable>
-) => {
-  const {
-    label,
-    disabled,
-    handleSelection,
-    isClearable,
-    helperText,
-    regions,
-    selectedID,
-    styles,
-    required,
-    width,
-    ...restOfReactSelectProps
-  } = props;
+export const RegionSelect = React.memo(
+  <IsClearable extends boolean>(props: Props<IsClearable>) => {
+    const {
+      label,
+      disabled,
+      handleSelection,
+      isClearable,
+      helperText,
+      regions,
+      selectedID,
+      styles,
+      required,
+      width,
+      ...restOfReactSelectProps
+    } = props;
 
-  const onChange = React.useCallback(
-    (selection: RegionItem | null) => {
-      if (selection === null) {
-        handleSelection('');
-        return;
-      }
-      if (selection.disabledMessage) {
-        // React Select's disabled state should prevent anything
-        // from firing, this is basic paranoia.
-        return;
-      }
-      handleSelection(selection?.value);
-    },
-    [handleSelection]
-  );
-
-  const classes = useStyles();
-
-  const options = React.useMemo(() => getRegionOptions(regions), [regions]);
-
-  return (
-    <div className={classes.root} style={{ width }}>
-      <Select
-        isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
-        value={getSelectedRegionById(selectedID || '', options) ?? null}
-        label={label ?? 'Region'}
-        disabled={disabled}
-        placeholder="Select a Region"
-        options={options}
-        onChange={onChange}
-        components={{ Option: RegionOption, SingleValue }}
-        isOptionDisabled={(option: RegionItem) =>
-          Boolean(option.disabledMessage)
+    const onChange = React.useCallback(
+      (selection: RegionItem | null) => {
+        if (selection === null) {
+          handleSelection('');
+          return;
         }
-        styles={styles || selectStyles}
-        textFieldProps={{
-          tooltipText: helperText,
-        }}
-        required={required}
-        {...restOfReactSelectProps}
-      />
-    </div>
-  );
-};
+        if (selection.disabledMessage) {
+          // React Select's disabled state should prevent anything
+          // from firing, this is basic paranoia.
+          return;
+        }
+        handleSelection(selection?.value);
+      },
+      [handleSelection]
+    );
 
-export default React.memo(SelectRegionPanel);
+    const options = React.useMemo(() => getRegionOptions(regions), [regions]);
+
+    return (
+      <div style={{ width }}>
+        <Select
+          isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
+          value={getSelectedRegionById(selectedID || '', options) ?? null}
+          label={label ?? 'Region'}
+          disabled={disabled}
+          placeholder="Select a Region"
+          options={options}
+          onChange={onChange}
+          components={{ Option: RegionOption, SingleValue }}
+          isOptionDisabled={(option: RegionItem) =>
+            Boolean(option.disabledMessage)
+          }
+          styles={styles || selectStyles}
+          textFieldProps={{
+            tooltipText: helperText,
+          }}
+          required={required}
+          {...restOfReactSelectProps}
+        />
+      </div>
+    );
+  }
+);
