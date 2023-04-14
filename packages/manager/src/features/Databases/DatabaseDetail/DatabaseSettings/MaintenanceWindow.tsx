@@ -80,7 +80,7 @@ export const MaintenanceWindow = (props: Props) => {
   const [
     modifiedWeekSelectionMap,
     setModifiedWeekSelectionMap,
-  ] = React.useState<Item[]>([]);
+  ] = React.useState<Item<number>[]>([]);
 
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -90,7 +90,10 @@ export const MaintenanceWindow = (props: Props) => {
     database.id
   );
 
-  const weekSelectionModifier = (day: string, weekSelectionMap: Item[]) => {
+  const weekSelectionModifier = (
+    day: string,
+    weekSelectionMap: Item<number>[]
+  ) => {
     const modifiedMap = weekSelectionMap.map((weekSelectionElement) => {
       return {
         label: `${weekSelectionElement.label} ${day} of each month`,
@@ -138,14 +141,6 @@ export const MaintenanceWindow = (props: Props) => {
         setSubmitting(false);
       });
   };
-
-  const scheduledUpdateDay = daySelectionMap.find(
-    (thisOption) => thisOption.value === database.updates?.day_of_week
-  );
-
-  const scheduledUpdateHour = hourSelectionMap.find(
-    (thisOption) => thisOption.value === database.updates?.hour_of_day
-  );
 
   const utcOffsetInHours = timezone
     ? DateTime.fromISO(new Date().toISOString(), { zone: timezone }).offset / 60
@@ -205,11 +200,13 @@ export const MaintenanceWindow = (props: Props) => {
                   },
                 }}
                 options={daySelectionMap}
-                defaultValue={scheduledUpdateDay?.value ?? 1}
+                defaultValue={daySelectionMap.find(
+                  (option) => option.value === 1
+                )}
                 value={daySelectionMap.find(
                   (thisOption) => thisOption.value === values.day_of_week
                 )}
-                onChange={(e: Item) => {
+                onChange={(e) => {
                   setFormTouched(true);
                   setFieldValue('day_of_week', e.value);
                   weekSelectionModifier(e.label, weekSelectionMap);
@@ -225,7 +222,6 @@ export const MaintenanceWindow = (props: Props) => {
                 isClearable={false}
                 menuPlacement="top"
                 name="Day of Week"
-                error={touched.day_of_week && Boolean(errors.day_of_week)}
                 errorText={touched.day_of_week ? errors.day_of_week : undefined}
                 noMarginTop
               />
@@ -239,20 +235,21 @@ export const MaintenanceWindow = (props: Props) => {
                     },
                   }}
                   options={hourSelectionMap}
-                  defaultValue={scheduledUpdateHour?.value ?? 20}
+                  defaultValue={hourSelectionMap.find(
+                    (option) => option.value === 20
+                  )}
                   value={hourSelectionMap.find(
                     (thisOption) => thisOption.value === values.hour_of_day
                   )}
-                  onChange={(e: Item) => {
+                  onChange={(e) => {
                     setFormTouched(true);
-                    setFieldValue('hour_of_day', +e.value);
+                    setFieldValue('hour_of_day', e.value);
                   }}
                   label="Time of Day (UTC)"
                   placeholder="Choose a time"
                   isClearable={false}
                   menuPlacement="top"
                   name="Time of Day"
-                  error={touched.hour_of_day && Boolean(errors.hour_of_day)}
                   errorText={
                     touched.hour_of_day ? errors.hour_of_day : undefined
                   }
@@ -331,16 +328,15 @@ export const MaintenanceWindow = (props: Props) => {
                   value={modifiedWeekSelectionMap.find(
                     (thisOption) => thisOption.value === values.week_of_month
                   )}
-                  onChange={(e: Item) => {
+                  onChange={(e) => {
                     setFormTouched(true);
-                    setFieldValue('week_of_month', +e.value);
+                    setFieldValue('week_of_month', e.value);
                   }}
                   label="Repeats on"
                   placeholder="Repeats on"
                   isClearable={false}
                   menuPlacement="top"
                   name="Repeats on"
-                  error={touched.week_of_month && Boolean(errors.week_of_month)}
                   errorText={
                     touched.week_of_month ? errors.week_of_month : undefined
                   }

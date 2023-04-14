@@ -1,345 +1,318 @@
-import { createStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
-export type ClassNames =
-  | 'root'
-  | 'input'
-  | 'noOptionsMessage'
-  | 'divider'
-  | 'suggestionRoot'
-  | 'highlight'
-  | 'suggestionItem'
-  | 'suggestionIcon'
-  | 'suggestionTitle'
-  | 'suggestionDescription'
-  | 'resultContainer'
-  | 'tagContainer'
-  | 'selectedMenuItem'
-  | 'medium'
-  | 'small'
-  | 'noMarginTop'
-  | 'inline'
-  | 'hideLabel'
-  | 'algoliaRoot'
-  | 'label'
-  | 'source'
-  | 'icon'
-  | 'row'
-  | 'finalLink';
-
-export const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes dash': {
-      to: {
-        'stroke-dashoffset': 0,
+export const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
+  root: {
+    width: '100%',
+    position: 'relative',
+    '& .react-select__control': {
+      borderRadius: 0,
+      boxShadow: 'none',
+      border: `1px solid transparent`,
+      backgroundColor: theme.bg.white,
+      minHeight: `calc(${theme.spacing(5)} - 2)`,
+      '&:hover': {
+        border: `1px dotted #ccc`,
+        cursor: 'text',
+      },
+      '&--is-focused, &--is-focused:hover': {
+        border: `1px dotted #999`,
       },
     },
-    root: {
+    '& .react-select__value-container': {
       width: '100%',
-      position: 'relative',
-      '& .react-select__control': {
-        borderRadius: 0,
-        boxShadow: 'none',
-        border: `1px solid transparent`,
-        backgroundColor: theme.bg.white,
-        minHeight: `calc(${theme.spacing(5)} - 2)`,
-        '&:hover': {
-          border: `1px dotted #ccc`,
-          cursor: 'text',
-        },
-        '&--is-focused, &--is-focused:hover': {
-          border: `1px dotted #999`,
-        },
-      },
-      '& .react-select__value-container': {
+      '& > div': {
         width: '100%',
-        '& > div': {
-          width: '100%',
+      },
+      '&.react-select__value-container--is-multi': {
+        '& > div, & .react-select__input': {
+          width: 'auto',
         },
-        '&.react-select__value-container--is-multi': {
-          '& > div, & .react-select__input': {
-            width: 'auto',
-          },
-        },
-      },
-      '& .react-select__input': {
-        width: '100%',
-        color: theme.palette.text.primary,
-      },
-      '& .react-select__menu': {
-        margin: '-1px 0 0 0',
-        borderRadius: 0,
-        boxShadow: 'none',
-        border: `1px solid ${theme.palette.primary.main}`,
-        maxWidth: 415,
-        zIndex: 100,
-      },
-      '& .react-select__group': {
-        width: '100%',
-        '&:last-child': {
-          paddingBottom: 0,
-        },
-      },
-      '& .react-select__group-heading': {
-        textTransform: 'initial',
-        fontSize: '1rem',
-        color: theme.color.headline,
-        fontFamily: theme.font.bold,
-        paddingLeft: 10,
-        paddingRight: 10,
-      },
-      '& .react-select__menu-list': {
-        zIndex: 100,
-        padding: theme.spacing(0.5),
-        backgroundColor: theme.bg.white,
-        height: '101%',
-        overflow: 'auto',
-        maxHeight: 285,
-        '&::-webkit-scrollbar': {
-          appearance: 'none',
-        },
-        '&::-webkit-scrollbar:vertical': {
-          width: 8,
-        },
-        '&::-webkit-scrollbar-thumb': {
-          borderRadius: 8,
-          backgroundColor: '#ccc',
-        },
-      },
-      '& .react-select__option': {
-        transition: theme.transitions.create(['background-color', 'color']),
-        color: theme.palette.text.primary,
-        backgroundColor: theme.bg.white,
-        cursor: 'pointer',
-        padding: '10px',
-        fontSize: '0.9rem',
-        [theme.breakpoints.only('xs')]: {
-          fontSize: '1rem',
-        },
-        '& svg': {
-          marginTop: 2,
-        },
-      },
-      '& .react-select__option--is-focused': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
-      },
-      '& .react-select__option--is-selected': {
-        color: theme.palette.primary.main,
-        '&.react-select__option--is-focused': {
-          backgroundColor: theme.bg.white,
-        },
-      },
-      '& .react-select__option--is-disabled': {
-        opacity: 0.5,
-        cursor: 'initial',
-      },
-      '& .react-select__single-value': {
-        color: theme.palette.text.primary,
-        overflow: 'hidden',
-      },
-      '& .react-select__indicator-separator': {
-        display: 'none',
-      },
-      '& .react-select__multi-value': {
-        borderRadius: 4,
-        backgroundColor: theme.bg.lightBlue1,
-        alignItems: 'center',
-      },
-      '& .react-select__multi-value__label': {
-        color: theme.palette.text.primary,
-        fontSize: '.8rem',
-        height: 20,
-        marginTop: 2,
-        marginBottom: 2,
-        marginRight: 4,
-        paddingLeft: 6,
-        paddingRight: 0,
-      },
-      '& .react-select__clear-indicator': {
-        padding: 0,
-        '& svg': {
-          color: theme.color.grey4,
-          '&:hover': {
-            color: theme.palette.primary.main,
-          },
-        },
-      },
-      '& .react-select__multi-value__remove': {
-        backgroundColor: 'transparent',
-        borderRadius: '50%',
-        padding: 2,
-        marginLeft: 4,
-        marginRight: 4,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        '& svg': {
-          color: theme.palette.text.primary,
-          width: 12,
-          height: 12,
-        },
-        '&:hover': {
-          backgroundColor: theme.palette.primary.main,
-          '& svg': {
-            color: 'white',
-          },
-        },
-      },
-      '& .react-select__dropdown-indicator': {},
-      '& [class*="MuiFormHelperText-error"]': {
-        paddingBottom: theme.spacing(1),
       },
     },
-    input: {
+    '& .react-select__input': {
+      width: '100%',
+      color: theme.palette.text.primary,
+    },
+    '& .react-select__menu': {
+      margin: '-1px 0 0 0',
+      borderRadius: 0,
+      boxShadow: 'none',
+      border: `1px solid ${theme.palette.primary.main}`,
+      maxWidth: 415,
+      zIndex: 100,
+    },
+    '& .react-select__group': {
+      width: '100%',
+      '&:last-child': {
+        paddingBottom: 0,
+      },
+    },
+    '& .react-select__group-heading': {
+      textTransform: 'initial',
+      fontSize: '1rem',
+      color: theme.color.headline,
+      fontFamily: theme.font.bold,
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+    '& .react-select__menu-list': {
+      zIndex: 100,
+      padding: theme.spacing(0.5),
+      backgroundColor: theme.bg.white,
+      height: '101%',
+      overflow: 'auto',
+      maxHeight: 285,
+      '&::-webkit-scrollbar': {
+        appearance: 'none',
+      },
+      '&::-webkit-scrollbar:vertical': {
+        width: 8,
+      },
+      '&::-webkit-scrollbar-thumb': {
+        borderRadius: 8,
+        backgroundColor: '#ccc',
+      },
+    },
+    '& .react-select__option': {
+      transition: theme.transitions.create(['background-color', 'color']),
+      color: theme.palette.text.primary,
+      backgroundColor: theme.bg.white,
+      cursor: 'pointer',
+      padding: '10px',
       fontSize: '0.9rem',
       [theme.breakpoints.only('xs')]: {
         fontSize: '1rem',
       },
-      padding: 0,
-      display: 'flex',
-      color: theme.palette.text.primary,
-      cursor: 'pointer',
-      minHeight: `calc(${theme.spacing(5)} - 6)`,
-      // From the AutoSizeInput documentation: (https://github.com/JedWatson/react-input-autosize/blob/master/README.md#csp-and-the-ie-clear-indicator)
-      // "The input will automatically inject a stylesheet that hides IE/Edge's "clear" indicator,
-      // which otherwise breaks the UI. This has the downside of being incompatible with some CSP policies.
-      // To work around this, you can pass the injectStyles={false} prop, but if you do this I strongly
-      // recommend targeting the input element in your own stylesheet with the following rule:"
-      '::-ms-clear': { display: 'none' },
-    },
-    noOptionsMessage: {
-      padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
-    },
-    divider: {
-      height: theme.spacing(2),
-    },
-    suggestionRoot: {
-      cursor: 'pointer',
-      width: 'calc(100% + 2px)',
-      alignItems: 'space-between',
-      justifyContent: 'space-between',
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-      },
-      '&:last-child': {
-        borderBottom: 0,
+      '& svg': {
+        marginTop: 2,
       },
     },
-    highlight: {
+    '& .react-select__option--is-focused': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
+    '& .react-select__option--is-selected': {
       color: theme.palette.primary.main,
+      '&.react-select__option--is-focused': {
+        backgroundColor: theme.bg.white,
+      },
     },
-    suggestionItem: {
-      padding: theme.spacing(),
+    '& .react-select__option--is-disabled': {
+      opacity: 0.5,
+      cursor: 'initial',
     },
-    suggestionIcon: {
+    '& .react-select__single-value': {
+      color: theme.palette.text.primary,
+      overflow: 'hidden',
+    },
+    '& .react-select__indicator-separator': {
+      display: 'none',
+    },
+    '& .react-select__multi-value': {
+      borderRadius: 4,
+      backgroundColor: theme.bg.lightBlue1,
+      alignItems: 'center',
+    },
+    '& .react-select__multi-value__label': {
+      color: theme.palette.text.primary,
+      fontSize: '.8rem',
+      height: 20,
+      marginTop: 2,
+      marginBottom: 2,
+      marginRight: 4,
+      paddingLeft: 6,
+      paddingRight: 0,
+    },
+    '& .react-select__clear-indicator': {
+      padding: 0,
+      '& svg': {
+        color: theme.color.grey4,
+        '&:hover': {
+          color: theme.palette.primary.main,
+        },
+      },
+    },
+    '& .react-select__multi-value__remove': {
+      backgroundColor: 'transparent',
+      borderRadius: '50%',
+      padding: 2,
+      marginLeft: 4,
+      marginRight: 4,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      marginLeft: theme.spacing(1.5),
-    },
-    suggestionTitle: {
-      fontSize: '1rem',
-      color: theme.palette.text.primary,
-      wordBreak: 'break-all',
-      fontWeight: 600,
-    },
-    suggestionDescription: {
-      color: theme.color.headline,
-      fontSize: '.75rem',
-      marginTop: 2,
-    },
-    resultContainer: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-    },
-    tagContainer: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      paddingRight: 8,
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      '& > div': {
-        margin: '2px',
-      },
-    },
-    selectedMenuItem: {
-      backgroundColor: `${theme.bg.main} !important`,
-      '& .tag': {
-        backgroundColor: theme.bg.lightBlue1,
+      '& svg': {
         color: theme.palette.text.primary,
-        '&:hover': {
-          backgroundColor: theme.palette.primary.main,
+        width: 12,
+        height: 12,
+      },
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        '& svg': {
           color: 'white',
         },
       },
     },
-    medium: {
-      minHeight: 40,
+    '& .react-select__dropdown-indicator': {},
+    '& [class*="MuiFormHelperText-error"]': {
+      paddingBottom: theme.spacing(1),
     },
-    small: {
-      minHeight: 35,
-      minWidth: 'auto',
+  },
+  input: {
+    fontSize: '0.9rem',
+    [theme.breakpoints.only('xs')]: {
+      fontSize: '1rem',
     },
-    inline: {
-      display: 'inline-flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      '& label': {
-        marginRight: theme.spacing(1),
-        whiteSpace: 'nowrap',
-        position: 'relative',
-        top: 1,
-      },
+    padding: 0,
+    display: 'flex',
+    color: theme.palette.text.primary,
+    cursor: 'pointer',
+    minHeight: `calc(${theme.spacing(5)} - 6)`,
+    // From the AutoSizeInput documentation: (https://github.com/JedWatson/react-input-autosize/blob/master/README.md#csp-and-the-ie-clear-indicator)
+    // "The input will automatically inject a stylesheet that hides IE/Edge's "clear" indicator,
+    // which otherwise breaks the UI. This has the downside of being incompatible with some CSP policies.
+    // To work around this, you can pass the injectStyles={false} prop, but if you do this I strongly
+    // recommend targeting the input element in your own stylesheet with the following rule:"
+    '::-ms-clear': { display: 'none' },
+  },
+  noOptionsMessage: {
+    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+  },
+  divider: {
+    height: theme.spacing(2),
+  },
+  suggestionRoot: {
+    cursor: 'pointer',
+    width: 'calc(100% + 2px)',
+    alignItems: 'space-between',
+    justifyContent: 'space-between',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
     },
-    hideLabel: {
-      '& label': { ...theme.visually.hidden },
+    '&:last-child': {
+      borderBottom: 0,
     },
-    algoliaRoot: {
-      width: '100%',
-      cursor: 'pointer',
-      padding: `calc(${theme.spacing(1)} / 2 + 2)`,
-      '& em': {
-        fontStyle: 'normal',
-        color: theme.color.blueDTwhite,
-      },
+  },
+  highlight: {
+    color: theme.palette.primary.main,
+  },
+  suggestionItem: {
+    padding: theme.spacing(),
+  },
+  suggestionIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: theme.spacing(1.5),
+  },
+  suggestionTitle: {
+    fontSize: '1rem',
+    color: theme.palette.text.primary,
+    wordBreak: 'break-all',
+    fontWeight: 600,
+  },
+  suggestionDescription: {
+    color: theme.color.headline,
+    fontSize: '.75rem',
+    marginTop: 2,
+  },
+  resultContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+  },
+  tagContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    paddingRight: 8,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    '& > div': {
+      margin: '2px',
     },
-    label: {
-      display: 'inline',
+  },
+  selectedMenuItem: {
+    backgroundColor: `${theme.bg.main} !important`,
+    '& .tag': {
+      backgroundColor: theme.bg.lightBlue1,
       color: theme.palette.text.primary,
-      maxWidth: '95%',
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white',
+      },
     },
-    icon: {
-      display: 'inline-block',
-      width: 12,
-      height: 12,
+  },
+  medium: {
+    minHeight: 40,
+  },
+  small: {
+    minHeight: 35,
+    minWidth: 'auto',
+  },
+  inline: {
+    display: 'inline-flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    '& label': {
+      marginRight: theme.spacing(1),
+      whiteSpace: 'nowrap',
       position: 'relative',
-      top: 5,
-      marginLeft: theme.spacing(0.5),
-      marginRight: theme.spacing(0.5),
-      color: theme.palette.primary.main,
+      top: 1,
     },
-    source: {
-      marginTop: `calc(${theme.spacing(1)} / 4)`,
-      color: theme.color.headline,
-      paddingLeft: theme.spacing(1),
-      margin: 0,
+  },
+  hideLabel: {
+    '& label': { ...theme.visually.hidden },
+  },
+  algoliaRoot: {
+    width: '100%',
+    cursor: 'pointer',
+    padding: `calc(${theme.spacing(1)} / 2 + 2)`,
+    '& em': {
+      fontStyle: 'normal',
+      color: theme.color.blueDTwhite,
     },
-    row: {
-      display: 'flex',
-      width: '100%',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingLeft: theme.spacing(1),
-    },
-    finalLink: {
-      display: 'flex',
-      alignItems: 'center',
-      fontSize: '1.2em',
-      paddingLeft: theme.spacing(1),
-    },
-  });
+  },
+  label: {
+    display: 'inline',
+    color: theme.palette.text.primary,
+    maxWidth: '95%',
+  },
+  icon: {
+    display: 'inline-block',
+    width: 12,
+    height: 12,
+    position: 'relative',
+    top: 5,
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(0.5),
+    color: theme.palette.primary.main,
+  },
+  source: {
+    marginTop: `calc(${theme.spacing(1)} / 4)`,
+    color: theme.color.headline,
+    paddingLeft: theme.spacing(1),
+    margin: 0,
+  },
+  row: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: theme.spacing(1),
+  },
+  finalLink: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '1.2em',
+    paddingLeft: theme.spacing(1),
+  },
+}));
 
 // @todo @tdt: Replace the class name based styles above with these. They're (mostly) copied over,
 // as they're needed for one specific case: where a Select component appears on a Dialog. To reduce
