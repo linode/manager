@@ -1,72 +1,14 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
-import RenderGuard from 'src/components/RenderGuard';
+import Grid from '@mui/material/Unstable_Grid2';
+import Box from '@mui/material/Box';
 import TextField from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
-  },
-  root: {
-    marginBottom: theme.spacing(2),
-    paddingTop: theme.spacing(0.5),
-    '&:last-of-type': {
-      marginBottom: 0,
-    },
-    '&:last-of-type + hr': {
-      display: 'none',
-    },
-  },
-  switch: {
-    display: 'flex',
-    marginLeft: -12,
-    width: 240,
-    '& .toggleLabel': {
-      display: 'flex',
-      flexDirection: 'row',
-      '& > span:first-of-type': {
-        marginTop: -6,
-      },
-      '& > span:last-child': {
-        ...theme.typography.h3,
-      },
-    },
-  },
-  copy: {
-    marginTop: 40,
-    marginLeft: -160,
-    width: 600,
-    [theme.breakpoints.down('md')]: {
-      marginTop: -28,
-      marginLeft: 70,
-      width: '100%',
-    },
-  },
-  usageWrapper: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: 70,
-      width: '100%',
-    },
-  },
-  usage: {
-    animation: '$fadeIn .3s ease-in-out forwards',
-    marginTop: 0,
-    maxWidth: 150,
-  },
-}));
+import { useTheme } from '@mui/material/styles';
+import { fadeIn } from 'src/styles/keyframes';
 
 interface Props {
   title: string;
@@ -83,10 +25,8 @@ interface Props {
   readOnly?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const AlertSection: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const AlertSection = (props: Props) => {
+  const theme = useTheme();
   const {
     title,
     textTitle,
@@ -104,30 +44,74 @@ export const AlertSection: React.FC<CombinedProps> = (props) => {
     <>
       <Grid
         container
-        alignItems="flex-start"
-        className={classes.root}
         data-qa-alerts-panel
+        spacing={2}
+        sx={{
+          alignItems: 'flex-start',
+          flex: 1,
+          marginBottom: theme.spacing(2),
+          '&:last-of-type': {
+            marginBottom: 0,
+          },
+          '&:last-of-type + hr': {
+            display: 'none',
+          },
+        }}
       >
-        <Grid item className={classes.switch}>
-          <FormControlLabel
-            className="toggleLabel"
-            control={
-              <Toggle
-                checked={state}
-                disabled={readOnly}
-                onChange={onStateChange}
-              />
-            }
-            label={title}
-            data-qa-alert={title}
-          />
+        <Grid
+          xs={12}
+          md={9}
+          lg={7}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Box>
+            <FormControlLabel
+              control={
+                <Toggle
+                  checked={state}
+                  disabled={readOnly}
+                  onChange={onStateChange}
+                />
+              }
+              label={title}
+              data-qa-alert={title}
+              sx={{
+                '.MuiFormControlLabel-label': {
+                  paddingLeft: '12px',
+                },
+                '& > span:last-child': {
+                  ...theme.typography.h3,
+                },
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              paddingLeft: '70px',
+              [theme.breakpoints.down('md')]: {
+                marginTop: '-12px',
+              },
+            }}
+          >
+            <Typography>{copy}</Typography>
+          </Box>
         </Grid>
-        <Grid item className={classes.copy}>
-          <Typography>{copy}</Typography>
-        </Grid>
-        <Grid item className={`${classes.usageWrapper} py0`}>
+        <Grid
+          xs={12}
+          md={3}
+          lg={5}
+          sx={{
+            paddingTop: '0',
+            paddingBottom: '0',
+            [theme.breakpoints.down('md')]: {
+              paddingLeft: '78px',
+            },
+          }}
+        >
           <TextField
-            className={classes.usage}
             disabled={!state || readOnly}
             error={Boolean(error)}
             errorText={error}
@@ -142,6 +126,13 @@ export const AlertSection: React.FC<CombinedProps> = (props) => {
                 <InputAdornment position="end">{endAdornment}</InputAdornment>
               ),
             }}
+            sx={{
+              '.MuiInput-root': {
+                animation: `${fadeIn} .3s ease-in-out forwards`,
+                marginTop: 0,
+                maxWidth: 150,
+              },
+            }}
           />
         </Grid>
       </Grid>
@@ -150,4 +141,4 @@ export const AlertSection: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, any>(RenderGuard)(AlertSection);
+export default AlertSection;

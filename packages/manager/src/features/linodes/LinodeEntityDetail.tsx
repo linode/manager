@@ -13,13 +13,12 @@ import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
-import Grid, { GridProps } from 'src/components/Grid';
+import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
@@ -51,6 +50,7 @@ import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { useProfile } from 'src/queries/profile';
 
 interface LinodeEntityDetailProps {
@@ -512,7 +512,7 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
     linodeId,
     numVolumes,
   } = props;
-
+  const theme = useTheme();
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   const firstAddress = ipv4[0];
@@ -522,43 +522,49 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
 
   return (
-    <Grid container item className={classes.body} direction="row">
+    <Grid container className={classes.body} direction="row" spacing={2}>
       {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
       <Grid
         container
-        item
         className={classes.summaryContainer}
         direction="column"
+        spacing={2}
       >
-        <Grid item className={classes.columnLabel}>
-          Summary
-        </Grid>
-        <Grid container item className={classes.summaryContent} direction="row">
-          <Grid item>
+        <Grid className={classes.columnLabel}>Summary</Grid>
+        <Grid
+          container
+          className={classes.summaryContent}
+          direction="row"
+          spacing={2}
+        >
+          <Grid>
             <Typography>
               {pluralize('CPU Core', 'CPU Cores', numCPUs)}
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>{gbStorage} GB Storage</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>{gbRAM} GB RAM</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>
               {pluralize('Volume', 'Volumes', numVolumes)}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
-
       <Grid
         container
-        item
         className={classes.rightColumn}
         direction="row"
         justifyContent="space-between"
+        spacing={2}
+        sx={{
+          paddingRight: 0,
+          paddingBottom: 0,
+        }}
       >
         <AccessTable
           title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
@@ -573,6 +579,11 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
             ) : undefined
           }
           gridProps={{ md: 5 }}
+          sx={{
+            [theme.breakpoints.up('md')]: {
+              paddingRight: theme.spacing(2.5),
+            },
+          }}
         />
 
         <AccessTable
@@ -585,6 +596,11 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
             },
           ]}
           gridProps={{ md: 7 }}
+          sx={{
+            [theme.breakpoints.up('md')]: {
+              paddingLeft: theme.spacing(2.5),
+            },
+          }}
         />
       </Grid>
     </Grid>
@@ -700,18 +716,24 @@ interface AccessTableRow {
 interface AccessTableProps {
   title: string;
   rows: AccessTableRow[];
-  gridProps?: GridProps;
+  gridProps?: Grid2Props;
   footer?: JSX.Element;
+  sx?: SxProps;
 }
 
 export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
   const classes = useAccessTableStyles();
   return (
-    <Grid container item md={6} direction="column" {...props.gridProps}>
-      <Grid item className={classes.columnLabel}>
-        {props.title}
-      </Grid>
-      <Grid item className={classes.accessTableContent}>
+    <Grid
+      container
+      md={6}
+      direction="column"
+      spacing={1}
+      sx={props.sx}
+      {...props.gridProps}
+    >
+      <Grid className={classes.columnLabel}>{props.title}</Grid>
+      <Grid className={classes.accessTableContent}>
         <Table className={classes.accessTable}>
           <TableBody>
             {props.rows.map((thisRow) => {
@@ -731,7 +753,7 @@ export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
             })}
           </TableBody>
         </Table>
-        {props.footer ? <Grid item>{props.footer}</Grid> : null}
+        {props.footer ? <Grid sx={{ padding: 0 }}>{props.footer}</Grid> : null}
       </Grid>
     </Grid>
   );
@@ -751,79 +773,8 @@ interface FooterProps {
   openDialog: OpenDialog;
 }
 
-const useFooterStyles = makeStyles((theme: Theme) => ({
-  details: {
-    flexWrap: 'nowrap',
-    '&.MuiGrid-item': {
-      paddingRight: 0,
-    },
-    [theme.breakpoints.up(1400)]: {
-      flexBasis: '66.67%',
-      flexGrow: 0,
-      maxWidth: '66.67%',
-    },
-    [theme.breakpoints.down(1400)]: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'stretch',
-      flexDirection: 'column',
-    },
-  },
-  detailRow: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      '&:first-of-type': {
-        paddingBottom: theme.spacing(0.5),
-      },
-    },
-  },
-  listItem: {
-    display: 'flex',
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    color: theme.textColors.tableStatic,
-    padding: `0px 10px`,
-    [theme.breakpoints.down('md')]: {
-      flex: '50%',
-      borderRight: 'none',
-      paddingRight: 0,
-    },
-  },
-  listItemLast: {
-    borderRight: 'none',
-    paddingRight: 0,
-  },
-  label: {
-    fontFamily: theme.font.bold,
-    marginRight: 4,
-  },
-  tags: {
-    [theme.breakpoints.up(1400)]: {
-      flexBasis: '33.33%',
-      flexGrow: 0,
-      maxWidth: '33.33%',
-    },
-    [theme.breakpoints.down(1400)]: {
-      marginLeft: theme.spacing(),
-      '& > div': {
-        flexDirection: 'row-reverse',
-        '& > button': {
-          marginRight: 4,
-        },
-        '& > div': {
-          justifyContent: 'flex-start !important',
-        },
-      },
-    },
-  },
-}));
-
 export const Footer: React.FC<FooterProps> = React.memo((props) => {
-  const classes = useFooterStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const theme = useTheme();
 
   const { data: profile } = useProfile();
 
@@ -853,55 +804,141 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
     [linodeId, updateLinode, enqueueSnackbar]
   );
 
+  const sxListItemMdBp = {
+    flex: '50%',
+    borderRight: 0,
+    padding: 0,
+  };
+
+  const sxListItem = {
+    display: 'flex',
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    color: theme.textColors.tableStatic,
+    padding: `0px 10px`,
+    [theme.breakpoints.down('md')]: {
+      ...sxListItemMdBp,
+    },
+  };
+
+  const sxListItemFirstChild = {
+    [theme.breakpoints.down('md')]: {
+      ...sxListItemMdBp,
+      '&:first-of-type': {
+        paddingBottom: theme.spacing(0.5),
+      },
+    },
+  };
+
+  const sxLastListItem = {
+    borderRight: 0,
+    paddingRight: 0,
+  };
+
+  const sxBox = {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'column',
+    },
+  };
+
+  const sxLabel = {
+    fontFamily: theme.font.bold,
+    marginRight: '4px',
+  };
+
   return (
     <Grid
       container
       direction="row"
       alignItems="center"
       justifyContent="space-between"
+      spacing={2}
+      sx={{
+        padding: 0,
+        flex: 1,
+      }}
     >
       <Grid
-        container
-        item
-        className={classes.details}
         alignItems="flex-start"
-        md={12}
+        xs={12}
+        lg={8}
+        sx={{
+          display: 'flex',
+          padding: 0,
+          [theme.breakpoints.down('md')]: {
+            display: 'grid',
+            gridTemplateColumns: '50% 2fr',
+          },
+          [theme.breakpoints.down('lg')]: {
+            padding: '8px',
+          },
+        }}
       >
-        <div className={classes.detailRow}>
+        <Box sx={sxBox}>
           {linodePlan && (
-            <Typography className={classes.listItem}>
-              <span className={classes.label}>Plan: </span> {linodePlan}
+            <Typography
+              sx={{
+                ...sxListItem,
+                ...sxListItemFirstChild,
+                [theme.breakpoints.down('lg')]: {
+                  paddingLeft: 0,
+                },
+              }}
+            >
+              <Box sx={sxLabel}>Plan: </Box> {linodePlan}
             </Typography>
           )}
           {linodeRegionDisplay && (
             <Typography
-              className={classNames({
-                [classes.listItem]: true,
-                [classes.listItemLast]: matchesSmDown,
-              })}
+              sx={{
+                ...sxListItem,
+              }}
             >
-              <span className={classes.label}>Region:</span>{' '}
-              {linodeRegionDisplay}
+              <Box sx={sxLabel}>Region:</Box> {linodeRegionDisplay}
             </Typography>
           )}
-        </div>
-        <div className={classes.detailRow}>
-          <Typography className={classes.listItem}>
-            <span className={classes.label}>Linode ID:</span> {linodeId}
+        </Box>
+        <Box sx={sxBox}>
+          <Typography sx={{ ...sxListItem, ...sxListItemFirstChild }}>
+            <Box sx={sxLabel}>Linode ID:</Box> {linodeId}
           </Typography>
-          <Typography className={`${classes.listItem} ${classes.listItemLast}`}>
-            <span className={classes.label}>Created:</span>{' '}
+          <Typography
+            sx={{
+              ...sxListItem,
+              ...sxLastListItem,
+            }}
+          >
+            <Box sx={sxLabel}>Created:</Box>{' '}
             {formatDate(linodeCreated, {
               timezone: profile?.timezone,
             })}
           </Typography>
-        </div>
+        </Box>
       </Grid>
-      <Grid item className={classes.tags} md={12}>
+      <Grid
+        xs={12}
+        lg={4}
+        sx={{
+          [theme.breakpoints.down('lg')]: {
+            display: 'flex',
+            justifyContent: 'flex-start',
+          },
+        }}
+      >
         <TagCell
           tags={linodeTags}
           updateTags={updateTags}
           listAllTags={openTagDrawer}
+          sx={{
+            [theme.breakpoints.down('lg')]: {
+              flexDirection: 'row-reverse',
+              '& > button': {
+                marginRight: theme.spacing(0.5),
+              },
+            },
+          }}
         />
       </Grid>
     </Grid>

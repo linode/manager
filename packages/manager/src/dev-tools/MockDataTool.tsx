@@ -1,6 +1,6 @@
 import * as React from 'react';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { MockData, mockDataController } from './mockDataController';
 import ServiceWorkerTool from './ServiceWorkerTool';
 
@@ -34,11 +34,11 @@ const MockDataTool: React.FC<{}> = () => {
   // specific fields, like label, region, etc. (via <input /> or even JSON entry?)
 
   return (
-    <Grid>
-      <Grid item xs={12}>
-        <h4 style={{ marginBottom: 8 }}>Mock Data</h4>
+    <Grid container>
+      <Grid xs={12}>
+        <h4 style={{ marginTop: 0, marginBottom: 8 }}>Mock Data</h4>
       </Grid>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         {options.map((thisOption) => {
           return (
             <div key={thisOption.key} style={{ marginTop: 4 }}>
@@ -55,7 +55,7 @@ const MockDataTool: React.FC<{}> = () => {
           );
         })}
       </Grid>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <ServiceWorkerTool />
       </Grid>
     </Grid>

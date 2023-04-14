@@ -6,7 +6,7 @@ import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
@@ -144,12 +144,11 @@ const EmailBounceNotification = React.memo((props: Props) => {
   return (
     <Notice important warning spacing={2}>
       <Grid container alignItems="center">
-        <Grid item xs={12} md={6} lg={8}>
+        <Grid xs={12} md={6} lg={8}>
           {text}
         </Grid>
         <Grid
           container
-          item
           xs={12}
           md={6}
           lg={4}

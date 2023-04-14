@@ -1,6 +1,6 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import { makeStyles } from '@mui/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import UserIcon from 'src/assets/icons/account.svg';
 import Community from 'src/assets/icons/community_nav.svg';
 import TooltipIcon from 'src/assets/icons/get_help.svg';
@@ -37,10 +37,10 @@ export const icons = {
 export const renderIcons = (icons) => {
   const classes = useStyles();
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       {Object.entries(icons).map(([iconLabel, icon]) => {
         return (
-          <Grid key={iconLabel} item className={classes.item}>
+          <Grid key={iconLabel} className={classes.item}>
             {icon}
             <div className={classes.label}>{iconLabel}</div>
           </Grid>

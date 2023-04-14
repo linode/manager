@@ -6,7 +6,7 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
@@ -99,16 +99,16 @@ export const VolumeTableRow = (props: CombinedProps) => {
   return (
     <TableRow key={`volume-row-${id}`} data-qa-volume-cell={id}>
       <TableCell data-qa-volume-cell-label={label}>
-        <Grid
-          container
-          wrap="nowrap"
-          justifyContent="space-between"
-          alignItems="center"
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            wrap: 'nowrap',
+          }}
         >
-          <Grid item>
-            <div>{label}</div>
-          </Grid>
-        </Grid>
+          {label}
+        </Box>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={volumeStatusIconMap[status]} />

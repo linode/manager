@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
@@ -119,7 +119,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
     >
       <Grid container wrap="nowrap" alignItems="center">
         {/* Hidden overflow is necessary for the wrapping of the label to work. */}
-        <Grid item style={{ overflow: 'hidden' }}>
+        <Grid style={{ overflow: 'hidden' }}>
           <div className={classes.labelStatusWrapper}>
             <Link className={classes.link} to={`/linodes/${id}`} tabIndex={0}>
               {label}

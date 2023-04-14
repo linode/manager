@@ -8,7 +8,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -151,13 +151,11 @@ const UsersLanding = () => {
         ariaLabel={`User ${user.username}`}
       >
         <TableCell data-qa-username>
-          <Grid container alignItems="center">
-            <Grid item style={{ display: 'flex' }}>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid style={{ display: 'flex' }}>
               <GravatarByEmail email={user.email} />
             </Grid>
-            <Grid item className="px0">
-              {user.username}
-            </Grid>
+            <Grid className="px0">{user.username}</Grid>
           </Grid>
         </TableCell>
         {!matchesSmDown && (
@@ -213,8 +211,9 @@ const UsersLanding = () => {
         alignItems="flex-end"
         justifyContent="flex-end"
         className={classes.userLandingHeader}
+        spacing={2}
       >
-        <Grid item className={classes.addNewWrapper}>
+        <Grid className={classes.addNewWrapper}>
           <AddNewLink
             disabled={isRestrictedUser}
             disabledReason={

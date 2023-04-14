@@ -9,7 +9,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableFooter from 'src/components/core/TableFooter';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -240,7 +240,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
     <TableRow ariaLabel={label} className={classes.row}>
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
-          <Grid item>
+          <Grid>
             <Typography>
               {linodeLink ? (
                 <Link to={linodeLink}>{displayLabel}</Link>

@@ -2,54 +2,18 @@ import { Interface, InterfacePurpose } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'src/components/TextField';
 import { useVlansQuery } from 'src/queries/vlans';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
-    margin: `${theme.spacing(2)} ${theme.spacing()} 0 `,
+    margin: `${theme.spacing(4.5)} ${theme.spacing()} ${theme.spacing(1.5)} `,
     width: `calc(100% - ${theme.spacing(2)})`,
-  },
-  vlanGrid: {
-    minWidth: 450,
-    '& .react-select__menu': {
-      marginTop: 20,
-      '& p': {
-        paddingLeft: theme.spacing(),
-      },
-    },
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      minWidth: 'auto',
-    },
-  },
-  vlanLabelField: {
-    width: 202,
-    height: 35,
-    marginRight: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  ipamAddressLabel: {
-    '& label': {
-      whiteSpace: 'nowrap',
-    },
-    [theme.breakpoints.down('lg')]: {
-      width: 200,
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  configsWrapper: {
-    [theme.breakpoints.down('sm')]: {
-      marginTop: `-${theme.spacing(2)}`,
-    },
   },
 }));
 
@@ -74,6 +38,8 @@ export interface ExtendedInterface extends Omit<Interface, 'purpose'> {
 
 export const InterfaceSelect: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
 
   const {
     readOnly,
@@ -152,7 +118,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12}>
           <Select
             options={
               // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
@@ -173,21 +139,20 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
         </Grid>
       )}
       {purpose === 'vlan' ? (
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={9} md={7}>
           <Grid
             container
-            direction={fromAddonsPanel ? 'row' : 'column'}
-            className={fromAddonsPanel ? classes.vlanGrid : ''}
+            sx={{
+              flexDirection: 'row',
+              [theme.breakpoints.down('sm')]: {
+                flexDirection: 'column',
+              },
+            }}
+            spacing={isSmallBp ? 0 : 4}
           >
-            <Grid
-              item
-              className={!fromAddonsPanel ? classes.configsWrapper : ''}
-              xs={12}
-              sm={fromAddonsPanel ? 6 : 12}
-            >
+            <Grid xs={12} sm={6}>
               <Select
                 inputId={`vlan-label-${slotNumber}`}
-                className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
                 options={vlanOptions}
                 label="VLAN"
@@ -209,31 +174,23 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 }
               />
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={fromAddonsPanel ? 6 : 12}
-              className={fromAddonsPanel ? '' : 'py0'}
-              style={fromAddonsPanel ? {} : { marginTop: -8, marginBottom: 8 }}
-            >
-              <div className={fromAddonsPanel ? classes.ipamAddressLabel : ''}>
-                <TextField
-                  inputId={`ipam-input-${slotNumber}`}
-                  label="IPAM Address"
-                  disabled={readOnly}
-                  errorText={ipamError}
-                  onChange={handleAddressChange}
-                  optional
-                  placeholder="192.0.2.0/24"
-                  tooltipOnMouseEnter={() =>
-                    sendLinodeCreateDocsEvent('IPAM Address Tooltip Hover')
-                  }
-                  tooltipText={
-                    'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
-                  }
-                  value={ipamAddress}
-                />
-              </div>
+            <Grid xs={12} sm={6}>
+              <TextField
+                inputId={`ipam-input-${slotNumber}`}
+                label="IPAM Address"
+                disabled={readOnly}
+                errorText={ipamError}
+                onChange={handleAddressChange}
+                optional
+                placeholder="192.0.2.0/24"
+                tooltipOnMouseEnter={() =>
+                  sendLinodeCreateDocsEvent('IPAM Address Tooltip Hover')
+                }
+                tooltipText={
+                  'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
+                }
+                value={ipamAddress}
+              />
             </Grid>
           </Grid>
         </Grid>

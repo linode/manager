@@ -15,7 +15,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
@@ -156,7 +156,7 @@ export const AddCertForm: React.FC<FormProps> = (props) => {
       )}
       <div>
         <div className={classes.wrapper}>
-          <Grid item xs={12} md={6} className={classes.certWrapper}>
+          <Grid xs={12} md={6} className={classes.certWrapper}>
             <TextField
               label="Certificate"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -171,7 +171,7 @@ export const AddCertForm: React.FC<FormProps> = (props) => {
               errorText={errorMap.certificate}
             />
           </Grid>
-          <Grid item xs={12} md={6} className={classes.keyWrapper}>
+          <Grid xs={12} md={6} className={classes.keyWrapper}>
             <TextField
               label="Private Key"
               fullWidth
@@ -187,7 +187,7 @@ export const AddCertForm: React.FC<FormProps> = (props) => {
             />
           </Grid>
         </div>
-        <Grid item>
+        <Grid>
           <ActionsPanel>
             <Button
               onClick={onSubmit}

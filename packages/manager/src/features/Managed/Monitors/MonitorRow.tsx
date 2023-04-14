@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { ExtendedIssue } from 'src/queries/managed/types';
@@ -71,16 +71,16 @@ export const MonitorRow: React.FC<Props> = (props) => {
       ariaLabel={`Monitor ${monitor.label}`}
     >
       <TableCell className={classes.label} data-qa-monitor-label>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className={classes.icon} style={{ display: 'flex' }}>
+        <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+          <Grid className={classes.icon} style={{ display: 'flex' }}>
             <Icon height={30} width={30} />
           </Grid>
-          <Grid item>{monitor.label}</Grid>
+          <Grid>{monitor.label}</Grid>
         </Grid>
       </TableCell>
       <TableCell data-qa-monitor-status>
-        <Grid container item direction="row" alignItems="center">
-          <Grid item>
+        <Grid container direction="row" alignItems="center" spacing={1}>
+          <Grid>
             <Typography
               className={
                 monitor.status === 'problem' ? classes.errorStatus : ''

@@ -29,7 +29,7 @@ import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -587,7 +587,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         <DialogContent loading={isLoading} errors={props.kernelError}>
           <React.Fragment>
             {generalError && (
-              <Grid item>
+              <Grid>
                 <Notice
                   error
                   errorGroup="linode-config-dialog"
@@ -596,18 +596,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 />
               </Grid>
             )}
-            <Grid
-              item
-              xs={12}
-              updateFor={[
-                formik.errors.label,
-                formik.errors.comments,
-                values.label,
-                values.comments,
-                formik.handleChange,
-                classes,
-              ]}
-            >
+            <Grid xs={12}>
               <TextField
                 label="Label"
                 name="label"
@@ -634,7 +623,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid item xs={12} updateFor={[values.virt_mode, classes]}>
+            <Grid xs={12}>
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
@@ -675,21 +664,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid
-              item
-              xs={12}
-              updateFor={[
-                deviceCounter,
-                values.kernel,
-                values.setMemoryLimit,
-                kernels,
-                formik.errors.kernel,
-                values.run_level,
-                values.memory_limit,
-                formik.errors.memory_limit,
-                classes,
-              ]}
-            >
+            <Grid xs={12}>
               <Typography variant="h3">Boot Settings</Typography>
               {kernels && (
                 <KernelSelect
@@ -796,19 +771,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid
-              item
-              xs={12}
-              updateFor={[
-                deviceCounter,
-                values.devices,
-                values.initrd,
-                values.root_device,
-                useCustomRoot,
-                values.useCustomRoot,
-                formik.errors.devices,
-              ]}
-            >
+            <Grid xs={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 counter={deviceCounter}
@@ -893,7 +856,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             <Divider className={classes.divider} />
 
             {showVlans ? (
-              <Grid item xs={12}>
+              <Grid xs={12}>
                 <Box display="flex" alignItems="center">
                   <Typography variant="h3">Network Interfaces</Typography>
                   <TooltipIcon
@@ -946,7 +909,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               </Grid>
             ) : null}
 
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
               <FormControl
                 updateFor={[

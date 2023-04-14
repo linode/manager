@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { SupportLink } from 'src/components/SupportLink';
 import withLinodes, {
   DispatchProps,
@@ -44,8 +44,8 @@ export const ManagedContent = (props: ContentProps) => {
   }
 
   return (
-    <Grid container direction="column">
-      <Grid item>
+    <Grid container direction="column" spacing={2}>
+      <Grid>
         <Typography variant="body1">
           Linode Managed includes Backups, Longview Pro, cPanel, and
           round-the-clock monitoring to help keep your systems up and running.
@@ -57,7 +57,7 @@ export const ManagedContent = (props: ContentProps) => {
           />
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <Button buttonType="outlined" onClick={openConfirmationModal}>
           Add Linode Managed
         </Button>

@@ -8,7 +8,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import IPSelect from 'src/components/IPSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -166,8 +166,8 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                       placeholder={user || DEFAULTS.user}
                     />
 
-                    <Grid container>
-                      <Grid item xs={12} md={8} className={classes.ip}>
+                    <Grid container spacing={2}>
+                      <Grid xs={12} md={8} className={classes.ip}>
                         <IPSelect
                           linodeId={linodeSetting.id}
                           value={{
@@ -198,7 +198,7 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                         />
                       </Grid>
 
-                      <Grid item xs={12} md={4} className={classes.port}>
+                      <Grid xs={12} md={4} className={classes.port}>
                         <TextField
                           name="ssh.port"
                           label="Port"

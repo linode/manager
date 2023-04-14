@@ -4,7 +4,7 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import EntityIcon from 'src/components/EntityIcon';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { FolderActionMenu } from './FolderActionMenu';
@@ -39,11 +39,11 @@ const FolderTableRow: React.FC<Props> = (props) => {
       ariaLabel={`Folder ${displayName}`}
     >
       <TableCell parentColumn="Object">
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className={classes.iconWrapper}>
+        <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+          <Grid className={classes.iconWrapper}>
             <EntityIcon variant="folder" size={22} />
           </Grid>
-          <Grid item>
+          <Grid>
             <Link to={`?prefix=${folderName}`} className="secondaryLink">
               {displayName}
             </Link>

@@ -6,7 +6,7 @@ import { assocPath } from 'ramda';
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
@@ -318,7 +318,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid className={`${classes.main} mlMain py0`}>
           <Paper>
             <Typography variant="h2">Select an App</Typography>
             <Box className={classes.searchAndFilter}>

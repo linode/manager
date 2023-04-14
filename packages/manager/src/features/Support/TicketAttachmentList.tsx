@@ -6,7 +6,7 @@ import { compose, withStateHandlers } from 'recompose';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import TicketAttachmentRow from './TicketAttachmentRow';
 
@@ -61,8 +61,8 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
   const icons = addIconsToAttachments(attachments);
 
   return (
-    <Grid item container justifyContent="flex-start" className={classes.root}>
-      <Grid item className={classes.attachmentPaperWrapper}>
+    <Grid container justifyContent="flex-start" className={classes.root}>
+      <Grid className={classes.attachmentPaperWrapper}>
         <Typography variant="h3">Attachments</Typography>
         <TicketAttachmentRow
           attachments={slice(0, 5, attachments)}

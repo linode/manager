@@ -9,7 +9,6 @@ import CircleProgress from 'src/components/CircleProgress';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
@@ -232,7 +231,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Connection Details
       </Typography>
-      <Grid className={classes.connectionDetailsCtn} data-qa-connection-details>
+      <Box className={classes.connectionDetailsCtn} data-qa-connection-details>
         <Typography>
           <span>username</span> ={' '}
           {database.engine === 'postgresql' ? 'linpostgres' : DB_ROOT_USERNAME}
@@ -398,7 +397,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         <Typography>
           <span>ssl</span> = {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
         </Typography>
-      </Grid>
+      </Box>
       <div className={classes.actionBtnsCtn}>
         {database.ssl_connection ? caCertificateJSX : null}
       </div>

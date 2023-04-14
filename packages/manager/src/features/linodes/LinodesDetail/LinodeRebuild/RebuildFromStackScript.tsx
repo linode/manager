@@ -11,7 +11,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -270,7 +270,7 @@ export const RebuildFromStackScript = (props: Props) => {
         }
 
         return (
-          <Grid item className={classes.root}>
+          <Grid className={classes.root}>
             <form>
               <SelectStackScriptPanel
                 error={errors.stackscript_id}

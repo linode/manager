@@ -5,7 +5,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
@@ -143,11 +143,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid
-          data-qa-panel={header}
-          item
-          className={`${classes.main} mlMain py0`}
-        >
+        <Grid data-qa-panel={header} className={`${classes.main} mlMain py0`}>
           <SelectStackScriptPanel
             data-qa-select-stackscript
             error={hasErrorFor('stackscript_id')}

@@ -21,7 +21,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import {
   withProfile,
@@ -244,10 +244,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         justifyContent="flex-start"
         className={classes.label}
       >
-        <Grid item className={classes.labelIcon}>
-          {icon}
-        </Grid>
-        <Grid item className="p0">
+        <Grid className={classes.labelIcon}>{icon}</Grid>
+        <Grid className="p0">
           {target !== null ? (
             <Link
               to={target}
@@ -385,8 +383,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           <Notice success text={'Ticket has been closed.'} />
         )}
 
-        <Grid container>
-          <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid xs={12}>
             {/* If the ticket isn't blank, display it, followed by replies (if any). */}
             {ticket.description && (
               <ExpandableTicketPanel
@@ -409,7 +407,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
               />
             )}
           </Grid>
-          <Grid item xs={12} />
+          <Grid xs={12} />
         </Grid>
       </React.Fragment>
     );

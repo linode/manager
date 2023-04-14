@@ -6,7 +6,7 @@ import MenuItem from 'src/components/core/MenuItem';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -109,9 +109,9 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Grid updateFor={[node, classes]} item data-qa-node xs={12}>
+      <Grid data-qa-node xs={12} sx={{ padding: 0 }}>
         {idx !== 0 && (
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Divider
               style={{
                 marginTop: forEdit ? 8 : 24,
@@ -121,12 +121,21 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
           </Grid>
         )}
         {nodesErrorMap.none && (
-          <Grid item>
+          <Grid>
             <Notice error text={nodesErrorMap.none} />
           </Grid>
         )}
-        <Grid container>
-          <Grid item xs={6} sm={forEdit ? 4 : 6} lg={forEdit ? 2 : 4}>
+        <Grid container spacing={2}>
+          <Grid
+            xs={6}
+            sm={forEdit ? 4 : 6}
+            lg={forEdit ? 2 : 4}
+            sx={{
+              '.MuiInputLabel-root': {
+                marginTop: 0,
+              },
+            }}
+          >
             <TextField
               label="Label"
               value={node.label}
@@ -140,7 +149,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
             />
           </Grid>
           {node.status && (
-            <Grid item xs={6} sm={4} lg={2}>
+            <Grid xs={6} sm={4} lg={2}>
               <Typography
                 variant="h3"
                 data-qa-active-checks-header
@@ -162,14 +171,9 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
           )}
         </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Grid
-          key={idx}
-          updateFor={[nodeBalancerRegion, node, configIdx, classes]}
-          container
-          data-qa-node
-        >
-          <Grid item xs={12} sm={3} lg={forEdit ? 2 : 4}>
+      <Grid xs={12} sx={{ padding: 0 }}>
+        <Grid key={idx} container data-qa-node spacing={2}>
+          <Grid xs={12} sm={3} lg={forEdit ? 2 : 4}>
             <SelectIP
               textfieldProps={{
                 dataAttrs: {
@@ -185,7 +189,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
               inputId={`ip-select-node-${configIdx}-${idx}`}
             />
           </Grid>
-          <Grid item xs={6} sm={3} lg={2}>
+          <Grid xs={6} sm={3} lg={2}>
             <TextField
               type="number"
               label="Port"
@@ -199,7 +203,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
               disabled={disabled}
             />
           </Grid>
-          <Grid item xs={6} sm={3} lg={2}>
+          <Grid xs={6} sm={3} lg={2}>
             <TextField
               type="number"
               label="Weight"
@@ -214,7 +218,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
             />
           </Grid>
           {forEdit && (
-            <Grid item xs={6} sm={3} lg={2}>
+            <Grid xs={6} sm={3} lg={2}>
               <TextField
                 className={classes.mode}
                 label="Mode"

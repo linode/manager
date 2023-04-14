@@ -3,7 +3,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
@@ -93,7 +93,7 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
       <Grid container className="m0" style={{ width: '100%' }}>
         {data.map((linode, idx: number) => (
           <React.Fragment key={`linode-card-${idx}`}>
-            <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
+            <Grid xs={12} className={`${classes.summaryOuter} py0`}>
               <LinodeEntityDetail
                 id={linode.id}
                 linode={linode}

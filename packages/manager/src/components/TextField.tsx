@@ -44,10 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 0,
   },
   helpWrapperTextField: {
-    width: 415,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
+    width: '415px',
   },
   errorText: {
     display: 'flex',

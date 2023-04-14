@@ -1,45 +1,20 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import LinodeConfigs from './LinodeConfigs';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  title: {
-    marginBottom: theme.spacing(2),
-  },
-  enclosingGrid: {
-    width: '100%',
-  },
-  paper: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(1),
-    marginBottom: theme.spacing(3),
-  },
-  migrationHeader: {
-    paddingTop: theme.spacing(),
-  },
-  migrationCopy: {
-    marginTop: theme.spacing(),
-  },
-  sidebar: {
-    marginTop: `-${theme.spacing(2)}`,
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(5),
-    },
-  },
-}));
 
 type CombinedProps = LinodeContextProps;
 
 const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
-  const classes = useStyles();
-
   return (
-    <Grid container item className="m0" xs={12}>
-      <Grid item className={`${classes.enclosingGrid} p0`}>
+    <Grid container className="m0" xs={12} spacing={1}>
+      <Grid
+        sx={{
+          padding: 0,
+          flex: 1,
+        }}
+      >
         <LinodeConfigs />
       </Grid>
     </Grid>
