@@ -1,26 +1,12 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { clone, propOr } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Box from '@mui/material/Box';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-  },
-  selectContainer: {
-    width: `calc(415px + ${theme.spacing(2)})`,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-}));
 
 interface Props {
   images: Image[];
@@ -53,8 +39,6 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
     anyAllOption,
   } = props;
 
-  const classes = useStyles();
-
   const { isLoading: imagesLoading, isError, error } = useAllImagesQuery(
     {},
     {}
@@ -85,13 +69,17 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
 
   return (
     <Box
-      className={classes.root}
       sx={{
-        display: 'flex',
         alignItems: 'center',
+        display: 'flex',
+        width: '100%',
       }}
     >
-      <Box className={classes.selectContainer}>
+      <Box
+        sx={{
+          width: '415px',
+        }}
+      >
         <Select
           id={'image-select'}
           isLoading={imagesLoading}
@@ -112,7 +100,6 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
         <TooltipIcon
           sxTooltipIcon={{
             transform: 'translateY(50%)',
-            marginLeft: '-20px',
           }}
           text={helperText || 'Choosing a 64-bit distro is recommended.'}
           status="help"

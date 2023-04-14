@@ -9,7 +9,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Tag from 'src/components/Tag';
 import CircleProgress from '../CircleProgress';
 import AddTag from './AddTag';
-import Box from '@mui/material/Box';
 import { SxProps } from '@mui/system';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -61,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.tagIcon,
     height: 30,
     marginLeft: theme.spacing(),
+    marginRight: theme.spacing(0.5),
     padding: 0,
     width: '40px',
     '&:hover': {
@@ -205,18 +205,16 @@ export const TagCell: React.FC<Props> = (props) => {
           </div>
 
           {hasOverflow ? (
-            <Box className="py0">
-              <IconButton
-                onKeyPress={() => props.listAllTags(tags)}
-                onClick={() => props.listAllTags(tags)}
-                className={classes.button}
-                disableRipple
-                aria-label="Display all tags"
-                size="large"
-              >
-                <MoreHoriz />
-              </IconButton>
-            </Box>
+            <IconButton
+              onKeyPress={() => props.listAllTags(tags)}
+              onClick={() => props.listAllTags(tags)}
+              className={classes.button}
+              disableRipple
+              aria-label="Display all tags"
+              size="large"
+            >
+              <MoreHoriz />
+            </IconButton>
           ) : null}
           <button
             className={classes.addTagButton}
