@@ -1,6 +1,6 @@
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
-import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
 

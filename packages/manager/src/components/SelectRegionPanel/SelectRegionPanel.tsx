@@ -7,7 +7,7 @@ import { compose } from 'recompose';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/linodes/LinodesCreate/utilities';
