@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 - Typesafety of the `<Select />` component #8986
+- Clear the Kubernetes Delete Dialog when it is re-opened #9000
 
 ### Tech Stories:
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
