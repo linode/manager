@@ -91,7 +91,9 @@ const TagsInput = (props: TagsInputProps) => {
     : labelError ||
       tagError ||
       generalError ||
-      (accountTagsError !== null && 'There was an error retrieving your tags.');
+      (accountTagsError !== null
+        ? 'There was an error retrieving your tags.'
+        : undefined);
 
   return (
     <Select
@@ -105,9 +107,9 @@ const TagsInput = (props: TagsInputProps) => {
       errorText={error}
       value={value}
       onChange={onChange}
-      createNew={createTag}
+      onCreateOption={createTag}
       noOptionsMessage={getEmptyMessage}
-      disabled={disabled}
+      isDisabled={disabled}
       menuPlacement={menuPlacement}
     />
   );

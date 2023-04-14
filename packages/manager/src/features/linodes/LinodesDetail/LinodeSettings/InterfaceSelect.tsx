@@ -133,7 +133,6 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
               (thisOption) => thisOption.value === purpose
             )}
             onChange={handlePurposeChange}
-            onCreate
             disabled={readOnly}
             isClearable={false}
           />
@@ -165,9 +164,9 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                   null
                 }
                 onChange={handleLabelChange}
-                createNew={handleCreateOption}
+                onCreateOption={handleCreateOption}
                 isClearable
-                disabled={readOnly}
+                isDisabled={readOnly}
                 noOptionsMessage={() =>
                   isLoading
                     ? 'Loading...'
