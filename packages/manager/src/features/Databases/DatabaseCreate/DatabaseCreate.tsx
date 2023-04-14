@@ -28,7 +28,7 @@ import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import ErrorState from 'src/components/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
