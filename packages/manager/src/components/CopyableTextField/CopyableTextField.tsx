@@ -1,10 +1,10 @@
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   removeDisabledStyles: {
     '& .MuiInput-input': {
       borderColor: theme.name === 'light' ? '#ccc' : '#222',
@@ -36,8 +36,8 @@ type Props = TextFieldProps & {
 
 type CombinedProps = Props;
 
-export const CopyableTextField: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const CopyableTextField = (props: CombinedProps) => {
+  const { classes } = useStyles();
   const { value, className, hideIcon, ...restProps } = props;
 
   return (
@@ -55,5 +55,3 @@ export const CopyableTextField: React.FC<CombinedProps> = (props) => {
     />
   );
 };
-
-export default CopyableTextField;
