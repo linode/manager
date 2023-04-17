@@ -110,18 +110,12 @@ export const AddNodePoolDrawer = (props: Props) => {
     }
   }, [error]);
 
-  React.useEffect(() => {
-    if (selectedTypeInfo?.count === 0) {
-      setSelectedTypeInfo(undefined);
-    }
-  }, [selectedTypeInfo]);
-
   const resetDrawer = () => {
     setSelectedTypeInfo(undefined);
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    setSelectedTypeInfo({ planId, count: newCount });
+    setSelectedTypeInfo(newCount > 0 ? { planId, count: newCount } : undefined);
   };
 
   const handleAdd = () => {
