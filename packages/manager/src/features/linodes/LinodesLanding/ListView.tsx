@@ -4,9 +4,12 @@ import { notificationContext as _notificationContext } from 'src/features/Notifi
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow';
 import { RenderLinodesProps } from './DisplayLinodes';
+import { useProfile } from 'src/queries/profile';
 
 export const ListView: React.FC<RenderLinodesProps> = (props) => {
   const { data, openDialog, openPowerActionDialog } = props;
+
+  const { data: profile } = useProfile();
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -27,7 +30,11 @@ export const ListView: React.FC<RenderLinodesProps> = (props) => {
           id={linode.id}
           ipv4={linode.ipv4}
           maintenanceStartTime={
-            linode.maintenance?.when ? formatDate(linode.maintenance.when) : ''
+            linode.maintenance?.when
+              ? formatDate(linode.maintenance.when, {
+                  timezone: profile?.timezone,
+                })
+              : ''
           }
           ipv6={linode.ipv6 || ''}
           label={linode.label}

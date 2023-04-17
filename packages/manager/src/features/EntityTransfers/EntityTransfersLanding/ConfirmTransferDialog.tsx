@@ -15,7 +15,6 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
-import { queryClient } from 'src/queries/base';
 import {
   queryKey,
   TRANSFER_FILTERS,
@@ -28,6 +27,8 @@ import { formatDate } from 'src/utilities/formatDate';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { countByEntity } from '../utilities';
+import { useQueryClient } from 'react-query';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   transferSummary: {
@@ -74,6 +75,8 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   const [submissionErrors, setSubmissionErrors] = React.useState<
     APIError[] | null
   >(null);
+
+  const queryClient = useQueryClient();
 
   const isOwnAccount = Boolean(data?.is_sender);
 
@@ -194,6 +197,8 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
   } = props;
   const classes = useStyles();
 
+  const { data: profile } = useProfile();
+
   if (isLoading) {
     return (
       <div style={{ width: 500 }}>
@@ -217,7 +222,7 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
     );
   }
 
-  const timeRemaining = getTimeRemaining(expiry);
+  const timeRemaining = getTimeRemaining(expiry, profile?.timezone);
 
   return (
     <>
@@ -272,7 +277,10 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
   );
 });
 
-export const getTimeRemaining = (time?: string): string | undefined => {
+export const getTimeRemaining = (
+  time?: string,
+  timezone?: string
+): string | undefined => {
   if (!time) {
     return;
   }
@@ -293,7 +301,9 @@ export const getTimeRemaining = (time?: string): string | undefined => {
     unit,
     unit + 's',
     unit === 'minute' ? minutesRemaining : Math.round(minutesRemaining / 60)
-  )} (${formatDate(time)}).`;
+  )} (${formatDate(time, {
+    timezone,
+  })}).`;
 };
 
 export default React.memo(ConfirmTransferDialog);

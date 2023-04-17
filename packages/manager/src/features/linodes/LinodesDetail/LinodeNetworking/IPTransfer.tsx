@@ -30,10 +30,10 @@ import {
   queryKey as linodesQueryKey,
   useAllLinodesQuery,
 } from 'src/queries/linodes';
-import { queryClient } from 'src/queries/base';
 import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   sourceIPWrapper: {
@@ -151,6 +151,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     readOnly,
   } = props;
   const classes = useStyles();
+  const queryClient = useQueryClient();
   const [ips, setIPs] = React.useState<IPRowState>(
     props.ipAddresses.reduce(
       (acc, ip) => ({

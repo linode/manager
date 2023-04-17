@@ -23,7 +23,7 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(0),
     paddingTop: '4px',
   },
   button: {
@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
   },
   displayTable: {
+    padding: '8px 8px 0px',
     width: '100%',
     '& > div': {
       marginBottom: theme.spacing(3),
@@ -41,6 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   nodePoolHeader: {
     marginBottom: theme.spacing(),
+    [theme.breakpoints.only('sm')]: {
+      marginLeft: theme.spacing(),
+    },
+    [theme.breakpoints.only('xs')]: {
+      marginLeft: theme.spacing(),
+    },
   },
   nodePoolHeaderOuter: {
     display: 'flex',
@@ -48,12 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   nodePool: {
     marginBottom: theme.spacing(3),
-  },
-  mobileSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
   },
 }));
 
@@ -128,10 +129,7 @@ export const NodePoolsDisplay = (props: Props) => {
         <Grid item>
           <Typography
             variant="h2"
-            className={classNames(
-              classes.nodePoolHeader,
-              classes.mobileSpacing
-            )}
+            className={classNames(classes.nodePoolHeader)}
           >
             Node Pools
           </Typography>
@@ -139,14 +137,14 @@ export const NodePoolsDisplay = (props: Props) => {
         <Grid item>
           <Button
             buttonType="secondary"
-            className={classNames(classes.button, classes.mobileSpacing)}
+            className={classNames(classes.button)}
             onClick={() => setIsRecycleClusterOpen(true)}
           >
             Recycle All Nodes
           </Button>
           <Button
             buttonType="primary"
-            className={classNames(classes.button, classes.mobileSpacing)}
+            className={classNames(classes.button)}
             onClick={handleOpenAddDrawer}
           >
             Add a Node Pool
@@ -158,7 +156,7 @@ export const NodePoolsDisplay = (props: Props) => {
           <ErrorState errorText={poolsError?.[0].reason} />
         ) : (
           <Grid container direction="column">
-            <Grid item xs={12} className={classes.displayTable}>
+            <Grid xs={12} className={classes.displayTable}>
               {_pools?.map((thisPool) => {
                 const { id, nodes } = thisPool;
 

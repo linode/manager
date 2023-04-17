@@ -41,12 +41,12 @@ import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectDetailDrawer from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
 import { deleteObject as _deleteObject } from '../requests';
-import { queryClient } from 'src/queries/base';
 import produce from 'immer';
 import { debounce } from 'throttle-debounce';
 import Box from 'src/components/core/Box';
 import { CreateFolderDrawer } from './CreateFolderDrawer';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   objectTable: {
@@ -93,6 +93,8 @@ export const BucketDetail: React.FC = () => {
   const bucketName = match?.params.bucketName || '';
   const clusterId = match?.params.clusterId || '';
   const prefix = getQueryParam(location.search, 'prefix');
+
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -162,7 +164,7 @@ export const BucketDetail: React.FC = () => {
   // we don't want to fetch for every delete action. Debounce
   // the updateBucket call by 3 seconds.
   const debouncedUpdateBucket = debounce(3000, false, () =>
-    updateBucket(clusterId, bucketName)
+    updateBucket(clusterId, bucketName, queryClient)
   );
 
   const deleteObject = async () => {

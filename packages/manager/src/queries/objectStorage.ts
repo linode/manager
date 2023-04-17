@@ -1,7 +1,13 @@
 import { APIError, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
-import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
-import { queryClient, queryPresets } from './base';
+import {
+  QueryClient,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+import { queryPresets } from './base';
 import { getAll } from 'src/utilities/getAll';
 import {
   createBucket,
@@ -21,6 +27,7 @@ import {
   ObjectStorageObjectURLOptions,
   ObjectStorageObjectURL,
 } from '@linode/api-v4/lib/object-storage';
+import { queryKey as accountSettingsQueryKey } from './accountSettings';
 
 export interface BucketError {
   cluster: ObjectStorageCluster;
@@ -78,12 +85,15 @@ export const useObjectStorageAccessKeys = (params: Params) =>
   );
 
 export const useCreateBucketMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<
     ObjectStorageBucket,
     APIError[],
     ObjectStorageBucketRequestPayload
   >(createBucket, {
     onSuccess: (newEntity) => {
+      // Invalidate account settings because it contains obj information
+      queryClient.invalidateQueries(accountSettingsQueryKey);
       queryClient.setQueryData<BucketsResponce>(
         `${queryKey}-buckets`,
         (oldData) => ({
@@ -96,6 +106,7 @@ export const useCreateBucketMutation = () => {
 };
 
 export const useDeleteBucketMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { cluster: string; label: string }>(
     (data) => deleteBucket(data),
     {
@@ -189,7 +200,11 @@ export const prefixToQueryKey = (prefix: string) => {
  * @param {string} cluster the id of the Object Storage cluster
  * @param {string} bucketName the label of the bucket
  */
-export const updateBucket = async (cluster: string, bucketName: string) => {
+export const updateBucket = async (
+  cluster: string,
+  bucketName: string,
+  queryClient: QueryClient
+) => {
   const bucket = await getBucket(cluster, bucketName);
   queryClient.setQueryData<BucketsResponce | undefined>(
     `${queryKey}-buckets`,

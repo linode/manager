@@ -52,7 +52,7 @@ export const buildQueryStringForLinodeClone = (
   linodeId: number,
   linodeRegion: string,
   linodeType: string | null,
-  types: ExtendedType[] | null,
+  types: ExtendedType[] | null | undefined,
   regions: Region[]
 ): string => {
   const params: Record<string, string> = {

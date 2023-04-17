@@ -15,10 +15,13 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
@@ -58,9 +61,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    toolTip: {
-      marginLeft: -2,
-    },
     title: {
       marginBottom: theme.spacing(2),
     },
@@ -120,7 +120,7 @@ type CombinedProps = Props &
   PreferencesProps &
   WithSnackbarProps &
   StateProps &
-  ProfileProps;
+  WithProfileProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
@@ -369,20 +369,29 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <Typography variant="h2" className={classes.resizeTitle}>
           Auto Resize Disk
           {disksError ? (
-            <HelpIcon
-              className={classes.toolTip}
+            <TooltipIcon
+              sxTooltipIcon={{
+                marginLeft: '-2px',
+              }}
               text={`There was an error loading your Linode&rsquo; disks.`}
+              status="help"
             />
           ) : isSmaller ? (
-            <HelpIcon
-              className={classes.toolTip}
+            <TooltipIcon
+              sxTooltipIcon={{
+                marginLeft: '-2px',
+              }}
               text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
+              status="help"
             />
           ) : !_shouldEnableAutoResizeDiskOption ? (
-            <HelpIcon
-              className={classes.toolTip}
+            <TooltipIcon
+              sxTooltipIcon={{
+                marginLeft: '-2px',
+              }}
               text={`Your ext disk can only be automatically resized if you have one ext
                       disk or one ext disk and one swap disk on this Linode.`}
+              status="help"
             />
           ) : null}
         </Typography>

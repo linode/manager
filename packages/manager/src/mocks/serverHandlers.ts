@@ -317,8 +317,17 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
-    const cloudinitCompatableImages = imageFactory.buildList(5, {
-      id: 'metadata-test',
+    const cloudinitCompatableDistro = imageFactory.build({
+      id: 'metadata-test-distro',
+      label: 'metadata-test-distro',
+      is_public: true,
+      status: 'available',
+      type: 'manual',
+      capabilities: ['cloud-init'],
+    });
+    const cloudinitCompatableImage = imageFactory.build({
+      id: 'metadata-test-image',
+      label: 'metadata-test-image',
       status: 'available',
       type: 'manual',
       capabilities: ['cloud-init'],
@@ -335,9 +344,10 @@ export const handlers = [
       type: 'automatic',
       expiry: '2021-05-01',
     });
-    const publicImages = imageFactory.buildList(0, { is_public: true });
+    const publicImages = imageFactory.buildList(4, { is_public: true });
     const images = [
-      ...cloudinitCompatableImages,
+      cloudinitCompatableDistro,
+      cloudinitCompatableImage,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
@@ -368,7 +378,16 @@ export const handlers = [
       })
   ),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(60, {
+    const metadataLinodeWithCompatibleImage = linodeFactory.build({
+      image: 'metadata-test-image',
+      label: 'metadata-test-image',
+    });
+    const metadataLinodeWithCompatibleImageAndRegion = linodeFactory.build({
+      region: 'eu-west',
+      image: 'metadata-test-image',
+      label: 'metadata-test-region',
+    });
+    const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
     });
@@ -378,10 +397,6 @@ export const handlers = [
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
     const busyLinodes = linodeFactory.buildList(1, { status: 'migrating' });
-    const metadataLinodes = linodeFactory.buildList(2, {
-      image: 'metadata-test',
-      label: 'metadata-test',
-    });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
@@ -400,7 +415,8 @@ export const handlers = [
       tags: ['test1', 'test2', 'test3'],
     });
     const linodes = [
-      ...metadataLinodes,
+      metadataLinodeWithCompatibleImage,
+      metadataLinodeWithCompatibleImageAndRegion,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
@@ -601,7 +617,7 @@ export const handlers = [
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(650);
+    const buckets = objectStorageBucketFactory.buildList(0);
 
     return res(
       ctx.json({
@@ -816,39 +832,19 @@ export const handlers = [
     );
   }),
   rest.get('*/events', (req, res, ctx) => {
-    const brokenEvent = eventFactory.build({
-      action: 'community_question_reply',
-      message: 'some community reply',
-      username: 'randomperson',
-      status: 'notification',
-      percent_complete: null,
-      entity: null,
-      seen: false,
-      read: false,
+    const events = eventFactory.buildList(1, {
+      action: 'lke_node_create',
+      percent_complete: 15,
+      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      message:
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
     });
-    const brokenEvent2 = eventFactory.build({
-      action: 'community_mention',
-      message: 'some community reply',
-      username: 'randomperson',
-      status: 'notification',
-      percent_complete: null,
-      entity: null,
-      seen: false,
-      read: false,
+    const oldEvents = eventFactory.buildList(20, {
+      action: 'account_update',
+      seen: true,
+      percent_complete: 100,
     });
-    const brokenEvent3 = eventFactory.build({
-      action: 'community_like',
-      message: 'some community reply',
-      username: 'randomperson',
-      status: 'notification',
-      percent_complete: null,
-      entity: null,
-      seen: false,
-      read: false,
-    });
-    return res(
-      ctx.json(makeResourcePage([brokenEvent, brokenEvent2, brokenEvent3]))
-    );
+    return res.once(ctx.json(makeResourcePage([...events, ...oldEvents])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
@@ -894,12 +890,12 @@ export const handlers = [
         longview_subscription: 'longview-100',
         managed: true,
         network_helper: true,
-        object_storage: 'active',
+        object_storage: 'disabled',
       })
     );
   }),
   rest.put('*/account/settings/*', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(ctx.json(req.body as any));
   }),
   rest.get('*/tags', (req, res, ctx) => {
     tagFactory.resetSequenceNumber();

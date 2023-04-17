@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
   },
   dnsWarning: {
-    '& h3:first-child': {
+    '& h3:first-of-type': {
       marginBottom: theme.spacing(1),
     },
   },

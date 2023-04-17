@@ -5,8 +5,8 @@ import {
   SecurityQuestionsPayload,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery, useMutation } from 'react-query';
-import { queryPresets, queryClient } from './base';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { queryPresets } from './base';
 
 export const queryKey = 'securityQuestions';
 
@@ -16,6 +16,7 @@ export const useSecurityQuestions = () =>
   });
 
 export const useMutateSecurityQuestions = () => {
+  const queryClient = useQueryClient();
   return useMutation<
     SecurityQuestionsPayload,
     APIError[],

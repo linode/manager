@@ -13,11 +13,10 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from 'src/components/IconButton';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
@@ -28,39 +27,12 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import InvoiceTable from './InvoiceTable';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
-  },
-  totals: {
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'right',
-    '& h2': {
-      margin: theme.spacing(1),
-    },
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34,
-    },
-  },
-  m2: {
-    margin: theme.spacing(),
-  },
-}));
+import Box from '@mui/material/Box';
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }>;
 
 export const InvoiceDetail = (props: CombinedProps) => {
-  const { classes } = useStyles();
+  const theme = useTheme();
 
   const csvRef = React.useRef<any>();
 
@@ -123,31 +95,55 @@ export const InvoiceDetail = (props: CombinedProps) => {
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };
 
+  const sxGrid = {
+    alignItems: 'center',
+    display: 'flex',
+  };
+
+  const sxDownloadButton = {
+    whiteSpace: 'nowrap',
+  };
+
   return (
-    <Paper className={classes.root}>
-      <Grid container>
-        <Grid item xs={12}>
-          <Grid container justifyContent="space-between">
-            <Grid item className={classes.titleWrapper} style={{ flex: 1 }}>
+    <Paper
+      sx={{
+        padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
+      }}
+    >
+      <Grid container rowGap={2}>
+        <Grid xs={12}>
+          <Grid container sx={sxGrid} spacing={2}>
+            <Grid xs={12} sm={4} sx={sxGrid}>
               <Link to={`/account/billing`}>
                 <IconButton
-                  className={classes.backButton}
                   data-qa-back-to-billing
                   size="large"
+                  sx={{
+                    padding: 0,
+                  }}
                 >
-                  <KeyboardArrowLeft />
+                  <KeyboardArrowLeft
+                    sx={{
+                      width: 34,
+                      height: 34,
+                    }}
+                  />
                 </IconButton>
               </Link>
               {invoice && (
-                <Typography variant="h2" data-qa-invoice-id>
+                <Typography
+                  variant="h2"
+                  data-qa-invoice-id
+                  sx={{ paddingLeft: theme.spacing(1) }}
+                >
                   Invoice #{invoice.id}
                 </Typography>
               )}
             </Grid>
             <Grid
-              item
-              className={classes.titleWrapper}
+              sm
               data-qa-printable-invoice
+              sx={{ ...sxGrid, justifyContent: 'flex-end' }}
             >
               {account && invoice && items && (
                 <>
@@ -162,20 +158,21 @@ export const InvoiceDetail = (props: CombinedProps) => {
                   <Button
                     buttonType="secondary"
                     onClick={() => csvRef.current.link.click()}
-                    style={{ marginRight: 8 }}
+                    sx={{ ...sxDownloadButton, marginRight: '8px' }}
                   >
                     Download CSV
                   </Button>
                   <Button
                     buttonType="secondary"
                     onClick={() => printInvoicePDF(account, invoice, items)}
+                    sx={sxDownloadButton}
                   >
                     Download PDF
                   </Button>
                 </>
               )}
             </Grid>
-            <Grid item className={`${classes.titleWrapper} ${classes.m2}`}>
+            <Grid sm="auto">
               {invoice && (
                 <Typography variant="h2" data-qa-total={invoice.total}>
                   Total:{' '}
@@ -188,43 +185,49 @@ export const InvoiceDetail = (props: CombinedProps) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           {pdfGenerationError && <Notice error>Failed generating PDF.</Notice>}
           <InvoiceTable loading={loading} items={items} errors={errors} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           {invoice && (
-            <Grid container justifyContent="flex-end">
-              <Grid item className={classes.totals}>
-                <Typography variant="h2">
-                  Subtotal:{' '}
-                  <Currency
-                    wrapInParentheses={invoice.subtotal < 0}
-                    quantity={invoice.subtotal}
-                  />
-                </Typography>
-                {invoice.tax_summary.map((summary) => {
-                  return (
-                    <Typography key={summary.name} variant="h2">
-                      {summary.name === 'Standard'
-                        ? 'Standard Tax: '
-                        : `${summary.name}: `}
-                      <Currency quantity={summary.tax} />
-                    </Typography>
-                  );
-                })}
-                <Typography variant="h2">
-                  Tax Subtotal: <Currency quantity={invoice.tax} />
-                </Typography>
-                <Typography variant="h2">
-                  Total:{' '}
-                  <Currency
-                    wrapInParentheses={invoice.total < 0}
-                    quantity={invoice.total}
-                  />
-                </Typography>
-              </Grid>
-            </Grid>
+            <Box
+              sx={{
+                alignItems: 'flex-end',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: theme.spacing(2),
+                padding: theme.spacing(1),
+              }}
+            >
+              <Typography variant="h2">
+                Subtotal:{' '}
+                <Currency
+                  wrapInParentheses={invoice.subtotal < 0}
+                  quantity={invoice.subtotal}
+                />
+              </Typography>
+              {invoice.tax_summary.map((summary) => {
+                return (
+                  <Typography key={summary.name} variant="h2">
+                    {summary.name === 'Standard'
+                      ? 'Standard Tax: '
+                      : `${summary.name}: `}
+                    <Currency quantity={summary.tax} />
+                  </Typography>
+                );
+              })}
+              <Typography variant="h2">
+                Tax Subtotal: <Currency quantity={invoice.tax} />
+              </Typography>
+              <Typography variant="h2">
+                Total:{' '}
+                <Currency
+                  wrapInParentheses={invoice.total < 0}
+                  quantity={invoice.total}
+                />
+              </Typography>
+            </Box>
           )}
         </Grid>
       </Grid>

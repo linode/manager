@@ -109,7 +109,8 @@ export default compose<CombinedProps, Props>(
 const generateIntroText = (
   type?: AccountMaintenance['type'],
   start?: string | null,
-  end?: string | null
+  end?: string | null,
+  timezone?: string
 ) => {
   const maintenanceInProgress = !!start
     ? isPast(start)(new Date().toISOString())
@@ -134,7 +135,9 @@ const generateIntroText = (
        * we're going to display both the raw and humanized versions of the date
        * to the user here.
        */
-      const rawDate = formatDate(start);
+      const rawDate = formatDate(start, {
+        timezone,
+      });
 
       return (
         <React.Fragment>

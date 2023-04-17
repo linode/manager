@@ -23,7 +23,7 @@ const styles = (theme: Theme) =>
       boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
     },
     loading: {
-      '& >div:first-child': {
+      '& >div:first-of-type': {
         height: 450,
       },
     },

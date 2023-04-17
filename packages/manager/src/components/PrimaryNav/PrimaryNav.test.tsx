@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { rest, server } from 'src/mocks/testServer';
+import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav from './PrimaryNav';
 
@@ -9,6 +10,8 @@ const props = {
   toggleSpacing: jest.fn(),
   isCollapsed: false,
 };
+
+const queryClient = queryClientFactory();
 
 describe('PrimaryNav', () => {
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
@@ -23,7 +26,7 @@ describe('PrimaryNav', () => {
       rerender,
       queryByTestId,
       findByTestId,
-    } = renderWithTheme(<PrimaryNav {...props} />);
+    } = renderWithTheme(<PrimaryNav {...props} />, { queryClient });
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 
     server.use(
@@ -32,7 +35,7 @@ describe('PrimaryNav', () => {
       })
     );
 
-    rerender(wrapWithTheme(<PrimaryNav {...props} />));
+    rerender(wrapWithTheme(<PrimaryNav {...props} />, { queryClient }));
 
     await findByTestId('menu-item-Managed');
 
@@ -40,7 +43,9 @@ describe('PrimaryNav', () => {
   });
 
   it('should have aria-current attribute for accessible links', () => {
-    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />);
+    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      queryClient,
+    });
 
     expect(getByTestId('menu-item-Managed').getAttribute('aria-current')).toBe(
       'false'

@@ -11,16 +11,16 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { reportException } from 'src/exceptionReporting';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
-import { queryClient } from 'src/queries/base';
 import { SetSuccess } from './types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useAccount } from 'src/queries/account';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()(() => ({
   root: {
@@ -62,6 +62,7 @@ export const PayPalButton = (props: Props) => {
   } = useClientToken();
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
   const { data: account } = useAccount();
+  const queryClient = useQueryClient();
 
   const {
     usd,

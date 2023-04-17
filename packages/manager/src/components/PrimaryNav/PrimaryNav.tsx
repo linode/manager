@@ -14,10 +14,10 @@ import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
-import HelpIcon from 'src/assets/icons/get_help.svg';
+import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import BetaChip from 'src/components/BetaChip';
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -232,7 +232,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         {
           display: 'Help & Support',
           href: '/support',
-          icon: <HelpIcon />,
+          icon: <TooltipIcon status="help" />,
         },
       ],
     ],

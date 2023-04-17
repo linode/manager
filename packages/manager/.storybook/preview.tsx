@@ -6,9 +6,14 @@ import { DocsContainer as BaseContainer } from '@storybook/addon-docs';
 import { themes } from '@storybook/theming';
 import '../public/fonts/fonts.css';
 import '../src/index.css';
+import { worker } from '../src/mocks/testBrowser';
 
 export const DocsContainer = ({ children, context }) => {
   const isDark = useDarkMode();
+
+  React.useEffect(() => {
+    worker.start();
+  }, []);
 
   return (
     <BaseContainer

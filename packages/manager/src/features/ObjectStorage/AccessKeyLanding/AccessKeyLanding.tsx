@@ -24,7 +24,7 @@ import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 import { MODE, OpenAccessDrawer } from './types';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
-import usePagination from 'src/hooks/usePagination';
+import { usePagination } from 'src/hooks/usePagination';
 import PaginationFooter from 'src/components/PaginationFooter';
 
 interface Props {

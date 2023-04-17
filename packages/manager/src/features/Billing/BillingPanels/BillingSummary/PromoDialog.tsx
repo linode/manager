@@ -8,10 +8,10 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { addPromotion } from '@linode/api-v4/lib';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/account';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()(() => ({
   input: {
@@ -29,6 +29,7 @@ const PromoDialog = (props: Props) => {
   const { open, onClose } = props;
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
   const [promoCode, setPromoCode] = React.useState<string>('');
   const [error, setError] = React.useState<string>();
   const [loading, setLoading] = React.useState<boolean>(false);

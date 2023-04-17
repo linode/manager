@@ -8,7 +8,7 @@ import AccordionSummary, {
   AccordionSummaryProps,
 } from 'src/components/core/AccordionSummary';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import RenderGuard from 'src/components/RenderGuard';
 import { makeStyles } from 'tss-react/mui';
 import Notice from '../Notice';
@@ -95,7 +95,7 @@ export const Accordion = (props: Props) => {
       <AccordionDetails {...detailProps} data-qa-panel-details>
         <Grid container>
           {notice ? (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Notice
                 data-qa-notice
                 text={notice}
@@ -106,7 +106,7 @@ export const Accordion = (props: Props) => {
               />
             </Grid>
           ) : null}
-          <Grid item xs={12} data-qa-grid-item>
+          <Grid xs={12} data-qa-grid-item>
             {props.children}
           </Grid>
         </Grid>

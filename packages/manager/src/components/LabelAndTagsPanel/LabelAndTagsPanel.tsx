@@ -46,6 +46,7 @@ export class InfoPanel extends React.Component<CombinedProps> {
             placeholder: 'Enter a label',
           })}
           data-qa-label-input
+          noMarginTop
         />
         {tagsInputProps && <TagsInput {...tagsInputProps} />}
       </Paper>

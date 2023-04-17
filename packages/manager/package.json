@@ -2,7 +2,11 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
+<<<<<<< HEAD
   "version": "1.90.0",
+=======
+  "version": "1.91.0",
+>>>>>>> release-v1.91.0
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"

@@ -15,8 +15,8 @@ import Grid from 'src/components/Grid';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
 import { usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/objectStorage';
+import { useQueryClient } from 'react-query';
 
 interface Props {
   object_storage: AccountSettings['object_storage'];
@@ -76,6 +76,7 @@ export const EnableObjectStorage = (props: Props) => {
   const [confirmText, setConfirmText] = React.useState('');
   const { data: preferences } = usePreferences();
   const { data: profile } = useProfile();
+  const queryClient = useQueryClient();
   const username = profile?.username;
   const disabledConfirm =
     preferences?.type_to_confirm !== false && confirmText !== username;
@@ -95,7 +96,7 @@ export const EnableObjectStorage = (props: Props) => {
     setError(undefined);
     cancelObjectStorage()
       .then(() => {
-        updateAccountSettingsData({ object_storage: 'disabled' });
+        updateAccountSettingsData({ object_storage: 'disabled' }, queryClient);
         handleClose();
         queryClient.invalidateQueries(`${queryKey}-buckets`);
         queryClient.invalidateQueries(`${queryKey}-access-keys`);

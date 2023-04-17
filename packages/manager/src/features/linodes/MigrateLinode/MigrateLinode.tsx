@@ -9,7 +9,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
-import HelpIcon from 'src/components/HelpIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -157,6 +157,7 @@ const MigrateLinode = (props: Props) => {
           region,
           selectedRegion,
           +formatDate(new Date().toISOString(), {
+            timezone: profile?.timezone,
             format: 'H',
           })
         );
@@ -260,7 +261,7 @@ const MigrateLinode = (props: Props) => {
         >
           Enter Migration Queue
         </Button>
-        {!!disabledText && <HelpIcon text={disabledText} />}
+        {!!disabledText && <TooltipIcon text={disabledText} status="help" />}
       </Box>
     </Dialog>
   );

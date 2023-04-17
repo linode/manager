@@ -1,5 +1,4 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { MenuLink } from '@reach/menu-button';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -24,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   header: {
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
     marginBottom: 6,
@@ -137,14 +137,13 @@ export const NotificationSection: React.FC<Props> = (props) => {
                   <Typography variant="h3">{header}</Typography>
                   {showMoreTarget && (
                     <strong>
-                      <MenuLink
-                        as={Link}
+                      <Link
                         to={showMoreTarget}
                         className={classes.menuItemLink}
                         style={{ padding: 0 }}
                       >
                         {showMoreText ?? 'View history'}
-                      </MenuLink>
+                      </Link>
                     </strong>
                   )}
                 </div>

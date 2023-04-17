@@ -3,8 +3,8 @@ import {
   UpdateNodeBalancerConfigSchema,
 } from '@linode/validation/lib/nodebalancers.schema';
 import { API_ROOT } from '../constants';
-import Request, { setData, setMethod, setURL } from '../request';
-import { ResourcePage as Page } from '../types';
+import Request, { setData, setMethod, setParams, setURL } from '../request';
+import { ResourcePage as Page, Params } from '../types';
 import {
   CreateNodeBalancerConfig,
   NodeBalancerConfig,
@@ -19,10 +19,14 @@ import { combineConfigNodeAddressAndPort } from './utils';
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to view configs for.
  */
-export const getNodeBalancerConfigs = (nodeBalancerId: number) =>
+export const getNodeBalancerConfigs = (
+  nodeBalancerId: number,
+  params?: Params
+) =>
   Request<Page<NodeBalancerConfig>>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params)
   );
 
 /**

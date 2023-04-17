@@ -1,56 +1,45 @@
 import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import { ExtendedNodeBalancer } from '../../types';
-import NodeBalancerCreationErrors, {
-  ConfigOrNodeErrorResponse,
-} from './NodeBalancerCreationErrors';
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
+import { useParams } from 'react-router-dom';
+import { makeStyles } from '@mui/styles';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
+import { Theme } from '@mui/material/styles';
 
-type ClassNames = 'main' | 'sidebar';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    main: {
-      [theme.breakpoints.up('md')]: {
-        order: 1,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  main: {
+    [theme.breakpoints.up('md')]: {
+      order: 1,
     },
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        order: 2,
-      },
+  },
+  sidebar: {
+    [theme.breakpoints.up('md')]: {
+      order: 2,
     },
-  });
+  },
+}));
 
-interface Props {
-  nodeBalancer: ExtendedNodeBalancer;
-  errorResponses?: ConfigOrNodeErrorResponse[];
-}
+const NodeBalancerSummary = () => {
+  const classes = useStyles();
+  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
+  const id = Number(nodeBalancerId);
+  const { data: nodebalancer } = useNodeBalancerQuery(id);
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const NodeBalancerSummary: React.FC<CombinedProps> = (props) => {
-  const { nodeBalancer, errorResponses, classes } = props;
   return (
     <div>
-      <DocumentTitleSegment segment={`${nodeBalancer.label} - Summary`} />
-      <NodeBalancerCreationErrors errors={errorResponses} />
+      <DocumentTitleSegment segment={`${nodebalancer?.label} - Summary`} />
       <Grid container>
         <Grid item xs={12} md={8} lg={9} className={classes.main}>
-          <TablesPanel nodeBalancer={nodeBalancer} />
+          <TablesPanel />
         </Grid>
         <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-          <SummaryPanel nodeBalancer={nodeBalancer} />
+          <SummaryPanel />
         </Grid>
       </Grid>
     </div>
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(NodeBalancerSummary);
+export default NodeBalancerSummary;

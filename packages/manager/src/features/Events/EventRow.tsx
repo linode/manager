@@ -15,6 +15,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import { GravatarByUsername } from '../../components/GravatarByUsername';
+import { useApplicationStore } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   row: {
@@ -42,10 +43,11 @@ type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
   const { event, entityId } = props;
+  const store = useApplicationStore();
   const link = getLinkForEvent(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
-  const entity = getEntityByIDFromStore(type, id);
+  const entity = getEntityByIDFromStore(type, id, store);
 
   const rowProps = {
     action: event.action,

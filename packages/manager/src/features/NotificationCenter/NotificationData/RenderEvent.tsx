@@ -10,6 +10,7 @@ import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import { parseAPIDate } from 'src/utilities/date';
 import useEventInfo from './useEventInfo';
+import { useApplicationStore } from 'src/store';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -49,10 +50,11 @@ interface Props {
 }
 
 export const RenderEvent: React.FC<Props> = (props) => {
+  const store = useApplicationStore();
   const classes = useStyles();
 
   const { event } = props;
-  const { message } = useEventInfo(event);
+  const { message } = useEventInfo(event, store);
 
   if (message === null) {
     return null;

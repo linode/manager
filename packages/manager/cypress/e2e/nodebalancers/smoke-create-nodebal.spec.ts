@@ -1,4 +1,4 @@
-import { testNodeBalTag } from 'support/api/nodebalancers';
+import { entityTag } from 'support/constants/cypress';
 import { createLinode } from 'support/api/linodes';
 import { selectRegionString } from 'support/ui/constants';
 import {
@@ -13,13 +13,12 @@ import { randomLabel } from 'support/util/random';
 
 const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
-  cy.get('[data-qa-deploy-linode]').click();
+  cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 const createNodeBalancerWithUI = (nodeBal) => {
   cy.visitWithLogin('/nodebalancers/create');
-  fbtVisible('NodeBalancer Settings');
   getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
-  containsClick('create a tag').type(testNodeBalTag);
+  containsClick('create a tag').type(entityTag);
   // this will create the NB in newark, where the default Linode was created
   containsClick(selectRegionString).type('new {enter}');
 
