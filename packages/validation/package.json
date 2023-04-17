@@ -1,10 +1,6 @@
 {
   "name": "@linode/validation",
-<<<<<<< HEAD
-  "version": "0.21.0",
-=======
   "version": "0.22.0",
->>>>>>> release-v1.91.0
   "description": "Yup validation schemas for use with the Linode APIv4",
   "type": "module",
   "main": "lib/index.cjs",
