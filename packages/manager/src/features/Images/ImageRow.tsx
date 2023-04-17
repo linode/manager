@@ -5,6 +5,7 @@ import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { useProfile } from 'src/queries/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
@@ -29,6 +30,8 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     onCancelFailed,
     ...rest
   } = props;
+
+  const { data: profile } = useProfile();
 
   const isFailed = status === 'pending_upload' && event?.status === 'failed';
 
@@ -69,14 +72,22 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
       <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden smDown>
         {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
-        <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
+        <TableCell data-qa-image-date>
+          {formatDate(created, {
+            timezone: profile?.timezone,
+          })}
+        </TableCell>
       </Hidden>
       <TableCell data-qa-image-size>
         {getSizeForImage(size, status, event?.status)}
       </TableCell>
       <Hidden smDown>
         {expiry ? (
-          <TableCell data-qa-image-date>{formatDate(expiry)}</TableCell>
+          <TableCell data-qa-image-date>
+            {formatDate(expiry, {
+              timezone: profile?.timezone,
+            })}
+          </TableCell>
         ) : null}
       </Hidden>
       <TableCell actionCell>

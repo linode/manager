@@ -23,7 +23,6 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -148,8 +147,8 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
 
   const mayUserModifyLVSubscription =
     !(profile?.restricted || false) ||
-    (hasGrant('longview_subscription', grants) &&
-      hasGrant('account_access', grants) === 'read_write');
+    (grants?.global.longview_subscription &&
+      grants.global.account_access === 'read_write');
 
   const [currentSubscription, setCurrentSubscription] = React.useState<
     string | undefined

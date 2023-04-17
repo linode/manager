@@ -6,7 +6,7 @@ import Dialog from 'src/components/Dialog';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 
@@ -147,11 +147,12 @@ export const TransferDialog = React.memo((props: DialogProps) => {
         container
         justifyContent="space-between"
         style={{ marginBottom: 0 }}
+        spacing={2}
       >
-        <Grid item style={{ marginRight: 10 }}>
+        <Grid style={{ marginRight: 10 }}>
           <Typography>{used} GB Used</Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Typography>
             {quota >= used ? (
               <span>{quota - used} GB Available</span>

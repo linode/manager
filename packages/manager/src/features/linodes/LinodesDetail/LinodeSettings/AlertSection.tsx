@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .toggleLabel': {
       display: 'flex',
       flexDirection: 'row',
-      '& > span:first-child': {
+      '& > span:first-of-type': {
         marginTop: -6,
       },
       '& > span:last-child': {

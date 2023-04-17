@@ -1,42 +1,21 @@
-// will need to change from beta to regular eventually
-import { deleteByIdBeta, getAllBeta, isTestEntity } from './common';
-export const getFirewalls = (page: number = 1) =>
-  // get firewalls up to 500 per page. if no page number specified, defaults to 1
-  getAllBeta(`networking/firewalls?page=${page}&page_size=500`);
+import { isTestLabel } from './common';
+import { pageSize } from 'support/constants/api';
+import { depaginate } from 'support/util/paginate';
+import { Firewall, getFirewalls, deleteFirewall } from '@linode/api-v4';
 
-export const deleteFirewallByLabel = (firewall) => {
-  getFirewalls().then((resp) => {
-    const firewallToDelete = resp.body.data.find((f) => f.label === firewall);
-    deleteFirewallById(firewallToDelete.id);
-  });
+/**
+ * Deletes all Firewalls whose labels are prefixed "cy-test-".
+ *
+ * @returns Promise that resolves when Firewalls have been deleted.
+ */
+export const deleteAllTestFirewalls = async (): Promise<void> => {
+  const firewalls = await depaginate<Firewall>((page: number) =>
+    getFirewalls({ page_size: pageSize, page })
+  );
+
+  const deletionPromises = firewalls
+    .filter((firewall: Firewall) => isTestLabel(firewall.label))
+    .map((firewall: Firewall) => deleteFirewall(firewall.id));
+
+  await Promise.all(deletionPromises);
 };
-
-const deleteTestEntities = (resp) => {
-  resp.body.data.forEach((firewall) => {
-    if (isTestEntity(firewall)) {
-      deleteFirewallById(firewall.id);
-    }
-  });
-};
-
-export const deleteAllTestFirewalls = () => {
-  /* get all firewalls, but request without page number specified only yields first page,
-  so it gets number of pages as well */
-  getFirewalls().then((resp) => {
-    const pageNumber = resp.body.pages;
-    /* do this if there's more than one page(500 items), get each page and delete the test entities from it.
-    It probably won't be necessary very often if ever, but here just in case. */
-    if (pageNumber > 1) {
-      for (let currentPage = 1; currentPage <= pageNumber; currentPage++) {
-        getFirewalls(currentPage).then((resp) => {
-          deleteTestEntities(resp);
-        });
-      }
-    } else {
-      deleteTestEntities(resp);
-    }
-  });
-};
-
-export const deleteFirewallById = (firewallId: number) =>
-  deleteByIdBeta('networking/firewalls', firewallId);

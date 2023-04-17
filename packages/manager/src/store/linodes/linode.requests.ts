@@ -8,7 +8,6 @@ import {
   linodeReboot as _rebootLinode,
   updateLinode as _updateLinode,
 } from '@linode/api-v4/lib/linodes';
-import { queryClient } from 'src/queries/base';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { getAllLinodeFirewalls } from 'src/queries/linodes';
 import { getAll } from 'src/utilities/getAll';
@@ -24,6 +23,7 @@ import {
   updateLinodeActions,
   upsertLinode,
 } from './linodes.actions';
+import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 
 export const getLinode = createRequestThunk(getLinodeActions, ({ linodeId }) =>
   _getLinode(linodeId)
@@ -40,7 +40,7 @@ export const createLinode = createRequestThunk(createLinodeActions, (data) =>
 
 export const deleteLinode = createRequestThunk(
   deleteLinodeActions,
-  async ({ linodeId }) => {
+  async ({ linodeId, queryClient }) => {
     // Before we delete a Linode, we need to see what firewalls
     // are associated with it so that we can update the firewalls
     // UI to no longer include the deleted linode.
@@ -56,6 +56,13 @@ export const deleteLinode = createRequestThunk(
         'devices',
       ]);
     }
+
+    // Removed unneeded volume stores
+    queryClient.removeQueries([`${volumesQueryKey}-list`, 'linode', linodeId]);
+
+    // A Linode that was deleted may have had volumes attached.
+    // Invalidate paginated volume stores so they will reflect there is no attached Linode.
+    queryClient.invalidateQueries([`${volumesQueryKey}-list`]);
 
     return response;
   }

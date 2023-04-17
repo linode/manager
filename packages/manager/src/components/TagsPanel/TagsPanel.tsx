@@ -10,6 +10,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { useProfile } from 'src/queries/profile';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -134,6 +135,8 @@ const TagsPanel: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { tags, disabled, updateTags } = props;
 
+  const queryClient = useQueryClient();
+
   const [tagError, setTagError] = React.useState<string>('');
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
   const [tagInputValue, setTagInputValue] = React.useState('');
@@ -227,7 +230,7 @@ const TagsPanel: React.FC<Props> = (props) => {
           // set the input value to blank on submit
           setTagInputValue('');
           if (userTags) {
-            updateTagsSuggestionsData([...userTags, value]);
+            updateTagsSuggestionsData([...userTags, value], queryClient);
           }
         })
         .catch((e) => {

@@ -1,114 +1,87 @@
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { Props as TextFieldProps } from 'src/components/TextField';
-import withNodeBalancers from 'src/containers/withNodeBalancers.container';
-import {
-  WithNodeBalancerActions,
-  withNodeBalancerActions,
-} from 'src/store/nodeBalancer/nodeBalancer.containers';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-interface WithNodeBalancersProps {
-  nodeBalancersData: NodeBalancer[];
-  nodeBalancersLoading: boolean;
-  nodeBalancersError?: APIError[];
-  nodeBalancersLastUpdated: number;
-}
+import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
+import { NodeBalancer } from '@linode/api-v4';
 
 interface Props {
-  generalError?: string;
-  nodeBalancerError?: string;
-  selectedNodeBalancer: number | null;
+  error?: string;
+  value?: number;
   disabled?: boolean;
   region?: string;
-  handleChange: (nodeBalancer: NodeBalancer) => void;
+  onChange: (id: number, nodebalancer: NodeBalancer | undefined) => void;
   textFieldProps?: TextFieldProps;
 }
 
-type CombinedProps = Props & WithNodeBalancersProps & WithNodeBalancerActions;
+export const NodeBalancerSelect = (props: Props) => {
+  const { disabled, error, onChange, value, region } = props;
+  const [inputValue, setInputValue] = React.useState<string>('');
 
-const nodeBalancersToItems = (nodeBalancers: NodeBalancer[]): Item<number>[] =>
-  nodeBalancers.map((thisNodeBalancer) => ({
-    value: thisNodeBalancer.id,
-    label: thisNodeBalancer.label,
-    data: thisNodeBalancer,
-  }));
+  const searchFilter = inputValue
+    ? {
+        '+or': [
+          { label: { '+contains': inputValue } },
+          { tags: { '+contains': inputValue } },
+        ],
+      }
+    : {};
 
-const nodeBalancerFromItems = (
-  nodeBalancers: Item<number>[],
-  nodeBalancerId: number | null
-) => {
-  if (!nodeBalancerId) {
-    return;
-  }
-  return nodeBalancers.find(
-    (thisNodeBalancer) => thisNodeBalancer.value === nodeBalancerId
-  );
-};
-
-const NodeBalancerSelect: React.FC<CombinedProps> = (props) => {
   const {
-    disabled,
-    generalError,
-    handleChange,
-    nodeBalancerError,
-    nodeBalancersError,
-    nodeBalancersLoading,
-    nodeBalancersLastUpdated,
-    nodeBalancersData,
-    nodeBalancerActions,
-    region,
-    selectedNodeBalancer,
-  } = props;
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteNodebalancersQuery({
+    ...searchFilter,
+    ...(region ? { region } : {}),
+    '+order_by': 'label',
+    '+order': 'asc',
+  });
+  const nodebalancers = data?.pages.flatMap((page) => page.data);
 
-  React.useEffect(() => {
-    // If NodeBalacers have not yet been requested when this component was mounted,
-    // make the API call to get them.
-    if (nodeBalancersLastUpdated === 0) {
-      nodeBalancerActions.getAllNodeBalancers();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const options = nodebalancers?.map(({ id, label }) => ({ id, label }));
 
-  const nodeBalancer = region
-    ? nodeBalancersData.filter(
-        (thisNodeBalancer) => thisNodeBalancer.region === region
-      )
-    : nodeBalancersData;
-  const options = nodeBalancersToItems(nodeBalancer);
-
-  const noOptionsMessage =
-    !nodeBalancerError && !nodeBalancersLoading && options.length === 0
-      ? 'You have no NodeBalancers to choose from'
-      : 'No Options';
+  const selectedNodebalancer =
+    options?.find((option) => option.id === value) ?? null;
 
   return (
-    <EnhancedSelect
-      label="NodeBalancer"
-      placeholder="Select a NodeBalancer"
-      value={nodeBalancerFromItems(options, selectedNodeBalancer)}
-      options={options}
+    <Autocomplete
       disabled={disabled}
-      isLoading={nodeBalancersLoading}
-      onChange={(selected: Item<number>) => {
-        return handleChange(selected.data);
+      options={options ?? []}
+      value={selectedNodebalancer}
+      onChange={(event, value) =>
+        onChange(
+          value?.id ?? -1,
+          nodebalancers?.find((n) => n.id === value?.id)
+        )
+      }
+      inputValue={inputValue}
+      onInputChange={(event, value) => {
+        setInputValue(value);
       }}
-      errorText={getErrorStringOrDefault(
-        generalError || nodeBalancerError || nodeBalancersError || ''
+      isOptionEqualToValue={(option) => option.id === selectedNodebalancer?.id}
+      ListboxProps={{
+        onScroll: (event: React.SyntheticEvent) => {
+          const listboxNode = event.currentTarget;
+          if (
+            listboxNode.scrollTop + listboxNode.clientHeight >=
+              listboxNode.scrollHeight &&
+            hasNextPage
+          ) {
+            fetchNextPage();
+          }
+        },
+      }}
+      loading={isLoading}
+      renderInput={(params) => (
+        <TextField
+          label="NodeBalancer"
+          placeholder="Select a NodeBalancer"
+          loading={isLoading}
+          errorText={error}
+          {...params}
+        />
       )}
-      isClearable={false}
-      textFieldProps={props.textFieldProps}
-      noOptionsMessage={() => noOptionsMessage}
     />
   );
 };
-
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  withNodeBalancerActions,
-  withNodeBalancers()
-)(NodeBalancerSelect);

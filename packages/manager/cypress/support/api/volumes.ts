@@ -1,90 +1,29 @@
-import {
-  apiCheckErrors,
-  testTag,
-  getAll,
-  deleteById,
-  isTestEntity,
-} from './common';
-import { deleteLinodeById } from './linodes';
-import { apiMatcher } from 'support/util/intercepts';
-import { randomLabel, randomString } from 'support/util/random';
+import { Volume, getVolumes, deleteVolume, detachVolume } from '@linode/api-v4';
+import { isTestLabel } from './common';
+import { pageSize } from 'support/constants/api';
+import { depaginate } from 'support/util/paginate';
 
-const relativeApiPath = 'volumes';
-const testVolumeTag = testTag;
-const oauthtoken = Cypress.env('MANAGER_OAUTH');
-const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
+/**
+ * Delete all Volumes whose labels are prefixed "cy-test-".
+ *
+ * If any Volumes are attached to a Linode, they will be detached before being
+ * deleted.
+ *
+ * @returns Promise that resolves when Volumes have been detached and deleted.
+ */
+export const deleteAllTestVolumes = async (): Promise<void> => {
+  const volumes = await depaginate<Volume>((page: number) =>
+    getVolumes({ page_size: pageSize, page })
+  );
 
-const makeVolumeCreateReq = (linodeID, volume) => {
-  const volumeData = volume ?? {
-    root_pass: randomString(32),
-    label: randomLabel(),
-    region: 'us-east',
-    tags: [testVolumeTag],
-    linode_id: linodeID,
-  };
-
-  return cy.request({
-    method: 'POST',
-    url: apiroot + relativeApiPath,
-    body: volumeData,
-    auth: {
-      bearer: oauthtoken,
-    },
-  });
-};
-
-export const createVolume = (linodeID, volume = undefined) => {
-  return makeVolumeCreateReq(linodeID, volume).then((resp) => {
-    apiCheckErrors(resp);
-    console.log(`Created Volume ${resp.body.label} successfully`, resp);
-    return resp.body;
-  });
-};
-
-export const getVolumes = () => getAll(relativeApiPath);
-
-export const deleteVolumeById = (id) => deleteById(relativeApiPath, id);
-
-export const detachVolumeById = (path: string, id: number) => {
-  return cy.request({
-    method: 'POST',
-    url: `${apiroot}${path}/${id}/detach`,
-    auth: {
-      bearer: oauthtoken,
-    },
-  });
-};
-
-// use this if you have any volumes attached to non test linodes
-export const detachAllTestVolumes = () => {
-  getVolumes().then((resp) => {
-    resp.body.data.forEach((vol) => {
-      if (isTestEntity(vol) && vol.linode_id != undefined) {
-        detachVolumeById(relativeApiPath, vol.id);
+  const detachDeletePromises = volumes
+    .filter((volume: Volume) => isTestLabel(volume.label))
+    .map(async (volume: Volume) => {
+      if (volume.linode_id) {
+        await detachVolume(volume.id);
       }
+      await deleteVolume(volume.id);
     });
-  });
-};
 
-export const deleteAllTestVolumes = () => {
-  getVolumes().then((resp) => {
-    resp.body.data.forEach((vol) => {
-      // catch delete linode request
-      cy.intercept(
-        'DELETE',
-        apiMatcher(`linode/instances/${vol.linode_id}`)
-      ).as('deleteLinode');
-      if (isTestEntity(vol) && vol.linode_id === null) {
-        deleteVolumeById(vol.id);
-      } else if (isTestEntity(vol) && vol.linode_id !== null) {
-        deleteLinodeById(vol.linode_id).then(() => {
-          cy.wait('@deleteLinode');
-          // this wait is necessary to allow time for attached linode to be deleted before deleting volume
-          // eslint-disable-next-line cypress/no-unnecessary-waiting
-          cy.wait(10000);
-          deleteVolumeById(vol.id);
-        });
-      }
-    });
-  });
+  await Promise.all(detachDeletePromises);
 };

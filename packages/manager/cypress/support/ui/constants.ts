@@ -16,6 +16,8 @@ export const routes = {
   support: '/support',
   account: '/account',
   supportTickets: '/support/tickets',
+  supportTicketsOpen: '/support/tickets?type=open',
+  supportTicketsClosed: '/support/tickets?type=closed',
   profile: '/profile',
 };
 /**
@@ -113,7 +115,7 @@ export const pages = [
           loadAppNoLogin(url);
           getVisible('[data-qa-header="My Profile"]');
           containsVisible(
-            'How to Enable Third Party Authentication on Your Linode Account'
+            'How to Enable Third Party Authentication on Your User Account'
           );
           waitDoubleRerender();
           cy.contains('Display').should('be.visible').click();
@@ -211,13 +213,13 @@ export const pages = [
   },
   {
     name: 'Support/tickets/open',
-    url: `${routes.supportTickets}`,
+    url: `${routes.supportTicketsOpen}`,
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
     goWithUI: [
       {
         name: 'Tab',
         go: () => {
-          loadAppNoLogin(routes.supportTickets);
+          loadAppNoLogin(routes.supportTicketsOpen);
           cy.findByText('Open Tickets').click();
         },
       },
@@ -225,14 +227,13 @@ export const pages = [
   },
   {
     name: 'Support/tickets/closed',
-
-    url: `${routes.supportTickets}`,
+    url: `${routes.supportTicketsClosed}`,
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
     goWithUI: [
       {
         name: 'Tab',
         go: () => {
-          loadAppNoLogin(routes.supportTickets);
+          loadAppNoLogin(routes.supportTicketsClosed);
           cy.findByText('Closed Tickets').click();
         },
       },

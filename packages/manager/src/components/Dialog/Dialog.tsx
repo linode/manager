@@ -7,10 +7,9 @@ import MUIDialog, {
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 import Notice from 'src/components/Notice';
-import classNames from 'classnames';
 
 export interface DialogProps extends _DialogProps {
   className?: string;
@@ -22,7 +21,6 @@ export interface DialogProps extends _DialogProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
     paddingTop: 0,
     maxHeight: '100%',
     '& .actionPanel': {
@@ -46,10 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   drawerHeader: {
     padding: theme.spacing(2),
   },
-  dialogContent: {
-    padding: theme.spacing(2),
-    paddingTop: 0,
-  },
   button: {
     minWidth: 'auto',
     minHeight: 'auto',
@@ -69,10 +63,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.bgPaper,
     position: 'sticky',
     top: 0,
-    padding: theme.spacing(),
-    paddingTop: theme.spacing(4),
-    marginBottom: 20,
-    zIndex: 1,
+    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+    zIndex: 2,
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
@@ -122,38 +114,30 @@ const Dialog: React.FC<DialogProps> = (props) => {
       }}
       className={fullHeight ? classes.fullHeight : undefined}
     >
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        updateFor={[title, props.children]}
-      >
+      <Grid container alignItems="center">
         <div className={classes.sticky}>
-          <Grid item>
-            <Typography
-              variant="h2"
-              id={titleID}
-              data-qa-drawer-title={title}
-              data-qa-dialog-title={title}
-            >
-              {title}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Button
-              buttonType="secondary"
-              onClick={props.onClose as (e: any) => void}
-              className={classes.button}
-              data-qa-close-drawer
-              aria-label="Close"
-            >
-              <Close />
-            </Button>
-          </Grid>
+          <Typography
+            variant="h2"
+            id={titleID}
+            data-qa-drawer-title={title}
+            data-qa-dialog-title={title}
+          >
+            {title}
+          </Typography>
+
+          <Button
+            buttonType="secondary"
+            onClick={props.onClose as (e: any) => void}
+            className={classes.button}
+            data-qa-close-drawer
+            aria-label="Close"
+          >
+            <Close />
+          </Button>
         </div>
         {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
-        <Grid container>
-          <div className={classNames(classes.dialogContent, className)}>
+        <Grid container sx={{ margin: '0 32px' }}>
+          <div className={className}>
             {error && <Notice text={error} error />}
             {children}
           </div>

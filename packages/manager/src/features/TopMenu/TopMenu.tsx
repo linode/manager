@@ -4,13 +4,14 @@ import AppBar from 'src/components/core/AppBar';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
+import clsx from 'clsx';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
-import AddNewMenu from './AddNewMenu';
+import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import Community from './Community';
 import Help from './Help';
-import NotificationButton from './NotificationButton';
+import NotificationMenu from './NotificationMenu';
 import SearchBar from './SearchBar';
 import TopMenuIcon from './TopMenuIcon';
 import UserMenu from './UserMenu';
@@ -31,11 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: `50px !important`,
     width: '100%',
   },
-  communityIcon: {
-    [theme.breakpoints.down(370)]: {
-      ...theme.visually.hidden,
-    },
-  },
 }));
 
 interface Props {
@@ -46,9 +42,7 @@ interface Props {
   username: string;
 }
 
-type PropsWithStyles = Props;
-
-const TopMenu: React.FC<PropsWithStyles> = (props) => {
+const TopMenu = (props: Props) => {
   const {
     isSideMenuOpen,
     openSideMenu,
@@ -57,7 +51,14 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
     desktopMenuToggle,
   } = props;
 
+  const theme = useTheme();
   const classes = useStyles();
+
+  const communityIconStyles = {
+    [theme.breakpoints.down(370)]: {
+      ...theme.visually.hidden,
+    },
+  };
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -89,7 +90,7 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
               data-testid="open-nav-menu"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
-                <MenuIcon style={{ marginTop: 6 }} />
+                <MenuIcon />
               </TopMenuIcon>
             </IconButton>
           </Hidden>
@@ -101,15 +102,15 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
               size="large"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
-                <MenuIcon style={{ marginTop: 6 }} />
+                <MenuIcon />
               </TopMenuIcon>
             </IconButton>
           </Hidden>
           <AddNewMenu />
           <SearchBar />
           <Help />
-          <Community className={classes.communityIcon} />
-          <NotificationButton />
+          <Community className={clsx(communityIconStyles)} />
+          <NotificationMenu />
           <UserMenu />
         </Toolbar>
       </AppBar>

@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useClientToken } from 'src/queries/accountPayment';
 import { makeStyles } from 'tss-react/mui';
 import CircleProgress from 'src/components/CircleProgress';
-import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { reportException } from 'src/exceptionReporting';
+import Grid from '@mui/material/Unstable_Grid2';
 import {
   OnApproveBraintreeData,
   BraintreePayPalButtons,
@@ -17,14 +17,12 @@ import {
   OnApproveBraintreeActions,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
+import { QueryClient, useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()(() => ({
   disabled: {
     // Allows us to disable the pointer on the PayPal button because the SDK does not
     pointerEvents: 'none',
-  },
-  button: {
-    marginRight: -8,
   },
 }));
 
@@ -41,6 +39,7 @@ export const PayPalChip = (props: Props) => {
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     /**
@@ -103,10 +102,10 @@ export const PayPalChip = (props: Props) => {
 
     return actions.braintree
       .tokenizePayment(data)
-      .then((payload) => onNonce(payload.nonce));
+      .then((payload) => onNonce(payload.nonce, queryClient));
   };
 
-  const onNonce = (nonce: string) => {
+  const onNonce = (nonce: string, queryClient: QueryClient) => {
     addPaymentMethod({
       type: 'payment_method_nonce',
       data: { nonce },
@@ -153,13 +152,16 @@ export const PayPalChip = (props: Props) => {
   }
 
   if (isLoading || isPending || !options['data-client-token']) {
-    return <CircleProgress mini />;
+    return (
+      <Grid>
+        <CircleProgress mini />
+      </Grid>
+    );
   }
 
   return (
-    <div
+    <Grid
       className={cx({
-        [classes.button]: true,
         [classes.disabled]: disabled,
       })}
     >
@@ -171,6 +173,6 @@ export const PayPalChip = (props: Props) => {
         onApprove={onApprove}
         onError={onError}
       />
-    </div>
+    </Grid>
   );
 };

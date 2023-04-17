@@ -1,14 +1,16 @@
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Accordion from 'src/components/Accordion';
-import TextField from 'src/components/TextField';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import AcceptedFormats from './AcceptedFormats';
-import UserDataAccordionHeading from './UserDataAccordionHeading';
-import UserDataExplanatory from './UserDataExplanatory';
+import TextField from 'src/components/TextField';
+import Typography from 'src/components/core/Typography';
+import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 interface Props {
-  createType?: string;
+  createType?: CreateTypes;
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
@@ -16,7 +18,7 @@ interface Props {
   renderCheckbox?: JSX.Element;
 }
 
-const UserDataAccordion = (props: Props) => {
+export const UserDataAccordion = (props: Props) => {
   const { expandIconStyles } = useExpandIconStyles();
   const {
     createType,
@@ -78,14 +80,19 @@ const UserDataAccordion = (props: Props) => {
       expandIconClassNames={fromBackupOrFromLinode ? expandIconStyles : ''}
     >
       {renderNotice ? (
-        <div data-testid="render-notice">{renderNotice}</div>
-      ) : (
-        <UserDataExplanatory />
-      )}
-      <AcceptedFormats />
+        <Box marginBottom="16px" data-testid="render-notice">
+          {renderNotice}
+        </Box>
+      ) : null}
+      <Typography sx={{ marginBottom: 3 }}>
+        User data is a virtual machine&rsquo;s cloud-init metadata relating to a
+        user&rsquo;s local account, including username and user group(s). <br />
+        User data must be added before the Linode provisions.{' '}
+        <Link to="http://linode.com/docs">Learn more.</Link>{' '}
+      </Typography>
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
-          This user data may not be in a format accepted by cloud-init.
+          The user data may be formatted incorrectly.
         </Notice>
       ) : null}
       <TextField
@@ -108,5 +115,3 @@ const UserDataAccordion = (props: Props) => {
     </Accordion>
   );
 };
-
-export default UserDataAccordion;

@@ -14,7 +14,6 @@ import Typography from 'src/components/core/Typography';
 import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { MapState } from 'src/store/types';
@@ -75,7 +74,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
-  const disabled = profile?.restricted && !hasGrant('add_volumes', grants);
+  const disabled = profile?.restricted && !grants?.global.add_volumes;
 
   // The original schema expects tags to be an array of strings, but Formik treats
   // tags as _Tag[], so we extend the schema to transform tags before validation.

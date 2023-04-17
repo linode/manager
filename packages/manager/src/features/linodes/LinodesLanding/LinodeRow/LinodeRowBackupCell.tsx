@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import BackupStatus from 'src/components/BackupStatus';
+import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { makeStyles } from '@mui/styles';
 import TableCell from 'src/components/TableCell';
 

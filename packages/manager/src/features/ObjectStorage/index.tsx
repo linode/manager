@@ -17,7 +17,10 @@ export const ObjectStorage: React.FC<CombinedProps> = (props) => {
           path={`${path}/buckets/:clusterId/:bucketName`}
           component={BucketDetail}
         />
-        <Route component={ObjectStorageLanding} path={path} />
+        <Route
+          component={ObjectStorageLanding}
+          path={'/object-storage/:tab?/:action?'}
+        />
       </Switch>
     </React.Suspense>
   );

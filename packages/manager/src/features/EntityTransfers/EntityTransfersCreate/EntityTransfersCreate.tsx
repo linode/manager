@@ -7,7 +7,6 @@ import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { queryClient } from 'src/queries/base';
 import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEntityTransferCreateEvent } from 'src/utilities/ga';
@@ -21,6 +20,7 @@ import {
   defaultTransferState,
   TransferableEntity,
 } from './transferReducer';
+import { QueryClient, useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -49,6 +49,7 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
   const { push } = useHistory();
   const { mutateAsync: createTransfer, error, isLoading } = useCreateTransfer();
   const classes = useStyles();
+  const queryClient = useQueryClient();
 
   /**
    * Reducer and helpers for working with the payload/selection process
@@ -79,7 +80,10 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
    * Helper functions
    */
 
-  const handleCreateTransfer = (payload: CreateTransferPayload) => {
+  const handleCreateTransfer = (
+    payload: CreateTransferPayload,
+    queryClient: QueryClient
+  ) => {
     createTransfer(payload, {
       onSuccess: (transfer) => {
         // @analytics
@@ -142,7 +146,9 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
             isCreating={isLoading}
             selectedEntities={state}
             removeEntities={removeEntitiesFromTransfer}
-            handleSubmit={handleCreateTransfer}
+            handleSubmit={(payload) =>
+              handleCreateTransfer(payload, queryClient)
+            }
           />
         </Grid>
       </Grid>

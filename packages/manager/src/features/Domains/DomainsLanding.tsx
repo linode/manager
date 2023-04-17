@@ -28,7 +28,7 @@ import {
   useDomainsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
-import usePagination from 'src/hooks/usePagination';
+import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
 import Table from 'src/components/Table/Table';
 import TableHead from 'src/components/core/TableHead';

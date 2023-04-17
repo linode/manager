@@ -9,12 +9,11 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendBackupsEnabledEvent } from 'src/utilities/ga';
 import { ThunkActionCreator } from '../types';
 import {
-  getAccountBackupsEnabled,
   queryKey,
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
-import { queryClient } from 'src/queries/base';
 import { updateAccountSettings } from '@linode/api-v4/lib';
+import { QueryClient } from 'react-query';
 
 export interface BackupError {
   linodeId: number;
@@ -292,11 +291,14 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
  *  When complete, it will dispatch appropriate actions to handle the result, including
  * updating state.__resources.accountSettings.data.backups_enabled.
  */
-type EnableAutoEnrollThunk = ThunkActionCreator<void>;
-export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
-  dispatch,
-  getState
-) => {
+type EnableAutoEnrollThunk = ThunkActionCreator<
+  void,
+  { backupsEnabled: boolean; queryClient: QueryClient }
+>;
+export const enableAutoEnroll: EnableAutoEnrollThunk = ({
+  backupsEnabled,
+  queryClient,
+}) => (dispatch, getState) => {
   const state = getState();
   const { backups } = state;
   const shouldEnableBackups = Boolean(backups.autoEnroll);
@@ -304,7 +306,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
   /** If the selected toggle setting matches the setting already on the user's account,
    * don't bother the API.
    */
-  if (getAccountBackupsEnabled() === shouldEnableBackups) {
+  if (backupsEnabled === shouldEnableBackups) {
     dispatch(enableAllBackups());
     return;
   }
@@ -316,7 +318,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
     mutationKey: queryKey,
     variables: { backups_enabled: shouldEnableBackups },
     onSuccess: (data) => {
-      updateAccountSettingsData(data);
+      updateAccountSettingsData(data, queryClient);
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());
     },

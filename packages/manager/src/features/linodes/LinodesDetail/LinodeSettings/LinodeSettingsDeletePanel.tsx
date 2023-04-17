@@ -1,6 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
@@ -35,6 +36,8 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
     readOnly,
   } = props;
 
+  const queryClient = useQueryClient();
+
   const [open, setOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
@@ -42,7 +45,7 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
   const _deleteLinode = () => {
     setSubmitting(true);
 
-    deleteLinode({ linodeId })
+    deleteLinode({ linodeId, queryClient })
       .then(() => {
         resetEventsPolling();
         props.history.push('/linodes');

@@ -1,4 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import {
   deleteLinode as _deleteLinode,
@@ -18,6 +19,7 @@ export interface LinodesProps {
 
 export const useLinodeActions = (): LinodesProps => {
   const dispatch: Dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const requestLinodes = () =>
     dispatch(_requestLinodes({})).then((response) => response.data);
@@ -25,7 +27,7 @@ export const useLinodeActions = (): LinodesProps => {
   const getLinode = (linodeId: number) => dispatch(_getLinode({ linodeId }));
 
   const deleteLinode = (linodeId: number) =>
-    dispatch(_deleteLinode({ linodeId }));
+    dispatch(_deleteLinode({ linodeId, queryClient }));
 
   const updateLinode = (params: UpdateLinodeParams) =>
     dispatch(_updateLinode(params));

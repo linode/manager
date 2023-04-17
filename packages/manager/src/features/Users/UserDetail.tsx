@@ -16,12 +16,12 @@ import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import { queryKey } from 'src/queries/account';
-import { queryClient } from 'src/queries/base';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 import LandingHeader from 'src/components/LandingHeader';
+import { useQueryClient } from 'react-query';
 
 const UserDetail: React.FC = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
@@ -29,6 +29,8 @@ const UserDetail: React.FC = () => {
   const history = useHistory();
 
   const { data: profile, refetch: refreshProfile } = useProfile();
+
+  const queryClient = useQueryClient();
 
   const [error, setError] = React.useState<string | undefined>();
   const [username, setUsername] = React.useState<string>('');

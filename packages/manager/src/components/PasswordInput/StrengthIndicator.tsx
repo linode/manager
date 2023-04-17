@@ -3,7 +3,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 type StrengthValues = null | 0 | 1 | 2 | 3 | 4;
 interface Props {
@@ -56,9 +56,10 @@ const StrengthIndicator = (props: Props) => {
       spacing={1}
       className={classes.root}
       data-qa-strength={strength}
+      sx={{ paddingLeft: 0, paddingRight: 0 }}
     >
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
-        <Grid item key={idx} xs={3} className={classes.blockOuter}>
+        <Grid key={idx} xs={3} className={classes.blockOuter}>
           <div
             className={classNames({
               [classes.block]: true,
@@ -70,7 +71,7 @@ const StrengthIndicator = (props: Props) => {
           />
         </Grid>
       ))}
-      <Grid item xs={3} className="py0">
+      <Grid xs={3} className="py0">
         <Typography
           variant="caption"
           className={classes.strengthText}

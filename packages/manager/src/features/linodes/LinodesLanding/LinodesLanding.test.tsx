@@ -1,5 +1,9 @@
+import { Profile, APIError, Grants } from '@linode/api-v4';
 import { render } from '@testing-library/react';
 import * as React from 'react';
+import { UseQueryResult } from 'react-query';
+import { profileFactory } from 'src/factories';
+import { grantsFactory } from 'src/factories/grants';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { ListLinodes } from './LinodesLanding';
@@ -27,6 +31,18 @@ describe('ListLinodes', () => {
           deleteLinode={jest.fn()}
           {...reactRouterProps}
           linodesInTransition={new Set<number>()}
+          profile={
+            { data: profileFactory.build() } as UseQueryResult<
+              Profile,
+              APIError[]
+            >
+          }
+          grants={
+            { data: grantsFactory.build() } as UseQueryResult<
+              Grants,
+              APIError[]
+            >
+          }
         />
       )
     );

@@ -4,6 +4,9 @@ import { profileFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { formatOffset, TimezoneForm } from './TimezoneForm';
+import { queryClientFactory } from 'src/queries/base';
+
+const queryClient = queryClientFactory();
 
 describe('Timezone change form', () => {
   // Use the MSW to mock a profile with America/New_York as the timezone
@@ -18,7 +21,8 @@ describe('Timezone change form', () => {
 
   it('should render input label', async () => {
     const { getByText, getByTestId } = renderWithTheme(
-      <TimezoneForm loggedInAsCustomer={true} />
+      <TimezoneForm loggedInAsCustomer={true} />,
+      { queryClient }
     );
 
     // This component depends on the /profile to be loaded. Wait for
@@ -30,7 +34,8 @@ describe('Timezone change form', () => {
 
   it('should show a message if an admin is logged in as a customer', () => {
     const { getByTestId } = renderWithTheme(
-      <TimezoneForm loggedInAsCustomer={true} />
+      <TimezoneForm loggedInAsCustomer={true} />,
+      { queryClient }
     );
 
     expect(getByTestId('admin-notice')).toBeInTheDocument();
@@ -38,7 +43,8 @@ describe('Timezone change form', () => {
 
   it('should not show a message if the user is logged in normally', () => {
     const { queryByTestId } = renderWithTheme(
-      <TimezoneForm loggedInAsCustomer={false} />
+      <TimezoneForm loggedInAsCustomer={false} />,
+      { queryClient }
     );
 
     expect(queryByTestId('admin-notice')).not.toBeInTheDocument();
@@ -46,7 +52,8 @@ describe('Timezone change form', () => {
 
   it("should include text with the user's current time zone", async () => {
     const { getByText } = renderWithTheme(
-      <TimezoneForm loggedInAsCustomer={true} />
+      <TimezoneForm loggedInAsCustomer={true} />,
+      { queryClient }
     );
 
     expect(getByText('New York', { exact: false })).toBeInTheDocument();

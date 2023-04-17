@@ -78,10 +78,10 @@ export const AuthenticationSettings: React.FC = () => {
         <Typography variant="h3">Phone Verification</Typography>
         <Typography variant="body1" className={classes.copy}>
           A verified phone number provides our team with a secure method of
-          verifying your identity as the owner of your Linode user account. This
-          phone number is only ever used to send an SMS message with a
-          verification code. Standard carrier messaging fees may apply. By
-          clicking Send Verification Code you are opting in to receive SMS
+          verifying your identity as the owner of your Cloud Manager user
+          account. This phone number is only ever used to send an SMS message
+          with a verification code. Standard carrier messaging fees may apply.
+          By clicking Send Verification Code you are opting in to receive SMS
           messages. You may opt out at any time.{' '}
           <Link to="https://www.linode.com/docs/guides/user-security-controls#phone-verification">
             Learn more about security options.

@@ -45,11 +45,8 @@ describe('Component', () => {
   );
 
   it('should render', async () => {
-    const { getByText, getByTestId } = renderWithTheme(
-      <SearchLanding {...props} />
-    );
-    await waitForElementToBeRemoved(getByTestId('loading'));
-    expect(getByText(/search/));
+    const { findByText } = renderWithTheme(<SearchLanding {...props} />);
+    expect(await findByText(/search/));
   });
 
   it('should search on mount', async () => {

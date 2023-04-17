@@ -20,7 +20,6 @@ interface Taxes {
 interface TaxBanner {
   tax_name: string;
   date: string;
-  linode_tax_id?: string;
   country_tax?: TaxDetail;
   provincial_tax_ids?: Record<string, TaxDetail>;
 }

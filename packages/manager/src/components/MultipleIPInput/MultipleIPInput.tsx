@@ -8,8 +8,8 @@ import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import Grid from '@mui/material/Unstable_Grid2';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
@@ -50,10 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipNetmaskTooltipSection: {
     display: 'flex',
     flexDirection: 'row',
-  },
-  helpIcon: {
-    marginTop: -15,
-    marginLeft: -4,
   },
   required: {
     fontFamily: theme.font.normal,
@@ -137,10 +133,14 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
       {tooltip ? (
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
-          <HelpIcon
-            className={classes.helpIcon}
+          <TooltipIcon
+            sxTooltipIcon={{
+              marginTop: '-15px',
+              marginLeft: '-4px',
+            }}
             text={tooltip}
             tooltipPosition="right"
+            status="help"
           />
         </div>
       ) : (
@@ -162,8 +162,9 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
           direction="row"
           justifyContent="center"
           data-testid="domain-transfer-input"
+          spacing={2}
         >
-          <Grid item xs={11}>
+          <Grid xs={11}>
             <TextField
               className={classes.input}
               // Prevent unique ID errors, since TextField sets the input element's ID to the label
@@ -183,7 +184,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
             />
           </Grid>
           {/** Don't show the button for the first input since it won't do anything, unless this component is used in DBaaS */}
-          <Grid item xs={1}>
+          <Grid xs={1}>
             {idx > 0 || forDatabaseAccessControls ? (
               <Button
                 className={classes.button}

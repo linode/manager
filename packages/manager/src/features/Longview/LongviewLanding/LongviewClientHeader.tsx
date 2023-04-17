@@ -19,6 +19,7 @@ import { formatUptime } from 'src/utilities/formatUptime';
 import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
 import RestrictedUserLabel from './RestrictedUserLabel';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -85,6 +86,8 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const [updating, setUpdating] = React.useState<boolean>(false);
 
+  const { data: profile } = useProfile();
+
   const handleUpdateLabel = (newLabel: string) => {
     setUpdating(true);
     return updateLongviewClient(clientID, newLabel)
@@ -117,7 +120,9 @@ export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
 
   const formattedlastUpdatedTime =
     longviewClientLastUpdated !== undefined
-      ? `Last updated ${formatDate(longviewClientLastUpdated)}`
+      ? `Last updated ${formatDate(longviewClientLastUpdated, {
+          timezone: profile?.timezone,
+        })}`
       : 'Latest update time not available';
 
   /**

@@ -4,7 +4,6 @@ import {
   CreateImagePayload,
   deleteImage,
   uploadImage,
-  Event,
   getImage,
   getImages,
   Image,
@@ -17,13 +16,15 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
 import {
-  doesItemExistInPaginatedStore,
-  queryClient,
-  updateInPaginatedStore,
-} from './base';
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
 import { getAll } from 'src/utilities/getAll';
+import { EventWithStore } from 'src/events';
 
 export const queryKey = 'images';
 
@@ -40,6 +41,7 @@ export const useImageQuery = (imageID: string) =>
 
 // Create Image
 export const useCreateImageMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<Image, APIError[], CreateImagePayload>(
     ({ diskID, label, description, cloud_init }) => {
       return createImage(diskID, label, description, cloud_init);
@@ -53,8 +55,9 @@ export const useCreateImageMutation = () => {
 };
 
 // Update Image
-export const useUpdateImageMutation = () =>
-  useMutation<
+export const useUpdateImageMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
     Image,
     APIError[],
     { imageId: string; label?: string; description?: string }
@@ -63,14 +66,21 @@ export const useUpdateImageMutation = () =>
       updateImage(imageId, label, description),
     {
       onSuccess(image) {
-        updateInPaginatedStore<Image>(`${queryKey}-list`, image.id, image);
+        updateInPaginatedStore<Image>(
+          `${queryKey}-list`,
+          image.id,
+          image,
+          queryClient
+        );
       },
     }
   );
+};
 
 // Delete Image
-export const useDeleteImageMutation = () =>
-  useMutation<{}, APIError[], { imageId: string }>(
+export const useDeleteImageMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { imageId: string }>(
     ({ imageId }) => deleteImage(imageId),
     {
       onSuccess() {
@@ -78,9 +88,10 @@ export const useDeleteImageMutation = () =>
       },
     }
   );
+};
 
 // Remove Image from cache
-export const removeImageFromCache = () =>
+export const removeImageFromCache = (queryClient: QueryClient) =>
   queryClient.invalidateQueries(`${queryKey}-list`);
 
 // Get all Images
@@ -108,7 +119,7 @@ export const useAllImagesQuery = (
 export const useUploadImageQuery = (payload: ImageUploadPayload) =>
   useMutation<UploadImageResponse, APIError[]>(() => uploadImage(payload));
 
-export const imageEventsHandler = (event: Event) => {
+export const imageEventsHandler = ({ event, queryClient }: EventWithStore) => {
   const { action, status, entity } = event;
 
   // Keep the getAll query up to date so that when we have to use it, it contains accurate data
@@ -116,7 +127,13 @@ export const imageEventsHandler = (event: Event) => {
 
   switch (action) {
     case 'image_delete':
-      if (doesItemExistInPaginatedStore(`${queryKey}-list`, entity!.id)) {
+      if (
+        doesItemExistInPaginatedStore(
+          `${queryKey}-list`,
+          entity!.id,
+          queryClient
+        )
+      ) {
         queryClient.invalidateQueries(`${queryKey}-list`);
       }
       return;
@@ -130,7 +147,8 @@ export const imageEventsHandler = (event: Event) => {
         updateInPaginatedStore<Image>(
           `${queryKey}-list`,
           event.secondary_entity.id,
-          {}
+          {},
+          queryClient
         );
         return;
       }
@@ -144,7 +162,8 @@ export const imageEventsHandler = (event: Event) => {
           `private/${event.secondary_entity.id}`,
           {
             status: 'available',
-          }
+          },
+          queryClient
         );
         return;
       }
@@ -159,7 +178,8 @@ export const imageEventsHandler = (event: Event) => {
               `private/${event.entity?.id}`,
               {
                 status: 'available',
-              }
+              },
+              queryClient
             );
           }))();
       }

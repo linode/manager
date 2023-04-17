@@ -25,14 +25,6 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  slash: {
-    alignSelf: 'end',
-    padding: '0px !important',
-    '& p': {
-      fontSize: '1rem',
-      padding: `${theme.spacing(2)} 0`,
-    },
-  },
   button: {
     paddingRight: 8,
   },
@@ -41,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'center',
   },
   deletePoolBtn: {
-    paddingRight: 0,
+    paddingRight: 8,
     marginBottom: 3,
   },
 }));
@@ -70,7 +62,7 @@ const NodePool: React.FC<Props> = (props) => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Grid item>
+        <Grid item style={{ marginLeft: '15px' }}>
           <Typography variant="h2">{typeLabel}</Typography>
         </Grid>
         <Grid item style={{ display: 'flex' }}>

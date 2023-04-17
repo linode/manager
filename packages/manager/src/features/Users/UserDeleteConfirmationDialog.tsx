@@ -6,51 +6,38 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 interface Props {
   username: string;
   open: boolean;
-  onDelete: (username: string) => void;
+  onDelete: () => void;
   onCancel: () => void;
 }
 
-type CombinedProps = Props;
+export const UserDeleteConfirmationDialog = (props: Props) => {
+  const { onDelete, onCancel, open, username } = props;
 
-class UserDeleteConfirmationDialog extends React.PureComponent<
-  CombinedProps,
-  {}
-> {
-  deleteUser = () => this.props.onDelete(this.props.username);
-
-  render() {
-    return (
-      <ConfirmationDialog
-        title="Confirm Deletion"
-        onClose={this.props.onCancel}
-        actions={this.renderActionsPanel}
-        open={this.props.open}
-      >
-        {`User ${this.props.username} will be permanently deleted. Are you sure?`}
-      </ConfirmationDialog>
-    );
-  }
-
-  renderActionsPanel = () => {
-    return (
-      <ActionsPanel style={{ padding: 0 }}>
-        <Button
-          buttonType="secondary"
-          onClick={this.props.onCancel}
-          data-qa-cancel-delete
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.deleteUser}
-          data-qa-confirm-delete
-        >
-          Delete
-        </Button>
-      </ActionsPanel>
-    );
-  };
-}
-
-export default UserDeleteConfirmationDialog;
+  return (
+    <ConfirmationDialog
+      title="Confirm Deletion"
+      onClose={onCancel}
+      open={open}
+      actions={
+        <ActionsPanel style={{ padding: 0 }}>
+          <Button
+            buttonType="secondary"
+            onClick={onCancel}
+            data-qa-cancel-delete
+          >
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            onClick={onDelete}
+            data-qa-confirm-delete
+          >
+            Delete
+          </Button>
+        </ActionsPanel>
+      }
+    >
+      User {username} will be permanently deleted. Are you sure?
+    </ConfirmationDialog>
+  );
+};

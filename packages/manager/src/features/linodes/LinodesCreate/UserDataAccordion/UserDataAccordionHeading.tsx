@@ -1,46 +1,49 @@
 import * as React from 'react';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { StyledHelpIcon } from './UserDataAccordion.styles';
-
-export const LINODE_CREATE_FROM = {
-  BACKUPS: 'fromBackup',
-  CLONE: 'fromLinode',
-};
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import Box from 'src/components/core/Box';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 interface Props {
-  createType?: string | undefined;
+  createType?: CreateTypes;
 }
 
-const UserDataAccordionHeading = ({ createType }: Props) => {
-  const userDataHeaderWarningMessage =
-    createType === LINODE_CREATE_FROM.BACKUPS
-      ? 'Existing user data is not available when creating a Linode from a backup.'
-      : 'User data is not cloned.';
-  const showWarningMessage =
-    createType &&
-    [LINODE_CREATE_FROM.BACKUPS, LINODE_CREATE_FROM.CLONE].includes(createType);
+export const UserDataAccordionHeading = ({ createType }: Props) => {
+  const warningMessageMap: Record<CreateTypes, string | null> = {
+    fromBackup:
+      'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.',
+    fromLinode:
+      'Existing user data is not cloned. You may add new user data now.',
+    fromApp: null,
+    fromStackScript: null,
+    fromImage: null,
+  };
+
+  const warningMessage = createType ? warningMessageMap[createType] : null;
 
   return (
     <>
-      Add User Data{' '}
-      <StyledHelpIcon
-        text={
-          <>
-            User data is part of a virtual machine&rsquo;s cloud-init metadata
-            containing information related to a user&rsquo;s local account.{' '}
-            <Link to="/">Learn more.</Link>
-          </>
-        }
-        interactive
-      />
-      {showWarningMessage ? (
+      <Box display="flex">
+        Add User Data{' '}
+        <TooltipIcon
+          sxTooltipIcon={{ padding: '0 8px' }}
+          text={
+            <>
+              User data is a virtual machine&rsquo;s cloud-init metadata
+              relating to a user&rsquo;s local account.{' '}
+              <Link to="/">Learn more.</Link>
+            </>
+          }
+          status="help"
+          interactive
+        />
+      </Box>
+      {warningMessage ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
-          {userDataHeaderWarningMessage}
+          {warningMessage}
         </Notice>
       ) : null}
     </>
   );
 };
-
-export default UserDataAccordionHeading;

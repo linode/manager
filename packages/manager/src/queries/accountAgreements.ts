@@ -4,7 +4,7 @@ import {
   signAgreement,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { reportException } from 'src/exceptionReporting';
 import { useProfile } from 'src/queries/profile';
 import { queryPresets, simpleMutationHandlers } from './base';
@@ -25,9 +25,13 @@ export const useAccountAgreements = (enabled?: boolean) => {
 };
 
 export const useMutateAccountAgreements = () => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[], Partial<Agreements>>(
     (data) => signAgreement(data),
-    simpleMutationHandlers<Agreements, Partial<Agreements>>(queryKey)
+    simpleMutationHandlers<Agreements, Partial<Agreements>>(
+      queryKey,
+      queryClient
+    )
   );
 };
 
