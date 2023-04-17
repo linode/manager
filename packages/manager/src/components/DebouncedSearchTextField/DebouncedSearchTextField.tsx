@@ -4,13 +4,13 @@ import { compose } from 'recompose';
 
 import CircleProgress from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 import usePrevious from 'src/hooks/usePrevious';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   searchIcon: {
     color: `${theme.color.grey1} !important`,
   },
@@ -45,7 +45,7 @@ const DebouncedSearch: React.FC<CombinedProps> = (props) => {
   const [query, setQuery] = React.useState<string>('');
   const prevQuery = usePrevious<string>(query);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   React.useEffect(() => {
     /*
