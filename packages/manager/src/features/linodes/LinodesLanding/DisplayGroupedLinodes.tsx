@@ -10,7 +10,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
@@ -134,7 +134,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
   if (display === 'grid') {
     return (
       <>
-        <Grid item xs={12} className={'px0'}>
+        <Grid xs={12} className={'px0'}>
           <div className={classes.controlHeader}>
             <div id="displayViewDescription" className="visually-hidden">
               Currently in {linodeViewPreference} view
@@ -184,7 +184,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
               data-qa-tag-header={tag}
             >
               <Grid container>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <Typography
                     variant="h2"
                     component="h3"
@@ -231,7 +231,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                   return (
                     <React.Fragment>
                       <Component {...finalProps} />
-                      <Grid item xs={12}>
+                      <Grid xs={12}>
                         <PaginationFooter
                           count={count}
                           handlePageChange={handlePageChange}

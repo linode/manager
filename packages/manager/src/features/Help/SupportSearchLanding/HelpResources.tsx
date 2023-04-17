@@ -6,8 +6,8 @@ import Support from 'src/assets/icons/support.svg';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import { Tile } from 'src/components/Tile/Tile';
+import Grid from '@mui/material/Unstable_Grid2';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
     },
     heading: {
       textAlign: 'center',
-      marginBottom: theme.spacing(2),
+      marginBottom: theme.spacing(1),
     },
     card: {
       display: 'flex',
@@ -94,15 +94,21 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     const { drawerOpen } = this.state;
 
     return (
-      <Grid item>
-        <Grid container className={classes.wrapper}>
-          <Grid item xs={12}>
+      <>
+        <Grid container className={classes.wrapper} spacing={2}>
+          <Grid xs={12}>
             <Typography variant="h2" className={classes.heading}>
               Didn&rsquo;t find what you need? Get help.
             </Typography>
           </Grid>
-          <Grid container style={{ display: 'flex', justifyContent: 'center' }}>
-            <Grid item xs={12} sm={6} md={4}>
+          <Grid
+            container
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Grid xs={12} sm={6} md={4}>
               <Tile
                 title="Create a Community Post"
                 description="Find help from other Linode users in the Community Find help from other Linode "
@@ -110,7 +116,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
                 link="https://linode.com/community/"
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Tile
                 title="Open a ticket"
                 description="If you are not able to solve an issue with the resources listed above,
@@ -126,7 +132,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           onClose={this.closeTicketDrawer}
           onSuccess={this.onTicketCreated}
         />
-      </Grid>
+      </>
     );
   }
 }

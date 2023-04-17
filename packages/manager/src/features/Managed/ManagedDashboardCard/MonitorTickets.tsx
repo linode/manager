@@ -5,7 +5,7 @@ import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { ExtendedIssue } from 'src/queries/managed/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,12 +49,11 @@ export const MonitorTickets: React.FC<Props> = (props) => {
       className={classes.root}
     >
       <Grid
-        item
         className={`${hasIssues ? classes.sadTicket : classes.happyTicket} py0`}
       >
         <TicketIcon width={50} height={39} />
       </Grid>
-      <Grid item>
+      <Grid>
         <Typography variant="h2">
           {hasIssues
             ? `${openIssues.length} open support ${
@@ -63,7 +62,7 @@ export const MonitorTickets: React.FC<Props> = (props) => {
             : 'No open support tickets'}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         {hasIssues ? (
           <Typography>
             View the <Link to="/support/tickets">Support tickets page</Link> for

@@ -4,7 +4,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
@@ -51,12 +51,12 @@ export const ActivityRow: React.FC<CombinedProps> = (props) => {
       alignItems={'center'}
       data-qa-activity-row
     >
-      <Grid item>
+      <Grid>
         <Typography>
           {message} {duration && `(${duration})`}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <DateTimeDisplay value={event.created} />
       </Grid>
     </Grid>

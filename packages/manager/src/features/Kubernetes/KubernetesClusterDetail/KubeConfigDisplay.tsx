@@ -2,7 +2,8 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
+import Box from '@mui/material/Box';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
@@ -129,7 +130,7 @@ export const KubeConfigDisplay = (props: Props) => {
 
   return (
     <>
-      <Grid item>
+      <Grid xs={12}>
         <Typography className={classes.label}>
           Kubernetes API Endpoint:
         </Typography>
@@ -143,13 +144,12 @@ export const KubeConfigDisplay = (props: Props) => {
           )}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid xs={12}>
         <Typography className={classes.label} style={{ marginTop: 8 }}>
           Kubeconfig:
         </Typography>
         <div className={classes.kubeconfigElements}>
-          <Grid
-            item
+          <Box
             onClick={downloadKubeConfig}
             className={classes.kubeconfigElement}
           >
@@ -160,17 +160,12 @@ export const KubeConfigDisplay = (props: Props) => {
             <Typography className={classes.kubeconfigFileText}>
               {`${clusterLabel}-kubeconfig.yaml`}
             </Typography>
-          </Grid>
-          <Grid
-            item
-            onClick={handleOpenDrawer}
-            className={classes.kubeconfigElement}
-          >
+          </Box>
+          <Box onClick={handleOpenDrawer} className={classes.kubeconfigElement}>
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
-          </Grid>
-          <Grid
-            item
+          </Box>
+          <Box
             onClick={() => setResetKubeConfigDialogOpen(true)}
             className={classes.kubeconfigElement}
           >
@@ -188,7 +183,7 @@ export const KubeConfigDisplay = (props: Props) => {
             >
               Reset
             </Typography>
-          </Grid>
+          </Box>
         </div>
       </Grid>
     </>

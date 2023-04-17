@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: `10px 16px !important`,
+    padding: `7px 16px !important`, // This will be taken care of during refactor
   },
   footerBorder: {
     borderTop: `1px solid ${theme.borderColors.borderTable}`,

@@ -18,7 +18,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -299,17 +299,17 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       <DialogContent loading={isLoading}>
         <>
           {generalError && (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Notice error text={generalError} />
             </Grid>
           )}
           {successMessage && (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Notice success text={successMessage} />
             </Grid>
           )}
           <Grid container>
-            <Grid item sm={12} lg={8} xl={6}>
+            <Grid sm={12} lg={8} xl={6}>
               {flags.ipv6Sharing ? (
                 <Notice warning>
                   <Typography style={{ fontSize: '0.875rem' }}>
@@ -332,9 +332,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 sharing.
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Grid container>
-                <Grid item className={classes.ipFieldLabel}>
+                <Grid className={classes.ipFieldLabel}>
                   <Typography style={{ fontWeight: 'bold' }}>
                     IP Addresses
                   </Typography>
@@ -376,7 +376,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 </React.Fragment>
               )}
             </Grid>
-            <Grid container item justifyContent="flex-end" className="m0">
+            <Grid container justifyContent="flex-end" className="m0">
               <ActionsPanel>
                 <Button
                   buttonType="secondary"
@@ -445,10 +445,10 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
   const classes = useStyles();
   return (
     <Grid container key={ip}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Divider spacingBottom={0} />
       </Grid>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <TextField
           disabled
           value={ip}
@@ -496,10 +496,10 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
 
   return (
     <Grid container key={idx}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Divider spacingBottom={0} />
       </Grid>
-      <Grid item xs={12} sm={10}>
+      <Grid xs={12} sm={10}>
         <Select
           value={selectedIP}
           options={ipList}
@@ -520,7 +520,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
         />
       </Grid>
       {handleDelete ? (
-        <Grid item sm={2} className={classes.removeCont}>
+        <Grid sm={2} className={classes.removeCont}>
           <Button
             buttonType="outlined"
             className={classes.remove}

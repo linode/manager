@@ -54,7 +54,7 @@ export const SelectTemplate = (args) => {
     <div id="drop-down-story">
       <Select
         onChange={onSelect}
-        createNew={create}
+        onCreateOption={create}
         value={isMulti ? selectedItems : selectedItem}
         {...args}
       />

@@ -10,7 +10,7 @@ import CheckBox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import FileUploader from 'src/components/FileUploader/FileUploader';
 import Link from 'src/components/Link';
 import LinodeCLIModal from 'src/components/LinodeCLIModal';

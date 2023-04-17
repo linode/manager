@@ -10,7 +10,7 @@ import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
@@ -164,11 +164,11 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
   const errorMap = getErrorMap(['description'], errors);
 
   return (
-    <Grid item className={classes.replyContainer}>
+    <Grid className={classes.replyContainer}>
       {errorMap.none && (
         <Notice error spacingBottom={8} spacingTop={16} text={errorMap.none} />
       )}
-      <Grid item>
+      <Grid>
         <TabbedReply
           error={errorMap.description}
           handleChange={setValue}
@@ -176,7 +176,7 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
           value={value}
         />
       </Grid>
-      <Grid item style={{ marginTop: 8 }}>
+      <Grid style={{ marginTop: 8 }}>
         <Accordion
           heading="Formatting Tips"
           defaultExpanded={false}
@@ -185,7 +185,7 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
           <Reference isReply rootClass={classes.referenceRoot} />
         </Accordion>
       </Grid>
-      <Grid item>
+      <Grid>
         <AttachFileForm
           files={files}
           updateFiles={(filesToAttach: FileAttachment[]) =>

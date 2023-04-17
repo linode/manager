@@ -14,7 +14,7 @@ import Box from 'src/components/core/Box';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Typography from 'src/components/core/Typography';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { LinkButton } from 'src/components/LinkButton';
 import TextField from 'src/components/TextField';
 import {
@@ -167,11 +167,12 @@ export const PhoneVerification = () => {
       marginLeft: '-1px !important',
       marginTop: '0px !important',
     }),
-    singleValue: (provided: React.CSSProperties) => ({
-      ...provided,
-      textAlign: 'center',
-      fontSize: '20px',
-    }),
+    singleValue: (provided: React.CSSProperties) =>
+      ({
+        ...provided,
+        textAlign: 'center',
+        fontSize: '20px',
+      } as const),
   };
 
   const selectedCountry = countries.find(
@@ -249,6 +250,7 @@ export const PhoneVerification = () => {
                 })}
               >
                 <Select
+                  label="ISO Code"
                   onFocus={() => setIsPhoneInputFocused(true)}
                   onBlur={() => setIsPhoneInputFocused(false)}
                   styles={customStyles}
@@ -256,16 +258,15 @@ export const PhoneVerification = () => {
                   className={classes.select}
                   id="iso_code"
                   name="iso_code"
-                  type="text"
                   isClearable={false}
                   value={{
                     value: sendCodeForm.values.iso_code,
                     label: getCountryFlag(sendCodeForm.values.iso_code),
                   }}
-                  isOptionSelected={(option: Item) =>
+                  isOptionSelected={(option) =>
                     sendCodeForm.values.iso_code === option.value
                   }
-                  onChange={(item: Item) =>
+                  onChange={(item) =>
                     sendCodeForm.setFieldValue('iso_code', item.value)
                   }
                   options={countries.map((counrty) => ({
