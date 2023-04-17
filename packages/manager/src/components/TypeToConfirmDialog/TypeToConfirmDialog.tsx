@@ -1,7 +1,8 @@
 import * as React from 'react';
-import ConfirmationDialog, {
-  ConfirmationDialogProps,
-} from 'src/components/ConfirmationDialog';
+import {
+  ConfirmationDialog,
+  Props as ConfirmationDialogProps,
+} from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { usePreferences } from 'src/queries/preferences';
 import ActionsPanel from 'src/components/ActionsPanel';

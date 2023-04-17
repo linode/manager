@@ -1,7 +1,7 @@
 import React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { useDeleteOAuthClientMutation } from 'src/queries/accountOAuth';
 

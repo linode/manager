@@ -3,12 +3,10 @@ import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
 import ActionsPanel from 'src/components/ActionsPanel';
 import DeletionDialog from 'src/components/DeletionDialog';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 
-<Meta
-  title="Components/Dialogs"
-/>
+<Meta title="Components/Dialogs" />
 
 export const DeletionTemplate = (args) => (
   <DeletionDialog
@@ -22,7 +20,6 @@ export const DeletionTemplate = (args) => (
     {args.children}
   </DeletionDialog>
 );
-
 
 export const ConfirmationTemplate = (args) => (
   <ConfirmationDialog
@@ -53,11 +50,13 @@ export const NormalTemplate = (args) => (
 # Dialogs
 
 ## Overview
+
 A modal dialog is a window that appears on top of a parent screen. It's called 'modal' because it creates a mode that disables the parent screen but keeps it visible. Users must interact with the modal to return to the main screen.
 
 > ⚠️ In Cloud Manager, dialogs will lock focus onto the dialog and prevent scrolling. For the sake of previewing dialogs, this does not occur in Storybook.
 
 ### Modal Types
+
 - **Standard**
   - Has an "X" button in the top right
   - Can contain anything in the body of the dialog
@@ -66,7 +65,6 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
 - **Deletion**
   - The user must confirm the deleteion of an entity
   - Can require user to type the entity name to confirm deletion
-
 
 > Clicking off of the modal will not close it.
 > A modal can only be closed by taking direct action, clicking on a button or the “X” button, or using the `esc` key.
@@ -91,10 +89,12 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
         description: 'Is the modal open?',
       },
       fullHeight: {
-        description: 'Should the Modal take up the entire height of the viewport?',
+        description:
+          'Should the Modal take up the entire height of the viewport?',
       },
       fullWidth: {
-        description: 'Should the Modal take up the entire width of the viewport?',
+        description:
+          'Should the Modal take up the entire width of the viewport?',
       },
       title: {
         description: 'Title that appears in the heading of the dialog.',
@@ -107,21 +107,14 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
       },
       onClose: {
         description: 'Callback fired when the component requests to be closed.',
-      }
+      },
     }}
   >
     {NormalTemplate.bind({})}
   </Story>
 </Canvas>
 
-
-<ArgsTable
-  story="Dialog"
-  exclude={[
-    'ref',
-  ]}
-  sort="requiredFirst"
-/>
+<ArgsTable story="Dialog" exclude={['ref']} sort="requiredFirst" />
 
 ### Confirmation Dialog
 
@@ -132,6 +125,7 @@ A Confirmation Dialog is used for confirming a simple task.
 > If you are confirming a delete action, use a `Deletion Dialog`
 
 ### Language
+
 - Avoid “Are you sure?” language. Assume the user knows what they want to do while helping them avoid unintended consequences.
 
 <Canvas>
@@ -140,14 +134,15 @@ A Confirmation Dialog is used for confirming a simple task.
     args={{
       open: true,
       title: 'Enable this feature?',
-      children: 'This confirmation modal is making sure you really want to do this.',
+      children:
+        'This confirmation modal is making sure you really want to do this.',
       error: '',
       actions: (
         <ActionsPanel>
           <Button>Cancel</Button>
           <Button buttonType="primary">Continue</Button>
         </ActionsPanel>
-      )
+      ),
     }}
     argTypes={{
       open: {
@@ -163,26 +158,20 @@ A Confirmation Dialog is used for confirming a simple task.
         description: 'Error that will be shown in the dialog.',
       },
       actions: {
-        description: 'Items that get rendered in the footer of the Dialog. Typicaly you put an `<ActionsPanel />` with `<Button />`s in it.',
+        description:
+          'Items that get rendered in the footer of the Dialog. Typicaly you put an `<ActionsPanel />` with `<Button />`s in it.',
         control: false,
       },
       onClose: {
         description: 'Callback fired when the component requests to be closed.',
-      }
+      },
     }}
   >
     {ConfirmationTemplate.bind({})}
   </Story>
 </Canvas>
 
-
-<ArgsTable
-  story="Confirmation Dialog"
-  exclude={[
-    'ref',
-  ]}
-  sort="requiredFirst"
-/>
+<ArgsTable story="Confirmation Dialog" exclude={['ref']} sort="requiredFirst" />
 
 ### Deletion Dialog
 
@@ -221,18 +210,11 @@ If a user has opted out of type-to-confirm this will be ignored
       },
       onClose: {
         description: 'Callback fired when the component requests to be closed.',
-      }
+      },
     }}
   >
     {DeletionTemplate.bind({})}
   </Story>
 </Canvas>
 
-
-<ArgsTable
-  story="Deletion Dialog"
-  exclude={[
-    'ref',
-  ]}
-  sort="requiredFirst"
-/>
+<ArgsTable story="Deletion Dialog" exclude={['ref']} sort="requiredFirst" />
