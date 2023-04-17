@@ -40,7 +40,7 @@ export const ipAddress = string().test({
 });
 
 export const validateFirewallPorts = string().matches(
-  /^([0-9\-]+,?\s?)+$/,
+  /^(?:\d+|\d+-\d+)(?:,\d+|\,\d+-\d+)*$/,
   'Ports must be an integer, range of integers, or a comma-separated list of integers.'
 );
 

@@ -853,7 +853,7 @@ export const validateForm = (
 
   if ((protocol === 'ICMP' || protocol === 'IPENCAP') && ports) {
     errors.ports = `Ports are not allowed for ${protocol} protocols.`;
-  } else if (ports && !ports.match(/^([0-9\-]+,?\s?)+$/)) {
+  } else if (ports && !ports.match(/^(?:\d+|\d+-\d+)(?:,\d+|\,\d+-\d+)*$/)) {
     errors.ports =
       'Ports must be an integer, range of integers, or a comma-separated list of integers.';
   }
