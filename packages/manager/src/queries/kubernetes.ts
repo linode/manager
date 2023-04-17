@@ -31,9 +31,9 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryClient, queryPresets, updateInPaginatedStore } from './base';
+import { queryPresets, updateInPaginatedStore } from './base';
 
 export const queryKey = `kubernetes`;
 
@@ -53,11 +53,17 @@ export const useKubernetesClusterQuery = (id: number) => {
 };
 
 export const useKubernetesClusterMutation = (id: number) => {
+  const queryClient = useQueryClient();
   return useMutation<KubernetesCluster, APIError[], Partial<KubernetesCluster>>(
     (data) => updateKubernetesCluster(id, data),
     {
       onSuccess(data) {
-        updateInPaginatedStore<KubernetesCluster>(`${queryKey}-list`, id, data);
+        updateInPaginatedStore<KubernetesCluster>(
+          `${queryKey}-list`,
+          id,
+          data,
+          queryClient
+        );
         queryClient.setQueryData([queryKey, 'cluster', id], data);
       },
     }
@@ -100,14 +106,20 @@ export const useKubenetesKubeConfigQuery = (
     }
   );
 
-export const useResetKubeConfigMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(({ id }) => resetKubeConfig(id), {
-    onSuccess(_, { id }) {
-      queryClient.removeQueries([queryKey, 'cluster', id, 'kubeconfig']);
-    },
-  });
+export const useResetKubeConfigMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { id: number }>(
+    ({ id }) => resetKubeConfig(id),
+    {
+      onSuccess(_, { id }) {
+        queryClient.removeQueries([queryKey, 'cluster', id, 'kubeconfig']);
+      },
+    }
+  );
+};
 
 export const useDeleteKubernetesClusterMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { id: number }>(
     ({ id }) => deleteKubernetesCluster(id),
     {
@@ -119,6 +131,7 @@ export const useDeleteKubernetesClusterMutation = () => {
 };
 
 export const useCreateKubernetesClusterMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>(
     createKubernetesCluster,
     {
@@ -130,6 +143,7 @@ export const useCreateKubernetesClusterMutation = () => {
 };
 
 export const useCreateNodePoolMutation = (clusterId: number) => {
+  const queryClient = useQueryClient();
   return useMutation<KubeNodePoolResponse, APIError[], CreateNodePoolData>(
     (data) => createNodePool(clusterId, data),
     {
@@ -149,6 +163,7 @@ export const useUpdateNodePoolMutation = (
   clusterId: number,
   poolId: number
 ) => {
+  const queryClient = useQueryClient();
   return useMutation<
     KubeNodePoolResponse,
     APIError[],
@@ -164,6 +179,7 @@ export const useDeleteNodePoolMutation = (
   clusterId: number,
   poolId: number
 ) => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteNodePool(clusterId, poolId), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);
@@ -175,6 +191,7 @@ export const useRecycleNodePoolMutation = (
   clusterId: number,
   poolId: number
 ) => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => recycleAllNodes(clusterId, poolId), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);
@@ -183,6 +200,7 @@ export const useRecycleNodePoolMutation = (
 };
 
 export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => recycleNode(clusterId, nodeId), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);
@@ -191,6 +209,7 @@ export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
 };
 
 export const useRecycleClusterMutation = (clusterId: number) => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => recycleClusterNodes(clusterId), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);

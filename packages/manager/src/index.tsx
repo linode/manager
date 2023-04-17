@@ -16,15 +16,24 @@ import SplashScreen from 'src/components/SplashScreen';
 import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
-import 'src/request';
-import store from 'src/store';
+import { setupInterceptors } from 'src/request';
+import { storeFactory } from 'src/store';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { queryClient } from './queries/base';
 import App from './App';
+import { queryPresets } from './queries/base';
+import { QueryClient } from 'react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: queryPresets.longLived },
+});
+
+const store = storeFactory(queryClient);
+
+setupInterceptors(store);
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 const Cancel = React.lazy(() => import('src/features/CancelLanding'));
@@ -40,11 +49,11 @@ initAnalytics(isProductionBuild, GA_ID);
 
 initTagManager(GTM_ID);
 
-const renderNullAuth = () => <span>null auth route</span>;
+const NullAuth = () => <span>null auth route</span>;
 
-const renderNull = () => <span>null route</span>;
+const Null = () => <span>null route</span>;
 
-const renderApp = (props: RouteComponentProps) => (
+const AppWrapper = (props: RouteComponentProps) => (
   <>
     <SplashScreen />
     <SnackBar
@@ -59,7 +68,7 @@ const renderApp = (props: RouteComponentProps) => (
   </>
 );
 
-const renderAuthentication = () => (
+const ContextWrapper = () => (
   <QueryClientProvider client={queryClient}>
     <LinodeThemeWrapper>
       <React.Suspense fallback={<SplashScreen />}>
@@ -71,13 +80,13 @@ const renderAuthentication = () => (
             component={LoginAsCustomerCallback}
           />
           {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-          <Route exact path="/nullauth" render={renderNullAuth} />
+          <Route exact path="/nullauth" component={NullAuth} />
           <Route exact path="/logout" component={Logout} />
           <Route exact path="/cancel" component={Cancel} />
           <AuthenticationWrapper>
             <Switch>
               <Route path="/linodes/:linodeId/lish/:type" component={Lish} />
-              <Route render={renderApp} />
+              <Route component={AppWrapper} />
             </Switch>
           </AuthenticationWrapper>
         </Switch>
@@ -93,15 +102,15 @@ const renderAuthentication = () => (
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
 //
 // Load dev tools if need be.
-loadDevTools(() => {
+loadDevTools(store, () => {
   ReactDOM.render(
     navigator.cookieEnabled ? (
       <Provider store={store}>
         <Router>
           <Switch>
             {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-            <Route exact path="/null" render={renderNull} />
-            <Route render={renderAuthentication} />
+            <Route exact path="/null" component={Null} />
+            <Route component={ContextWrapper} />
           </Switch>
         </Router>
       </Provider>

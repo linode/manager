@@ -1,7 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import useLinodeActions from './useLinodeActions';
 import useLinodes from './useLinodes';
-import useNodeBalancers from './useNodeBalancers';
 
 export interface Entity<T> {
   data: T[];
@@ -23,10 +22,6 @@ export interface Entity<T> {
 export const useEntities = () => {
   const { linodes: _linodes } = useLinodes();
   const { requestLinodes } = useLinodeActions();
-  const {
-    nodeBalancers: _nodeBalancers,
-    requestNodeBalancers,
-  } = useNodeBalancers();
 
   /** Our Redux store is currently inconsistent about
    * the data shape for different entity types.
@@ -38,7 +33,6 @@ export const useEntities = () => {
    */
 
   const linodes = Object.values(_linodes.itemsById);
-  const nodeBalancers = Object.values(_nodeBalancers.itemsById);
 
   return {
     linodes: {
@@ -46,12 +40,6 @@ export const useEntities = () => {
       request: requestLinodes,
       lastUpdated: _linodes.lastUpdated,
       error: _linodes.error?.read,
-    },
-    nodeBalancers: {
-      data: nodeBalancers,
-      request: () => requestNodeBalancers().then((response) => response.data),
-      lastUpdated: _nodeBalancers.lastUpdated,
-      error: _nodeBalancers.error?.read,
     },
   };
 };

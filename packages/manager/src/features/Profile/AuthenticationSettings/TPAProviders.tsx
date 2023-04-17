@@ -4,7 +4,7 @@ import * as React from 'react';
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
 import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
 import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
-import LinodeLogo from 'src/assets/logo/logo-footer.svg';
+import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
@@ -101,15 +101,15 @@ interface Props {
 type CombinedProps = Props;
 
 const icons: Record<TPAProvider, any> = {
-  password: LinodeLogo,
+  password: AkamaiWaveOnlyIcon,
   google: GoogleIcon,
   github: GitHubIcon,
 };
 
 const linode = {
-  displayName: 'Linode',
+  displayName: 'Cloud Manager',
   name: 'password' as TPAProvider,
-  icon: LinodeLogo,
+  icon: AkamaiWaveOnlyIcon,
   href: '',
 };
 
@@ -141,11 +141,11 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
       <Paper className={classes.root}>
         <Typography variant="h3">Login Method</Typography>
         <Typography className={classes.copy}>
-          You can use your Linode credentials or another provider such as Google
-          or GitHub to log in to your Linode account. More information is
-          available in{' '}
+          You can use your Cloud Manager credentials or another provider such as
+          Google or GitHub to log in to your Cloud Manager account. More
+          information is available in{' '}
           <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
-            How to Enable Third Party Authentication on Your Linode Account
+            How to Enable Third Party Authentication on Your User Account
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (2FA).
         </Typography>
@@ -157,6 +157,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             return (
               <Grid item md={4} key={thisProvider.displayName}>
                 <Button
+                  data-testid={`Button-${thisProvider.displayName}`}
                   className={classNames({
                     [classes.button]: true,
                     [classes.isButtonEnabled]: isProviderEnabled,
@@ -182,7 +183,12 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                       <ProviderIcon className={classes.providerIcon} />
                       {thisProvider.displayName}
                       {isProviderEnabled ? (
-                        <span className={classes.enabledText}>(Enabled)</span>
+                        <span
+                          className={classes.enabledText}
+                          data-testid={`Enabled-${thisProvider.displayName}`}
+                        >
+                          (Enabled)
+                        </span>
                       ) : null}
                     </Box>
                     {isProviderEnabled ? <EnabledIcon /> : null}
@@ -193,7 +199,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           })}
         </Grid>
         {isThirdPartyAuthEnabled ? (
-          <>
+          <div data-testid={`Notice-${currentProvider.displayName}`}>
             <Divider spacingTop={24} spacingBottom={16} />
             <Typography variant="h3">
               {currentProvider.displayName} Authentication
@@ -227,7 +233,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
               We&rsquo;ll send you an e-mail with instructions on how to reset
               your password.
             </Typography>
-          </>
+          </div>
         ) : null}
       </Paper>
       <TPADialog

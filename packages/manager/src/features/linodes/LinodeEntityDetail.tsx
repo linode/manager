@@ -51,6 +51,7 @@ import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
+import { useProfile } from 'src/queries/profile';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -824,6 +825,8 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
+  const { data: profile } = useProfile();
+
   const {
     linodePlan,
     linodeRegionDisplay,
@@ -888,7 +891,9 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
           </Typography>
           <Typography className={`${classes.listItem} ${classes.listItemLast}`}>
             <span className={classes.label}>Created:</span>{' '}
-            {formatDate(linodeCreated)}
+            {formatDate(linodeCreated, {
+              timezone: profile?.timezone,
+            })}
           </Typography>
         </div>
       </Grid>

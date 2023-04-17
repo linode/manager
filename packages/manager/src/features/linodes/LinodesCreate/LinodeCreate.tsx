@@ -5,7 +5,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import classNames from 'classnames';
 import cloneDeep from 'lodash/cloneDeep';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
@@ -35,7 +35,6 @@ import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import { ApplicationState } from 'src/store';
 import {
   CreateTypes,
   handleChangeCreateType,
@@ -67,12 +66,12 @@ import {
   TypeInfo,
   WithDisplayData,
   WithLinodesProps,
-  WithRegionsProps,
   WithTypesRegionsAndImages,
 } from './types';
-import UserDataAccordion from './UserDataAccordion/UserDataAccordion';
+import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { extendType } from 'src/utilities/extendType';
 import { WithTypesProps } from 'src/containers/types.container';
+import { RegionsProps } from 'src/containers/regions.container';
 
 type ClassNames =
   | 'form'
@@ -187,11 +186,10 @@ type CombinedProps = Props &
   AllFormStateAndHandlers &
   AppsData &
   ReduxStateProps &
-  StateProps &
   WithDisplayData &
   ImagesProps &
   WithLinodesProps &
-  WithRegionsProps &
+  RegionsProps &
   WithStyles<ClassNames> &
   WithTypesProps &
   RouteComponentProps<{}> &
@@ -558,8 +556,14 @@ export class LinodeCreate extends React.PureComponent<
         'cloud-init'
       );
 
+    const regionSupportsMetadata =
+      this.props.regionsData
+        .find((region) => region.id === this.props.selectedRegionID)
+        ?.capabilities.includes('Metadata') ?? false;
+
     const showUserData =
       this.props.flags.metadata &&
+      regionSupportsMetadata &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     return (
@@ -877,21 +881,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
   setTab: (value) => dispatch(handleChangeCreateType(value)),
 });
 
-interface StateProps {
-  documentation: Linode.Doc[];
-}
-
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  CombinedProps,
-  ApplicationState
-> = (state) => ({
-  documentation: state.documentation,
-});
-
 const styled = withStyles(styles);
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = recompose<CombinedProps, InnerProps>(connected, styled);
 

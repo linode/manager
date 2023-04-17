@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useHistory } from 'react-router-dom';
+import { useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 interface Props {
   nodeBalancerId: number;
@@ -13,13 +13,13 @@ interface Props {
   label: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const NodeBalancerActionMenu: React.FC<CombinedProps> = (props) => {
+export const NodeBalancerActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
-  const { nodeBalancerId, history, toggleDialog, label } = props;
+  const history = useHistory();
+
+  const { nodeBalancerId, toggleDialog, label } = props;
 
   const actions: Action[] = [
     {
@@ -63,5 +63,3 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default withRouter(NodeBalancerActionMenu);

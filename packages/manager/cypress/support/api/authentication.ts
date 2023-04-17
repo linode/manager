@@ -3,8 +3,7 @@
  */
 
 import { baseRequest } from '@linode/api-v4/lib/request';
-
-const oauthToken = Cypress.env('MANAGER_OAUTH');
+import { oauthToken } from 'support/constants/api';
 
 /**
  * Intercepts all Linode API v4 requests and applies an authorization header.

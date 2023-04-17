@@ -1,9 +1,11 @@
-import { EntityTransfer, Linode } from '@linode/api-v4/types';
 import {
   getEntityTransfers,
   cancelTransfer,
-  getLinode,
-} from '@linode/api-v4/lib';
+  getLinodes,
+  Linode,
+  EntityTransfer,
+} from '@linode/api-v4';
+import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 import { isTestLabel } from './common';
 
@@ -13,36 +15,35 @@ import { isTestLabel } from './common';
  * @returns Promise that resolves when entity transfers have been cancelled or rejects on HTTP error.
  */
 export const cancelAllTestEntityTransfers = async (): Promise<void> => {
+  const linodes = await depaginate<Linode>((page: number) =>
+    getLinodes({ page_size: pageSize, page })
+  );
+
   const entityTransfers = (
     await depaginate<EntityTransfer>((page: number) =>
-      getEntityTransfers({ page_size: 500, page })
+      getEntityTransfers({ page_size: pageSize, page })
     )
   ).filter(
     (entityTransfer: EntityTransfer) => entityTransfer.status === 'pending'
   );
 
-  for (const entityTransfer of entityTransfers) {
-    // eslint-disable-next-line no-await-in-loop
-    const isTest = await areAllLinodesWithTestLabel(
-      entityTransfer?.entities?.linodes
-    );
-    if (isTest) {
-      // We want to send these requests sequentially
-      // to avoid overloading the API.
-      // eslint-disable-next-line no-await-in-loop
-      await cancelTransfer(entityTransfer.token);
+  const deletionPromises = entityTransfers.map(
+    async (entityTransfer: EntityTransfer) => {
+      const transferLinodeIds: number[] =
+        entityTransfer?.entities?.linodes || [];
+      const allLinodesAreTestLinodes = transferLinodeIds.every(
+        (transferLinodeId: number) => {
+          const existingLinode = linodes.find(
+            (linode: Linode) => linode.id === transferLinodeId
+          );
+          return !!existingLinode && isTestLabel(existingLinode.label);
+        }
+      );
+      if (allLinodesAreTestLinodes) {
+        await cancelTransfer(entityTransfer.token);
+      }
     }
-  }
-};
+  );
 
-const areAllLinodesWithTestLabel = async (
-  linodeIds: number[]
-): Promise<boolean> => {
-  if (linodeIds?.length > 0) {
-    const linodes = await Promise.all(
-      linodeIds.map((id: number) => getLinode(id))
-    );
-    return linodes.every((linode: Linode) => isTestLabel(linode.label));
-  }
-  return false;
+  await Promise.all(deletionPromises);
 };

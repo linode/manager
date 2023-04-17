@@ -30,8 +30,6 @@ describe('CPUMetrics', () => {
         darkGreen: '',
         text: '',
         tableHeadInner: '',
-        simpleLegendRoot: '',
-        simpleLegend: '',
       }}
       theme={light}
       rows={[
