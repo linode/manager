@@ -119,6 +119,10 @@ describe('utilities', () => {
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       );
+      expect(validateForm('TCP', '1-2,3-4')).toHaveProperty(
+        'ports',
+        'Ports must be an integer, range of integers, or a comma-separated list of integers.'
+      );
       expect(validateForm('TCP', '-20')).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'

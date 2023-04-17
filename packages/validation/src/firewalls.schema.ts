@@ -7,7 +7,7 @@ export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
 export const CUSTOM_PORTS_ERROR_MESSAGE =
   'Ports must be an integer, range of integers, or a comma-separated list of integers.';
-export const CUSTOM_PORTS_VALIDATION_REGEX = /^(?:\d+|\d+-\d+)(?:,\d+|\,\d+-\d+)*$/;
+export const CUSTOM_PORTS_VALIDATION_REGEX = /^(?:\d+|\d+-\d+|(?:\d+,)*\d+)$/;
 
 export const validateIP = (ipAddress?: string | null): boolean => {
   if (!ipAddress) {
