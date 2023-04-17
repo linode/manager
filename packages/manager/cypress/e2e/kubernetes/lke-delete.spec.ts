@@ -1,6 +1,10 @@
 // import { KubernetesCluster } from '@linode/api-v4';
 import { kubernetesClusterFactory } from 'src/factories';
-import { mockGetClusters, mockDeleteCluster } from 'support/intercepts/lke';
+import {
+  mockGetCluster,
+  mockGetClusters,
+  mockDeleteCluster,
+} from 'support/intercepts/lke';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
@@ -65,7 +69,19 @@ describe('LKE cluster deletion', () => {
       .should('be.enabled');
   });
 
-  // it('can delete an LKE cluster from landing page', () => {
+  it('can delete an LKE cluster from landing page', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      label: randomLabel(),
+    });
 
-  // });
+    mockGetCluster(mockCluster).as('getCluster');
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+    cy.wait('@getCluster');
+
+    ui.button
+      .findByTitle('Delete Cluster')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+  });
 });

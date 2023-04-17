@@ -25,6 +25,23 @@ export const mockGetClusters = (
 };
 
 /**
+ * Intercepts GET request to retrieve an LKE cluster and mocks the response.
+ *
+ * @param cluster - LKE cluster with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetCluster = (
+  cluster: KubernetesCluster
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`lke/clusters/${cluster.id}`),
+    makeResponse(cluster)
+  );
+};
+
+/**
  * Intercepts POST request to create an LKE cluster.
  *
  * @returns Cypress chainable.
