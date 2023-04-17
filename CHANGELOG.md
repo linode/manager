@@ -20,10 +20,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-04-03] - v1.90.0
 
 ### Added:
+
 - Delete warning to LKE [#8891](https://github.com/linode/manager/pull/8891)
 - “to another region” to the title of the Linode Migrate Dialog [#8920](https://github.com/linode/manager/pull/8920)
 
 ### Changed:
+
 - Disable Download CA Certificate when DB is provisioning [#8890](https://github.com/linode/manager/pull/8890)
 - Update OCC logos to include naming convention [#8927](https://github.com/linode/manager/pull/8927)
 - MUI v5 Migration - Features > Billing [#8895](https://github.com/linode/manager/pull/8895)
@@ -41,22 +43,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - React Query for Notifications [#8915](https://github.com/linode/manager/pull/8915)
 
 ### Fixed:
+
 - Filtering by `Status` on Linode Details Volumes Table [#8947](https://github.com/linode/manager/pull/8947)
 - Tag drawer in LinodesLanding summary view [#8909](https://github.com/linode/manager/pull/8909)
 - Crash for Events with a `null` community post `entity` [#8912](https://github.com/linode/manager/pull/8912)
 - Incorrect headline in Linode Details Networking table [#8925](https://github.com/linode/manager/pull/8925)
+- One Click Cluster UDF Caching issue [#8997](https://github.com/linode/manager/pull/8997)
 
 ### Removed:
+
 - Repo clean up, remove old Redux Docs [#8907](https://github.com/linode/manager/pull/8907)
 
 ## [2023-03-28] - v1.89.1
 
 ### Fixed:
+
 - NodeBalancer Configurations not saving [#8929](https://github.com/linode/manager/pull/8929)
 
 ## [2023-03-20] - v1.89.0
 
 ### Added:
+
 - One Click Clusters [#8878](​​https://github.com/linode/manager/pull/8878)
 - Infinitely Loaded Volume Select [#8876](https://github.com/linode/manager/pull/8876)
 - Allow users to select `system` as a theme option [#8869](https://github.com/linode/manager/pull/8869)
@@ -64,6 +71,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Resource links to Kubernetes empty state landing page [#8827](https://github.com/linode/manager/pull/8827)
 
 ### Changed:
+
 - Updated maintenance and account activation screen logo [#8879](https://github.com/linode/manager/pull/8879)
 - Updated `VolumeStatus` type and logic [#8862](https://github.com/linode/manager/pull/8862)
 - Temporarily changed Remit To invoice address [#8847](https://github.com/linode/manager/pull/8847)
@@ -73,12 +81,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Use region `label` from `/v4/regions` instead of `dcDisplayNames` constant [#8851](https://github.com/linode/manager/pull/8851)
 
 ### Fixed:
+
 - Use our custom dialog for Monthly Network Transfer Pool instead of MUI's [#8874](https://github.com/linode/manager/pull/8874)
 - Radio Styles after Vite Upgrade [#8871](https://github.com/linode/manager/pull/8871)
 - Disable/hide showAll for PaginationFooter [#8826](https://github.com/linode/manager/pull/8826)
 - Invalidate Firewall devices cache when a Linode is deleted [#8848](https://github.com/linode/manager/pull/8848)
 
 ### Removed:
+
 - VLANs from Redux [#8872](https://github.com/linode/manager/pull/8872)
 - Unused packages + update lint-staged [#8860](https://github.com/linode/manager/pull/8860)
 - /core/styles abstraction for tss-react codemod [#8875](https://github.com/linode/manager/pull/8875)
@@ -86,13 +96,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-03-06] - v1.88.0
 
 ### Breaking:
+
 - Remove deprecated `ip_whitelist_enabled` Profile Toggle
 
 ### Added:
+
 - Support for local development access from local domain
 - Account Logins Show `Successful` or `Failed` Access
 
 ### Changed:
+
 - Increased minimum acceptable password strength for Linode root passwords
 - Use React Query to fetch and store user preferences, tags, and images
 - Use `URLSearchParams` to standardize query string parsing and stringifying
@@ -102,47 +115,57 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Use Region ID to dynamically generate LISH URLs
 
 ### Removed:
+
 - `wait-on` package for CVE-2023-25166
 
 ### Fixed:
+
 - Firewall Rules Table rendering overlapping text
 - `validateDOMNesting` warning in console
 
 ## [2023-02-21] - v1.87.0
 
 ### Added:
+
 - Ability to create Object Storage folders
 
 ### Changed:
+
 - Standardize Text tooltip
 - Prevent Firewall Rule Drawer reset if the same preset is reselected
 
 ## [2023-02-13] - v1.86.0
 
 ### Added:
+
 - “Status” column to Linode Backups table
 
 ### Changed:
+
 - Migrate to Material UI v5 theme format
 - Accessibility improvements to TopMenu icons
 - Logo updates
 - Account Agreements Query Small Optimization
 
 ### Fixed:
+
 - Uneven Breakpoints in Kubernetes Landing Table
 
 ## [2023-02-07] - v1.85.0
 
 ### Added:
+
 - Databases as a User Permissions Option
 - Monthly Network Transfer Pool to select empty state landing pages
 - API/CLI usage information to Linode Create
 
 ### Changed:
+
 - Improve firewall rule list screen reader support
 - UX copy for “Getting Started” playlists
 
 ### Fixed:
+
 - API Tokens revocation
 
 ## [2023-01-18] - v1.84.0
