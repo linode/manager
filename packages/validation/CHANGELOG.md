@@ -1,4 +1,9 @@
 
+## [2023-04-17] - v0.22.0
+
+### Changed:
+- Make NodeBalancer label required #8964
+
 ## [2023-04-03] - v0.21.0
 
 ### Added:
