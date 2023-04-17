@@ -1,8 +1,6 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
-import ConditionalWrapper from 'src/components/ConditionalWrapper';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
@@ -12,7 +10,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     alignItems: 'flex-start',
     cursor: 'pointer',
-    padding: theme.spacing(1) + theme.spacing(0.5),
+    padding: theme.spacing(1.5),
     color: theme.textColors.linkActiveLight,
     transition: 'none',
     margin: `0 ${theme.spacing(1)} 2px 0`,
@@ -48,7 +46,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   left: {
-    left: -(theme.spacing(1) + theme.spacing(0.5)),
+    left: `-${theme.spacing(1.5)}`,
   },
   label: {
     whiteSpace: 'nowrap',
@@ -78,9 +76,8 @@ export interface Props {
   children?: string;
 }
 
-const IconTextLink = (props: Props) => {
-  const { classes } = useStyles();
-
+export const IconTextLink = (props: Props) => {
+  const { classes, cx } = useStyles();
   const {
     SideIcon,
     text,
@@ -94,43 +91,40 @@ const IconTextLink = (props: Props) => {
     hideText,
   } = props;
 
-  return (
-    <ConditionalWrapper
-      condition={to !== undefined && !disabled}
-      wrapper={(children) => (
-        <Link className={classes.linkWrapper} to={to as string}>
-          {children}
-        </Link>
+  const LinkButton = (
+    <Button
+      className={cx(
+        classes.root,
+        {
+          [classes.disabled]: disabled,
+          [classes.active]: active,
+          [classes.left]: left,
+        },
+        className
       )}
+      title={title}
+      onClick={onClick}
+      data-qa-icon-text-link={title}
+      disableRipple
     >
-      <Button
-        className={classNames(
-          {
-            [classes.root]: true,
-            [classes.disabled]: disabled === true,
-            [classes.active]: active === true,
-            [classes.left]: left === true,
-            iconTextLink: true,
-          },
-          className
-        )}
-        title={title}
-        onClick={onClick}
-        data-qa-icon-text-link={title}
-        disableRipple
+      <SideIcon className={cx(classes.icon, { m0: hideText })} />
+      <span
+        className={cx(classes.label, {
+          ['visually-hidden']: hideText,
+        })}
       >
-        <SideIcon className={`${classes.icon} ${hideText === true && 'm0'}`} />
-        <span
-          className={classNames({
-            [classes.label]: true,
-            ['visually-hidden']: hideText,
-          })}
-        >
-          {text}
-        </span>
-      </Button>
-    </ConditionalWrapper>
+        {text}
+      </span>
+    </Button>
   );
-};
 
-export default IconTextLink;
+  if (to !== undefined && !disabled) {
+    return (
+      <Link className={classes.linkWrapper} to={to as string}>
+        {LinkButton}
+      </Link>
+    );
+  }
+
+  return LinkButton;
+};
