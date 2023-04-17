@@ -1,4 +1,10 @@
 
+## [2023-04-17] - v0.90.0
+
+### Changed:
+- Accept URL query parameters for `getNodeBalancerConfigs` #8964
+- Accept `null` for `OAuthClient` thumbnail URL #8938
+
 ## [2023-04-03] - v0.89.0
 
 ### Added:
