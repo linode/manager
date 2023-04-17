@@ -7,10 +7,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel';
-import SelectPlanQuantityPanel, {
-  ExtendedTypeWithCount,
-} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
+import SelectPlanQuantityPanel from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -84,17 +81,25 @@ export const AddNodePoolDrawer = (props: Props) => {
   } = useCreateNodePoolMutation(clusterId);
 
   // Only want to use current types here.
-  const typesData = filterCurrentTypes(types?.map(extendType));
+  const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
   const [selectedType, setSelectedType] = React.useState<string | undefined>(
     undefined
   );
-  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
-    addCountToTypes(typesData || [])
+  const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
+    new Map()
+  );
+  const getTypeCount = React.useCallback(
+    (planId: string) => typeCountMap.get(planId) ?? 0,
+    [typeCountMap]
   );
 
-  const _selectedType = _types.find((thisType) => thisType.id === selectedType);
-  const currentCount = _selectedType?.count ?? 0;
+  const _selectedType = extendedTypes.find(
+    (thisType) => thisType.id === selectedType
+  );
+  const currentCount = _selectedType
+    ? typeCountMap.get(_selectedType.id) ?? 0
+    : 0;
   const pricePerNode = _selectedType?.price?.monthly ?? 0;
 
   React.useEffect(() => {
@@ -110,26 +115,14 @@ export const AddNodePoolDrawer = (props: Props) => {
   }, [error]);
 
   const resetDrawer = () => {
-    const newTypes = _types.map((thisType) => {
-      return {
-        ...thisType,
-        count: 0,
-      };
-    });
-    setNewType(newTypes);
+    setTypeCountMap(new Map());
     setSelectedType(undefined);
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    const newTypes = _types.map((thisType: any) => {
-      if (thisType.id === planId) {
-        return { ...thisType, count: newCount };
-      }
-      return { ...thisType, count: 0 };
-    });
-    setNewType(newTypes);
+    setTypeCountMap(new Map(typeCountMap).set(planId, newCount));
     // If everything's empty, we need to reset the selected type.
-    if (newTypes.every((thisType) => thisType.count === 0)) {
+    if (Array.from(typeCountMap.values()).every((count) => count === 0)) {
       setSelectedType(undefined);
     } else {
       setSelectedType(planId);
@@ -137,11 +130,14 @@ export const AddNodePoolDrawer = (props: Props) => {
   };
 
   const handleAdd = () => {
-    const type = _types.find((thisType) => thisType.id === selectedType);
-    if (!type || !selectedType) {
+    const type = extendedTypes.find((thisType) => thisType.id === selectedType);
+    if (!type) {
       return;
     }
-    return createPool({ type: type.id, count: type.count }).then(() => {
+
+    const count = getTypeCount(type.id);
+
+    return createPool({ type: type.id, count }).then(() => {
       onClose();
     });
   };
@@ -159,9 +155,10 @@ export const AddNodePoolDrawer = (props: Props) => {
       <form className={classes.plans}>
         <SelectPlanQuantityPanel
           // No nanodes or GPUs in clusters
-          types={_types.filter(
+          types={extendedTypes.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'
           )}
+          getTypeCount={getTypeCount}
           selectedID={selectedType}
           onSelect={(newType: string) => setSelectedType(newType)}
           updatePlanCount={updatePlanCount}

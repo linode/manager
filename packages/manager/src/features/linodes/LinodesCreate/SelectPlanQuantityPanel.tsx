@@ -13,7 +13,6 @@ import Typography from 'src/components/core/Typography';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
@@ -91,12 +90,9 @@ const styles = (theme: Theme) =>
     },
   });
 
-export interface ExtendedTypeWithCount extends ExtendedType {
-  count: number;
-}
-
 interface Props {
-  types: ExtendedTypeWithCount[];
+  types: ExtendedType[];
+  getTypeCount: (planId: string) => number;
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
@@ -108,10 +104,12 @@ interface Props {
   submitForm?: (key: string, value: number) => void;
   addPool?: (pool?: CreateNodePoolData) => void;
   isOnCreate?: boolean;
-  updatePlanCount: any;
+  updatePlanCount: (planId: string, newCount: number) => void;
   isSubmitting?: boolean;
   resetValues: () => void;
 }
+
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const getNanodes = (types: ExtendedType[]) =>
   types.filter((t) => /nanode/.test(t.class));
@@ -128,12 +126,10 @@ const getDedicated = (types: ExtendedType[]) =>
 const getGPU = (types: ExtendedType[]) =>
   types.filter((t) => /gpu/.test(t.class));
 
-export class SelectPlanPanel extends React.Component<
-  Props & WithStyles<ClassNames>
-> {
+export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
-  renderSelection = (type: ExtendedTypeWithCount, idx: number) => {
+  renderSelection = (type: ExtendedType, idx: number) => {
     const {
       selectedID,
       disabled,
@@ -141,7 +137,10 @@ export class SelectPlanPanel extends React.Component<
       submitForm,
       isOnCreate,
       updatePlanCount,
+      getTypeCount,
     } = this.props;
+
+    const count = getTypeCount(type.id);
 
     // We don't want network information for LKE so we remove the last two elements.
     const subHeadings = type.subHeadings.slice(0, -2);
@@ -150,14 +149,14 @@ export class SelectPlanPanel extends React.Component<
       <Grid xs={12}>
         <div className={classes.enhancedInputOuter}>
           <EnhancedNumberInput
-            value={type.count}
+            value={count}
             setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
           />
           {isOnCreate && (
             <Button
               buttonType="primary"
-              onClick={() => submitForm!(type.id, type.count)}
-              disabled={type.count < 1}
+              onClick={() => submitForm!(type.id, count)}
+              disabled={count < 1}
               className={classes.enhancedInputButton}
             >
               Add
@@ -198,21 +197,21 @@ export class SelectPlanPanel extends React.Component<
               <div className={classes.enhancedInputOuter}>
                 <EnhancedNumberInput
                   inputLabel={`edit-quantity-${type.id}`}
-                  value={type.count}
+                  value={count}
                   setValue={(newCount: number) =>
                     updatePlanCount(type.id, newCount)
                   }
                   disabled={
                     // When on the add pool flow, we only want the current input to be active,
                     // unless we've just landed on the form or all the inputs are empty.
-                    !isOnCreate && Boolean(selectedID) && type.count < 1
+                    !isOnCreate && Boolean(selectedID) && count < 1
                   }
                 />
                 {isOnCreate && (
                   <Button
                     buttonType="primary"
-                    onClick={() => submitForm!(type.id, type.count)}
-                    disabled={type.count < 1}
+                    onClick={() => submitForm!(type.id, count)}
+                    disabled={count < 1}
                     className={classes.enhancedInputButton}
                   >
                     Add
@@ -423,10 +422,4 @@ export class SelectPlanPanel extends React.Component<
 
 const styled = withStyles(styles);
 
-export default compose<
-  Props & WithStyles<ClassNames>,
-  Props & RenderGuardProps
->(
-  RenderGuard,
-  styled
-)(SelectPlanPanel);
+export default compose<CombinedProps, Props>(styled)(SelectPlanQuantityPanel);
