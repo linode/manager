@@ -1,7 +1,7 @@
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { DateTimeDisplay, Props } from './DateTimeDisplay';
+import { DateTimeDisplay, DateTimeDisplayProps } from './DateTimeDisplay';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 jest.mock('../../utilities/getUserTimezone');
 
@@ -24,7 +24,7 @@ describe('DateTimeDisplay component', () => {
           .minus({ minutes: 5 })
           .toFormat(ISO_DATETIME_NO_TZ_FORMAT),
         humanizeCutoff: 'day',
-      } as Props;
+      } as DateTimeDisplayProps;
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
 
       getByText('5 minutes ago');
@@ -38,7 +38,7 @@ describe('DateTimeDisplay component', () => {
         const props = {
           value: almostOneWeekString,
           humanizeCutoff: 'month',
-        } as Props;
+        } as DateTimeDisplayProps;
         const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
         getByText('6 days ago');
       });
@@ -47,7 +47,7 @@ describe('DateTimeDisplay component', () => {
         const props = {
           value: almostOneWeekString,
           humanizeCutoff: 'day',
-        } as Props;
+        } as DateTimeDisplayProps;
         const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
         getByText(`${almostOneWeek.year}`, { exact: false });
       });
@@ -59,7 +59,7 @@ describe('DateTimeDisplay component', () => {
       const props = {
         value: aLongTimeAgo,
         humanizeCutoff: 'never',
-      } as Props;
+      } as DateTimeDisplayProps;
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
       getByText('10 years ago');
     });

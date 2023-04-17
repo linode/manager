@@ -8,7 +8,7 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
