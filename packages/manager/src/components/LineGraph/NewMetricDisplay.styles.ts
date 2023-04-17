@@ -15,8 +15,6 @@ export type ClassNames =
   | 'text'
   | 'tableHead'
   | 'tableHeadInner'
-  | 'simpleLegend'
-  | 'simpleLegendRoot'
   | 'crossedOut'
   | 'chartIcon';
 
@@ -53,7 +51,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
       '& th, td': {
         padding: `${theme.spacing(0.5)} !important`,
       },
-      '& td:first-child': {
+      '& td:first-of-type': {
         backgroundColor: 'transparent !important',
         [theme.breakpoints.down('md')]: {
           marginLeft: -45,
@@ -150,14 +148,6 @@ const newMetricDisplayStyles = (theme: Theme) =>
     text: {
       color: theme.color.black,
       fontSize: '0.75rem',
-    },
-    simpleLegendRoot: {
-      maxWidth: 'initial',
-      display: 'flex',
-    },
-    simpleLegend: {
-      width: 'auto',
-      marginTop: theme.spacing(2),
     },
     crossedOut: {
       textDecoration: 'line-through',

@@ -18,7 +18,7 @@ describe('useAPIRequest', () => {
       useAPIRequest<number>(mockRequestSuccess, 0)
     );
 
-    act(async () => {
+    await act(async () => {
       await waitForNextUpdate();
 
       expect(result.current.data).toEqual(1);
@@ -31,7 +31,7 @@ describe('useAPIRequest', () => {
       useAPIRequest<number>(mockRequestWithDep(mockDep), 0, [mockDep])
     );
 
-    act(async () => {
+    await act(async () => {
       await waitForNextUpdate();
       const data1 = result.current.data;
 
@@ -49,7 +49,7 @@ describe('useAPIRequest', () => {
       useAPIRequest<number>(mockRequestFailure, 0)
     );
 
-    act(async () => {
+    await act(async () => {
       await waitForNextUpdate();
 
       expect(result.current.error).toEqual(mockError);

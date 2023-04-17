@@ -11,10 +11,10 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEntityTransferCancelEvent } from 'src/utilities/ga';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles(() => ({
   actions: {
@@ -40,6 +40,8 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
   const [submissionErrors, setSubmissionErrors] = React.useState<
     APIError[] | null
   >(null);
+
+  const queryClient = useQueryClient();
 
   React.useEffect(() => {
     if (open) {

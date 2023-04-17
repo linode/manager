@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { extendIssues } from './helpers';
 import { ExtendedIssue } from './types';
@@ -98,90 +98,114 @@ export const useManagedStatsQuery = () =>
     retry: false,
   });
 
-export const useDeleteMonitorMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(
+export const useDeleteMonitorMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { id: number }>(
     ({ id }) => deleteServiceMonitor(id),
-    itemInListDeletionHandler(`${queryKey}-monitors`)
+    itemInListDeletionHandler(`${queryKey}-monitors`, queryClient)
   );
+};
 
-export const useCreateMonitorMutation = () =>
-  useMutation<ManagedServiceMonitor, APIError[], ManagedServicePayload>(
+export const useCreateMonitorMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ManagedServiceMonitor, APIError[], ManagedServicePayload>(
     createServiceMonitor,
-    itemInListCreationHandler(`${queryKey}-monitors`)
+    itemInListCreationHandler(`${queryKey}-monitors`, queryClient)
   );
+};
 
-export const useUpdateMonitorMutation = (id: number) =>
-  useMutation<
+export const useUpdateMonitorMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<
     ManagedServiceMonitor,
     APIError[],
     Partial<ManagedServicePayload>
   >(
     (data) => updateServiceMonitor(id, data),
-    itemInListMutationHandler(`${queryKey}-monitors`)
+    itemInListMutationHandler(`${queryKey}-monitors`, queryClient)
   );
+};
 
-export const useCreateCredentialMutation = () =>
-  useMutation<ManagedCredential, APIError[], CredentialPayload>(
+export const useCreateCredentialMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ManagedCredential, APIError[], CredentialPayload>(
     createCredential,
-    itemInListCreationHandler(`${queryKey}-credentials`)
+    itemInListCreationHandler(`${queryKey}-credentials`, queryClient)
   );
+};
 
 export const useUpdateCredentialPasswordMutation = (id: number) =>
   useMutation<{}, APIError[], UpdatePasswordPayload>((data) =>
     updatePassword(id, data)
   );
 
-export const useUpdateCredentialMutation = (id: number) =>
-  useMutation<ManagedCredential, APIError[], UpdateCredentialPayload>(
+export const useUpdateCredentialMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<ManagedCredential, APIError[], UpdateCredentialPayload>(
     (data) => updateCredential(id, data),
-    itemInListMutationHandler(`${queryKey}-credentials`)
+    itemInListMutationHandler(`${queryKey}-credentials`, queryClient)
   );
+};
 
-export const useDeleteCredentialMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(
+export const useDeleteCredentialMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { id: number }>(
     ({ id }) => deleteCredential(id),
-    itemInListDeletionHandler(`${queryKey}-credentials`)
+    itemInListDeletionHandler(`${queryKey}-credentials`, queryClient)
   );
+};
 
-export const useCreateContactMutation = () =>
-  useMutation<ManagedContact, APIError[], ContactPayload>(
+export const useCreateContactMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ManagedContact, APIError[], ContactPayload>(
     createContact,
-    itemInListCreationHandler(`${queryKey}-contacts`)
+    itemInListCreationHandler(`${queryKey}-contacts`, queryClient)
   );
+};
 
-export const useDeleteContactMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(
+export const useDeleteContactMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { id: number }>(
     ({ id }) => deleteContact(id),
-    itemInListDeletionHandler(`${queryKey}-contacts`)
+    itemInListDeletionHandler(`${queryKey}-contacts`, queryClient)
   );
+};
 
-export const useUpdateContactMutation = (id: number) =>
-  useMutation<ManagedContact, APIError[], Partial<ContactPayload>>(
+export const useUpdateContactMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<ManagedContact, APIError[], Partial<ContactPayload>>(
     (data) => updateContact(id, data),
-    itemInListMutationHandler(`${queryKey}-contacts`)
+    itemInListMutationHandler(`${queryKey}-contacts`, queryClient)
   );
+};
 
-export const useUpdateLinodeSettingsMutation = (id: number) =>
-  useMutation<
+export const useUpdateLinodeSettingsMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<
     ManagedLinodeSetting,
     APIError[],
     { ssh: Partial<ManagedSSHSetting> }
   >(
     (data) => updateLinodeSettings(id, data),
-    itemInListMutationHandler(`${queryKey}-linode-settings`)
+    itemInListMutationHandler(`${queryKey}-linode-settings`, queryClient)
   );
+};
 
-export const useEnableMonitorMutation = (id: number) =>
-  useMutation<ManagedServiceMonitor, APIError[]>(
+export const useEnableMonitorMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<ManagedServiceMonitor, APIError[]>(
     () => enableServiceMonitor(id),
-    itemInListMutationHandler(`${queryKey}-monitors`)
+    itemInListMutationHandler(`${queryKey}-monitors`, queryClient)
   );
+};
 
-export const useDisableMonitorMutation = (id: number) =>
-  useMutation<ManagedServiceMonitor, APIError[]>(
+export const useDisableMonitorMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<ManagedServiceMonitor, APIError[]>(
     () => disableServiceMonitor(id),
-    itemInListMutationHandler(`${queryKey}-monitors`)
+    itemInListMutationHandler(`${queryKey}-monitors`, queryClient)
   );
+};
 
 // We need to "Get All" on this request in order to handle Groups
 // as a quasi-independent entity.

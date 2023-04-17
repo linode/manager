@@ -11,7 +11,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& > button': {
       marginBottom: theme.spacing(1),
     },
-    '& > :first-child': {
+    '& > :first-of-type': {
       marginRight: theme.spacing(),
       marginLeft: 0,
     },

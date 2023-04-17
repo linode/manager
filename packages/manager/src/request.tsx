@@ -7,11 +7,11 @@ import { SupportError } from './components/SupportError';
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
-import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
+import { ApplicationStore } from './store';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
@@ -23,7 +23,7 @@ const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   return response;
 };
 
-export const handleError = (error: AxiosError) => {
+export const handleError = (error: AxiosError, store: ApplicationStore) => {
   if (error.response && error.response.status === 401) {
     /**
      * this will blow out redux state and the componentDidUpdate in the
@@ -117,31 +117,6 @@ export const handleError = (error: AxiosError) => {
   return Promise.reject(interceptedErrors);
 };
 
-baseRequest.interceptors.request.use((config) => {
-  const state = store.getState();
-  /** Will end up being "Admin: 1234" or "Bearer 1234" */
-  const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
-
-  const url = getURL(config);
-
-  return {
-    ...config,
-    url,
-    headers: {
-      ...config.headers,
-      ...(token && { Authorization: `${token}` }),
-    },
-  };
-});
-
-/*
-Interceptor that:
-  * initiates re-authentication if the response is HTTP 401 "Unauthorized"
-  * displays a Maintenance view if the API is in Maintenance mode
-Also rejects non-error responses if the API is in Maintenance mode
-*/
-baseRequest.interceptors.response.use(handleSuccess, handleError);
-
 export const getURL = ({ url, baseURL }: AxiosRequestConfig) => {
   if (!url || !baseURL) {
     return;
@@ -197,4 +172,33 @@ export const getXCustomerUuidHeader = (
   return response.headers['x-customer-uuid'];
 };
 
-baseRequest.interceptors.response.use(injectEuuidToProfile);
+export const setupInterceptors = (store: ApplicationStore) => {
+  baseRequest.interceptors.request.use((config) => {
+    const state = store.getState();
+    /** Will end up being "Admin: 1234" or "Bearer 1234" */
+    const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
+
+    const url = getURL(config);
+
+    return {
+      ...config,
+      url,
+      headers: {
+        ...config.headers,
+        ...(token && { Authorization: `${token}` }),
+      },
+    };
+  });
+
+  /*
+  Interceptor that:
+    * initiates re-authentication if the response is HTTP 401 "Unauthorized"
+    * displays a Maintenance view if the API is in Maintenance mode
+  Also rejects non-error responses if the API is in Maintenance mode
+  */
+  baseRequest.interceptors.response.use(handleSuccess, (error: AxiosError) =>
+    handleError(error, store)
+  );
+
+  baseRequest.interceptors.response.use(injectEuuidToProfile);
+};

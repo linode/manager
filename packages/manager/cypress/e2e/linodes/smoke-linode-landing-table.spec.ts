@@ -130,7 +130,7 @@ describe('linode landing checks', () => {
 
       cy.findByTitle('Linode Cloud Community')
         .should('be.visible')
-        .parent()
+        .parents('a')
         .should('have.attr', 'href', 'https://linode.com/community');
 
       getVisible('[aria-label="Notifications"]');

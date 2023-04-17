@@ -3,7 +3,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
-import store from 'src/store';
 import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
@@ -11,6 +10,10 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
 import { hasOauthError } from './App';
 import { preferencesFactory } from './factories/preferences';
+import { storeFactory } from './store';
+import { queryClientFactory } from './queries/base';
+
+const store = storeFactory(queryClientFactory());
 
 it('renders without crashing.', () => {
   const component = shallow(
@@ -29,7 +32,6 @@ it('renders without crashing.', () => {
               search: '',
               state: {},
             }}
-            documentation={[]}
             appIsLoading={false}
             preferences={preferencesFactory.build()}
             getUserPreferences={jest.fn()}
