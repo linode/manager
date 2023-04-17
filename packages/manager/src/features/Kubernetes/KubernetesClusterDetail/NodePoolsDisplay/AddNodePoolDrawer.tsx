@@ -83,24 +83,20 @@ export const AddNodePoolDrawer = (props: Props) => {
   // Only want to use current types here.
   const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
-  const [selectedType, setSelectedType] = React.useState<string | undefined>(
-    undefined
-  );
-  const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
-    new Map()
-  );
+  const [selectedTypeInfo, setSelectedTypeInfo] = React.useState<
+    { planId: string; count: number } | undefined
+  >(undefined);
+
   const getTypeCount = React.useCallback(
-    (planId: string) => typeCountMap.get(planId) ?? 0,
-    [typeCountMap]
+    (planId: string) =>
+      planId === selectedTypeInfo?.planId ? selectedTypeInfo.count : 0,
+    [selectedTypeInfo]
   );
 
-  const _selectedType = extendedTypes.find(
-    (thisType) => thisType.id === selectedType
-  );
-  const currentCount = _selectedType
-    ? typeCountMap.get(_selectedType.id) ?? 0
-    : 0;
-  const pricePerNode = _selectedType?.price?.monthly ?? 0;
+  const selectedType = selectedTypeInfo
+    ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
+    : undefined;
+  const pricePerNode = selectedType?.price?.monthly ?? 0;
 
   React.useEffect(() => {
     if (open) {
@@ -114,30 +110,28 @@ export const AddNodePoolDrawer = (props: Props) => {
     }
   }, [error]);
 
+  React.useEffect(() => {
+    if (selectedTypeInfo?.count === 0) {
+      setSelectedTypeInfo(undefined);
+    }
+  }, [selectedTypeInfo]);
+
   const resetDrawer = () => {
-    setTypeCountMap(new Map());
-    setSelectedType(undefined);
+    setSelectedTypeInfo(undefined);
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    setTypeCountMap(new Map(typeCountMap).set(planId, newCount));
-    // If everything's empty, we need to reset the selected type.
-    if (Array.from(typeCountMap.values()).every((count) => count === 0)) {
-      setSelectedType(undefined);
-    } else {
-      setSelectedType(planId);
-    }
+    setSelectedTypeInfo({ planId, count: newCount });
   };
 
   const handleAdd = () => {
-    const type = extendedTypes.find((thisType) => thisType.id === selectedType);
-    if (!type) {
+    if (!selectedTypeInfo) {
       return;
     }
-
-    const count = getTypeCount(type.id);
-
-    return createPool({ type: type.id, count }).then(() => {
+    return createPool({
+      type: selectedTypeInfo.planId,
+      count: selectedTypeInfo.count,
+    }).then(() => {
       onClose();
     });
   };
@@ -159,36 +153,43 @@ export const AddNodePoolDrawer = (props: Props) => {
             (t) => t.class !== 'nanode' && t.class !== 'gpu'
           )}
           getTypeCount={getTypeCount}
-          selectedID={selectedType}
-          onSelect={(newType: string) => setSelectedType(newType)}
+          selectedID={selectedTypeInfo?.planId}
+          onSelect={(newType: string) => {
+            if (selectedTypeInfo?.planId !== newType) {
+              setSelectedTypeInfo({ planId: newType, count: 1 });
+            }
+          }}
           updatePlanCount={updatePlanCount}
           addPool={handleAdd}
           isSubmitting={isLoading}
           resetValues={resetDrawer}
         />
-        {currentCount > 0 && currentCount < 3 && (
-          <Notice
-            important
-            warning
-            text={nodeWarning}
-            spacingTop={8}
-            spacingBottom={16}
-          />
-        )}
+        {selectedTypeInfo &&
+          selectedTypeInfo.count > 0 &&
+          selectedTypeInfo.count < 3 && (
+            <Notice
+              important
+              warning
+              text={nodeWarning}
+              spacingTop={8}
+              spacingBottom={16}
+            />
+          )}
         <ActionsPanel className={classes.button}>
           <Box
             display="flex"
             flexDirection="row"
             alignItems="center"
-            justifyContent={currentCount > 0 ? 'space-between' : 'flex-end'}
+            justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
             className={classes.boxOuter}
           >
-            {currentCount > 0 && (
+            {selectedTypeInfo && (
               <Typography className={classes.priceDisplay}>
                 This pool will add{' '}
                 <strong>
-                  ${currentCount * pricePerNode}/month (
-                  {pluralize('node', 'nodes', currentCount)} at ${pricePerNode}
+                  ${selectedTypeInfo.count * pricePerNode}/month (
+                  {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
+                  {pricePerNode}
                   /month)
                 </strong>{' '}
                 to this cluster.
@@ -196,8 +197,8 @@ export const AddNodePoolDrawer = (props: Props) => {
             )}
             <Button
               buttonType="primary"
-              onClick={() => handleAdd()}
-              disabled={currentCount === 0}
+              onClick={handleAdd}
+              disabled={!selectedTypeInfo}
               loading={isLoading}
             >
               Add pool

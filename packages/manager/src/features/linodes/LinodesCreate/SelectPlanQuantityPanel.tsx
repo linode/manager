@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -96,14 +96,12 @@ interface Props {
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
-  selectedDiskSize?: number;
   currentPlanHeading?: string;
   disabled?: boolean;
   header?: string;
   copy?: string;
-  submitForm?: (key: string, value: number) => void;
+  onAdd?: (key: string, value: number) => void;
   addPool?: (pool?: CreateNodePoolData) => void;
-  isOnCreate?: boolean;
   updatePlanCount: (planId: string, newCount: number) => void;
   isSubmitting?: boolean;
   resetValues: () => void;
@@ -134,8 +132,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
       selectedID,
       disabled,
       classes,
-      submitForm,
-      isOnCreate,
+      onAdd,
       updatePlanCount,
       getTypeCount,
     } = this.props;
@@ -152,10 +149,10 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
             value={count}
             setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
           />
-          {isOnCreate && (
+          {onAdd && (
             <Button
               buttonType="primary"
-              onClick={() => submitForm!(type.id, count)}
+              onClick={() => onAdd(type.id, count)}
               disabled={count < 1}
               className={classes.enhancedInputButton}
             >
@@ -204,13 +201,13 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
                   disabled={
                     // When on the add pool flow, we only want the current input to be active,
                     // unless we've just landed on the form or all the inputs are empty.
-                    !isOnCreate && Boolean(selectedID) && count < 1
+                    !onAdd && Boolean(selectedID) && type.id !== selectedID
                   }
                 />
-                {isOnCreate && (
+                {onAdd && (
                   <Button
                     buttonType="primary"
-                    onClick={() => submitForm!(type.id, count)}
+                    onClick={() => onAdd(type.id, count)}
                     disabled={count < 1}
                     className={classes.enhancedInputButton}
                   >
@@ -278,7 +275,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
   };
 
   createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes, types, isOnCreate } = this.props;
+    const { classes, types, onAdd } = this.props;
     const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
@@ -295,7 +292,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
         render: () => {
           return (
             <>
-              {isOnCreate && (
+              {onAdd && (
                 <Typography data-qa-dedicated className={classes.copy}>
                   Dedicated CPU instances are good for full-duty workloads where
                   consistent performance is important.
@@ -333,7 +330,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
         render: () => {
           return (
             <>
-              {isOnCreate && (
+              {onAdd && (
                 <Typography data-qa-highmem className={classes.copy}>
                   High Memory instances favor RAM over other resources, and can
                   be good for memory hungry use cases like caching and in-memory
@@ -356,7 +353,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
           return (
             <>
               <Notice warning>{programInfo}</Notice>
-              {isOnCreate && (
+              {onAdd && (
                 <Typography data-qa-gpu className={classes.copy}>
                   Linodes with dedicated GPUs accelerate highly specialized
                   applications such as machine learning, AI, and video
@@ -391,18 +388,14 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
 
     // Determine initial plan category tab based on current plan selection
     // (if there is one).
-    let selectedTypeClass: LinodeTypeClass = pathOr(
-      'dedicated', // Use `dedicated` by default
-      ['class'],
+    const _selectedTypeClass: LinodeTypeClass =
       types.find(
         (type) => type.id === selectedID || type.heading === currentPlanHeading
-      )
-    );
+      )?.class ?? 'dedicated';
 
     // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
-    if (selectedTypeClass === 'nanode') {
-      selectedTypeClass = 'standard';
-    }
+    const selectedTypeClass: LinodeTypeClass =
+      _selectedTypeClass === 'nanode' ? 'standard' : _selectedTypeClass;
 
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 

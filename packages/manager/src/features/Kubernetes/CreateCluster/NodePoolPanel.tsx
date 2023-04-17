@@ -15,7 +15,6 @@ interface Props {
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
-  isOnCreate?: boolean;
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
 }
 
@@ -44,7 +43,7 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (
 };
 
 const Panel: React.FunctionComponent<CombinedProps> = (props) => {
-  const { addNodePool, apiError, types, isOnCreate } = props;
+  const { addNodePool, apiError, types } = props;
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
     new Map()
@@ -87,8 +86,7 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
           updatePlanCount={updatePlanCount}
-          submitForm={submitForm}
-          isOnCreate={isOnCreate}
+          onAdd={submitForm}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
         />
       </Grid>
