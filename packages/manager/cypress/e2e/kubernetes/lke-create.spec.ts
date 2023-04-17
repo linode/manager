@@ -2,7 +2,7 @@
  * @file LKE creation end-to-end tests.
  */
 
-import { KubernetesCluster } from '@linode/api-v4/types';
+import { KubernetesCluster } from '@linode/api-v4';
 import { LkePlanDescription } from 'support/api/lke';
 import { lkeClusterPlans } from 'support/constants/lke';
 import { regionsFriendly } from 'support/constants/regions';
