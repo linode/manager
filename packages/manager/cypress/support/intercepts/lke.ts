@@ -4,7 +4,25 @@
 
 import type { KubernetesCluster } from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
+import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
+
+/**
+ * Intercepts GET request to retrieve LKE clusters and mocks response.
+ *
+ * @param clusters - LKE clusters with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetClusters = (
+  clusters: KubernetesCluster[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('lke/clusters*'),
+    paginateResponse(clusters)
+  );
+};
 
 /**
  * Intercepts POST request to create an LKE cluster.
@@ -29,5 +47,22 @@ export const mockCreateCluster = (
     'POST',
     apiMatcher('lke/clusters'),
     makeResponse(cluster)
+  );
+};
+
+/**
+ * Intercepts DELETE request to delete an LKE cluster and mocks the response.
+ *
+ * @param clusterId - Numeric ID for LKE cluster for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteCluster = (
+  clusterId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`lke/clusters/${clusterId}`),
+    makeResponse()
   );
 };
