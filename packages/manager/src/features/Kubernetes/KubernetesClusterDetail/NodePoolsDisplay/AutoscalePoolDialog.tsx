@@ -9,11 +9,11 @@ import Typography from 'src/components/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSnackbar } from 'notistack';
@@ -188,8 +188,8 @@ export const AutoscalePoolDialog = (props: Props) => {
           }
           style={{ marginTop: 12 }}
         />
-        <Grid container className={classes.inputContainer}>
-          <Grid item>
+        <Grid container className={classes.inputContainer} spacing={2}>
+          <Grid>
             <TextField
               name="min"
               label="Min"
@@ -202,7 +202,6 @@ export const AutoscalePoolDialog = (props: Props) => {
             />
           </Grid>
           <Grid
-            item
             className={classNames({
               [classes.slash]: true,
               [classes.disabled]: !values.enabled,
@@ -210,7 +209,7 @@ export const AutoscalePoolDialog = (props: Props) => {
           >
             <Typography>/</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <TextField
               name="max"
               label="Max"
@@ -222,7 +221,7 @@ export const AutoscalePoolDialog = (props: Props) => {
               className={classes.input}
             />
           </Grid>
-          <Grid item xs={12} style={{ padding: '0 8px' }}>
+          <Grid xs={12} style={{ padding: '0 8px' }}>
             {errors.min ? (
               <Typography className={classes.errorText}>
                 {errors.min}

@@ -30,7 +30,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -301,7 +301,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
       <Notifications />
       <LinodesDetailHeader />
       <Grid container className={classes.root}>
-        <Grid item xs={12} md={8} lg={9}>
+        <Grid xs={12} md={8} lg={9}>
           <Paper className={classes.paper}>
             <Typography
               role="heading"
@@ -356,7 +356,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
             </Tabs>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid xs={12} md={4} lg={3}>
           <Details
             currentLinodeId={linodeId}
             selectedConfigs={attachAssociatedDisksToConfigs(

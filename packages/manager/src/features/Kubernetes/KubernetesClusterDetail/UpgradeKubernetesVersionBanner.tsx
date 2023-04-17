@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
 import { getNextVersion } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
@@ -33,12 +33,12 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Grid item>
+            <Grid>
               <Typography>
                 A new version of Kubernetes is available ({nextVersion}).
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid>
               <Button onClick={() => setDialogOpen(true)} buttonType="primary">
                 Upgrade Version
               </Button>

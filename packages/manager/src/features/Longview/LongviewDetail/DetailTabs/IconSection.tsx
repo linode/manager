@@ -10,7 +10,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import IconTextLink from 'src/components/IconTextLink';
+import { IconTextLink } from 'src/components/IconTextLink/IconTextLink';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import { listToItemsByID } from 'src/queries/base';
@@ -43,7 +43,7 @@ export const StackScriptsLanding = () => {
         {_loading ? (
           <CircleProgress />
         ) : (
-          <Grid item className="p0" xs={12}>
+          <Grid className="p0" xs={12}>
             <StackScriptPanel
               publicImages={imagesData}
               queryString={history.location.search}

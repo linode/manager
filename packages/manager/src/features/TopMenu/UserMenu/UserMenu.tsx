@@ -9,7 +9,7 @@ import {
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -203,7 +203,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   profileWrapper: {
     marginBottom: theme.spacing(2),
-    width: '100%',
     '& > div': {
       whiteSpace: 'normal',
     },
@@ -291,7 +290,7 @@ export const UserMenu: React.FC<{}> = () => {
 
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
-      <Grid item xs={12} key={menuLink.display}>
+      <Grid xs={12} key={menuLink.display}>
         <MenuLink
           as={Link}
           to={menuLink.href}
@@ -340,8 +339,6 @@ export const UserMenu: React.FC<{}> = () => {
             <div className={classes.menuHeader}>My Profile</div>
             <Grid container>
               <Grid
-                container
-                item
                 xs={6}
                 wrap="nowrap"
                 direction="column"
@@ -350,8 +347,6 @@ export const UserMenu: React.FC<{}> = () => {
                 {profileLinks.slice(0, 4).map(renderLink)}
               </Grid>
               <Grid
-                container
-                item
                 xs={6}
                 wrap="nowrap"
                 direction="column"
@@ -364,7 +359,7 @@ export const UserMenu: React.FC<{}> = () => {
               <>
                 <div className={classes.menuHeader}>Account</div>
                 <Grid container>
-                  <Grid item className={classes.accountColumn}>
+                  <Grid className={classes.accountColumn}>
                     {accountLinks.map((menuLink) =>
                       menuLink.hide ? null : (
                         <MenuLink

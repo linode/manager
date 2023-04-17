@@ -113,12 +113,6 @@ body.searchOverlay #main-content {
   margin: 0 auto;
 }
 
-@media (min-width: 1600px) {
-  #main-content {
-    padding-top: 20px;
-  }
-}
-
 .label-visually-hidden {
   margin-right: 0 !important;
 }

@@ -20,7 +20,7 @@ import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
@@ -568,7 +568,7 @@ export class LinodeCreate extends React.PureComponent<
 
     return (
       <form className={classes.form}>
-        <Grid item className="py0">
+        <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
@@ -804,11 +804,7 @@ export class LinodeCreate extends React.PureComponent<
               })}
             >
               <SMTPRestrictionText>
-                {({ text }) => (
-                  <Grid item xs={12}>
-                    {text}
-                  </Grid>
-                )}
+                {({ text }) => <Grid xs={12}>{text}</Grid>}
               </SMTPRestrictionText>
               {showAgreement ? (
                 <EUAgreementCheckbox

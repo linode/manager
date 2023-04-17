@@ -3,7 +3,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import packageJson from '../../../package.json';
 
 interface Props {
@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   version: {
-    marginLeft: theme.spacing(2),
     '&.MuiGrid-item': {
       paddingLeft: 0,
     },
@@ -86,11 +85,8 @@ export const Footer: React.FC<Props> = (props) => {
           [classes.desktopMenuIsOpen]: desktopMenuIsOpen,
         })}
       >
-        <Grid item className={classes.version}>
-          {renderVersion(classes.link)}
-        </Grid>
+        <Grid className={classes.version}>{renderVersion(classes.link)}</Grid>
         <Grid
-          item
           className={classNames({
             [classes.linkContainer]: true,
           })}
@@ -106,7 +102,6 @@ export const Footer: React.FC<Props> = (props) => {
           </a>
         </Grid>
         <Grid
-          item
           className={classNames({
             [classes.linkContainer]: true,
             [classes.feedbackLink]: true,

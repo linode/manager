@@ -3,7 +3,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -84,12 +84,11 @@ export const KubeClusterSpecs = (props: Props) => {
     return (
       <Grid
         key={`spec-${idx}`}
-        item
         wrap="nowrap"
         alignItems="center"
         className={classes.item}
       >
-        <Grid item className={classes.iconTextOuter}>
+        <Grid className={classes.iconTextOuter}>
           <Typography>{spec}</Typography>
         </Grid>
       </Grid>
@@ -97,13 +96,9 @@ export const KubeClusterSpecs = (props: Props) => {
   };
 
   return (
-    <Grid item container direction="row" xs={12} lg={3}>
-      <Grid item lg={6}>
-        {kubeSpecsLeft.map(kubeSpecItem)}
-      </Grid>
-      <Grid item lg={6}>
-        {kubeSpecsRight.map(kubeSpecItem)}
-      </Grid>
+    <Grid container direction="row" xs={12} lg={3} spacing={0}>
+      <Grid lg={6}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
+      <Grid lg={6}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
     </Grid>
   );
 };

@@ -13,7 +13,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';

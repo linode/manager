@@ -13,7 +13,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import CSVLink from 'src/components/DownloadCSV';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
@@ -419,7 +419,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                         className={classes.CSVwrapper}
                         justifyContent="flex-end"
                       >
-                        <Grid item className={classes.CSVlinkContainer}>
+                        <Grid className={classes.CSVlinkContainer}>
                           <CSVLink
                             data={linodesData.map((e) => {
                               const maintenance = e.maintenance?.when

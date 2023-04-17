@@ -7,7 +7,7 @@ import EnvironmentToggleTool from './EnvironmentToggleTool';
 import { Provider } from 'react-redux';
 import MockDataTool from './MockDataTool';
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { ApplicationStore } from 'src/store';
 
 function install(store: ApplicationStore) {
@@ -18,16 +18,16 @@ function install(store: ApplicationStore) {
       <div id="dev-tools">
         <div>🛠</div>
         <Grid container spacing={2} className="tools">
-          <Grid item xs={4} sm={2}>
+          <Grid xs={4} sm={2}>
             <FeatureFlagTool />
           </Grid>
           {import.meta.env.DEV && (
-            <Grid item xs={4} sm={5} md={3}>
+            <Grid xs={4} sm={5} md={3}>
               <EnvironmentToggleTool />
             </Grid>
           )}
           {!isProductionBuild || ENABLE_DEV_TOOLS ? (
-            <Grid item xs={4} sm={5} md={3}>
+            <Grid xs={4} sm={5} md={3}>
               <MockDataTool />
             </Grid>
           ) : null}

@@ -2,7 +2,7 @@ import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectPlanQuantityPanel, {
@@ -86,7 +86,7 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
 
   return (
     <Grid container direction="column">
-      <Grid item>
+      <Grid>
         <SelectPlanQuantityPanel
           types={_types.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'

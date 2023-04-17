@@ -4,7 +4,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 type ClassNames =
   | 'root'
@@ -45,7 +45,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const TicketAttachmentRow: React.FC<CombinedProps> = (props) => {
   const { attachments, classes, icons } = props;
   return (
-    <Grid item>
+    <Grid>
       <Paper className={classes.attachmentPaper}>
         {attachments.map((attachment, idx) => {
           return (
@@ -56,10 +56,8 @@ export const TicketAttachmentRow: React.FC<CombinedProps> = (props) => {
               className={classes.attachmentRow}
               data-qa-attachment-row
             >
-              <Grid item className={classes.attachmentIcon}>
-                {icons[idx]}
-              </Grid>
-              <Grid item>
+              <Grid className={classes.attachmentIcon}>{icons[idx]}</Grid>
+              <Grid>
                 <Typography component="span">{attachment}</Typography>
               </Grid>
             </Grid>
