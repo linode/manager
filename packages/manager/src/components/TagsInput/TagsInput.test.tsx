@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import TagsInput from './TagsInput';
+import { TagsInput } from './TagsInput';
 
 jest.mock('src/components/EnhancedSelect/Select');
 const mockGetTags = jest.spyOn<any, any>(tags, 'getTags');

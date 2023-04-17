@@ -34,7 +34,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import PromiseLoader, {
   PromiseLoaderResponse,
 } from 'src/components/PromiseLoader/PromiseLoader';
@@ -1127,7 +1127,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           )}
 
         {!hasUnsavedConfig && (
-          <Grid item style={{ marginTop: 16 }}>
+          <Box sx={{ marginTop: '16px' }}>
             <Button
               buttonType="outlined"
               className={classes.button}
@@ -1138,7 +1138,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                 ? 'Add a Configuration'
                 : 'Add Another Configuration'}
             </Button>
-          </Grid>
+          </Box>
         )}
 
         <ConfirmationDialog

@@ -5,7 +5,7 @@ import { compose, withHandlers } from 'recompose';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LinearProgress from 'src/components/LinearProgress';
 import TextField from 'src/components/TextField';
 import { FileAttachment } from './index';
@@ -58,8 +58,8 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
     file.errors && file.errors.length ? file.errors[0].reason : undefined;
 
   return (
-    <Grid container>
-      <Grid item>
+    <Grid container spacing={2}>
+      <Grid>
         <TextField
           className={classes.attachmentField}
           value={file.name}
@@ -89,7 +89,7 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
         />
       </Grid>
       {file.uploading && (
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <LinearProgress
             className={classes.uploadProgress}
             variant="indeterminate"

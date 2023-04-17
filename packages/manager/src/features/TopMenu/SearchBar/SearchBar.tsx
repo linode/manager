@@ -331,7 +331,6 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
           isMulti={false}
           onMenuClose={onClose}
           onMenuOpen={onOpen}
-          value={false}
           menuIsOpen={menuOpen}
           guidance={guidanceText()}
         />

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu from './ClusterActionMenu';
@@ -96,7 +96,7 @@ export const KubernetesClusterRow = (props: Props) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Grid item className="py0">
+          <Grid className="py0">
             <div className={classes.labelStatusWrapper}>
               <Link
                 className={classes.link}
@@ -108,7 +108,7 @@ export const KubernetesClusterRow = (props: Props) => {
             </div>
           </Grid>
           {cluster.control_plane.high_availability ? (
-            <Grid item>
+            <Grid>
               <Chip
                 label="HA"
                 variant="outlined"

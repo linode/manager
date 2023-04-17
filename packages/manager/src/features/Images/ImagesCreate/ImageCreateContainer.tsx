@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import ImageCreate from './ImageCreate';
 import LandingHeader from 'src/components/LandingHeader';
 
@@ -13,7 +13,7 @@ export const ImagesCreateContainer: React.FC = () => {
         removeCrumbX={2}
         title="Create"
       />
-      <Grid item className="p0" xs={12}>
+      <Grid className="p0" xs={12}>
         <ImageCreate />
       </Grid>
     </Grid>

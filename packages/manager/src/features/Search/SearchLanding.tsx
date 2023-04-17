@@ -8,7 +8,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import { REFRESH_INTERVAL } from 'src/constants';
@@ -286,8 +286,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areNodeBalancersLoading;
 
   return (
-    <Grid container className={classes.root} direction="column">
-      <Grid item>
+    <Grid container className={classes.root} direction="column" spacing={2}>
+      <Grid>
         {!resultsEmpty && !loading && (
           <H1Header
             title={`Search Results ${query && `for "${query}"`}`}
@@ -296,27 +296,27 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         )}
       </Grid>
       {errors.hasErrors && (
-        <Grid item>
+        <Grid>
           <Notice error text={getErrorMessage(errors)} />
         </Grid>
       )}
       {apiError && (
-        <Grid item>
+        <Grid>
           <Notice error text={apiError} />
         </Grid>
       )}
       {queryError && (
-        <Grid item>
+        <Grid>
           <Notice error text="Invalid query" />
         </Grid>
       )}
       {(loading || apiSearchLoading) && (
-        <Grid item data-qa-search-loading data-testid="loading">
+        <Grid data-qa-search-loading data-testid="loading">
           <CircleProgress />
         </Grid>
       )}
       {resultsEmpty && !loading && (
-        <Grid item data-qa-empty-state className={classes.emptyResultWrapper}>
+        <Grid data-qa-empty-state className={classes.emptyResultWrapper}>
           <div className={classes.emptyResult}>
             <Error className={classes.errorIcon} />
             <Typography style={{ marginBottom: 16 }}>
@@ -332,7 +332,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         </Grid>
       )}
       {!loading && (
-        <Grid item>
+        <Grid sx={{ padding: 0 }}>
           {Object.keys(finalResults).map((entityType, idx: number) => (
             <ResultGroup
               key={idx}

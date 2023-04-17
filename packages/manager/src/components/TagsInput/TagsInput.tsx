@@ -15,7 +15,7 @@ export interface Tag {
   label: string;
 }
 
-export interface Props {
+export interface TagsInputProps {
   label?: string;
   hideLabel?: boolean;
   name?: string;
@@ -23,10 +23,10 @@ export interface Props {
   value: Item[];
   onChange: (selected: Item[]) => void;
   disabled?: boolean;
-  menuPlacement?: 'bottom' | 'top' | 'auto' | undefined;
+  menuPlacement?: 'bottom' | 'top' | 'auto';
 }
 
-const TagsInput: React.FC<Props> = (props) => {
+const TagsInput = (props: TagsInputProps) => {
   const {
     label,
     hideLabel,
@@ -91,7 +91,9 @@ const TagsInput: React.FC<Props> = (props) => {
     : labelError ||
       tagError ||
       generalError ||
-      (accountTagsError !== null && 'There was an error retrieving your tags.');
+      (accountTagsError !== null
+        ? 'There was an error retrieving your tags.'
+        : undefined);
 
   return (
     <Select
@@ -105,12 +107,12 @@ const TagsInput: React.FC<Props> = (props) => {
       errorText={error}
       value={value}
       onChange={onChange}
-      createNew={createTag}
+      onCreateOption={createTag}
       noOptionsMessage={getEmptyMessage}
-      disabled={disabled}
+      isDisabled={disabled}
       menuPlacement={menuPlacement}
     />
   );
 };
 
-export default TagsInput;
+export { TagsInput };
