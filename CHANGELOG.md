@@ -12,10 +12,42 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 - Typesafety of the `<Select />` component #8986
 - Clear the Kubernetes Delete Dialog when it is re-opened #9000
+- Event entities should only be linked for true labels
 
 ### Tech Stories:
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
+## [2023-04-17] - v1.91.0
+
+### Added:
+- Cross Data Center Clone warning #8937
+- `Plan` column header to plan select table #8943
+
+### Changed:
+- Use Akamai logo for TPA provider screen #8982
+- Use Akamai logo for the favicon #8988
+- Only fetch grants when the user is restricted #8941
+- Improve the StackScript user defined fields (UDF) forms #8973
+
+### Fixed:
+- Styling of Linode Details Add Configurations modal header #8981
+- Alignment issues with Kubernetes Node Pool table and buttons #8967
+- Domain Records not updating when navigating #8957
+- Notification menu displaying empty menu on secondary status click #8902
+
+### Tech Story:
+- React Query for NodeBalancers #8964
+- React Query for Profile - Trusted Devices #8942
+- React Query for OAuth Apps #8938
+- Un-Redux-ify Object Storage Drawer #8965
+- MUI v5 Migration - `Components > BarPercent` #8962
+- MUI v5 Migration - `Components > BetaChip & Breadcrumb` #8968
+- MUI v5 Migration - `Features > Billing` #8933
+- MUI v5 Migration - `Components > CheckBox` #8980
+- MUI v5 Migration - `Components > BackupStatus` #8960
+- Use MUI Grid v2 #8959
+- Update the `usePagination` hook to use Query Params instead of state #8914
+- Use Query Client from Context #8949
 
 ## [2023-04-03] - v1.90.0
 

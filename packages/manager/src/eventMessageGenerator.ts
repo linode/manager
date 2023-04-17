@@ -846,7 +846,7 @@ function applyBolding(event: Event, message: string) {
   return newMessage;
 }
 
-function applyLinking(event: Event, message: string) {
+export function applyLinking(event: Event, message: string) {
   if (!message) {
     return '';
   }
@@ -857,14 +857,19 @@ function applyLinking(event: Event, message: string) {
     event.secondary_entity,
     false
   );
+
   let newMessage = message;
 
   if (event.entity && entityLinkTarget) {
+    const label = event.entity.label;
+    const nonTickedLabels = new RegExp(`(?<!\`)${label}`, 'g');
+
     newMessage = newMessage.replace(
-      event.entity.label,
-      `<a href="${entityLinkTarget}">${event.entity.label}</a>`
+      nonTickedLabels,
+      `<a href="${entityLinkTarget}">${label}</a> `
     );
   }
+
   if (event.secondary_entity && secondaryEntityLinkTarget) {
     newMessage = newMessage.replace(
       event.secondary_entity.label,
