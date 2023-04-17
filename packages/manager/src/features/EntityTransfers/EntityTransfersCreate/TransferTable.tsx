@@ -5,7 +5,7 @@ import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import DebouncedSearchTextField from 'src/components/DebouncedSearchTextField';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';

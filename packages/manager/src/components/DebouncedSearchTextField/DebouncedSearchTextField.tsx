@@ -1,6 +1,5 @@
 import Search from '@mui/icons-material/Search';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import CircleProgress from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
@@ -16,7 +15,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface Props extends TextFieldProps {
+interface DebouncedSearchProps extends TextFieldProps {
   onSearch: (query: string) => void;
   debounceTime?: number;
   isSearching?: boolean;
@@ -27,9 +26,7 @@ interface Props extends TextFieldProps {
   defaultValue?: string;
 }
 
-type CombinedProps = Props;
-
-const DebouncedSearch: React.FC<CombinedProps> = (props) => {
+const DebouncedSearch = (props: DebouncedSearchProps) => {
   const {
     className,
     isSearching,
@@ -102,4 +99,4 @@ const DebouncedSearch: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(DebouncedSearch);
+export const DebouncedSearchTextField = React.memo(DebouncedSearch);
