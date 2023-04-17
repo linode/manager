@@ -19,6 +19,7 @@ interface Props {
   apps: StackScript[];
   disabled: boolean;
   selectedStackScriptID: number | undefined;
+  searchValue?: string;
   openDrawer: (stackScriptLabel: string) => void;
   handleClick: (
     id: number,
@@ -37,6 +38,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
     disabled,
     openDrawer,
     handleClick,
+    searchValue,
   } = props;
 
   return (
@@ -84,10 +86,11 @@ export const AppPanelSection: React.FC<Props> = (props) => {
             container
             direction="row"
             justifyContent="center"
-            xs={10}
-            spacing={2}
+            xs={12}
+            columnSpacing={0}
           >
-            No Results
+            {`Sorry, no "${searchValue}" results matched your search. Please try
+            again.`}
           </Grid>
         )}
       </AppPanelGrid>

@@ -43,6 +43,7 @@ interface Props extends AppsData {
   error?: string;
   isSearching: boolean;
   isFiltering: boolean;
+  searchValue?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -113,6 +114,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       openDrawer,
       isSearching,
       isFiltering,
+      searchValue,
     } = this.props;
 
     if (appInstancesError) {
@@ -185,6 +187,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
           selectedStackScriptID={selectedStackScriptID}
           handleClick={handleClick}
           openDrawer={openDrawer}
+          searchValue={searchValue}
         />
       </Paper>
     );
