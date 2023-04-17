@@ -3,17 +3,10 @@ import * as React from 'react';
 
 import CircleProgress from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 import usePrevious from 'src/hooks/usePrevious';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  searchIcon: {
-    color: `${theme.color.grey1} !important`,
-  },
-}));
 
 interface DebouncedSearchProps extends TextFieldProps {
   onSearch: (query: string) => void;
@@ -41,8 +34,6 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
   } = props;
   const [query, setQuery] = React.useState<string>('');
   const prevQuery = usePrevious<string>(query);
-
-  const { classes } = useStyles();
 
   React.useEffect(() => {
     /*
@@ -82,7 +73,7 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
       InputProps={{
         startAdornment: (
           <InputAdornment position="end">
-            <Search className={classes.searchIcon} />
+            <StyledSearchIcon />
           </InputAdornment>
         ),
         endAdornment: isSearching ? (
@@ -100,3 +91,7 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
 };
 
 export const DebouncedSearchTextField = React.memo(DebouncedSearch);
+
+const StyledSearchIcon = styled(Search)(({ theme }) => ({
+  color: `${theme.color.grey1} !important`,
+}));
