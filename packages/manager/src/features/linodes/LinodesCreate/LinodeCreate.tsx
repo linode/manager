@@ -572,7 +572,7 @@ export class LinodeCreate extends React.PureComponent<
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
           {generalError && <Notice error spacingTop={8} text={generalError} />}
-          {userCannotCreateLinode ? (
+          {userCannotCreateLinode && (
             <Notice
               text={
                 "You don't have permissions to create a new Linode. Please contact an account administrator for details."
@@ -580,7 +580,7 @@ export class LinodeCreate extends React.PureComponent<
               error
               important
             />
-          ) : null}
+          )}
           <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
             <TabLinkList tabs={this.tabs} />
             <TabPanels>
