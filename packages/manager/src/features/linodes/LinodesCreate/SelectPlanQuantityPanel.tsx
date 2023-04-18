@@ -383,7 +383,6 @@ export class SelectPlanPanel extends React.Component<
           return (
             <>
               <Notice warning>
-                {' '}
                 This plan is only available in the Washington, DC region.
               </Notice>
               <Typography data-qa-gpu className={classes.copy}>
