@@ -19,12 +19,12 @@ describe('DateTimeDisplay component', () => {
 
   describe('Humanized dates', () => {
     it('should output humanized strings if the date is earlier than the cutoff', () => {
-      const props = {
+      const props: DateTimeDisplayProps = {
         value: DateTime.utc()
           .minus({ minutes: 5 })
           .toFormat(ISO_DATETIME_NO_TZ_FORMAT),
         humanizeCutoff: 'day',
-      } as DateTimeDisplayProps;
+      };
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
 
       getByText('5 minutes ago');
@@ -35,19 +35,19 @@ describe('DateTimeDisplay component', () => {
         ISO_DATETIME_NO_TZ_FORMAT
       );
       it('cutoff month', () => {
-        const props = {
+        const props: DateTimeDisplayProps = {
           value: almostOneWeekString,
           humanizeCutoff: 'month',
-        } as DateTimeDisplayProps;
+        };
         const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
         getByText('6 days ago');
       });
 
       it('cutoff day', () => {
-        const props = {
+        const props: DateTimeDisplayProps = {
           value: almostOneWeekString,
           humanizeCutoff: 'day',
-        } as DateTimeDisplayProps;
+        };
         const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
         getByText(`${almostOneWeek.year}`, { exact: false });
       });
@@ -56,10 +56,10 @@ describe('DateTimeDisplay component', () => {
       const aLongTimeAgo = DateTime.utc()
         .minus({ years: 10 })
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
-      const props = {
+      const props: DateTimeDisplayProps = {
         value: aLongTimeAgo,
         humanizeCutoff: 'never',
-      } as DateTimeDisplayProps;
+      };
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
       getByText('10 years ago');
     });

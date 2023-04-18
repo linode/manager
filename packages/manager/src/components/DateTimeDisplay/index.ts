@@ -1,7 +1,2 @@
-import {
-  DateTimeDisplay,
-  DateTimeDisplayProps as _DateTimeDisplayProps,
-} from './DateTimeDisplay';
-/* tslint:disable */
-export type DateTimeDisplayProps = _DateTimeDisplayProps;
-export { DateTimeDisplay };
+export type { DateTimeDisplayProps } from './DateTimeDisplay';
+export { DateTimeDisplay } from './DateTimeDisplay';
