@@ -6,7 +6,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import capitalize from 'src/utilities/capitalize';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import StatusIcon, { Status } from 'src/components/StatusIcon/StatusIcon';
+import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';

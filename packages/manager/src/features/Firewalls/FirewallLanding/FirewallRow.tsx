@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import StatusIcon from 'src/components/StatusIcon';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
