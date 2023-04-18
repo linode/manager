@@ -93,5 +93,7 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
 export const DebouncedSearchTextField = React.memo(DebouncedSearch);
 
 const StyledSearchIcon = styled(Search)(({ theme }) => ({
-  color: `${theme.color.grey1} !important`,
+  '&&': {
+    color: `${theme.color.grey1}`,
+  },
 }));
