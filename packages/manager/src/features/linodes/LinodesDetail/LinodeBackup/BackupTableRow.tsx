@@ -2,7 +2,7 @@ import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { Duration } from 'luxon';
 import * as React from 'react';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import StatusIcon, { Status } from 'src/components/StatusIcon/StatusIcon';
+import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { parseAPIDate } from 'src/utilities/date';
