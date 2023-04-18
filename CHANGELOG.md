@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-04-18] - v1.91.1
+
+### Fixed:
+- Add Premium plans to LKE #9021
+
 ## [2023-04-17] - v1.91.0
 
 ### Added:
