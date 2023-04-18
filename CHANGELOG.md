@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Event entities should only be linked for true labels
 
 ### Tech Stories:
+- MUIv5 Migration - Components > CircleProgress #9028
+- MUIv5 Migration - Components > StatusIcon #9014
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
 ## [2023-04-17] - v1.91.0
