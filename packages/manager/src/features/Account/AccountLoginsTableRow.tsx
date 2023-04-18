@@ -4,7 +4,7 @@ import Link from 'src/components/Link';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import formatDate from 'src/utilities/formatDate';
-import StatusIcon, { Status } from 'src/components/StatusIcon/StatusIcon';
+import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
 import { capitalize } from 'src/utilities/capitalize';
 import {
   AccountLogin,
