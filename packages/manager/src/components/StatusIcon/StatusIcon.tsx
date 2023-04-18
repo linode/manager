@@ -1,33 +1,5 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  statusIcon: {
-    display: 'inline-block',
-    borderRadius: '50%',
-    height: '16px',
-    width: '16px',
-    marginRight: theme.spacing(),
-    position: 'relative',
-  },
-  statusIconRunning: {
-    backgroundColor: theme.color.teal,
-  },
-  statusIconOffline: {
-    backgroundColor: theme.color.grey8,
-  },
-  statusIconError: {
-    backgroundColor: theme.color.red,
-  },
-  statusIconOther: {
-    backgroundColor: theme.color.orange,
-  },
-  pulse: {
-    animation: 'pulse 1.5s ease-in-out infinite',
-  },
-}));
+import { styled } from '@mui/material/styles';
 
 export type Status = 'active' | 'inactive' | 'error' | 'other';
 
@@ -36,10 +8,8 @@ export interface StatusProps {
   pulse?: boolean;
 }
 
-export const StatusIcon = (props: StatusProps) => {
+const StatusIcon = React.memo((props: StatusProps) => {
   const { status, pulse } = props;
-
-  const classes = useStyles();
 
   const shouldPulse =
     pulse === undefined
@@ -47,20 +17,32 @@ export const StatusIcon = (props: StatusProps) => {
         !['inactive', 'active', 'error'].includes(status)
       : pulse;
 
-  return (
-    <div
-      className={classNames({
-        [classes.statusIcon]: true,
-        [classes.pulse]: shouldPulse,
-        [classes.statusIconRunning]: status === 'active',
-        [classes.statusIconOffline]: status === 'inactive',
-        [classes.statusIconError]: status === 'error',
-        [classes.statusIconOther]: !['inactive', 'active', 'error'].includes(
-          status
-        ),
-      })}
-    />
-  );
-};
+  return <StyledDiv pulse={shouldPulse} status={status} />;
+});
 
-export default React.memo(StatusIcon);
+export { StatusIcon };
+
+const StyledDiv = styled('div')<StatusProps>(({ theme, ...props }) => ({
+  display: 'inline-block',
+  borderRadius: '50%',
+  height: '16px',
+  width: '16px',
+  marginRight: theme.spacing(),
+  position: 'relative',
+  transition: theme.transitions.create(['color']),
+  ...(props.status === 'active' && {
+    backgroundColor: theme.color.teal,
+  }),
+  ...(props.status === 'inactive' && {
+    backgroundColor: theme.color.grey8,
+  }),
+  ...(props.status === 'error' && {
+    backgroundColor: theme.color.red,
+  }),
+  ...(!['inactive', 'active', 'error'].includes(props.status) && {
+    backgroundColor: theme.color.orange,
+  }),
+  ...(props.pulse && {
+    animation: 'pulse 1.5s ease-in-out infinite',
+  }),
+}));
