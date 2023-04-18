@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';

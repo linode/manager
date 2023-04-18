@@ -11,7 +11,7 @@ import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Link from 'src/components/Link';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

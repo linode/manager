@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

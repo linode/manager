@@ -8,7 +8,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

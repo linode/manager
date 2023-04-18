@@ -1,18 +1,18 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import DashboardCard from './DashboardCard';
-import ManagedChartPanel from './ManagedChartPanel';
-import MonitorStatus from './MonitorStatus';
-import MonitorTickets from './MonitorTickets';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { CircleProgress } from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState/ErrorState';
 import {
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import ErrorState from 'src/components/ErrorState/ErrorState';
-import CircleProgress from 'src/components/CircleProgress/CircleProgress';
+import DashboardCard from './DashboardCard';
+import ManagedChartPanel from './ManagedChartPanel';
+import MonitorStatus from './MonitorStatus';
+import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

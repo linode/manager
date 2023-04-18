@@ -2,7 +2,7 @@ import Search from '@mui/icons-material/Search';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
