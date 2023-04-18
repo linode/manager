@@ -3,7 +3,7 @@ import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import CircleProgress from 'src/components/CircleProgress';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import Notice from 'src/components/Notice';
 import _StackScript from 'src/components/StackScript';
 import { ApplicationState } from 'src/store';

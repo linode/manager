@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
@@ -125,6 +125,7 @@ const ApiAwarenessModal = (props: Props) => {
       open={isOpen}
       onClose={onClose}
       maxWidth="sm"
+      fullWidth
     >
       <Typography variant="body1" className={classes.modalIntroTypoClass}>
         Create a Linode in the command line using either cURL or the Linode CLI
