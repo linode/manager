@@ -5,6 +5,9 @@ import { array, mixed, number, object, string } from 'yup';
 
 export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
+export const CUSTOM_PORTS_ERROR_MESSAGE =
+  'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+export const CUSTOM_PORTS_VALIDATION_REGEX = /^(?:\d+|\d+-\d+|(?:\d+,\s*)*\d+)$/;
 
 export const validateIP = (ipAddress?: string | null): boolean => {
   if (!ipAddress) {
@@ -40,8 +43,8 @@ export const ipAddress = string().test({
 });
 
 export const validateFirewallPorts = string().matches(
-  /^([0-9\-]+,?\s?)+$/,
-  'Ports must be an integer, range of integers, or a comma-separated list of integers.'
+  CUSTOM_PORTS_VALIDATION_REGEX,
+  CUSTOM_PORTS_ERROR_MESSAGE
 );
 
 const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP', 'IPENCAP'];

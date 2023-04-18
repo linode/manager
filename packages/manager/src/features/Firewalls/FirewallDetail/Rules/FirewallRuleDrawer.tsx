@@ -3,6 +3,10 @@ import {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import {
+  CUSTOM_PORTS_VALIDATION_REGEX,
+  CUSTOM_PORTS_ERROR_MESSAGE,
+} from '@linode/validation';
 import { Formik, FormikProps } from 'formik';
 import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import { uniq } from 'ramda';
@@ -853,9 +857,8 @@ export const validateForm = (
 
   if ((protocol === 'ICMP' || protocol === 'IPENCAP') && ports) {
     errors.ports = `Ports are not allowed for ${protocol} protocols.`;
-  } else if (ports && !ports.match(/^([0-9\-]+,?\s?)+$/)) {
-    errors.ports =
-      'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+  } else if (ports && !ports.match(CUSTOM_PORTS_VALIDATION_REGEX)) {
+    errors.ports = CUSTOM_PORTS_ERROR_MESSAGE;
   }
 
   return errors;
