@@ -40,8 +40,9 @@ const Dialog = (props: DialogProps) => {
       data-qa-drawer
       data-testid="drawer"
       fullHeight={fullHeight}
-      maxWidth={(fullWidth && maxWidth) ?? undefined}
       fullWidth={fullWidth}
+      maxWidth={(fullWidth && maxWidth) ?? undefined}
+      onClose={onClose}
       role="dialog"
       title={title}
       {...rest}
