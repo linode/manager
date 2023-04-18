@@ -47,9 +47,9 @@ export const AppPanelSection: React.FC<Props> = (props) => {
       {heading && heading.length > 0 ? (
         <Divider spacingTop={16} spacingBottom={16} />
       ) : null}
-      <AppPanelGrid container spacing={2}>
-        {apps.length > 0 ? (
-          apps.map((eachApp) => {
+      {apps.length > 0 ? (
+        <AppPanelGrid container spacing={2}>
+          {apps.map((eachApp) => {
             const decodedLabel = decode(eachApp.label);
             const isCluster =
               decodedLabel.endsWith('Cluster ') &&
@@ -80,15 +80,13 @@ export const AppPanelSection: React.FC<Props> = (props) => {
                 }
               />
             );
-          })
-        ) : (
-          <Grid container xs={12} columnSpacing={0}>
-            <Typography>
-              {`Sorry, no results matching "${searchValue}" were found.`}
-            </Typography>
-          </Grid>
-        )}
-      </AppPanelGrid>
+          })}
+        </AppPanelGrid>
+      ) : (
+        <Typography>
+          {`Sorry, no results matching "${searchValue}" were found.`}
+        </Typography>
+      )}
     </>
   );
 };
