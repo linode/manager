@@ -82,7 +82,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
             );
           })
         ) : (
-          <Grid container direction="row" xs={12} columnSpacing={0}>
+          <Grid container xs={12} columnSpacing={0}>
             <Typography>
               {`Sorry, no results matching "${searchValue}" were found.`}
             </Typography>
