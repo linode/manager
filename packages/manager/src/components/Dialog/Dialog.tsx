@@ -66,7 +66,6 @@ const Dialog = (props: DialogProps) => {
             onClick={onClose as (e: any) => void}
             data-qa-close-drawer
             aria-label="Close"
-            sx={{}}
           >
             <Close />
           </StyledButton>

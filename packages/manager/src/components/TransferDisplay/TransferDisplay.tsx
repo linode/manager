@@ -141,7 +141,7 @@ export const TransferDialog = React.memo((props: DialogProps) => {
       classes={{ paper: classes.paper }}
       onClose={onClose}
       title="Monthly Network Transfer Pool"
-      // maxWidth="sm"
+      maxWidth="sm"
       fullWidth
     >
       <Grid
