@@ -111,6 +111,10 @@ describe('utilities', () => {
       expect(validateForm('TCP', 'invalid-port')).toHaveProperty('ports');
     });
     it('validates custom ports', () => {
+      expect(validateForm('TCP', '1')).toEqual({});
+      expect(validateForm('TCP', '1,2,3,4,5')).toEqual({});
+      expect(validateForm('TCP', '1, 2, 3, 4, 5')).toEqual({});
+      expect(validateForm('TCP', '1-20')).toEqual({});
       expect(validateForm('TCP', 'abc')).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
