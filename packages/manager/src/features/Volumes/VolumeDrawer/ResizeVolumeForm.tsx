@@ -10,7 +10,7 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import NoticePanel from './NoticePanel';
-import PricePanel from './PricePanel';
+import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
@@ -104,9 +104,7 @@ export const ResizeVolumeForm = (props: Props) => {
               resize={volumeSize}
               disabled={readOnly}
             />
-
             <PricePanel value={values.size} currentSize={volumeSize} />
-
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}

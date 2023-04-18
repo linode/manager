@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
-import DisplayPrice from 'src/components/DisplayPrice';
+import { DisplayPrice } from 'src/components/DisplayPrice';
 import useStyles from './styles';
 
 interface Props {
