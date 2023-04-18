@@ -1,5 +1,5 @@
 import { event } from 'react-ga';
-import { GA_ID } from 'src/constants';
+import { GA_ID, ADOBE_ANALYTICS_URL } from 'src/constants';
 
 interface AnalyticsEvent {
   category: string;
@@ -12,13 +12,19 @@ interface AnalyticsEvent {
  * Will throw error unless analytics is initialized
  */
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
-  // Send a Direct Call Rule to Adobe
-  (window as any)._satellite.track('custom event', {
-    category: eventPayload.category,
-    action: eventPayload.action,
-    label: eventPayload.label,
-    value: eventPayload.value,
-  });
+  // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
+  if (!!ADOBE_ANALYTICS_URL) {
+    try {
+      (window as any)._satellite.track('custom event', {
+        category: eventPayload.category,
+        action: eventPayload.action,
+        label: eventPayload.label,
+        value: eventPayload.value,
+      });
+    } catch {
+      return undefined;
+    }
+  }
 
   /** only send events if we have a GA ID */
   return !!GA_ID ? event(eventPayload) : undefined;
