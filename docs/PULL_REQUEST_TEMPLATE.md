@@ -16,10 +16,10 @@
 | Content | Content |
 
 ## How to test 🧪
-1. How to setup test environment?
-2. How to reproduce the issue (if applicable)?
-3. How to verify changes?
-4. How to run Unit or E2E tests?
+1. **How to setup test environment?**
+2. **How to reproduce the issue (if applicable)?**
+3. **How to verify changes?**
+4. **How to run Unit or E2E tests?**
 
 ## Commit message and pull request title format standards
 
