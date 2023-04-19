@@ -18,6 +18,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Tech Stories:
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
+- MUIv5 Migration - Components > Currency #9030
+- MUIv5 Migration - Components > DisplayPrice #9022
+- MUIv5 Migration - Components > CreateLinodeDisabled #9015
+
+
 ## [2023-04-18] - v1.91.1
 
 ### Fixed:
