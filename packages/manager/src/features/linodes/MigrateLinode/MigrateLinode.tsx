@@ -17,6 +17,7 @@ import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementChec
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -91,6 +92,7 @@ const MigrateLinode = React.memo((props: Props) => {
   const { data: agreements } = useAccountAgreements(open);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: regionsData } = useRegionsQuery();
+  const flags = useFlags();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -129,7 +131,7 @@ const MigrateLinode = React.memo((props: Props) => {
   }, [open]);
 
   React.useEffect(() => {
-    if (!selectedRegion || !linode) {
+    if (!flags.metadata || !selectedRegion || !linode) {
       return;
     }
     const currentRegionSupportsMetadata =
@@ -152,7 +154,7 @@ const MigrateLinode = React.memo((props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     // we only want to update the warning when the selected region changes
-  }, [regionsData, selectedRegion]);
+  }, [flags.metadata, regionsData, selectedRegion]);
 
   if (!linode) {
     return null;
