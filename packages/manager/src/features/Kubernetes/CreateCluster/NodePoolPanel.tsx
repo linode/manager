@@ -5,30 +5,20 @@ import CircleProgress from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import SelectPlanQuantityPanel, {
-  ExtendedTypeWithCount,
-} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
-import { ExtendedType } from 'src/utilities/extendType';
+import SelectPlanQuantityPanel from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
+
+const DEFAULT_PLAN_COUNT = 3;
 
 interface Props {
   types: ExtendedType[];
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
-  isOnCreate?: boolean;
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
 }
 
 type CombinedProps = Props;
-
-export const addCountToTypes = (
-  types: ExtendedType[]
-): ExtendedTypeWithCount[] => {
-  return types.map((thisType) => ({
-    ...thisType,
-    count: 3,
-  }));
-};
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = (
   props
@@ -53,12 +43,14 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (
 };
 
 const Panel: React.FunctionComponent<CombinedProps> = (props) => {
-  const { addNodePool, apiError, types, isOnCreate } = props;
+  const { addNodePool, apiError, types } = props;
 
-  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
-    addCountToTypes(types)
+  const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
+    new Map()
   );
   const [selectedType, setSelectedType] = React.useState<string | undefined>();
+
+  const extendedTypes = types.map(extendType);
 
   const submitForm = (selectedPlanType: string, nodeCount: number) => {
     /**
@@ -74,13 +66,7 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    const newTypes = _types.map((thisType: ExtendedTypeWithCount) => {
-      if (thisType.id === planId) {
-        return { ...thisType, count: newCount };
-      }
-      return thisType;
-    });
-    setNewType(newTypes);
+    setTypeCountMap(new Map(typeCountMap).set(planId, newCount));
     setSelectedType(planId);
   };
 
@@ -88,17 +74,19 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
     <Grid container direction="column">
       <Grid>
         <SelectPlanQuantityPanel
-          types={_types.filter(
+          types={extendedTypes.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'
           )} // No Nanodes or GPUs in clusters
+          getTypeCount={(planId) =>
+            typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
+          }
           selectedID={selectedType}
           onSelect={(newType: string) => setSelectedType(newType)}
           error={apiError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
           updatePlanCount={updatePlanCount}
-          submitForm={submitForm}
-          isOnCreate={isOnCreate}
+          onAdd={submitForm}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
         />
       </Grid>
