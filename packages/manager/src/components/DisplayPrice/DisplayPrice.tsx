@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 
 export interface DisplayPriceProps {
   price: number;

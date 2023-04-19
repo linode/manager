@@ -9,13 +9,12 @@ import { APIError } from '@linode/api-v4/lib/types';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useParams } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from 'src/components/IconButton';
 import Link from 'src/components/Link';
@@ -29,9 +28,8 @@ import { getShouldUseAkamaiBilling } from '../billingUtils';
 import InvoiceTable from './InvoiceTable';
 import Box from '@mui/material/Box';
 
-type CombinedProps = RouteComponentProps<{ invoiceId: string }>;
-
-export const InvoiceDetail = (props: CombinedProps) => {
+export const InvoiceDetail = () => {
+  const { invoiceId } = useParams<{ invoiceId?: string }>();
   const theme = useTheme();
 
   const csvRef = React.useRef<any>();
@@ -51,18 +49,13 @@ export const InvoiceDetail = (props: CombinedProps) => {
   const flags = useFlags();
 
   const requestData = () => {
-    const {
-      match: {
-        params: { invoiceId },
-      },
-    } = props;
     setLoading(true);
 
     const getAllInvoiceItems = getAll<InvoiceItem>((params, filter) =>
-      getInvoiceItems(+invoiceId, params, filter)
+      getInvoiceItems(Number(invoiceId), params, filter)
     );
 
-    Promise.all([getInvoice(+invoiceId), getAllInvoiceItems()])
+    Promise.all([getInvoice(Number(invoiceId)), getAllInvoiceItems()])
       .then(([invoice, { data: items }]) => {
         setLoading(false);
         setInvoice(invoice);
@@ -235,9 +228,7 @@ export const InvoiceDetail = (props: CombinedProps) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withRouter);
-
-export default enhanced(InvoiceDetail);
+export default InvoiceDetail;
 
 const csvHeaders = [
   { label: 'Description', key: 'label' },
