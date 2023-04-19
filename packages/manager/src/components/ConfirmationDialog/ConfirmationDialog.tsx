@@ -28,14 +28,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export interface Props extends DialogProps {
+export interface ConfirmationDialogProps extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
   error?: string | JSX.Element;
   onClose: () => void;
   title: string;
 }
 
-export const ConfirmationDialog = (props: Props) => {
+export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const { classes } = useStyles();
 
   const { title, children, actions, error, ...dialogProps } = props;
