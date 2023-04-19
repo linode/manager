@@ -4,6 +4,7 @@ import getEventMessage, {
   eventMessageCreators,
   safeSecondaryEntityLabel,
 } from './eventMessageGenerator';
+import { applyLinking } from './eventMessageGenerator';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -85,6 +86,44 @@ describe('Event message generation', () => {
           'booted'
         )
       ).not.toMatch('booted with');
+    });
+  });
+
+  describe('apply linking to labels', () => {
+    const entity = entityFactory.build({ id: 10, label: 'foo' });
+
+    it('should return empty string if message is falsy', () => {
+      const mockEvent = eventFactory.build({ action: 'domain_record_create' });
+      const message = null;
+      const result = applyLinking(mockEvent, message as any); // casting since message is a required prop
+
+      expect(result).toEqual('');
+    });
+
+    it('should replace entity label with link if entity and link exist', async () => {
+      const mockEvent = eventFactory.build({ entity });
+      const message = 'created entity foo';
+      const result = applyLinking(mockEvent, message);
+
+      expect(result).toEqual(`created entity <a href="/linodes/10">foo</a> `);
+    });
+
+    it('should replace secondary entity label with link if entity and link exist', () => {
+      const mockEvent = eventFactory.build({ entity });
+      const message = 'created secondary_entity for foo';
+      const result = applyLinking(mockEvent, message);
+
+      expect(result).toEqual(
+        `created secondary_entity for <a href="/linodes/10">foo</a> `
+      );
+    });
+
+    it('should not replace entity label if label is inside backticks', () => {
+      const mockEvent = eventFactory.build({ entity });
+      const message = 'created `foo`';
+      const result = applyLinking(mockEvent, message);
+
+      expect(result).toEqual('created `foo`');
     });
   });
 });

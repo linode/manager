@@ -12,17 +12,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 - Typesafety of the `<Select />` component #8986
 - Clear the Kubernetes Delete Dialog when it is re-opened #9000
+- @linode/validation version badge Label in `README.md` #9011
+- Event entities should only be linked for true labels
 
 ### Tech Stories:
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
-- MUI v5 Migration - `SRC > Components > ConfirmationDialog` #9016
+- MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
+
+## [2023-04-18] - v1.91.1
+
+### Fixed:
+- Add Premium plans to LKE #9021
 
 ## [2023-04-17] - v1.91.0
 
 ### Added:
 - Cross Data Center Clone warning #8937
 - `Plan` column header to plan select table #8943
+- Add No Results section for Marketplace Search #8999
 
 ### Changed:
 - Use Akamai logo for TPA provider screen #8982

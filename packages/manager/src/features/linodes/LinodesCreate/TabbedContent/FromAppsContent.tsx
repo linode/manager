@@ -358,6 +358,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
             error={hasErrorFor('stackscript_id')}
             isSearching={isSearching}
             isFiltering={isFiltering}
+            searchValue={query}
           />
           {!userCannotCreateLinode && selectedStackScriptLabel ? (
             <UserDefinedFieldsPanel
