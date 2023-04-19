@@ -37,7 +37,7 @@ const firewall = firewallFactory.build({
 });
 
 /**
- * Adds an inboun / outbount firewall rule.
+ * Adds an inbound / outbound firewall rule.
  *
  * No assertion is made on the result of the rule addition attempt.
  *
@@ -45,18 +45,18 @@ const firewall = firewallFactory.build({
  * @param direction - the direction of the rule, inbound or outbound.
  */
 const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
-  const ruleType =
+  const ruleTitle =
     direction && direction.toLowerCase() === 'outbound'
-      ? 'Outbound'
-      : 'Inbound';
+      ? 'Add an Outbound Rule'
+      : 'Add an Inbound Rule';
 
   // Go to Rules tab
   ui.tabList.findTabByTitle('Rules').should('be.visible').click();
 
-  ui.button.findByText(ruleType).should('be.visible').click();
+  ui.button.findByTitle(ruleTitle).should('be.visible').click();
 
   ui.drawer
-    .findByTitle(`Add an ${ruleType} Rule`)
+    .findByTitle(ruleTitle)
     .should('be.visible')
     .within(() => {
       const port = rule.ports ? rule.ports : '22';
@@ -76,12 +76,17 @@ const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
           rule.action.slice(1).toLowerCase()
         : 'Accept';
       containsClick(action).click();
-      ui.button.findByText('Add Rule').should('be.visible').click();
+
+      ui.button
+        .findByTitle('Add Rule')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
     });
 };
 
 /**
- * Removes an inboun / outbount firewall rule.
+ * Removes an inbound / outbound firewall rule.
  *
  * No assertion is made on the result of the rule addition attempt.
  *
@@ -95,7 +100,7 @@ const removeFirewallRules = (ruleLabel: string) => {
     .first()
     .should('be.visible')
     .within(() => {
-      ui.button.findByText('Delete').should('be.visible').click();
+      ui.button.findByTitle('Delete').should('be.visible').click();
     });
 };
 
@@ -111,10 +116,7 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
   // Go to Linodes tab
   ui.tabList.findTabByTitle('Linodes').should('be.visible').click();
 
-  cy.get('button')
-    .contains('span', 'Add Linodes to Firewall')
-    .should('be.visible')
-    .click();
+  ui.button.findByTitle('Add Linodes to Firewall').should('be.visible').click();
 
   ui.drawer
     .findByTitle(`Add Linode to Firewall: ${firewall.label}`)
@@ -125,15 +127,13 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
         .should('be.visible')
         .click()
         .type(linode.label);
-    });
 
-  ui.autocompletePopper.findByTitle(linode.label).should('be.visible').click();
+      ui.autocompletePopper
+        .findByTitle(linode.label)
+        .should('be.visible')
+        .click();
 
-  ui.drawer
-    .findByTitle(`Add Linode to Firewall: ${firewall.label}`)
-    .should('be.visible')
-    .within(() => {
-      ui.button.findByText('Add').click();
+      ui.button.findByTitle('Add').should('be.visible').click();
     });
 };
 
@@ -209,11 +209,20 @@ describe('update firewall', () => {
         });
 
       // Save configuration
-      ui.button.findByText('Save Changes').click();
+      ui.button
+        .findByTitle('Save Changes')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       // Go back to landing page and check rules are added to the firewall
+      cy.wait(100);
       cy.visitWithLogin('/firewalls');
-      cy.findByText('1 Inbound / 1 Outbound').should('be.visible');
+      cy.findByText(firewall.label)
+        .closest('tr')
+        .within(() => {
+          cy.findByText('1 Inbound / 1 Outbound').should('be.visible');
+        });
 
       // Go to the firewalls edit page
       cy.findByText(firewall.label).click();
@@ -225,11 +234,20 @@ describe('update firewall', () => {
       removeFirewallRules(outboundRule.label);
 
       // Save configuration
-      ui.button.findByText('Save Changes').click();
+      ui.button
+        .findByTitle('Save Changes')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       // Go back to landing page and check rules are removed to the firewall
+      cy.wait(100);
       cy.visitWithLogin('/firewalls');
-      cy.findByText('No rules').should('be.visible');
+      cy.findByText(firewall.label)
+        .closest('tr')
+        .within(() => {
+          cy.findByText('No rules').should('be.visible');
+        });
 
       // Go to the firewalls edit page
       cy.findByText(firewall.label).click();
@@ -237,7 +255,11 @@ describe('update firewall', () => {
       // Confirm that the firewall can be assigned to the linode
       addLinodesToFirewall(firewall, linode);
       cy.visitWithLogin('/firewalls');
-      cy.findByText(linode.label).should('be.visible');
+      cy.findByText(firewall.label)
+        .closest('tr')
+        .within(() => {
+          cy.findByText(linode.label).should('be.visible');
+        });
     });
   });
 
