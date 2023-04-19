@@ -1,23 +1,22 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import { useSpecificTypes } from 'src/queries/types';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -26,6 +25,9 @@ import {
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
+import { extendType } from 'src/utilities/extendType';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
@@ -33,7 +35,6 @@ import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
-import { extendType } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -89,6 +90,7 @@ const MigrateLinode = (props: Props) => {
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements(open);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+  const { data: regionsData } = useRegionsQuery();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -96,6 +98,10 @@ const MigrateLinode = (props: Props) => {
   const [regionError, setRegionError] = React.useState<string>('');
   const [acceptError, setAcceptError] = React.useState<string>('');
   const [APIError, setAPIError] = React.useState<string>('');
+  const [
+    metadataMigrateWarning,
+    setMetadataMigrateWarning,
+  ] = React.useState<string>('');
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
@@ -116,10 +122,37 @@ const MigrateLinode = (props: Props) => {
     if (open) {
       setAPIError('');
       setRegionError('');
+      setMetadataMigrateWarning('');
       setConfirmed(false);
       handleSelectRegion(null);
     }
   }, [open]);
+
+  React.useEffect(() => {
+    if (!selectedRegion || !linode) {
+      return;
+    }
+    const currentRegionSupportsMetadata =
+      regionsData
+        ?.find((region) => region.id === linode.region)
+        ?.capabilities.includes('Metadata') ?? false;
+
+    const selectedRegionSupportsMetadata =
+      regionsData
+        ?.find((region) => region.id === selectedRegion)
+        ?.capabilities.includes('Metadata') ?? false;
+
+    const metadataWarning =
+      currentRegionSupportsMetadata && !selectedRegionSupportsMetadata
+        ? 'The selected Data Center does not support Metadata. If your Linode is rebuilt, it will boot without using any associated User Data.'
+        : undefined;
+
+    if (metadataWarning) {
+      setMetadataMigrateWarning(metadataWarning);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // we only want to update the warning when the selected region changes
+  }, [regionsData, selectedRegion]);
 
   if (!linode) {
     return null;
@@ -227,6 +260,7 @@ const MigrateLinode = (props: Props) => {
         hasConfirmed={hasConfirmed}
         error={acceptError}
         migrationTimeInMins={migrationTimeInMinutes}
+        metadataWarning={metadataMigrateWarning}
       />
       <ConfigureForm
         currentRegion={region}
