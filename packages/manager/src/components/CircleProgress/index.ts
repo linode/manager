@@ -1,2 +1,1 @@
-import { CircleProgress } from './CircleProgress';
-export { CircleProgress };
+export { CircleProgress } from './CircleProgress';
