@@ -75,7 +75,7 @@ interface Props {
   onClose: () => void;
 }
 
-const MigrateLinode = (props: Props) => {
+const MigrateLinode = React.memo((props: Props) => {
   const { linodeID, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -299,9 +299,9 @@ const MigrateLinode = (props: Props) => {
       </Box>
     </Dialog>
   );
-};
+});
 
-export default React.memo(MigrateLinode);
+export { MigrateLinode };
 
 const getDisabledReason = (
   events: Event[],
