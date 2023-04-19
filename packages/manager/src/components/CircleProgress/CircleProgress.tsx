@@ -11,11 +11,19 @@ interface CircleProgressProps extends CircularProgressProps {
   mini?: boolean;
   noInner?: boolean;
   noPadding?: boolean;
-  tag?: boolean;
+  size?: number;
 }
 
 const CircleProgress = (props: CircleProgressProps) => {
-  const { className, children, mini, noInner, noPadding, ...rest } = props;
+  const {
+    className,
+    children,
+    mini,
+    noInner,
+    noPadding,
+    size,
+    ...rest
+  } = props;
 
   const variant =
     typeof props.value === 'number' ? 'determinate' : 'indeterminate';
@@ -24,7 +32,8 @@ const CircleProgress = (props: CircleProgressProps) => {
   if (mini) {
     return (
       <StyledMiniCircularProgress
-        size={noPadding ? 22 : 40}
+        size={size ? size : noPadding ? 22 : 40}
+        noPadding={noPadding}
         aria-label="Content is loading"
         data-qa-circle-progress
         data-testid="circle-progress"
@@ -107,15 +116,5 @@ const StyledMiniCircularProgress = styled(
   padding: `calc(${theme.spacing()} * 1.3)`,
   ...(props.noPadding && {
     padding: 0,
-  }),
-  ...(props.tag && {
-    width: '12px !important',
-    height: '12px !important',
-    padding: 0,
-    marginLeft: 4,
-    marginRight: 4,
-    '& circle': {
-      stroke: 'white',
-    },
   }),
 }));
