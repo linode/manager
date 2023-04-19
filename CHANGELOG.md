@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added:
+- Metadata migrate warning #9033
+
 ### Changed:
 - `<RegionSelect />` can now dynamically get country flag and group all countrys #8996
 
