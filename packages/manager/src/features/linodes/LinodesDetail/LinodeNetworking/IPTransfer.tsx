@@ -161,9 +161,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
       {}
     )
   );
-  const [error, setError] = React.useState<APIError[] | undefined | string>(
-    undefined
-  );
+  const [error, setError] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
@@ -448,7 +446,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
       (ip) => ip.mode !== 'none'
     );
     if (noActionSelected) {
-      setError('Please select an action.');
+      setError([{ reason: 'Please select an action.' }]);
       setSubmitting(false);
 
       return;
@@ -505,13 +503,9 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     <Dialog title="IP Transfer" open={open} onClose={onClose}>
       {error && (
         <Grid xs={12}>
-          {typeof error === 'string' ? (
-            <Notice error text={error} />
-          ) : (
-            error.map(({ reason }, idx) => (
-              <Notice key={idx} error text={reason} />
-            ))
-          )}
+          {error.map(({ reason }, idx) => (
+            <Notice key={idx} error text={reason} />
+          ))}
         </Grid>
       )}
       {successMessage && (
