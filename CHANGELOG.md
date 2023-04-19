@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added:
 - Cross Data Center Clone warning #8937
 - `Plan` column header to plan select table #8943
+- Add No Results section for Marketplace Search #8999
 
 ### Changed:
 - Use Akamai logo for TPA provider screen #8982
