@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Tech Stories:
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
+- MUI v5 Migration - `SRC > Components > ConfirmationDialog` #9016
+
 ## [2023-04-17] - v1.91.0
 
 ### Added:
@@ -44,7 +46,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUI v5 Migration - `Features > Billing` #8933
 - MUI v5 Migration - `Components > CheckBox` #8980
 - MUI v5 Migration - `Components > BackupStatus` #8960
-- MUI v5 Migration - `SRC > Components > ConfirmationDialog` #9016
 - Use MUI Grid v2 #8959
 - Update the `usePagination` hook to use Query Params instead of state #8914
 - Use Query Client from Context #8949
