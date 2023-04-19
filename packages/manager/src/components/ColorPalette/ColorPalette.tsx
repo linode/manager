@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { useTheme } from '@mui/material';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -11,7 +11,7 @@ interface Color {
   alias: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     '& h2': {
       color: '#32363c',
@@ -41,8 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ColorPalette: React.FC<{}> = () => {
-  const classes = useStyles();
+export const ColorPalette = () => {
+  const { classes } = useStyles();
   const theme = useTheme();
 
   const primaryColors = [
@@ -197,5 +197,3 @@ export const ColorPalette: React.FC<{}> = () => {
     </Grid>
   );
 };
-
-export default ColorPalette;

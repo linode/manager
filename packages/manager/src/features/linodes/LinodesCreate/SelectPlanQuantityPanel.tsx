@@ -124,6 +124,9 @@ const getDedicated = (types: ExtendedType[]) =>
 const getGPU = (types: ExtendedType[]) =>
   types.filter((t) => /gpu/.test(t.class));
 
+const getPremium = (types: ExtendedType[]) =>
+  types.filter((t) => /premium/.test(t.class));
+
 export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
@@ -282,6 +285,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
+    const premium = getPremium(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
@@ -367,6 +371,28 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
         title: 'GPU',
       });
       tabOrder.push('gpu');
+    }
+
+    if (!isEmpty(premium)) {
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Notice warning>
+                This plan is only available in the Washington, DC region.
+              </Notice>
+              <Typography data-qa-gpu className={classes.copy}>
+                Premium CPU instances guarantee a minimum processor model, AMD
+                Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
+                performance for more demanding workloads.
+              </Typography>
+              {this.renderPlanContainer(premium)}
+            </>
+          );
+        },
+        title: 'Premium',
+      });
+      tabOrder.push('premium');
     }
 
     return [tabs, tabOrder];
