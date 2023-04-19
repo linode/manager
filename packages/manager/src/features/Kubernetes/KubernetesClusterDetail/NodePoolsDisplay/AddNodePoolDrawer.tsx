@@ -7,10 +7,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel';
-import SelectPlanQuantityPanel, {
-  ExtendedTypeWithCount,
-} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
+import SelectPlanQuantityPanel from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -84,18 +81,22 @@ export const AddNodePoolDrawer = (props: Props) => {
   } = useCreateNodePoolMutation(clusterId);
 
   // Only want to use current types here.
-  const typesData = filterCurrentTypes(types?.map(extendType));
+  const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
-  const [selectedType, setSelectedType] = React.useState<string | undefined>(
-    undefined
-  );
-  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
-    addCountToTypes(typesData || [])
+  const [selectedTypeInfo, setSelectedTypeInfo] = React.useState<
+    { planId: string; count: number } | undefined
+  >(undefined);
+
+  const getTypeCount = React.useCallback(
+    (planId: string) =>
+      planId === selectedTypeInfo?.planId ? selectedTypeInfo.count : 0,
+    [selectedTypeInfo]
   );
 
-  const _selectedType = _types.find((thisType) => thisType.id === selectedType);
-  const currentCount = _selectedType?.count ?? 0;
-  const pricePerNode = _selectedType?.price?.monthly ?? 0;
+  const selectedType = selectedTypeInfo
+    ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
+    : undefined;
+  const pricePerNode = selectedType?.price?.monthly ?? 0;
 
   React.useEffect(() => {
     if (open) {
@@ -110,38 +111,21 @@ export const AddNodePoolDrawer = (props: Props) => {
   }, [error]);
 
   const resetDrawer = () => {
-    const newTypes = _types.map((thisType) => {
-      return {
-        ...thisType,
-        count: 0,
-      };
-    });
-    setNewType(newTypes);
-    setSelectedType(undefined);
+    setSelectedTypeInfo(undefined);
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    const newTypes = _types.map((thisType: any) => {
-      if (thisType.id === planId) {
-        return { ...thisType, count: newCount };
-      }
-      return { ...thisType, count: 0 };
-    });
-    setNewType(newTypes);
-    // If everything's empty, we need to reset the selected type.
-    if (newTypes.every((thisType) => thisType.count === 0)) {
-      setSelectedType(undefined);
-    } else {
-      setSelectedType(planId);
-    }
+    setSelectedTypeInfo(newCount > 0 ? { planId, count: newCount } : undefined);
   };
 
   const handleAdd = () => {
-    const type = _types.find((thisType) => thisType.id === selectedType);
-    if (!type || !selectedType) {
+    if (!selectedTypeInfo) {
       return;
     }
-    return createPool({ type: type.id, count: type.count }).then(() => {
+    return createPool({
+      type: selectedTypeInfo.planId,
+      count: selectedTypeInfo.count,
+    }).then(() => {
       onClose();
     });
   };
@@ -159,39 +143,47 @@ export const AddNodePoolDrawer = (props: Props) => {
       <form className={classes.plans}>
         <SelectPlanQuantityPanel
           // No nanodes or GPUs in clusters
-          types={_types.filter(
+          types={extendedTypes.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'
           )}
-          selectedID={selectedType}
-          onSelect={(newType: string) => setSelectedType(newType)}
+          getTypeCount={getTypeCount}
+          selectedID={selectedTypeInfo?.planId}
+          onSelect={(newType: string) => {
+            if (selectedTypeInfo?.planId !== newType) {
+              setSelectedTypeInfo({ planId: newType, count: 1 });
+            }
+          }}
           updatePlanCount={updatePlanCount}
           addPool={handleAdd}
           isSubmitting={isLoading}
           resetValues={resetDrawer}
         />
-        {currentCount > 0 && currentCount < 3 && (
-          <Notice
-            important
-            warning
-            text={nodeWarning}
-            spacingTop={8}
-            spacingBottom={16}
-          />
-        )}
+        {selectedTypeInfo &&
+          selectedTypeInfo.count > 0 &&
+          selectedTypeInfo.count < 3 && (
+            <Notice
+              important
+              warning
+              text={nodeWarning}
+              spacingTop={8}
+              spacingBottom={16}
+            />
+          )}
         <ActionsPanel className={classes.button}>
           <Box
             display="flex"
             flexDirection="row"
             alignItems="center"
-            justifyContent={currentCount > 0 ? 'space-between' : 'flex-end'}
+            justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
             className={classes.boxOuter}
           >
-            {currentCount > 0 && (
+            {selectedTypeInfo && (
               <Typography className={classes.priceDisplay}>
                 This pool will add{' '}
                 <strong>
-                  ${currentCount * pricePerNode}/month (
-                  {pluralize('node', 'nodes', currentCount)} at ${pricePerNode}
+                  ${selectedTypeInfo.count * pricePerNode}/month (
+                  {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
+                  {pricePerNode}
                   /month)
                 </strong>{' '}
                 to this cluster.
@@ -199,8 +191,8 @@ export const AddNodePoolDrawer = (props: Props) => {
             )}
             <Button
               buttonType="primary"
-              onClick={() => handleAdd()}
-              disabled={currentCount === 0}
+              onClick={handleAdd}
+              disabled={!selectedTypeInfo}
               loading={isLoading}
             >
               Add pool
