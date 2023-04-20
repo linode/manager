@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Dialog from 'src/components/Dialog';
-import CopyTooltip from '../CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { sendCLIClickEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
