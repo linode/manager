@@ -65,7 +65,7 @@ interface Props {
 }
 
 type CombinedProps = Props;
-const AddonsPanel: React.FC<CombinedProps> = (props) => {
+const AddonsPanel = (props: CombinedProps) => {
   const {
     accountBackups,
     changeBackups,
@@ -75,6 +75,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     labelError,
     ipamAddress,
     ipamError,
+    privateIP,
     handleVLANChange,
     selectedRegionID,
     selectedImageID,
@@ -82,7 +83,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     createType,
   } = props;
 
-  const hidePrivateIP = createType === 'fromLinode';
+  // const hidePrivateIP = createType === 'fromLinode';
 
   const classes = useStyles();
   const { data: account } = useAccount();
@@ -186,28 +187,24 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             </Typography>
           </Grid>
         </Grid>
-        {
-          /** /v4/linodes/instances/clone does *not* support the private IP flag */
-          hidePrivateIP ? null : (
-            <Grid container>
-              <Grid xs={12}>
-                <Divider />
-                <FormControlLabel
-                  className={classes.label}
-                  control={
-                    <CheckBox
-                      checked={props.privateIP}
-                      onChange={() => changePrivateIP()}
-                      data-qa-check-private-ip
-                      disabled={disabled}
-                    />
-                  }
-                  label="Private IP"
+
+        <Grid container>
+          <Grid xs={12}>
+            <Divider />
+            <FormControlLabel
+              className={classes.label}
+              control={
+                <CheckBox
+                  checked={privateIP}
+                  onChange={() => changePrivateIP()}
+                  data-qa-check-private-ip
+                  disabled={disabled}
                 />
-              </Grid>
-            </Grid>
-          )
-        }
+              }
+              label="Private IP"
+            />
+          </Grid>
+        </Grid>
       </Paper>
     </>
   );
