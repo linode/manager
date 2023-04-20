@@ -129,7 +129,6 @@ const AddonsPanel = (props: CombinedProps) => {
   // Check whether the source Linode has been allocated a private IP to select/unselect the 'Private IP' checkbox.
   React.useEffect(() => {
     if (selectedLinodeID) {
-      debugger;
       const selectedLinode = linodesData?.find(
         (image) => image.id === selectedLinodeID
       );
