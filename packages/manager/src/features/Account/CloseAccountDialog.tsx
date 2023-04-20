@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Notice from 'src/components/Notice';
@@ -98,7 +98,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   }
 
   return (
-    <Dialog
+    <ConfirmationDialog
       open={open}
       title="Are you sure you want to close your Linode account?"
       onClose={closeDialog}
@@ -146,7 +146,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         value={comments}
         aria-label="Optional comments field"
       />
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 

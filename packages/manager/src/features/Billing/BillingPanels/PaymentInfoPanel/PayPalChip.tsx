@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useClientToken } from 'src/queries/accountPayment';
 import { makeStyles } from 'tss-react/mui';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
 import { useSnackbar } from 'notistack';

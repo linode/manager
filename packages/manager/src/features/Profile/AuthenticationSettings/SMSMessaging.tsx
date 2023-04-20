@@ -3,7 +3,7 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
