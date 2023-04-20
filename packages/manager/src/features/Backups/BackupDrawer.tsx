@@ -8,7 +8,7 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
-import DisplayPrice from 'src/components/DisplayPrice';
+import { DisplayPrice } from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
