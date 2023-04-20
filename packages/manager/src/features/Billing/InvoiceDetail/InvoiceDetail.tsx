@@ -29,7 +29,7 @@ import InvoiceTable from './InvoiceTable';
 import Box from '@mui/material/Box';
 
 export const InvoiceDetail = () => {
-  const { invoiceId } = useParams<{ invoiceId?: string }>();
+  const { invoiceId } = useParams<{ invoiceId: string }>();
   const theme = useTheme();
 
   const csvRef = React.useRef<any>();
@@ -52,10 +52,10 @@ export const InvoiceDetail = () => {
     setLoading(true);
 
     const getAllInvoiceItems = getAll<InvoiceItem>((params, filter) =>
-      getInvoiceItems(Number(invoiceId), params, filter)
+      getInvoiceItems(+invoiceId, params, filter)
     );
 
-    Promise.all([getInvoice(Number(invoiceId)), getAllInvoiceItems()])
+    Promise.all([getInvoice(+invoiceId), getAllInvoiceItems()])
       .then(([invoice, { data: items }]) => {
         setLoading(false);
         setInvoice(invoice);
