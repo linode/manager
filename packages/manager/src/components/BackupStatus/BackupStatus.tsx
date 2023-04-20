@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Link from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { makeStyles } from 'tss-react/mui';

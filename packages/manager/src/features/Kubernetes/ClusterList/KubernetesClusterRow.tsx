@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from '@mui/material/Unstable_Grid2';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu from './ClusterActionMenu';

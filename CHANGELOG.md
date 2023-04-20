@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUIv5 Migration - Components > StatusIcon #9014
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
+- MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
 - MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
 
 ## [2023-04-18] - v1.91.1

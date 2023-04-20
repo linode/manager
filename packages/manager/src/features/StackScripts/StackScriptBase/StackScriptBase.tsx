@@ -11,7 +11,7 @@ import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
-import DebouncedSearch from 'src/components/DebouncedSearchTextField';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
@@ -544,7 +544,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   [classes.landing]: !isSelecting,
                 })}
               >
-                <DebouncedSearch
+                <DebouncedSearchTextField
                   placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
                   debounceTime={400}
