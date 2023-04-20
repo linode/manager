@@ -65,7 +65,7 @@ interface Props {
 }
 
 type CombinedProps = Props;
-const AddonsPanel = (props: CombinedProps) => {
+const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const {
     accountBackups,
     changeBackups,
@@ -75,7 +75,6 @@ const AddonsPanel = (props: CombinedProps) => {
     labelError,
     ipamAddress,
     ipamError,
-    privateIP,
     handleVLANChange,
     selectedRegionID,
     selectedImageID,
@@ -83,7 +82,7 @@ const AddonsPanel = (props: CombinedProps) => {
     createType,
   } = props;
 
-  // const hidePrivateIP = createType === 'fromLinode';
+  const hidePrivateIP = createType === 'fromLinode';
 
   const classes = useStyles();
   const { data: account } = useAccount();
@@ -187,24 +186,28 @@ const AddonsPanel = (props: CombinedProps) => {
             </Typography>
           </Grid>
         </Grid>
-
-        <Grid container>
-          <Grid xs={12}>
-            <Divider />
-            <FormControlLabel
-              className={classes.label}
-              control={
-                <CheckBox
-                  checked={privateIP}
-                  onChange={() => changePrivateIP()}
-                  data-qa-check-private-ip
-                  disabled={disabled}
+        {
+          /** /v4/linodes/instances/clone does *not* support the private IP flag */
+          hidePrivateIP ? null : (
+            <Grid container>
+              <Grid xs={12}>
+                <Divider />
+                <FormControlLabel
+                  className={classes.label}
+                  control={
+                    <CheckBox
+                      checked={props.privateIP}
+                      onChange={() => changePrivateIP()}
+                      data-qa-check-private-ip
+                      disabled={disabled}
+                    />
+                  }
+                  label="Private IP"
                 />
-              }
-              label="Private IP"
-            />
-          </Grid>
-        </Grid>
+              </Grid>
+            </Grid>
+          )
+        }
       </Paper>
     </>
   );
