@@ -15,7 +15,7 @@ import {
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

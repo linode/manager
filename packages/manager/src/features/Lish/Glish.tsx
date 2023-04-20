@@ -4,7 +4,7 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import { VncScreen, VncScreenHandle } from 'react-vnc';
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 import { makeStyles } from '@mui/styles';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 
 const useStyles = makeStyles(() => ({

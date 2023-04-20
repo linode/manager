@@ -4,7 +4,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useSnackbar } from 'notistack';
 import { makeStyles } from '@mui/styles';

@@ -21,6 +21,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
 
 ### Tech Stories:
+- MUIv5 Migration - Components > CircleProgress #9028
+- MUIv5 Migration - Components > StatusIcon #9014
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
 - MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016

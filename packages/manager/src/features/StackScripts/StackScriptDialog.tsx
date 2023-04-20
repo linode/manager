@@ -2,7 +2,7 @@ import { getStackScript, StackScript } from '@linode/api-v4/lib/stackscripts';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Dialog from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 import _StackScript from 'src/components/StackScript';

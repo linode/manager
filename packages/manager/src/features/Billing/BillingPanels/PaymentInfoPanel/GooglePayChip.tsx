@@ -1,6 +1,6 @@
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from 'tss-react/mui';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import {

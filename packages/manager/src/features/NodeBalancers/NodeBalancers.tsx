@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 
 const NodeBalancerDetail = React.lazy(
   () => import('./NodeBalancerDetail/NodeBalancerDetail')

@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';

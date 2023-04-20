@@ -19,7 +19,7 @@ import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';

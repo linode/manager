@@ -1,7 +1,7 @@
 import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';

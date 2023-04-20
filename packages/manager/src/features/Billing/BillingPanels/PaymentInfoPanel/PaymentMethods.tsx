@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
 import Typography from 'src/components/core/Typography';

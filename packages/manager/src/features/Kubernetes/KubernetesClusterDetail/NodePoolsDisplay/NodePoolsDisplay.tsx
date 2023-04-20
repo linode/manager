@@ -15,7 +15,7 @@ import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import Button from 'src/components/Button';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import classNames from 'classnames';
 import { useSpecificTypes } from 'src/queries/types';

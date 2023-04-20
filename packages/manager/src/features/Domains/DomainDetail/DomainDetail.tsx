@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import ErrorState from 'src/components/ErrorState';

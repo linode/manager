@@ -1,15 +1,15 @@
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { SxProps } from '@mui/system';
 import classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
-import IconButton from 'src/components/core/IconButton';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Tag from 'src/components/Tag';
-import CircleProgress from '../CircleProgress';
+import IconButton from 'src/components/core/IconButton';
 import AddTag from './AddTag';
-import { SxProps } from '@mui/system';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
