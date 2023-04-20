@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from '../ActionsPanel';
 import Button from '../Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment from './ThirdPartyPayment';
@@ -45,7 +45,7 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
   );
 
   return (
-    <Dialog
+    <ConfirmationDialog
       title="Delete Payment Method"
       error={error}
       open={open}
@@ -66,7 +66,7 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
           ) : null}
         </Grid>
       </Grid>
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 

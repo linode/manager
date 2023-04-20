@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { managedText } from './LongviewPlans';
 
@@ -39,14 +39,14 @@ export const SubscriptionDialog: React.FC<Props> = (props) => {
   );
 
   return (
-    <Dialog
+    <ConfirmationDialog
       title="Maximum Clients Reached"
       open={isOpen}
       onClose={onClose}
       actions={actions}
     >
       <Typography variant="body1">{text}</Typography>
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 
