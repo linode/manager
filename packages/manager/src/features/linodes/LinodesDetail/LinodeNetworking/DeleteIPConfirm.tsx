@@ -6,7 +6,7 @@ import {
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingErrorProps,
