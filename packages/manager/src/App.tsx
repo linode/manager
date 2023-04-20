@@ -86,7 +86,11 @@ export class App extends React.Component<CombinedProps, State> {
 
     // Load Adobe Analytics Launch Script
     if (!!ADOBE_ANALYTICS_URL) {
-      loadScript(ADOBE_ANALYTICS_URL);
+      const script = document.createElement('script');
+      // eslint-disable-next-line scanjs-rules/assign_to_src
+      script.src = `${ADOBE_ANALYTICS_URL}`;
+      script.async = true;
+      document.head.appendChild(script);
     }
 
     /**
