@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUIv5 Migration - Components > Currency #9030
 - MUIv5 Migration - Components > DisplayPrice #9022
 - MUIv5 Migration - Components > CreateLinodeDisabled #9015
+- MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
 - MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
 
 ## [2023-04-18] - v1.91.1
