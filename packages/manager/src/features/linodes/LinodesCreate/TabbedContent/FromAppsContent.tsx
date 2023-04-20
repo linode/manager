@@ -21,7 +21,7 @@ import {
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 import { APP_ROOT } from 'src/constants';
-import DebouncedSearch from 'src/components/DebouncedSearchTextField';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
@@ -319,7 +319,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
             <Typography variant="h2">Select an App</Typography>
             <Box className={classes.searchAndFilter}>
               <Box className={classes.search}>
-                <DebouncedSearch
+                <DebouncedSearchTextField
                   placeholder="Search for app name"
                   fullWidth
                   onSearch={this.onSearch}
@@ -353,6 +353,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
             error={hasErrorFor('stackscript_id')}
             isSearching={isSearching}
             isFiltering={isFiltering}
+            searchValue={query}
           />
           {!userCannotCreateLinode && selectedStackScriptLabel ? (
             <UserDefinedFieldsPanel

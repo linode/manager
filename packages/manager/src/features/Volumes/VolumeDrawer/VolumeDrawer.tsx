@@ -7,10 +7,6 @@ import {
   withProfile,
   WithProfileProps,
 } from 'src/containers/profile.container';
-import {
-  withQueryClient,
-  WithQueryClientProps,
-} from 'src/containers/withQueryClient.container';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import {
@@ -27,10 +23,7 @@ import { ResizeVolumeForm } from './ResizeVolumeForm';
 import ResizeVolumesInstruction from './ResizeVolumesInstruction';
 import VolumeConfigForm from './VolumeConfigForm';
 
-type CombinedProps = StateProps &
-  DispatchProps &
-  WithProfileProps &
-  WithQueryClientProps;
+type CombinedProps = StateProps & DispatchProps & WithProfileProps;
 
 class VolumeDrawer extends React.PureComponent<CombinedProps> {
   render() {
@@ -256,4 +249,4 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(connected, withProfile, withQueryClient)(VolumeDrawer);
+export default compose(connected, withProfile)(VolumeDrawer);
