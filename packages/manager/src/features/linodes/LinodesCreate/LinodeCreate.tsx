@@ -779,7 +779,7 @@ export class LinodeCreate extends React.PureComponent<
             backups={this.props.backupsEnabled}
             accountBackups={accountBackupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
-            privateIP={this.props.privateIPEnabled}
+            isPrivateIPChecked={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}
             changePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
@@ -789,6 +789,8 @@ export class LinodeCreate extends React.PureComponent<
             ipamAddress={this.props.ipamAddress || ''}
             handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
+            selectedLinodeID={this.props.selectedLinodeID}
+            linodesData={this.props.linodesData}
             labelError={hasErrorFor['interfaces[1].label']}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
             createType={this.props.createType}
