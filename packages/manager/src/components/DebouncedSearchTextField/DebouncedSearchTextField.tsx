@@ -1,7 +1,7 @@
 import Search from '@mui/icons-material/Search';
 import * as React from 'react';
 
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { styled } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';

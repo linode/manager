@@ -9,7 +9,7 @@ import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
