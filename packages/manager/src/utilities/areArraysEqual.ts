@@ -1,7 +1,7 @@
 /**
- * Specify props to compare string arrays.
+ * Specify props to compare arrays.
  * Note: This function is not recursive and will only be true if arrays are sorted equally.
- * The reason is that this function is intended to do the bare minimum for the sake of performance and its current use cases.
+ * The reason is that this function is intended to do the bare minimum for the sake of performance and its current use case(s).
  *
  * @param array1
  * @param array2
