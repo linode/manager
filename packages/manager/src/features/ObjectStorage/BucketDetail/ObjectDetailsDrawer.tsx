@@ -75,7 +75,7 @@ const ObjectDetailsDrawer: React.FC<Props> = (props) => {
           {readableBytes(size).formatted}
         </Typography>
       ) : null}
-      {formattedLastModified ? (
+      {formattedLastModified && Boolean(profile) ? (
         <Typography variant="subtitle2" data-testid="lastModified">
           Last modified: {formattedLastModified}
         </Typography>
