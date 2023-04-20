@@ -1,7 +1,7 @@
 import React from 'react';
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { wrapWithTheme } from '../src/utilities/testHelpers';
-import { useDarkMode } from 'storybook-dark-mode-v7';
+import { useDarkMode } from 'storybook-dark-mode';
 import { DocsContainer as BaseContainer } from '@storybook/addon-docs';
 import { themes } from '@storybook/theming';
 import '../public/fonts/fonts.css';
