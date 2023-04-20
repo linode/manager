@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - @linode/validation version badge Label in `README.md` #9011
 - Event entities should only be linked for true labels
 - Radio button hover effect #9031
+- Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
 
 ### Tech Stories:
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995

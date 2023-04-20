@@ -166,6 +166,13 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   const [submitting, setSubmitting] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
 
+  React.useEffect(() => {
+    // Not using onReset here because we don't want to reset the IPs.
+    // User may want to keep their selection after closing the modal to check their IP addresses table.
+    setError(undefined);
+    setSuccessMessage('');
+  }, [open]);
+
   const handleInputChange = React.useRef(
     debounce(500, false, (_searchText: string) => {
       setSearchText(_searchText);
@@ -292,7 +299,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     ];
 
     return (
-      <Grid container key={state.sourceIP}>
+      <Grid container key={state.sourceIP} spacing={2}>
         <Grid xs={12}>
           <Divider spacingBottom={0} />
         </Grid>
@@ -434,6 +441,16 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     setSubmitting(true);
     setError(undefined);
     setSuccessMessage('');
+
+    const noActionSelected = !Object.values(ips).find(
+      (ip) => ip.mode !== 'none'
+    );
+    if (noActionSelected) {
+      setError([{ reason: 'Please select an action.' }]);
+      setSubmitting(false);
+
+      return;
+    }
 
     assignAddresses(createRequestData(ips, props.linodeRegion))
       .then(() => {
