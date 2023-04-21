@@ -13,7 +13,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Tabs from 'src/components/core/ReachTabs';
 import TabPanels from 'src/components/core/ReachTabPanels';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import generateCurlCommand from 'src/utilities/generate-cURL';
 import generateCLICommand from 'src/utilities/generate-cli';
 

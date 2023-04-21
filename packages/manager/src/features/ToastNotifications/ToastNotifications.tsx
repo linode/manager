@@ -8,7 +8,7 @@ import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import Link from 'src/components/Link';
 import { events$ } from 'src/events';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 
 interface ToastOptions {
   enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'];

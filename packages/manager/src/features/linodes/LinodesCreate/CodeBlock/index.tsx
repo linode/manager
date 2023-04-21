@@ -1,7 +1,7 @@
 import React from 'react';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import CopyTooltip from 'src/components/CopyTooltip';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { useCodeBlockStyles } from './styles';
 export interface Props {
   command: string;

@@ -27,7 +27,7 @@ import {
   updateBucket,
   useObjectBucketDetailsInfiniteQuery,
 } from 'src/queries/objectStorage';
-import { sendDownloadObjectEvent } from 'src/utilities/ga';
+import { sendDownloadObjectEvent } from 'src/utilities/analytics';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 import ObjectUploader from '../ObjectUploader';

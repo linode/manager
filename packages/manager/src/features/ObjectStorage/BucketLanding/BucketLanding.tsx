@@ -30,7 +30,7 @@ import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
   sendObjectStorageDocsEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 import CancelNotice from '../CancelNotice';
 import BucketDetailsDrawer from './BucketDetailsDrawer';

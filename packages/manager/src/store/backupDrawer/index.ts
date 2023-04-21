@@ -6,7 +6,7 @@ import { Reducer } from 'redux';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { sendBackupsEnabledEvent } from 'src/utilities/ga';
+import { sendBackupsEnabledEvent } from 'src/utilities/analytics';
 import { ThunkActionCreator } from '../types';
 import {
   queryKey,

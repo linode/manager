@@ -26,7 +26,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateVolumeEvent } from 'src/utilities/ga';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
 import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';

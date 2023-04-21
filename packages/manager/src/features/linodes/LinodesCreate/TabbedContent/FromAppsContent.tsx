@@ -27,7 +27,7 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { oneClickApps, AppCategory } from 'src/features/OneClickApps/FakeSpec';
-import { sendMarketplaceSearchEvent } from 'src/utilities/ga';
+import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
 
 type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
 

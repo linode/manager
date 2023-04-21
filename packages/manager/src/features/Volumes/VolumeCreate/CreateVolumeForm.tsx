@@ -35,7 +35,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateVolumeEvent } from 'src/utilities/ga';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
 import ConfigSelect, {

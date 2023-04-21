@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Dialog from 'src/components/Dialog';
 import CopyTooltip from '../CopyTooltip';
-import { sendCLIClickEvent } from 'src/utilities/ga';
+import { sendCLIClickEvent } from 'src/utilities/analytics';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {

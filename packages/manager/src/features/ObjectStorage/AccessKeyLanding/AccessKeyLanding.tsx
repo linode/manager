@@ -17,7 +17,7 @@ import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 import AccessKeyDrawer from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';

@@ -19,7 +19,7 @@ import {
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 
 const useStyles = makeStyles((theme: Theme) => ({
   placeholderAdjustment: {

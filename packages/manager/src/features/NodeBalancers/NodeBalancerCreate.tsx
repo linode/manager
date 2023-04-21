@@ -20,7 +20,7 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
+import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';

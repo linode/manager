@@ -4,7 +4,7 @@ import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import PageButton from 'src/components/PaginationControls/PageButton';
-import { sendPaginationEvent } from 'src/utilities/ga';
+import { sendPaginationEvent } from 'src/utilities/analytics';
 import PageNumbers from './PageNumbers';
 
 type CSSClasses = 'root';

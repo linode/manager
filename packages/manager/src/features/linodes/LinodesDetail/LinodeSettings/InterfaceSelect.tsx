@@ -7,7 +7,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'src/components/TextField';
 import { useVlansQuery } from 'src/queries/vlans';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const useStyles = makeStyles((theme: Theme) => ({

@@ -33,7 +33,7 @@ import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';

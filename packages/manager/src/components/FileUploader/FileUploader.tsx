@@ -17,7 +17,7 @@ import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUpload
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { redirectToLogin } from 'src/session';
 import { setPendingUpload } from 'src/store/pendingUpload';
-import { sendImageUploadEvent } from 'src/utilities/ga';
+import { sendImageUploadEvent } from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 import {
   curriedObjectUploaderReducer,

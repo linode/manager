@@ -21,7 +21,7 @@ import {
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import AppsSection from './AppsSection';
 import LinksSection from './LinksSection';
 import LinksSubSection from './LinksSubSection';

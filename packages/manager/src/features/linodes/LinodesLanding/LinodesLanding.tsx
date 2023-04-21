@@ -34,7 +34,7 @@ import formatDate, { formatDateISO } from 'src/utilities/formatDate';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';

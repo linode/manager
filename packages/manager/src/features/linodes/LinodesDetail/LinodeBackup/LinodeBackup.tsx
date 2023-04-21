@@ -49,7 +49,7 @@ import {
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { ExtendedType } from 'src/utilities/extendType';
 import { formatDate } from 'src/utilities/formatDate';
-import { sendBackupsDisabledEvent } from 'src/utilities/ga';
+import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 import { initWindows } from 'src/utilities/initWindows';

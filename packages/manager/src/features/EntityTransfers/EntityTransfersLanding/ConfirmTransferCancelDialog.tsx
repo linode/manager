@@ -13,7 +13,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { queryKey } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendEntityTransferCancelEvent } from 'src/utilities/ga';
+import { sendEntityTransferCancelEvent } from 'src/utilities/analytics';
 import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles(() => ({

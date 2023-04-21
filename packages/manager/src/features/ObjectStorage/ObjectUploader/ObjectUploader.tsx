@@ -8,7 +8,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { updateBucket } from 'src/queries/objectStorage';
-import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
+import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { debounce } from 'throttle-debounce';
 import { uploadObject } from '../requests';

@@ -26,7 +26,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
 
