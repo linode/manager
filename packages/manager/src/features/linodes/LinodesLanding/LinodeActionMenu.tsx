@@ -19,7 +19,6 @@ import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import {
-  sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
 } from 'src/utilities/analytics';
@@ -122,8 +121,6 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
           setHasMadeConfigsRequest(true);
         });
     }
-
-    sendLinodeActionEvent();
   };
 
   const handlePowerAction = () => {

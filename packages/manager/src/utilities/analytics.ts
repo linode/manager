@@ -30,16 +30,7 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
 };
 
 // LinodeActionMenu.tsx
-export const sendLinodeActionEvent = (): void => {
-  // AC 8/26/2020: disabling this event to reduce hits on GA as this seems to not be used
-  // sendEvent({
-  //   category: 'Linode Action Menu',
-  //   action: 'Open Action Menu'
-  // });
-};
-
-// LinodeActionMenu.tsx
-// LinodeCard.tsx
+// LinodeEntityDetail.tsx
 export const sendLinodeActionMenuItemEvent = (eventAction: string): void => {
   sendEvent({
     category: 'Linode Action Menu Item',
@@ -72,7 +63,7 @@ export const sendCreateVolumeEvent = (
   });
 };
 
-// For DOMAINS
+// CreateDomain.tsx
 export const sendCreateDomainEvent = (
   eventLabel: string,
   eventAction?: string
@@ -84,54 +75,7 @@ export const sendCreateDomainEvent = (
   });
 };
 
-// getAll.ts
-export const sendFetchAllEvent = (
-  eventLabel: string,
-  eventValue: number
-): void => {
-  sendEvent({
-    category: 'Search',
-    action: 'Data fetch all entities',
-    label: eventLabel,
-    value: eventValue,
-  });
-};
-
-// TagImportDrawer.tsx
-export const sendImportDisplayGroupSubmitEvent = (
-  eventLabel: string,
-  eventValue: number
-): void => {
-  sendEvent({
-    category: 'dashboard',
-    action: 'import display groups',
-    label: eventLabel,
-    value: eventValue,
-  });
-};
-
-// LinodeThemeWrapper.tsx
-export const sendSpacingToggleEvent = (eventLabel: string): void => {
-  // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
-  // sendEvent({
-  //   category: 'Theme Choice',
-  //   action: 'Spacing Toggle',
-  //   label: eventLabel
-  // });
-};
-
-// LinodeThemeWrapper.tsx
-export const sendThemeToggleEvent = (): void => {
-  // AC 9/24/2020: disabling this event to reduce hits on GA as this seems to not be used
-  // sendEvent({
-  //   category: 'Theme Choice',
-  //   action: 'Theme Toggle',
-  //   label: eventLabel
-  // });
-};
-
 // backupDrawer/index.ts
-// LinodeBackup.tsx
 export const sendBackupsEnabledEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'Backups',
@@ -149,10 +93,7 @@ export const sendBackupsDisabledEvent = (): void => {
   });
 };
 
-// NodeBalancersLanding.tsx
-// DomainsLanding.tsx
 // LinodesLanding.tsx
-// VolumesLanding.tsx
 export const sendGroupByTagEnabledEvent = (
   eventCategory: string,
   eventLabel: boolean
@@ -197,6 +138,7 @@ export const sendCreateLinodeEvent = (
   });
 };
 
+// TODO: not used, determine if it should be or can be removed
 // CreateBucketForm.tsx
 export const sendCreateBucketEvent = (eventLabel: string): void => {
   sendEvent({
@@ -215,6 +157,7 @@ export const sendDeleteBucketEvent = (eventLabel: string): void => {
   });
 };
 
+// BucketsLanding.tsx
 export const sendDeleteBucketFailedEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'Object Storage',
@@ -248,8 +191,9 @@ export const sendRevokeAccessKeyEvent = (): void => {
 };
 
 /**
- * meant to be sent to GA upon navigating to `/linodes/${linodeID}/migrate`
+ * meant to be sent to AA upon navigating to `/linodes/${linodeID}/migrate`
  */
+// LinodeActionMenu.tsx
 export const sendMigrationNavigationEvent = (
   pathNavigatedFrom: string
 ): void => {
@@ -259,6 +203,7 @@ export const sendMigrationNavigationEvent = (
   });
 };
 
+// MigrateLinode.tsx
 export const sendMigrationInitiatedEvent = (
   sourceRegionLabel: string,
   destRegionLabel: string,
@@ -289,6 +234,7 @@ export const generateTimeOfDay = (currentHour: number): string => {
   return currentTimeOfDay;
 };
 
+// DisableDomainDialog.tsx
 export const sendDomainStatusChangeEvent = (
   action: 'Enable' | 'Disable'
 ): void => {
@@ -298,6 +244,7 @@ export const sendDomainStatusChangeEvent = (
   });
 };
 
+// BucketDetail.tsx
 export const sendDownloadObjectEvent = (): void => {
   sendEvent({
     category: 'Object Storage',
@@ -305,6 +252,7 @@ export const sendDownloadObjectEvent = (): void => {
   });
 };
 
+// ObjectUploader.tsx
 export const sendObjectsQueuedForUploadEvent = (numObjects: number): void => {
   sendEvent({
     category: 'Object Storage',
@@ -313,6 +261,7 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number): void => {
   });
 };
 
+// EntityTransferCreate.tsx
 export const sendEntityTransferCreateEvent = (label: string): void => {
   sendEvent({
     // eslint-disable-next-line
@@ -322,6 +271,7 @@ export const sendEntityTransferCreateEvent = (label: string): void => {
   });
 };
 
+// ConfirmTransferDialog.tsx
 export const sendEntityTransferReceiveEvent = (label: string): void => {
   sendEvent({
     category: 'Service Transfer',
@@ -330,6 +280,7 @@ export const sendEntityTransferReceiveEvent = (label: string): void => {
   });
 };
 
+// ConfirmTransferCancelDialog.tsx
 export const sendEntityTransferCancelEvent = (): void => {
   sendEvent({
     category: 'Service Transfer',
@@ -337,6 +288,7 @@ export const sendEntityTransferCancelEvent = (): void => {
   });
 };
 
+// ConfirmTransferSuccessDialog.tsx
 export const sendEntityTransferCopyTokenEvent = (): void => {
   sendEvent({
     category: 'Entity Transfer',
@@ -344,6 +296,7 @@ export const sendEntityTransferCopyTokenEvent = (): void => {
   });
 };
 
+// CreateTransferSuccessDialog.tsx
 export const sendEntityTransferCopyDraftEmailEvent = (): void => {
   sendEvent({
     category: 'Entity Transfer',
@@ -351,6 +304,7 @@ export const sendEntityTransferCopyDraftEmailEvent = (): void => {
   });
 };
 
+// DocsLink.tsx
 export const sendHelpButtonClickEvent = (url: string, from?: string) => {
   if (from === 'Object Storage Landing') {
     sendObjectStorageDocsEvent('Docs');
@@ -363,6 +317,7 @@ export const sendHelpButtonClickEvent = (url: string, from?: string) => {
   });
 };
 
+// LinodeCLIModal.tsx
 export const sendCLIClickEvent = (action: string) => {
   sendEvent({
     category: 'Linode CLI Prompt',
@@ -370,6 +325,7 @@ export const sendCLIClickEvent = (action: string) => {
   });
 };
 
+// FileUploader.tsx
 export const sendImageUploadEvent = (action: string, imageSize: string) => {
   sendEvent({
     category: 'Image Upload',
@@ -378,6 +334,9 @@ export const sendImageUploadEvent = (action: string, imageSize: string) => {
   });
 };
 
+// SelectRegionPanel.tsx
+// SMTPRestrictionHelperText.tsx
+// InterfaceSelect.tsx
 export const sendLinodeCreateDocsEvent = (action: string) => {
   sendEvent({
     category: 'Linode Create Contextual Help',
@@ -385,6 +344,7 @@ export const sendLinodeCreateDocsEvent = (action: string) => {
   });
 };
 
+// BucketLanding.tsx
 export const sendObjectStorageDocsEvent = (action: string) => {
   sendEvent({
     category: 'Object Storage Landing Contextual Help',
@@ -392,6 +352,7 @@ export const sendObjectStorageDocsEvent = (action: string) => {
   });
 };
 
+// FromAppsContent.tsx
 export const sendMarketplaceSearchEvent = (appCategory?: string) => {
   sendEvent({
     category: 'Marketplace Create Flow',
