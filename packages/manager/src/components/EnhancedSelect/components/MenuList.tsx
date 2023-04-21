@@ -11,7 +11,7 @@ const Menu: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <reactSelectComponents.MenuList {...props}>
-        {props.children}
+        <div data-qa-autocomplete-popper>{props.children}</div>
       </reactSelectComponents.MenuList>
       {guidance !== undefined && <Guidance text={guidance} />}
     </React.Fragment>
