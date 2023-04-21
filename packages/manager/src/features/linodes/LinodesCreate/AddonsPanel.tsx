@@ -217,6 +217,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
               className={classes.label}
               control={
                 <CheckBox
+                  data-testid="private_ip"
                   checked={isPrivateIPChecked}
                   onChange={() => changePrivateIP()}
                   data-qa-check-private-ip
