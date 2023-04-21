@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Typography from 'src/components/core/Typography';
