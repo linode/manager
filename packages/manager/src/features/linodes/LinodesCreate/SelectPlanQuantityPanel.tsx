@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -13,7 +13,6 @@ import Typography from 'src/components/core/Typography';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
@@ -91,27 +90,24 @@ const styles = (theme: Theme) =>
     },
   });
 
-export interface ExtendedTypeWithCount extends ExtendedType {
-  count: number;
-}
-
 interface Props {
-  types: ExtendedTypeWithCount[];
+  types: ExtendedType[];
+  getTypeCount: (planId: string) => number;
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
-  selectedDiskSize?: number;
   currentPlanHeading?: string;
   disabled?: boolean;
   header?: string;
   copy?: string;
-  submitForm?: (key: string, value: number) => void;
+  onAdd?: (key: string, value: number) => void;
   addPool?: (pool?: CreateNodePoolData) => void;
-  isOnCreate?: boolean;
-  updatePlanCount: any;
+  updatePlanCount: (planId: string, newCount: number) => void;
   isSubmitting?: boolean;
   resetValues: () => void;
 }
+
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const getNanodes = (types: ExtendedType[]) =>
   types.filter((t) => /nanode/.test(t.class));
@@ -128,20 +124,23 @@ const getDedicated = (types: ExtendedType[]) =>
 const getGPU = (types: ExtendedType[]) =>
   types.filter((t) => /gpu/.test(t.class));
 
-export class SelectPlanPanel extends React.Component<
-  Props & WithStyles<ClassNames>
-> {
+const getPremium = (types: ExtendedType[]) =>
+  types.filter((t) => /premium/.test(t.class));
+
+export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
-  renderSelection = (type: ExtendedTypeWithCount, idx: number) => {
+  renderSelection = (type: ExtendedType, idx: number) => {
     const {
       selectedID,
       disabled,
       classes,
-      submitForm,
-      isOnCreate,
+      onAdd,
       updatePlanCount,
+      getTypeCount,
     } = this.props;
+
+    const count = getTypeCount(type.id);
 
     // We don't want network information for LKE so we remove the last two elements.
     const subHeadings = type.subHeadings.slice(0, -2);
@@ -150,14 +149,14 @@ export class SelectPlanPanel extends React.Component<
       <Grid xs={12}>
         <div className={classes.enhancedInputOuter}>
           <EnhancedNumberInput
-            value={type.count}
+            value={count}
             setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
           />
-          {isOnCreate && (
+          {onAdd && (
             <Button
               buttonType="primary"
-              onClick={() => submitForm!(type.id, type.count)}
-              disabled={type.count < 1}
+              onClick={() => onAdd(type.id, count)}
+              disabled={count < 1}
               className={classes.enhancedInputButton}
             >
               Add
@@ -198,21 +197,21 @@ export class SelectPlanPanel extends React.Component<
               <div className={classes.enhancedInputOuter}>
                 <EnhancedNumberInput
                   inputLabel={`edit-quantity-${type.id}`}
-                  value={type.count}
+                  value={count}
                   setValue={(newCount: number) =>
                     updatePlanCount(type.id, newCount)
                   }
                   disabled={
                     // When on the add pool flow, we only want the current input to be active,
                     // unless we've just landed on the form or all the inputs are empty.
-                    !isOnCreate && Boolean(selectedID) && type.count < 1
+                    !onAdd && Boolean(selectedID) && type.id !== selectedID
                   }
                 />
-                {isOnCreate && (
+                {onAdd && (
                   <Button
                     buttonType="primary"
-                    onClick={() => submitForm!(type.id, type.count)}
-                    disabled={type.count < 1}
+                    onClick={() => onAdd(type.id, count)}
+                    disabled={count < 1}
                     className={classes.enhancedInputButton}
                   >
                     Add
@@ -279,13 +278,14 @@ export class SelectPlanPanel extends React.Component<
   };
 
   createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes, types, isOnCreate } = this.props;
+    const { classes, types, onAdd } = this.props;
     const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
+    const premium = getPremium(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
@@ -296,7 +296,7 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              {isOnCreate && (
+              {onAdd && (
                 <Typography data-qa-dedicated className={classes.copy}>
                   Dedicated CPU instances are good for full-duty workloads where
                   consistent performance is important.
@@ -334,7 +334,7 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              {isOnCreate && (
+              {onAdd && (
                 <Typography data-qa-highmem className={classes.copy}>
                   High Memory instances favor RAM over other resources, and can
                   be good for memory hungry use cases like caching and in-memory
@@ -357,7 +357,7 @@ export class SelectPlanPanel extends React.Component<
           return (
             <>
               <Notice warning>{programInfo}</Notice>
-              {isOnCreate && (
+              {onAdd && (
                 <Typography data-qa-gpu className={classes.copy}>
                   Linodes with dedicated GPUs accelerate highly specialized
                   applications such as machine learning, AI, and video
@@ -371,6 +371,28 @@ export class SelectPlanPanel extends React.Component<
         title: 'GPU',
       });
       tabOrder.push('gpu');
+    }
+
+    if (!isEmpty(premium)) {
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Notice warning>
+                This plan is only available in the Washington, DC region.
+              </Notice>
+              <Typography data-qa-gpu className={classes.copy}>
+                Premium CPU instances guarantee a minimum processor model, AMD
+                Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
+                performance for more demanding workloads.
+              </Typography>
+              {this.renderPlanContainer(premium)}
+            </>
+          );
+        },
+        title: 'Premium',
+      });
+      tabOrder.push('premium');
     }
 
     return [tabs, tabOrder];
@@ -392,18 +414,14 @@ export class SelectPlanPanel extends React.Component<
 
     // Determine initial plan category tab based on current plan selection
     // (if there is one).
-    let selectedTypeClass: LinodeTypeClass = pathOr(
-      'dedicated', // Use `dedicated` by default
-      ['class'],
+    const _selectedTypeClass: LinodeTypeClass =
       types.find(
         (type) => type.id === selectedID || type.heading === currentPlanHeading
-      )
-    );
+      )?.class ?? 'dedicated';
 
     // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
-    if (selectedTypeClass === 'nanode') {
-      selectedTypeClass = 'standard';
-    }
+    const selectedTypeClass: LinodeTypeClass =
+      _selectedTypeClass === 'nanode' ? 'standard' : _selectedTypeClass;
 
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
@@ -423,10 +441,4 @@ export class SelectPlanPanel extends React.Component<
 
 const styled = withStyles(styles);
 
-export default compose<
-  Props & WithStyles<ClassNames>,
-  Props & RenderGuardProps
->(
-  RenderGuard,
-  styled
-)(SelectPlanPanel);
+export default compose<CombinedProps, Props>(styled)(SelectPlanQuantityPanel);

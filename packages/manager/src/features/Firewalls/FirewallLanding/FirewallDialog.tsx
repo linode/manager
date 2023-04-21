@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
@@ -59,7 +59,7 @@ const FirewallDialog = (props: Props) => {
   };
 
   return (
-    <Dialog
+    <ConfirmationDialog
       open={open}
       title={`${capitalize(mode)} Firewall ${label}?`}
       onClose={onClose}
@@ -80,7 +80,7 @@ const FirewallDialog = (props: Props) => {
       }
     >
       Are you sure you want to {mode} this Firewall?
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 
