@@ -294,7 +294,10 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       <div className={classes.canvasContainer}>
         <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
-      <AccessibleGraphData chartInstance={chartInstance.current} />
+      <AccessibleGraphData
+        chartInstance={chartInstance.current}
+        ariaLabel={ariaLabel}
+      />
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table
