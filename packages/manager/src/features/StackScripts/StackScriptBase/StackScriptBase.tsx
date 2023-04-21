@@ -23,7 +23,6 @@ import {
 import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -374,8 +373,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         isSearching: true, // wether to show the loading spinner in search bar
         didSearch: true, // table will show default empty state unless didSearch is true
       });
-
-      sendStackscriptsSearchEvent(lowerCaseValue);
 
       request({ page: 1, page_size: 50 }, { ...filter, ...currentFilter })
         .then((response: any) => {

@@ -257,9 +257,7 @@ const NodeBalancerCreate = () => {
       .then((nodeBalancer) => {
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // GA Event
-        sendCreateNodeBalancerEvent(
-          `${nodeBalancer.label}: ${nodeBalancer.region}`
-        );
+        sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
       .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
