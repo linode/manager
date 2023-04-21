@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import Currency from './Currency';
+import { Currency } from './Currency';
 
 describe('Currency Component', () => {
   it('displays a given quantity in USD', () => {
