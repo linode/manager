@@ -1,5 +1,4 @@
-import { event } from 'react-ga';
-import { GA_ID, ADOBE_ANALYTICS_URL } from 'src/constants';
+import { ADOBE_ANALYTICS_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
 interface AnalyticsEvent {
@@ -28,9 +27,6 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
         'An error occurred when tracking a custom event. Adobe Launch script not loaded correctly; no analytics will be sent.',
     });
   }
-
-  /** only send events if we have a GA ID */
-  return !!GA_ID ? event(eventPayload) : undefined;
 };
 
 // LinodeActionMenu.tsx

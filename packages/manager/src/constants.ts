@@ -63,9 +63,6 @@ export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 export const SENTRY_URL = import.meta.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
-/** Google Analytics and Tag Manager */
-export const GA_ID = import.meta.env.REACT_APP_GA_ID;
-export const GTM_ID = import.meta.env.REACT_APP_GTM_ID;
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
