@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface AddonsPanelProps {
   backups: boolean;
   accountBackups: boolean;
   backupsMonthly?: number | null;
@@ -66,8 +66,6 @@ interface Props {
   selectedLinodeID?: number;
   linodesData?: Linode[];
 }
-
-export type AddonsPanelProps = Props;
 
 export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
