@@ -18,10 +18,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - @linode/validation version badge Label in `README.md` #9011
 - Event entities should only be linked for true labels
 - Radio button hover effect #9031
+- Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
 
 ### Tech Stories:
+- MUIv5 Migration - Components > CircleProgress #9028
+- MUIv5 Migration - Components > StatusIcon #9014
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
+- MUIv5 Migration - Components > Currency #9030
+- MUIv5 Migration - Components > DisplayPrice #9022
+- MUIv5 Migration - Components > CreateLinodeDisabled #9015
+- MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
 - MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
 
 ## [2023-04-18] - v1.91.1

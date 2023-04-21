@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import NotFound from 'src/components/NotFound';
 import { useDomainQuery } from 'src/queries/domains';
 import ErrorState from 'src/components/ErrorState';

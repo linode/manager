@@ -1,7 +1,7 @@
 import { DatabaseInstance } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';

@@ -2,7 +2,7 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { useQueryClient } from 'react-query';
 import Plus from 'src/assets/icons/plusSign.svg';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
 import Tag from 'src/components/Tag';
 import Typography from 'src/components/core/Typography';
