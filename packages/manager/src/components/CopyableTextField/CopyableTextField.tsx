@@ -29,14 +29,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-type Props = TextFieldProps & {
+type CopyableTextFieldProps = TextFieldProps & {
   className?: string;
   hideIcon?: boolean;
 };
 
-type CombinedProps = Props;
-
-export const CopyableTextField = (props: CombinedProps) => {
+export const CopyableTextField = (props: CopyableTextFieldProps) => {
   const { classes } = useStyles();
   const { value, className, hideIcon, ...restProps } = props;
 
