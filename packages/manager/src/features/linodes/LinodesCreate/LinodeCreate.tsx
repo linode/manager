@@ -45,7 +45,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { sendEvent } from 'src/utilities/ga';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
-import AddonsPanel from './AddonsPanel';
+import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
 import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';

@@ -67,8 +67,9 @@ interface Props {
   linodesData?: Linode[];
 }
 
-type CombinedProps = Props;
-const AddonsPanel = (props: CombinedProps) => {
+export type AddonsPanelProps = Props;
+
+export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
     accountBackups,
     changeBackups,
@@ -229,7 +230,7 @@ const AddonsPanel = (props: CombinedProps) => {
       </Paper>
     </>
   );
-};
+});
 
 const getVlanDisabledReason = (
   isBareMetal: boolean,
@@ -245,5 +246,3 @@ const getVlanDisabledReason = (
   }
   return undefined;
 };
-
-export default React.memo(AddonsPanel);
