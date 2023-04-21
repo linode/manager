@@ -87,16 +87,6 @@ export const sendCreateDomainEvent = (
   });
 };
 
-// PanelContent.tsx
-// StackScriptBase.tsx
-export const sendStackscriptsSearchEvent = (eventLabel: string): void => {
-  sendEvent({
-    category: 'stackscripts',
-    action: 'search',
-    label: eventLabel,
-  });
-};
-
 // getAll.ts
 export const sendFetchAllEvent = (
   eventLabel: string,
@@ -326,14 +316,6 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number): void => {
   });
 };
 
-export const sendSearchBarUsedEvent = (): void => {
-  sendEvent({
-    category: 'Search',
-    action: 'Search Select',
-    label: window.location.pathname,
-  });
-};
-
 export const sendEntityTransferCreateEvent = (label: string): void => {
   sendEvent({
     // eslint-disable-next-line
@@ -413,15 +395,10 @@ export const sendObjectStorageDocsEvent = (action: string) => {
   });
 };
 
-type TypeOfSearch = 'Search Field' | 'Category Dropdown';
-
-export const sendMarketplaceSearchEvent = (
-  typeOfSearch: TypeOfSearch,
-  appCategory?: string
-) => {
+export const sendMarketplaceSearchEvent = (appCategory?: string) => {
   sendEvent({
     category: 'Marketplace Create Flow',
-    action: typeOfSearch,
+    action: 'Category Dropdown',
     label: appCategory,
   });
 };

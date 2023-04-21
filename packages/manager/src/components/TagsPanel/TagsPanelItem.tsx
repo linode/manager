@@ -1,6 +1,4 @@
-import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
 import Tag, { TagProps } from 'src/components/Tag';
 
 interface Props extends TagProps {
@@ -27,20 +25,11 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
     onDelete(this.props.tagLabel);
   };
 
-  renderIcon = () => {
-    return !this.props.loading ? (
-      <Close data-qa-delete-tag />
-    ) : (
-      <CircleProgress mini tag />
-    );
-  };
-
   render() {
-    const { tagLabel, loading, onDelete, ...restOfProps } = this.props;
+    const { onDelete, ...restOfProps } = this.props;
     return (
       <Tag
         {...(restOfProps as any)}
-        deleteIcon={this.renderIcon()}
         onDelete={onDelete ? this.handleDelete : undefined}
         component={'button' as 'div'}
         colorVariant="lightBlue"

@@ -34,7 +34,7 @@ import LabelField from './LabelField';
 import { modes } from './modes';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
-import PricePanel from './PricePanel';
+import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
@@ -117,7 +117,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               `Volume scheduled for creation.`
             );
             // GA Event
-            sendCreateVolumeEvent(`${label}: ${size}GB`, origin);
+            sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;

@@ -315,7 +315,6 @@ export const CreateCluster = () => {
                 typesLoading,
                 classes,
               ]}
-              isOnCreate
             />
           </Box>
         </Paper>

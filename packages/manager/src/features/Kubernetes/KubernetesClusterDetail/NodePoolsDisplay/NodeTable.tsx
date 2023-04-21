@@ -13,7 +13,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import StatusIcon from 'src/components/StatusIcon';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';

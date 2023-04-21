@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 
 interface State {
   loading: boolean;

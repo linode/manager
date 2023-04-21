@@ -12,7 +12,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
@@ -257,9 +257,7 @@ const NodeBalancerCreate = () => {
       .then((nodeBalancer) => {
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // GA Event
-        sendCreateNodeBalancerEvent(
-          `${nodeBalancer.label}: ${nodeBalancer.region}`
-        );
+        sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
       .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);

@@ -1,5 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import StatusIcon from './StatusIcon';
+import { StatusIcon } from './StatusIcon';
 
 <Meta title="Elements/Status Icons" component={StatusIcon} />
 
@@ -8,7 +8,22 @@ export const StatusIconTemplate = (args) => <StatusIcon {...args} />;
 # Status Icons
 
 <Canvas>
-  <Story name="Status Icons">{StatusIconTemplate.bind({})}</Story>
+  <Story
+    name="Status Icons"
+    args={{
+      status: 'active',
+      pulse: false,
+    }}
+    argTypes={{
+      status: {
+        description: 'Status of the icon',
+        options: ['error', 'other', 'active', 'inactive'],
+        control: { type: 'radio' },
+      },
+    }}
+  >
+    {StatusIconTemplate.bind({})}
+  </Story>
 </Canvas>
 
 <ArgsTable story="Status Icons" sort="requiredFirst"/>
