@@ -34,7 +34,6 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
 
-
     /* Backwards Compatability */
     "suppressImplicitAnyIndexErrors": true,
     "ignoreDeprecations": "5.0",
