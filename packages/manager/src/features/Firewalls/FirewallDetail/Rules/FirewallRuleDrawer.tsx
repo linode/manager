@@ -38,7 +38,7 @@ import {
   predefinedFirewallFromRule,
   protocolOptions,
 } from 'src/features/Firewalls/shared';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import {
   ExtendedIP,
   stringToExtendedIP,
