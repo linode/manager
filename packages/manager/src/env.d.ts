@@ -14,6 +14,7 @@ interface ImportMetaEnv {
   REACT_APP_ACCESS_TOKEN?: string;
   REACT_APP_GTM_ID?: string;
   REACT_APP_GA_ID?: string;
+  REACT_APP_ADOBE_ANALYTICS_URL?: string;
   REACT_APP_SENTRY_URL?: string;
   REACT_APP_GPAY_ENV?: 'TEST' | 'PRODUCTION';
   REACT_APP_GPAY_MERCHANT_ID?: string;

@@ -213,7 +213,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             );
             history.push('/volumes');
             // GA Event
-            sendCreateVolumeEvent(`${label}: ${size}GB`, origin);
+            sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
