@@ -90,15 +90,6 @@ export class App extends React.Component<CombinedProps, State> {
     }
 
     /**
-     * Send pageviews unless blocklisted.
-     */
-    this.props.history.listen(({ pathname }) => {
-      if ((window as any).ga) {
-        (window as any).ga('send', 'pageview', pathname);
-      }
-    });
-
-    /**
      * Allow an Easter egg for toggling the theme with
      * a key combination
      */
