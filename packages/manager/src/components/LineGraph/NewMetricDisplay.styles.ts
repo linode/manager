@@ -24,11 +24,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
   createStyles({
     wrapper: {
       display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      '& > div': {
-        flexBasis: '100%',
-      },
+      flexDirection: 'column-reverse',
     },
     container: {
       borderTop: `1px solid ${theme.borderColors.divider}`,

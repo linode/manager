@@ -10,6 +10,11 @@ interface GraphTabledDataProps {
   hiddenDatasets: number[];
 }
 
+/**
+ * This component is used to provide an accessible representation of the data
+ * It does not care about styles, it only cares about presenting the data in bare HTML tables,
+ * visually hidden from the user, yet available to screen readers.
+ */
 const AccessibleGraphData = (props: GraphTabledDataProps) => {
   const { ariaLabel, chartInstance, hiddenDatasets } = props;
 
@@ -54,7 +59,6 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
       !hidden && (
         <table
           key={`accessible-graph-data-table-${tableID}`}
-          style={{ textAlign: 'left' }}
           summary={`This table contains the data for the ${
             ariaLabel ? ariaLabel : label + 'graph.'
           }`}
@@ -66,8 +70,7 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
     );
   });
 
-  // return <Grid sx={visuallyHidden}>{tables}</Grid>;
-  return <Grid>{tables}</Grid>;
+  return <Grid sx={visuallyHidden}>{tables}</Grid>;
 };
 
 export default AccessibleGraphData;

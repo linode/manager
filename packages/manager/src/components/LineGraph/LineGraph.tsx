@@ -285,20 +285,17 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   return (
     // Allow `tabIndex` on `<div>` because it represents an interactive element.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+
+    // Note on markup and styling: the legend is rendered first for accessibility reasons.
+    // Screen readers read from top to bottom, so the legend should be read before the data tables, esp considering their size
+    // and the fact that the legend can filter them.
+    // Meanwhile the CSS uses column-reverse to visually retain the original order
     <div
       className={classes.wrapper}
       tabIndex={tabIndex ?? 0}
       role="graphics-document"
       aria-label={ariaLabel || 'Stats and metrics'}
     >
-      <div className={classes.canvasContainer}>
-        <canvas height={chartHeight || 300} ref={inputEl} />
-      </div>
-      <AccessibleGraphData
-        chartInstance={chartInstance.current}
-        ariaLabel={ariaLabel}
-        hiddenDatasets={hiddenDatasets}
-      />
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table
@@ -396,6 +393,14 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           </Table>
         </div>
       )}
+      <div className={classes.canvasContainer}>
+        <canvas height={chartHeight || 300} ref={inputEl} />
+        <AccessibleGraphData
+          chartInstance={chartInstance.current}
+          ariaLabel={ariaLabel}
+          hiddenDatasets={hiddenDatasets}
+        />
+      </div>
     </div>
   );
 };
