@@ -7,10 +7,11 @@ import { visuallyHidden } from '@mui/utils';
 interface GraphTabledDataProps {
   ariaLabel?: string;
   chartInstance: React.MutableRefObject<any>['current'];
+  hiddenDatasets: number[];
 }
 
 const AccessibleGraphData = (props: GraphTabledDataProps) => {
-  const { ariaLabel, chartInstance } = props;
+  const { ariaLabel, chartInstance, hiddenDatasets } = props;
 
   // This is necessary because the chartInstance is not immediately available
   if (!chartInstance?.config?.data?.datasets) {
@@ -21,6 +22,8 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
 
   const tables = datasets.map((dataset, tableID) => {
     const { label, data } = dataset;
+    const hidden = hiddenDatasets.includes(tableID);
+
     const tableHeader = (
       <tr>
         <th>Time</th>
@@ -48,20 +51,23 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
       });
 
     return (
-      <table
-        key={`accessible-graph-data-table-${tableID}`}
-        style={{ textAlign: 'left' }}
-        summary={`This table contains the data for the ${
-          ariaLabel ? ariaLabel : label + 'graph.'
-        }`}
-      >
-        <thead>{tableHeader}</thead>
-        <tbody>{tableBody}</tbody>
-      </table>
+      !hidden && (
+        <table
+          key={`accessible-graph-data-table-${tableID}`}
+          style={{ textAlign: 'left' }}
+          summary={`This table contains the data for the ${
+            ariaLabel ? ariaLabel : label + 'graph.'
+          }`}
+        >
+          <thead>{tableHeader}</thead>
+          <tbody>{tableBody}</tbody>
+        </table>
+      )
     );
   });
 
-  return <Grid sx={visuallyHidden}>{tables}</Grid>;
+  // return <Grid sx={visuallyHidden}>{tables}</Grid>;
+  return <Grid>{tables}</Grid>;
 };
 
 export default AccessibleGraphData;

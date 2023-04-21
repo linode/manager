@@ -297,6 +297,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       <AccessibleGraphData
         chartInstance={chartInstance.current}
         ariaLabel={ariaLabel}
+        hiddenDatasets={hiddenDatasets}
       />
       {legendRendered && legendRows && (
         <div className={classes.container}>
