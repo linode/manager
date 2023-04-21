@@ -13,6 +13,7 @@ import Button from 'src/components/Button';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import AccessibleGraphData from './AccessibleGraphData';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -293,6 +294,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       <div className={classes.canvasContainer}>
         <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
+      <AccessibleGraphData chartInstance={chartInstance.current} />
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table
