@@ -61,7 +61,6 @@
     "react-csv": "^2.0.3",
     "react-dom": "^17.0.2",
     "react-dropzone": "~11.2.0",
-    "react-ga": "^2.5.3",
     "react-number-format": "^3.5.0",
     "react-page-visibility": "^6.2.0",
     "react-query": "^3.3.2",
