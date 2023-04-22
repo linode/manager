@@ -41,6 +41,7 @@ import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
+import { ADOBE_ANALYTICS_URL } from './constants';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -81,6 +82,11 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidMount() {
     if (import.meta.env.PROD && !import.meta.env.REACT_APP_DISABLE_NEW_RELIC) {
       loadScript('/new-relic.js');
+    }
+
+    // Load Adobe Analytics Launch Script
+    if (!!ADOBE_ANALYTICS_URL) {
+      loadScript(ADOBE_ANALYTICS_URL, { location: 'head' });
     }
 
     /**

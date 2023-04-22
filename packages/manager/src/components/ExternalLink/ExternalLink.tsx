@@ -3,6 +3,7 @@ import OpenInNew from '@mui/icons-material/OpenInNew';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
+import { sanitizeUrl } from '@braintree/sanitize-url';
 
 const useStyles = makeStyles<void, 'icon'>()(
   (theme: Theme, _params, classes) => ({
@@ -77,10 +78,10 @@ const ExternalLink = (props: Props) => {
       target="_blank"
       aria-describedby="external-site"
       rel="noopener noreferrer"
-      href={link}
+      href={sanitizeUrl(link)}
       className={cx(
+        classes.root,
         {
-          [classes.root]: true,
           [classes.absoluteIcon]: absoluteIcon,
           [classes.black]: black,
         },

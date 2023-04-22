@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';

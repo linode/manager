@@ -15,7 +15,7 @@ import {
 import * as React from 'react';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -165,6 +165,13 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   const [successMessage, setSuccessMessage] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
+
+  React.useEffect(() => {
+    // Not using onReset here because we don't want to reset the IPs.
+    // User may want to keep their selection after closing the modal to check their IP addresses table.
+    setError(undefined);
+    setSuccessMessage('');
+  }, [open]);
 
   const handleInputChange = React.useRef(
     debounce(500, false, (_searchText: string) => {
@@ -431,6 +438,16 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     setSubmitting(true);
     setError(undefined);
     setSuccessMessage('');
+
+    const noActionSelected = !Object.values(ips).find(
+      (ip) => ip.mode !== 'none'
+    );
+    if (noActionSelected) {
+      setError([{ reason: 'Please select an action.' }]);
+      setSubmitting(false);
+
+      return;
+    }
 
     assignAddresses(createRequestData(ips, props.linodeRegion))
       .then(() => {

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';

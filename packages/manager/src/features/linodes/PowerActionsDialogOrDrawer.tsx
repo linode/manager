@@ -9,7 +9,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
@@ -145,7 +145,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <Dialog
+    <ConfirmationDialog
       className={classes.dialog}
       open={props.isOpen}
       title={`${props.action} Linode ${props.linodeLabel}?`}
@@ -177,7 +177,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
           </Notice>
         </span>
       )}
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 

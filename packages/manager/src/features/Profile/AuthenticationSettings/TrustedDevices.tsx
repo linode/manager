@@ -9,7 +9,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError/TableRowError';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableSortCell from 'src/components/TableSortCell';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useLinodes } from 'src/hooks/useLinodes';
 import { useAllImagesQuery } from 'src/queries/images';
