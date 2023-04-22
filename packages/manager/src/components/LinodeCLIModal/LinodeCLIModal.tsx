@@ -13,9 +13,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       zIndex: 2,
     },
   },
-  commandAndCopy: {
-    paddingBottom: theme.spacing(4),
-  },
   commandDisplay: {
     display: 'flex',
     alignItems: 'center',
@@ -73,17 +70,15 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
       fullWidth
       className={classes.dialog}
     >
-      <div className={classes.commandAndCopy}>
-        <div className={classes.commandDisplay}>
-          <div className={classes.cliText}>{command}</div>{' '}
-          <CopyTooltip
-            text={command}
-            className={classes.copyIcon}
-            onClickCallback={
-              analyticsKey ? () => sendCLIClickEvent(analyticsKey) : undefined
-            }
-          />
-        </div>
+      <div className={classes.commandDisplay}>
+        <div className={classes.cliText}>{command}</div>{' '}
+        <CopyTooltip
+          text={command}
+          className={classes.copyIcon}
+          onClickCallback={
+            analyticsKey ? () => sendCLIClickEvent(analyticsKey) : undefined
+          }
+        />
       </div>
     </Dialog>
   );
