@@ -8,7 +8,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import Link from 'src/components/Link';
 import CircleProgress from 'src/components/CircleProgress';
@@ -377,7 +377,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
               )}
             </Grid>
             <Grid container justifyContent="flex-end" className="m0">
-              <ActionsPanel>
+              <StyledActionPanel>
                 <Button
                   buttonType="secondary"
                   disabled={submitting || noChoices}
@@ -395,7 +395,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 >
                   Save
                 </Button>
-              </ActionsPanel>
+              </StyledActionPanel>
             </Grid>
           </Grid>
         </>

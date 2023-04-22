@@ -13,7 +13,7 @@ import {
   when,
 } from 'ramda';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   actionsLabel: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none',
     },
   },
@@ -292,16 +292,13 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     ];
 
     return (
-      <Grid container key={state.sourceIP}>
-        <Grid xs={12}>
-          <Divider spacingBottom={0} />
-        </Grid>
+      <Grid container key={state.sourceIP} spacing={2} sx={{ width: '100%' }}>
         <Grid className={classes.sourceIPWrapper}>
           <Typography variant="body1" className={classes.ipField}>
             {state.sourceIP}
           </Typography>
         </Grid>
-        <Grid xs={12} className={classes.autoGridsm}>
+        <Grid className={classes.autoGridsm}>
           <Select
             value={
               state.mode === 'none'
@@ -483,7 +480,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Dialog title="IP Transfer" open={open} onClose={onClose}>
+    <Dialog title="IP Transfer" open={open} onClose={onClose} fullWidth>
       {error && (
         <Grid xs={12}>
           {error.map(({ reason }, idx) => (
@@ -505,7 +502,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           the DNS records.
         </Typography>
       </Grid>
-      <Grid xs={12}>
+      <Grid xs={12} container spacing={2}>
         {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
           <Notice error text={'There was an error loading IPv6 Ranges'} />
         ) : null}
@@ -515,7 +512,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           </div>
         ) : (
           <>
-            <Grid container>
+            <Grid container spacing={2} sx={{ width: '100%' }}>
               <Grid className={classes.ipFieldLabel} data-qa-transfer-ip-label>
                 <Typography>IP Address</Typography>
               </Grid>
@@ -523,18 +520,23 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
                 <Typography>Actions</Typography>
               </Grid>
             </Grid>
+            <Grid xs={12} sx={{ paddingTop: 0 }}>
+              <Divider spacingBottom={0} />
+            </Grid>
             {linodes.length === 0 && searchText === '' ? (
               <Typography className={classes.emptyStateText}>
                 You have no other linodes in this Linode&rsquo;s datacenter with
                 which to transfer IPs.
               </Typography>
             ) : (
-              Object.values(ips).map(ipRow)
+              <Grid container spacing={2} sx={{ width: '100%' }}>
+                {Object.values(ips).map(ipRow)}
+              </Grid>
             )}
           </>
         )}
       </Grid>
-      <ActionsPanel>
+      <StyledActionPanel>
         <Button
           buttonType="secondary"
           disabled={submitting || linodes.length === 0}
@@ -552,7 +554,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         >
           Save
         </Button>
-      </ActionsPanel>
+      </StyledActionPanel>
     </Dialog>
   );
 };

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
@@ -235,7 +235,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
             >
               Add Disk
             </Button>
-            <ActionsPanel>
+            <StyledActionPanel>
               <Button
                 buttonType="primary"
                 disabled={disabled}
@@ -244,7 +244,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
               >
                 Reboot into Rescue Mode
               </Button>
-            </ActionsPanel>
+            </StyledActionPanel>
           </Paper>
         </div>
       )}
