@@ -123,11 +123,11 @@ export const updateEvents = compose(
  *
  */
 export const mostRecentCreated = (
-  latestTime: number,
+  latestTime: number | undefined,
   current: Pick<Event, 'created'>
 ) => {
   const time: number = parseAPIDate(current.created).valueOf(); // Unix time (milliseconds)
-  return latestTime > time ? latestTime : time;
+  return latestTime !== undefined && latestTime > time ? latestTime : time;
 };
 
 /**
@@ -153,7 +153,9 @@ export const isLongPendingEvent = (event: Event): boolean => {
   return status === 'scheduled' && action === 'image_upload';
 };
 
-export const isInProgressEvent = (event: Event) => {
+export const isInProgressEvent = (
+  event: Event
+): event is Event & { percent_complete: number } => {
   const { percent_complete } = event;
   if (percent_complete === null || isLongPendingEvent(event)) {
     return false;
