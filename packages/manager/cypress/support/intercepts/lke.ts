@@ -169,6 +169,44 @@ export const mockDeleteCluster = (
 };
 
 /**
+ * Intercepts POST request to add a node pool and mocks the response.
+ *
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
+ * @param nodePool - Node pool response object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAddNodePool = (
+  clusterId: number,
+  nodePool: KubeNodePoolResponse
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`lke/clusters/${clusterId}/pools`),
+    makeResponse(nodePool)
+  );
+};
+
+/**
+ * Intercepts DELETE request to delete a node pool and mocks the response.
+ *
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
+ * @param nodePoolId - Numeric ID of node pool for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteNodePool = (
+  clusterId: number,
+  nodePoolId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`lke/clusters/${clusterId}/pools/${nodePoolId}`),
+    makeResponse({})
+  );
+};
+
+/**
  * Intercepts DELETE request to reset Kubeconfig and mocks the response.
  *
  * @param clusterId - Numberic ID of LKE cluster for which to mock response.
