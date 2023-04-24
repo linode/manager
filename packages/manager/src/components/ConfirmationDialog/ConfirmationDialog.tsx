@@ -55,7 +55,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       data-qa-dialog
       data-testid="drawer"
     >
-      <DialogTitle title={title} />
+      <DialogTitle title={title} onClose={dialogProps.onClose} />
       <DialogContent data-qa-dialog-content className="dialog-content">
         {children}
         {error && (

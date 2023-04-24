@@ -34,6 +34,7 @@ const DialogTitle = (props: DiaglogTitleProps) => {
           alignItems: 'center',
           display: 'flex',
           justifyContent: 'space-between',
+          position: 'relative',
           width: '100%',
         }}
       >
@@ -44,6 +45,10 @@ const DialogTitle = (props: DiaglogTitleProps) => {
             disableRipple
             onClick={onClose}
             size="large"
+            sx={{
+              position: 'absolute',
+              right: '-12px',
+            }}
           >
             <Close />
           </IconButton>
