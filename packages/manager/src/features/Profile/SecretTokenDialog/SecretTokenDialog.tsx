@@ -62,6 +62,7 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
       onClose={onClose}
       disableEscapeKeyDown
       maxWidth="sm"
+      fullWidth
       actions={actions}
     >
       <Notice
