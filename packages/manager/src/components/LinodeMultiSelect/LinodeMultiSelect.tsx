@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useInfiniteLinodesQuery } from 'src/queries/linodes';
+import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import Autocomplete from '@mui/material/Autocomplete';
 import Popper from '@mui/material/Popper';
 import TextField from 'src/components/TextField';
