@@ -100,10 +100,6 @@ const MigrateLinode = React.memo((props: Props) => {
   const [regionError, setRegionError] = React.useState<string>('');
   const [acceptError, setAcceptError] = React.useState<string>('');
   const [APIError, setAPIError] = React.useState<string>('');
-  const [
-    metadataMigrateWarning,
-    setMetadataMigrateWarning,
-  ] = React.useState<string>('');
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
@@ -124,37 +120,30 @@ const MigrateLinode = React.memo((props: Props) => {
     if (open) {
       setAPIError('');
       setRegionError('');
-      setMetadataMigrateWarning('');
       setConfirmed(false);
       handleSelectRegion(null);
     }
   }, [open]);
 
-  React.useEffect(() => {
+  const metadataMigrateWarning = React.useMemo(() => {
     if (!flags.metadata || !selectedRegion || !linode) {
       return;
     }
-    const currentRegionSupportsMetadata =
+
+    const regionSupportsMetadata = (_region: string) =>
       regionsData
-        ?.find((region) => region.id === linode.region)
+        ?.find((region) => region.id === _region)
         ?.capabilities.includes('Metadata') ?? false;
 
-    const selectedRegionSupportsMetadata =
-      regionsData
-        ?.find((region) => region.id === selectedRegion)
-        ?.capabilities.includes('Metadata') ?? false;
+    const currentRegionSupportsMetadata = regionSupportsMetadata(linode.region);
+    const selectedRegionSupportsMetadata = regionSupportsMetadata(
+      selectedRegion
+    );
 
-    const metadataWarning =
-      currentRegionSupportsMetadata && !selectedRegionSupportsMetadata
-        ? 'The selected Data Center does not support Metadata. If your Linode is rebuilt, it will boot without using any associated User Data.'
-        : undefined;
-
-    if (metadataWarning) {
-      setMetadataMigrateWarning(metadataWarning);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // we only want to update the warning when the selected region changes
-  }, [flags.metadata, regionsData, selectedRegion]);
+    return currentRegionSupportsMetadata && !selectedRegionSupportsMetadata
+      ? 'The selected Data Center does not support Metadata. If your Linode is rebuilt, it will boot without using any associated User Data.'
+      : undefined;
+  }, [flags.metadata, linode, regionsData, selectedRegion]);
 
   if (!linode) {
     return null;
