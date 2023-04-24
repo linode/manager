@@ -4,11 +4,7 @@ import {
   mockGetClusterPools,
   mockGetKubeconfig,
 } from 'support/intercepts/lke';
-import {
-  kubernetesClusterFactory,
-  nodePoolFactory,
-  kubeconfigFactory,
-} from 'src/factories';
+import { kubernetesClusterFactory, nodePoolFactory } from 'src/factories';
 import { regionsMap } from 'support/constants/regions';
 import { readDownload } from 'support/util/downloads';
 import { ui } from 'support/ui';
@@ -80,9 +76,9 @@ describe('LKE landing page', () => {
     const mockClusterNodePools = nodePoolFactory.buildList(2);
     const mockKubeconfigFilename = `${mockCluster.label}-kubeconfig.yaml`;
     const mockKubeconfigContents = '---'; // Valid YAML.
-    const mockKubeconfigResponse = kubeconfigFactory.build({
+    const mockKubeconfigResponse = {
       kubeconfig: btoa(mockKubeconfigContents),
-    });
+    };
 
     mockGetClusters([mockCluster]).as('getClusters');
     mockGetClusterPools(mockCluster.id, mockClusterNodePools).as(
