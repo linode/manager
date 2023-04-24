@@ -111,6 +111,11 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   } = props;
 
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
+  // the chartID is used to associate the chart with the table for accessibility purpose
+  // trying to use a more readable ariaLabel as the chartID, but if it's undefined, we'll generate a random ID
+  const chartID: string = ariaLabel
+    ? ariaLabel.replace(/\s+/g, '-').toLocaleLowerCase()
+    : crypto.randomUUID();
   // is undefined on linode/summary
   const plugins = [
     {
@@ -395,10 +400,12 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           height={chartHeight || 300}
           ref={inputEl}
           role="img"
+          aria-describedby={chartID}
           aria-label={ariaLabel || 'Stats and metrics'}
         />
       </div>
       <AccessibleGraphData
+        id={chartID}
         chartInstance={chartInstance.current}
         ariaLabel={ariaLabel}
         hiddenDatasets={hiddenDatasets}
