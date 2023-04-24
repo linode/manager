@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Added:
+- Metadata
 - Add No Results section for Marketplace Search #8999
 
 ### Changed:
