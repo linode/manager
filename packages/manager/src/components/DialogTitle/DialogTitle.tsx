@@ -1,65 +1,56 @@
-import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-import DialogTitle from 'src/components/core/DialogTitle';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import _DialogTitle from '@mui/material/DialogTitle';
+import Box from '@mui/material/Box';
+import Close from '@mui/icons-material/Close';
+import IconButton from 'src/components/IconButton/IconButton';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  button: {
-    border: 'none',
-    backgroundColor: 'inherit',
-    paddingRight: 0,
-    paddingLeft: 0,
-    cursor: 'pointer',
-    '&:hover': {
-      color: theme.palette.primary.main,
-    },
-  },
-}));
-interface Props {
-  title: string;
+interface DiaglogTitleProps {
   className?: string;
   onClose?: () => void;
+  title: string;
 }
 
-// Accessibility Feature:
-// Focus on modal title on component mount
-
-const _DialogTitle: React.FC<Props> = (props) => {
-  const dialogTitle = React.useRef<HTMLDivElement>(null);
+const DialogTitle = (props: DiaglogTitleProps) => {
+  const ref = React.useRef<HTMLDivElement>(null);
   const { className, onClose, title } = props;
-  const classes = useStyles();
 
   React.useEffect(() => {
-    if (dialogTitle.current !== null) {
-      dialogTitle.current.focus();
+    if (ref.current === null) {
+      return;
     }
+
+    ref.current.focus();
   }, []);
 
   return (
-    <DialogTitle
-      data-qa-dialog-title={title}
-      title={title}
-      tabIndex={0}
+    <_DialogTitle
       className={className}
-      ref={dialogTitle}
+      data-qa-dialog-title={title}
+      ref={ref}
+      title={title}
     >
-      <div className={classes.root}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
         {title}
-        {onClose ? (
-          <button className={classes.button} onClick={onClose}>
+        {onClose != null && (
+          <IconButton
+            aria-label="Close"
+            disableRipple
+            onClick={onClose}
+            size="large"
+          >
             <Close />
-          </button>
-        ) : null}
-      </div>
-    </DialogTitle>
+          </IconButton>
+        )}
+      </Box>
+    </_DialogTitle>
   );
 };
 
-export default _DialogTitle;
+export { DialogTitle };

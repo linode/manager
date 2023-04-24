@@ -5,7 +5,7 @@ import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import DialogTitle from 'src/components/DialogTitle';
+import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -55,7 +55,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       data-qa-dialog
       data-testid="drawer"
     >
-      <DialogTitle className="dialog-title" title={title} />
+      <DialogTitle title={title} />
       <DialogContent data-qa-dialog-content className="dialog-content">
         {children}
         {error && (
