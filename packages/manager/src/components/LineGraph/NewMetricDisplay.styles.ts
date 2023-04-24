@@ -25,6 +25,11 @@ const newMetricDisplayStyles = (theme: Theme) =>
     wrapper: {
       display: 'flex',
       flexDirection: 'column-reverse',
+      flex: 1,
+      width: '100%',
+      '& > div': {
+        width: '100%',
+      },
     },
     container: {
       borderTop: `1px solid ${theme.borderColors.divider}`,

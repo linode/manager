@@ -47,6 +47,7 @@ export interface Props {
   rowHeaders?: Array<string>;
   legendRows?: Array<any>;
   unit?: string;
+  accessibleUnit?: string;
   nativeLegend?: boolean; // Display chart.js native legend
   formatData?: (value: number) => number | null;
   formatTooltip?: (value: number) => string;
@@ -106,6 +107,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     nativeLegend,
     tabIndex,
     unit,
+    accessibleUnit,
   } = props;
 
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -395,12 +397,13 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           role="img"
           aria-label={ariaLabel || 'Stats and metrics'}
         />
-        <AccessibleGraphData
-          chartInstance={chartInstance.current}
-          ariaLabel={ariaLabel}
-          hiddenDatasets={hiddenDatasets}
-        />
       </div>
+      <AccessibleGraphData
+        chartInstance={chartInstance.current}
+        ariaLabel={ariaLabel}
+        hiddenDatasets={hiddenDatasets}
+        accessibleUnit={accessibleUnit}
+      />
     </div>
   );
 };

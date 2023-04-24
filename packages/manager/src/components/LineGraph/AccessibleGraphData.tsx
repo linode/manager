@@ -6,6 +6,7 @@ import { visuallyHidden } from '@mui/utils';
 
 interface GraphTabledDataProps {
   ariaLabel?: string;
+  accessibleUnit?: string;
   chartInstance: React.MutableRefObject<any>['current'];
   hiddenDatasets: number[];
 }
@@ -16,7 +17,7 @@ interface GraphTabledDataProps {
  * visually hidden from the user, yet available to screen readers.
  */
 const AccessibleGraphData = (props: GraphTabledDataProps) => {
-  const { ariaLabel, chartInstance, hiddenDatasets } = props;
+  const { accessibleUnit, ariaLabel, chartInstance, hiddenDatasets } = props;
 
   // This is necessary because the chartInstance is not immediately available
   if (!chartInstance?.config?.data?.datasets) {
@@ -50,7 +51,10 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
                   )
                 : ''}
             </td>
-            <td>{value && Number(value).toFixed(2)}</td>
+            <td>
+              {value && Number(value).toFixed(2)}
+              {accessibleUnit}
+            </td>
           </tr>
         );
       });

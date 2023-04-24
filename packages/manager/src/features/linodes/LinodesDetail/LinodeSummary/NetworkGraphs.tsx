@@ -257,6 +257,7 @@ const Graph: React.FC<GraphProps> = (props) => {
       timezone={timezone}
       chartHeight={chartHeight}
       unit={`/s`}
+      accessibleUnit="Kb/s"
       formatData={convertNetworkData}
       formatTooltip={_formatTooltip}
       showToday={rangeSelection === '24'}
