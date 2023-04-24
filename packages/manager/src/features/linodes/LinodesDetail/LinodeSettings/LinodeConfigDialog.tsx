@@ -11,7 +11,7 @@ import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
@@ -1007,7 +1007,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
           </React.Fragment>
         </DialogContent>
       </Grid>
-      <ActionsPanel>
+      <StyledActionPanel>
         <Button buttonType="secondary" className="cancel" onClick={onClose}>
           Cancel
         </Button>
@@ -1019,7 +1019,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         >
           {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
         </Button>
-      </ActionsPanel>
+      </StyledActionPanel>
     </Dialog>
   );
 };

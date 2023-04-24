@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
@@ -230,7 +230,7 @@ const ApiAwarenessModal = (props: Props) => {
           with programmatic access to the Linode platform.
         </Typography>
       </Notice>
-      <ActionsPanel className={classes.actionPanelStyles}>
+      <StyledActionPanel className={classes.actionPanelStyles}>
         <Button
           buttonType="secondary"
           onClick={onClose}
@@ -239,7 +239,7 @@ const ApiAwarenessModal = (props: Props) => {
         >
           Close
         </Button>
-      </ActionsPanel>
+      </StyledActionPanel>
     </Dialog>
   );
 };
