@@ -1,5 +1,5 @@
 import React from 'react';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Typography from 'src/components/core/Typography';
 import { Token } from '@linode/api-v4/lib/profile/types';

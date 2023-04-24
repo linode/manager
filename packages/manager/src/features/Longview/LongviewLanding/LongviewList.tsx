@@ -1,7 +1,7 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';

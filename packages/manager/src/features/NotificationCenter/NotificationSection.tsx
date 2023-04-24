@@ -2,7 +2,7 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';

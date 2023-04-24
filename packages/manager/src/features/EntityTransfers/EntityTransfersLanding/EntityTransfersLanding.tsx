@@ -10,7 +10,7 @@ import {
 import TransfersTable from '../TransfersTable';
 import CreateTransferSuccessDialog from './CreateTransferSuccessDialog';
 import TransferControls from './TransferControls';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 
 export const EntityTransfersLanding: React.FC<{}> = (_) => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
