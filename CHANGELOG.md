@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUIv5 Migration - Components > StatusIcon #9014
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
+- MUIv5 Migration - Components > Dialog #9020
 - MUIv5 Migration - Components > Currency #9030
 - MUIv5 Migration - Components > DisplayPrice #9022
 - MUIv5 Migration - Components > CreateLinodeDisabled #9015

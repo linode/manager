@@ -1,7 +1,7 @@
 import * as React from 'react';
 import RenderGuard from 'src/components/RenderGuard';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import Box, { BoxProps } from '../core/Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -39,5 +39,11 @@ const ActionPanel = (props: BoxProps) => {
     </Box>
   );
 };
+
+export const StyledActionPanel = styled(ActionPanel)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  marginTop: theme.spacing(2),
+}));
 
 export default RenderGuard(ActionPanel);
