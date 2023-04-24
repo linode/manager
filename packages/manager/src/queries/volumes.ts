@@ -1,7 +1,6 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { Filter, Params } from '@linode/api-v4/src/types';
 import { EventWithStore } from 'src/events';
-import { queryKey as linodesQueryKey } from './linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 import { updateInPaginatedStore } from './base';
 import {
@@ -176,17 +175,6 @@ export const useDetachVolumeMutation = () =>
 export const volumeEventsHandler = ({ event, queryClient }: EventWithStore) => {
   if (['finished', 'failed', 'started'].includes(event.status)) {
     queryClient.invalidateQueries([queryKey]);
-
-    // Volume attach and detach events will expose a secondary_entity
-    // with the Linode's id. This allows us to keep useLinodeVolumesQuery up to date.
-    if (event.secondary_entity?.type === 'linode') {
-      queryClient.invalidateQueries([
-        linodesQueryKey,
-        'linode',
-        event.secondary_entity.id,
-        'volumes',
-      ]);
-    }
   }
 };
 
