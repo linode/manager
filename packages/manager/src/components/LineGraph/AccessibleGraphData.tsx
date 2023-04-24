@@ -72,7 +72,7 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
           id={id}
           key={`accessible-graph-data-table-${tableID}`}
           summary={`This table contains the data for the ${
-            ariaLabel ? ariaLabel : label + 'graph.'
+            ariaLabel ? ariaLabel : label + ' graph.'
           }`}
         >
           <thead>{tableHeader}</thead>
