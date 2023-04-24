@@ -5,6 +5,7 @@
 import type {
   KubernetesCluster,
   KubeNodePoolResponse,
+  KubeConfigResponse,
 } from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -60,6 +61,25 @@ export const mockGetClusterPools = (
     'GET',
     apiMatcher(`lke/clusters/${clusterId}/pools*`),
     paginateResponse(pools)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve an LKE cluster's kubeconfig and mocks response.
+ *
+ * @param clusterId - ID of cluster for which to mock response.
+ * @param kubeconfig - Kubeconfig object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetKubeconfig = (
+  clusterId: number,
+  kubeconfig: KubeConfigResponse
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`lke/clusters/${clusterId}/kubeconfig`),
+    makeResponse(kubeconfig)
   );
 };
 
