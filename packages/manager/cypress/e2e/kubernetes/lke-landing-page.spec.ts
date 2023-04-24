@@ -1,0 +1,64 @@
+import type { KubernetesCluster } from '@linode/api-v4';
+import { mockGetClusters, mockGetClusterPools } from 'support/intercepts/lke';
+import { kubernetesClusterFactory, nodePoolFactory } from 'src/factories';
+import { regionsMap } from 'support/constants/regions';
+import { ui } from 'support/ui';
+
+describe('LKE landing page', () => {
+  /*
+   * - Confirms that LKE clusters are listed on landing page.
+   */
+  it('lists LKE clusters', () => {
+    const mockClusters = kubernetesClusterFactory.buildList(10);
+    mockGetClusters(mockClusters).as('getClusters');
+
+    mockClusters.forEach((cluster: KubernetesCluster) => {
+      mockGetClusterPools(cluster.id, nodePoolFactory.buildList(3));
+    });
+
+    cy.visitWithLogin('/kubernetes/clusters');
+    cy.wait('@getClusters');
+
+    mockClusters.forEach((cluster: KubernetesCluster) => {
+      cy.findByText(cluster.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText(regionsMap[cluster.region]).should('be.visible');
+          cy.findByText(cluster.k8s_version).should('be.visible');
+
+          ui.button
+            .findByTitle('Download kubeconfig')
+            .should('be.visible')
+            .should('be.enabled');
+
+          ui.button
+            .findByTitle('Delete')
+            .should('be.visible')
+            .should('be.enabled');
+        });
+    });
+  });
+
+  /*
+   * - Confirms that welcome page is shown when no LKE clusters exist.
+   * - Confirms that core page elements (create button, guides, playlist, etc.) are present.
+   */
+  it('shows welcome page when there are no LKE clusters', () => {
+    mockGetClusters([]).as('getClusters');
+    cy.visitWithLogin('/kubernetes/clusters');
+    cy.wait('@getClusters');
+
+    cy.findByText('Fully managed Kubernetes infrastructure').should(
+      'be.visible'
+    );
+
+    ui.button
+      .findByTitle('Create Cluster')
+      .should('be.visible')
+      .should('be.enabled');
+
+    cy.findByText('Getting Started Guides').should('be.visible');
+    cy.findByText('Video Playlist').should('be.visible');
+  });
+});
