@@ -1,33 +1,40 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import useStyles from './styles';
+import { StyledDiv2 } from './styles';
 
 export interface Props {
   title: string;
   details?: string | number;
 }
 
-export const DisplaySection: React.FC<Props> = (props) => {
+const DisplaySection = React.memo((props: Props) => {
   const { title, details } = props;
-  const classes = useStyles();
+
+  const theme = useTheme();
+
   return (
-    <div className={classes.checkoutSection}>
+    <StyledDiv2>
       {title && (
         <Typography variant="h3" data-qa-subheading={title}>
           {title}
         </Typography>
       )}
-      {details && (
+      {details ? (
         <Typography
           component="span"
           data-qa-details={details}
-          className={classes.detail}
+          sx={{
+            color: theme.color.headline,
+            fontSize: '.8rem',
+            lineHeight: '1.5em',
+          }}
         >
           {details}
         </Typography>
-      )}
-    </div>
+      ) : null}
+    </StyledDiv2>
   );
-};
+});
 
-export default React.memo(DisplaySection);
+export { DisplaySection };

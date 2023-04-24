@@ -1,8 +1,9 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import useStyles from './styles';
+import { fadeIn } from 'src/styles/keyframes';
+import { StyledButton, StyledDiv1, StyledDiv2 } from './styles';
 
 interface Props {
   onDeploy: () => void;
@@ -17,11 +18,7 @@ interface Props {
   agreement?: JSX.Element;
 }
 
-type CombinedProps = Props;
-
-const CheckoutBar: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+const CheckoutBar = (props: Props) => {
   const {
     onDeploy,
     heading,
@@ -32,44 +29,65 @@ const CheckoutBar: React.FC<CombinedProps> = (props) => {
     submitText,
     footer,
     agreement,
+    children,
   } = props;
+
+  const theme = useTheme();
 
   const price = calculatedPrice ?? 0;
 
   return (
-    <div className={classes.root}>
+    <StyledDiv1>
       <Typography
         variant="h2"
-        className={classes.sidebarTitle}
+        sx={{
+          color: theme.color.headline,
+          fontSize: '1.125rem',
+          wordBreak: 'break-word',
+        }}
         data-qa-order-summary
       >
         {heading}
       </Typography>
-      {props.children}
+      {children}
       {
-        <div className={classes.checkoutSection} data-qa-total-price>
+        <StyledDiv2
+          sx={{
+            animation: `${fadeIn} 225ms linear forwards`,
+            opacity: 0,
+          }}
+          data-qa-total-price
+        >
           <DisplayPrice price={price} interval="mo" />
           {priceHelperText && price > 0 && (
-            <Typography className={classes.price}>{priceHelperText}</Typography>
+            <Typography
+              sx={{
+                color: theme.color.headline,
+                fontSize: '.8rem',
+                lineHeight: '1.5em',
+                marginTop: theme.spacing(),
+              }}
+            >
+              {priceHelperText}
+            </Typography>
           )}
-        </div>
+        </StyledDiv2>
       }
       {agreement ? agreement : null}
-      <div className={classes.checkoutSection}>
-        <Button
+      <StyledDiv2>
+        <StyledButton
           buttonType="primary"
-          className={classes.createButton}
           disabled={disabled}
           onClick={onDeploy}
           data-qa-deploy-linode
           loading={isMakingRequest}
         >
           {submitText ?? 'Create'}
-        </Button>
-      </div>
+        </StyledButton>
+      </StyledDiv2>
       {footer ? footer : null}
-    </div>
+    </StyledDiv1>
   );
 };
 
-export default CheckoutBar;
+export { CheckoutBar };

@@ -1,16 +1,18 @@
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/system';
+import Button from 'src/components/Button';
 
-export const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
+const StyledButton = styled(Button)(({ theme }) => ({
+  marginTop: 18,
+  [theme.breakpoints.up('lg')]: {
+    width: '100%',
   },
-  root: {
+}));
+
+const StyledDiv1 = styled('div')(() => {
+  const theme = useTheme();
+
+  return {
     minHeight: '24px',
     minWidth: '24px',
     [theme.breakpoints.down('md')]: {
@@ -20,42 +22,19 @@ export const useStyles = makeStyles((theme: Theme) => ({
       left: '0 !important' as '0',
       bottom: '0 !important' as '0',
     },
-  },
-  sidebarTitle: {
-    color: theme.color.headline,
-    fontSize: '1.125rem',
-    wordBreak: 'break-word',
-  },
-  checkoutSection: {
-    animation: '$fadeIn 225ms linear forwards',
-    opacity: 0,
-    padding: '12px 0',
-    [theme.breakpoints.down('md')]: {
-      '& button': {
-        marginLeft: 0,
-      },
-    },
-    [theme.breakpoints.down('lg')]: {
-      paddingBottom: `0px !important`,
+  };
+});
+
+const StyledDiv2 = styled('div')(({ theme }) => ({
+  padding: '12px 0',
+  [theme.breakpoints.down('md')]: {
+    '& button': {
+      marginLeft: 0,
     },
   },
-  price: {
-    color: theme.color.headline,
-    fontSize: '.8rem',
-    lineHeight: '1.5em',
-    marginTop: theme.spacing(),
-  },
-  detail: {
-    color: theme.color.headline,
-    fontSize: '.8rem',
-    lineHeight: '1.5em',
-  },
-  createButton: {
-    marginTop: 18,
-    [theme.breakpoints.up('lg')]: {
-      width: '100%',
-    },
+  [theme.breakpoints.down('lg')]: {
+    paddingBottom: `0px !important`,
   },
 }));
 
-export default useStyles;
+export { StyledButton, StyledDiv1, StyledDiv2 };
