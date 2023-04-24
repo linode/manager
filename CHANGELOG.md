@@ -10,9 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Metadata
 - Add No Results section for Marketplace Search #8999
 - Add Private IP checkbox when cloning a Linode #9039
+- Accessible graph tabled data for `LineGraph` component #5915
 
 ### Changed:
-- `<RegionSelect />` can now dynamically get country flag and group all countrys #8996
+- `<RegionSelect />` can now dynamically get country flag and group all countries #8996
 
 ### Fixed:
 - Typesafety of the `<Select />` component #8986
