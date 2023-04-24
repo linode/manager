@@ -12,7 +12,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 import { Toggle } from 'src/components/Toggle';
 import useOpenClose from 'src/hooks/useOpenClose';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { bucketACLOptions, objectACLOptions } from '../utilities';
 

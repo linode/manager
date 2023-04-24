@@ -1,33 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { parseAPIDate } from 'src/utilities/date';
-import {
-  always,
-  compose,
-  cond,
-  filter,
-  groupBy,
-  prop,
-  propOr,
-  propSatisfies,
-  reverse,
-  sortBy,
-  startsWith,
-} from 'ramda';
-
-export const sortCreatedDESC = compose<any, any, any>(
-  reverse,
-  sortBy(
-    compose(
-      (created: string) => parseAPIDate(created).toFormat('x'),
-      prop('created')
-    )
-  )
-);
-
-export const getMyImages = compose<any, any, any>(
-  sortCreatedDESC,
-  filter(propSatisfies(startsWith('private'), 'id'))
-);
+import { always, cond, groupBy, propOr } from 'ramda';
 
 const isRecentlyDeleted = (i: Image) =>
   i.created_by === null && i.type === 'automatic';
