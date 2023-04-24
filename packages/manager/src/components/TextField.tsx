@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { clamp } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';

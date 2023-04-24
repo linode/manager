@@ -150,11 +150,15 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
       action: values.action,
     };
 
-    if (values.label) {
+    if (values.label === '') {
+      payload.label = null;
+    } else {
       payload.label = values.label;
     }
 
-    if (values.description) {
+    if (values.description === '') {
+      payload.description = null;
+    } else {
       payload.description = values.description;
     }
 

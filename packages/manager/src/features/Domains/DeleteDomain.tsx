@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
-import DeletionDialog from 'src/components/DeletionDialog';
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { useDeleteDomainMutation } from 'src/queries/domains';

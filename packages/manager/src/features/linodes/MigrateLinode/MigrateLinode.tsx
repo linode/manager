@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import Notice from 'src/components/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Box from 'src/components/core/Box';
@@ -100,6 +100,7 @@ const MigrateLinode = React.memo((props: Props) => {
   const [regionError, setRegionError] = React.useState<string>('');
   const [acceptError, setAcceptError] = React.useState<string>('');
   const [APIError, setAPIError] = React.useState<string>('');
+
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(

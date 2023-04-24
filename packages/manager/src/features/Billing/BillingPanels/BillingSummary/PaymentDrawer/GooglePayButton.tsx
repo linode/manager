@@ -1,7 +1,7 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';

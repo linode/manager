@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { action } from '@storybook/addon-actions';
 
-import DebouncedSearchTextField from '../DebouncedSearchTextField';
+import { DebouncedSearchTextField } from '../DebouncedSearchTextField';
 
 interface Props {
   list: string[];

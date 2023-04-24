@@ -12,7 +12,7 @@ import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { SecurityQuestionsData } from '@linode/api-v4';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { useSnackbar } from 'notistack';
 import { Link } from 'src/components/Link';
 

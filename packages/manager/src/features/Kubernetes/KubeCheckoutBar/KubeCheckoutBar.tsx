@@ -1,7 +1,7 @@
 import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import CheckoutBar from 'src/components/CheckoutBar';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';

@@ -96,7 +96,10 @@ describe('Managed navigation', () => {
     managedURLs.forEach((url) => {
       mockUnauthorizedManagedRequests();
       visitUrlWithManagedDisabled(url);
-      cy.findByText('Unauthorized').should('be.visible');
+
+      // The Managed SSH tab has two sections that can each display an "Unauthorized" notice.
+      // We're using `findAllByText` to ensure that Cypress succeeds when both load at the same time.
+      cy.findAllByText('Unauthorized').should('exist').should('be.visible');
     });
   });
 

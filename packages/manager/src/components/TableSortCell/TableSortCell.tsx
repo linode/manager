@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 import SortUp from 'src/assets/icons/sort-up.svg';
 import Sort from 'src/assets/icons/unsorted.svg';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
