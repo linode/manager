@@ -113,9 +113,10 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // the chartID is used to associate the chart with the table for accessibility purpose
   // trying to use a more readable ariaLabel as the chartID, but if it's undefined, we'll generate a random ID
-  const chartID: string = ariaLabel
+  // TODO: update to use React.useId when we upgrade to React 18
+  const chartID: string | undefined = ariaLabel
     ? ariaLabel.replace(/\s+/g, '-').toLocaleLowerCase()
-    : crypto.randomUUID();
+    : crypto && crypto.randomUUID();
   // is undefined on linode/summary
   const plugins = [
     {
