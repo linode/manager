@@ -173,8 +173,16 @@ export const useDetachVolumeMutation = () =>
   useMutation<{}, APIError[], { id: number }>(({ id }) => detachVolume(id));
 
 export const volumeEventsHandler = ({ event, queryClient }: EventWithStore) => {
-  if (['finished', 'failed', 'started'].includes(event.status)) {
+  if (['finished', 'failed', 'notification'].includes(event.status)) {
     queryClient.invalidateQueries([queryKey]);
+  }
+
+  if (event.action === 'volume_clone') {
+    // The API gives us no way to know when a cloned volume transitions from
+    // creating to active, so we will just refresh after 10 seconds
+    setTimeout(() => {
+      queryClient.invalidateQueries([queryKey]);
+    }, 10000);
   }
 };
 
