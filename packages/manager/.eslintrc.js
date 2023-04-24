@@ -95,6 +95,8 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     // react and jsx specific rules
     'react/display-name': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     // requires the definition of proptypes for react components
     'react/prop-types': 'off',
     'react/jsx-no-script-url': 'error',
