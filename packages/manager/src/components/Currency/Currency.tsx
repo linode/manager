@@ -7,7 +7,7 @@ interface CurrencyFormatterProps {
   dataAttrs?: Record<string, any>;
 }
 
-export const Currency: React.FC<CurrencyFormatterProps> = (props) => {
+export const Currency = (props: CurrencyFormatterProps) => {
   const { quantity, wrapInParentheses, dataAttrs } = props;
 
   const formatter = new Intl.NumberFormat('en-US', {
@@ -27,12 +27,9 @@ export const Currency: React.FC<CurrencyFormatterProps> = (props) => {
     output = isNegative ? `-${formattedQuantity}` : formattedQuantity;
   }
 
-  // eslint-disable-next-line
   return (
     <span className="notranslate" {...dataAttrs}>
       {output}
     </span>
   );
 };
-
-export default React.memo(Currency);

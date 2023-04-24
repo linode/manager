@@ -3,11 +3,11 @@ import Dialog, { DialogProps } from 'src/components/core/Dialog';
 import DialogActions from 'src/components/core/DialogActions';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import DialogTitle from 'src/components/DialogTitle';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     '& .MuiPaper-root': {
       minWidth: 480,
@@ -28,15 +28,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props extends DialogProps {
+export interface ConfirmationDialogProps extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
   error?: string | JSX.Element;
   onClose: () => void;
   title: string;
 }
 
-const ConfirmationDialog: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
+  const { classes } = useStyles();
 
   const { title, children, actions, error, ...dialogProps } = props;
 
@@ -72,5 +72,3 @@ const ConfirmationDialog: React.FC<Props> = (props) => {
     </Dialog>
   );
 };
-
-export default ConfirmationDialog;

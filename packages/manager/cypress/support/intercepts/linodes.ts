@@ -31,6 +31,19 @@ export const mockGetLinodes = (linodes: Linode[]): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to retrieve Linode details.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetLinodeDetails = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}*`));
+};
+
+/**
  * Intercepts GET request to retrieve Linode details and mocks response.
  *
  * @param linodeId - ID of Linode for intercepted request.
@@ -65,5 +78,21 @@ export const mockGetLinodeVolumes = (
     'GET',
     apiMatcher(`linode/instances/${linodeId}/volumes*`),
     paginateResponse(volumes)
+  );
+};
+
+/**
+ * Intercepts POST request to reboot a Linode into rescue mode.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptRebootLinodeIntoRescueMode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/rescue`)
   );
 };

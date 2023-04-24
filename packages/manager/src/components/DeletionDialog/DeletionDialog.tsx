@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
@@ -9,7 +9,7 @@ import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
 import { titlecase } from 'src/features/linodes/presentation';
 import { capitalize } from 'src/utilities/capitalize';
-import { DialogProps } from '../Dialog';
+import { DialogProps } from '../Dialog/Dialog';
 import { usePreferences } from 'src/queries/preferences';
 
 interface Props extends Omit<DialogProps, 'title'> {
