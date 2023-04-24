@@ -6,6 +6,8 @@ import {
   mockGetClusterPools,
   mockResetKubeconfig,
   mockUpdateCluster,
+  mockAddNodePool,
+  mockDeleteNodePool,
 } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
 
@@ -171,7 +173,7 @@ describe('LKE cluster updates', () => {
       'This action cannot be undone',
     ];
 
-    cy.visitWithLogin(`kubernetes/clusters/${mockCluster.id}`);
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
 
     // Click "Reset" button, proceed through confirmation dialog.
@@ -196,5 +198,107 @@ describe('LKE cluster updates', () => {
     ui.toast.assertMessage('Successfully reset Kubeconfig');
   });
 
-  it.skip('can add and delete node pools', () => {});
+  /*
+   * - Confirms UI flow when adding and deleting node pools.
+   * - Confirms that user cannot delete a node pool when there is only 1 pool.
+   * - Confirms that details page updates to reflect change when pools are added or deleted.
+   */
+  it('can add and delete node pools', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    const mockNodePool = nodePoolFactory.build({
+      type: 'g6-dedicated-4',
+    });
+
+    const mockNewNodePool = nodePoolFactory.build({
+      type: 'g6-dedicated-2',
+    });
+
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+    mockGetKubernetesVersions().as('getVersions');
+    mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
+    mockDeleteNodePool(mockCluster.id, mockNewNodePool.id).as('deleteNodePool');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+    // Assert that initial node pool is shown on the page.
+    cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
+
+    // "Delete Pool" button should be disabled when only 1 node pool exists.
+    ui.button
+      .findByTitle('Delete Pool')
+      .should('be.visible')
+      .should('be.disabled');
+
+    // Add a new node pool, select plan, submit form in drawer.
+    ui.button
+      .findByTitle('Add a Node Pool')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockGetClusterPools(mockCluster.id, [mockNodePool, mockNewNodePool]).as(
+      'getNodePools'
+    );
+    ui.drawer
+      .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Dedicated 4 GB')
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            cy.findByLabelText('Add 1').should('be.visible').click();
+          });
+
+        ui.button
+          .findByTitle('Add pool')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Wait for API responses and confirm that both node pools are shown.
+    cy.wait(['@addNodePool', '@getNodePools']);
+    cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
+    cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('be.visible');
+
+    // Delete the newly added node pool.
+    cy.get(`[data-qa-node-pool-id="${mockNewNodePool.id}"]`)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete Pool')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+    ui.dialog
+      .findByTitle('Delete Node Pool?')
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm node pool is deleted, original node pool still exists, and
+    // delete pool button is once again disabled.
+    cy.wait(['@deleteNodePool', '@getNodePools']);
+    cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
+    cy.findByText('Dedicated 4 GB', { selector: 'h2' }).should('not.exist');
+
+    ui.button
+      .findByTitle('Delete Pool')
+      .should('be.visible')
+      .should('be.disabled');
+  });
 });
