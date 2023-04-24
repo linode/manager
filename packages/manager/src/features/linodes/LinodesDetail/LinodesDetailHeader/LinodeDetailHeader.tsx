@@ -29,7 +29,7 @@ import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 import LandingHeader from 'src/components/LandingHeader';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { APIError } from '@linode/api-v4/lib/types';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -338,11 +338,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
             : undefined,
         }}
         onDocsClick={() => {
-          sendEvent({
-            category: 'Linode Create Flow',
-            action: 'Click:link',
-            label: 'Getting Started',
-          });
+          sendLinodeCreateFlowDocsClickEvent('Getting Started');
         }}
       />
       <LinodeEntityDetail

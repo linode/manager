@@ -21,7 +21,7 @@ import {
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEmptyStateLandingCreateEvent } from 'src/utilities/analytics';
 import { makeStyles } from 'tss-react/mui';
 
 const gaCategory = 'Managed Databases landing page empty';
@@ -118,11 +118,10 @@ const DatabaseEmptyState = () => {
         buttonProps={[
           {
             onClick: () => {
-              sendEvent({
-                category: gaCategory,
-                action: 'Click:button',
-                label: 'Create Database Cluster',
-              });
+              sendEmptyStateLandingCreateEvent(
+                'Managed Database',
+                'Database Cluster'
+              );
               history.push('/databases/create');
             },
             children: 'Create Database Cluster',

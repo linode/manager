@@ -344,6 +344,33 @@ export const sendLinodeCreateDocsEvent = (action: string) => {
   });
 };
 
+// LinodeCreate.tsx
+// LinodeCreateContainer.tsx
+// LinodeDetailHeader.tsx
+export const sendLinodeCreateFlowDocsClickEvent = (label: string) => {
+  sendEvent({
+    category: 'Linode Create Flow',
+    action: 'Click:link',
+    label,
+  });
+};
+
+// LinodeDiskActionMenu.tsx
+// LinodeDiskDrawer.tsx
+// LinodeDisks.tsx
+// ToastNotifications.tsx
+export const sendLinodeDiskEvent = (
+  diskActionTitle: string,
+  action: string,
+  label: string
+) => {
+  sendEvent({
+    category: `Disk ${diskActionTitle} Flow`,
+    action,
+    label,
+  });
+};
+
 // BucketLanding.tsx
 export const sendObjectStorageDocsEvent = (action: string) => {
   sendEvent({
@@ -358,5 +385,33 @@ export const sendMarketplaceSearchEvent = (appCategory?: string) => {
     category: 'Marketplace Create Flow',
     action: 'Category Dropdown',
     label: appCategory,
+  });
+};
+
+// DatabaseEmptyState.tsx
+// KubernetesLandingEmptyState.tsx
+// ListLinodesEmptyState.tsx
+export const sendEmptyStateLandingCreateEvent = (
+  productName: string,
+  eventLabel?: string
+) => {
+  sendEvent({
+    category: `${productName} landing page empty`,
+    action: 'Click:button',
+    label: `Create ${eventLabel ?? productName}`,
+  });
+};
+
+// LinodeCreate.tsx
+// LinodesCreate/CodeBlock/index.tsx
+// LinodesCreate/ApiAwareness/index.tsx
+export const sendApiAwarenessClickEvent = (
+  clickType: string,
+  label: string
+) => {
+  sendEvent({
+    category: 'Linode Create API CLI Awareness Modal',
+    action: `Click:${clickType}`,
+    label,
   });
 };

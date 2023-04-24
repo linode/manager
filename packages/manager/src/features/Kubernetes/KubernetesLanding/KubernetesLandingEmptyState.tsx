@@ -19,7 +19,7 @@ import {
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEmptyStateLandingCreateEvent } from 'src/utilities/analytics';
 
 const useStyles = makeStyles((theme: Theme) => ({
   placeholderAdjustment: {
@@ -122,11 +122,7 @@ const KubernetesEmptyState = () => {
       buttonProps={[
         {
           onClick: () => {
-            sendEvent({
-              category: gaCategory,
-              action: 'Click:button',
-              label: 'Create Cluster',
-            });
+            sendEmptyStateLandingCreateEvent('Kubernetes', 'Cluster');
             push('/kubernetes/create');
           },
           children: 'Create Cluster',

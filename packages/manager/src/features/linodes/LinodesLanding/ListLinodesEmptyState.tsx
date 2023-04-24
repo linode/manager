@@ -21,7 +21,7 @@ import {
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEmptyStateLandingCreateEvent } from 'src/utilities/analytics';
 import AppsSection from './AppsSection';
 import LinksSection from './LinksSection';
 import LinksSubSection from './LinksSubSection';
@@ -130,11 +130,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
         {
           onClick: () => {
             push('/linodes/create');
-            sendEvent({
-              category: gaCategory,
-              action: 'Click:button',
-              label: 'Create Linode',
-            });
+            sendEmptyStateLandingCreateEvent('Linode');
           },
           children: 'Create Linode',
         },

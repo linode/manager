@@ -8,7 +8,7 @@ import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import Link from 'src/components/Link';
 import { events$ } from 'src/events';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 
 interface ToastOptions {
   enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'];
@@ -121,11 +121,11 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               link: formatLink(
                 'Learn more about resizing restrictions.',
                 'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/',
-                sendEvent({
-                  category: 'Disk Resize Flow',
-                  action: `Click:link`,
-                  label: 'Disk resize failed toast',
-                })
+                sendLinodeDiskEvent(
+                  'Resize',
+                  'Click:link',
+                  'Disk resize failed toast'
+                )
               ),
             });
           case 'image_upload':
