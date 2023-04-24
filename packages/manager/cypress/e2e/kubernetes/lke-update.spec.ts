@@ -150,7 +150,18 @@ describe('LKE cluster updates', () => {
     cy.findByText(upgradePrompt).should('not.exist');
   });
 
-  it.skip('can resize pool, toggle autoscaling, and recyle nodes', () => {});
+  it.only('can resize pool, toggle autoscaling, and recyle nodes', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+    mockGetKubernetesVersions().as('getVersions');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+  });
 
   /*
    * - Confirms kubeconfig reset UI flow using mocked API responses.
