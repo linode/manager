@@ -2,7 +2,10 @@
  * @file Cypress intercepts and mocks for Cloud Manager LKE operations.
  */
 
-import type { KubernetesCluster } from '@linode/api-v4/types';
+import type {
+  KubernetesCluster,
+  KubeNodePoolResponse,
+} from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
@@ -38,6 +41,25 @@ export const mockGetCluster = (
     'GET',
     apiMatcher(`lke/clusters/${cluster.id}`),
     makeResponse(cluster)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve an LKE cluster's node pools and mocks response.
+ *
+ * @param clusterId - ID of cluster for which to mock response.
+ * @param pools - Array of LKE node pools with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetClusterPools = (
+  clusterId: number,
+  pools: KubeNodePoolResponse[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`lke/clusters/${clusterId}/pools*`),
+    paginateResponse(pools)
   );
 };
 
