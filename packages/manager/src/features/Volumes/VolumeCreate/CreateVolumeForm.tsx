@@ -36,8 +36,8 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
-import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
-import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
+import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
+import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import ConfigSelect, {
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';

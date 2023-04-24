@@ -14,7 +14,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import imageToItem from 'src/utilities/imageToItem';
+import { imageToItem } from 'src/utilities/imageToItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
