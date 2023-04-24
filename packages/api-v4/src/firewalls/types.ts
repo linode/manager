@@ -24,8 +24,8 @@ export interface FirewallRules {
 }
 
 export interface FirewallRuleType {
-  label?: string;
-  description?: string;
+  label?: string | null;
+  description?: string | null;
   protocol: FirewallRuleProtocol;
   ports?: string;
   action: FirewallPolicyType;
