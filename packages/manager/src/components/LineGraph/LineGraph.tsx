@@ -290,12 +290,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     // Screen readers read from top to bottom, so the legend should be read before the data tables, esp considering their size
     // and the fact that the legend can filter them.
     // Meanwhile the CSS uses column-reverse to visually retain the original order
-    <div
-      className={classes.wrapper}
-      tabIndex={tabIndex ?? 0}
-      role="graphics-document"
-      aria-label={ariaLabel || 'Stats and metrics'}
-    >
+    <div className={classes.wrapper} tabIndex={tabIndex ?? 0}>
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table
@@ -394,7 +389,12 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         </div>
       )}
       <div className={classes.canvasContainer}>
-        <canvas height={chartHeight || 300} ref={inputEl} />
+        <canvas
+          height={chartHeight || 300}
+          ref={inputEl}
+          role="img"
+          aria-label={ariaLabel || 'Stats and metrics'}
+        />
         <AccessibleGraphData
           chartInstance={chartInstance.current}
           ariaLabel={ariaLabel}
