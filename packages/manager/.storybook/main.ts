@@ -10,16 +10,21 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
-    'storybook-dark-mode-v7',
+    'storybook-dark-mode',
   ],
   staticDirs: ['../public'],
   framework: {
     name: '@storybook/react-vite',
     options: {},
   },
+  docs: {
+    autodocs: true,
+    defaultName: 'Documentation',
+  },
   features: { storyStoreV7: true },
   async viteFinal(config) {
     return mergeConfig(config, {
+      base: './',
       resolve: {
         preserveSymlinks: true,
       },
