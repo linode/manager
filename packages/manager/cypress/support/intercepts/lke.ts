@@ -188,6 +188,25 @@ export const mockAddNodePool = (
 };
 
 /**
+ * Intercepts PUT request to update a node pool and mocks the response.
+ *
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
+ * @param nodePoolId - Numeric ID of node pool for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateNodePool = (
+  clusterId: number,
+  nodePool: KubeNodePoolResponse
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`lke/clusters/${clusterId}/pools/${nodePool.id}`),
+    makeResponse(nodePool)
+  );
+};
+
+/**
  * Intercepts DELETE request to delete a node pool and mocks the response.
  *
  * @param clusterId - Numeric ID of LKE cluster for which to mock response.
