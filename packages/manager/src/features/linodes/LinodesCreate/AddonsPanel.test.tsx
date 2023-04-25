@@ -6,7 +6,7 @@ const props: AddonsPanelProps = {
   accountBackups: true,
   backups: false,
   changeBackups: jest.fn(),
-  changePrivateIP: jest.fn(),
+  togglePrivateIP: jest.fn(),
   disabled: false,
   vlanLabel: 'abc',
   labelError: 'testError',
@@ -146,7 +146,7 @@ describe('AddonsPanel', () => {
   it('Should trigger changePrivateIP if source linode has been allocated a private IP', () => {
     renderWithTheme(<AddonsPanel {...props} />);
 
-    expect(props.changePrivateIP).toBeCalled();
+    expect(props.togglePrivateIP).toBeCalled();
   });
   it('Should select Private IP checkbox if source linode has been allocated a private IP', () => {
     const addOnProps = { ...props, isPrivateIPChecked: true };

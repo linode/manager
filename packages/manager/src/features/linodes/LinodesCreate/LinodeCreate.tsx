@@ -781,7 +781,7 @@ export class LinodeCreate extends React.PureComponent<
             backupsMonthly={backupsMonthlyPrice}
             isPrivateIPChecked={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}
-            changePrivateIP={this.props.togglePrivateIPEnabled}
+            togglePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
             selectedImageID={this.props.selectedImageID}
             selectedTypeID={this.props.selectedTypeID}

@@ -52,7 +52,7 @@ export interface AddonsPanelProps {
   backupsMonthly?: number | null;
   isPrivateIPChecked: boolean;
   changeBackups: () => void;
-  changePrivateIP: () => void;
+  togglePrivateIP: () => void;
   vlanLabel: string;
   ipamAddress: string;
   handleVLANChange: (updatedInterface: Interface) => void;
@@ -71,7 +71,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
     accountBackups,
     changeBackups,
-    changePrivateIP,
+    togglePrivateIP,
     disabled,
     vlanLabel,
     labelError,
@@ -138,7 +138,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
         (linodeHasPrivateIp && !isPrivateIPChecked) ||
         (!linodeHasPrivateIp && isPrivateIPChecked)
       ) {
-        changePrivateIP();
+        togglePrivateIP();
       }
     }
   }, [selectedLinodeID]);
@@ -217,7 +217,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
                 <CheckBox
                   data-testid="private_ip"
                   checked={isPrivateIPChecked}
-                  onChange={() => changePrivateIP()}
+                  onChange={togglePrivateIP}
                   data-qa-check-private-ip
                   disabled={disabled}
                 />
