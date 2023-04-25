@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Event entities should only be linked for true labels
 - Radio button hover effect #9031
 - Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
+- fix: [M3-6510] - Modifying Configuration Profile in Cloud breaks with VLANs #9053
 
 ### Tech Stories:
 - MUIv5 Migration - Components > CircleProgress #9028
