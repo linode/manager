@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Added:
+- Metadata
 - Add No Results section for Marketplace Search #8999
 
 ### Changed:
@@ -25,7 +26,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUIv5 Migration - Components > StatusIcon #9014
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
 - MUIv5 Migration - Grid v2 for Features #8985
+- MUIv5 Migration - Components > Dialog #9020
+- MUIv5 Migration - Components > DeletionDialog #9047
+- MUIv5 Migration - Components > Currency #9030
+- MUIv5 Migration - Components > DisplayPrice #9022
+- MUIv5 Migration - Components > CreateLinodeDisabled #9015
+- MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
 - MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
+- Add basic Adobe Analytics tracking #8989
 
 ## [2023-04-18] - v1.91.1
 

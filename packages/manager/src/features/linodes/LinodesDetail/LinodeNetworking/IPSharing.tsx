@@ -8,7 +8,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import Link from 'src/components/Link';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -16,7 +16,7 @@ import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
@@ -388,7 +388,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           </Grid>
         </>
       </DialogContent>
-      <ActionsPanel>
+      <StyledActionPanel>
         <Button
           buttonType="secondary"
           disabled={submitting || noChoices}
@@ -406,7 +406,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
         >
           Save
         </Button>
-      </ActionsPanel>
+      </StyledActionPanel>
     </Dialog>
   );
 };

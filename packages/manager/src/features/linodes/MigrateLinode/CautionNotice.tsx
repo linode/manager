@@ -46,6 +46,7 @@ interface Props {
   error?: string;
   migrationTimeInMins: number;
   linodeId: number;
+  metadataWarning?: string;
 }
 
 const CautionNotice: React.FC<Props> = (props) => {
@@ -120,6 +121,7 @@ const CautionNotice: React.FC<Props> = (props) => {
             ?.replace('in', '')}{' '}
           to complete.
         </li>
+        {props.metadataWarning ? <li>{props.metadataWarning}</li> : null}
       </ul>
       {props.error && <Notice error text={props.error} />}
       <Checkbox
