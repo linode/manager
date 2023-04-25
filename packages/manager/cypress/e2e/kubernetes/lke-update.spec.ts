@@ -4,10 +4,7 @@ import {
   kubeLinodeFactory,
   linodeFactory,
 } from 'src/factories';
-import {
-  latestKubernetesVersion,
-  lkeClusterPlans,
-} from 'support/constants/lke';
+import { latestKubernetesVersion } from 'support/constants/lke';
 import {
   mockGetCluster,
   mockGetKubernetesVersions,
