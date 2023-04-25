@@ -1,13 +1,13 @@
 import * as React from 'react';
 import type { ChartData, ChartPoint } from 'chart.js';
 import { DateTime } from 'luxon';
-import Grid from '@mui/material/Unstable_Grid2';
 import { visuallyHidden } from '@mui/utils';
+import Box from 'src/components/core/Box';
 
-interface GraphTabledDataProps {
+export interface GraphTabledDataProps {
   ariaLabel?: string;
-  accessibleUnit?: string;
-  chartInstance: React.MutableRefObject<any>['current'];
+  accessibleUnit: string;
+  chartInstance: React.MutableRefObject<Chart | null>['current'];
   hiddenDatasets: number[];
 }
 
@@ -74,7 +74,7 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
     );
   });
 
-  return <Grid sx={visuallyHidden}>{tables}</Grid>;
+  return <Box sx={visuallyHidden}>{tables}</Box>;
 };
 
 export default AccessibleGraphData;

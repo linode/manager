@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import AccessibleGraphData from './AccessibleGraphData';
+import type { GraphTabledDataProps } from './AccessibleGraphData';
 
 const chartInstance = {
   config: {
@@ -32,7 +33,7 @@ describe('AccessibleGraphData', () => {
     const { getAllByRole } = render(
       <AccessibleGraphData
         ariaLabel="data filter"
-        chartInstance={chartInstance}
+        chartInstance={chartInstance as GraphTabledDataProps['chartInstance']}
         hiddenDatasets={[]}
         accessibleUnit="%"
       />
@@ -62,9 +63,9 @@ describe('AccessibleGraphData', () => {
     expect(tableBodyRows.length).toEqual(3);
 
     tableBodyRows.forEach((row, idx) => {
-      const value = chartInstance.config.data.datasets[0].data[idx].y.toFixed(
-        2
-      );
+      const value: any = chartInstance.config.data.datasets[0].data[
+        idx
+      ].y.toFixed(2);
 
       expect(row.querySelector('td:nth-child(2)')).toHaveTextContent(
         value + '%'
@@ -74,7 +75,11 @@ describe('AccessibleGraphData', () => {
 
   it('hides the correct datasets', () => {
     const { getByRole, queryByText } = render(
-      <AccessibleGraphData chartInstance={chartInstance} hiddenDatasets={[0]} />
+      <AccessibleGraphData
+        chartInstance={chartInstance as GraphTabledDataProps['chartInstance']}
+        hiddenDatasets={[0]}
+        accessibleUnit="%"
+      />
     );
 
     // Check that the first table is hidden

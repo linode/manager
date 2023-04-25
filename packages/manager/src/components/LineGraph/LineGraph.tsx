@@ -47,6 +47,9 @@ export interface Props {
   rowHeaders?: Array<string>;
   legendRows?: Array<any>;
   unit?: string;
+  /**
+   * If provided, will be used to render the accessible graph data
+   */
   accessibleUnit?: string;
   nativeLegend?: boolean; // Display chart.js native legend
   formatData?: (value: number) => number | null;
@@ -398,12 +401,14 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           aria-label={ariaLabel || 'Stats and metrics'}
         />
       </div>
-      <AccessibleGraphData
-        chartInstance={chartInstance.current}
-        ariaLabel={ariaLabel}
-        hiddenDatasets={hiddenDatasets}
-        accessibleUnit={accessibleUnit}
-      />
+      {accessibleUnit && (
+        <AccessibleGraphData
+          chartInstance={chartInstance.current}
+          ariaLabel={ariaLabel}
+          hiddenDatasets={hiddenDatasets}
+          accessibleUnit={accessibleUnit}
+        />
+      )}
     </div>
   );
 };
