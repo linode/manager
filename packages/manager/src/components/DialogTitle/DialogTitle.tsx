@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
 import IconButton from 'src/components/IconButton/IconButton';
 
-interface DiaglogTitleProps {
+interface DialogTitleProps {
   className?: string;
   onClose?: () => void;
   title: string;
