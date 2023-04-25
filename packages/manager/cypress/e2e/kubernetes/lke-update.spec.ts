@@ -1,5 +1,13 @@
-import { kubernetesClusterFactory, nodePoolFactory } from 'src/factories';
-import { latestKubernetesVersion } from 'support/constants/lke';
+import {
+  kubernetesClusterFactory,
+  nodePoolFactory,
+  kubeLinodeFactory,
+  linodeFactory,
+} from 'src/factories';
+import {
+  latestKubernetesVersion,
+  lkeClusterPlans,
+} from 'support/constants/lke';
 import {
   mockGetCluster,
   mockGetKubernetesVersions,
@@ -7,9 +15,18 @@ import {
   mockResetKubeconfig,
   mockUpdateCluster,
   mockAddNodePool,
+  mockUpdateNodePool,
   mockDeleteNodePool,
+  mockRecycleNode,
+  mockRecycleNodePool,
+  mockRecycleAllNodes,
+  mockGetDashboardUrl,
+  mockGetApiEndpoints,
 } from 'support/intercepts/lke';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import type { PoolNodeResponse, Linode } from '@linode/api-v4';
 import { ui } from 'support/ui';
+import { randomIp, randomLabel } from 'support/util/random';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -47,6 +64,8 @@ describe('LKE cluster updates', () => {
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockGetKubernetesVersions().as('getVersions');
     mockUpdateCluster(mockCluster.id, mockClusterWithHA).as('updateCluster');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
@@ -116,6 +135,8 @@ describe('LKE cluster updates', () => {
     mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
@@ -150,17 +171,424 @@ describe('LKE cluster updates', () => {
     cy.findByText(upgradePrompt).should('not.exist');
   });
 
-  it.only('can resize pool, toggle autoscaling, and recyle nodes', () => {
+  /*
+   * - Confirms node, node pool, and cluster recycling UI flow using mocked API data.
+   * - Confirms that user is warned that recycling recreates nodes and may take a while.
+   */
+  it('can recycle nodes', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
     });
 
+    const mockKubeLinode = kubeLinodeFactory.build();
+
+    const mockNodePool = nodePoolFactory.build({
+      count: 1,
+      type: 'g6-standard-1',
+      nodes: [mockKubeLinode],
+    });
+
+    const mockLinode = linodeFactory.build({
+      label: randomLabel(),
+      id: mockKubeLinode.instance_id,
+    });
+
+    const recycleWarningSubstrings = [
+      'will be deleted',
+      'will be created',
+      'local storage (such as ’hostPath’ volumes) will be erased',
+      'may take several minutes',
+    ];
+
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+    mockGetLinodes([mockLinode]).as('getLinodes');
     mockGetKubernetesVersions().as('getVersions');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools', '@getLinodes', '@getVersions']);
+
+    // Recycle individual node.
+    ui.button
+      .findByTitle('Recycle')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockRecycleNode(mockCluster.id, mockKubeLinode.id).as('recycleNode');
+    ui.dialog
+      .findByTitle(`Recycle ${mockKubeLinode.id}?`)
+      .should('be.visible')
+      .within(() => {
+        recycleWarningSubstrings.forEach((warning: string) => {
+          cy.findByText(warning, { exact: false }).should('be.visible');
+        });
+
+        ui.button
+          .findByTitle('Recycle')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@recycleNode');
+    ui.toast.assertMessage('Node queued for recycling.');
+
+    // For now, we have to manually cancel out of this dialog.
+    ui.dialog.findByTitle(`Recycle ${mockKubeLinode.id}?`).within(() => {
+      recycleWarningSubstrings.forEach((warning: string) => {
+        cy.findByText(warning, { exact: false }).should('be.visible');
+      });
+
+      ui.button
+        .findByTitle('Cancel')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
+
+    ui.button
+      .findByTitle('Recycle Pool Nodes')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockRecycleNodePool(mockCluster.id, mockNodePool.id).as('recycleNodePool');
+    ui.dialog
+      .findByTitle('Recycle node pool?')
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Recycle Pool Nodes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@recycleNodePool');
+    ui.toast.assertMessage(
+      `Recycled all nodes in node pool ${mockNodePool.id}`
+    );
+
+    ui.button
+      .findByTitle('Recycle All Nodes')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
+    ui.dialog
+      .findByTitle('Recycle all nodes in cluster?')
+      .should('be.visible')
+      .within(() => {
+        recycleWarningSubstrings.forEach((warning: string) => {
+          cy.findByText(warning, { exact: false }).should('be.visible');
+        });
+
+        ui.button
+          .findByTitle('Recycle All Cluster Nodes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@recycleAllNodes');
+    ui.toast.assertMessage('All cluster nodes queued for recycling');
+  });
+
+  /*
+   * - Confirms UI flow when enabling and disabling node pool autoscaling using mocked API responses.
+   * - Confirms that errors are shown when attempting to autoscale using invalid values.
+   * - Confirms that UI updates to reflect node pool autoscale state.
+   */
+  it('can toggle autoscaling', () => {
+    const autoscaleMin = 3;
+    const autoscaleMax = 10;
+
+    const minWarning =
+      'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.';
+    const maxWarning = 'Maximum must be between 1 and 100 nodes.';
+
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    const mockNodePool = nodePoolFactory.build({
+      count: 1,
+      type: 'g6-standard-1',
+      nodes: kubeLinodeFactory.buildList(1),
+    });
+
+    const mockNodePoolAutoscale = {
+      ...mockNodePool,
+      autoscaler: {
+        enabled: true,
+        min: autoscaleMin,
+        max: autoscaleMax,
+      },
+    };
+
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+    mockGetKubernetesVersions().as('getVersions');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+    // Click "Autoscale Pool", enable autoscaling, and set min and max values.
+    mockUpdateNodePool(mockCluster.id, mockNodePoolAutoscale).as(
+      'toggleAutoscale'
+    );
+    mockGetClusterPools(mockCluster.id, [mockNodePoolAutoscale]).as(
+      'getNodePools'
+    );
+    ui.button
+      .findByTitle('Autoscale Pool')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.dialog
+      .findByTitle('Autoscale Pool')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Autoscaler').should('be.visible').click();
+
+        cy.findByLabelText('Min')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(`${autoscaleMin}`);
+
+        cy.findByText(minWarning).should('be.visible');
+
+        cy.findByLabelText('Max')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type('101');
+
+        cy.findByText(minWarning).should('not.exist');
+        cy.findByText(maxWarning).should('be.visible');
+
+        cy.findByLabelText('Max')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(`${autoscaleMax}`);
+
+        cy.findByText(minWarning).should('not.exist');
+        cy.findByText(maxWarning).should('not.exist');
+
+        ui.button.findByTitle('Save Changes').should('be.visible').click();
+      });
+
+    // Wait for API response and confirm that UI updates to reflect autoscale.
+    cy.wait(['@toggleAutoscale', '@getNodePools']);
+    ui.toast.assertMessage(
+      `Autoscaling updated for Node Pool ${mockNodePool.id}.`
+    );
+    cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
+      'be.visible'
+    );
+
+    // Click "Autoscale Pool" again and disable autoscaling.
+    mockUpdateNodePool(mockCluster.id, mockNodePool).as('toggleAutoscale');
+    mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
+    ui.button
+      .findByTitle('Autoscale Pool')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.dialog
+      .findByTitle('Autoscale Pool')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Autoscaler').should('be.visible').click();
+
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Wait for API response and confirm that UI updates to reflect no autoscale.
+    cy.wait(['@toggleAutoscale', '@getNodePools']);
+    ui.toast.assertMessage(
+      `Autoscaling updated for Node Pool ${mockNodePool.id}.`
+    );
+    cy.findByText(`(Min ${autoscaleMin} / Max ${autoscaleMax})`).should(
+      'not.exist'
+    );
+  });
+
+  /*
+   * - Confirms node pool resize UI flow using mocked API responses.
+   * - Confirms that pool size can be increased and decreased.
+   * - Confirms that user is warned when decreasing node pool size.
+   * - Confirms that UI updates to reflect new node pool size.
+   */
+  it('can resize pools', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    const mockNodePoolResized = nodePoolFactory.build({
+      count: 3,
+      type: 'g6-standard-1',
+      nodes: kubeLinodeFactory.buildList(3),
+    });
+
+    const mockNodePoolInitial = {
+      ...mockNodePoolResized,
+      count: 1,
+      nodes: [mockNodePoolResized.nodes[0]],
+    };
+
+    const mockLinodes: Linode[] = mockNodePoolResized.nodes.map(
+      (node: PoolNodeResponse): Linode => {
+        return linodeFactory.build({
+          id: node.instance_id,
+          ipv4: [randomIp()],
+        });
+      }
+    );
+
+    const mockNodePoolDrawerTitle = 'Resize Pool: Linode 2 GB Plan';
+
+    const decreaseSizeWarning =
+      'Resizing to fewer nodes will delete random nodes from the pool.';
+    const nodeSizeRecommendation =
+      'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
+
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+      'getNodePools'
+    );
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetKubernetesVersions().as('getVersions');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools', '@getLinodes', '@getVersions']);
+
+    // Confirm that nodes are listed with correct details.
+    mockNodePoolInitial.nodes.forEach((node: PoolNodeResponse) => {
+      cy.get(`tr[data-qa-node-row="${node.id}"]`)
+        .should('be.visible')
+        .within(() => {
+          const nodeLinode = mockLinodes.find(
+            (linode: Linode) => linode.id === node.instance_id
+          );
+          if (nodeLinode) {
+            cy.findByText(nodeLinode.label).should('be.visible');
+            cy.findByText(nodeLinode.ipv4[0]).should('be.visible');
+            ui.button
+              .findByTitle('Recycle')
+              .should('be.visible')
+              .should('be.enabled');
+          }
+        });
+    });
+
+    // Click "Resize Pool" and increase size to 3 nodes.
+    ui.button
+      .findByTitle('Resize Pool')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockUpdateNodePool(mockCluster.id, mockNodePoolResized).as(
+      'resizeNodePool'
+    );
+    mockGetClusterPools(mockCluster.id, [mockNodePoolResized]).as(
+      'getNodePools'
+    );
+    ui.drawer
+      .findByTitle(mockNodePoolDrawerTitle)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        cy.findByText('Resized pool: $12/month (1 node at $12/month)').should(
+          'be.visible'
+        );
+
+        cy.findByLabelText('Add 1')
+          .should('be.visible')
+          .should('be.enabled')
+          .click()
+          .click();
+
+        cy.findByLabelText('Edit Quantity').should('have.value', '3');
+        cy.findByText('Resized pool: $36/month (3 nodes at $12/month)').should(
+          'be.visible'
+        );
+
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@resizeNodePool', '@getNodePools']);
+
+    // Confirm that new nodes are listed with correct info.
+    mockLinodes.forEach((mockLinode: Linode) => {
+      cy.findByText(mockLinode.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText(mockLinode.ipv4[0]).should('be.visible');
+        });
+    });
+
+    // Click "Resize Pool" and decrease size back to 1 node.
+    ui.button
+      .findByTitle('Resize Pool')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    mockUpdateNodePool(mockCluster.id, mockNodePoolInitial).as(
+      'resizeNodePool'
+    );
+    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+      'getNodePools'
+    );
+    ui.drawer
+      .findByTitle(mockNodePoolDrawerTitle)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Subtract 1')
+          .should('be.visible')
+          .should('be.enabled')
+          .click()
+          .click();
+
+        cy.findByText(decreaseSizeWarning).should('be.visible');
+        cy.findByText(nodeSizeRecommendation).should('be.visible');
+
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@resizeNodePool', '@getNodePools']);
+    cy.get('[data-qa-node-row]').should('have.length', 1);
   });
 
   /*
@@ -177,6 +605,8 @@ describe('LKE cluster updates', () => {
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockGetKubernetesVersions().as('getVersions');
     mockResetKubeconfig(mockCluster.id).as('resetKubeconfig');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
 
     const resetWarnings = [
       'This will delete and regenerate the cluster’s Kubeconfig file',
@@ -232,6 +662,8 @@ describe('LKE cluster updates', () => {
     mockGetKubernetesVersions().as('getVersions');
     mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
     mockDeleteNodePool(mockCluster.id, mockNewNodePool.id).as('deleteNodePool');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
