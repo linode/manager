@@ -4,7 +4,7 @@ import {
   updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';

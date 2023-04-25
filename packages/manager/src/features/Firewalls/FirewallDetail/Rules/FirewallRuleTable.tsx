@@ -23,7 +23,7 @@ import {
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
 } from 'src/features/Firewalls/shared';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
@@ -132,8 +132,8 @@ const sxItemSpacing = {
 
 interface RuleRow {
   type: string;
-  label?: string;
-  description?: string;
+  label?: string | null;
+  description?: string | null;
   action?: string;
   protocol: string;
   ports: string;
@@ -298,7 +298,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                             key={thisRuleRow.id}
                             role="option"
                             ref={provided.innerRef}
-                            aria-label={thisRuleRow.label}
+                            aria-label={
+                              thisRuleRow.label ??
+                              `firewall rule ${thisRuleRow.id}`
+                            }
                             aria-selected={false}
                             aria-roledescription={screenReaderMessage}
                             {...provided.draggableProps}
@@ -384,7 +387,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     return (
       <Box
         key={id}
-        aria-label={label}
+        aria-label={label ?? `firewall rule ${id}`}
         className={classNames({
           [classes.ruleGrid]: true,
           [classes.ruleRow]: true,

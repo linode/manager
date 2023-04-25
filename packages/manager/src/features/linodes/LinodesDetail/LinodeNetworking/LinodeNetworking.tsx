@@ -19,7 +19,7 @@ import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';

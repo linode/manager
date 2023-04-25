@@ -48,7 +48,7 @@ import {
 } from 'src/utilities/analytics';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
-import AddonsPanel from './AddonsPanel';
+import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
 import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
@@ -774,9 +774,9 @@ export class LinodeCreate extends React.PureComponent<
             backups={this.props.backupsEnabled}
             accountBackups={accountBackupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
-            privateIP={this.props.privateIPEnabled}
+            isPrivateIPChecked={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}
-            changePrivateIP={this.props.togglePrivateIPEnabled}
+            togglePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
             selectedImageID={this.props.selectedImageID}
             selectedTypeID={this.props.selectedTypeID}
@@ -784,6 +784,8 @@ export class LinodeCreate extends React.PureComponent<
             ipamAddress={this.props.ipamAddress || ''}
             handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
+            selectedLinodeID={this.props.selectedLinodeID}
+            linodesData={this.props.linodesData}
             labelError={hasErrorFor['interfaces[1].label']}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
             createType={this.props.createType}
