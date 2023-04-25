@@ -111,10 +111,6 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   } = props;
 
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
-  // the chartID is used to associate the chart with the table for accessibility purpose
-  // TODO: update to use React.useId when we upgrade to React 18
-  const chartID: string | undefined =
-    ariaLabel && ariaLabel.replace(/\s+/g, '-').toLocaleLowerCase();
   // is undefined on linode/summary
   const plugins = [
     {
@@ -399,12 +395,10 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           height={chartHeight || 300}
           ref={inputEl}
           role="img"
-          aria-describedby={chartID}
           aria-label={ariaLabel || 'Stats and metrics'}
         />
       </div>
       <AccessibleGraphData
-        id={chartID}
         chartInstance={chartInstance.current}
         ariaLabel={ariaLabel}
         hiddenDatasets={hiddenDatasets}

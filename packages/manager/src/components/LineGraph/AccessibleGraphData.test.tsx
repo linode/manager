@@ -31,6 +31,7 @@ describe('AccessibleGraphData', () => {
   it('renders a table with correct data', () => {
     const { getAllByRole } = render(
       <AccessibleGraphData
+        ariaLabel="data filter"
         chartInstance={chartInstance}
         hiddenDatasets={[]}
         accessibleUnit="%"
@@ -48,7 +49,7 @@ describe('AccessibleGraphData', () => {
     // Check that the table has the correct summary attribute
     expect(table).toHaveAttribute(
       'summary',
-      'This table contains the data for the Dataset 1 graph.'
+      'This table contains the data for the data filter (Dataset 1)'
     );
 
     // Check that the table header is correct

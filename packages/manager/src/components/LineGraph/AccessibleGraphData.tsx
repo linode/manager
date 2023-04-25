@@ -5,7 +5,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { visuallyHidden } from '@mui/utils';
 
 interface GraphTabledDataProps {
-  id?: string;
   ariaLabel?: string;
   accessibleUnit?: string;
   chartInstance: React.MutableRefObject<any>['current'];
@@ -18,13 +17,7 @@ interface GraphTabledDataProps {
  * visually hidden from the user, yet available to screen readers.
  */
 const AccessibleGraphData = (props: GraphTabledDataProps) => {
-  const {
-    accessibleUnit,
-    ariaLabel,
-    chartInstance,
-    hiddenDatasets,
-    id,
-  } = props;
+  const { accessibleUnit, ariaLabel, chartInstance, hiddenDatasets } = props;
 
   // This is necessary because the chartInstance is not immediately available
   if (!chartInstance?.config?.data?.datasets) {
@@ -56,11 +49,11 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
                 ? DateTime.fromMillis(Number(timestamp)).toLocaleString(
                     DateTime.DATETIME_SHORT
                   )
-                : ''}
+                : 'timestamp unavailable'}
             </td>
             <td>
-              {value && Number(value).toFixed(2)}
-              {accessibleUnit}
+              {value ? Number(value).toFixed(2) : 'value unavailable'}
+              {value && accessibleUnit}
             </td>
           </tr>
         );
@@ -69,10 +62,9 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
     return (
       !hidden && (
         <table
-          id={id}
           key={`accessible-graph-data-table-${tableID}`}
           summary={`This table contains the data for the ${
-            ariaLabel ? ariaLabel : label + ' graph.'
+            ariaLabel && label ? ariaLabel + ` (${label})` : 'graph below'
           }`}
         >
           <thead>{tableHeader}</thead>
