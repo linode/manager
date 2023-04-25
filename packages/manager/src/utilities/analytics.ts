@@ -138,8 +138,7 @@ export const sendCreateLinodeEvent = (
   });
 };
 
-// TODO: not used, determine if it should be or can be removed
-// CreateBucketForm.tsx
+// CreateBucketDrawer.tsx
 export const sendCreateBucketEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'Object Storage',

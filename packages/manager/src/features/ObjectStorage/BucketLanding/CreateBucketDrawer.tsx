@@ -23,6 +23,7 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { sendCreateBucketEvent } from 'src/utilities/analytics';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textWrapper: {
@@ -82,6 +83,7 @@ export const CreateBucketDrawer = (props: Props) => {
     },
     async onSubmit(values) {
       await createBucket(values);
+      sendCreateBucketEvent(values.cluster);
       onClose();
     },
   });
