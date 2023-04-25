@@ -48,9 +48,13 @@ export interface Props {
   legendRows?: Array<any>;
   unit?: string;
   /**
-   * If provided, will be used to render the accessible graph data
+   * If provided, will be responsible to both rendering the accessible graph data table and an associated unit.
+   * Both nested props require a value for the table to render.
    */
-  accessibleUnit?: string;
+  accessibleDataTable?: {
+    display: boolean;
+    unit: string;
+  };
   nativeLegend?: boolean; // Display chart.js native legend
   formatData?: (value: number) => number | null;
   formatTooltip?: (value: number) => string;
@@ -110,7 +114,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     nativeLegend,
     tabIndex,
     unit,
-    accessibleUnit,
+    accessibleDataTable,
   } = props;
 
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -401,12 +405,12 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           aria-label={ariaLabel || 'Stats and metrics'}
         />
       </div>
-      {accessibleUnit && (
+      {accessibleDataTable?.display && accessibleDataTable?.unit && (
         <AccessibleGraphData
           chartInstance={chartInstance.current}
           ariaLabel={ariaLabel}
           hiddenDatasets={hiddenDatasets}
-          accessibleUnit={accessibleUnit}
+          accessibleUnit={accessibleDataTable.unit}
         />
       )}
     </div>

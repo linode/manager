@@ -183,7 +183,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
         timezone={profile?.timezone ?? 'UTC'}
         chartHeight={190}
         unit={`/s`}
-        accessibleUnit="Kb/s"
+        accessibleDataTable={{ display: true, unit: 'Kb/s' }}
         formatData={convertNetworkData}
         formatTooltip={formatTooltip}
         showToday={true}
