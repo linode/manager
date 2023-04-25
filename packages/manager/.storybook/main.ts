@@ -12,7 +12,6 @@ const config: StorybookConfig = {
     '@storybook/addon-viewport',
     'storybook-dark-mode',
   ],
-  staticDirs: ['../public'],
   framework: {
     name: '@storybook/react-vite',
     options: {},
@@ -25,6 +24,7 @@ const config: StorybookConfig = {
   async viteFinal(config) {
     return mergeConfig(config, {
       base: './',
+      publicDir: 'public',
       resolve: {
         preserveSymlinks: true,
       },
