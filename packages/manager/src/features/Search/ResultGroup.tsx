@@ -13,7 +13,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import ResultRow from './ResultRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
