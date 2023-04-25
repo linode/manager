@@ -2,11 +2,11 @@ import * as React from 'react';
 import Divider from '../core/Divider';
 import { DisplaySection } from './DisplaySection';
 
-interface Props {
+interface DisplaySectionListProps {
   displaySections?: { title: string; details?: string | number }[];
 }
 
-const DisplaySectionList = ({ displaySections }: Props) => {
+const DisplaySectionList = ({ displaySections }: DisplaySectionListProps) => {
   if (!displaySections) {
     return null;
   }

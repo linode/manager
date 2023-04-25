@@ -2,12 +2,12 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { StyledDiv2, SxTypography } from './styles';
 
-export interface Props {
+export interface DisplaySectionProps {
   title: string;
   details?: string | number;
 }
 
-const DisplaySection = React.memo((props: Props) => {
+const DisplaySection = React.memo((props: DisplaySectionProps) => {
   const { title, details } = props;
 
   return (

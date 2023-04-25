@@ -4,7 +4,7 @@ import Typography from 'src/components/core/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { StyledButton, StyledDiv1, StyledDiv2, SxTypography } from './styles';
 
-interface Props {
+interface CheckoutBarProps {
   onDeploy: () => void;
   heading: string;
   calculatedPrice?: number;
@@ -17,7 +17,7 @@ interface Props {
   agreement?: JSX.Element;
 }
 
-const CheckoutBar = (props: Props) => {
+const CheckoutBar = (props: CheckoutBarProps) => {
   const {
     onDeploy,
     heading,
