@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added:
 - Metadata
 - Add No Results section for Marketplace Search #8999
+- Add Private IP checkbox when cloning a Linode #9039
 
 ### Changed:
 - `<RegionSelect />` can now dynamically get country flag and group all countrys #8996
@@ -33,6 +34,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUIv5 Migration - Components > CreateLinodeDisabled #9015
 - MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
 - MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
+- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
+- - MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
 - Add basic Adobe Analytics tracking #8989
 
 ## [2023-04-18] - v1.91.1
