@@ -425,6 +425,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             (thisOption) => thisOption.value === config?.root_device
           )
         );
+        const configInterfaces = config?.interfaces?.map(
+          ({ ipam_address, label, purpose }) => {
+            return { ipam_address, label, purpose };
+          }
+        );
         resetForm({
           values: {
             useCustomRoot: isUsingCustomRoot(config.root_device),
@@ -438,7 +443,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: interfacesToState(config.interfaces),
+            interfaces: interfacesToState(configInterfaces),
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
