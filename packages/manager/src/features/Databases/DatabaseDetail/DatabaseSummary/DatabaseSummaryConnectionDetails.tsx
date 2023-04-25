@@ -6,7 +6,7 @@ import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';

@@ -80,5 +80,3 @@ export const CopyTooltip = (props: Props) => {
     </ToolTip>
   );
 };
-
-export default CopyTooltip;

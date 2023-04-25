@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Download from 'src/assets/icons/download.svg';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
