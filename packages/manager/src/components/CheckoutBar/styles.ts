@@ -37,4 +37,14 @@ const StyledDiv2 = styled('div')(({ theme }) => ({
   },
 }));
 
-export { StyledButton, StyledDiv1, StyledDiv2 };
+const SxTypography = () => {
+  const theme = useTheme();
+
+  return {
+    color: theme.color.headline,
+    fontSize: '.8rem',
+    lineHeight: '1.5em',
+  };
+};
+
+export { StyledButton, StyledDiv1, StyledDiv2, SxTypography };

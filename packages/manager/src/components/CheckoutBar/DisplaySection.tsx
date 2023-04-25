@@ -1,7 +1,6 @@
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { StyledDiv2 } from './styles';
+import { StyledDiv2, SxTypography } from './styles';
 
 export interface Props {
   title: string;
@@ -10,8 +9,6 @@ export interface Props {
 
 const DisplaySection = React.memo((props: Props) => {
   const { title, details } = props;
-
-  const theme = useTheme();
 
   return (
     <StyledDiv2>
@@ -24,11 +21,7 @@ const DisplaySection = React.memo((props: Props) => {
         <Typography
           component="span"
           data-qa-details={details}
-          sx={{
-            color: theme.color.headline,
-            fontSize: '.8rem',
-            lineHeight: '1.5em',
-          }}
+          sx={SxTypography}
         >
           {details}
         </Typography>

@@ -2,8 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import { fadeIn } from 'src/styles/keyframes';
-import { StyledButton, StyledDiv1, StyledDiv2 } from './styles';
+import { StyledButton, StyledDiv1, StyledDiv2, SxTypography } from './styles';
 
 interface Props {
   onDeploy: () => void;
@@ -51,20 +50,12 @@ const CheckoutBar = (props: Props) => {
       </Typography>
       {children}
       {
-        <StyledDiv2
-          sx={{
-            animation: `${fadeIn} 225ms linear forwards`,
-            opacity: 0,
-          }}
-          data-qa-total-price
-        >
+        <StyledDiv2 data-qa-total-price>
           <DisplayPrice price={price} interval="mo" />
           {priceHelperText && price > 0 && (
             <Typography
               sx={{
-                color: theme.color.headline,
-                fontSize: '.8rem',
-                lineHeight: '1.5em',
+                ...SxTypography,
                 marginTop: theme.spacing(),
               }}
             >
