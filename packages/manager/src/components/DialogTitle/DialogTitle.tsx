@@ -10,7 +10,7 @@ interface DiaglogTitleProps {
   title: string;
 }
 
-const DialogTitle = (props: DiaglogTitleProps) => {
+const DialogTitle = (props: DialogTitleProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const { className, onClose, title } = props;
 
