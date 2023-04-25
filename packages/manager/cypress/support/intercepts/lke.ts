@@ -12,6 +12,11 @@ import { kubernetesVersions } from 'support/constants/lke';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
+import { randomDomainName } from 'support/util/random';
+import {
+  kubernetesDashboardUrlFactory,
+  kubeEndpointFactory,
+} from '@src/factories';
 
 /**
  * Intercepts GET request to retrieve Kubernetes versions and mocks response.
@@ -222,6 +227,113 @@ export const mockDeleteNodePool = (
     'DELETE',
     apiMatcher(`lke/clusters/${clusterId}/pools/${nodePoolId}`),
     makeResponse({})
+  );
+};
+
+/**
+ * Intercepts POST request to recycle a node and mocks the response.
+ *
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
+ * @param nodeId - ID of node for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRecycleNode = (
+  clusterId: number,
+  nodeId: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`lke/clusters/${clusterId}/nodes/${nodeId}/recycle`),
+    makeResponse({})
+  );
+};
+
+/**
+ * Intercepts POST request to recycle a node pool and mocks the response.
+ *
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
+ * @param nodePoolId - Numeric ID of node pool for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRecycleNodePool = (
+  clusterId: number,
+  poolId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`lke/clusters/${clusterId}/pools/${poolId}/recycle`),
+    makeResponse({})
+  );
+};
+
+/**
+ * Intercepts POST request to recycle all of a cluster's nodes and mocks the response.
+ *
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRecycleAllNodes = (
+  clusterId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`lke/clusters/${clusterId}/recycle`),
+    makeResponse({})
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve Kubernetes cluster dashboard URL and mocks response.
+ *
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
+ * @param url - Optional URL to include in mocked response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetDashboardUrl = (clusterId: number, url?: string) => {
+  const dashboardUrl = url ?? `https://${randomDomainName()}`;
+  const dashboardResponse = kubernetesDashboardUrlFactory.build({
+    url: dashboardUrl,
+  });
+
+  return cy.intercept(
+    'GET',
+    apiMatcher(`lke/clusters/${clusterId}/dashboard`),
+    makeResponse(dashboardResponse)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve cluster API endpoints and mocks response.
+ *
+ * By default, a single endpoint 'https://cy-test.linodelke.net:443' is returned.
+ * Cloud Manager will only display endpoints that end with 'linodelke.net:443'.
+ *
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
+ * @param endpoints - Optional array of API endpoints to include in mocked response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetApiEndpoints = (
+  clusterId: number,
+  endpoints?: string[]
+): Cypress.Chainable => {
+  // Endpoint has to end with 'linodelke.net:443' to be displayed in Cloud.
+  const kubeEndpoints = endpoints
+    ? endpoints.map((endpoint: string) =>
+        kubeEndpointFactory.build({ endpoint })
+      )
+    : kubeEndpointFactory.build({
+        endpoint: `https://cy-test.linodelke.net:443`,
+      });
+
+  return cy.intercept(
+    'GET',
+    apiMatcher(`lke/clusters/${clusterId}/api-endpoints*`),
+    paginateResponse(kubeEndpoints)
   );
 };
 
