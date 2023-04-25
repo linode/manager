@@ -158,7 +158,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
     return (
       <LineGraph
         ariaLabel="CPU Usage Graph"
-        accessibleDataTable={{ display: true, unit: '%' }}
+        accessibleDataTable={{ unit: '%' }}
         timezone={timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}
@@ -191,7 +191,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
     return (
       <LineGraph
         ariaLabel="Disk I/O Graph"
-        accessibleDataTable={{ display: true, unit: 'blocks/s' }}
+        accessibleDataTable={{ unit: 'blocks/s' }}
         timezone={timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}

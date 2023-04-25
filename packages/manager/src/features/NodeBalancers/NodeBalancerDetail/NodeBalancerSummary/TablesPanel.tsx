@@ -139,7 +139,7 @@ const TablesPanel = () => {
             ariaLabel="Connections Graph"
             timezone={timezone}
             showToday={true}
-            accessibleDataTable={{ display: true, unit: 'CXN/s' }}
+            accessibleDataTable={{ unit: 'CXN/s' }}
             data={[
               {
                 label: 'Connections',
@@ -208,7 +208,7 @@ const TablesPanel = () => {
             ariaLabel="Traffic Graph"
             timezone={timezone}
             showToday={true}
-            accessibleDataTable={{ display: true, unit: 'bits/s' }}
+            accessibleDataTable={{ unit: 'bits/s' }}
             data={[
               {
                 label: 'Traffic In',

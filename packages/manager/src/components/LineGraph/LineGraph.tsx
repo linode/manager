@@ -48,11 +48,9 @@ export interface Props {
   legendRows?: Array<any>;
   unit?: string;
   /**
-   * If provided, will be responsible to both rendering the accessible graph data table and an associated unit.
-   * Both nested props require a value for the table to render.
+   * `accessibleDataTable` is responsible to both rendering the accessible graph data table and an associated unit.
    */
   accessibleDataTable?: {
-    display: boolean;
     unit: string;
   };
   nativeLegend?: boolean; // Display chart.js native legend
@@ -405,7 +403,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           aria-label={ariaLabel || 'Stats and metrics'}
         />
       </div>
-      {accessibleDataTable?.display && accessibleDataTable?.unit && (
+      {accessibleDataTable?.unit && (
         <AccessibleGraphData
           chartInstance={chartInstance.current}
           ariaLabel={ariaLabel}

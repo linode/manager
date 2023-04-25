@@ -120,7 +120,7 @@ const createTabs = (
             <div className={classes.canvasContainer}>
               <LineGraph
                 ariaLabel="CPU Usage Graph"
-                accessibleDataTable={{ display: true, unit: '%' }}
+                accessibleDataTable={{ unit: '%' }}
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
@@ -152,7 +152,7 @@ const createTabs = (
                 showToday={true}
                 nativeLegend
                 unit="/s"
-                accessibleDataTable={{ display: true, unit: 'Kb/s"' }}
+                accessibleDataTable={{ unit: 'Kb/s"' }}
                 formatData={convertNetworkData}
                 formatTooltip={_formatTooltip}
                 data={[
@@ -187,7 +187,7 @@ const createTabs = (
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
-                accessibleDataTable={{ display: true, unit: 'op/s' }}
+                accessibleDataTable={{ unit: 'op/s' }}
                 data={[
                   {
                     borderColor: 'transparent',
