@@ -5,7 +5,7 @@ import Close from '@mui/icons-material/Close';
 import IconButton from 'src/components/IconButton/IconButton';
 import { SxProps } from '@mui/system';
 
-interface DiaglogTitleProps {
+interface DialogTitleProps {
   className?: string;
   id?: string;
   onClose?: () => void;
@@ -13,7 +13,7 @@ interface DiaglogTitleProps {
   title: string;
 }
 
-const DialogTitle = (props: DiaglogTitleProps) => {
+const DialogTitle = (props: DialogTitleProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const { className, onClose, title, id, sx } = props;
 
