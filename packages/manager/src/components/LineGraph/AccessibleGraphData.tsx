@@ -52,8 +52,10 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
                 : 'timestamp unavailable'}
             </td>
             <td>
-              {value ? Number(value).toFixed(2) : 'value unavailable'}
-              {value && accessibleUnit}
+              {value !== undefined
+                ? Number(value).toFixed(2)
+                : 'value unavailable'}
+              {value !== undefined && accessibleUnit}
             </td>
           </tr>
         );
