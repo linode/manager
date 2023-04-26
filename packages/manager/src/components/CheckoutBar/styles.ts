@@ -9,7 +9,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const StyledDiv1 = styled('div')(() => {
+const StyledRoot = styled('div')(() => {
   const theme = useTheme();
 
   return {
@@ -25,7 +25,7 @@ const StyledDiv1 = styled('div')(() => {
   };
 });
 
-const StyledDiv2 = styled('div')(({ theme }) => ({
+const StyledCheckoutSection = styled('div')(({ theme }) => ({
   padding: '12px 0',
   [theme.breakpoints.down('md')]: {
     '& button': {
@@ -47,4 +47,4 @@ const SxTypography = () => {
   };
 };
 
-export { StyledButton, StyledDiv1, StyledDiv2, SxTypography };
+export { StyledButton, StyledRoot, StyledCheckoutSection, SxTypography };

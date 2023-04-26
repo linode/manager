@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { StyledDiv2, SxTypography } from './styles';
+import { StyledCheckoutSection, SxTypography } from './styles';
 
 export interface DisplaySectionProps {
   title: string;
@@ -11,7 +11,7 @@ const DisplaySection = React.memo((props: DisplaySectionProps) => {
   const { title, details } = props;
 
   return (
-    <StyledDiv2>
+    <StyledCheckoutSection>
       {title && (
         <Typography variant="h3" data-qa-subheading={title}>
           {title}
@@ -26,7 +26,7 @@ const DisplaySection = React.memo((props: DisplaySectionProps) => {
           {details}
         </Typography>
       ) : null}
-    </StyledDiv2>
+    </StyledCheckoutSection>
   );
 });
 

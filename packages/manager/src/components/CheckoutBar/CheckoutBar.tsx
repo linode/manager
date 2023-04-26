@@ -2,7 +2,12 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import { StyledButton, StyledDiv1, StyledDiv2, SxTypography } from './styles';
+import {
+  StyledButton,
+  StyledCheckoutSection,
+  StyledRoot,
+  SxTypography,
+} from './styles';
 
 interface CheckoutBarProps {
   onDeploy: () => void;
@@ -36,7 +41,7 @@ const CheckoutBar = (props: CheckoutBarProps) => {
   const price = calculatedPrice ?? 0;
 
   return (
-    <StyledDiv1>
+    <StyledRoot>
       <Typography
         variant="h2"
         sx={{
@@ -50,7 +55,7 @@ const CheckoutBar = (props: CheckoutBarProps) => {
       </Typography>
       {children}
       {
-        <StyledDiv2 data-qa-total-price>
+        <StyledCheckoutSection data-qa-total-price>
           <DisplayPrice price={price} interval="mo" />
           {priceHelperText && price > 0 && (
             <Typography
@@ -62,10 +67,10 @@ const CheckoutBar = (props: CheckoutBarProps) => {
               {priceHelperText}
             </Typography>
           )}
-        </StyledDiv2>
+        </StyledCheckoutSection>
       }
       {agreement ? agreement : null}
-      <StyledDiv2>
+      <StyledCheckoutSection>
         <StyledButton
           buttonType="primary"
           disabled={disabled}
@@ -75,9 +80,9 @@ const CheckoutBar = (props: CheckoutBarProps) => {
         >
           {submitText ?? 'Create'}
         </StyledButton>
-      </StyledDiv2>
+      </StyledCheckoutSection>
       {footer ? footer : null}
-    </StyledDiv1>
+    </StyledRoot>
   );
 };
 
