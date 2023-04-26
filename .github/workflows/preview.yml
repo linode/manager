@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.event.issue_comment.issue.pull_request && contains(fromJSON('["CONTRIBUTOR", "COLLABORATOR"]'), github.event.issue_comment.comment.author_association) && starsWith("/preview", github.event.issue_comment.comment.body)
+    if: github.event.issue_comment.issue.pull_request && contains(fromJSON('["CONTRIBUTOR", "COLLABORATOR"]'), github.event.issue_comment.comment.author_association) && contains(github.event.issue_comment.comment.body, '/preview')
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v3
@@ -62,7 +62,7 @@ jobs:
 
   cleanup:
     runs-on: "ubuntu-latest"
-    if: github.event.pull_request.action == 'closed'
+    if: github.event.issue.pull_request && github.event.pull_request.action == 'closed'
     steps:
       - uses: linode/action-linode-cli@v1
         with:
@@ -84,5 +84,5 @@ jobs:
           secret_key: ${{ secrets.S3_SECRET_KEY }}
 
       - run: |
-          s3cmd del --recursive s3://${LABEL}
+          s3cmd del --recursive --force s3://${LABEL}
           s3cmd rb s3://${LABEL}
