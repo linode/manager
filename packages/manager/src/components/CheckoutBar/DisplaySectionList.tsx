@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Divider from '../core/Divider';
-import DisplaySection from './DisplaySection';
+import { DisplaySection } from './DisplaySection';
 
-interface Props {
+interface DisplaySectionListProps {
   displaySections?: { title: string; details?: string | number }[];
 }
 
-export const DisplaySectionList: React.FC<Props> = ({ displaySections }) => {
+const DisplaySectionList = ({ displaySections }: DisplaySectionListProps) => {
   if (!displaySections) {
     return null;
   }
@@ -27,4 +27,4 @@ export const DisplaySectionList: React.FC<Props> = ({ displaySections }) => {
   );
 };
 
-export default DisplaySectionList;
+export { DisplaySectionList };
