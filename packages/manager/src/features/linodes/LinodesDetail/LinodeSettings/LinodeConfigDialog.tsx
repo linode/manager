@@ -193,15 +193,13 @@ const pathsOptions = [
 ];
 
 const interfacesToState = (interfaces?: Interface[]) => {
-  const processedInterfaces = interfaces?.map(
-    ({ ipam_address, label, purpose }) => {
-      return { ipam_address, label, purpose };
-    }
-  );
-  if (!processedInterfaces || processedInterfaces.length === 0) {
+  if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
   }
-  return padInterfaceList(processedInterfaces);
+  const interfacesPayload = interfaces.map(
+    ({ ipam_address, label, purpose }) => ({ ipam_address, label, purpose })
+  );
+  return padInterfaceList(interfacesPayload);
 };
 
 const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
