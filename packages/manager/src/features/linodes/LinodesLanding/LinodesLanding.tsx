@@ -40,7 +40,7 @@ import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDial
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
 import LinodeResize from '../LinodesDetail/LinodeResize';
-import MigrateLinode from '../MigrateLinode';
+import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';

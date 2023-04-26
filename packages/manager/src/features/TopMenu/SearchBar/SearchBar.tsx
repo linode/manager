@@ -22,7 +22,7 @@ import {
 } from 'src/queries/objectStorage';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
+import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';

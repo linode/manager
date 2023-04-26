@@ -7,7 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Added:
+- Metadata
 - Add No Results section for Marketplace Search #8999
+- Add Private IP checkbox when cloning a Linode #9039
 
 ### Changed:
 - `<RegionSelect />` can now dynamically get country flag and group all countrys #8996
@@ -19,6 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Event entities should only be linked for true labels
 - Radio button hover effect #9031
 - Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
+- Inability to edit and save Linode Configurations #9053
 
 ### Tech Stories:
 - MUIv5 Migration - Components > CircleProgress #9028
@@ -27,11 +30,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUIv5 Migration - Grid v2 for Features #8985
 - MUIv5 Migration - Components > Dialog #9020
 - MUIv5 Migration - Components > DialogTitle #9050
+- MUIv5 Migration - Components > DeletionDialog #9047
 - MUIv5 Migration - Components > Currency #9030
 - MUIv5 Migration - Components > DisplayPrice #9022
 - MUIv5 Migration - Components > CreateLinodeDisabled #9015
 - MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
 - MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
+- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
+- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
+- MUIv5 Migration - `SRC > Components > CheckoutBar` #9051
 - Add basic Adobe Analytics tracking #8989
 
 ## [2023-04-18] - v1.91.1
