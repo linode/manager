@@ -13,9 +13,9 @@ import { wrapWithTheme } from '../src/utilities/testHelpers';
 import { useDarkMode } from 'storybook-dark-mode';
 import { DocsContainer as BaseContainer } from '@storybook/addon-docs';
 import { themes } from '@storybook/theming';
-import '../src/assets/fonts/fonts.css';
-import '../src/index.css';
 import { worker } from '../src/mocks/testBrowser';
+
+import '../src/index.css';
 
 MINIMAL_VIEWPORTS.mobile1.styles = {
   height: '667px',
