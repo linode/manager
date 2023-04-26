@@ -6,7 +6,7 @@ import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   removeDisabledStyles: {
-    '& .MuiInput-input': {
+    '&& .MuiInput-input': {
       borderColor: theme.name === 'light' ? '#ccc' : '#222',
       color:
         theme.name === 'light'
@@ -15,7 +15,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       opacity: 1,
       '-webkit-text-fill-color': 'unset !important',
     },
-    '& .MuiInput-root': {
+    '&& .MuiInput-root': {
       borderColor: theme.name === 'light' ? '#ccc' : '#222',
       opacity: 1,
     },
