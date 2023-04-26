@@ -196,7 +196,10 @@ const interfacesToState = (interfaces?: Interface[]) => {
   if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
   }
-  return padInterfaceList(interfaces);
+  const interfacesPayload = interfaces.map(
+    ({ ipam_address, label, purpose }) => ({ ipam_address, label, purpose })
+  );
+  return padInterfaceList(interfacesPayload);
 };
 
 const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
@@ -425,6 +428,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             (thisOption) => thisOption.value === config?.root_device
           )
         );
+
         resetForm({
           values: {
             useCustomRoot: isUsingCustomRoot(config.root_device),

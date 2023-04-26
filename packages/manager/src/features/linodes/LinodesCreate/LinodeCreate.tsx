@@ -1,4 +1,4 @@
-import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
+import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import { Theme } from '@mui/material/styles';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
@@ -151,7 +151,7 @@ interface Props {
   showGeneralError?: boolean;
   vlanLabel: string | null;
   ipamAddress: string | null;
-  handleVLANChange: (updatedInterface: Interface) => void;
+  handleVLANChange: (updatedInterface: InterfacePayload) => void;
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   handleAgreementChange: () => void;
@@ -870,7 +870,7 @@ export class LinodeCreate extends React.PureComponent<
   }
 }
 
-const defaultPublicInterface: Interface = {
+const defaultPublicInterface: InterfacePayload = {
   purpose: 'public',
   label: '',
   ipam_address: '',
