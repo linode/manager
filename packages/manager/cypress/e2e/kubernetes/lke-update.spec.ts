@@ -233,19 +233,6 @@ describe('LKE cluster updates', () => {
     cy.wait('@recycleNode');
     ui.toast.assertMessage('Node queued for recycling.');
 
-    // For now, we have to manually cancel out of this dialog.
-    ui.dialog.findByTitle(`Recycle ${mockKubeLinode.id}?`).within(() => {
-      recycleWarningSubstrings.forEach((warning: string) => {
-        cy.findByText(warning, { exact: false }).should('be.visible');
-      });
-
-      ui.button
-        .findByTitle('Cancel')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-    });
-
     ui.button
       .findByTitle('Recycle Pool Nodes')
       .should('be.visible')
