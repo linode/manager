@@ -193,10 +193,15 @@ const pathsOptions = [
 ];
 
 const interfacesToState = (interfaces?: Interface[]) => {
-  if (!interfaces || interfaces.length === 0) {
+  const processedInterfaces = interfaces?.map(
+    ({ ipam_address, label, purpose }) => {
+      return { ipam_address, label, purpose };
+    }
+  );
+  if (!processedInterfaces || processedInterfaces.length === 0) {
     return defaultInterfaceList;
   }
-  return padInterfaceList(interfaces);
+  return padInterfaceList(processedInterfaces);
 };
 
 const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
@@ -425,11 +430,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             (thisOption) => thisOption.value === config?.root_device
           )
         );
-        const configInterfaces = config?.interfaces?.map(
-          ({ ipam_address, label, purpose }) => {
-            return { ipam_address, label, purpose };
-          }
-        );
+
         resetForm({
           values: {
             useCustomRoot: isUsingCustomRoot(config.root_device),
@@ -443,7 +444,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: interfacesToState(configInterfaces),
+            interfaces: interfacesToState(config.interfaces),
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
