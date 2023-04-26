@@ -62,7 +62,7 @@ jobs:
 
   cleanup:
     runs-on: "ubuntu-latest"
-    if: github.event.issue.pull_request && github.event.pull_request.action == 'closed'
+    if: github.event.issue.pull_request && github.event.issue.pull_request.action == 'closed'
     steps:
       - uses: linode/action-linode-cli@v1
         with:
