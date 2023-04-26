@@ -1277,11 +1277,6 @@
   resolved "https://registry.yarnpkg.com/@braintree/browser-detection/-/browser-detection-1.14.0.tgz#d1b397b00ccbc7cac12f6cec27c0a413d740332a"
   integrity sha512-OsqU+28RhNvSw8Y5JEiUHUrAyn4OpYazFkjSJe8ZVZfkAaRXQc6hsV38MMEpIlkPMig+A68buk/diY+0O8/dMQ==
 
-"@braintree/class-list@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@braintree/class-list/-/class-list-0.2.0.tgz#4c4352ac19c262f61526f93d07d248244b399ec4"
-  integrity sha512-iLXJT51jnBFuGvyTAQqZ2uwyEVwdyapyz52F5MK1Uoh2ZOiPJ5hoqI0wncyCP2KfqrgyCpOkkEaLMLb/94unGA==
-
 "@braintree/event-emitter@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@braintree/event-emitter/-/event-emitter-0.4.1.tgz#204eaad8cf84eb7bf81fb288a359d34eda85a396"
@@ -1297,7 +1292,7 @@
   resolved "https://registry.yarnpkg.com/@braintree/iframer/-/iframer-1.1.0.tgz#7e59b975c2a48bd92616f653367a5214fc2ddd4b"
   integrity sha512-tVpr7U6u6bqeQlHreEjYMNtnHX62vLnNWziY2kQLqkWhvusPuY5DfuGEIPpWqsd+V/a1slyTQaxK6HWTlH6A/Q==
 
-"@braintree/sanitize-url@6.0.0", "@braintree/sanitize-url@^6.0.2":
+"@braintree/sanitize-url@6.0.2":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-6.0.2.tgz#6110f918d273fe2af8ea1c4398a88774bb9fc12f"
   integrity sha512-Tbsj02wXCbqGmzdnXNk0SOF19ChhRU70BsroIi4Pm6Ehp56in6vch94mfbdQ17DozxkL3BAVjbZ4Qc1a0HFRAg==
@@ -2311,19 +2306,19 @@
   resolved "https://registry.yarnpkg.com/@open-draft/until/-/until-1.0.3.tgz#db9cc719191a62e7d9200f6e7bab21c5b848adca"
   integrity sha512-Aq58f5HiWdyDlFffbbSjAlv596h/cOnt2DO1w3DOC7OJ5EHs0hd/nycJfiu9RJbT6Yk6F1knnRRXNSpxoIVZ9Q==
 
-"@paypal/paypal-js@^5.1.4":
-  version "5.1.4"
-  resolved "https://registry.yarnpkg.com/@paypal/paypal-js/-/paypal-js-5.1.4.tgz#aff45a27bb542dc331853577094aee78d5233b75"
-  integrity sha512-5ktge4DFOMu3rvFR4YWDiPm4wDUzOmghtCM9ZxgJyJCOJP+61IVYdrENysMay91T4GOZ10k2ywWcBN5shsGhLw==
+"@paypal/paypal-js@^5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@paypal/paypal-js/-/paypal-js-5.1.6.tgz#8ec59f4cc016addb3de41511f70950fd0359ffdb"
+  integrity sha512-1upF06pv0AUtTftRVSra44p8ibqGa3ruKLArvdhpZla25zcrND7R+nDUIMrJ0iteVYZowhujZStFs6NoruExfg==
   dependencies:
-    promise-polyfill "^8.2.3"
+    promise-polyfill "^8.3.0"
 
-"@paypal/react-paypal-js@^7.4.2":
-  version "7.8.2"
-  resolved "https://registry.yarnpkg.com/@paypal/react-paypal-js/-/react-paypal-js-7.8.2.tgz#df24d0e50aebce9d9ac467c53a66f45ed93beca1"
-  integrity sha512-H6/qpAVkf57spCgvQPO7jNhtD58KdiywqKYmgmJm7Xnwu2wH03XfOsBjlINi1zM1VnzcyKhcliyBh9+uTAzI0g==
+"@paypal/react-paypal-js@^7.8.3":
+  version "7.8.3"
+  resolved "https://registry.yarnpkg.com/@paypal/react-paypal-js/-/react-paypal-js-7.8.3.tgz#a5ca30a6db6a16776a447976c168f6b7438b1fb9"
+  integrity sha512-7sD5JFA0IH9kysyGFv5DTmtPn54vLWZ0DLhdjUvsjqZnoEs11mJJJlTsTA7MkIO3jBAJOWlfoA4wLYzmy68C4g==
   dependencies:
-    "@paypal/paypal-js" "^5.1.4"
+    "@paypal/paypal-js" "^5.1.6"
     "@paypal/sdk-constants" "^1.0.122"
 
 "@paypal/sdk-constants@^1.0.122":
@@ -3684,10 +3679,10 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/braintree-web@^3.75.19":
-  version "3.75.22"
-  resolved "https://registry.yarnpkg.com/@types/braintree-web/-/braintree-web-3.75.22.tgz#b718c1e415c03b59144dc7b8ce22d84b5583a0fa"
-  integrity sha512-wvefF6OZkEg8twgEf/TMGPZ6OlLyq59eHe77D5QlQgAApUI4QkHwuK5UldVi4/6gBhwvW6snfNUdaQTfK3auRg==
+"@types/braintree-web@^3.75.23":
+  version "3.75.23"
+  resolved "https://registry.yarnpkg.com/@types/braintree-web/-/braintree-web-3.75.23.tgz#4ef88d6724582c9f6f01f57f90b98ec575087976"
+  integrity sha512-uD2wQCpHXlaPHjVkoaHgNcKY8zpPddSYRztWQ3cRbpiP99Fk4p6HqDV/OkB58oMyLf5syz9cYG96qsS4VXtPKw==
   dependencies:
     "@types/googlepay" "*"
     "@types/paypal-checkout-components" "*"
@@ -5359,18 +5354,17 @@ braces@^3.0.2, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-braintree-web@^3.85.3:
-  version "3.91.0"
-  resolved "https://registry.yarnpkg.com/braintree-web/-/braintree-web-3.91.0.tgz#e763b1eec2a99229ba23ed23bcec97311a821ace"
-  integrity sha512-7fiYRDY+f7bZ322Uk0iBFuanLyrDd1GKKwPUElbhbRS3AtImoSeGFvwvGfyxDo+vrLAoa7OghhcfI+rPY7xY6Q==
+braintree-web@^3.92.2:
+  version "3.92.2"
+  resolved "https://registry.yarnpkg.com/braintree-web/-/braintree-web-3.92.2.tgz#a11454f47b81fc7984dc2a1d5e3402cf1f7f6515"
+  integrity sha512-aGPwbXddmgUTshsCQvPi4OJcUi2KnOj4O8+lfCCohyO9qX+ZKNBNYfcdzhfQ8N+9DbLebUyrTjRJyJC1a+6oxA==
   dependencies:
     "@braintree/asset-loader" "0.4.4"
     "@braintree/browser-detection" "1.14.0"
-    "@braintree/class-list" "0.2.0"
     "@braintree/event-emitter" "0.4.1"
     "@braintree/extended-promise" "0.4.1"
     "@braintree/iframer" "1.1.0"
-    "@braintree/sanitize-url" "6.0.0"
+    "@braintree/sanitize-url" "6.0.2"
     "@braintree/uuid" "0.1.0"
     "@braintree/wrap-promise" "2.1.0"
     card-validator "8.1.1"
@@ -12272,7 +12266,7 @@ promise-polyfill@8.2.3:
   resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.2.3.tgz#2edc7e4b81aff781c88a0d577e5fe9da822107c6"
   integrity sha512-Og0+jCRQetV84U8wVjMNccfGCnMQ9mGs9Hv78QFe+pSDD3gWTpz0y+1QCuxy5d/vBFuZ3iwP2eycAkvqIMPmWg==
 
-promise-polyfill@^8.1.3, promise-polyfill@^8.2.3:
+promise-polyfill@^8.1.3, promise-polyfill@^8.3.0:
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.3.0.tgz#9284810268138d103807b11f4e23d5e945a4db63"
   integrity sha512-H5oELycFml5yto/atYqmjyigJoAo3+OXwolYiH7OfQuYlAqhxNvTfiNMbV9hsC6Yp83yE5r2KTVmtrG6R9i6Pg==
