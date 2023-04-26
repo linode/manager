@@ -1,0 +1,88 @@
+name: preview
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [closed]
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ github.event.issue_comment.issue.pull_request }} && contains(fromJSON('["CONTRIBUTOR", "COLLABORATOR"]', github.event.issue_comment.comment.author_association) && starsWith("/preview", github.event.issue_comment.comment.body)
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: |
+          # TODO: change label
+          echo LABEL="stjacobs-cloud-pr-${{ github.event.pull_request.number }}" >> ${GITHUB_ENV}
+          echo URL="https://${LABEL}.website-us-east-1.linodeobjects.com" >> ${GITHUB_ENV}
+
+      - uses: linode/action-linode-cli@v1
+        with:
+          token: ${{ secrets.LINODE_TOKEN }}
+
+      - run: |
+          echo LINODE_OAUTH_CLIENT_ID=$(linode-cli account clients-list --label="${LABEL}" --no-header --text --format id) >> ${GITHUB_ENV}
+
+      - run: |
+          echo LINODE_OAUTH_CLIENT_ID=$(linode-cli account client-create --label="${LABEL}" --redirect=${URL}/oauth/callback --no-header --text --format id) >> ${GITHUB_ENV}
+        if: env.LINODE_OAUTH_CLIENT_ID == ''
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+
+      - run: |
+          yarn install:all
+          yarn build
+        env:
+          REACT_APP_ENABLE_DEV_TOOLS: true
+          REACT_APP_API_ROOT: "https://api.linode.com/v4"
+          REACT_APP_APP_ROOT: "${URL}"
+          REACT_APP_CLIENT_ID: "${LINODE_OAUTH_CLIENT_ID}"
+
+      - uses: s3-actions/s3cmd@v1.4.0
+        with:
+          provider: linode
+          region: us-east-1
+          access_key: ${{ secrets.S3_ACCESS_KEY }}
+          secret_key: ${{ secrets.S3_SECRET_KEY }}
+
+      - run: |
+          s3cmd ls s3://${LABEL} || s3cmd mb --acl-public s3://${LABEL}
+          s3cmd ws-create --ws-index=index.html --ws-error=index.html s3://${LABEL}
+          s3cmd sync --acl-public --no-mime-magic packages/manager/build/ s3://${LABEL}
+
+  cleanup:
+    runs-on: "ubuntu-latest"
+    if: ${{ github.event.pull_request.action }} == 'closed'
+    steps:
+      - uses: linode/action-linode-cli@v1
+        with:
+          token: ${{ secrets.LINODE_TOKEN }}
+
+      - run: |
+          echo LABEL="stjacobs-cloud-pr-${{ github.event.pull_request.number }}" >> ${GITHUB_ENV}
+          echo LINODE_OAUTH_CLIENT_ID=$(linode-cli account clients-list --label="${LABEL}" --no-header --text --format id) >> ${GITHUB_ENV}
+
+      - run: |
+          linode-cli account client-remove ${LINODE_OAUTH_CLIENT_ID}
+        if: env.LINODE_OAUTH_CLIENT_ID != ''
+
+      - uses: s3-actions/s3cmd@v1.4.0
+        with:
+          provider: linode
+          region: us-east-1
+          access_key: ${{ secrets.S3_ACCESS_KEY }}
+          secret_key: ${{ secrets.S3_SECRET_KEY }}
+
+      - run: |
+          s3cmd del --recursive s3://${LABEL}
+          s3cmd rb s3://${LABEL}
