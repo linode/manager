@@ -4,7 +4,6 @@ on:
   issue_comment:
     types: [created]
   pull_request:
-    types: [closed]
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
