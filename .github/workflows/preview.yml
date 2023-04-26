@@ -11,6 +11,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  printJob:
+    name: Print event
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
   build:
     if: github.event.issue_comment.issue.pull_request && contains(fromJSON('["CONTRIBUTOR", "COLLABORATOR"]'), github.event.issue_comment.comment.author_association) && contains(github.event.issue_comment.comment.body, '/preview')
     runs-on: "ubuntu-latest"
