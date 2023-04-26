@@ -7,22 +7,28 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Added:
+
 - Metadata
 - Add No Results section for Marketplace Search #8999
 - Add Private IP checkbox when cloning a Linode #9039
+- Accessible graph tabled data for `LineGraph` component #5915
 
 ### Changed:
-- `<RegionSelect />` can now dynamically get country flag and group all countrys #8996
+
+- `<RegionSelect />` can now dynamically get country flag and group all countries #8996
 
 ### Fixed:
+
 - Typesafety of the `<Select />` component #8986
 - Clear the Kubernetes Delete Dialog when it is re-opened #9000
 - @linode/validation version badge Label in `README.md` #9011
 - Event entities should only be linked for true labels
 - Radio button hover effect #9031
 - Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
+- Inability to edit and save Linode Configurations #9053
 
 ### Tech Stories:
+
 - MUIv5 Migration - Components > CircleProgress #9028
 - MUIv5 Migration - Components > StatusIcon #9014
 - MUIv5 Migration - Components > TagsInput, TagsPanel #8995
@@ -36,33 +42,39 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
 - MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
 - MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
+- MUIv5 Migration - `SRC > Components > CheckoutBar` #9051
 - MUIv5 Migration - `SRC > Components > CopyableTextField` #9018
 - Add basic Adobe Analytics tracking #8989
 
 ## [2023-04-18] - v1.91.1
 
 ### Fixed:
+
 - Add Premium plans to LKE #9021
 
 ## [2023-04-17] - v1.91.0
 
 ### Added:
+
 - Cross Data Center Clone warning #8937
 - `Plan` column header to plan select table #8943
 
 ### Changed:
+
 - Use Akamai logo for TPA provider screen #8982
 - Use Akamai logo for the favicon #8988
 - Only fetch grants when the user is restricted #8941
 - Improve the StackScript user defined fields (UDF) forms #8973
 
 ### Fixed:
+
 - Styling of Linode Details Add Configurations modal header #8981
 - Alignment issues with Kubernetes Node Pool table and buttons #8967
 - Domain Records not updating when navigating #8957
 - Notification menu displaying empty menu on secondary status click #8902
 
 ### Tech Story:
+
 - React Query for NodeBalancers #8964
 - React Query for Profile - Trusted Devices #8942
 - React Query for OAuth Apps #8938
