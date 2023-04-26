@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    if: ${{ github.event.issue_comment.issue.pull_request }} && contains(fromJSON('["CONTRIBUTOR", "COLLABORATOR"]', github.event.issue_comment.comment.author_association) && starsWith("/preview", github.event.issue_comment.comment.body)
+    if: github.event.issue_comment.issue.pull_request && contains(fromJSON('["CONTRIBUTOR", "COLLABORATOR"]'), github.event.issue_comment.comment.author_association) && starsWith("/preview", github.event.issue_comment.comment.body)
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v3
@@ -62,7 +62,7 @@ jobs:
 
   cleanup:
     runs-on: "ubuntu-latest"
-    if: ${{ github.event.pull_request.action }} == 'closed'
+    if: github.event.pull_request.action == 'closed'
     steps:
       - uses: linode/action-linode-cli@v1
         with:
