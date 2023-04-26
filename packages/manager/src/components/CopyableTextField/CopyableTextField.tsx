@@ -1,6 +1,6 @@
 import * as React from 'react';
-import CopyTooltip from 'src/components/CopyTooltip';
 import { makeStyles } from 'tss-react/mui';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
