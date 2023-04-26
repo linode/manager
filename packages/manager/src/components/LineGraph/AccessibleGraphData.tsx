@@ -30,14 +30,14 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
     const { label, data } = dataset;
     const hidden = hiddenDatasets.includes(tableID);
 
-    const tableHeader = (
+    const TableHeader = (
       <tr>
         <th>Time</th>
         <th>{label}</th>
       </tr>
     );
 
-    const tableBody =
+    const TableBody =
       data &&
       data.map((entry, idx) => {
         const { t: timestamp, y: value } = entry as ChartPoint;
@@ -69,8 +69,8 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
             ariaLabel && label ? ariaLabel + ` (${label})` : 'graph below'
           }`}
         >
-          <thead>{tableHeader}</thead>
-          <tbody>{tableBody}</tbody>
+          <thead>{TableHeader}</thead>
+          <tbody>{TableBody}</tbody>
         </table>
       )
     );
