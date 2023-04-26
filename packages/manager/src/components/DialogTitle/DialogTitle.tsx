@@ -3,16 +3,19 @@ import _DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
 import IconButton from 'src/components/IconButton/IconButton';
+import { SxProps } from '@mui/system';
 
 interface DiaglogTitleProps {
   className?: string;
+  id?: string;
   onClose?: () => void;
+  sx?: SxProps;
   title: string;
 }
 
 const DialogTitle = (props: DiaglogTitleProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const { className, onClose, title } = props;
+  const { className, onClose, title, id, sx } = props;
 
   React.useEffect(() => {
     if (ref.current === null) {
@@ -26,10 +29,14 @@ const DialogTitle = (props: DiaglogTitleProps) => {
     <_DialogTitle
       className={className}
       data-qa-dialog-title={title}
+      id={id}
       ref={ref}
+      sx={sx}
       title={title}
     >
       <Box
+        data-qa-drawer-title={title}
+        data-qa-dialog-title={title}
         sx={{
           alignItems: 'center',
           display: 'flex',
@@ -42,7 +49,7 @@ const DialogTitle = (props: DiaglogTitleProps) => {
         {onClose != null && (
           <IconButton
             aria-label="Close"
-            disableRipple
+            data-qa-close-drawer
             onClick={onClose}
             size="large"
             sx={{

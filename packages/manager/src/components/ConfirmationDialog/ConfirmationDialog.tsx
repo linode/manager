@@ -38,14 +38,14 @@ export interface ConfirmationDialogProps extends DialogProps {
 export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const { classes } = useStyles();
 
-  const { title, children, actions, error, ...dialogProps } = props;
+  const { title, children, actions, error, onClose, ...dialogProps } = props;
 
   return (
     <Dialog
       {...dialogProps}
       onClose={(_, reason) => {
         if (reason !== 'backdropClick') {
-          dialogProps.onClose();
+          onClose();
         }
       }}
       className={classes.root}
@@ -55,7 +55,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       data-qa-dialog
       data-testid="drawer"
     >
-      <DialogTitle title={title} onClose={dialogProps.onClose} />
+      <DialogTitle title={title} onClose={onClose} />
       <DialogContent data-qa-dialog-content className="dialog-content">
         {children}
         {error && (
