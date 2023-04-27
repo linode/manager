@@ -2,7 +2,7 @@ import * as React from 'react';
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
-import CopyableTextField from 'src/components/CopyableTextField';
+import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
