@@ -59,9 +59,7 @@ export const deleteLinode = createRequestThunk(
 
     // Removed unneeded volume stores
     queryClient.removeQueries([volumesQueryKey, 'linode', linodeId]);
-
-    // A Linode that was deleted may have had volumes attached.
-    // Invalidate paginated volume stores so they will reflect there is no attached Linode.
+    // Invalidate volume stores so they will reflect there is no attached Linode.
     queryClient.invalidateQueries([volumesQueryKey]);
 
     return response;
