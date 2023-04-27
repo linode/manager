@@ -22,7 +22,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
-  type: null | string;
+  type: string;
   status: LinodeStatus;
   updated: string;
   hypervisor: Hypervisor;

@@ -71,17 +71,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeID: number;
+  linodeId: number | undefined;
   open: boolean;
   onClose: () => void;
 }
 
 const MigrateLinode = React.memo((props: Props) => {
-  const { linodeID, onClose, open } = props;
+  const { linodeId, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const linode = useExtendedLinode(linodeID);
+  const linode = useExtendedLinode(linodeId ?? -1);
   const typesQuery = useSpecificTypes(linode?.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
 
@@ -172,7 +172,7 @@ const MigrateLinode = React.memo((props: Props) => {
 
     setLoading(true);
 
-    return scheduleOrQueueMigration(linodeID, {
+    return scheduleOrQueueMigration(linodeId ?? -1, {
       region: selectedRegion,
     })
       .then(() => {
@@ -216,7 +216,7 @@ const MigrateLinode = React.memo((props: Props) => {
   const disabledText = getDisabledReason(
     linode._events,
     linode.status,
-    linodeID
+    linodeId ?? -1
   );
 
   /** how long will this take to migrate when the migration starts */
@@ -247,7 +247,7 @@ const MigrateLinode = React.memo((props: Props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
-        linodeId={linodeID}
+        linodeId={linodeId ?? -1}
         setConfirmed={setConfirmed}
         hasConfirmed={hasConfirmed}
         error={acceptError}

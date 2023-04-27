@@ -1,5 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -62,40 +60,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  backups: LinodeBackups;
-  id: number;
-  image: string | null;
-  ipv4: string[];
-  ipv6: string;
   label: string;
-  region: string;
-  disk: number;
-  memory: number;
-  vcpus: number;
-  status: LinodeStatus;
-  displayStatus: string | null;
-  tags: string[];
-  mostRecentBackup: string | null;
+  id: number;
   width?: number;
-  loading: boolean;
-  recentEvent?: Event;
-  maintenance?: string | null;
+  maintenance?: string;
   isDashboard?: boolean;
-  isVLAN?: boolean;
 }
 
-type CombinedProps = Props;
-
-const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
-  const {
-    // linode props
-    label,
-    id,
-    // other props
-    width,
-    maintenance,
-    isDashboard,
-  } = props;
+const LinodeRowHeadCell = (props: Props) => {
+  const { label, id, width, maintenance, isDashboard } = props;
 
   const classes = useStyles();
 

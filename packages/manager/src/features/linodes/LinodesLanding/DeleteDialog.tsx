@@ -1,65 +1,50 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from 'react-query';
-import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
+import {
+  useDeleteLinodeMutation,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 
 interface Props {
-  linodeID?: number;
-  linodeLabel?: string;
+  linodeId: number | undefined;
   open: boolean;
   onClose: () => void;
-  handleDelete: (linodeID: number, queryClient: QueryClient) => Promise<{}>;
 }
 
-type CombinedProps = Props;
+export const DeleteLinodeDialog = (props: Props) => {
+  const { linodeId, open, onClose } = props;
 
-const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
-  const { linodeID, linodeLabel, open, onClose, handleDelete } = props;
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined
+  );
 
-  const queryClient = useQueryClient();
-
-  const [isDeleting, setDeleting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const { mutateAsync, error, isLoading, reset } = useDeleteLinodeMutation(
+    linodeId ?? -1
+  );
 
   React.useEffect(() => {
     if (open) {
-      /**
-       * reset error and loading states
-       */
-      setErrors(undefined);
-      setDeleting(false);
+      reset();
     }
   }, [open]);
 
-  const handleSubmit = () => {
-    if (!linodeID) {
-      return setErrors([{ reason: 'Something went wrong.' }]);
-    }
-
-    setDeleting(true);
-
-    handleDelete(linodeID, queryClient)
-      .then(() => {
-        onClose();
-      })
-      .catch((e) => {
-        setErrors(e);
-        setDeleting(false);
-      });
+  const onDelete = async () => {
+    await mutateAsync();
+    onClose();
   };
 
   return (
     <TypeToConfirmDialog
-      title={`Delete ${linodeLabel}?`}
-      entity={{ type: 'Linode', label: linodeLabel }}
+      title={`Delete ${linode?.label}?`}
+      entity={{ type: 'Linode', label: linode?.label }}
       open={open}
-      loading={isDeleting}
-      errors={errors}
+      loading={isLoading}
+      errors={error}
       onClose={onClose}
-      onClick={handleSubmit}
+      onClick={onDelete}
     >
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
@@ -70,5 +55,3 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
     </TypeToConfirmDialog>
   );
 };
-
-export default compose<CombinedProps, Props>(React.memo)(DeleteLinodeDialog);

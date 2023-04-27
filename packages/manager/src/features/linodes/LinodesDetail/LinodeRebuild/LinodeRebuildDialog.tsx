@@ -39,12 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeId: number;
+  linodeId: number | undefined;
   open: boolean;
   onClose: () => void;
 }
-
-type CombinedProps = Props;
 
 type MODES =
   | 'fromImage'
@@ -58,9 +56,9 @@ const options = [
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
-const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
+const LinodeRebuildDialog = (props: Props) => {
   const { linodeId, open, onClose } = props;
-  const linode = useExtendedLinode(linodeId);
+  const linode = useExtendedLinode(linodeId ?? -1);
   const linodeLabel = linode?.label;
   const linodeStatus = linode?.status;
   const permissions = linode?._permissions;
@@ -124,7 +122,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
         <RebuildFromImage
           passwordHelperText={passwordHelperText}
           disabled={disabled}
-          linodeId={linodeId}
+          linodeId={linodeId ?? -1}
           linodeLabel={linodeLabel}
           handleRebuildError={handleRebuildError}
           onClose={onClose}
@@ -135,7 +133,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
           type="community"
           passwordHelperText={passwordHelperText}
           disabled={disabled}
-          linodeId={linodeId}
+          linodeId={linodeId ?? -1}
           linodeLabel={linodeLabel}
           handleRebuildError={handleRebuildError}
           onClose={onClose}
@@ -146,7 +144,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
           type="account"
           passwordHelperText={passwordHelperText}
           disabled={disabled}
-          linodeId={linodeId}
+          linodeId={linodeId ?? -1}
           linodeLabel={linodeLabel}
           handleRebuildError={handleRebuildError}
           onClose={onClose}

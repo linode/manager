@@ -309,11 +309,9 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
         </Menu>
         <PowerDialogOrDrawer
           isOpen={this.state.powerDialogOpen}
-          action={this.state.selectedBootAction}
-          linodeID={this.props.id}
-          linodeLabel={this.props.label}
-          close={this.closeDialog}
-          linodeConfigs={this.props.linodeConfigs}
+          action={this.state.selectedBootAction ?? 'Reboot'}
+          linodeId={this.props.id}
+          onClose={this.closeDialog}
         />
       </React.Fragment>
     );

@@ -6,12 +6,12 @@ import RescueDialog from './RescueDialog';
 export interface Props {
   open: boolean;
   onClose: () => void;
-  linodeId: number;
+  linodeId: number | undefined;
 }
 
-export const RescueContainer: React.FC<Props> = (props) => {
+export const RescueContainer = (props: Props) => {
   const { linodeId, open, onClose } = props;
-  const linode = useExtendedLinode(linodeId);
+  const linode = useExtendedLinode(linodeId ?? -1);
   const isBareMetalInstance = linode?._type?.class === 'metal';
   const linodeLabel = linode?.label ?? '';
 
@@ -24,14 +24,14 @@ export const RescueContainer: React.FC<Props> = (props) => {
    */
   return isBareMetalInstance ? (
     <BareMetalRescue
-      linodeID={linodeId}
+      linodeID={linodeId ?? -1}
       linodeLabel={linodeLabel}
       isOpen={open}
       onClose={onClose}
     />
   ) : (
     /** For normal Linodes, load the standard rescue dialog. */
-    <RescueDialog linodeId={linodeId} open={open} onClose={onClose} />
+    <RescueDialog linodeId={linodeId ?? -1} open={open} onClose={onClose} />
   );
 };
 
