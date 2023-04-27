@@ -22,7 +22,7 @@ import DomainBanner from './DomainBanner';
 import DomainRow from './DomainTableRow';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 import { useProfile } from 'src/queries/profile';
-import { useLinodesQuery } from 'src/queries/linodes';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useDeleteDomainMutation,
   useDomainsQuery,

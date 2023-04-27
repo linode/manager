@@ -29,7 +29,7 @@ import { ipv6RangeQueryKey } from 'src/queries/networking';
 import {
   queryKey as linodesQueryKey,
   useAllLinodesQuery,
-} from 'src/queries/linodes';
+} from 'src/queries/linodes/linodes';
 import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';

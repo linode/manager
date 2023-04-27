@@ -24,7 +24,7 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import useFlags from 'src/hooks/useFlags';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useAllLinodesQuery } from 'src/queries/linodes';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 

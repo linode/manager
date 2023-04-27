@@ -9,7 +9,10 @@ import ErrorState from 'src/components/ErrorState';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import { Tab } from 'src/components/TabLinkList/TabLinkList';
-import { useLinodeLishTokenQuery, useLinodeQuery } from 'src/queries/linodes';
+import {
+  useLinodeLishTokenQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
