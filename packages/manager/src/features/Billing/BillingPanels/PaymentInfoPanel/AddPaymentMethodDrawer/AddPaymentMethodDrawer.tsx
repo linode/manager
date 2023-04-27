@@ -147,6 +147,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
                   onClose={onClose}
                   setProcessing={setIsProcessing}
                   renderError={renderError}
+                  setMessage={setMessage}
                   disabled={disabled}
                 />
               </PayPalErrorBoundary>
