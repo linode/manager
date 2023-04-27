@@ -147,8 +147,7 @@ export const PhoneVerification = () => {
   };
 
   const onEnterDifferentPhoneNumber = () => {
-    resetSendCodeMutation();
-    sendCodeForm.resetForm();
+    reset();
   };
 
   const onResendVerificationCode = () => {
