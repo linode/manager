@@ -5,7 +5,7 @@ import {
   metricsBySection,
   MetricsDisplay,
 } from 'src/components/LineGraph/MetricsDisplay';
-import { light } from 'src/themes';
+import { light } from 'src/foundations/themes';
 import { formatPercentage } from 'src/utilities/statMetrics';
 
 describe('CPUMetrics', () => {

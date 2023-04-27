@@ -1,8 +1,5 @@
-import { createTheme, ThemeOptions } from '@mui/material/styles';
-import { mergeDeepRight } from 'ramda';
-import { base, breakpoints } from './themeFactory';
-
-export const light = createTheme(base);
+import { ThemeOptions } from '@mui/material/styles';
+import { breakpoints } from './breakpoints';
 
 const primaryColors = {
   main: '#3683dc',
@@ -127,7 +124,7 @@ const genericTableHeaderStyle = {
   },
 };
 
-const darkThemeOptions: ThemeOptions = {
+export const darkTheme: ThemeOptions = {
   name: 'dark',
   breakpoints,
   bg: customDarkModeOptions.bg,
@@ -586,5 +583,3 @@ const darkThemeOptions: ThemeOptions = {
     },
   },
 };
-
-export const dark = createTheme(mergeDeepRight(base, darkThemeOptions));

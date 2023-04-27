@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material/styles';
-import { ThemeName } from 'src/themeFactory';
-import { dark, light } from 'src/themes';
+import { ThemeName } from 'src/foundations/themes';
+import { dark, light } from 'src/foundations/themes';
 
 export type ThemeChoice = 'light' | 'dark' | 'system';
 

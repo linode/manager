@@ -1,84 +1,8 @@
 import { ThemeOptions } from '@mui/material/styles';
-import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
-import { customDarkModeOptions } from './themes';
+import { breakpoints } from 'src/foundations/breakpoints';
+import { fonts } from 'src/foundations/fonts';
 
-export type ThemeName = 'light' | 'dark';
-
-type Fonts = typeof primaryFonts;
-
-type MergeTypes<A, B> = Omit<A, keyof B> &
-  Omit<B, keyof A> &
-  { [K in keyof A & keyof B]: A[K] | B[K] };
-
-type LightModeColors = typeof color;
-type DarkModeColors = typeof customDarkModeOptions.color;
-
-type Colors = MergeTypes<LightModeColors, DarkModeColors>;
-
-type LightModeBgColors = typeof bg;
-type DarkModeBgColors = typeof customDarkModeOptions.bg;
-
-type BgColors = MergeTypes<LightModeBgColors, DarkModeBgColors>;
-
-type LightModeTextColors = typeof textColors;
-type DarkModeTextColors = typeof customDarkModeOptions.textColors;
-type TextColors = MergeTypes<LightModeTextColors, DarkModeTextColors>;
-
-type LightModeBorderColors = typeof borderColors;
-type DarkModeBorderColors = typeof customDarkModeOptions.borderColors;
-
-type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
-
-/**
- * Augmenting the Theme and ThemeOptions.
- * This allows us to add cutom fields to the theme.
- * Avoid doing this unless you have a good reason.
- */
-declare module '@mui/material/styles/createTheme' {
-  interface Theme {
-    name: ThemeName;
-    bg: BgColors;
-    color: Colors;
-    textColors: TextColors;
-    borderColors: BorderColors;
-    font: Fonts;
-    graphs: any;
-    visually: any;
-    animateCircleIcon?: any;
-    addCircleHoverEffect?: any;
-    applyLinkStyles?: any;
-    applyStatusPillStyles?: any;
-    applyTableHeaderStyles?: any;
-  }
-
-  interface ThemeOptions {
-    name: ThemeName;
-    bg?: LightModeBgColors | DarkModeBgColors;
-    color?: LightModeColors | DarkModeColors;
-    textColors?: LightModeTextColors | DarkModeTextColors;
-    borderColors?: LightModeBorderColors | DarkModeBorderColors;
-    font?: Fonts;
-    graphs?: any;
-    visually?: any;
-    animateCircleIcon?: any;
-    addCircleHoverEffect?: any;
-    applyLinkStyles?: any;
-    applyStatusPillStyles?: any;
-    applyTableHeaderStyles?: any;
-  }
-}
-
-export const breakpoints = createBreakpoints({
-  values: {
-    xs: 0,
-    sm: 600,
-    md: 960,
-    lg: 1280,
-    xl: 1920,
-  },
-});
-
-const bg = {
+export const bg = {
   app: '#f4f5f6',
   main: '#f4f4f4',
   offWhite: '#fbfbfb',
@@ -103,7 +27,7 @@ const primaryColors = {
   white: '#fff',
 };
 
-const color = {
+export const color = {
   headline: primaryColors.headline,
   red: '#ca0813',
   orange: '#ffb31a',
@@ -136,7 +60,7 @@ const color = {
   blue: '#3683dc',
 } as const;
 
-const textColors = {
+export const textColors = {
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
   tableHeader: '#888f91',
@@ -144,16 +68,10 @@ const textColors = {
   textAccessTable: '#606469',
 } as const;
 
-const borderColors = {
+export const borderColors = {
   borderTypography: '#e3e5e8',
   borderTable: '#f4f5f6',
   divider: '#e3e5e8',
-} as const;
-
-const primaryFonts = {
-  normal: '"LatoWeb", sans-serif',
-  semiBold: '"LatoWebSemibold", sans-serif',
-  bold: '"LatoWebBold", sans-serif',
 } as const;
 
 const iconCircleAnimation = {
@@ -202,7 +120,7 @@ const genericLinkStyle = {
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
   color: textColors.tableStatic,
-  fontFamily: primaryFonts.bold,
+  fontFamily: fonts.bold,
   fontSize: '1rem',
   padding: 0,
   '&:before': {
@@ -247,7 +165,7 @@ const graphTransparency = '0.7';
 
 const spacing = 8;
 
-export const base: ThemeOptions = {
+export const lightTheme: ThemeOptions = {
   name: 'light', // we really should just leverage pallete.mode
   breakpoints,
   shadows: [
@@ -346,9 +264,9 @@ export const base: ThemeOptions = {
     yellow: `rgba(255, 220, 125, ${graphTransparency})`,
   },
   font: {
-    normal: primaryFonts.normal,
-    semiBold: primaryFonts.semiBold,
-    bold: primaryFonts.bold,
+    normal: fonts.normal,
+    semiBold: fonts.semiBold,
+    bold: fonts.bold,
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -388,13 +306,13 @@ export const base: ThemeOptions = {
     },
   },
   typography: {
-    fontFamily: primaryFonts.normal,
+    fontFamily: fonts.normal,
     fontSize: 16,
     h1: {
       color: primaryColors.headline,
       fontSize: '1.25rem',
       lineHeight: '1.75rem',
-      fontFamily: primaryFonts.bold,
+      fontFamily: fonts.bold,
       [breakpoints.up('lg')]: {
         fontSize: '1.5rem',
         lineHeight: '1.875rem',
@@ -403,13 +321,13 @@ export const base: ThemeOptions = {
     h2: {
       color: primaryColors.headline,
       fontSize: '1.125rem',
-      fontFamily: primaryFonts.bold,
+      fontFamily: fonts.bold,
       lineHeight: '1.5rem',
     },
     h3: {
       color: primaryColors.headline,
       fontSize: '1rem',
-      fontFamily: primaryFonts.bold,
+      fontFamily: fonts.bold,
       lineHeight: '1.4rem',
     },
     body1: {
@@ -489,7 +407,7 @@ export const base: ThemeOptions = {
           border: 'none',
           borderRadius: 1,
           cursor: 'pointer',
-          fontFamily: primaryFonts.bold,
+          fontFamily: fonts.bold,
           fontSize: '1rem',
           minHeight: 34,
           minWidth: 105,
@@ -794,7 +712,7 @@ export const base: ThemeOptions = {
       styleOverrides: {
         root: {
           color: '#555',
-          fontFamily: primaryFonts.bold,
+          fontFamily: fonts.bold,
           fontSize: '.875rem',
           marginBottom: 8,
           '&$focused': {
@@ -989,7 +907,7 @@ export const base: ThemeOptions = {
           },
           '&.selectHeader': {
             opacity: 1,
-            fontFamily: primaryFonts.bold,
+            fontFamily: fonts.bold,
             fontSize: '1rem',
             color: primaryColors.text,
           },
@@ -1044,7 +962,7 @@ export const base: ThemeOptions = {
       styleOverrides: {
         root: {
           height: 'auto',
-          fontFamily: primaryFonts.normal,
+          fontFamily: fonts.normal,
           fontSize: '.9rem',
           whiteSpace: 'initial',
           textOverflow: 'initial',
@@ -1273,7 +1191,7 @@ export const base: ThemeOptions = {
             minWidth: 75,
           },
           '&$selected, &$selected:hover': {
-            fontFamily: primaryFonts.bold,
+            fontFamily: fonts.bold,
             color: primaryColors.headline,
           },
           '&:hover': {
@@ -1448,7 +1366,7 @@ export const base: ThemeOptions = {
           borderRadius: '3px',
           fontSize: '1rem',
           lineHeight: 1,
-          fontFamily: primaryFonts.bold,
+          fontFamily: fonts.bold,
           backgroundColor: primaryColors.main,
           color: '#fff',
           padding: `8px 20px`,
