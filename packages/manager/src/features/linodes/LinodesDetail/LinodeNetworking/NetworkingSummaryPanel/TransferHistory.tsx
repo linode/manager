@@ -20,7 +20,7 @@ import {
   STATS_NOT_READY_MESSAGE,
   useLinodeStatsByDate,
   useLinodeTransferByDate,
-} from 'src/queries/linodes';
+} from 'src/queries/linodes/stats';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
