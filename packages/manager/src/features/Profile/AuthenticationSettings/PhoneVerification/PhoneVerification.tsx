@@ -64,6 +64,7 @@ export const PhoneVerification = () => {
 
   const {
     mutateAsync: sendVerificationCode,
+    reset: resetCodeMutation,
     error: verifyError,
   } = useVerifyPhoneVerificationCodeMutation();
 
@@ -72,6 +73,7 @@ export const PhoneVerification = () => {
   const onSubmitPhoneNumber = async (
     values: SendPhoneVerificationCodePayload
   ) => {
+    resetCodeMutation();
     return await sendPhoneVerificationCode(values);
   };
 
