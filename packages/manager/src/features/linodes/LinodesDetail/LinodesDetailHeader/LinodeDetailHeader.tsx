@@ -4,7 +4,8 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import PowerDialogOrDrawer, {
+import {
+  PowerActionsDialog,
   Action,
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import useLinodeActions from 'src/hooks/useLinodeActions';
@@ -242,7 +243,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         openTagDrawer={openTagDrawer}
         handlers={handlers}
       />
-      <PowerDialogOrDrawer
+      <PowerActionsDialog
         isOpen={powerDialogOpen}
         action={powerAction ?? 'Reboot'}
         linodeId={matchedLinodeId}

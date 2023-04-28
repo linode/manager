@@ -19,7 +19,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableBody from 'src/components/core/TableBody';
 import Hidden from 'src/components/core/Hidden';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 
 const preferenceKey = 'firewalls';
 

@@ -6,9 +6,10 @@ import TableBody from 'src/components/core/TableBody';
 import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter, {
+import {
+  PaginationFooter,
   MIN_PAGE_SIZE,
-} from 'src/components/PaginationFooter';
+} from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';

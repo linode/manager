@@ -58,7 +58,7 @@ interface Props {
 export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
-export const PowerActionsDialogOrDrawer = (props: Props) => {
+export const PowerActionsDialog = (props: Props) => {
   const { onClose, linodeId, isOpen, action } = props;
   const classes = useStyles();
 
@@ -189,5 +189,3 @@ export const PowerActionsDialogOrDrawer = (props: Props) => {
     </ConfirmationDialog>
   );
 };
-
-export default PowerActionsDialogOrDrawer;

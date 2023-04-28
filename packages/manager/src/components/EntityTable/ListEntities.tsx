@@ -2,7 +2,7 @@ import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import EntityTableHeader from './EntityTableHeader';

@@ -8,7 +8,7 @@ import TableRow from 'src/components/core/TableRow';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table/Table';
 import TableCell from 'src/components/TableCell/TableCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';

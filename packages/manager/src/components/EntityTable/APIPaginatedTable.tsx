@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import { HiddenProps } from '../core/Hidden';

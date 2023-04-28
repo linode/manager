@@ -11,9 +11,9 @@ import LinodeResize from '../LinodesDetail/LinodeResize';
 import LandingHeader from 'src/components/LandingHeader';
 import TransferDisplay from 'src/components/TransferDisplay';
 import ErrorState from 'src/components/ErrorState';
-import ListLinodesEmptyState from './ListLinodesEmptyState';
-import PaginationFooter from 'src/components/PaginationFooter';
-import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
+import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -118,7 +118,7 @@ export const LinodesLanding = () => {
   }
 
   if (data?.results === 0) {
-    return <ListLinodesEmptyState />;
+    return <LinodesLandingEmptyState />;
   }
 
   return (
@@ -193,7 +193,7 @@ export const LinodesLanding = () => {
         <LinodesLandingCSVDownload />
       </Box>
       <TransferDisplay />
-      <PowerDialogOrDrawer
+      <PowerActionsDialog
         isOpen={powerDialogOpen}
         linodeId={selectedLinodeId}
         onClose={() => setPowerDialogOpen(false)}

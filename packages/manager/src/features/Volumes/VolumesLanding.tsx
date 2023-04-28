@@ -15,7 +15,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Loading from 'src/components/LandingLoading';
 import Link from 'src/components/Link';
-import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table/Table';
 import TableCell from 'src/components/TableCell/TableCell';
