@@ -20,6 +20,7 @@ import {
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   placeholderAdjustment: {
@@ -112,75 +113,79 @@ const KubernetesEmptyState = () => {
   const classes = useStyles();
 
   return (
-    <Placeholder
-      title="Kubernetes"
-      subtitle="Fully managed Kubernetes infrastructure"
-      className={classes.placeholderAdjustment}
-      icon={KubernetesSvg}
-      isEntity
-      showTransferDisplay
-      buttonProps={[
-        {
-          onClick: () => {
-            sendEvent({
-              category: gaCategory,
-              action: 'Click:button',
-              label: 'Create Cluster',
-            });
-            push('/kubernetes/create');
+    <>
+      <ProductInformationBanner bannerLocation="Kubernetes" warning important />
+      <Placeholder
+        title="Kubernetes"
+        subtitle="Fully managed Kubernetes infrastructure"
+        className={classes.placeholderAdjustment}
+        icon={KubernetesSvg}
+        isEntity
+        showTransferDisplay
+        buttonProps={[
+          {
+            onClick: () => {
+              sendEvent({
+                category: gaCategory,
+                action: 'Click:button',
+                label: 'Create Cluster',
+              });
+              push('/kubernetes/create');
+            },
+            children: 'Create Cluster',
           },
-          children: 'Create Cluster',
-        },
-      ]}
-      linksSection={
-        <LinksSection>
-          <LinkSubSection
-            title="Getting Started Guides"
-            icon={<DocsIcon />}
-            MoreLink={(props) => (
-              <Link
-                onClick={getLinkOnClick(
-                  linkGAEventTemplate,
-                  guidesMoreLinkText
-                )}
-                to="https://www.linode.com/docs/"
-                {...props}
-              >
-                {guidesMoreLinkText}
-              </Link>
-            )}
-          >
-            {guideLinks}
-          </LinkSubSection>
-          <LinkSubSection
-            title="Video Playlist"
-            icon={<YoutubeIcon />}
-            external
-            MoreLink={(props) => (
-              <Link
-                onClick={getLinkOnClick(
-                  linkGAEventTemplate,
-                  youtubeMoreLinkLabel
-                )}
-                to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
-                {...props}
-              >
-                {youtubeMoreLinkText}
-                <ExternalLinkIcon style={{ marginLeft: 8 }} />
-              </Link>
-            )}
-          >
-            {youtubeLinks}
-          </LinkSubSection>
-        </LinksSection>
-      }
-    >
-      {' '}
-      <Typography variant="subtitle1">
-        Deploy and scale your applications with the Linode Kubernetes Engine
-        (LKE), a Kubernetes service equipped with a fully managed control plane.
-      </Typography>
-    </Placeholder>
+        ]}
+        linksSection={
+          <LinksSection>
+            <LinkSubSection
+              title="Getting Started Guides"
+              icon={<DocsIcon />}
+              MoreLink={(props) => (
+                <Link
+                  onClick={getLinkOnClick(
+                    linkGAEventTemplate,
+                    guidesMoreLinkText
+                  )}
+                  to="https://www.linode.com/docs/"
+                  {...props}
+                >
+                  {guidesMoreLinkText}
+                </Link>
+              )}
+            >
+              {guideLinks}
+            </LinkSubSection>
+            <LinkSubSection
+              title="Video Playlist"
+              icon={<YoutubeIcon />}
+              external
+              MoreLink={(props) => (
+                <Link
+                  onClick={getLinkOnClick(
+                    linkGAEventTemplate,
+                    youtubeMoreLinkLabel
+                  )}
+                  to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+                  {...props}
+                >
+                  {youtubeMoreLinkText}
+                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                </Link>
+              )}
+            >
+              {youtubeLinks}
+            </LinkSubSection>
+          </LinksSection>
+        }
+      >
+        {' '}
+        <Typography variant="subtitle1">
+          Deploy and scale your applications with the Linode Kubernetes Engine
+          (LKE), a Kubernetes service equipped with a fully managed control
+          plane.
+        </Typography>
+      </Placeholder>
+    </>
   );
 };
 

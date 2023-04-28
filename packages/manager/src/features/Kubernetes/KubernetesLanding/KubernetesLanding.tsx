@@ -22,6 +22,7 @@ import KubernetesEmptyState from './KubernetesLandingEmptyState';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useHistory } from 'react-router-dom';
 import { KubeNodePoolResponse } from '@linode/api-v4';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 
 interface ClusterDialogState {
   open: boolean;
@@ -147,6 +148,7 @@ export const KubernetesLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
+      <ProductInformationBanner bannerLocation="Kubernetes" warning important />
       <LandingHeader
         title="Kubernetes"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"

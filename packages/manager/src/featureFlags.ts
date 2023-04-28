@@ -112,7 +112,10 @@ interface ReferralBannerText {
   };
 }
 
-export type ProductInformationBannerLocation = 'Object Storage' | 'Databases';
+export type ProductInformationBannerLocation =
+  | 'Object Storage'
+  | 'Databases'
+  | 'Kubernetes';
 
 export interface ProductInformationBannerFlag {
   // `key` should be unique across product information banners
