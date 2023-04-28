@@ -215,7 +215,7 @@ export const LinodesLanding = () => {
       />
       <MigrateLinode
         open={linodeMigrateOpen}
-        onClose={() => setMigrateDialogOpen(true)}
+        onClose={() => setMigrateDialogOpen(false)}
         linodeId={selectedLinodeId}
       />
       <LinodeRebuildDialog
