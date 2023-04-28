@@ -143,6 +143,7 @@ export const LinodesLanding = () => {
               direction={order}
               label="label"
               handleClick={handleOrderChange}
+              data-qa-sort-label={order}
             >
               Label
             </TableSortCell>

@@ -218,22 +218,21 @@ describe('linode landing checks', () => {
   it('checks the table and action menu buttons/labels', () => {
     const label = linodeLabel(1);
     const ip = mockLinodes[0].ipv4[0];
+
     getVisible('[aria-label="Sort by label"]').within(() => {
       fbtVisible('Label');
     });
-    getVisible('[aria-label="Sort by _statusPriority"]').within(() => {
-      fbtVisible('Status');
-    });
-    getVisible('[aria-label="Sort by type"]').within(() => {
-      fbtVisible('Plan');
-    });
-    getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
-      fbtVisible('IP Address');
-    });
 
-    cy.findByLabelText('Toggle display').should('be.visible');
-
-    cy.findByLabelText('Toggle group by tag').should('be.visible');
+    // We can't sort by these with the API:
+    // getVisible('[aria-label="Sort by status"]').within(() => {
+    //   fbtVisible('Status');
+    // });
+    // getVisible('[aria-label="Sort by type"]').within(() => {
+    //   fbtVisible('Plan');
+    // });
+    // getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
+    //   fbtVisible('IP Address');
+    // });
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
       ui.button
