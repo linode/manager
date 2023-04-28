@@ -89,11 +89,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-
-  // The "Status" cell in the VLAN Detail context.
-  vlan_Status: {
-    width: '14%',
-  },
   maintenanceTooltip: {
     maxWidth: 300,
   },
