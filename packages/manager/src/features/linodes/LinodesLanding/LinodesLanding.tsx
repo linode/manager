@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Table from 'src/components/Table/Table';
 import TableRow from 'src/components/core/TableRow';
 import TableBody from 'src/components/core/TableBody';
@@ -26,6 +27,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useHistory } from 'react-router-dom';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { LinodeRow } from './LinodeRow/LinodeRow';
+import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 
 export interface LinodeHandlers {
   onOpenPowerDialog: (action: Action) => void;
@@ -181,6 +183,9 @@ export const LinodesLanding = () => {
           ))}
         </TableBody>
       </Table>
+      <Box display="flex" justifyContent="flex-end" marginTop={1}>
+        <LinodesLandingCSVDownload />
+      </Box>
       <TransferDisplay />
       <PowerDialogOrDrawer
         isOpen={powerDialogOpen}
