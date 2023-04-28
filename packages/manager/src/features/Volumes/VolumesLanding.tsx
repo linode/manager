@@ -1,22 +1,18 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Config } from '@linode/api-v4/lib/linodes';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import { makeStyles } from '@mui/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Loading from 'src/components/LandingLoading';
-import Link from 'src/components/Link';
 import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
-import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table/Table';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
@@ -38,6 +34,7 @@ import { DestructiveVolumeDialog } from './DestructiveVolumeDialog';
 import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
 import { VolumeAttachmentDrawer } from './VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
+import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 import VolumeTableRow from './VolumeTableRow';
 
 interface Props {
@@ -88,8 +85,7 @@ export const useStyles = makeStyles(() => ({
 
 const preferenceKey = 'volumes';
 
-export const VolumesLanding: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const VolumesLanding = (props: CombinedProps) => {
   const history = useHistory();
 
   const pagination = usePagination(1, preferenceKey);
@@ -226,32 +222,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   }
 
   if (volumes?.results === 0) {
-    return (
-      <>
-        <DocumentTitleSegment segment="Volumes" />
-        <Placeholder
-          title="Volumes"
-          className={classes.empty}
-          icon={VolumeIcon}
-          isEntity
-          buttonProps={[
-            {
-              onClick: () => history.push('/volumes/create'),
-              children: 'Create Volume',
-            },
-          ]}
-        >
-          <Typography variant="subtitle1">
-            Attach additional storage to your Linode.
-          </Typography>
-          <Typography variant="subtitle1">
-            <Link to="https://www.linode.com/docs/products/storage/block-storage/">
-              Learn more about Linode Block Storage Volumes.
-            </Link>
-          </Typography>
-        </Placeholder>
-      </>
-    );
+    return <VolumesLandingEmptyState />;
   }
 
   const handlers: VolumeHandlers = {
