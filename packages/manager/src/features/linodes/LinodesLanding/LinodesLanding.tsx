@@ -108,7 +108,7 @@ export const LinodesLanding = () => {
   };
 
   const onOpenMigrateDialog = (linodeId: number) => {
-    setRescueDialogOpen(true);
+    setMigrateDialogOpen(true);
     setSelectedLinodeId(linodeId);
   };
 

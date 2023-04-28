@@ -192,7 +192,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   };
 
   const onOpenMigrateDialog = () => {
-    setRescueDialogOpen(true);
+    setMigrateDialogOpen(true);
   };
 
   const handlers = {
