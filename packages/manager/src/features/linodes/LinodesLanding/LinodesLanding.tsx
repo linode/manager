@@ -15,6 +15,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import TransferDisplay from 'src/components/TransferDisplay';
 import ErrorState from 'src/components/ErrorState';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
+import PaginationFooter from 'src/components/PaginationFooter';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -184,6 +185,14 @@ export const LinodesLanding = () => {
           ))}
         </TableBody>
       </Table>
+      <PaginationFooter
+        count={data?.results ?? 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Linodes Table"
+      />
       <Box display="flex" justifyContent="flex-end" marginTop={1}>
         <LinodesLandingCSVDownload />
       </Box>
