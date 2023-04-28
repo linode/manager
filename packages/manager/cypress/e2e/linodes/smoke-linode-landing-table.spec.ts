@@ -146,7 +146,8 @@ describe('linode landing checks', () => {
     fbtVisible('Create Linode');
   });
 
-  it('checks label and region sorting behavior for linode table', () => {
+  // Skipping because the sorting is now done by the API
+  it.skip('checks label and region sorting behavior for linode table', () => {
     const linodesByLabel = [...mockLinodes.sort(sortByLabel)];
     const linodesByRegion = [...mockLinodes.sort(sortByRegion)];
     const linodesLastIndex = mockLinodes.length - 1;
@@ -279,9 +280,9 @@ describe('linode landing actions', () => {
         cy.visitWithLogin('/linodes', { preferenceOverrides });
         cy.wait('@getAccountSettings');
         getVisible('[data-qa-header="Linodes"]');
-        if (!cy.get('[data-qa-sort-label="asc"]')) {
-          getClick('[aria-label="Sort by label"]');
-        }
+        // if (!cy.get('[data-qa-sort-label="asc"]')) {
+        //   getClick('[aria-label="Sort by label"]');
+        // }
         deleteLinodeFromActionMenu(linodeA.label);
         deleteLinodeFromActionMenu(linodeB.label);
         cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');
