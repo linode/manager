@@ -5,11 +5,12 @@ import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -48,6 +49,7 @@ type MODES =
   | 'fromImage'
   | 'fromCommunityStackScript'
   | 'fromAccountStackScript';
+
 const options = [
   { value: 'fromImage', label: 'From Image' },
   { value: 'fromCommunityStackScript', label: 'From Community StackScript' },
@@ -56,15 +58,23 @@ const options = [
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
-const LinodeRebuildDialog = (props: Props) => {
+export const LinodeRebuildDialog = (props: Props) => {
   const { linodeId, open, onClose } = props;
-  const linode = useExtendedLinode(linodeId ?? -1);
-  const linodeLabel = linode?.label;
-  const linodeStatus = linode?.status;
-  const permissions = linode?._permissions;
 
-  const hostMaintenance = linodeStatus === 'stopped';
-  const unauthorized = permissions === 'read_only';
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined
+  );
+
+  const isReadOnly =
+    Boolean(profile?.restricted) &&
+    grants?.linode.find((grant) => grant.id === linodeId)?.permissions ===
+      'read_only';
+
+  const hostMaintenance = linode?.status === 'stopped';
+  const unauthorized = isReadOnly;
   const disabled = hostMaintenance || unauthorized;
 
   const classes = useStyles();
@@ -84,7 +94,7 @@ const LinodeRebuildDialog = (props: Props) => {
 
   return (
     <Dialog
-      title={`Rebuild Linode ${linodeLabel ?? ''}`}
+      title={`Rebuild Linode ${linode?.label}`}
       open={open}
       onClose={onClose}
       fullWidth
@@ -123,7 +133,7 @@ const LinodeRebuildDialog = (props: Props) => {
           passwordHelperText={passwordHelperText}
           disabled={disabled}
           linodeId={linodeId ?? -1}
-          linodeLabel={linodeLabel}
+          linodeLabel={linode?.label}
           handleRebuildError={handleRebuildError}
           onClose={onClose}
         />
@@ -134,7 +144,7 @@ const LinodeRebuildDialog = (props: Props) => {
           passwordHelperText={passwordHelperText}
           disabled={disabled}
           linodeId={linodeId ?? -1}
-          linodeLabel={linodeLabel}
+          linodeLabel={linode?.label}
           handleRebuildError={handleRebuildError}
           onClose={onClose}
         />
@@ -145,7 +155,7 @@ const LinodeRebuildDialog = (props: Props) => {
           passwordHelperText={passwordHelperText}
           disabled={disabled}
           linodeId={linodeId ?? -1}
-          linodeLabel={linodeLabel}
+          linodeLabel={linode?.label}
           handleRebuildError={handleRebuildError}
           onClose={onClose}
         />
@@ -153,5 +163,3 @@ const LinodeRebuildDialog = (props: Props) => {
     </Dialog>
   );
 };
-
-export default LinodeRebuildDialog;

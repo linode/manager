@@ -7,8 +7,6 @@ import TableHead from 'src/components/core/TableHead';
 import TableCell from 'src/components/TableCell/TableCell';
 import Hidden from 'src/components/core/Hidden';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
-import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
-import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import LinodeResize from '../LinodesDetail/LinodeResize';
 import LandingHeader from 'src/components/LandingHeader';
 import TransferDisplay from 'src/components/TransferDisplay';
@@ -16,6 +14,7 @@ import ErrorState from 'src/components/ErrorState';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
+import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -51,9 +50,6 @@ export const LinodesLanding = () => {
   const [rescueDialogOpen, setRescueDialogOpen] = React.useState(false);
   const [linodeResizeOpen, setResizeDialogOpen] = React.useState(false);
   const [linodeMigrateOpen, setMigrateDialogOpen] = React.useState(false);
-  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
-    false
-  );
 
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<
     number | undefined
@@ -226,11 +222,6 @@ export const LinodesLanding = () => {
       <RescueDialog
         open={rescueDialogOpen}
         onClose={() => setRescueDialogOpen(false)}
-        linodeId={selectedLinodeId}
-      />
-      <EnableBackupsDialog
-        open={enableBackupsDialogOpen}
-        onClose={() => setEnableBackupsDialogOpen(false)}
         linodeId={selectedLinodeId}
       />
     </React.Fragment>

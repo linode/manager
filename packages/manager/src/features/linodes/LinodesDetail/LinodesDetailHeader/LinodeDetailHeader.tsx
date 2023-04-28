@@ -18,7 +18,7 @@ import {
   LinodeDetailContext,
   withLinodeDetailContext,
 } from '../linodeDetailContext';
-import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
+import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
