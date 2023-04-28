@@ -4,7 +4,7 @@ import { linodeFactory } from 'src/factories/linodes';
 import { rest, server } from 'src/mocks/testServer';
 import { typeFactory } from 'src/factories/types';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import RescueContainer, { Props } from './RescueContainer';
+import { RescueDialog, Props } from './RescueDialog';
 
 const standard = typeFactory.build({ id: 'g6-standard-1' });
 const metal = typeFactory.build({ id: 'g6-metal-alpha-2', class: 'metal' });
@@ -19,7 +19,7 @@ const props: Props = {
 };
 
 const render = (propOverride?: Partial<Props>) =>
-  renderWithTheme(<RescueContainer {...props} {...propOverride} />, {
+  renderWithTheme(<RescueDialog {...props} {...propOverride} />, {
     customStore: {
       __resources: {
         linodes: {
@@ -32,7 +32,7 @@ const render = (propOverride?: Partial<Props>) =>
     },
   });
 
-describe('RescueContainer', () => {
+describe('RescueDialog', () => {
   beforeEach(async () => {
     server.use(
       rest.get(`*/linode/types/${standard.id}`, (_, res, ctx) => {

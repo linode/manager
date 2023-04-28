@@ -49,10 +49,11 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
   );
 };
 
-export const useTypeQuery = (type: string) => {
+export const useTypeQuery = (type: string, enabled = true) => {
   return useQuery<LinodeType, APIError[]>({
     queryKey: specificTypesQueryKey(type),
     queryFn: () => getType(type),
     ...queryPresets.oneTimeFetch,
+    enabled,
   });
 };
