@@ -116,20 +116,26 @@ export const useDeleteLinodeMutation = (id: number) => {
 
 export const useBootLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => linodeBoot(id), {
-    onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
-    },
-  });
+  return useMutation<{}, APIError[], { config_id?: number }>(
+    ({ config_id }) => linodeBoot(id, config_id),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
 };
 
 export const useRebootLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => linodeReboot(id), {
-    onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
-    },
-  });
+  return useMutation<{}, APIError[], { config_id?: number }>(
+    ({ config_id }) => linodeReboot(id, config_id),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
 };
 
 export const useShutdownLinodeMutation = (id: number) => {

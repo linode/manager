@@ -1,15 +1,16 @@
-import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import Select from 'src/components/EnhancedSelect/Select';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
+import { Config } from '@linode/api-v4/lib/linodes';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import {
-  // useAllLinodeConfigsQuery,
+  useAllLinodeConfigsQuery,
   useBootLinodeMutation,
   useLinodeQuery,
   useRebootLinodeMutation,
@@ -65,10 +66,12 @@ export const PowerActionsDialogOrDrawer = (props: Props) => {
     linodeId ?? -1,
     linodeId !== undefined
   );
-  // const { data: configs } = useAllLinodeConfigsQuery(
-  //   linodeId ?? -1,
-  //   linodeId !== undefined
-  // );
+
+  const {
+    data: configs,
+    isLoading: configsLoading,
+    error: configsError,
+  } = useAllLinodeConfigsQuery(linodeId ?? -1, linodeId !== undefined);
 
   const {
     mutateAsync: bootLinode,
@@ -88,15 +91,15 @@ export const PowerActionsDialogOrDrawer = (props: Props) => {
     error: shutdownError,
   } = useShutdownLinodeMutation(linodeId ?? -1);
 
-  // const [selectedConfigID, selectConfigID] = React.useState<number | undefined>();
-
-  // const hasMoreThanOneConfig = configs && configs.length > 1;
+  const [selectedConfigID, setSelectConfigID] = React.useState<number | null>(
+    null
+  );
 
   const mutationMap = {
     Reboot: rebootLinode,
     'Power Off': shutdownLinode,
     'Power On': bootLinode,
-  };
+  } as const;
 
   const errorMap = {
     Reboot: rebootError,
@@ -110,14 +113,32 @@ export const PowerActionsDialogOrDrawer = (props: Props) => {
     'Power On': isBooting,
   };
 
-  const mutateAsync = mutationMap[action];
   const error = errorMap[action];
   const isLoading = loadingMap[action];
 
   const onSubmit = async () => {
-    await mutateAsync();
+    if (props.action === 'Power On' || props.action === 'Reboot') {
+      const mutateAsync = mutationMap[action as 'Power On' | 'Reboot'];
+      await mutateAsync({
+        config_id: selectedConfigID ?? selectDefaultConfig(configs),
+      });
+    } else {
+      const mutateAsync = mutationMap[action as 'Power Off'];
+      await mutateAsync();
+    }
     onClose();
   };
+
+  const showConfigSelect =
+    configs !== undefined &&
+    configs?.length > 1 &&
+    (props.action === 'Power On' || props.action === 'Reboot');
+
+  const configOptions =
+    configs?.map((config) => ({
+      label: config.label,
+      value: config.id,
+    })) ?? [];
 
   return (
     <ConfirmationDialog
@@ -140,6 +161,17 @@ export const PowerActionsDialogOrDrawer = (props: Props) => {
       <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
+      {showConfigSelect && (
+        <Select
+          label="Config"
+          options={configOptions}
+          value={configOptions.find((o) => o.value === selectedConfigID)}
+          onChange={(o) => setSelectConfigID(o === null ? null : o.value)}
+          isLoading={configsLoading}
+          errorText={configsError?.[0].reason}
+          overflowPortal
+        />
+      )}
       {props.action === 'Power Off' && (
         <span>
           <Notice warning important className={classes.notice}>
