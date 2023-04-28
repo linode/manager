@@ -14,7 +14,6 @@ import {
   getLinkOnClick,
   guidesMoreLinkText,
   youtubeMoreLinkLabel,
-  youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
 import { StyledPlaceholder } from './VolumesLandingEmptyState.styles';
@@ -122,10 +121,10 @@ const VolumesLandingEmptyState = () => {
                   linkGAEventTemplate,
                   guidesMoreLinkText
                 )}
-                to="https://www.linode.com/docs/"
+                to="https://www.linode.com/docs/products/storage/block-storage/"
                 {...props}
               >
-                {guidesMoreLinkText}
+                Browse Linode Block Storage documentation
               </Link>
             )}
           >
@@ -144,7 +143,7 @@ const VolumesLandingEmptyState = () => {
                 to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
                 {...props}
               >
-                {youtubeMoreLinkText}
+                Check out our YouTube channel
                 <ExternalLinkIcon style={{ marginLeft: 8 }} />
               </Link>
             )}

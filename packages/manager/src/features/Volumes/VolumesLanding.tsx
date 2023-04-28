@@ -1,6 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Config } from '@linode/api-v4/lib/linodes';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -74,14 +73,6 @@ interface DispatchProps {
 }
 
 type CombinedProps = Props & DispatchProps;
-
-export const useStyles = makeStyles(() => ({
-  empty: {
-    '& svg': {
-      transform: 'scale(0.75)',
-    },
-  },
-}));
 
 const preferenceKey = 'volumes';
 
