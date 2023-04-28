@@ -244,113 +244,115 @@ export const CreateCluster = () => {
   }
 
   return (
-    <Grid container className={classes.root}>
-      <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+    <>
       <ProductInformationBanner bannerLocation="Kubernetes" warning important />
-      <LandingHeader
-        title="Create Cluster"
-        docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
-      />
-      <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice error text={errorMap.none} />}
-        <Paper data-qa-label-header>
-          <div className={classes.inner}>
-            <Box>
-              <TextField
-                className={classes.inputWidth}
-                data-qa-label-input
-                errorText={errorMap.label}
-                label="Cluster Label"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateLabel(e.target.value)
-                }
-                value={label || ''}
-              />
-            </Box>
-            <Box>
-              <RegionSelect
-                className={classes.regionSubtitle}
-                errorText={errorMap.region}
-                handleSelection={(regionID: string) =>
-                  setSelectedRegion(regionID)
-                }
-                regions={filteredRegions}
-                selectedID={selectedID}
-                textFieldProps={{
-                  helperText: regionHelperText(),
-                  helperTextPosition: 'top',
-                }}
-              />
-            </Box>
-            <Box>
-              <Select
-                className={classes.inputWidth}
-                label="Kubernetes Version"
-                value={version || null}
-                errorText={errorMap.k8s_version}
-                options={versions}
-                placeholder={' '}
-                onChange={(selected: Item<string>) => setVersion(selected)}
-                isClearable={false}
-              />
-            </Box>
-          </div>
-          <Box>
-            <NodePoolPanel
-              types={typesData || []}
-              apiError={errorMap.node_pools}
-              typesLoading={typesLoading}
-              typesError={
-                typesError
-                  ? getAPIErrorOrDefault(
-                      typesError,
-                      'Error loading Linode type information.'
-                    )[0].reason
-                  : undefined
-              }
-              addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
-              updateFor={[
-                nodePools,
-                typesData,
-                errorMap,
-                typesLoading,
-                classes,
-              ]}
-            />
-          </Box>
-        </Paper>
-      </Grid>
-      <Grid
-        className={`mlSidebar ${classes.sidebar}`}
-        data-testid="kube-checkout-bar"
-      >
-        <KubeCheckoutBar
-          pools={nodePools}
-          createCluster={createCluster}
-          submitting={submitting}
-          updatePool={updatePool}
-          removePool={removePool}
-          highAvailability={highAvailability}
-          setHighAvailability={setHighAvailability}
-          region={selectedRegion}
-          hasAgreed={hasAgreed}
-          toggleHasAgreed={toggleHasAgreed}
-          updateFor={[
-            hasAgreed,
-            highAvailability,
-            selectedRegion,
-            nodePools,
-            submitting,
-            typesData,
-            updatePool,
-            removePool,
-            createCluster,
-            classes,
-          ]}
+      <Grid container className={classes.root}>
+        <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+        <LandingHeader
+          title="Create Cluster"
+          docsLabel="Docs"
+          docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
         />
+        <Grid className={`mlMain py0`}>
+          {errorMap.none && <Notice error text={errorMap.none} />}
+          <Paper data-qa-label-header>
+            <div className={classes.inner}>
+              <Box>
+                <TextField
+                  className={classes.inputWidth}
+                  data-qa-label-input
+                  errorText={errorMap.label}
+                  label="Cluster Label"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    updateLabel(e.target.value)
+                  }
+                  value={label || ''}
+                />
+              </Box>
+              <Box>
+                <RegionSelect
+                  className={classes.regionSubtitle}
+                  errorText={errorMap.region}
+                  handleSelection={(regionID: string) =>
+                    setSelectedRegion(regionID)
+                  }
+                  regions={filteredRegions}
+                  selectedID={selectedID}
+                  textFieldProps={{
+                    helperText: regionHelperText(),
+                    helperTextPosition: 'top',
+                  }}
+                />
+              </Box>
+              <Box>
+                <Select
+                  className={classes.inputWidth}
+                  label="Kubernetes Version"
+                  value={version || null}
+                  errorText={errorMap.k8s_version}
+                  options={versions}
+                  placeholder={' '}
+                  onChange={(selected: Item<string>) => setVersion(selected)}
+                  isClearable={false}
+                />
+              </Box>
+            </div>
+            <Box>
+              <NodePoolPanel
+                types={typesData || []}
+                apiError={errorMap.node_pools}
+                typesLoading={typesLoading}
+                typesError={
+                  typesError
+                    ? getAPIErrorOrDefault(
+                        typesError,
+                        'Error loading Linode type information.'
+                      )[0].reason
+                    : undefined
+                }
+                addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
+                updateFor={[
+                  nodePools,
+                  typesData,
+                  errorMap,
+                  typesLoading,
+                  classes,
+                ]}
+              />
+            </Box>
+          </Paper>
+        </Grid>
+        <Grid
+          className={`mlSidebar ${classes.sidebar}`}
+          data-testid="kube-checkout-bar"
+        >
+          <KubeCheckoutBar
+            pools={nodePools}
+            createCluster={createCluster}
+            submitting={submitting}
+            updatePool={updatePool}
+            removePool={removePool}
+            highAvailability={highAvailability}
+            setHighAvailability={setHighAvailability}
+            region={selectedRegion}
+            hasAgreed={hasAgreed}
+            toggleHasAgreed={toggleHasAgreed}
+            updateFor={[
+              hasAgreed,
+              highAvailability,
+              selectedRegion,
+              nodePools,
+              submitting,
+              typesData,
+              updatePool,
+              removePool,
+              createCluster,
+              classes,
+            ]}
+          />
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 
