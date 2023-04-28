@@ -12,7 +12,6 @@ import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
 import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
 import {
   getLinkOnClick,
-  guidesMoreLinkText,
   youtubeMoreLinkLabel,
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
@@ -55,6 +54,8 @@ const linkGAEventTemplate = {
   category: gaCategory,
   action: 'Click:link',
 };
+
+const volumesGuidesMoreLinkText = 'Browse Linode Block Storage documentation';
 
 const guideLinks = (
   <List>
@@ -119,12 +120,12 @@ const VolumesLandingEmptyState = () => {
               <Link
                 onClick={getLinkOnClick(
                   linkGAEventTemplate,
-                  guidesMoreLinkText
+                  volumesGuidesMoreLinkText
                 )}
                 to="https://www.linode.com/docs/products/storage/block-storage/"
                 {...props}
               >
-                Browse Linode Block Storage documentation
+                {volumesGuidesMoreLinkText}
               </Link>
             )}
           >
