@@ -7,7 +7,6 @@ import Link from '../Link';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 
 const sxBoxFlex = {
   alignItems: 'center',
@@ -103,27 +102,12 @@ export const Default: Story = {
               memory: 2048,
               vcpus: 1,
             }}
-            onOpenPowerDialog={function (
-              linodeId: number,
-              action: Action
-            ): void {
-              throw new Error('Function not implemented.');
-            }}
-            onOpenDeleteDialog={function (linodeId: number): void {
-              throw new Error('Function not implemented.');
-            }}
-            onOpenResizeDialog={function (linodeId: number): void {
-              throw new Error('Function not implemented.');
-            }}
-            onOpenRebuildDialog={function (linodeId: number): void {
-              throw new Error('Function not implemented.');
-            }}
-            onOpenRescueDialog={function (linodeId: number): void {
-              throw new Error('Function not implemented.');
-            }}
-            onOpenMigrateDialog={function (linodeId: number): void {
-              throw new Error('Function not implemented.');
-            }}
+            onOpenPowerDialog={action('onOpenPowerDialog')}
+            onOpenDeleteDialog={action('onOpenDeleteDialog')}
+            onOpenResizeDialog={action('onOpenResizeDialog')}
+            onOpenRebuildDialog={action('onOpenRebuildDialog')}
+            onOpenRescueDialog={action('onOpenRescueDialog')}
+            onOpenMigrateDialog={action('onOpenMigrateDialog')}
           />
         </Box>
       </EntityHeader>

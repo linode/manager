@@ -170,7 +170,9 @@ export const LinodeRow = (props: Props) => {
       </Hidden>
       <TableCell actionCell data-qa-notifications>
         <RenderFlag
-          mutationAvailable={linodeType?.successor !== null}
+          mutationAvailable={
+            linodeType !== undefined && linodeType?.successor !== null
+          }
           linodeNotifications={linodeNotifications}
           classes={classes}
         />

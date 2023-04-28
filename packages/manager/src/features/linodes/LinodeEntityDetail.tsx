@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Box from 'src/components/core/Box';
@@ -23,8 +22,6 @@ import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useSpecificTypes } from 'src/queries/types';
@@ -38,9 +35,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import EntityHeader from 'src/components/EntityHeader';
-import withRecentEvent, {
-  WithRecentEvent,
-} from './LinodesLanding/withRecentEvent';
+import { WithRecentEvent } from './LinodesLanding/withRecentEvent';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
@@ -258,7 +253,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header: React.FC<HeaderProps & { handlers: LinodeHandlers }> = (props) => {
+const Header: React.FC<HeaderProps & { handlers: LinodeHandlers }> = (
+  props
+) => {
   const classes = useHeaderStyles();
   const theme = useTheme();
 
@@ -359,10 +356,7 @@ const Header: React.FC<HeaderProps & { handlers: LinodeHandlers }> = (props) => 
             sx={sxActionItem}
             disabled={!(isRunning || isOffline)}
             onClick={() =>
-              handlers.onOpenPowerDialog(
-                linodeId,
-                isRunning ? 'Power Off' : 'Power On'
-              )
+              handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
           >
             {isRunning ? 'Power Off' : 'Power On'}
@@ -371,7 +365,7 @@ const Header: React.FC<HeaderProps & { handlers: LinodeHandlers }> = (props) => 
             buttonType="secondary"
             sx={sxActionItem}
             disabled={isOffline}
-            onClick={() => handlers.onOpenPowerDialog(linodeId, 'Reboot')}
+            onClick={() => handlers.onOpenPowerDialog('Reboot')}
           >
             Reboot
           </Button>

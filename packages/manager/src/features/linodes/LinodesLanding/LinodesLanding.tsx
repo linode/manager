@@ -1,39 +1,39 @@
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
-import TransferDisplay from 'src/components/TransferDisplay';
-import { BackupsCTA } from 'src/features/Backups';
+import Table from 'src/components/Table/Table';
+import TableRow from 'src/components/core/TableRow';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import TableCell from 'src/components/TableCell/TableCell';
+import Hidden from 'src/components/core/Hidden';
+import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
 import LinodeResize from '../LinodesDetail/LinodeResize';
-import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
-import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
-import { DeleteLinodeDialog } from './DeleteDialog';
+import LandingHeader from 'src/components/LandingHeader';
+import TransferDisplay from 'src/components/TransferDisplay';
+import ErrorState from 'src/components/ErrorState';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
+import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { BackupsCTA } from 'src/features/Backups';
+import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
+import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useHistory } from 'react-router-dom';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableCell from 'src/components/TableCell/TableCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { LinodeRow } from './LinodeRow/LinodeRow';
-import Table from 'src/components/Table/Table';
-import TableRow from 'src/components/core/TableRow';
-import Hidden from 'src/components/core/Hidden';
-import MaintenanceBanner from 'src/components/MaintenanceBanner';
 
 export interface LinodeHandlers {
-  onOpenPowerDialog: (linodeId: number, action: Action) => void;
-  onOpenDeleteDialog: (linodeId: number) => void;
-  onOpenResizeDialog: (linodeId: number) => void;
-  onOpenRebuildDialog: (linodeId: number) => void;
-  onOpenRescueDialog: (linodeId: number) => void;
-  onOpenMigrateDialog: (linodeId: number) => void;
+  onOpenPowerDialog: (action: Action) => void;
+  onOpenDeleteDialog: () => void;
+  onOpenResizeDialog: () => void;
+  onOpenRebuildDialog: () => void;
+  onOpenRescueDialog: () => void;
+  onOpenMigrateDialog: () => void;
 }
 
 const preferenceKey = 'linodes';
@@ -122,19 +122,10 @@ export const LinodesLanding = () => {
     return <ListLinodesEmptyState />;
   }
 
-  const handlers = {
-    onOpenPowerDialog,
-    onOpenDeleteDialog,
-    onOpenResizeDialog,
-    onOpenRebuildDialog,
-    onOpenRescueDialog,
-    onOpenMigrateDialog,
-  };
-
   return (
     <React.Fragment>
-      <MaintenanceBanner />
       <DocumentTitleSegment segment="Linodes" />
+      <MaintenanceBanner />
       <BackupsCTA />
       <LandingHeader
         title="Linodes"
@@ -174,7 +165,19 @@ export const LinodesLanding = () => {
         </TableHead>
         <TableBody>
           {data?.data.map((linode) => (
-            <LinodeRow key={linode.id} {...linode} handlers={handlers} />
+            <LinodeRow
+              key={linode.id}
+              {...linode}
+              handlers={{
+                onOpenDeleteDialog: () => onOpenDeleteDialog(linode.id),
+                onOpenMigrateDialog: () => onOpenMigrateDialog(linode.id),
+                onOpenPowerDialog: (action: Action) =>
+                  onOpenPowerDialog(linode.id, action),
+                onOpenRebuildDialog: () => onOpenRebuildDialog(linode.id),
+                onOpenRescueDialog: () => onOpenRescueDialog(linode.id),
+                onOpenResizeDialog: () => onOpenResizeDialog(linode.id),
+              }}
+            />
           ))}
         </TableBody>
       </Table>

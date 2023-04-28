@@ -85,7 +85,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   const handlePowerAction = () => {
     const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
     sendLinodeActionMenuItemEvent(`${action} Linode`);
-    props.onOpenPowerDialog(linodeId, action);
+    props.onOpenPowerDialog(action);
   };
 
   const hasHostMaintenance = linodeStatus === 'stopped';
@@ -122,7 +122,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
           tooltip: readOnly ? noPermissionTooltipText : undefined,
           onClick: () => {
             sendLinodeActionMenuItemEvent('Reboot Linode');
-            props.onOpenPowerDialog(linodeId, 'Reboot');
+            props.onOpenPowerDialog('Reboot');
           },
           ...readOnlyProps,
         }
@@ -162,7 +162,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       : {
           title: 'Resize',
           onClick: () => {
-            props.onOpenResizeDialog(linodeId);
+            props.onOpenResizeDialog();
           },
           ...maintenanceProps,
           ...readOnlyProps,
@@ -171,7 +171,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       title: 'Rebuild',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
-        props.onOpenRebuildDialog(linodeId);
+        props.onOpenRebuildDialog();
       },
       ...maintenanceProps,
       ...readOnlyProps,
@@ -180,7 +180,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       title: 'Rescue',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
-        props.onOpenRescueDialog(linodeId);
+        props.onOpenRescueDialog();
       },
       ...maintenanceProps,
       ...readOnlyProps,
@@ -192,7 +192,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
           onClick: () => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
-            props.onOpenMigrateDialog(linodeId);
+            props.onOpenMigrateDialog();
           },
           ...readOnlyProps,
         },
@@ -200,7 +200,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       title: 'Delete',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Delete Linode');
-        props.onOpenDeleteDialog(linodeId);
+        props.onOpenDeleteDialog();
       },
       ...readOnlyProps,
     },

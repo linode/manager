@@ -1,5 +1,4 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -7,15 +6,12 @@ import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
   Action,
-  Action as BootAction,
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { DialogType } from 'src/features/linodes/types';
-import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useProfile } from 'src/queries/profile';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
-import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteDialog';
+import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
@@ -28,7 +24,6 @@ import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
-import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 import LandingHeader from 'src/components/LandingHeader';
 import { sendEvent } from 'src/utilities/ga';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';
@@ -36,7 +31,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ACCESS_LEVELS } from 'src/constants';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 interface Props {
   numVolumes: number;
@@ -47,20 +41,6 @@ interface Props {
 interface TagDrawerProps {
   tags: string[];
   open: boolean;
-}
-
-interface PowerDialogProps {
-  open: boolean;
-  linodeLabel: string;
-  linodeID: number;
-  bootAction?: BootAction;
-  linodeConfigs?: Config[];
-}
-
-interface DialogProps {
-  open: boolean;
-  linodeLabel?: string;
-  linodeID: number;
 }
 
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
@@ -79,10 +59,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   });
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
-
-  const { data: notifications } = useNotificationsQuery();
-
-  const notificationContext = React.useContext(_notificationContext);
 
   const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
 
@@ -194,7 +170,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const onOpenPowerDialog = (linodeId: number, action: Action) => {
+  const onOpenPowerDialog = (action: Action) => {
     setPowerDialogOpen(true);
     setPowerAction(action);
   };
@@ -203,19 +179,19 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     setDeleteDialogOpen(true);
   };
 
-  const onOpenResizeDialog = (linodeId: number) => {
+  const onOpenResizeDialog = () => {
     setResizeDialogOpen(true);
   };
 
-  const onOpenRebuildDialog = (linodeId: number) => {
+  const onOpenRebuildDialog = () => {
     setRebuildDialogOpen(true);
   };
 
-  const onOpenRescueDialog = (linodeId: number) => {
+  const onOpenRescueDialog = () => {
     setRescueDialogOpen(true);
   };
 
-  const onOpenMigrateDialog = (linodeId: number) => {
+  const onOpenMigrateDialog = () => {
     setRescueDialogOpen(true);
   };
 
