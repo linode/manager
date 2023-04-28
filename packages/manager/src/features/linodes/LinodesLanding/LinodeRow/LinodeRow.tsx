@@ -21,7 +21,6 @@ import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
-import LinodeRowBackupCell from './LinodeRowBackupCell';
 import { SxProps } from '@mui/system';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { LinodeHandlers } from '../LinodesLanding';
@@ -30,6 +29,7 @@ import useEvents from 'src/hooks/useEvents';
 import { useStyles } from './LinodeRow.style';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 
 type Props = Linode & { handlers: LinodeHandlers };
 
@@ -160,12 +160,14 @@ export const LinodeRow = (props: Props) => {
         </Hidden>
       </Hidden>
       <Hidden lgDown>
-        <LinodeRowBackupCell
-          linodeId={id}
-          backupsEnabled={backups.enabled}
-          mostRecentBackup={backups.last_successful}
-          isBareMetalInstance={isBareMetalInstance}
-        />
+        <TableCell>
+          <BackupStatus
+            linodeId={id}
+            backupsEnabled={backups.enabled}
+            mostRecentBackup={backups.last_successful}
+            isBareMetalInstance={isBareMetalInstance}
+          />
+        </TableCell>
       </Hidden>
       <TableCell actionCell data-qa-notifications>
         <RenderFlag

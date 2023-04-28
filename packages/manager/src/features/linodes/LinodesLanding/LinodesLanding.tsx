@@ -7,7 +7,7 @@ import TableHead from 'src/components/core/TableHead';
 import TableCell from 'src/components/TableCell/TableCell';
 import Hidden from 'src/components/core/Hidden';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
-import LinodeResize from '../LinodesDetail/LinodeResize';
+import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';
 import LandingHeader from 'src/components/LandingHeader';
 import TransferDisplay from 'src/components/TransferDisplay';
 import ErrorState from 'src/components/ErrorState';
