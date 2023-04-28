@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeId: number;
+  linodeId: number | undefined;
   open: boolean;
   onClose: () => void;
 }
@@ -88,8 +88,14 @@ export const StandardRescueDialog = (props: Props) => {
 
   const classes = useStyles();
 
-  const { data: linode } = useLinodeQuery(linodeId);
-  const { data: disks, error: disksError } = useAllLinodeDisksQuery(linodeId);
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && open
+  );
+  const { data: disks, error: disksError } = useAllLinodeDisksQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && open
+  );
   const { data: volumes, error: volumesError } = useAllVolumesQuery(
     {},
     { region: linode?.region },
@@ -165,7 +171,7 @@ export const StandardRescueDialog = (props: Props) => {
   const disabled = isReadOnly;
 
   const onSubmit = () => {
-    rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
+    rescueLinode(linodeId ?? -1, createDevicesFromStrings(rescueDevices))
       .then((_) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
@@ -214,7 +220,7 @@ export const StandardRescueDialog = (props: Props) => {
         <div>
           <Paper className={classes.root}>
             {isReadOnly && <LinodePermissionsError />}
-            <RescueDescription linodeId={linodeId} />
+            {linodeId ? <RescueDescription linodeId={linodeId} /> : null}
             <DeviceSelection
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
               devices={devices}

@@ -64,14 +64,17 @@ export const PowerActionsDialog = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && isOpen
   );
 
   const {
     data: configs,
     isLoading: configsLoading,
     error: configsError,
-  } = useAllLinodeConfigsQuery(linodeId ?? -1, linodeId !== undefined);
+  } = useAllLinodeConfigsQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && isOpen
+  );
 
   const {
     mutateAsync: bootLinode,

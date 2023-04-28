@@ -10,7 +10,7 @@ import RescueDescription from './RescueDescription';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Props {
-  linodeId: number;
+  linodeId: number | undefined;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -20,7 +20,10 @@ export const BareMetalRescue = (props: Props) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const { enqueueSnackbar } = useSnackbar();
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && isOpen
+  );
 
   React.useEffect(() => {
     if (isOpen) {
@@ -32,7 +35,7 @@ export const BareMetalRescue = (props: Props) => {
   const handleSubmit = () => {
     setError(undefined);
     setLoading(true);
-    rescueMetalLinode(linodeId)
+    rescueMetalLinode(linodeId ?? -1)
       .then(() => {
         setLoading(false);
         enqueueSnackbar('Linode rescue started.', {
@@ -68,7 +71,7 @@ export const BareMetalRescue = (props: Props) => {
       actions={actions}
       error={error}
     >
-      <RescueDescription linodeId={linodeId} isBareMetal />
+      {linodeId ? <RescueDescription linodeId={linodeId} isBareMetal /> : null}
     </ConfirmationDialog>
   );
 };

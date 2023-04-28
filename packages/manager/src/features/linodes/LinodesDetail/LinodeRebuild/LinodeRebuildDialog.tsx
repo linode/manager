@@ -65,7 +65,7 @@ export const LinodeRebuildDialog = (props: Props) => {
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
 
   const isReadOnly =

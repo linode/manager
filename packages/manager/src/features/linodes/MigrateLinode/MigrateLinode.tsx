@@ -247,7 +247,7 @@ const MigrateLinode = React.memo((props: Props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
-        linodeId={linodeId ?? -1}
+        linodeId={linodeId}
         setConfirmed={setConfirmed}
         hasConfirmed={hasConfirmed}
         error={acceptError}

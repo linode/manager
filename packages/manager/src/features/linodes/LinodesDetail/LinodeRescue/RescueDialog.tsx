@@ -15,7 +15,7 @@ export const RescueDialog = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
   const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
 
@@ -29,17 +29,9 @@ export const RescueDialog = (props: Props) => {
    * these instances.
    */
   return isBareMetalInstance ? (
-    <BareMetalRescue
-      linodeId={linodeId ?? -1}
-      isOpen={open}
-      onClose={onClose}
-    />
+    <BareMetalRescue linodeId={linodeId} isOpen={open} onClose={onClose} />
   ) : (
     /** For normal Linodes, load the standard rescue dialog. */
-    <StandardRescueDialog
-      linodeId={linodeId ?? -1}
-      open={open}
-      onClose={onClose}
-    />
+    <StandardRescueDialog linodeId={linodeId} open={open} onClose={onClose} />
   );
 };

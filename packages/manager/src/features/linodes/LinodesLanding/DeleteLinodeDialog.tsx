@@ -18,7 +18,7 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
-    linodeId !== undefined
+    linodeId !== undefined && open
   );
 
   const { mutateAsync, error, isLoading, reset } = useDeleteLinodeMutation(
