@@ -141,10 +141,10 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
 
     const newApps = appInstances.filter((app) => {
       return [
-        'mongodb cluster',
-        'redis sentinel cluster',
-        'galera cluster',
-        'postgresql cluster',
+        'appwrite',
+        'illa builder',
+        'owncloud',
+        'seatable',
       ].includes(app.label.toLowerCase().trim());
     });
 
