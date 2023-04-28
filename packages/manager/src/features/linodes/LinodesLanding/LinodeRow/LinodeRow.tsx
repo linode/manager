@@ -22,7 +22,6 @@ import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
-import LinodeRowHeadCell from './LinodeRowHeadCell';
 import { SxProps } from '@mui/system';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { LinodeHandlers } from '../LinodesLanding';
@@ -92,10 +91,6 @@ export const LinodeRow = (props: Props) => {
       ? 'inactive'
       : 'other';
 
-  const headCell = (
-    <LinodeRowHeadCell id={id} label={label} maintenance={maintenance?.when} />
-  );
-
   return (
     <TableRow
       key={id}
@@ -104,7 +99,11 @@ export const LinodeRow = (props: Props) => {
       data-qa-linode={label}
       ariaLabel={label}
     >
-      {headCell}
+      <TableCell>
+        <Link to={`/linodes/${id}`} tabIndex={0}>
+          {label}
+        </Link>
+      </TableCell>
       <TableCell
         className={classNames({
           [classes.statusCell]: true,
