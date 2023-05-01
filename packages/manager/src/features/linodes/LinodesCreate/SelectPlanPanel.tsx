@@ -32,7 +32,7 @@ import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 import { useRegionsQuery } from 'src/queries/regions';
-import useFlags from 'src/hooks/useFlags';
+import PremiumPlansAvailabilityNotice from './PremiumPlansAvailabilityNotice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -190,16 +190,6 @@ export const SelectPlanPanel = (props: Props) => {
       ?.filter((thisRegion) => thisRegion.capabilities.includes(capability))
       .map((thisRegion) => thisRegion.label);
     return arrayToList(withCapability ?? []);
-  };
-
-  const PremiumPlansAvailabilityNotice = () => {
-    const { premiumPlansAvailabilityNotice } = useFlags();
-
-    if (premiumPlansAvailabilityNotice) {
-      return <Notice warning>{premiumPlansAvailabilityNotice}</Notice>;
-    }
-
-    return null;
   };
 
   const renderSelection = (type: PlanSelectionType, idx: number) => {

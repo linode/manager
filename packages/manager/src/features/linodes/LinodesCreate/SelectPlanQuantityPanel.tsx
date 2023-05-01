@@ -23,6 +23,7 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
+import PremiumPlansAvailabilityNotice from './PremiumPlansAvailabilityNotice';
 
 type ClassNames =
   | 'root'
@@ -378,9 +379,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
         render: () => {
           return (
             <>
-              <Notice warning>
-                This plan is only available in the Washington, DC region.
-              </Notice>
+              <PremiumPlansAvailabilityNotice />
               <Typography data-qa-gpu className={classes.copy}>
                 Premium CPU instances guarantee a minimum processor model, AMD
                 Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
