@@ -54,6 +54,7 @@ export const CreateBucketDrawer = (props: Props) => {
     error,
     reset,
   } = useCreateBucketMutation();
+
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
@@ -121,6 +122,7 @@ export const CreateBucketDrawer = (props: Props) => {
             data-qa-permissions-notice
           />
         )}
+        {Boolean(errorMap.none) && <Notice error text={errorMap.none} />}
         <TextField
           data-qa-cluster-label
           label="Label"
@@ -134,7 +136,7 @@ export const CreateBucketDrawer = (props: Props) => {
         />
         <ClusterSelect
           data-qa-cluster-select
-          error={formik.touched.cluster ? errorMap.cluster : undefined}
+          error={errorMap.cluster}
           onBlur={formik.handleBlur}
           onChange={(value) => formik.setFieldValue('cluster', value)}
           selectedCluster={formik.values.cluster}

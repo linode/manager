@@ -635,6 +635,15 @@ export const handlers = [
     const buckets = objectStorageBucketFactory.buildList(10);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
+  rest.post('*/object-storage/buckets', (req, res, ctx) => {
+    // return res(
+    //   ctx.status(500),
+    //   ctx.json({
+    //     errors: [{ reason: "Object Storage isn't working right now, sorry!" }],
+    //   })
+    // );
+    return res(ctx.json(objectStorageBucketFactory.build()));
+  }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
     const clusters = objectStorageClusterFactory.buildList(3);
     return res(ctx.json(makeResourcePage(clusters)));
