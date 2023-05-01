@@ -122,11 +122,13 @@ export const testItem = (item: SearchableItem, query: string) => {
   return areAllTrue(matchedSearchTerms);
 };
 
-const forceSkipFieldSearch = (query: string): boolean => {
+// Force to skip field search (make a simple query) if there's a match
+const shouldSkipFieldSearch = (query: string): boolean => {
   const skipConditions = {
-    // matches a compressed ipv6 addresses which we are using. e.g. 2600:3c03::f03c:91ff:fe96:1d2f
-    // a double semi-colon present in the string will indicate that it is an ipv6 address or that the string is malformed, in which case we can safely skip field search
-    isIPV6: query.match('::'),
+    // matches a compressed ipv6 addresses (which we are using). e.g. xxxx:xxxx::xxxx:xxxx:xxxx:xxxx
+    // a double semi-colon present in the string will indicate that it is an ipv6 address or that the search query is malformed,
+    // in which case we can safely skip the search fields lookup
+    isIPV6: query.match(/::/),
   };
 
   return Object.values(skipConditions).some((condition) => condition);
@@ -139,7 +141,7 @@ export const isSimpleQuery = (originalQuery: string, parsedQuery: any) => {
 
   return (
     (isEmpty(exclude) && isEmpty(include)) ||
-    forceSkipFieldSearch(originalQuery)
+    shouldSkipFieldSearch(originalQuery)
   );
 };
 

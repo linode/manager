@@ -324,7 +324,7 @@ describe('isSimpleQuery', () => {
     expect(isSimpleQuery(query, parsedQuery)).toBe(false);
   });
 
-  it('returns true if we match a forceSkipFieldSearch rule', () => {
+  it('returns true if we match a shouldSkipFieldSearch rule', () => {
     const query = 'label::hello';
     const parsedQuery = searchString.parse(query).getParsedQuery();
     expect(isSimpleQuery(query, parsedQuery)).toBe(true);
