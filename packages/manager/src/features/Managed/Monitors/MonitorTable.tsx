@@ -8,9 +8,9 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import DeletionDialog from 'src/components/DeletionDialog';
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -191,15 +191,10 @@ export const MonitorTable = () => {
   return (
     <>
       <DocumentTitleSegment segment="Monitors" />
-      <Grid
-        container
-        justifyContent="flex-end"
-        alignItems="flex-end"
-        updateFor={[classes]}
-      >
-        <Grid item>
+      <Grid container justifyContent="flex-end" alignItems="flex-end">
+        <Grid>
           <Grid container alignItems="flex-end">
-            <Grid item className={classes.addNewWrapper}>
+            <Grid className={classes.addNewWrapper}>
               <AddNewLink
                 onClick={() => setMonitorDrawerOpen(true)}
                 label="Add Monitor"

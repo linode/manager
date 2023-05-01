@@ -33,9 +33,9 @@ export const Question = (props: Props) => {
 
   const name = `security_questions[${index}].id`;
   const label = `Question ${index + 1}`;
-  const onChange = (item: Item<string>) => {
+  const onChange = (item: Item<number>) => {
     setFieldValue(`security_questions[${index}]`, {
-      id: Number.parseInt(item.value, 10),
+      id: item.value,
       question: item.label,
       response: '',
     });
@@ -61,7 +61,6 @@ export const Question = (props: Props) => {
       placeholder="Select a question"
       defaultValue={currentOption}
       isClearable={false}
-      height="36px"
       onChange={onChange}
     />
   );

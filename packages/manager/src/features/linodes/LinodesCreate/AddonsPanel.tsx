@@ -1,4 +1,4 @@
-import { Interface } from '@linode/api-v4/lib/linodes';
+import { Interface, Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CheckBox from 'src/components/CheckBox';
@@ -8,12 +8,13 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
-import Grid from 'src/components/Grid';
+import { Currency } from 'src/components/Currency';
+import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAccount } from 'src/queries/account';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
+import { privateIPRegex } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   vlan: {
@@ -45,13 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface AddonsPanelProps {
   backups: boolean;
   accountBackups: boolean;
   backupsMonthly?: number | null;
-  privateIP: boolean;
+  isPrivateIPChecked: boolean;
   changeBackups: () => void;
-  changePrivateIP: () => void;
+  togglePrivateIP: () => void;
   vlanLabel: string;
   ipamAddress: string;
   handleVLANChange: (updatedInterface: Interface) => void;
@@ -62,27 +63,29 @@ interface Props {
   ipamError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
   createType: CreateTypes;
+  selectedLinodeID?: number;
+  linodesData?: Linode[];
 }
 
-type CombinedProps = Props;
-const AddonsPanel: React.FC<CombinedProps> = (props) => {
+export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
     accountBackups,
     changeBackups,
-    changePrivateIP,
+    togglePrivateIP,
     disabled,
     vlanLabel,
     labelError,
     ipamAddress,
     ipamError,
     handleVLANChange,
+    isPrivateIPChecked,
+    selectedLinodeID,
     selectedRegionID,
     selectedImageID,
     selectedTypeID,
     createType,
+    linodesData,
   } = props;
-
-  const hidePrivateIP = createType === 'fromLinode';
 
   const classes = useStyles();
   const { data: account } = useAccount();
@@ -113,7 +116,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     const { backupsMonthly } = props;
     return (
       backupsMonthly && (
-        <Grid item>
+        <Grid>
           <Typography variant="body1">
             <Currency quantity={backupsMonthly} /> per month
           </Typography>
@@ -121,6 +124,24 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
       )
     );
   };
+
+  // Check whether the source Linode has been allocated a private IP to select/unselect the 'Private IP' checkbox.
+  React.useEffect(() => {
+    if (selectedLinodeID) {
+      const selectedLinode = linodesData?.find(
+        (image) => image.id === selectedLinodeID
+      );
+      const linodeHasPrivateIp = selectedLinode?.ipv4.some((ipv4) =>
+        privateIPRegex.test(ipv4)
+      );
+      if (
+        (linodeHasPrivateIp && !isPrivateIPChecked) ||
+        (!linodeHasPrivateIp && isPrivateIPChecked)
+      ) {
+        togglePrivateIP();
+      }
+    }
+  }, [selectedLinodeID]);
 
   return (
     <>
@@ -146,7 +167,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
           ) : null}
         </Typography>
         <Grid container>
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <FormControlLabel
               className={classes.label}
               control={
@@ -163,7 +184,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
               }
               label={
                 <Grid container spacing={2} alignItems="center">
-                  <Grid item>Backups</Grid>
+                  <Grid>Backups</Grid>
                   {renderBackupsPrice()}
                 </Grid>
               }
@@ -186,32 +207,29 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             </Typography>
           </Grid>
         </Grid>
-        {
-          /** /v4/linodes/instances/clone does *not* support the private IP flag */
-          hidePrivateIP ? null : (
-            <Grid container>
-              <Grid item xs={12}>
-                <Divider />
-                <FormControlLabel
-                  className={classes.label}
-                  control={
-                    <CheckBox
-                      checked={props.privateIP}
-                      onChange={() => changePrivateIP()}
-                      data-qa-check-private-ip
-                      disabled={disabled}
-                    />
-                  }
-                  label="Private IP"
+
+        <Grid container>
+          <Grid xs={12}>
+            <Divider />
+            <FormControlLabel
+              className={classes.label}
+              control={
+                <CheckBox
+                  data-testid="private_ip"
+                  checked={isPrivateIPChecked}
+                  onChange={togglePrivateIP}
+                  data-qa-check-private-ip
+                  disabled={disabled}
                 />
-              </Grid>
-            </Grid>
-          )
-        }
+              }
+              label="Private IP"
+            />
+          </Grid>
+        </Grid>
       </Paper>
     </>
   );
-};
+});
 
 const getVlanDisabledReason = (
   isBareMetal: boolean,
@@ -227,5 +245,3 @@ const getVlanDisabledReason = (
   }
   return undefined;
 };
-
-export default React.memo(AddonsPanel);

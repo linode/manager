@@ -5,9 +5,9 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -65,7 +65,7 @@ const ProfileSettings = () => {
           Notifications
         </Typography>
         <Grid container alignItems="center">
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <FormControlLabel
               control={
                 <Toggle
@@ -91,7 +91,7 @@ const ProfileSettings = () => {
       </Paper>
       <Paper className={classes.root}>
         <Grid container alignItems="center">
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <FormControl>
               <FormLabel>
                 <Typography variant="h2">Theme</Typography>
@@ -143,7 +143,7 @@ const ProfileSettings = () => {
           }: ToggleProps<boolean>) => {
             return (
               <Grid container alignItems="center">
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <FormControlLabel
                     control={
                       <Toggle

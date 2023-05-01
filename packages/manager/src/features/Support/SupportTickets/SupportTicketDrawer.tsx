@@ -8,13 +8,13 @@ import { update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import Accordion from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
@@ -714,7 +714,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
               <AttachFileForm files={files} updateFiles={updateFiles} />
             </React.Fragment>
           )}
-          <ActionsPanel>
+          <StyledActionPanel>
             <Button
               buttonType="secondary"
               onClick={onCancel}
@@ -733,7 +733,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
             >
               Open Ticket
             </Button>
-          </ActionsPanel>
+          </StyledActionPanel>
         </React.Fragment>
       )}
     </Dialog>

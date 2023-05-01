@@ -3,8 +3,8 @@ import AddNewLink from 'src/components/AddNewLink';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -205,8 +205,9 @@ export const APITokenTable = (props: Props) => {
         container
         alignItems="center"
         justifyContent="space-between"
+        spacing={2}
       >
-        <Grid item>
+        <Grid>
           <Typography
             variant="h3"
             className={classes.headline}
@@ -215,7 +216,7 @@ export const APITokenTable = (props: Props) => {
             {title}
           </Typography>
         </Grid>
-        <Grid item className={classes.addNewWrapper}>
+        <Grid className={classes.addNewWrapper}>
           {type === 'Personal Access Token' && (
             <AddNewLink
               onClick={() => setIsCreateOpen(true)}

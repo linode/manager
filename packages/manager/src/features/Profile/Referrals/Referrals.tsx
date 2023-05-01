@@ -9,7 +9,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { useProfile } from 'src/queries/profile';
@@ -127,8 +127,8 @@ export const Referrals: React.FC<{}> = () => {
   return (
     <Paper>
       <DocumentTitleSegment segment="Referrals" />
-      <Grid container className={classes.root}>
-        <Grid item>
+      <Grid container className={classes.root} spacing={2}>
+        <Grid>
           <Typography variant="body1" style={{ marginBottom: 12 }}>
             When you refer friends or colleagues to Linode using your referral
             link, they&rsquo;ll receive a $100, 60-day credit once a valid
@@ -146,7 +146,7 @@ export const Referrals: React.FC<{}> = () => {
           </Typography>
         </Grid>
         <>
-          <Grid item xs={12} className={classes.link}>
+          <Grid xs={12} className={classes.link}>
             {allowReferral ? (
               <CopyableTextField
                 expand
@@ -162,26 +162,29 @@ export const Referrals: React.FC<{}> = () => {
                   container
                   justifyContent="space-between"
                   className={classes.referrals}
+                  spacing={2}
                 >
-                  <Grid item>Pending referrals</Grid>
-                  <Grid item>{pending}</Grid>
+                  <Grid>Pending referrals</Grid>
+                  <Grid>{pending}</Grid>
                 </Grid>
               ) : null}
               <Grid
                 container
                 justifyContent="space-between"
                 className={classes.referrals}
+                spacing={2}
               >
-                <Grid item>Completed referrals</Grid>
-                <Grid item>{completed}</Grid>
+                <Grid>Completed referrals</Grid>
+                <Grid>{completed}</Grid>
               </Grid>
               <Grid
                 container
                 justifyContent="space-between"
                 className={classes.earned}
+                spacing={2}
               >
-                <Grid item>Credit earned</Grid>
-                <Grid item>${credit}</Grid>
+                <Grid>Credit earned</Grid>
+                <Grid>${credit}</Grid>
               </Grid>
             </div>
           ) : null}
@@ -191,6 +194,12 @@ export const Referrals: React.FC<{}> = () => {
               className={classes.limitNotice}
               spacingTop={8}
               spacingBottom={0}
+              sx={{
+                '&&': {
+                  // '&&' is only needed because Notice is using makeStyles
+                  padding: '8px',
+                },
+              }}
             >
               Spend $25 with Linode to activate your personal referral link
             </Notice>
@@ -201,20 +210,24 @@ export const Referrals: React.FC<{}> = () => {
             justifyContent="space-between"
             wrap="nowrap"
             className={classes.images}
+            sx={{
+              width: '100%',
+              padding: 0,
+            }}
           >
-            <Grid item className={classes.image}>
+            <Grid className={classes.image}>
               <Step1 />
               <Typography variant="body1" className={classes.imageCopy}>
                 Share your referral link with friends and colleagues
               </Typography>
             </Grid>
-            <Grid item className={classes.image}>
+            <Grid className={classes.image}>
               <Step2 />
               <Typography variant="body1" className={classes.imageCopy}>
                 They sign up and receive a $100, 60-day credit
               </Typography>
             </Grid>
-            <Grid item className={classes.image}>
+            <Grid className={classes.image}>
               <Step3 />
               <Typography variant="body1" className={classes.imageCopy}>
                 You earn $25 after they make their first payment of $25

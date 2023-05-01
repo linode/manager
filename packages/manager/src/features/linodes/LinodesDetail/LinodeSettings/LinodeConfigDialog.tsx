@@ -11,9 +11,9 @@ import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
@@ -25,16 +25,16 @@ import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import DeviceSelection, {
   ExtendedDisk,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -196,7 +196,10 @@ const interfacesToState = (interfaces?: Interface[]) => {
   if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
   }
-  return padInterfaceList(interfaces);
+  const interfacesPayload = interfaces.map(
+    ({ ipam_address, label, purpose }) => ({ ipam_address, label, purpose })
+  );
+  return padInterfaceList(interfacesPayload);
 };
 
 const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
@@ -425,6 +428,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             (thisOption) => thisOption.value === config?.root_device
           )
         );
+
         resetForm({
           values: {
             useCustomRoot: isUsingCustomRoot(config.root_device),
@@ -587,7 +591,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         <DialogContent loading={isLoading} errors={props.kernelError}>
           <React.Fragment>
             {generalError && (
-              <Grid item>
+              <Grid>
                 <Notice
                   error
                   errorGroup="linode-config-dialog"
@@ -596,18 +600,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 />
               </Grid>
             )}
-            <Grid
-              item
-              xs={12}
-              updateFor={[
-                formik.errors.label,
-                formik.errors.comments,
-                values.label,
-                values.comments,
-                formik.handleChange,
-                classes,
-              ]}
-            >
+            <Grid xs={12}>
               <TextField
                 label="Label"
                 name="label"
@@ -634,7 +627,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid item xs={12} updateFor={[values.virt_mode, classes]}>
+            <Grid xs={12}>
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
@@ -675,21 +668,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid
-              item
-              xs={12}
-              updateFor={[
-                deviceCounter,
-                values.kernel,
-                values.setMemoryLimit,
-                kernels,
-                formik.errors.kernel,
-                values.run_level,
-                values.memory_limit,
-                formik.errors.memory_limit,
-                classes,
-              ]}
-            >
+            <Grid xs={12}>
               <Typography variant="h3">Boot Settings</Typography>
               {kernels && (
                 <KernelSelect
@@ -796,19 +775,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid
-              item
-              xs={12}
-              updateFor={[
-                deviceCounter,
-                values.devices,
-                values.initrd,
-                values.root_device,
-                useCustomRoot,
-                values.useCustomRoot,
-                formik.errors.devices,
-              ]}
-            >
+            <Grid xs={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 counter={deviceCounter}
@@ -893,7 +860,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             <Divider className={classes.divider} />
 
             {showVlans ? (
-              <Grid item xs={12}>
+              <Grid xs={12}>
                 <Box display="flex" alignItems="center">
                   <Typography variant="h3">Network Interfaces</Typography>
                   <TooltipIcon
@@ -946,7 +913,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               </Grid>
             ) : null}
 
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
               <FormControl
                 updateFor={[
@@ -1044,7 +1011,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
           </React.Fragment>
         </DialogContent>
       </Grid>
-      <ActionsPanel>
+      <StyledActionPanel>
         <Button buttonType="secondary" className="cancel" onClick={onClose}>
           Cancel
         </Button>
@@ -1056,7 +1023,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         >
           {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
         </Button>
-      </ActionsPanel>
+      </StyledActionPanel>
     </Dialog>
   );
 };

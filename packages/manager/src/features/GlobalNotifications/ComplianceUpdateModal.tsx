@@ -1,9 +1,9 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import SupportLink from 'src/components/SupportLink';
+import { SupportLink } from 'src/components/SupportLink';
 import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import DNSResolvers from './DNSResolvers';
 import NetworkTransfer from './NetworkTransfer';
 import TransferHistory from './TransferHistory';
@@ -26,14 +26,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   dnsResolverContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
-    [theme.breakpoints.up('sm')]: {
-      paddingRight: theme.spacing(),
-    },
     [theme.breakpoints.down('md')]: {
       order: 2,
     },
     [theme.breakpoints.down('sm')]: {
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
     },
   },
 }));
@@ -53,19 +50,21 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
 
   return (
     <Paper className={classes.root}>
-      <Grid container justifyContent="space-between">
-        <Grid item xs={12} sm={6} md={3}>
+      <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+        <Grid xs={12} sm={6} md={3}>
           <NetworkTransfer linodeID={linodeID} linodeLabel={linodeLabel} />
         </Grid>
-        <Grid item xs={12} md={6} className={classes.transferHistoryContainer}>
+        <Grid xs={12} sm md className={classes.transferHistoryContainer}>
           <TransferHistory linodeID={linodeID} linodeCreated={linodeCreated} />
         </Grid>
         <Grid
-          item
           xs={12}
           sm={6}
           md={3}
           className={classes.dnsResolverContainer}
+          sx={{
+            paddingBottom: 0,
+          }}
         >
           <DNSResolvers region={linodeRegion} />
         </Grid>

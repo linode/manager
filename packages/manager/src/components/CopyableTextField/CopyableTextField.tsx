@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';

@@ -3,14 +3,14 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import DeletionDialog from 'src/components/DeletionDialog';
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -29,7 +29,7 @@ import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Contacts = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -119,8 +119,9 @@ const Contacts = () => {
         container
         alignItems="center"
         justifyContent="flex-end"
+        spacing={2}
       >
-        <Grid item className={classes.addNewWrapper}>
+        <Grid className={classes.addNewWrapper} sx={{ paddingRight: 0 }}>
           <AddNewLink
             onClick={() => {
               setContactDrawerMode('create');

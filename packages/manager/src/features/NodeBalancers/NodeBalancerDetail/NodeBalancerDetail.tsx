@@ -1,11 +1,8 @@
 import * as React from 'react';
-import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
@@ -13,8 +10,7 @@ import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary/NodeBalancerSummary';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import LandingHeader from 'src/components/LandingHeader';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
@@ -26,16 +22,7 @@ import {
   useParams,
 } from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(),
-    },
-  },
-}));
-
 const NodeBalancerDetail = () => {
-  const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -102,27 +89,21 @@ const NodeBalancerDetail = () => {
 
   return (
     <React.Fragment>
-      <Grid
-        container
-        className={`${classes.root} m0`}
-        justifyContent="space-between"
-      >
-        <Grid item className="p0">
-          <Breadcrumb
-            pathname={`/nodebalancers/${nodeBalancerLabel}`}
-            firstAndLastOnly
-            onEditHandlers={{
-              editableTextTitle: nodeBalancerLabel,
-              onEdit: (label) => updateNodeBalancer({ label }),
-              onCancel: cancelUpdate,
-              errorText: labelError,
-            }}
-          />
-        </Grid>
-        <Grid item className="p0" style={{ marginTop: 14 }}>
-          <DocsLink href="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/" />
-        </Grid>
-      </Grid>
+      <LandingHeader
+        title={nodeBalancerLabel}
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
+        breadcrumbProps={{
+          firstAndLastOnly: true,
+          pathname: `/nodebalancers/${nodeBalancerLabel}`,
+          onEditHandlers: {
+            editableTextTitle: nodeBalancerLabel,
+            onEdit: (label) => updateNodeBalancer({ label }),
+            onCancel: cancelUpdate,
+            errorText: labelError,
+          },
+        }}
+      />
       {errorMap.none && <Notice error text={errorMap.none} />}
       <Tabs
         index={Math.max(

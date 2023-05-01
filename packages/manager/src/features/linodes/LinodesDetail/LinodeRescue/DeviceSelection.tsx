@@ -101,9 +101,8 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
         <FormControl fullWidth>
           <Select
             disabled
-            onChange={() => onChange}
-            options={[]}
-            defaultValue={'finnix'}
+            onChange={() => null}
+            defaultValue={{ label: 'finnix', value: 'finnix' }}
             name="rescueDevice_sdh"
             id="rescueDevice_sdh"
             label="/dev/sdh"
