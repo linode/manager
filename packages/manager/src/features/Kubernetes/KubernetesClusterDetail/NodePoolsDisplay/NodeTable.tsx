@@ -237,7 +237,11 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow ariaLabel={label} className={classes.row}>
+    <TableRow
+      ariaLabel={label}
+      className={classes.row}
+      data-qa-node-row={nodeId}
+    >
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid>

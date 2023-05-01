@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Event entities should only be linked for true labels
 - Radio button hover effect #9031
 - Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
+- Recycle LKE Node confirmation dialog gets dismissed upon submission #9054
 - Inability to edit and save Linode Configurations #9053
 
 ### Tech Stories:
