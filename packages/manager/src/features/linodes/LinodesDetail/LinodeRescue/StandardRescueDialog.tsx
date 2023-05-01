@@ -71,7 +71,7 @@ export const getDefaultDeviceMapAndCounter = (
    * value for an empty slot, so this is a safe
    * assignment.
    */
-  const deviceMap = {
+  const deviceMap: DeviceMap = {
     sda: defaultDisks[0],
     sdb: defaultDisks[1],
     sdc: defaultDisks[2],
