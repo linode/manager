@@ -5,6 +5,7 @@ import {
   KubeNodePoolResponse,
   PoolNodeResponse,
   KubernetesVersion,
+  KubernetesDashboardResponse,
 } from '@linode/api-v4/lib/kubernetes/types';
 import { v4 } from 'uuid';
 
@@ -43,6 +44,12 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesClust
 export const kubeEndpointFactory = Factory.Sync.makeFactory<KubernetesEndpointResponse>(
   {
     endpoint: `https://${v4()}`,
+  }
+);
+
+export const kubernetesDashboardUrlFactory = Factory.Sync.makeFactory<KubernetesDashboardResponse>(
+  {
+    url: `https://${v4()}`,
   }
 );
 
