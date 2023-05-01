@@ -1,4 +1,4 @@
-import imageToItem from './imageToItem';
+import { imageToItem } from './imageToItem';
 
 const mockImages = ['linode/debian9', 'linode/arch'];
 

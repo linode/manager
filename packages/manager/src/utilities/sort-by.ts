@@ -45,19 +45,3 @@ export const sortByArrayLength = (a: any[], b: any[], order: SortOrder) => {
 
   return order === 'asc' ? result : -result;
 };
-
-// Sort function for Array.sort comparator functions
-export const sortAlphabetically = (a: string, b: string): number => {
-  const aLower = a.toLowerCase();
-  const bLower = b.toLowerCase();
-
-  if (aLower < bLower) {
-    return -1;
-  }
-  if (aLower > bLower) {
-    return 1;
-  }
-  return 0;
-};
-
-export default sortAlphabetically;

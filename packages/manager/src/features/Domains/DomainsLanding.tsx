@@ -8,7 +8,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import DeletionDialog from 'src/components/DeletionDialog';
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
@@ -22,7 +22,7 @@ import DomainBanner from './DomainBanner';
 import DomainRow from './DomainTableRow';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 import { useProfile } from 'src/queries/profile';
-import { useLinodesQuery } from 'src/queries/linodes';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useDeleteDomainMutation,
   useDomainsQuery,

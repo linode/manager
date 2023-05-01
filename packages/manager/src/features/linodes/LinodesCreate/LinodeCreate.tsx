@@ -1,4 +1,4 @@
-import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
+import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import { Theme } from '@mui/material/styles';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
@@ -45,7 +45,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { sendEvent } from 'src/utilities/ga';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
-import AddonsPanel from './AddonsPanel';
+import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
 import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
@@ -151,7 +151,7 @@ interface Props {
   showGeneralError?: boolean;
   vlanLabel: string | null;
   ipamAddress: string | null;
-  handleVLANChange: (updatedInterface: Interface) => void;
+  handleVLANChange: (updatedInterface: InterfacePayload) => void;
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   handleAgreementChange: () => void;
@@ -779,9 +779,9 @@ export class LinodeCreate extends React.PureComponent<
             backups={this.props.backupsEnabled}
             accountBackups={accountBackupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
-            privateIP={this.props.privateIPEnabled}
+            isPrivateIPChecked={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}
-            changePrivateIP={this.props.togglePrivateIPEnabled}
+            togglePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
             selectedImageID={this.props.selectedImageID}
             selectedTypeID={this.props.selectedTypeID}
@@ -789,6 +789,8 @@ export class LinodeCreate extends React.PureComponent<
             ipamAddress={this.props.ipamAddress || ''}
             handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
+            selectedLinodeID={this.props.selectedLinodeID}
+            linodesData={this.props.linodesData}
             labelError={hasErrorFor['interfaces[1].label']}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
             createType={this.props.createType}
@@ -868,7 +870,7 @@ export class LinodeCreate extends React.PureComponent<
   }
 }
 
-const defaultPublicInterface: Interface = {
+const defaultPublicInterface: InterfacePayload = {
   purpose: 'public',
   label: '',
   ipam_address: '',

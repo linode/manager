@@ -167,7 +167,7 @@ describe('Migrate Linode With Firewall', () => {
     cy.wait('@getRegions');
     cy.findByText('Dallas, TX').should('be.visible');
     getClick('[data-qa-checked="false"]');
-    cy.findByText(`United States: Dallas, TX`).should('be.visible');
+    cy.findByText(`North America: Dallas, TX`).should('be.visible');
     containsClick(selectRegionString);
 
     ui.regionSelect.findItemByRegionName('Singapore, SG').click();
