@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { useSnackbar } from 'notistack';
@@ -67,7 +67,7 @@ export const UpgradeVolumesDialog = (props: Props) => {
   );
 
   return (
-    <Dialog
+    <ConfirmationDialog
       title={`Upgrade Volume${numUpgradeableVolumes === 1 ? '' : 's'}`}
       open={open}
       onClose={onClose}
@@ -89,6 +89,6 @@ export const UpgradeVolumesDialog = (props: Props) => {
           be returned to its last known state prior to the upgrade.
         </Paper>
       </Typography>
-    </Dialog>
+    </ConfirmationDialog>
   );
 };

@@ -5,7 +5,7 @@ import { Flags, FlagSet } from 'src/featureFlags';
 import { Dispatch } from 'src/hooks/types';
 import useFlags from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 const options: { label: string; flag: keyof Flags }[] = [
   { label: 'Metadata', flag: 'metadata' },
@@ -25,10 +25,10 @@ const FeatureFlagTool: React.FC<{}> = () => {
 
   return (
     <Grid container>
-      <Grid item xs={12}>
-        <h4 style={{ marginBottom: 8 }}>Feature Flags</h4>
+      <Grid xs={12}>
+        <h4 style={{ marginTop: 0, marginBottom: 8 }}>Feature Flags</h4>
       </Grid>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {options.map((thisOption) => {
             return (

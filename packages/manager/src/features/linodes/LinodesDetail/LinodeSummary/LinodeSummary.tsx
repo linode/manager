@@ -8,7 +8,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LineGraph from 'src/components/LineGraph';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
@@ -271,7 +271,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
   return (
     <Paper>
       <Grid container className={`${classes.root} m0`}>
-        <Grid item className={`${classes.graphControls} p0`} xs={12}>
+        <Grid className={`${classes.graphControls} p0`} xs={12}>
           <Select
             options={options}
             defaultValue={options[0]}
@@ -286,15 +286,20 @@ const LinodeSummary: React.FC<Props> = (props) => {
           />
         </Grid>
         {!isBareMetalInstance ? (
-          <Grid container item xs={12} className={`${classes.graphGrids} p0`}>
-            <Grid item className={classes.grid} xs={12}>
+          <Grid
+            container
+            xs={12}
+            className={`${classes.graphGrids}`}
+            spacing={4}
+          >
+            <Grid className={classes.grid} xs={12}>
               <StatsPanel
                 title="CPU (%)"
                 renderBody={renderCPUChart}
                 {...chartProps}
               />
             </Grid>
-            <Grid item className={classes.grid} xs={12}>
+            <Grid className={classes.grid} xs={12}>
               <StatsPanel
                 title="Disk I/O (blocks/s)"
                 renderBody={renderDiskIOChart}

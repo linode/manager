@@ -27,7 +27,7 @@
     <img alt="api-v4 bundle size" src="https://img.shields.io/bundlephobia/min/@linode/api-v4?label=api-v4 size">
   </a>
   <a href="https://www.npmjs.com/package/@linode/validation">
-    <img src="https://img.shields.io/npm/v/@linode/validation?label=%40linode%2Fapi-v4" alt="@linode/validation version" />
+    <img src="https://img.shields.io/npm/v/@linode/validation?label=%40linode%2Fvalidation" alt="@linode/validation version" />
   </a>
   <a href="https://bundlephobia.com/package/@linode/validation">
     <img alt="validation bundle size" src="https://img.shields.io/bundlephobia/min/@linode/validation?label=validation size">

@@ -4,7 +4,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import DisplayPrice from 'src/components/DisplayPrice';
+import { DisplayPrice } from 'src/components/DisplayPrice';
 import Link from 'src/components/Link';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 

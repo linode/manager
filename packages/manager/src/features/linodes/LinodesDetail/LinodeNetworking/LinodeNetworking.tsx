@@ -18,8 +18,8 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
@@ -52,7 +52,7 @@ import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 type ClassNames =
   | 'root'
@@ -738,13 +738,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           justifyContent="space-between"
           alignItems="flex-end"
           className={classes.root}
+          spacing={1}
         >
-          <Grid item className="p0">
+          <Grid className="p0">
             <Typography variant="h3" className={classes.headline}>
               IP Addresses
             </Typography>
           </Grid>
-          <Grid item className={classes.addNewWrapper}>
+          <Grid className={classes.addNewWrapper}>
             <Hidden smDown>
               <Button onClick={this.openTransferDialog} buttonType="secondary">
                 IP Transfer

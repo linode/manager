@@ -1,11 +1,10 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: '100% !important',
   },
@@ -34,7 +33,7 @@ interface Props {
 }
 
 const DashboardCard: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const {
     alignHeader,
@@ -48,27 +47,29 @@ const DashboardCard: React.FC<Props> = (props) => {
   return (
     <Grid
       container
-      className={classNames(className, {
+      className={cx(className, {
         [classes.root]: true,
         [classes.container]: true,
       })}
       data-qa-card={title}
+      spacing={2}
     >
       {(title || headerAction) && (
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <Grid
             container
             className={classes.header}
             alignItems={alignItems || 'flex-start'}
             justifyContent={alignHeader || 'space-between'}
+            spacing={2}
           >
             {title && (
-              <Grid item className={'p0'}>
+              <Grid className={'p0'}>
                 <Typography variant="h2">{title}</Typography>
               </Grid>
             )}
             {headerAction && (
-              <Grid item className={'p0'}>
+              <Grid className={'p0'}>
                 <Typography
                   variant="body1"
                   className={
@@ -82,9 +83,7 @@ const DashboardCard: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
       )}
-      <Grid item xs={12}>
-        {props.children}
-      </Grid>
+      <Grid xs={12}>{props.children}</Grid>
     </Grid>
   );
 };

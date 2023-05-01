@@ -2,7 +2,7 @@ import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 import Placeholder from 'src/components/Placeholder';
 import LinodePermissionsError from '../LinodePermissionsError';
 import EnableBackupsDialog from './EnableBackupsDialog';
@@ -13,8 +13,6 @@ interface Props {
   linodeId: number;
 }
 
-export type CombinedProps = Props;
-
 const useStyles = makeStyles(() => ({
   empty: {
     '& svg': {
@@ -23,7 +21,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const BackupsPlaceholder: React.FC<Props> = (props) => {
+export const BackupsPlaceholder = (props: Props) => {
   const classes = useStyles();
 
   const { backupsMonthlyPrice, linodeId, disabled } = props;

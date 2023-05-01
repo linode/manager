@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
-import Grid from 'src/components/core/Grid';
+import { CircleProgress } from 'src/components/CircleProgress';
+import Grid from '@mui/material/Unstable_Grid2';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
@@ -73,7 +73,7 @@ export const KubernetesClusterDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
-      <Grid item>
+      <Grid>
         <UpgradeKubernetesVersionBanner
           clusterID={cluster?.id}
           clusterLabel={cluster?.label}
@@ -102,10 +102,10 @@ export const KubernetesClusterDetail = () => {
             : undefined
         }
       />
-      <Grid item>
+      <Grid>
         <KubeSummaryPanel cluster={cluster} />
       </Grid>
-      <Grid item>
+      <Grid>
         <NodePoolsDisplay clusterID={cluster.id} clusterLabel={cluster.label} />
       </Grid>
       <UpgradeKubernetesClusterToHADialog

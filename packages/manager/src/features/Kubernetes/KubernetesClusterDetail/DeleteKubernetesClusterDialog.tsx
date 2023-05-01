@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
@@ -37,6 +37,12 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled =
     preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
+
+  React.useEffect(() => {
+    if (open && confirmText !== '') {
+      setConfirmText('');
+    }
+  }, [open]);
 
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {

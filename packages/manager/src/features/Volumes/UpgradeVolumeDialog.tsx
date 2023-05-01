@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
@@ -72,7 +72,7 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
   );
 
   return (
-    <Dialog
+    <ConfirmationDialog
       title={`Upgrade Volume ${label}`}
       open={open}
       onClose={onClose}
@@ -84,6 +84,6 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
       }
     >
       <VolumeUpgradeCopy type="volume" label={label} />
-    </Dialog>
+    </ConfirmationDialog>
   );
 };

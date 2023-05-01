@@ -5,9 +5,8 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'header' | 'toggleLabel' | 'toggleLabelText';
 
@@ -45,42 +44,30 @@ export const AutoEnroll: React.FC<CombinedProps> = (props) => {
 
   return (
     <Paper className={classes.root}>
-      {error && (
-        <Grid item>
-          <Notice error text={error} />
-        </Grid>
-      )}
-      <Grid container direction="row" wrap="nowrap">
-        <Grid item>
-          <FormControlLabel
-            className={classes.toggleLabel}
-            control={
-              <Toggle
-                checked={enabled}
-                onChange={toggle}
-                data-qa-enable-toggle
-              />
-            }
-            label={
-              <div className={classes.toggleLabelText}>
-                <Typography className={classes.header}>
-                  Auto Enroll All New Linodes in Backups
-                </Typography>
-                <Typography variant="body1">
-                  {`Enroll all future Linodes in backups. Your account will be billed
+      {error && <Notice error text={error} />}
+      <FormControlLabel
+        className={classes.toggleLabel}
+        control={
+          <Toggle checked={enabled} onChange={toggle} data-qa-enable-toggle />
+        }
+        label={
+          <div className={classes.toggleLabelText}>
+            <Typography className={classes.header}>
+              Auto Enroll All New Linodes in Backups
+            </Typography>
+            <Typography variant="body1">
+              {`Enroll all future Linodes in backups. Your account will be billed
                     the additional hourly rate noted on the `}
-                  <ExternalLink
-                    data-qa-backups-price
-                    fixedIcon
-                    link="https://www.linode.com/backups"
-                    text="Backups pricing page"
-                  />
-                </Typography>
-              </div>
-            }
-          />
-        </Grid>
-      </Grid>
+              <ExternalLink
+                data-qa-backups-price
+                fixedIcon
+                link="https://www.linode.com/backups"
+                text="Backups pricing page"
+              />
+            </Typography>
+          </div>
+        }
+      />
     </Paper>
   );
 };

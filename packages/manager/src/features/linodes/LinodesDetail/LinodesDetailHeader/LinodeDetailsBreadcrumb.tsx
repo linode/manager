@@ -10,7 +10,7 @@ import {
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import DocsLink from 'src/components/DocsLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -80,7 +80,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
       justifyContent="space-between"
       data-qa-linode={linode.label}
     >
-      <Grid item className="p0">
+      <Grid className="p0">
         <Breadcrumb
           pathname={props.location.pathname}
           firstAndLastOnly
@@ -99,7 +99,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className="px0" style={{ marginTop: 4 }}>
+      <Grid className="px0" style={{ marginTop: 4 }}>
         <DocsLink
           href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
           analyticsLabel="Linode Detail"

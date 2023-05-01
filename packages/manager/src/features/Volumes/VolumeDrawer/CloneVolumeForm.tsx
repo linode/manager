@@ -12,7 +12,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
-import PricePanel from './PricePanel';
+import { PricePanel } from './PricePanel';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {

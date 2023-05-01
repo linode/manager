@@ -7,7 +7,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -119,8 +119,9 @@ const SSHKeys = () => {
         alignItems="flex-end"
         justifyContent="flex-end"
         className={classes.sshKeysHeader}
+        spacing={2}
       >
-        <Grid className={classes.addNewWrapper} item>
+        <Grid className={classes.addNewWrapper}>
           <AddNewLink
             label="Add an SSH Key"
             onClick={() => setIsCreateDrawerOpen(true)}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CircleProgress from '../CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 
 const DEFAULT_DELAY = 1000;
 

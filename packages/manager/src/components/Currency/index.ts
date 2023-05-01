@@ -1,2 +1,1 @@
-import Currency from './Currency';
-export default Currency;
+export { Currency } from './Currency';

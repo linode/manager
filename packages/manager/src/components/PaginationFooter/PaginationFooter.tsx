@@ -1,42 +1,39 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import classNames from 'classnames';
+import Select from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import PaginationControls from '../PaginationControls';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 export const MIN_PAGE_SIZE = 25;
 
-type ClassNames = 'root' | 'padded' | 'select';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      background: theme.bg.bgPaper,
-      margin: 0,
-      minHeight: theme.spacing(5),
-      width: '100%',
-    },
-    padded: {
-      padding: `0 ${theme.spacing(2)} ${theme.spacing(1)}`,
-    },
-    select: {
-      '& .MuiInput-root': {
-        backgroundColor: theme.bg.bgPaper,
-        border: 'none',
-        '&.Mui-focused': {
-          boxShadow: 'none',
-        },
-      },
-      '& .MuiInput-input': {
-        paddingTop: 4,
-      },
-      '& .react-select__value-container': {
-        paddingLeft: 12,
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    background: theme.bg.bgPaper,
+    margin: 0,
+    minHeight: theme.spacing(5),
+    width: '100%',
+  },
+  padded: {
+    padding: `0 ${theme.spacing(2)} ${theme.spacing(1)}`,
+  },
+  select: {
+    '& .MuiInput-root': {
+      backgroundColor: theme.bg.bgPaper,
+      border: 'none',
+      '&.Mui-focused': {
+        boxShadow: 'none',
       },
     },
-  });
+    '& .MuiInput-input': {
+      paddingTop: 4,
+    },
+    '& .react-select__value-container': {
+      paddingLeft: 12,
+    },
+  },
+}));
 
 export interface PaginationProps {
   count: number;
@@ -53,8 +50,6 @@ interface Props extends PaginationProps {
   padded?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
 export const PAGE_SIZES = [MIN_PAGE_SIZE, 50, 75, 100, Infinity];
 
 const baseOptions = [
@@ -64,86 +59,79 @@ const baseOptions = [
   { label: 'Show 100', value: PAGE_SIZES[3] },
 ];
 
-class PaginationFooter extends React.PureComponent<CombinedProps> {
-  handleSizeChange = (e: Item) => this.props.handleSizeChange(+e.value);
+const PaginationFooter = (props: Props) => {
+  const classes = useStyles();
+  const {
+    count,
+    fixedSize,
+    page,
+    pageSize,
+    handlePageChange,
+    handleSizeChange,
+    padded,
+    eventCategory,
+    showAll,
+  } = props;
 
-  render() {
-    const {
-      classes,
-      count,
-      fixedSize,
-      page,
-      pageSize,
-      handlePageChange,
-      padded,
-      eventCategory,
-      showAll,
-    } = this.props;
-
-    if (count <= MIN_PAGE_SIZE && !fixedSize) {
-      return null;
-    }
-
-    const finalOptions = [...baseOptions];
-
-    // Add "Show All" to the list of options if the consumer has so specified.
-    if (showAll) {
-      finalOptions.push({ label: 'Show All', value: Infinity });
-    }
-
-    const defaultPagination = finalOptions.find((eachOption) => {
-      return eachOption.value === pageSize;
-    });
-
-    // If "Show All" is currently selected, pageSize is `Infinity`.
-    const isShowingAll = pageSize === Infinity;
-
-    return (
-      <Grid
-        container
-        justifyContent="space-between"
-        alignItems="center"
-        className={classNames({
-          [classes.root]: true,
-          [classes.padded]: padded,
-        })}
-      >
-        <Grid>
-          {!isShowingAll && (
-            <PaginationControls
-              onClickHandler={handlePageChange}
-              page={page}
-              count={count}
-              pageSize={pageSize}
-              eventCategory={eventCategory}
-            />
-          )}
-        </Grid>
-        {!fixedSize ? (
-          <Grid className={classes.select}>
-            <Select
-              options={finalOptions}
-              defaultValue={defaultPagination}
-              onChange={this.handleSizeChange}
-              label="Number of items to show"
-              hideLabel
-              isClearable={false}
-              noMarginTop
-              menuPlacement="top"
-              medium
-            />
-          </Grid>
-        ) : null}
-      </Grid>
-    );
+  if (count <= MIN_PAGE_SIZE && !fixedSize) {
+    return null;
   }
-}
 
-export default withStyles(styles)(PaginationFooter);
+  const finalOptions = [...baseOptions];
 
-// =============================================================================
-// Utilities
-// =============================================================================
+  // Add "Show All" to the list of options if the consumer has so specified.
+  if (showAll) {
+    finalOptions.push({ label: 'Show All', value: Infinity });
+  }
+
+  const defaultPagination = finalOptions.find((eachOption) => {
+    return eachOption.value === pageSize;
+  });
+
+  // If "Show All" is currently selected, pageSize is `Infinity`.
+  const isShowingAll = pageSize === Infinity;
+
+  return (
+    <Grid
+      container
+      justifyContent="space-between"
+      alignItems="center"
+      className={classNames({
+        [classes.root]: true,
+        [classes.padded]: padded,
+      })}
+    >
+      <Grid>
+        {!isShowingAll && (
+          <PaginationControls
+            onClickHandler={handlePageChange}
+            page={page}
+            count={count}
+            pageSize={pageSize}
+            eventCategory={eventCategory}
+          />
+        )}
+      </Grid>
+      {!fixedSize ? (
+        <Grid className={classes.select}>
+          <Select
+            options={finalOptions}
+            defaultValue={defaultPagination}
+            onChange={({ value }) => handleSizeChange(value)}
+            label="Number of items to show"
+            hideLabel
+            isClearable={false}
+            noMarginTop
+            menuPlacement="top"
+            medium
+          />
+        </Grid>
+      ) : null}
+    </Grid>
+  );
+};
+
+export default PaginationFooter;
 
 /**
  * Return the minimum page size needed to display a given number of items (`value`).

@@ -2,14 +2,14 @@ import copy from 'copy-to-clipboard';
 import * as React from 'react';
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -21,10 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(2.5),
     minHeight: '112px',
-  },
-  copy: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
   },
   errorState: {
     padding: `calc(${theme.spacing(2)} - 1px)`,
@@ -142,8 +138,8 @@ const LinodePubKey: React.FC<{}> = () => {
 
   return (
     <Paper className={classes.root}>
-      <Grid container justifyContent="space-between">
-        <Grid item xs={12} md={3} lg={4} className={classes.copy}>
+      <Grid container justifyContent="space-between" spacing={2}>
+        <Grid xs={12} md={3} lg={4}>
           <Box display="flex" flexDirection="row">
             <SSHKeyIcon className={classes.icon} />
             <Typography variant="h3">Linode Public Key</Typography>
@@ -162,21 +158,14 @@ const LinodePubKey: React.FC<{}> = () => {
           </Typography>
         </Grid>
         {/* Hide the SSH key on x-small viewports */}
-        <Grid item xs={12} sm={5} md={6} className={classes.sshKeyContainer}>
+        <Grid xs={12} sm={5} md={6} className={classes.sshKeyContainer}>
           <Typography variant="subtitle1" className={classes.sshKey}>
             {data?.ssh_key || ''}
             {/* See NOTE A. If that CSS is removed, we can use the following instead: */}
             {/* pubKey.slice(0, 160)} . . . */}
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          md={3}
-          lg={2}
-          className={classes.copyToClipboard}
-        >
+        <Grid xs={12} sm={4} md={3} lg={2} className={classes.copyToClipboard}>
           <Button buttonType="secondary" onClick={handleCopy}>
             {!copied ? 'Copy to clipboard' : 'Copied!'}
           </Button>

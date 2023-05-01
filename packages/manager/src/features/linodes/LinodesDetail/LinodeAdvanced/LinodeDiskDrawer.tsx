@@ -16,12 +16,12 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'src/components/Link';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import TextTooltip from 'src/components/TextTooltip';
+import { TextTooltip } from 'src/components/TextTooltip';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -200,7 +200,7 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
     <Drawer title={getTitle(mode)} open={open} onClose={props.onClose}>
       <Grid container direction="row">
         {mode === 'create' && (
-          <Grid item data-qa-mode-toggle>
+          <Grid data-qa-mode-toggle>
             <ModeSelect
               modes={modeList}
               selected={selectedMode}
@@ -208,7 +208,7 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
             />
           </Grid>
         )}
-        <Grid item xs={12}>
+        <Grid xs={12}>
           {formik.status && (
             <Notice
               error
@@ -218,7 +218,7 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
             />
           )}
         </Grid>
-        <Grid item xs={12} className={classes.section}>
+        <Grid xs={12} className={classes.section}>
           <form>
             {mode === 'resize' ? (
               <FormHelperText>

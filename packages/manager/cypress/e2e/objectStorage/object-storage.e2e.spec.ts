@@ -316,7 +316,12 @@ describe('object storage end-to-end tests', () => {
           cy.findByText('Access Control List (ACL)')
             .should('be.visible')
             .click()
-            .type('Public Read{enter}');
+            .type('Public Read');
+
+          ui.autocompletePopper
+            .findByTitle('Public Read')
+            .should('be.visible')
+            .click();
 
           ui.button.findByTitle('Save').should('be.visible').click();
 

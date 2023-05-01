@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import DisplayPrice from 'src/components/DisplayPrice';
+import { DisplayPrice } from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-
-type ClassNames = 'root';
+import Box from 'src/components/core/Box';
 
 const getPrice = (size: number) => {
   return size * 0.1;
@@ -17,34 +14,17 @@ const getClampedPrice = (newSize: number, currentSize: number) =>
       : getPrice(MAX_VOLUME_SIZE)
     : getPrice(currentSize);
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(4),
-    },
-  });
-
 interface Props {
   value: number;
   currentSize: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const PricePanel: React.FC<CombinedProps> = ({
-  currentSize,
-  value,
-  classes,
-}) => {
+export const PricePanel = ({ currentSize, value }: Props) => {
   const price = getClampedPrice(value, currentSize);
 
   return (
-    <div className={classes.root}>
+    <Box marginTop={4}>
       <DisplayPrice price={price} interval="mo" />
-    </div>
+    </Box>
   );
 };
-
-const styled = withStyles(styles);
-
-export default styled(PricePanel);

@@ -12,7 +12,7 @@ import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
@@ -24,7 +24,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
-import Toggle from 'src/components/Toggle';
+import { Toggle } from 'src/components/Toggle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -578,7 +578,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['grants', entity, idx, 'permissions']), value));
   };
 
-  setAllEntitiesTo = (e: Item) => {
+  setAllEntitiesTo = (e: Item<string>) => {
     const value = e.value === 'null' ? null : e.value;
     this.entityPerms.map((entity: GrantType) =>
       this.entitySetAllTo(entity, value as GrantLevel)()

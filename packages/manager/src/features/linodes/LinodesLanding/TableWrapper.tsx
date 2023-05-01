@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Table, { TableProps } from 'src/components/Table';
 import SortableTableHead from './SortableTableHead';
@@ -33,7 +33,7 @@ const TableWrapper = <T extends unknown>(props: CombinedProps<T>) => {
 
   return (
     <Grid container className="m0" spacing={0} style={{ width: '100%' }}>
-      <Grid item xs={12} className="p0">
+      <Grid xs={12} className="p0">
         <Table
           aria-label="List of Linodes"
           rowCount={dataLength}

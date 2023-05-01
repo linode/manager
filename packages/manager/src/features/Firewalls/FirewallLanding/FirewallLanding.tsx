@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import LandingHeader from 'src/components/LandingHeader';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import CreateFirewallDrawer from './CreateFirewallDrawer';

@@ -1,5 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import CircleProgress from './CircleProgress';
+import { CircleProgress } from './CircleProgress';
 
 <Meta
   title="Components/Loading States/Circle Progress"
@@ -22,9 +22,9 @@ export const Template = (args) => <CircleProgress {...args}></CircleProgress>;
       noPadding: {
         description: 'Removes the padding for `mini` circle progresses only.',
       },
-      tag: {
+      size: {
         description:
-          'To be primarily used with tags and must be used with the `mini` prop. The spinner will not be visible in Storybook since the stroke is white.',
+          'To be primarily used with mini and noPadding. Set spinner to a custom size.',
       },
     }}
   >

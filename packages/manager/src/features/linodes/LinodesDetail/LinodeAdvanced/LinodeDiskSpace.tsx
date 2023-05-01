@@ -2,7 +2,7 @@ import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import BarPercent from 'src/components/BarPercent';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
@@ -74,11 +74,11 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
           value={usedDiskSpace}
           rounded
         />
-        <Grid container justifyContent="space-between">
-          <Grid item style={{ marginRight: 10 }}>
+        <Grid container justifyContent="space-between" spacing={2}>
+          <Grid style={{ marginRight: 10 }}>
             <Typography>{usedDiskSpace} MB Allocated</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>{freeDiskSpace} MB Available</Typography>
           </Grid>
         </Grid>

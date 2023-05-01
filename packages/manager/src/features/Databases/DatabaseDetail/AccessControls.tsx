@@ -5,7 +5,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import TableBody from 'src/components/core/TableBody';
 import Typography from 'src/components/core/Typography';
 import InlineMenuAction from 'src/components/InlineMenuAction';

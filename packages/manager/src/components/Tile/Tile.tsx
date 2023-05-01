@@ -1,14 +1,13 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/core/Button';
-import { createStyles, makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
+const useStyles = makeStyles<void, 'icon' | 'buttonTitle'>()(
+  (theme: Theme, _params, classes) => ({
     card: {
       display: 'flex',
       flexDirection: 'column',
@@ -23,14 +22,14 @@ const useStyles = makeStyles((theme: Theme) =>
       transition: 'border-color 225ms ease-in-out',
       cursor: 'pointer',
       '&:hover': {
-        '& $icon': {
+        [`& .${classes.icon}`]: {
           ...theme.animateCircleIcon,
         },
         '& svg .outerCircle': {
           fill: theme.palette.primary.main,
           transition: 'fill .2s ease-in-out .2s',
         },
-        '& $buttonTitle': {
+        [`& .${classes.buttonTitle}`]: {
           color: theme.color.black,
           textDecoration: 'underline',
         },
@@ -94,16 +93,16 @@ interface Props {
   errorText?: string;
 }
 
-const Tile = (props: Props) => {
+export const Tile = (props: Props) => {
   const { className, title, description, link, icon, errorText } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const renderLink = () => {
     if (typeof link === 'function') {
       return (
         <Button
           onClick={link}
-          className={classNames({
+          className={cx({
             [classes.buttonTitle]: true,
           })}
         >
@@ -123,7 +122,7 @@ const Tile = (props: Props) => {
 
   return (
     <div
-      className={classNames(
+      className={cx(
         {
           [classes.card]: true,
           [classes.clickableTile]: link !== undefined,
@@ -153,5 +152,3 @@ const Tile = (props: Props) => {
     </div>
   );
 };
-
-export default Tile;

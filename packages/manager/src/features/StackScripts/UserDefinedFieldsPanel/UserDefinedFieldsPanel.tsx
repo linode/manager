@@ -8,14 +8,14 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
 import Divider from 'src/components/core/Divider';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import AppInfo from '../../linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
-import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
+import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -78,7 +78,7 @@ const renderField = (
 
   if (isHeader(field)) {
     return (
-      <Grid item xs={12} lg={12} key={field.name} style={{ marginTop: 24 }}>
+      <Grid xs={12} lg={5} key={field.name} style={{ marginTop: 24 }}>
         <Divider />
         <Typography variant="h2">{field.label}</Typography>
       </Grid>
@@ -87,7 +87,7 @@ const renderField = (
 
   if (isMultiSelect(field)) {
     return (
-      <Grid item xs={12} lg={5} key={field.name}>
+      <Grid xs={12} lg={5} key={field.name}>
         <UserDefinedMultiSelect
           key={field.name}
           field={field}
@@ -102,12 +102,11 @@ const renderField = (
   }
   if (isOneSelect(field)) {
     return (
-      <Grid item xs={12} lg={5} key={field.name}>
+      <Grid xs={12} lg={5} key={field.name}>
         <UserDefinedSelect
           field={field}
           updateFormState={handleChange}
           value={udf_data[field.name] || ''}
-          updateFor={[field.label, udf_data[field.name], error]}
           isOptional={isOptional}
           key={field.name}
           error={error}
@@ -118,7 +117,7 @@ const renderField = (
   if (isPasswordField(field.name)) {
     const isTokenPassword = field.name === 'token_password';
     return (
-      <Grid item xs={12} lg={5} key={field.name}>
+      <Grid xs={12} lg={5} key={field.name}>
         <UserDefinedText
           /**
            * we are explicitly passing the value to solve for the situation
@@ -161,7 +160,7 @@ const renderField = (
     );
   }
   return (
-    <Grid item xs={12} lg={5} key={field.name}>
+    <Grid xs={12} lg={5} key={field.name}>
       <UserDefinedText
         /** see comment above for why we're passing the value prop */
         value={udf_data[field.name] || ''}

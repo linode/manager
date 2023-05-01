@@ -39,7 +39,7 @@ const _SingleValue: React.FC<CombinedProps> = (props) => {
         {props.children}
       </components.SingleValue>
       <span className={`${props.data.className} ${classes.icon}`}>
-        {props.data.flag && props.data.flag()}
+        {props.data.flag}
       </span>
     </>
   );

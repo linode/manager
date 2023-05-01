@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Placeholder from 'src/components/Placeholder';
 import { buildQueryStringForLinodeClone } from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { extendType } from 'src/utilities/extendType';
@@ -86,7 +86,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     // eslint-disable-next-line
     <React.Fragment>
       {linodesData && linodesData.length === 0 ? (
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid className={`${classes.main} mlMain py0`}>
           <Paper>
             <Placeholder
               data-qa-placeholder
@@ -101,7 +101,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
           </Paper>
         </Grid>
       ) : (
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid className={`${classes.main} mlMain py0`}>
           <SelectLinodePanel
             data-qa-linode-panel
             error={hasErrorFor('linode_id')}

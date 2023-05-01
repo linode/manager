@@ -5,11 +5,10 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
@@ -232,7 +231,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Connection Details
       </Typography>
-      <Grid className={classes.connectionDetailsCtn} data-qa-connection-details>
+      <Box className={classes.connectionDetailsCtn} data-qa-connection-details>
         <Typography>
           <span>username</span> ={' '}
           {database.engine === 'postgresql' ? 'linpostgres' : DB_ROOT_USERNAME}
@@ -243,7 +242,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           </Typography>
           {credentialsLoading ? (
             <div className={classes.progressCtn}>
-              <CircleProgress mini tag />
+              <CircleProgress mini noPadding size={12} />
             </div>
           ) : credentialsError ? (
             <>
@@ -398,7 +397,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         <Typography>
           <span>ssl</span> = {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
         </Typography>
-      </Grid>
+      </Box>
       <div className={classes.actionBtnsCtn}>
         {database.ssl_connection ? caCertificateJSX : null}
       </div>

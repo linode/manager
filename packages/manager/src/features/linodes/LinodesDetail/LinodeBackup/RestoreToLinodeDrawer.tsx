@@ -55,17 +55,19 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
   const { data: grants } = useGrants();
 
   const [overwrite, setOverwrite] = React.useState<boolean>(false);
-  const [selectedLinode, setSelectedLinode] = React.useState<string>('none');
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
+    linodeID
+  );
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
   const reset = () => {
     setOverwrite(false);
-    setSelectedLinode('none');
+    setSelectedLinodeId(null);
     setErrors([]);
   };
 
   const restoreToLinode = () => {
-    if (!selectedLinode || selectedLinode === 'none') {
+    if (!selectedLinodeId) {
       setErrors([
         ...errors,
         ...[{ field: 'linode_id', reason: 'You must select a Linode' }],
@@ -73,7 +75,7 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
       scrollErrorIntoView();
       return;
     }
-    restoreBackup(linodeID, Number(backupID), Number(selectedLinode), overwrite)
+    restoreBackup(linodeID, Number(backupID), selectedLinodeId, overwrite)
       .then(() => {
         reset();
         onSubmit();
@@ -82,10 +84,6 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
         setErrors(getAPIErrorOrDefault(errResponse));
         scrollErrorIntoView();
       });
-  };
-
-  const handleSelectLinode = (e: Item<string>) => {
-    setSelectedLinode(e.value);
   };
 
   const handleToggleOverwrite = () => {
@@ -108,7 +106,7 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
   const overwriteError = hasErrorFor('overwrite');
   const generalError = hasErrorFor('none');
 
-  const readOnly = canEditLinode(grants, Number(selectedLinode));
+  const readOnly = canEditLinode(grants, selectedLinodeId ?? -1);
   const selectError = Boolean(linodeError) || readOnly;
 
   const linodeOptions = linodesData
@@ -138,9 +136,11 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
               'data-qa-select-linode': true,
             },
           }}
-          defaultValue={selectedLinode || ''}
+          defaultValue={linodeOptions.find(
+            (option) => option.value === selectedLinodeId
+          )}
           options={linodeOptions}
-          onChange={handleSelectLinode}
+          onChange={(item: Item<number>) => setSelectedLinodeId(item.value)}
           errorText={linodeError}
           placeholder="Select a Linode"
           isClearable={false}

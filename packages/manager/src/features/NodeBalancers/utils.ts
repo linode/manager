@@ -5,8 +5,7 @@ import {
   NodeBalancerConfigNodeFields,
   NodeBalancerConfigFields,
 } from './types';
-
-import defaultNumeric from 'src/utilities/defaultNumeric';
+import { defaultNumeric } from 'src/utilities/defaultNumeric';
 
 export interface NodeBalancerConfigFieldsWithStatus
   extends NodeBalancerConfigFields {

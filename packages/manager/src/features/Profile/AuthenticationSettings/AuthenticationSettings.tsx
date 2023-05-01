@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';

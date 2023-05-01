@@ -3,7 +3,7 @@ import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'src/components/Link';
 import AccessControls from '../AccessControls';
 import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
@@ -35,11 +35,11 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
 
   return (
     <Paper>
-      <Grid container>
-        <Grid item xs={12} sm={4}>
+      <Grid container spacing={2}>
+        <Grid xs={12} sm={4}>
           <ClusterConfiguration database={database} />
         </Grid>
-        <Grid item xs={12} sm={8}>
+        <Grid xs={12} sm={8}>
           <ConnectionDetails database={database} />
         </Grid>
       </Grid>

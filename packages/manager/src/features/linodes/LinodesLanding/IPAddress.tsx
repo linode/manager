@@ -1,7 +1,7 @@
 import copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import ShowMore from 'src/components/ShowMore';

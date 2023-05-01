@@ -7,7 +7,7 @@ import Drawer from 'src/components/Drawer';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice/Notice';
 import Radio from 'src/components/Radio';
-import TagsInput from 'src/components/TagsInput';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import TextField from 'src/components/TextField';
 import { useFormik } from 'formik';
 import { useUpdateDomainMutation } from 'src/queries/domains';

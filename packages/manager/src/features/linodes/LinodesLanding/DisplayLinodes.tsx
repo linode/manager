@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import TableBody from 'src/components/core/TableBody';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate, { PaginationProps } from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -159,7 +159,7 @@ const DisplayLinodes = (props: CombinedProps) => {
             )}
             {display === 'grid' && (
               <>
-                <Grid item xs={12} className={'px0'}>
+                <Grid xs={12} className={'px0'}>
                   <div className={classes.controlHeader}>
                     <div
                       id="displayViewDescription"
@@ -202,7 +202,7 @@ const DisplayLinodes = (props: CombinedProps) => {
                 <Component showHead {...componentProps} />
               </>
             )}
-            <Grid item xs={12}>
+            <Grid xs={12}>
               {
                 <PaginationFooter
                   count={data.length}

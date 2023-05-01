@@ -13,13 +13,13 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -44,7 +44,6 @@ import ConfigRow from './ConfigRow';
 
 type ClassNames =
   | 'root'
-  | 'addNewWrapper'
   | 'tableCell'
   | 'labelColumn'
   | 'interfacesColumn'
@@ -53,19 +52,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      margin: 0,
-      width: '100%',
-    },
-    addNewWrapper: {
-      '&.MuiGrid-item': {
-        paddingTop: 0,
-        paddingRight: 0,
-      },
-      [theme.breakpoints.down('md')]: {
-        marginRight: theme.spacing(),
-      },
-    },
     tableCell: {
       borderRight: `1px solid ${theme.palette.divider}`,
       fontWeight: 'bold',
@@ -171,7 +157,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   configsPanel = React.createRef();
 
   render() {
-    const { classes, readOnly } = this.props;
+    const { readOnly } = this.props;
 
     return (
       <>
@@ -179,9 +165,11 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           container
           alignItems="flex-end"
           justifyContent="flex-end"
-          className={classes.root}
+          sx={{
+            padding: '0 0 8px 0',
+          }}
         >
-          <Grid item className={classes.addNewWrapper}>
+          <Grid>
             <AddNewLink
               onClick={this.openConfigDrawerForCreation}
               label="Add Configuration"

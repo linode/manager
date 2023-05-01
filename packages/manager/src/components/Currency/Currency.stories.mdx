@@ -1,5 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import Currency from './Currency';
+import { Currency } from './Currency';
 
 <Meta title="Elements/Typography/Currency" component={Currency} />
 
@@ -31,4 +31,4 @@ export const CurrencyTemplate = (args) => <Currency {...args} />;
   </Story>
 </Canvas>
 
-<ArgsTable story="Currency" exclude={['dataAttrs']} sort="requiredFirst"/>
+<ArgsTable story="Currency" sort="requiredFirst"/>

@@ -19,7 +19,7 @@ import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import Divider from 'src/components/core/Divider';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
@@ -258,7 +258,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       role="navigation"
       id="main-navigation"
     >
-      <Grid item>
+      <Grid>
         <div
           className={classNames(classes.logoItemAkamai, {
             [classes.logoItemAkamaiCollapsed]: isCollapsed,

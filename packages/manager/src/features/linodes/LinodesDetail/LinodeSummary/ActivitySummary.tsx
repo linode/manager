@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -135,11 +135,16 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
 
     return (
       <>
-        <Grid container alignItems={'center'} className={classes.header}>
-          <Grid item>
+        <Grid
+          container
+          alignItems={'center'}
+          className={classes.header}
+          sx={{ border: '1px solid red' }}
+        >
+          <Grid>
             <Typography variant="h2">Activity Feed</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>
               <ViewAllLink
                 text="View More Activity"

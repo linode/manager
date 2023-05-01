@@ -15,7 +15,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import ConfirmTransferCancelDialog from './EntityTransfersLanding/ConfirmTransferCancelDialog';
 import TransferDetailsDialog from './EntityTransfersLanding/TransferDetailsDialog';
 import RenderTransferRow from './RenderTransferRow';

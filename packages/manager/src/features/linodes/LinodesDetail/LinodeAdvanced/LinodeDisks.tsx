@@ -6,14 +6,14 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Hidden from 'src/components/core/Hidden';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
@@ -168,8 +168,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           container
           alignItems="flex-end"
           justifyContent="space-between"
+          spacing={1}
         >
-          <Grid item ref={this.disksHeader} className="p0">
+          <Grid ref={this.disksHeader} className="p0">
             <Typography variant="h3" className={classes.headline}>
               Disks
             </Typography>
@@ -188,7 +189,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                 }
               />
             ) : undefined}
-            <Grid item className={classes.addNewWrapper}>
+            <Grid className={classes.addNewWrapper}>
               <AddNewLink
                 onClick={this.openDrawerForCreation}
                 label="Add a Disk"
@@ -215,7 +216,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               }) => {
                 return (
                   <React.Fragment>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                       <Table aria-label="List of Disks">
                         <TableHead>
                           <TableRow>

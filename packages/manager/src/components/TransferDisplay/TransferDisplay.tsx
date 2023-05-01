@@ -2,7 +2,7 @@ import OpenInNew from '@mui/icons-material/OpenInNew';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
@@ -142,6 +142,7 @@ export const TransferDialog = React.memo((props: DialogProps) => {
       onClose={onClose}
       title="Monthly Network Transfer Pool"
       maxWidth="sm"
+      fullWidth
     >
       <Grid
         container

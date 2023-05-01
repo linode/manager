@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 interface Props {
   open: boolean;
@@ -56,7 +56,7 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Dialog
+    <ConfirmationDialog
       open={open}
       title={`Delete ${label ? label : 'this Longview Client'}?`}
       onClose={props.closeDialog}
@@ -70,7 +70,7 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
       }
     >
       Are you sure you want to delete this Longview Client?
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 

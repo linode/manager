@@ -1,1 +1,1 @@
-export { default } from './MigrateLinode';
+export { MigrateLinode } from './MigrateLinode';

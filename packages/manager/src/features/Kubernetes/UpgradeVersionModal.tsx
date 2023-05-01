@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
 import { useSnackbar } from 'notistack';
@@ -120,7 +120,7 @@ export const UpgradeDialog = (props: Props) => {
   );
 
   return (
-    <Dialog
+    <ConfirmationDialog
       title={dialogTitle}
       error={error}
       open={isOpen}
@@ -143,7 +143,7 @@ export const UpgradeDialog = (props: Props) => {
           </>
         )}
       </Typography>
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 

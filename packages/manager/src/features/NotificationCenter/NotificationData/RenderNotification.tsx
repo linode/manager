@@ -1,48 +1,14 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
-import classNames from 'classnames';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import { Link } from 'src/components/Link';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { ExtendedNotification } from './useFormattedNotifications';
-
-export const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: -2,
-  },
-  criticalIcon: {
-    fill: theme.color.red,
-  },
-  majorIcon: {
-    fill: theme.palette.warning.dark,
-  },
-  itemsWithoutIcon: {
-    marginLeft: '1.25rem',
-  },
-  severeAlert: {
-    color: theme.color.red,
-  },
-  redLink: {
-    color: `${theme.color.red} !important`,
-    '&:hover': {
-      textDecoration: `${theme.color.red} underline`,
-    },
-  },
-  notificationIcon: {
-    display: 'flex',
-    lineHeight: '1rem',
-    '& svg': {
-      height: '1.25rem',
-      width: '1.25rem',
-    },
-  },
-}));
 
 interface Props {
   notification: ExtendedNotification;
@@ -52,8 +18,8 @@ interface Props {
 export type CombinedProps = Props;
 
 export const RenderNotification: React.FC<Props> = (props) => {
+  const theme = useTheme();
   const { notification, onClose } = props;
-  const classes = useStyles();
 
   const severity = notification.severity;
 
@@ -63,64 +29,86 @@ export const RenderNotification: React.FC<Props> = (props) => {
     notification?.entity?.id
   );
 
+  const sxMessage = {
+    color: severity === 'critical' ? theme.color.red : undefined,
+    marginLeft: notification.severity === 'minor' ? '1.25rem' : undefined,
+  };
+
   const message = (
     <Typography
-      className={classNames({
-        [classes.itemsWithoutIcon]: notification.severity === 'minor',
-        [classes.severeAlert]: severity === 'critical',
-      })}
       dangerouslySetInnerHTML={{ __html: sanitizeHTML(notification.message) }}
+      sx={sxMessage}
     />
   );
 
   return (
     <>
-      <Grid
-        className={classes.root}
-        container
-        alignItems="flex-start"
-        wrap="nowrap"
+      <Box
         data-test-id={notification.type}
+        sx={{
+          display: 'flex',
+          alignItem: 'flex-start',
+        }}
       >
-        <Grid item>
-          <div className={classes.notificationIcon}>
+        <Box
+          sx={{
+            paddingRight: theme.spacing(2),
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              lineHeight: '1rem',
+              '& svg': {
+                height: '1.25rem',
+                width: '1.25rem',
+              },
+            }}
+          >
             {severity === 'critical' ? (
               <ErrorIcon
-                className={classes.criticalIcon}
+                sx={{
+                  fill: theme.color.red,
+                }}
                 data-test-id={severity + 'Icon'}
               />
             ) : null}
             {severity === 'major' ? (
               <WarningIcon
-                className={classes.majorIcon}
+                sx={{
+                  fill: theme.palette.warning.dark,
+                }}
                 data-test-id={severity + 'Icon'}
               />
             ) : null}
-          </div>
-        </Grid>
-        <Grid item>
+          </Box>
+        </Box>
+        <Box>
           {/* If JSX has already been put together from interceptions in useFormattedNotifications.tsx, use that */}
           {notification.jsx ? (
             notification.jsx
           ) : linkTarget ? (
-            <Link
-              className={classNames({
-                [classes.redLink]: severity === 'critical',
-              })}
-              to={linkTarget}
-              onClick={onClose}
-            >
+            <StyledLink to={linkTarget} onClick={onClose}>
               {message}
-            </Link>
+            </StyledLink>
           ) : (
             message
           )}
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
       <Divider />
     </>
   );
 };
+
+const StyledLink = styled(Link)<Partial<Props>>(({ theme, ...props }) => ({
+  ...(props.notification?.severity === 'critical' && {
+    color: `${theme.color.red} !important`,
+    '&:hover': {
+      textDecoration: `${theme.color.red} underline`,
+    },
+  }),
+}));
 
 const getEntityLinks = (
   notificationType?: NotificationType,

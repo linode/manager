@@ -8,6 +8,8 @@ import {
 } from '@linode/api-v4/lib/firewalls/types';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
+  label: Factory.each((i) => `firewall-rule-${i}`),
+  description: Factory.each((i) => `firewall-rule-${i} description`),
   ports: '22',
   protocol: 'TCP',
   action: 'DROP',

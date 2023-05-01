@@ -1,18 +1,17 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
 import { titlecase } from 'src/features/linodes/presentation';
 import { capitalize } from 'src/utilities/capitalize';
-import { DialogProps } from '../Dialog';
+import { DialogProps } from '../Dialog/Dialog';
 import { usePreferences } from 'src/queries/preferences';
 
-interface Props extends Omit<DialogProps, 'title'> {
+interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   open: boolean;
   error?: string;
   entity: string;
@@ -23,15 +22,8 @@ interface Props extends Omit<DialogProps, 'title'> {
   typeToConfirm?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  text: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(),
-  },
-}));
-
-const DeletionDialog: React.FC<Props> = (props) => {
-  const classes = useStyles();
+const _DeletionDialog = (props: DeletionDialogProps) => {
+  const theme = useTheme();
   const {
     entity,
     error,
@@ -96,7 +88,13 @@ const DeletionDialog: React.FC<Props> = (props) => {
         placeholder={label}
         visible={typeToConfirmRequired}
         confirmationText={
-          <Typography component={'span'} className={classes.text}>
+          <Typography
+            component={'span'}
+            sx={{
+              paddingTop: theme.spacing(2),
+              paddingBottom: theme.spacing(),
+            }}
+          >
             To confirm deletion, type the name of the {entity} (
             <strong>{label}</strong>) in the field below:
           </Typography>
@@ -106,4 +104,6 @@ const DeletionDialog: React.FC<Props> = (props) => {
   );
 };
 
-export default React.memo(DeletionDialog);
+const DeletionDialog = React.memo(_DeletionDialog);
+
+export { DeletionDialog };

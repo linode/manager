@@ -3,6 +3,10 @@ import {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import {
+  CUSTOM_PORTS_VALIDATION_REGEX,
+  CUSTOM_PORTS_ERROR_MESSAGE,
+} from '@linode/validation';
 import { Formik, FormikProps } from 'formik';
 import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import { uniq } from 'ramda';
@@ -34,7 +38,7 @@ import {
   predefinedFirewallFromRule,
   protocolOptions,
 } from 'src/features/Firewalls/shared';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import {
   ExtendedIP,
   stringToExtendedIP,
@@ -146,11 +150,15 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
       action: values.action,
     };
 
-    if (values.label) {
+    if (values.label === '') {
+      payload.label = null;
+    } else {
       payload.label = values.label;
     }
 
-    if (values.description) {
+    if (values.description === '') {
+      payload.description = null;
+    } else {
       payload.description = values.description;
     }
 
@@ -262,7 +270,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
 
     // This is an edge case; if there's an error for the Ports field
     // but CUSTOM isn't selected, the error won't be visible to the user.
-    const generalPortError = !hasCustomInput && errors.ports;
+    const generalPortError = !hasCustomInput ? errors.ports : undefined;
 
     // Set form field errors for each error we have (except "addresses" errors, which are handled
     // by IP Error state).
@@ -459,11 +467,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           name="protocol"
           placeholder="Select a protocol..."
           aria-label="Select rule protocol."
-          value={
-            values.protocol
-              ? { label: values.protocol, value: values.protocol }
-              : undefined
-          }
+          value={protocolOptions.find((p) => p.value === values.protocol)}
           errorText={errors.protocol}
           options={protocolOptions}
           onChange={handleProtocolChange}
@@ -857,9 +861,8 @@ export const validateForm = (
 
   if ((protocol === 'ICMP' || protocol === 'IPENCAP') && ports) {
     errors.ports = `Ports are not allowed for ${protocol} protocols.`;
-  } else if (ports && !ports.match(/^([0-9\-]+,?\s?)+$/)) {
-    errors.ports =
-      'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+  } else if (ports && !ports.match(CUSTOM_PORTS_VALIDATION_REGEX)) {
+    errors.ports = CUSTOM_PORTS_ERROR_MESSAGE;
   }
 
   return errors;

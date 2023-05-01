@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Download from 'src/assets/icons/download.svg';
-import CopyTooltip from 'src/components/CopyTooltip';
-import Grid from 'src/components/core/Grid';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
@@ -66,10 +66,10 @@ export const KubeConfigDrawer = (props: Props) => {
         loading={isLoading}
       >
         <Grid container spacing={2}>
-          <Grid item>
+          <Grid>
             <Typography variant="h3">{clusterLabel}</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <button
               onClick={() =>
                 downloadFile(`${clusterLabel}-kubeconfig.yaml`, data ?? '')

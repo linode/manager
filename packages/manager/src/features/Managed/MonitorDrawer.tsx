@@ -13,7 +13,7 @@ import Button from 'src/components/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 
@@ -182,8 +182,8 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                 }}
               />
 
-              <Grid container>
-                <Grid item xs={12} sm={6}>
+              <Grid container spacing={2}>
+                <Grid xs={12} sm={6}>
                   <Select
                     name="service_type"
                     label="Monitor Type"
@@ -201,7 +201,7 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid xs={12} sm={6}>
                   <TextField
                     name="timeout"
                     label="Response Timeout"

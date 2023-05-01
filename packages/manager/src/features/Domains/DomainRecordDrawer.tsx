@@ -297,7 +297,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         options={rateOptions}
         label="Expire Rate"
         defaultValue={defaultRate}
-        onChange={(e: Item) => this.setExpireSec(+e.value)}
+        onChange={(e) => this.setExpireSec(e.value)}
         isClearable={false}
         textFieldProps={{
           dataAttrs: {
@@ -350,7 +350,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         options={MSSelectOptions}
         label={label}
         defaultValue={defaultOption}
-        onChange={(e: Item) => fn(+e.value)}
+        onChange={(e) => fn(e.value)}
         isClearable={false}
         textFieldProps={{
           dataAttrs: {
@@ -385,7 +385,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         options={protocolOptions}
         label="Protocol"
         defaultValue={defaultProtocol}
-        onChange={(e: Item) => this.setProtocol(e.value)}
+        onChange={(e) => this.setProtocol(e.value)}
         isClearable={false}
         textFieldProps={{
           dataAttrs: {

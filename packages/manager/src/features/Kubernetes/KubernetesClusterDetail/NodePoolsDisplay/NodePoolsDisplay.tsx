@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
@@ -15,17 +15,13 @@ import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import Button from 'src/components/Button';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import classNames from 'classnames';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(0),
-    paddingTop: '4px',
-  },
   button: {
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(),
@@ -53,9 +49,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  nodePool: {
-    marginBottom: theme.spacing(3),
-  },
 }));
 
 export interface Props {
@@ -65,7 +58,6 @@ export interface Props {
 
 export const NodePoolsDisplay = (props: Props) => {
   const { clusterID, clusterLabel } = props;
-
   const classes = useStyles();
 
   const {
@@ -124,9 +116,9 @@ export const NodePoolsDisplay = (props: Props) => {
         container
         alignItems="center"
         justifyContent="space-between"
-        updateFor={[classes]}
+        spacing={2}
       >
-        <Grid item>
+        <Grid>
           <Typography
             variant="h2"
             className={classNames(classes.nodePoolHeader)}
@@ -134,7 +126,7 @@ export const NodePoolsDisplay = (props: Props) => {
             Node Pools
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Button
             buttonType="secondary"
             className={classNames(classes.button)}
@@ -151,12 +143,12 @@ export const NodePoolsDisplay = (props: Props) => {
           </Button>
         </Grid>
       </Grid>
-      <Paper className={classes.root}>
+      <Paper>
         {poolsError ? (
           <ErrorState errorText={poolsError?.[0].reason} />
         ) : (
           <Grid container direction="column">
-            <Grid xs={12} className={classes.displayTable}>
+            <Grid xs={12}>
               {_pools?.map((thisPool) => {
                 const { id, nodes } = thisPool;
 
@@ -168,7 +160,7 @@ export const NodePoolsDisplay = (props: Props) => {
                   thisPoolType?.formattedLabel ?? 'Unknown type';
 
                 return (
-                  <div key={id} className={classes.nodePool}>
+                  <div key={id}>
                     <NodePool
                       poolId={thisPool.id}
                       typeLabel={typeLabel}
