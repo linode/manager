@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CreateBucketDrawer } from './CreateBucketDrawer';
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import userEvent from '@testing-library/user-event';
 import { rest, server } from 'src/mocks/testServer';
@@ -70,8 +70,10 @@ describe('CreateBucketDrawer', () => {
 
     const saveButton = getByTestId('create-bucket-button');
 
-    userEvent.click(saveButton);
+    await act(async () => {
+      userEvent.click(saveButton);
 
-    await findByText('omg');
+      await findByText('omg');
+    });
   });
 });
