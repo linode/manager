@@ -4,41 +4,56 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [2023-05-01] - v1.92.0
 
 ### Added:
-- Metadata
-- Add No Results section for Marketplace Search #8999
-- Add Private IP checkbox when cloning a Linode #9039
+- No Results section for Marketplace Search #8999
+- Private IP checkbox when cloning a Linode #9039
+- Metadata migrate warning #9033
 
 ### Changed:
-- `<RegionSelect />` can now dynamically get country flag and group all countrys #8996
+- Region Select will dynamically get country flags and group all countries based on API data #8996
 
 ### Fixed:
-- Typesafety of the `<Select />` component #8986
-- Clear the Kubernetes Delete Dialog when it is re-opened #9000
-- @linode/validation version badge Label in `README.md` #9011
-- Event entities should only be linked for true labels
-- Radio button hover effect #9031
-- Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
+- Kubernetes Delete Dialog clears when it is re-opened #9000
+- HTML showing up in event messages #9003
 - Inability to edit and save Linode Configurations #9053
+- Marketplace One Click Cluster UDF caching issue #8997
+- Prevent IP transfer & sharing modals form submission if no action selected #9026
+- Increase radio button padding to fix hover effect shape #9031
+- Blank Kubernetes Node Pool plan selection #9009
 
 ### Tech Stories:
-- MUIv5 Migration - Components > CircleProgress #9028
-- MUIv5 Migration - Components > StatusIcon #9014
-- MUIv5 Migration - Components > TagsInput, TagsPanel #8995
-- MUIv5 Migration - Grid v2 for Features #8985
-- MUIv5 Migration - Components > Dialog #9020
-- MUIv5 Migration - Components > DeletionDialog #9047
-- MUIv5 Migration - Components > Currency #9030
-- MUIv5 Migration - Components > DisplayPrice #9022
-- MUIv5 Migration - Components > CreateLinodeDisabled #9015
-- MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
-- MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
-- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
-- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
-- MUIv5 Migration - `SRC > Components > CheckoutBar` #9051
+- MUI v5 Migration - `Components > CircleProgress` #9028
+- MUI v5 Migration - `Components > StatusIcon` #9014
+- MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
+- MUI v5 Migration - Grid v2 for Features #8985
+- MUI v5 Migration - `Components > Dialog` #9020
+- MUI v5 Migration - `Components > DeletionDialog` #9047
+- MUI v5 Migration - `Components > Currency` #9030
+- MUI v5 Migration - `Components > DisplayPrice` #9022
+- MUI v5 Migration - `Components > CreateLinodeDisabled` #9015
+- MUI v5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
+- MUI v5 Migration - `Components > ConfirmationDialog` #9016
+- MUI v5 Migration - `Components > CopyTooltip` #9040
+- MUI v5 Migration - `Components > CheckoutBar` #9051
+- MUI v5 Migration - `Components > CreateLinodeDisabled` #9015
+- MUI v5 Migration - `Components > ColorPalette` #9013
+- MUI v5 Migration - `Components > Tile` #9001
+- MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
+- MUI v5 Migration - `Components > DismissibleBanner` #8998
+- MUI v5 Migration - `Components > SupportLink, TextTooltip` #8993
+- MUI v5 Migration - `Components > Toggle` #8990
+- MUI v5 Migration - `Components > SplashScreen` #8994
+- Remove `ConditionalWrapper` #9002
+- Upgrade New Relic to v1230 #9005
 - Add basic Adobe Analytics tracking #8989
+- Add more eslint rules #9043
+- @linode/validation version badge Label in `README.md` #9011
+- Improve Firewall ports regex to prevent exponential backtracking #9010
+- Fix code scanning alert that DOM text is reinterpreted as HTML #9032
+- Fix the typesafety of the `<Select />` component #8986
+- Update PayPal and Braintree dependencies #9052
 
 ## [2023-04-18] - v1.91.1
 
