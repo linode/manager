@@ -65,7 +65,7 @@ export const BareMetalRescue = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      title={`Rescue Linode ${linode?.label}`}
+      title={`Rescue Linode ${linode?.label ?? ''}`}
       open={isOpen}
       onClose={onClose}
       actions={actions}

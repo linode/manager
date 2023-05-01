@@ -147,7 +147,7 @@ export const PowerActionsDialog = (props: Props) => {
     <ConfirmationDialog
       className={classes.dialog}
       open={isOpen}
-      title={`${action} Linode ${linode?.label}?`}
+      title={`${action} Linode ${linode?.label ?? ''}?`}
       onClose={onClose}
       error={error?.[0].reason}
       actions={

@@ -197,7 +197,7 @@ export const StandardRescueDialog = (props: Props) => {
 
   return (
     <Dialog
-      title={`Rescue Linode ${linode?.label}`}
+      title={`Rescue Linode ${linode?.label ?? ''}`}
       open={open}
       onClose={() => {
         setAPIError('');

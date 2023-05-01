@@ -94,7 +94,7 @@ export const LinodeRebuildDialog = (props: Props) => {
 
   return (
     <Dialog
-      title={`Rebuild Linode ${linode?.label}`}
+      title={`Rebuild Linode ${linode?.label ?? ''}`}
       open={open}
       onClose={onClose}
       fullWidth

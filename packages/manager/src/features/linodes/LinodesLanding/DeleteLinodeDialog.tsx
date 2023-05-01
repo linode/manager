@@ -38,7 +38,7 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
-      title={`Delete ${linode?.label}?`}
+      title={`Delete ${linode?.label ?? ''}?`}
       entity={{ type: 'Linode', label: linode?.label }}
       open={open}
       loading={isLoading}
