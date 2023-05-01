@@ -1,150 +1,101 @@
 import * as React from 'react';
-import Close from '@mui/icons-material/Close';
-import Button from 'src/components/Button';
-import MUIDialog, {
-  DialogProps as _DialogProps,
-} from 'src/components/core/Dialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-import { convertForAria } from 'src/components/TabLink/TabLink';
+import _Dialog, { DialogProps as _DialogProps } from '@mui/material/Dialog';
+import Box from '@mui/material/Box';
 import Notice from 'src/components/Notice';
+import DialogContent from 'src/components/core/DialogContent';
+import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
+import { isPropValid } from 'src/utilities/isPropValid';
+import { styled, useTheme } from '@mui/material/styles';
+import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface DialogProps extends _DialogProps {
   className?: string;
-  title: string;
-  fullHeight?: boolean;
-  titleBottomBorder?: boolean;
   error?: string;
+  fullHeight?: boolean;
+  title: string;
+  titleBottomBorder?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    paddingTop: 0,
-    maxHeight: '100%',
-    '& .actionPanel': {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginTop: theme.spacing(2),
-    },
-    '& .selectionCard': {
-      maxWidth: '100%',
-      flexBasis: '100%',
-    },
-  },
-  fullHeight: {
-    '& .MuiDialog-paper': {
-      height: '100vh',
-    },
-  },
-  settingsBackdrop: {
-    backgroundColor: 'rgba(0,0,0,.3)',
-  },
-  drawerHeader: {
-    padding: theme.spacing(2),
-  },
-  button: {
-    minWidth: 'auto',
-    minHeight: 'auto',
-    padding: 0,
-    '& > span': {
-      padding: 2,
-    },
-    '& :hover, & :focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
-    },
-  },
-  backDrop: {
-    backgroundColor: theme.color.drawerBackdrop,
-  },
-  sticky: {
-    backgroundColor: theme.bg.bgPaper,
-    position: 'sticky',
-    top: 0,
-    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
-    zIndex: 2,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  titleBottomBorder: {
-    backgroundColor: '#e3e5e8',
-    height: 1,
-    width: '100%',
-    margin: '-2em 8px 0px 8px',
-    border: 'none',
-  },
-  error: {
-    color: theme.color.red,
-    marginTop: theme.spacing(2),
-  },
-}));
-
-const Dialog: React.FC<DialogProps> = (props) => {
+const Dialog = (props: DialogProps) => {
+  const theme = useTheme();
   const {
-    className,
-    title,
-    fullHeight,
-    titleBottomBorder,
     children,
+    className,
     error,
+    fullHeight,
+    fullWidth,
+    title,
+    titleBottomBorder,
+    maxWidth = 'md',
+    onClose,
     ...rest
   } = props;
-
-  const classes = useStyles();
 
   const titleID = convertForAria(title);
 
   return (
-    <MUIDialog
-      title={title}
-      maxWidth={props.maxWidth ?? 'md'}
-      {...rest}
-      classes={{ paper: classes.paper }}
-      data-qa-drawer
-      data-qa-dialog
-      data-testid="drawer"
-      role="dialog"
+    <StyledDialog
       aria-labelledby={titleID}
-      BackdropProps={{
-        className: classes.settingsBackdrop,
-      }}
-      className={fullHeight ? classes.fullHeight : undefined}
+      data-qa-dialog
+      data-qa-drawer
+      data-testid="drawer"
+      fullHeight={fullHeight}
+      fullWidth={fullWidth}
+      maxWidth={(fullWidth && maxWidth) ?? undefined}
+      onClose={onClose}
+      role="dialog"
+      title={title}
+      {...rest}
     >
-      <Grid container alignItems="center">
-        <div className={classes.sticky}>
-          <Typography
-            variant="h2"
-            id={titleID}
-            data-qa-drawer-title={title}
-            data-qa-dialog-title={title}
-          >
-            {title}
-          </Typography>
-
-          <Button
-            buttonType="secondary"
-            onClick={props.onClose as (e: any) => void}
-            className={classes.button}
-            data-qa-close-drawer
-            aria-label="Close"
-          >
-            <Close />
-          </Button>
-        </div>
-        {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
-        <Grid container sx={{ margin: '0 32px' }}>
-          <div className={className}>
-            {error && <Notice text={error} error />}
-            {children}
-          </div>
-        </Grid>
-      </Grid>
-    </MUIDialog>
+      <Box
+        sx={{
+          alignItems: 'center',
+        }}
+      >
+        <DialogTitle
+          title={title}
+          onClose={() => onClose && onClose({}, 'backdropClick')}
+          id={titleID}
+        />
+        {titleBottomBorder && <StyledHr />}
+        <DialogContent
+          className={className}
+          sx={{
+            paddingBottom: theme.spacing(3),
+          }}
+        >
+          {error && <Notice text={error} error />}
+          {children}
+        </DialogContent>
+      </Box>
+    </StyledDialog>
   );
 };
 
-export default Dialog;
+const StyledDialog = styled(_Dialog, {
+  shouldForwardProp: (prop) => isPropValid(['fullHeight'], prop),
+})<DialogProps>(({ theme, ...props }) => ({
+  '& .MuiDialog-paper': {
+    height: props.fullHeight ? '100vh' : undefined,
+    maxHeight: '100%',
+    padding: 0,
+  },
+  '& .MuiDialogActions-root': {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: theme.spacing(2),
+  },
+  '& .MuiBackdrop-root': {
+    backgroundColor: 'rgba(0, 0, 0, .3)',
+  },
+}));
+
+const StyledHr = styled('hr')({
+  backgroundColor: '#e3e5e8',
+  border: 'none',
+  height: 1,
+  margin: '-2em 8px 0px 8px',
+  width: '100%',
+});
+
+export { Dialog };

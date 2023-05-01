@@ -10,7 +10,7 @@ import {
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 import Tooltip from 'src/components/core/Tooltip';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import { reportException } from 'src/exceptionReporting';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
@@ -209,6 +209,7 @@ export const PayPalButton = (props: Props) => {
       'An error occurred when trying to make a one-time PayPal payment.',
       { error }
     );
+    setError('Unable to open PayPal.');
   };
 
   if (clientTokenLoading || isPending || !options['data-client-token']) {

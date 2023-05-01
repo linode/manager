@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { reverse } from 'ramda';
 import { getAPIErrorOrDefault } from './errorUtils';
-import isNilOrEmpty from './isNilOrEmpty';
+import { isNilOrEmpty } from './isNilOrEmpty';
 
 export const handleFieldErrors = (
   callback: (error: unknown) => void,

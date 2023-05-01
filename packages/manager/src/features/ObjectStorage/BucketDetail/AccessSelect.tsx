@@ -2,7 +2,7 @@ import { ACLType } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -12,7 +12,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 import { Toggle } from 'src/components/Toggle';
 import useOpenClose from 'src/hooks/useOpenClose';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { bucketACLOptions, objectACLOptions } from '../utilities';
 

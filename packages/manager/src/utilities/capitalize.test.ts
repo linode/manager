@@ -1,4 +1,4 @@
-import capitalize, { capitalizeAllWords } from './capitalize';
+import { capitalize, capitalizeAllWords } from './capitalize';
 
 describe('capitalize', () => {
   it('should return capitalized string', () => {

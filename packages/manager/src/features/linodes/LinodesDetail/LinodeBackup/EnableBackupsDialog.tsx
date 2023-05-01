@@ -3,9 +3,9 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useLinodes from 'src/hooks/useLinodes';
@@ -17,9 +17,7 @@ interface Props {
   open: boolean;
 }
 
-export type CombinedProps = Props;
-
-export const EnableBackupsDialog: React.FC<Props> = (props) => {
+export const EnableBackupsDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
   /**
    * Calculate the monthly backup price here.

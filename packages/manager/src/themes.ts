@@ -42,8 +42,8 @@ export const customDarkModeOptions = {
     grey7: '#2e3238',
     grey9: primaryColors.divider,
     white: '#32363c',
-    black: '#fff',
-    offBlack: '#fff',
+    black: '#ffffff',
+    offBlack: '#ffffff',
     boxShadow: '#222',
     boxShadowDark: '#000',
     blueDTwhite: '#fff',
@@ -378,15 +378,6 @@ const darkThemeOptions: ThemeOptions = {
           lineHeight: 1.25,
           '&$error': {
             color: '#fb6d6d',
-          },
-        },
-      },
-    },
-    MuiIconButton: {
-      styleOverrides: {
-        root: {
-          '&:hover': {
-            color: primaryColors.light,
           },
         },
       },

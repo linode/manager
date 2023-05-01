@@ -12,7 +12,7 @@ import { compose } from 'recompose';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Search from 'src/components/DebouncedSearchTextField';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -235,7 +235,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment segment="Clients" />
       <Grid container className={classes.headingWrapper} alignItems="center">
         <Grid item className={classes.searchbar}>
-          <Search
+          <DebouncedSearchTextField
             placeholder="Filter by client label or hostname"
             label="Filter by client label or hostname"
             hideLabel

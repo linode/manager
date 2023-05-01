@@ -1,7 +1,7 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
 import * as React from 'react';
 import ErrorState from 'src/components/ErrorState';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Terminal } from 'xterm';
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';

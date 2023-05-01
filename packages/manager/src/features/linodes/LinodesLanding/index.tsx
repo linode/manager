@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 
 const LinodesLanding: React.FC<Props> = (props) => {

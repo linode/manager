@@ -1,7 +1,7 @@
 import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
-import CheckoutBar from 'src/components/CheckoutBar';
-import CircleProgress from 'src/components/CircleProgress';
+import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
@@ -14,11 +14,11 @@ import { useAccount } from 'src/queries/account';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 export interface Props {
   pools: KubeNodePoolResponse[];
