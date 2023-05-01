@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
 - Recycle LKE Node confirmation dialog gets dismissed upon submission #9054
 - Inability to edit and save Linode Configurations #9053
+- Excessively large file size for invoices due to uncompressed JPG logo #9069
 
 ### Tech Stories:
 
