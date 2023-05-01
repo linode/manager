@@ -155,7 +155,12 @@ export const CreateBucketDrawer = (props: Props) => {
           <Button buttonType="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button buttonType="primary" type="submit" loading={isLoading}>
+          <Button
+            buttonType="primary"
+            type="submit"
+            loading={isLoading}
+            data-testid="create-bucket-button"
+          >
             Create Bucket
           </Button>
         </ActionsPanel>
