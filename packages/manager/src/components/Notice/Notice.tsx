@@ -57,9 +57,6 @@ export const useStyles = makeStyles<
   },
   inner: {
     width: '100%',
-    '& p': {
-      fontSize: '1rem',
-    },
   },
   breakWords: {
     [`& .${classes.noticeText}`]: {

@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed:
 
 - `<RegionSelect />` can now dynamically get country flag and group all countries #8996
+- Adjust banner text size and spacing to improve readability #9064
 
 ### Fixed:
 
@@ -46,6 +47,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUIv5 Migration - `SRC > Components > CheckoutBar` #9051
 - MUIv5 Migration - `SRC > Components > CopyableTextField` #9018
 - Add basic Adobe Analytics tracking #8989
+- Add Adobe Analytics custom event tracking #9004
 
 ## [2023-04-18] - v1.91.1
 
