@@ -32,6 +32,7 @@ import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 import { useRegionsQuery } from 'src/queries/regions';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -189,6 +190,16 @@ export const SelectPlanPanel = (props: Props) => {
       ?.filter((thisRegion) => thisRegion.capabilities.includes(capability))
       .map((thisRegion) => thisRegion.label);
     return arrayToList(withCapability ?? []);
+  };
+
+  const PremiumPlansAvailabilityNotice = () => {
+    const { premiumPlansAvailabilityNotice } = useFlags();
+
+    if (premiumPlansAvailabilityNotice) {
+      return <Notice warning>{premiumPlansAvailabilityNotice}</Notice>;
+    }
+
+    return null;
   };
 
   const renderSelection = (type: PlanSelectionType, idx: number) => {
@@ -568,9 +579,7 @@ export const SelectPlanPanel = (props: Props) => {
         render: () => {
           return (
             <>
-              <Notice warning>
-                This plan is only available in the Washington, DC region.
-              </Notice>
+              <PremiumPlansAvailabilityNotice />
               <Typography data-qa-gpu className={classes.copy}>
                 Premium CPU instances guarantee a minimum processor model, AMD
                 Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
