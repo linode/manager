@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed:
 - Region Select will dynamically get country flags and group all countries based on API data #8996
+- Removed MongoDB Marketplace Apps #9071
 
 ### Fixed:
 - Kubernetes Delete Dialog clears when it is re-opened #9000
