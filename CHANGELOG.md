@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add No Results section for Marketplace Search #8999
 - Add Private IP checkbox when cloning a Linode #9039
 - Accessible graph tabled data for `LineGraph` component #5915
+- Resource links to empty state Volumes landing page #9065
 
 ### Changed:
 

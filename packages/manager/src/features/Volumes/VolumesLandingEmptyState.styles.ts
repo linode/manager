@@ -1,10 +1,8 @@
 import { styled } from '@mui/material/styles';
-import Placeholder from 'src/components/Placeholder';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 
-const StyledPlaceholder = styled(Placeholder)(() => ({
-  '& svg': {
-    transform: 'scale(0.75)',
-  },
+const StyledVolumeIcon = styled(VolumeIcon)(() => ({
+  transform: 'scale(0.75)',
 }));
 
-export { StyledPlaceholder };
+export { StyledVolumeIcon };

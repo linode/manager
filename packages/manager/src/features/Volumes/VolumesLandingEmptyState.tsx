@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import DocsIcon from 'src/assets/icons/docs.svg';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
+import Placeholder from 'src/components/Placeholder';
 import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
 import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
 import {
   getLinkOnClick,
+  guidesMoreLinkText,
   youtubeMoreLinkLabel,
+  youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
-import { StyledPlaceholder } from './VolumesLandingEmptyState.styles';
+import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
 
 const guidesLinkData = [
   {
@@ -55,8 +57,6 @@ const linkGAEventTemplate = {
   action: 'Click:link',
 };
 
-const volumesGuidesMoreLinkText = 'Browse Linode Block Storage documentation';
-
 const guideLinks = (
   <List>
     {guidesLinkData.map((linkData) => (
@@ -92,12 +92,11 @@ const VolumesLandingEmptyState = () => {
   const { push } = useHistory();
 
   return (
-    <StyledPlaceholder
+    <Placeholder
       title="Volumes"
       subtitle="NVM block storage service"
-      icon={VolumeIcon}
+      icon={StyledVolumeIcon}
       isEntity
-      showTransferDisplay
       buttonProps={[
         {
           onClick: () => {
@@ -120,12 +119,12 @@ const VolumesLandingEmptyState = () => {
               <Link
                 onClick={getLinkOnClick(
                   linkGAEventTemplate,
-                  volumesGuidesMoreLinkText
+                  guidesMoreLinkText
                 )}
                 to="https://www.linode.com/docs/products/storage/block-storage/"
                 {...props}
               >
-                {volumesGuidesMoreLinkText}
+                {guidesMoreLinkText}
               </Link>
             )}
           >
@@ -144,7 +143,7 @@ const VolumesLandingEmptyState = () => {
                 to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
                 {...props}
               >
-                Check out our YouTube channel
+                {youtubeMoreLinkText}
                 <ExternalLinkIcon style={{ marginLeft: 8 }} />
               </Link>
             )}
@@ -154,12 +153,11 @@ const VolumesLandingEmptyState = () => {
         </LinksSection>
       }
     >
-      {' '}
       <Typography variant="subtitle1">
         Attach scalable, fault-tolerant, and performant block storage volumes to
         your Linode Compute Instances or Kubernetes Clusters.
       </Typography>
-    </StyledPlaceholder>
+    </Placeholder>
   );
 };
 
