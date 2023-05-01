@@ -22,7 +22,10 @@ describe('CreateBucketDrawer', () => {
   it('Should show a general error notice if the API returns one', async () => {
     server.use(
       rest.post('*/object-storage/buckets', (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json({ errors: [{ reason: 'omg' }] }));
+        return res(
+          ctx.status(500),
+          ctx.json({ errors: [{ reason: 'Object Storage is offline!' }] })
+        );
       }),
       rest.get('*/regions', async (req, res, ctx) => {
         return res(
@@ -61,6 +64,7 @@ describe('CreateBucketDrawer', () => {
 
     userEvent.type(getByLabelText('Label'), 'my-test-bucket');
 
+    // We must waitFor because we need to load region and cluster data from the API
     await waitFor(() =>
       userEvent.selectOptions(
         getByPlaceholderText('Select a Region'),
@@ -72,6 +76,6 @@ describe('CreateBucketDrawer', () => {
 
     userEvent.click(saveButton);
 
-    await findByText('omg');
+    await findByText('Object Storage is offline!');
   });
 });
