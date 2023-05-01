@@ -297,25 +297,37 @@ describe('testItem', () => {
 
 describe('isSimpleQuery', () => {
   it('returns true if there are no specified search fields', () => {
-    let parsedQuery = searchString.parse('-hello world').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(true);
+    let query = '-hello world';
+    let parsedQuery = searchString.parse(query).getParsedQuery();
+    expect(isSimpleQuery(query, parsedQuery)).toBe(true);
 
-    parsedQuery = searchString.parse('hello world').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(true);
+    query = '-hello world';
+    parsedQuery = searchString.parse(query).getParsedQuery();
+    expect(isSimpleQuery(query, parsedQuery)).toBe(true);
 
-    parsedQuery = searchString.parse('hello -world').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(true);
+    query = 'hello -world';
+    parsedQuery = searchString.parse(query).getParsedQuery();
+    expect(isSimpleQuery(query, parsedQuery)).toBe(true);
   });
 
   it('returns false if there are specified search fields', () => {
-    let parsedQuery = searchString.parse('label:hello').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(false);
+    let query = 'label:hello';
+    let parsedQuery = searchString.parse(query).getParsedQuery();
+    expect(isSimpleQuery(query, parsedQuery)).toBe(false);
 
-    parsedQuery = searchString.parse('tags:hello,world').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(false);
+    query = 'tags:hello,world';
+    parsedQuery = searchString.parse(query).getParsedQuery();
+    expect(isSimpleQuery(query, parsedQuery)).toBe(false);
 
-    parsedQuery = searchString.parse('-label:hello').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(false);
+    query = '-label:hello';
+    parsedQuery = searchString.parse(query).getParsedQuery();
+    expect(isSimpleQuery(query, parsedQuery)).toBe(false);
+  });
+
+  it('returns true if we match a forceSkipFieldSearch rule', () => {
+    const query = 'label::hello';
+    const parsedQuery = searchString.parse(query).getParsedQuery();
+    expect(isSimpleQuery(query, parsedQuery)).toBe(true);
   });
 });
 

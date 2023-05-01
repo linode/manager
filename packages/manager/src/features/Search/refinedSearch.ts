@@ -108,7 +108,7 @@ export const testItem = (item: SearchableItem, query: string) => {
   const parsedQuery = searchString.parse(query).getParsedQuery();
 
   // If there are no specified search fields, we search the default fields.
-  if (isSimpleQuery(parsedQuery)) {
+  if (isSimpleQuery(query, parsedQuery)) {
     return searchDefaultFields(item, query);
   }
 
@@ -122,11 +122,23 @@ export const testItem = (item: SearchableItem, query: string) => {
   return areAllTrue(matchedSearchTerms);
 };
 
+const forceSkipFieldSearch = (query: string): boolean => {
+  const skipConditions = {
+    isIPV6: query.includes('::'), // ex: an IPV6 address should be searchable without being broken up into fields
+  };
+
+  return Object.values(skipConditions).some((condition) => condition);
+};
+
 // Determines whether a query is "simple", i.e., doesn't contain any search fields,
 // like "tags:my-tag" or "-label:my-linode".
-export const isSimpleQuery = (parsedQuery: any) => {
+export const isSimpleQuery = (originalQuery: string, parsedQuery: any) => {
   const { exclude, ...include } = parsedQuery;
-  return isEmpty(exclude) && isEmpty(include);
+
+  return (
+    (isEmpty(exclude) && isEmpty(include)) ||
+    forceSkipFieldSearch(originalQuery)
+  );
 };
 
 export const searchDefaultFields = (item: SearchableItem, query: string) => {
