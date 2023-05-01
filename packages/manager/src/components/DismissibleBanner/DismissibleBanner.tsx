@@ -84,6 +84,11 @@ const StyledNotice = styled(Notice)(({ theme }) => ({
   marginBottom: theme.spacing(),
   padding: theme.spacing(2),
   background: theme.bg.bgPaper,
+  '&&': {
+    p: {
+      lineHeight: '1.25rem',
+    },
+  },
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({
