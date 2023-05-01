@@ -44,7 +44,7 @@ export const baseApps = {
   '607488': 'Redis One-Click',
   '609048': 'Ruby on Rails One-Click',
   '609175': 'Django One-Click',
-  '609195': 'MongoDB One-Click',
+  // '609195': 'MongoDB One-Click',
   '609392': 'Flask One-Click',
   '611376': 'PostgreSQL One-Click',
   '611895': 'MEAN One-Click',
@@ -125,7 +125,7 @@ export const baseApps = {
   '1102906': 'Passky',
   '1102904': 'Superinsight',
   '1088136': 'Galera Cluster',
-  '1067004': 'MongoDB Cluster',
+  // '1067004': 'MongoDB Cluster',
   '1068726': 'PostgreSQL Cluster',
   '1132204': 'Redis Sentinel Cluster',
 };
