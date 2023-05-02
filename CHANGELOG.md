@@ -8,77 +8,89 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 
-- Metadata
-- Add No Results section for Marketplace Search #8999
-- Add Private IP checkbox when cloning a Linode #9039
-- Accessible graph tabled data for `LineGraph` component #5915
-
 ### Changed:
-
-- `<RegionSelect />` can now dynamically get country flag and group all countries #8996
-- Adjust banner text size and spacing to improve readability #9064
 
 ### Fixed:
 
-- Typesafety of the `<Select />` component #8986
-- Clear the Kubernetes Delete Dialog when it is re-opened #9000
-- @linode/validation version badge Label in `README.md` #9011
-- Event entities should only be linked for true labels
-- Radio button hover effect #9031
-- Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
-- Recycle LKE Node confirmation dialog gets dismissed upon submission #9054
-- Inability to edit and save Linode Configurations #9053
-
 ### Tech Stories:
 
-- MUIv5 Migration - Components > CircleProgress #9028
-- MUIv5 Migration - Components > StatusIcon #9014
-- MUIv5 Migration - Components > TagsInput, TagsPanel #8995
-- MUIv5 Migration - Grid v2 for Features #8985
-- MUIv5 Migration - Components > Dialog #9020
-- MUIv5 Migration - Components > DialogTitle #9050
-- MUIv5 Migration - Components > DeletionDialog #9047
-- MUIv5 Migration - Components > Currency #9030
-- MUIv5 Migration - Components > DisplayPrice #9022
-- MUIv5 Migration - Components > CreateLinodeDisabled #9015
-- MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
-- MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
-- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
-- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
-- MUIv5 Migration - `SRC > Components > CheckoutBar` #9051
-- MUIv5 Migration - `SRC > Components > CopyableTextField` #9018
+## [2023-05-01] - v1.92.0
+
+### Added:
+- No Results section for Marketplace Search #8999
+- Private IP checkbox when cloning a Linode #9039
+- Metadata migrate warning #9033
+
+### Changed:
+- Region Select will dynamically get country flags and group all countries based on API data #8996
+- Removed MongoDB Marketplace Apps #9071
+
+### Fixed:
+- Kubernetes Delete Dialog clears when it is re-opened #9000
+- HTML showing up in event messages #9003
+- Inability to edit and save Linode Configurations #9053
+- Excessively large file size for invoices due to uncompressed JPG logo #9069
+- Marketplace One Click Cluster UDF caching issue #8997
+- Prevent IP transfer & sharing modals form submission if no action selected #9026
+- Increase radio button padding to fix hover effect shape #9031
+- Blank Kubernetes Node Pool plan selection #9009
+
+### Tech Stories:
+- MUI v5 Migration - `Components > CircleProgress` #9028
+- MUI v5 Migration - `Components > StatusIcon` #9014
+- MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
+- MUI v5 Migration - Grid v2 for Features #8985
+- MUI v5 Migration - `Components > Dialog` #9020
+- MUI v5 Migration - `Components > DeletionDialog` #9047
+- MUI v5 Migration - `Components > Currency` #9030
+- MUI v5 Migration - `Components > DisplayPrice` #9022
+- MUI v5 Migration - `Components > CreateLinodeDisabled` #9015
+- MUI v5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
+- MUI v5 Migration - `Components > ConfirmationDialog` #9016
+- MUI v5 Migration - `Components > CopyTooltip` #9040
+- MUI v5 Migration - `Components > CheckoutBar` #9051
+- MUI v5 Migration - `Components > CreateLinodeDisabled` #9015
+- MUI v5 Migration - `Components > ColorPalette` #9013
+- MUI v5 Migration - `Components > Tile` #9001
+- MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
+- MUI v5 Migration - `Components > DismissibleBanner` #8998
+- MUI v5 Migration - `Components > SupportLink, TextTooltip` #8993
+- MUI v5 Migration - `Components > Toggle` #8990
+- MUI v5 Migration - `Components > SplashScreen` #8994
+- Remove `ConditionalWrapper` #9002
+- Upgrade New Relic to v1230 #9005
 - Add basic Adobe Analytics tracking #8989
-- Add Adobe Analytics custom event tracking #9004
+- Add more eslint rules #9043
+- @linode/validation version badge Label in `README.md` #9011
+- Improve Firewall ports regex to prevent exponential backtracking #9010
+- Fix code scanning alert that DOM text is reinterpreted as HTML #9032
+- Fix the typesafety of the `<Select />` component #8986
+- Update PayPal and Braintree dependencies #9052
 
 ## [2023-04-18] - v1.91.1
 
 ### Fixed:
-
 - Add Premium plans to LKE #9021
 
 ## [2023-04-17] - v1.91.0
 
 ### Added:
-
 - Cross Data Center Clone warning #8937
 - `Plan` column header to plan select table #8943
 
 ### Changed:
-
 - Use Akamai logo for TPA provider screen #8982
 - Use Akamai logo for the favicon #8988
 - Only fetch grants when the user is restricted #8941
 - Improve the StackScript user defined fields (UDF) forms #8973
 
 ### Fixed:
-
 - Styling of Linode Details Add Configurations modal header #8981
 - Alignment issues with Kubernetes Node Pool table and buttons #8967
 - Domain Records not updating when navigating #8957
 - Notification menu displaying empty menu on secondary status click #8902
 
 ### Tech Story:
-
 - React Query for NodeBalancers #8964
 - React Query for Profile - Trusted Devices #8942
 - React Query for OAuth Apps #8938
