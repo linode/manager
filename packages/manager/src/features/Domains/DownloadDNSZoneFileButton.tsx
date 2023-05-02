@@ -12,7 +12,7 @@ export const DownloadDNSZoneFileButton = ({ id }: Props) => {
     const data = await getDNSZoneFile(id);
     const zoneFileContent = data?.zone_file.join('\n');
     if (zoneFileContent) {
-      downloadFile('DNSzonefile.txt', zoneFileContent);
+      downloadFile(`${domain}.txt`, zoneFileContent);
     }
   };
 
