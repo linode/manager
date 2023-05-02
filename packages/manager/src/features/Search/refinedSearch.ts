@@ -3,6 +3,7 @@ import { all, any, equals, isEmpty } from 'ramda';
 import searchString from 'search-string';
 import { SearchableItem, SearchField } from './search.interfaces';
 
+const COMPRESSED_IPV6_REGEX = /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
 const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips'];
 
 // =============================================================================
@@ -125,10 +126,8 @@ export const testItem = (item: SearchableItem, query: string) => {
 // Force to skip field search (make a simple query) if there's a match
 const shouldSkipFieldSearch = (query: string): boolean => {
   const skipConditions = {
-    // matches a compressed ipv6 addresses (which we are using). e.g. xxxx:xxxx::xxxx:xxxx:xxxx:xxxx
-    // a double semi-colon present in the string will indicate that it is an ipv6 address or that the search query is malformed,
-    // in which case we can safely skip the search fields lookup
-    isIPV6: query.match(/::/),
+    // matches a compressed ipv6 addresses. e.g. xxxx:xxxx::xxxx:xxxx:xxxx:xxxx
+    isIPV6: query.match(COMPRESSED_IPV6_REGEX),
   };
 
   return Object.values(skipConditions).some((condition) => condition);

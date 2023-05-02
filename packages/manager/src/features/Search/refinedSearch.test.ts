@@ -325,7 +325,7 @@ describe('isSimpleQuery', () => {
   });
 
   it('returns true if we match a shouldSkipFieldSearch rule', () => {
-    const query = 'label::hello';
+    const query = '2001:db8:3c4d:15::1a2f:1a2b';
     const parsedQuery = searchString.parse(query).getParsedQuery();
     expect(isSimpleQuery(query, parsedQuery)).toBe(true);
   });
