@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed:
 
 ### Fixed:
+- Allow simple search for IPv6 addresses #5088
 
 ### Tech Stories:
 
