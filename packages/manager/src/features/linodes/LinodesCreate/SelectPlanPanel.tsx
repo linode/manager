@@ -32,7 +32,7 @@ import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 import { useRegionsQuery } from 'src/queries/regions';
-import PremiumPlansAvailabilityNotice from './PremiumPlansAvailabilityNotice';
+import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -93,6 +93,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& a:hover': {
       color: '#3683dc',
+    },
+    '& p': {
+      fontFamily: '"LatoWebBold", sans-serif',
     },
   },
 }));
@@ -508,7 +511,7 @@ export const SelectPlanPanel = (props: Props) => {
           {getRegionsWithCapability('GPU Linodes')}.
         </>
       ) : (
-        <div className={classes.gpuGuideLink}>{gpuPlanText()}</div>
+        <div className={classes.gpuGuideLink}>{gpuPlanText(true)}</div>
       );
       tabs.push({
         render: () => {

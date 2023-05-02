@@ -23,7 +23,7 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
-import PremiumPlansAvailabilityNotice from './PremiumPlansAvailabilityNotice';
+import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 
 type ClassNames =
   | 'root'
