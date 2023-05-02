@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Kubernetes Delete Dialog clears when it is re-opened #9000
 - HTML showing up in event messages #9003
 - Inability to edit and save Linode Configurations #9053
+- Excessively large file size for invoices due to uncompressed JPG logo #9069
 - Marketplace One Click Cluster UDF caching issue #8997
 - Prevent IP transfer & sharing modals form submission if no action selected #9026
 - Increase radio button padding to fix hover effect shape #9031
