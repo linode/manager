@@ -18,6 +18,7 @@ import {
   Domain,
   ImportZonePayload,
   UpdateDomainPayload,
+  ZoneFile,
 } from './types';
 
 /**
@@ -98,4 +99,16 @@ export const importZone = (data: ImportZonePayload) =>
     setData(data, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
     setMethod('POST')
+  );
+
+/**
+ * Imports a domain zone from a remote nameserver.
+ *
+ * @param domain { string } The domain to import.
+ * @param remote_nameserver { string } The remote nameserver that allows zone transfers (AXFR).
+ */
+export const getDNSZoneFile = (domainId: number) =>
+  Request<ZoneFile>(
+    setURL(`${API_ROOT}/domains/${domainId}/zone-file`),
+    setMethod('GET')
   );

@@ -51,6 +51,7 @@ import { storage } from 'src/utilities/storage';
 import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
 import DomainRecordDrawer from './DomainRecordDrawer';
+import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
 
 type ClassNames = 'root' | 'cells' | 'linkContainer';
 
@@ -326,6 +327,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           },
         },
       ],
+      link: () => <DownloadDNSZoneFileButton id={this.props.domain.id} />,
     },
 
     /** NS Record */

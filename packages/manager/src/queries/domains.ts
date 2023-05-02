@@ -21,6 +21,8 @@ import {
   importZone,
   getDomainRecords,
   DomainRecord,
+  getDNSZoneFile,
+  ZoneFile,
 } from '@linode/api-v4/lib/domains';
 import { EventWithStore } from 'src/events';
 
@@ -117,6 +119,12 @@ export const domainEventsHandler = ({ queryClient }: EventWithStore) => {
   // it is worth it for the UX benefits. We can fine tune this later if we need to.
   queryClient.invalidateQueries([queryKey]);
 };
+export const useDNSZoneFileQuery = (id: number) =>
+  useQuery<ZoneFile, APIError[]>(
+    [`dnszonefile-${queryKey}-${id}`],
+    () => getDNSZoneFile(id),
+    { keepPreviousData: true }
+  );
 
 export const getAllDomains = () =>
   getAll<Domain>((params) => getDomains(params))().then((data) => data.data);
