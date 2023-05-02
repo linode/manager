@@ -102,10 +102,9 @@ export const importZone = (data: ImportZonePayload) =>
   );
 
 /**
- * Imports a domain zone from a remote nameserver.
+ * Download DNS Zone file.
  *
- * @param domain { string } The domain to import.
- * @param remote_nameserver { string } The remote nameserver that allows zone transfers (AXFR).
+ ** @param domainId { number } The ID of the Domain to download DNS zone file.
  */
 export const getDNSZoneFile = (domainId: number) =>
   Request<ZoneFile>(
