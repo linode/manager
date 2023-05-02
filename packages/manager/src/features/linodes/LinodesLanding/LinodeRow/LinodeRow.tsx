@@ -106,7 +106,6 @@ export const LinodeRow = (props: Props) => {
       </TableCell>
       <TableCell
         className={classNames({
-          [classes.statusCell]: true,
           [classes.statusCellMaintenance]: Boolean(maintenance),
         })}
         statusCell
@@ -143,18 +142,13 @@ export const LinodeRow = (props: Props) => {
           </div>
         )}
       </TableCell>
-
       <Hidden smDown>
-        <TableCell className={classes.planCell} data-qa-ips>
-          <div className={classes.planCell}>{linodeType?.label}</div>
-        </TableCell>
-        <TableCell className={classes.ipCell} data-qa-ips>
-          <div className={classes.ipCellWrapper}>
-            <IPAddress ips={ipv4} />
-          </div>
+        <TableCell noWrap>{linodeType?.label ?? type}</TableCell>
+        <TableCell data-qa-ips className={classes.ipCellWrapper}>
+          <IPAddress ips={ipv4} />
         </TableCell>
         <Hidden lgDown>
-          <TableCell className={classes.regionCell} data-qa-region>
+          <TableCell data-qa-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>

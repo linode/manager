@@ -17,9 +17,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
   progressDisplay: {
     display: 'inline-block',
   },
-  statusCell: {
-    width: '17%',
-  },
   statusCellMaintenance: {
     [theme.breakpoints.up('md')]: {
       width: '20%',
@@ -50,17 +47,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
       fontFamily: theme.font.bold,
     },
   },
-  planCell: {
-    whiteSpace: 'nowrap',
-  },
-  ipCell: {
-    paddingRight: 0,
-    width: '14%',
-  },
   ipCellWrapper: {
-    display: 'inline-flex',
-    flexDirection: 'column',
-
     '& *': {
       fontSize: '.875rem',
       paddingTop: 0,
@@ -78,12 +65,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.primary.main,
       },
     },
-  },
-  regionCell: {
-    width: '14%',
-  },
-  tagCell: {
-    borderRight: 'none',
   },
   maintenanceOuter: {
     display: 'flex',
