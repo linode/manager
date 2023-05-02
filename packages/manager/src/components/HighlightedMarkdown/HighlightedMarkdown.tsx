@@ -8,12 +8,12 @@ import Typography from 'src/components/core/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
-import sanitize from 'sanitize-html';
 import apache from 'highlight.js/lib/languages/apache';
 import bash from 'highlight.js/lib/languages/bash';
 import javascript from 'highlight.js/lib/languages/javascript';
 import nginx from 'highlight.js/lib/languages/nginx';
 import yaml from 'highlight.js/lib/languages/yaml';
+import type { SanitizeHTMLOptions } from 'src/utilities/sanitize-html/sanitizeHTML';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
@@ -42,7 +42,7 @@ export interface HighlightedMarkdownProps {
   className?: string;
   textOrMarkdown: string;
   language?: SupportedLanguage;
-  sanitizeOptions?: sanitize.IOptions;
+  sanitizeOptions?: SanitizeHTMLOptions;
 }
 
 export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {

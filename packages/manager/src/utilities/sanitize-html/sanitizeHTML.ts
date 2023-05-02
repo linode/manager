@@ -1,7 +1,40 @@
-import sanitize from 'sanitize-html';
+import sanitize from 'sanitize-html-react';
 import { allowedHTMLAttr, allowedHTMLTags } from 'src/constants';
+import type { ParserOptions } from 'htmlparser2';
 
-export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
+interface IFrame {
+  tag: string;
+  attribs: { [index: string]: string };
+  text: string;
+  tagPosition: number;
+}
+type AllowedAttribute =
+  | string
+  | { name: string; multiple?: boolean; values: string[] };
+
+type DisallowedTagsModes = 'discard' | 'escape' | 'recursiveEscape';
+
+export interface SanitizeHTMLOptions {
+  allowedAttributes?: { [index: string]: AllowedAttribute[] } | boolean;
+  allowedStyles?: { [index: string]: { [index: string]: RegExp[] } };
+  allowedClasses?: { [index: string]: string[] } | boolean;
+  allowedIframeHostnames?: string[];
+  allowIframeRelativeUrls?: boolean;
+  allowedSchemes?: string[] | boolean;
+  allowedSchemesByTag?: { [index: string]: string[] } | boolean;
+  allowedSchemesAppliedToAttributes?: string[];
+  allowProtocolRelative?: boolean;
+  allowedTags?: string[] | boolean;
+  textFilter?: (text: string) => string;
+  exclusiveFilter?: (frame: IFrame) => boolean;
+  nonTextTags?: string[];
+  selfClosing?: string[];
+  transformTags?: { [tagName: string]: string | Transformer };
+  parser?: ParserOptions;
+  disallowedTagsMode?: DisallowedTagsModes;
+}
+
+export const sanitizeHTML = (text: string, options: SanitizeHTMLOptions = {}) =>
   sanitize(text, {
     allowedTags: allowedHTMLTags,
     allowedAttributes: {
@@ -20,7 +53,7 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
       // 3. Removes "target" attribute  if it's anything other than "_blank"
       // 4. Removes custom "rel" attributes
 
-      a: (tagName, attribs) => {
+      a: (tagName: string, attribs: IFrame['attribs']) => {
         // If the URL is invalid, transform to a span.
         const href = attribs.href ?? '';
         if (href && !isURLValid(href)) {
