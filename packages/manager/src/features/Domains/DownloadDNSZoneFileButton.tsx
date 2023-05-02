@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { LinkButton } from 'src/components/LinkButton';
 import { useDNSZoneFileQuery } from 'src/queries/domains';
+import { downloadFile } from 'src/utilities/downloadFile';
 
 type Props = {
   id: number;
@@ -12,14 +13,7 @@ export const DownloadDNSZoneFileButton = ({ id }: Props) => {
   const handleClick = () => {
     const zoneFileContent = data?.zone_file.join('\n');
     if (zoneFileContent) {
-      const blob = new Blob([zoneFileContent], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'DNSzonefile.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      downloadFile('DNSzonefile.txt', zoneFileContent);
     }
   };
 
