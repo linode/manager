@@ -56,7 +56,7 @@ export const LinodeRow = (props: Props) => {
         notification.entity?.type === 'linode' && notification.entity?.id === id
     ) ?? [];
 
-  const { data: linodeType } = useTypeQuery(type);
+  const { data: linodeType } = useTypeQuery(type ?? '', type !== null);
 
   const { events } = useEvents();
 

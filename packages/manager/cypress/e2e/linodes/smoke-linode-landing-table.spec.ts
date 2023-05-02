@@ -280,7 +280,7 @@ describe('linode landing actions', () => {
         cy.visitWithLogin('/linodes', { preferenceOverrides });
         cy.wait('@getAccountSettings');
         getVisible('[data-qa-header="Linodes"]');
-        // I think we can asume the linodes are on the page and we don't need to sort
+        // I think we can assume the linodes are on the page and we don't need to sort
         // if (!cy.get('[data-qa-sort-label="asc"]')) {
         //   getClick('[aria-label="Sort by label"]');
         // }
