@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
+import PointerIcon from 'src/assets/icons/pointer.svg';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
@@ -11,8 +12,10 @@ import Placeholder from 'src/components/Placeholder';
 import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
 import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
 import {
+  docsLink,
   getLinkOnClick,
   guidesMoreLinkText,
+  youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
@@ -57,7 +60,7 @@ const linkGAEventTemplate = {
   action: 'Click:link',
 };
 
-const guideLinks = (
+const GuideLinks = (
   <List>
     {guidesLinkData.map((linkData) => (
       <ListItem key={linkData.to}>
@@ -72,7 +75,7 @@ const guideLinks = (
   </List>
 );
 
-const youtubeLinks = (
+const YoutubeLinks = (
   <List>
     {youtubeLinkData.map((linkData) => (
       <ListItem key={linkData.to}>
@@ -111,46 +114,49 @@ const VolumesLandingEmptyState = () => {
         },
       ]}
       linksSection={
-        <LinksSection>
-          <LinkSubSection
-            title="Getting Started Guides"
-            icon={<DocsIcon />}
-            MoreLink={(props) => (
-              <Link
-                onClick={getLinkOnClick(
-                  linkGAEventTemplate,
-                  guidesMoreLinkText
-                )}
-                to="https://www.linode.com/docs/products/storage/block-storage/"
-                {...props}
-              >
-                {guidesMoreLinkText}
-              </Link>
-            )}
-          >
-            {guideLinks}
-          </LinkSubSection>
-          <LinkSubSection
-            title="Video Playlist"
-            icon={<YoutubeIcon />}
-            external
-            MoreLink={(props) => (
-              <Link
-                onClick={getLinkOnClick(
-                  linkGAEventTemplate,
-                  youtubeMoreLinkLabel
-                )}
-                to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
-                {...props}
-              >
-                {youtubeMoreLinkText}
-                <ExternalLinkIcon style={{ marginLeft: 8 }} />
-              </Link>
-            )}
-          >
-            {youtubeLinks}
-          </LinkSubSection>
-        </LinksSection>
+        <div style={{ maxWidth: '762px' }}>
+          <LinksSection>
+            <LinkSubSection
+              title="Getting Started Guides"
+              icon={<DocsIcon />}
+              MoreLink={(props) => (
+                <Link
+                  onClick={getLinkOnClick(
+                    linkGAEventTemplate,
+                    guidesMoreLinkText
+                  )}
+                  to={docsLink}
+                  {...props}
+                >
+                  {guidesMoreLinkText}
+                  <PointerIcon />
+                </Link>
+              )}
+            >
+              {GuideLinks}
+            </LinkSubSection>
+            <LinkSubSection
+              title="Video Playlist"
+              icon={<YoutubeIcon />}
+              external
+              MoreLink={(props) => (
+                <Link
+                  onClick={getLinkOnClick(
+                    linkGAEventTemplate,
+                    youtubeMoreLinkLabel
+                  )}
+                  to={youtubeChannelLink}
+                  {...props}
+                >
+                  {youtubeMoreLinkText}
+                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                </Link>
+              )}
+            >
+              {YoutubeLinks}
+            </LinkSubSection>
+          </LinksSection>
+        </div>
       }
     >
       <Typography variant="subtitle1">
