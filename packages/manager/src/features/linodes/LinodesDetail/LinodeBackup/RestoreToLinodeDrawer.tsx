@@ -1,7 +1,6 @@
-import { restoreBackup } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
@@ -10,29 +9,26 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
 import Drawer from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import withLinodes, {
-  Props as LinodeProps,
-} from 'src/containers/withLinodes.container';
 import { useGrants } from 'src/queries/profile';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { Grants } from '@linode/api-v4/lib';
+import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
+import {
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 
 interface Props {
   open: boolean;
-  linodeID: number;
-  linodeRegion: string;
-  backupCreated: string;
-  backupID?: number;
+  linodeId: number;
+  backup: LinodeBackup | undefined;
   onClose: () => void;
-  onSubmit: () => void;
 }
-
-export type CombinedProps = Props & LinodeProps;
 
 const canEditLinode = (
   grants: Grants | undefined,
@@ -41,44 +37,43 @@ const canEditLinode = (
   return getPermissionsForLinode(grants, linodeId) === 'read_only';
 };
 
-export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
-  const {
-    onSubmit,
-    linodeID,
-    backupID,
-    open,
-    backupCreated,
-    linodesData,
-    linodeRegion,
-  } = props;
+export const RestoreToLinodeDrawer = (props: Props) => {
+  const { linodeId, backup, open } = props;
 
   const { data: grants } = useGrants();
+  const { data: linode } = useLinodeQuery(linodeId);
+
+  const { data: linodes, isLoading } = useAllLinodesQuery(
+    {},
+    {
+      region: linode?.region,
+    },
+    open && linode !== undefined
+  );
+
+  const { mutateAsync: restoreBackup } = useLinodeBackupRestoreMutation();
 
   const [overwrite, setOverwrite] = React.useState<boolean>(false);
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
-    linodeID
-  );
+  const [selectedTargetLinodeId, setSelectedTargetLinodeId] = React.useState<
+    number | null
+  >(linodeId);
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
   const reset = () => {
     setOverwrite(false);
-    setSelectedLinodeId(null);
+    setSelectedTargetLinodeId(null);
     setErrors([]);
   };
 
   const restoreToLinode = () => {
-    if (!selectedLinodeId) {
-      setErrors([
-        ...errors,
-        ...[{ field: 'linode_id', reason: 'You must select a Linode' }],
-      ]);
-      scrollErrorIntoView();
-      return;
-    }
-    restoreBackup(linodeID, Number(backupID), selectedLinodeId, overwrite)
+    restoreBackup({
+      linodeId,
+      backupId: backup?.id ?? -1,
+      targetLinodeId: selectedTargetLinodeId ?? -1,
+      overwrite,
+    })
       .then(() => {
         reset();
-        onSubmit();
       })
       .catch((errResponse) => {
         setErrors(getAPIErrorOrDefault(errResponse));
@@ -106,20 +101,19 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
   const overwriteError = hasErrorFor('overwrite');
   const generalError = hasErrorFor('none');
 
-  const readOnly = canEditLinode(grants, selectedLinodeId ?? -1);
+  const readOnly = canEditLinode(grants, selectedTargetLinodeId ?? -1);
   const selectError = Boolean(linodeError) || readOnly;
 
-  const linodeOptions = linodesData
-    .filter((linode) => linode.region === linodeRegion)
-    .map(({ label, id }) => {
+  const linodeOptions =
+    linodes?.map(({ label, id }) => {
       return { label, value: id };
-    });
+    }) ?? [];
 
   return (
     <Drawer
       open={open}
       onClose={handleCloseDrawer}
-      title={`Restore Backup from ${backupCreated}`}
+      title={`Restore Backup from ${backup?.created}`}
     >
       <FormControl fullWidth>
         <InputLabel
@@ -136,15 +130,16 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
               'data-qa-select-linode': true,
             },
           }}
-          defaultValue={linodeOptions.find(
-            (option) => option.value === selectedLinodeId
+          value={linodeOptions.find(
+            (option) => option.value === selectedTargetLinodeId
           )}
           options={linodeOptions}
-          onChange={(item: Item<number>) => setSelectedLinodeId(item.value)}
+          onChange={(item) => setSelectedTargetLinodeId(item.value)}
           errorText={linodeError}
           placeholder="Select a Linode"
           isClearable={false}
           label="Select a Linode"
+          isLoading={isLoading}
           hideLabel
         />
         {selectError && (
@@ -191,7 +186,3 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
     </Drawer>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(withLinodes());
-
-export default enhanced(RestoreToLinodeDrawer);

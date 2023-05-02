@@ -16,7 +16,6 @@ import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
-import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
   withLinodeDetailContext,
@@ -36,6 +35,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ACCESS_LEVELS } from 'src/constants';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 
 interface Props {
   numVolumes: number;
@@ -399,7 +399,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         updateTags={(tags) => updateTags(linode.id, tags)}
         onClose={closeTagDrawer}
       />
-      <EnableBackupDialog
+      <EnableBackupsDialog
         linodeId={backupsDialog.linodeID}
         open={backupsDialog.open}
         onClose={closeDialogs}

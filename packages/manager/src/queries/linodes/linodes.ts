@@ -1,8 +1,14 @@
-import { useInfiniteQuery, useQuery } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from '../base';
 import {
   APIError,
+  DeepPartial,
   Filter,
   Params,
   ResourcePage,
@@ -14,6 +20,7 @@ import {
   getLinodeLishToken,
   getLinodeConfigs,
   Config,
+  updateLinode,
 } from '@linode/api-v4/lib/linodes';
 
 export const queryKey = 'linodes';
@@ -62,6 +69,19 @@ export const useLinodeQuery = (id: number, enabled = true) => {
     () => getLinode(id),
     {
       enabled,
+    }
+  );
+};
+
+export const useLinodeUpdateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Linode, APIError[], DeepPartial<Linode>>(
+    (data) => updateLinode(id, data),
+    {
+      onSuccess(linode) {
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData([queryKey, 'linode', id], linode);
+      },
     }
   );
 };

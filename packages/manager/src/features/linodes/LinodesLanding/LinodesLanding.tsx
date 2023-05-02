@@ -36,7 +36,7 @@ import {
   sendLinodesViewEvent,
 } from 'src/utilities/ga';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
-import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
+import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
 import LinodeResize from '../LinodesDetail/LinodeResize';
