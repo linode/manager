@@ -45,7 +45,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(2),
   },
   subTitle: {
     marginBottom: theme.spacing(1),
@@ -92,9 +92,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   snapshotNameField: {
     minWidth: 275,
-  },
-  snapshotGeneralError: {
-    minWidth: '100%',
   },
 }));
 
@@ -319,11 +316,7 @@ export const LinodeBackups = () => {
         </Typography>
         <FormControl className={classes.snapshotFormControl}>
           {hasErrorFor.none && (
-            <Notice
-              spacingBottom={8}
-              className={classes.snapshotGeneralError}
-              error
-            >
+            <Notice spacingBottom={8} error>
               {hasErrorFor.none}
             </Notice>
           )}
