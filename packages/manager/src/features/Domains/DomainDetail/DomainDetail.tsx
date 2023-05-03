@@ -13,6 +13,7 @@ import Typography from 'src/components/core/Typography';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import DomainRecords from '../DomainRecords';
 import DeleteDomain from '../DeleteDomain';
+import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
@@ -135,6 +136,12 @@ export const DomainDetail = () => {
             errorText: updateError,
           },
         }}
+        extraActions={
+          <DownloadDNSZoneFileButton
+            domainId={domain.id}
+            domainLabel={domain.domain}
+          />
+        }
       />
       {location.state && location.state.recordError && (
         <Notice

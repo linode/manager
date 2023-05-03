@@ -17,12 +17,16 @@ jest.mock('src/utilities/downloadFile', () => ({
 
 describe('DownloadDNSZoneFileButton', () => {
   it('renders button text correctly', () => {
-    const { getByText } = renderWithTheme(<DownloadDNSZoneFileButton id={1} />);
+    const { getByText } = renderWithTheme(
+      <DownloadDNSZoneFileButton domainLabel="test.com" domainId={1} />
+    );
     expect(getByText('Download DNS Zone File')).toBeInTheDocument();
   });
 
   it('downloads DNS zone file when button is clicked', async () => {
-    const { getByText } = renderWithTheme(<DownloadDNSZoneFileButton id={1} />);
+    const { getByText } = renderWithTheme(
+      <DownloadDNSZoneFileButton domainLabel="test.com" domainId={1} />
+    );
     fireEvent.click(getByText('Download DNS Zone File'));
     await waitFor(() =>
       expect(
@@ -32,7 +36,7 @@ describe('DownloadDNSZoneFileButton', () => {
     expect(
       require('src/utilities/downloadFile').downloadFile
     ).toHaveBeenCalledWith(
-      'DNSzonefile.txt',
+      'test.com.txt',
       'example.com. 86400 IN SOA ns1.linode.com. test.example.com. 2013072519 14400 14400 1209600 86400'
     );
   });
