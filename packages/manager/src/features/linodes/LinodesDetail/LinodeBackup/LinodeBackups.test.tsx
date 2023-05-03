@@ -5,12 +5,13 @@ import { rest, server } from 'src/mocks/testServer';
 import { backupFactory, linodeFactory } from 'src/factories';
 import { LinodeBackupsResponse } from '@linode/api-v4';
 
+// I'm so sorry, but I don't know a better way to mock react-router-dom params.
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(() => ({ linodeId: 1 })),
 }));
 
-describe('RestoreToLinodeDrawer', () => {
+describe('LinodeBackups', () => {
   it('renders a list of different types of backups if backups are enabled', async () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
