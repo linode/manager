@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
@@ -54,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+interface ResourcesLinksSubSectionProps {
   children?: JSX.Element[] | JSX.Element;
   title: string;
   icon: JSX.Element;
@@ -62,7 +61,9 @@ interface Props {
   external?: boolean;
 }
 
-const LinksSubSection = (props: Props) => {
+export const ResourcesLinksSubSection = (
+  props: ResourcesLinksSubSectionProps
+) => {
   const { title, icon, children, MoreLink, external } = props;
   const classes = useStyles();
   const linkClassName = external ? classes.externalLink : classes.internalLink;
@@ -77,5 +78,3 @@ const LinksSubSection = (props: Props) => {
     </div>
   );
 };
-
-export default LinksSubSection;

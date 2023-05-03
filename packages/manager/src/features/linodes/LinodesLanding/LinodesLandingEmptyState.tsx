@@ -23,8 +23,8 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
 import AppsSection from './AppsSection';
-import LinksSection from './LinksSection';
-import LinksSubSection from './LinksSubSection';
+import { ResourcesLinksSection } from '../../../components/EmptyLandingPageResources/ResourcesLinksSection';
+import { ResourcesLinksSubSection } from '../../../components/EmptyLandingPageResources/ResourcesLinksSubSection';
 
 const gaCategory = 'Linodes landing page empty';
 const linkGAEventTemplate = {
@@ -140,8 +140,8 @@ export const LinodesLandingEmptyState = () => {
         },
       ]}
       linksSection={
-        <LinksSection>
-          <LinksSubSection
+        <ResourcesLinksSection>
+          <ResourcesLinksSubSection
             title="Getting Started Guides"
             icon={<DocsIcon />}
             MoreLink={(props) => (
@@ -159,8 +159,8 @@ export const LinodesLandingEmptyState = () => {
             )}
           >
             {guideLinks}
-          </LinksSubSection>
-          <LinksSubSection
+          </ResourcesLinksSubSection>
+          <ResourcesLinksSubSection
             title="Deploy an App"
             icon={<MarketplaceIcon />}
             MoreLink={(props) => (
@@ -175,8 +175,8 @@ export const LinodesLandingEmptyState = () => {
             )}
           >
             <AppsSection />
-          </LinksSubSection>
-          <LinksSubSection
+          </ResourcesLinksSubSection>
+          <ResourcesLinksSubSection
             title="Video Playlist"
             icon={<YoutubeIcon />}
             external
@@ -195,8 +195,8 @@ export const LinodesLandingEmptyState = () => {
             )}
           >
             {youtubeLinks}
-          </LinksSubSection>
-        </LinksSection>
+          </ResourcesLinksSubSection>
+        </ResourcesLinksSection>
       }
       showTransferDisplay
     >

@@ -4,13 +4,12 @@ import DocsIcon from 'src/assets/icons/docs.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import PointerIcon from 'src/assets/icons/pointer.svg';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
-import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
-import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
+import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
+import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
+import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
 import {
   docsLink,
   getLinkOnClick,
@@ -61,34 +60,11 @@ const linkGAEventTemplate = {
 };
 
 const GuideLinks = (
-  <List>
-    {guidesLinkData.map((linkData) => (
-      <ListItem key={linkData.to}>
-        <Link
-          to={linkData.to}
-          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
-        >
-          {linkData.text}
-        </Link>
-      </ListItem>
-    ))}
-  </List>
+  <ResourceLinks links={guidesLinkData} linkGAEvent={linkGAEventTemplate} />
 );
 
 const YoutubeLinks = (
-  <List>
-    {youtubeLinkData.map((linkData) => (
-      <ListItem key={linkData.to}>
-        <Link
-          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
-          to={linkData.to}
-        >
-          {linkData.text}
-          <ExternalLinkIcon />
-        </Link>
-      </ListItem>
-    ))}
-  </List>
+  <ResourceLinks links={youtubeLinkData} linkGAEvent={linkGAEventTemplate} />
 );
 
 const VolumesLandingEmptyState = () => {
@@ -115,8 +91,8 @@ const VolumesLandingEmptyState = () => {
       ]}
       linksSection={
         <div style={{ maxWidth: '762px' }}>
-          <LinksSection>
-            <LinkSubSection
+          <ResourcesLinksSection>
+            <ResourcesLinksSubSection
               title="Getting Started Guides"
               icon={<DocsIcon />}
               MoreLink={(props) => (
@@ -134,8 +110,8 @@ const VolumesLandingEmptyState = () => {
               )}
             >
               {GuideLinks}
-            </LinkSubSection>
-            <LinkSubSection
+            </ResourcesLinksSubSection>
+            <ResourcesLinksSubSection
               title="Video Playlist"
               icon={<YoutubeIcon />}
               external
@@ -154,8 +130,8 @@ const VolumesLandingEmptyState = () => {
               )}
             >
               {YoutubeLinks}
-            </LinkSubSection>
-          </LinksSection>
+            </ResourcesLinksSubSection>
+          </ResourcesLinksSection>
         </div>
       }
     >

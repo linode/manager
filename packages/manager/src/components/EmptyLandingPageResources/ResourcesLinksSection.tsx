@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
@@ -18,13 +17,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+interface ResourcesLinksSectionProps {
   children: JSX.Element[] | JSX.Element;
 }
 
-const LinksSection = (props: Props) => {
+export const ResourcesLinksSection = (props: ResourcesLinksSectionProps) => {
   const classes = useStyles();
   return <div className={classes.categoryWrapper}>{props.children}</div>;
 };
-
-export default LinksSection;
