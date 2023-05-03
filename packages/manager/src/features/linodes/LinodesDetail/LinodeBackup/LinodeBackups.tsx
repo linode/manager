@@ -312,7 +312,10 @@ export const LinodeBackups = () => {
                 )}
               </>
             ) : (
-              <TableRowEmptyState colSpan={7} />
+              <TableRowEmptyState
+                colSpan={7}
+                message="Automatic and manual backups will be listed here"
+              />
             )}
           </TableBody>
         </Table>
