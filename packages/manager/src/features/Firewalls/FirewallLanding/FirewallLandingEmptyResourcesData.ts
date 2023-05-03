@@ -51,7 +51,7 @@ export const youtubeLinkData: ResourcesLinkSectionProps = {
       external: true,
     },
     {
-      to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
+      to: 'https://www.youtube.com/watch?v=H7wM5mDI1-k',
       text: 'Simple Scalable Network Security | Linode Cloud Firewall',
       external: true,
     },
