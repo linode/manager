@@ -6,7 +6,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ConfigSelection } from './utilities';

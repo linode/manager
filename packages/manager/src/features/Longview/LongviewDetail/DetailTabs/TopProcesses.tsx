@@ -8,7 +8,7 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';

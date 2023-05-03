@@ -30,7 +30,7 @@ import {
 } from 'src/queries/domains';
 import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
-import Table from 'src/components/Table/Table';
+import { Table } from 'src/components/Table';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/TableRow/TableRow';
 import TableBody from 'src/components/core/TableBody';

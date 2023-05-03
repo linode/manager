@@ -2,7 +2,7 @@ import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Drawer from 'src/components/Drawer';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import AccessCell from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';

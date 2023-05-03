@@ -24,7 +24,7 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';

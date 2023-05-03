@@ -11,7 +11,7 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState';

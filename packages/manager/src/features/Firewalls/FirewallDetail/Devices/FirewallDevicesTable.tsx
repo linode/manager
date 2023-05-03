@@ -6,7 +6,7 @@ import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';

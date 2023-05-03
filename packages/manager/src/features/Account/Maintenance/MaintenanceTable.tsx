@@ -4,7 +4,7 @@ import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Table from 'src/components/Table/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

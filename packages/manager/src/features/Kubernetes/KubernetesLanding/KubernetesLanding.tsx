@@ -6,7 +6,7 @@ import TableHead from 'src/components/core/TableHead';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import TableSortCell from 'src/components/TableSortCell';

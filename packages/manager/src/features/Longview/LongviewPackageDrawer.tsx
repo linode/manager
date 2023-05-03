@@ -7,7 +7,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
 import Drawer from 'src/components/Drawer';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import withLongviewStats, {

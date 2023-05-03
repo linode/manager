@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import Table from 'src/components/Table/Table';
+import { Table } from 'src/components/Table';
 import TableRow from 'src/components/core/TableRow';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';

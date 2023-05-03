@@ -6,7 +6,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';

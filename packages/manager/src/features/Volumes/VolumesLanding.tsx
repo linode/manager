@@ -12,7 +12,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Loading from 'src/components/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell';

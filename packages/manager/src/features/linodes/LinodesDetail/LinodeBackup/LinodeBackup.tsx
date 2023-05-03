@@ -35,7 +35,7 @@ import Notice from 'src/components/Notice';
 import PromiseLoader, {
   PromiseLoaderResponse,
 } from 'src/components/PromiseLoader';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';

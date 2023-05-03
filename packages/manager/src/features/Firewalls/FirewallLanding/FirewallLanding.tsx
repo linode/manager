@@ -12,7 +12,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
 import ErrorState from 'src/components/ErrorState/ErrorState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import Table from 'src/components/Table/Table';
+import { Table } from 'src/components/Table';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/TableRow/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
