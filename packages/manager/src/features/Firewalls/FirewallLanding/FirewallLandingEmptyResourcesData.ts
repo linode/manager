@@ -1,5 +1,14 @@
+export const headers = {
+  title: 'Firewalls',
+  subtitle: 'Secure cloud-based firewall',
+  description:
+    'Control network traffic to and from Linode Compute Instances with a simple management interface',
+};
+
 export const gettingStartedGuides = {
   title: 'Getting Started Guides',
+  subtitle:
+    'Control network traffic to and from Linode Compute Instances with a simple management interface',
   links: [
     {
       to:
@@ -27,17 +36,13 @@ export const gettingStartedGuides = {
 export const youtubeLinkData = {
   links: [
     {
-      to: 'https://www.youtube.com/watch?v=7ti25oK7UMA',
-      text: 'How to Use Block Storage with Your Linode',
-    },
-    {
-      to: 'https://www.youtube.com/watch?v=8G0cNZZIxNc',
-      text: 'Block Storage Vs Object Storage',
-    },
-    {
-      to: 'https://www.youtube.com/watch?v=Z9jZv_IHO2s',
+      to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
       text:
-        'How to use Block Storage to Increase Space on Your Nextcloud Instance',
+        'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
+    },
+    {
+      to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
+      text: 'Simple Scalable Network Security | Linode Cloud Firewall',
     },
   ],
 };

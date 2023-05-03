@@ -90,49 +90,47 @@ const VolumesLandingEmptyState = () => {
         },
       ]}
       linksSection={
-        <div style={{ maxWidth: '762px' }}>
-          <ResourcesLinksSection>
-            <ResourcesLinksSubSection
-              title="Getting Started Guides"
-              icon={<DocsIcon />}
-              MoreLink={(props) => (
-                <Link
-                  onClick={getLinkOnClick(
-                    linkGAEventTemplate,
-                    guidesMoreLinkText
-                  )}
-                  to={docsLink}
-                  {...props}
-                >
-                  {guidesMoreLinkText}
-                  <PointerIcon />
-                </Link>
-              )}
-            >
-              {GuideLinks}
-            </ResourcesLinksSubSection>
-            <ResourcesLinksSubSection
-              title="Video Playlist"
-              icon={<YoutubeIcon />}
-              external
-              MoreLink={(props) => (
-                <Link
-                  onClick={getLinkOnClick(
-                    linkGAEventTemplate,
-                    youtubeMoreLinkLabel
-                  )}
-                  to={youtubeChannelLink}
-                  {...props}
-                >
-                  {youtubeMoreLinkText}
-                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                </Link>
-              )}
-            >
-              {YoutubeLinks}
-            </ResourcesLinksSubSection>
-          </ResourcesLinksSection>
-        </div>
+        <ResourcesLinksSection>
+          <ResourcesLinksSubSection
+            title="Getting Started Guides"
+            icon={<DocsIcon />}
+            MoreLink={(props) => (
+              <Link
+                onClick={getLinkOnClick(
+                  linkGAEventTemplate,
+                  guidesMoreLinkText
+                )}
+                to={docsLink}
+                {...props}
+              >
+                {guidesMoreLinkText}
+                <PointerIcon className="pointerIcon" />
+              </Link>
+            )}
+          >
+            {GuideLinks}
+          </ResourcesLinksSubSection>
+          <ResourcesLinksSubSection
+            title="Video Playlist"
+            icon={<YoutubeIcon />}
+            external
+            MoreLink={(props) => (
+              <Link
+                onClick={getLinkOnClick(
+                  linkGAEventTemplate,
+                  youtubeMoreLinkLabel
+                )}
+                to={youtubeChannelLink}
+                {...props}
+              >
+                {youtubeMoreLinkText}
+                <ExternalLinkIcon style={{ marginLeft: 8 }} />
+              </Link>
+            )}
+          >
+            {YoutubeLinks}
+          </ResourcesLinksSubSection>
+        </ResourcesLinksSection>
       }
     >
       <Typography variant="subtitle1">

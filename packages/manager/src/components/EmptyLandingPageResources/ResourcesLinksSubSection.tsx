@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+import type { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   linksSubSection: {
     display: 'grid',
     gridTemplateRows: `22px minmax(${theme.spacing(3)}, 100%) 1.125rem`,
@@ -65,7 +65,7 @@ export const ResourcesLinksSubSection = (
   props: ResourcesLinksSubSectionProps
 ) => {
   const { title, icon, children, MoreLink, external } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const linkClassName = external ? classes.externalLink : classes.internalLink;
 
   return (

@@ -18,6 +18,7 @@ import {
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
 import {
+  headers,
   gettingStartedGuides,
   youtubeLinkData,
   linkGAEvent,
@@ -35,13 +36,15 @@ const YoutubeLinks = (
   <ResourceLinks links={youtubeLinkData.links} linkGAEvent={linkGAEvent} />
 );
 
+const { title, subtitle, description } = headers;
+
 export const FirewallLandingEmptyState = React.memo((props: Props) => {
   const { openAddFirewallDrawer } = props;
 
   return (
     <Placeholder
-      title="Firewalls"
-      subtitle="Secure cloud-based firewall"
+      title={title}
+      subtitle={subtitle}
       icon={FirewallIcon}
       isEntity
       buttonProps={[
@@ -58,52 +61,47 @@ export const FirewallLandingEmptyState = React.memo((props: Props) => {
         },
       ]}
       linksSection={
-        <div style={{ maxWidth: '762px' }}>
-          <ResourcesLinksSection>
-            <ResourcesLinksSubSection
-              title={gettingStartedGuides.title}
-              icon={DocsIcon}
-              MoreLink={(props) => (
-                <Link
-                  onClick={getLinkOnClick(
-                    linkGAEvent,
-                    gettingStartedGuides.moreInfo.text
-                  )}
-                  to={gettingStartedGuides.moreInfo.to}
-                  {...props}
-                >
-                  {gettingStartedGuides.moreInfo.text}
-                  <PointerIcon />
-                </Link>
-              )}
-            >
-              {GuideLinks}
-            </ResourcesLinksSubSection>
-            <ResourcesLinksSubSection
-              title="Video Playlist"
-              icon={<YoutubeIcon />}
-              external
-              MoreLink={(props) => (
-                <Link
-                  onClick={getLinkOnClick(linkGAEvent, youtubeMoreLinkLabel)}
-                  to={youtubeChannelLink}
-                  {...props}
-                >
-                  {youtubeMoreLinkText}
-                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                </Link>
-              )}
-            >
-              {YoutubeLinks}
-            </ResourcesLinksSubSection>
-          </ResourcesLinksSection>
-        </div>
+        <ResourcesLinksSection>
+          <ResourcesLinksSubSection
+            title={gettingStartedGuides.title}
+            icon={<DocsIcon />}
+            MoreLink={(props) => (
+              <Link
+                onClick={getLinkOnClick(
+                  linkGAEvent,
+                  gettingStartedGuides.moreInfo.text
+                )}
+                to={gettingStartedGuides.moreInfo.to}
+                {...props}
+              >
+                {gettingStartedGuides.moreInfo.text}
+                <PointerIcon />
+              </Link>
+            )}
+          >
+            {GuideLinks}
+          </ResourcesLinksSubSection>
+          <ResourcesLinksSubSection
+            title="Video Playlist"
+            icon={<YoutubeIcon />}
+            external
+            MoreLink={(props) => (
+              <Link
+                onClick={getLinkOnClick(linkGAEvent, youtubeMoreLinkLabel)}
+                to={youtubeChannelLink}
+                {...props}
+              >
+                {youtubeMoreLinkText}
+                <ExternalLinkIcon style={{ marginLeft: 8 }} />
+              </Link>
+            )}
+          >
+            {YoutubeLinks}
+          </ResourcesLinksSubSection>
+        </ResourcesLinksSection>
       }
     >
-      <Typography variant="subtitle1">
-        Control network traffic to and from Linode Compute Instances with a
-        simple management interface
-      </Typography>
+      <Typography variant="subtitle1">{description}</Typography>
     </Placeholder>
   );
 });

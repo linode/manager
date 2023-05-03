@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+import type { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   categoryWrapper: {
+    maxWidth: 762,
     display: 'grid',
     gridAutoColumns: '1fr',
     gridAutoFlow: 'column',
@@ -22,6 +23,7 @@ interface ResourcesLinksSectionProps {
 }
 
 export const ResourcesLinksSection = (props: ResourcesLinksSectionProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
+
   return <div className={classes.categoryWrapper}>{props.children}</div>;
 };
