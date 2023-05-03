@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Box from 'src/components/core/Box';
@@ -23,8 +22,6 @@ import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useSpecificTypes } from 'src/queries/types';
@@ -38,9 +35,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import EntityHeader from 'src/components/EntityHeader';
-import withRecentEvent, {
-  WithRecentEvent,
-} from './LinodesLanding/withRecentEvent';
+import { WithRecentEvent } from './LinodesLanding/withRecentEvent';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
@@ -52,19 +47,13 @@ import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { useProfile } from 'src/queries/profile';
+import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
   id: number;
   linode: Linode;
   username?: string;
-  openDialog: OpenDialog;
-  openPowerActionDialog: (
-    bootAction: BootAction,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => void;
   backups: LinodeBackups;
   linodeConfigs: Config[];
   numVolumes: number;
@@ -73,22 +62,14 @@ interface LinodeEntityDetailProps {
   isSummaryView?: boolean;
 }
 
-interface StatusChange {
-  linodeConfigs: Config[];
-  linodeId: number;
-  linodeLabel: string;
-  status: BootAction;
-}
-
-export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
+export type CombinedProps = LinodeEntityDetailProps &
+  WithRecentEvent & { handlers: LinodeHandlers };
 
 const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const {
     variant,
     linode,
     username,
-    openDialog,
-    openPowerActionDialog,
     backups,
     linodeConfigs,
     isSummaryView,
@@ -96,6 +77,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     openTagDrawer,
     openNotificationMenu,
     recentEvent,
+    handlers,
   } = props;
 
   const { data: images } = useAllImagesQuery({}, {});
@@ -140,8 +122,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           linodeId={linode.id}
           linodeStatus={linode.status}
           linodePermissions={extendedLinode?._permissions}
-          openDialog={openDialog}
-          openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
           isSummaryView={isSummaryView}
@@ -151,6 +131,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           openNotificationMenu={openNotificationMenu || (() => null)}
           progress={progress}
           transitionText={transitionText}
+          handlers={handlers}
         />
       }
       body={
@@ -176,19 +157,13 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           linodeTags={linode.tags}
           linodeLabel={linode.label}
           openTagDrawer={openTagDrawer}
-          openDialog={openDialog}
         />
       }
     />
   );
 };
 
-const enhanced = compose<CombinedProps, LinodeEntityDetailProps>(
-  withRecentEvent,
-  React.memo
-);
-
-export default enhanced(LinodeEntityDetail);
+export default LinodeEntityDetail;
 
 // =============================================================================
 // Header
@@ -200,13 +175,6 @@ export interface HeaderProps {
   linodeId: number;
   linodeStatus: Linode['status'];
   linodePermissions?: GrantLevel;
-  openDialog: OpenDialog;
-  openPowerActionDialog: (
-    bootAction: BootAction,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => void;
   linodeRegionDisplay: string;
   backups: LinodeBackups;
   type: ExtendedType | null;
@@ -285,7 +253,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header: React.FC<HeaderProps> = (props) => {
+const Header: React.FC<HeaderProps & { handlers: LinodeHandlers }> = (
+  props
+) => {
   const classes = useHeaderStyles();
   const theme = useTheme();
 
@@ -294,16 +264,14 @@ const Header: React.FC<HeaderProps> = (props) => {
     linodeId,
     linodeStatus,
     linodeRegionDisplay,
-    openDialog,
-    openPowerActionDialog,
     backups,
     type,
     variant,
-    linodeConfigs,
     isSummaryView,
     progress,
     transitionText,
     openNotificationMenu,
+    handlers,
   } = props;
 
   const isRunning = linodeStatus === 'running';
@@ -340,16 +308,6 @@ const Header: React.FC<HeaderProps> = (props) => {
   const sxBoxFlex = {
     alignItems: 'center',
     display: 'flex',
-  };
-
-  const handleStatusChange = ({
-    linodeConfigs,
-    linodeId,
-    linodeLabel,
-    status,
-  }: StatusChange) => {
-    sendLinodeActionMenuItemEvent(`${status} Linode`);
-    openPowerActionDialog(status, linodeId, linodeLabel, linodeConfigs);
   };
 
   return (
@@ -398,12 +356,7 @@ const Header: React.FC<HeaderProps> = (props) => {
             sx={sxActionItem}
             disabled={!(isRunning || isOffline)}
             onClick={() =>
-              handleStatusChange({
-                linodeConfigs,
-                linodeId,
-                linodeLabel,
-                status: isRunning ? 'Power Off' : 'Power On',
-              })
+              handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
           >
             {isRunning ? 'Power Off' : 'Power On'}
@@ -412,14 +365,7 @@ const Header: React.FC<HeaderProps> = (props) => {
             buttonType="secondary"
             sx={sxActionItem}
             disabled={isOffline}
-            onClick={() =>
-              handleStatusChange({
-                linodeConfigs,
-                linodeId,
-                linodeLabel,
-                status: 'Reboot',
-              })
-            }
+            onClick={() => handlers.onOpenPowerDialog('Reboot')}
           >
             Reboot
           </Button>
@@ -441,8 +387,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           linodeRegion={linodeRegionDisplay}
           linodeStatus={linodeStatus}
           linodeType={type ?? undefined}
-          openDialog={openDialog}
-          openPowerActionDialog={openPowerActionDialog}
+          {...handlers}
         />
       </Box>
     </EntityHeader>
@@ -770,7 +715,6 @@ interface FooterProps {
   linodeTags: string[];
   linodeLabel: string;
   openTagDrawer: (tags: string[]) => void;
-  openDialog: OpenDialog;
 }
 
 export const Footer: React.FC<FooterProps> = React.memo((props) => {
