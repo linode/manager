@@ -1,6 +1,6 @@
 import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
-import { fonts } from 'src/foundations/fonts';
+import { latoWeb } from 'src/foundations/fonts';
 
 export const bg = {
   app: '#f4f5f6',
@@ -120,7 +120,7 @@ const genericLinkStyle = {
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
   color: textColors.tableStatic,
-  fontFamily: fonts.bold,
+  fontFamily: latoWeb.bold,
   fontSize: '1rem',
   padding: 0,
   '&:before': {
@@ -264,9 +264,9 @@ export const lightTheme: ThemeOptions = {
     yellow: `rgba(255, 220, 125, ${graphTransparency})`,
   },
   font: {
-    normal: fonts.normal,
-    semiBold: fonts.semiBold,
-    bold: fonts.bold,
+    normal: latoWeb.normal,
+    semiBold: latoWeb.semiBold,
+    bold: latoWeb.bold,
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -306,13 +306,13 @@ export const lightTheme: ThemeOptions = {
     },
   },
   typography: {
-    fontFamily: fonts.normal,
+    fontFamily: latoWeb.normal,
     fontSize: 16,
     h1: {
       color: primaryColors.headline,
       fontSize: '1.25rem',
       lineHeight: '1.75rem',
-      fontFamily: fonts.bold,
+      fontFamily: latoWeb.bold,
       [breakpoints.up('lg')]: {
         fontSize: '1.5rem',
         lineHeight: '1.875rem',
@@ -321,13 +321,13 @@ export const lightTheme: ThemeOptions = {
     h2: {
       color: primaryColors.headline,
       fontSize: '1.125rem',
-      fontFamily: fonts.bold,
+      fontFamily: latoWeb.bold,
       lineHeight: '1.5rem',
     },
     h3: {
       color: primaryColors.headline,
       fontSize: '1rem',
-      fontFamily: fonts.bold,
+      fontFamily: latoWeb.bold,
       lineHeight: '1.4rem',
     },
     body1: {
@@ -407,7 +407,7 @@ export const lightTheme: ThemeOptions = {
           border: 'none',
           borderRadius: 1,
           cursor: 'pointer',
-          fontFamily: fonts.bold,
+          fontFamily: latoWeb.bold,
           fontSize: '1rem',
           minHeight: 34,
           minWidth: 105,
@@ -712,7 +712,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           color: '#555',
-          fontFamily: fonts.bold,
+          fontFamily: latoWeb.bold,
           fontSize: '.875rem',
           marginBottom: 8,
           '&$focused': {
@@ -907,7 +907,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&.selectHeader': {
             opacity: 1,
-            fontFamily: fonts.bold,
+            fontFamily: latoWeb.bold,
             fontSize: '1rem',
             color: primaryColors.text,
           },
@@ -962,7 +962,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           height: 'auto',
-          fontFamily: fonts.normal,
+          fontFamily: latoWeb.normal,
           fontSize: '.9rem',
           whiteSpace: 'initial',
           textOverflow: 'initial',
@@ -1191,7 +1191,7 @@ export const lightTheme: ThemeOptions = {
             minWidth: 75,
           },
           '&$selected, &$selected:hover': {
-            fontFamily: fonts.bold,
+            fontFamily: latoWeb.bold,
             color: primaryColors.headline,
           },
           '&:hover': {
@@ -1366,7 +1366,7 @@ export const lightTheme: ThemeOptions = {
           borderRadius: '3px',
           fontSize: '1rem',
           lineHeight: 1,
-          fontFamily: fonts.bold,
+          fontFamily: latoWeb.bold,
           backgroundColor: primaryColors.main,
           color: '#fff',
           padding: `8px 20px`,

@@ -3,7 +3,7 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import { isProductionBuild } from './constants';
 import { useAuthentication } from './hooks/useAuthentication';
 import { usePreferences } from './queries/preferences';
-import { ThemeName } from './foundations/themes';
+import { ThemeName } from './foundations/themes/themes';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ThemeProvider, Theme } from '@mui/material/styles';
 import {

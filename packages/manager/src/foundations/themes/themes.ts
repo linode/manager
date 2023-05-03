@@ -2,17 +2,22 @@ import { createTheme } from '@mui/material/styles';
 import _merge from 'lodash/merge';
 
 // Themes & Brands
-import { darkTheme } from 'src/foundations/dark';
-import { lightTheme } from 'src/foundations/light';
+import { darkTheme } from 'src/foundations/themes/dark';
+import { lightTheme } from 'src/foundations/themes/light';
 
 // Types & Interfaces
-import { customDarkModeOptions } from 'src/foundations/dark';
-import { fonts } from 'src/foundations/fonts';
-import { color, bg, textColors, borderColors } from 'src/foundations/light';
+import { customDarkModeOptions } from 'src/foundations/themes/dark';
+import { latoWeb } from 'src/foundations/fonts';
+import {
+  color,
+  bg,
+  textColors,
+  borderColors,
+} from 'src/foundations/themes/light';
 
 export type ThemeName = 'light' | 'dark';
 
-type Fonts = typeof fonts;
+type Fonts = typeof latoWeb;
 
 type MergeTypes<A, B> = Omit<A, keyof B> &
   Omit<B, keyof A> &
@@ -39,7 +44,7 @@ type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
 
 /**
  * Augmenting the Theme and ThemeOptions.
- * This allows us to add cutom fields to the theme.
+ * This allows us to add custom fields to the theme.
  * Avoid doing this unless you have a good reason.
  */
 declare module '@mui/material/styles/createTheme' {

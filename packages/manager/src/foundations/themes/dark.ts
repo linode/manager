@@ -1,5 +1,5 @@
 import { ThemeOptions } from '@mui/material/styles';
-import { breakpoints } from './breakpoints';
+import { breakpoints } from '../breakpoints';
 
 const primaryColors = {
   main: '#3683dc',
