@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed:
 
 ### Fixed:
+- Swap sanitize-html with sanitize-html-react (node module incompatibility) #6548
 
 ### Tech Stories:
 
