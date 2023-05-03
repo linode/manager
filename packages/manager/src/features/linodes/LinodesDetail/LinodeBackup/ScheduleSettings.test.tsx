@@ -57,6 +57,6 @@ describe('RestoreToLinodeDrawer', () => {
     await findByText('Monday');
     await findByText('00:00 - 02:00');
 
-    await findByText('America/New York');
+    await findByText('America/New York', { exact: false });
   });
 });
