@@ -17,7 +17,7 @@ import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 import { makeStyles } from 'tss-react/mui';
 import { GravatarByEmail } from '../GravatarByEmail';
-import PaginationFooter from '../PaginationFooter/PaginationFooter';
+import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
 export const MAX_SSH_KEYS_DISPLAY = 25;

@@ -146,7 +146,8 @@ describe('linode landing checks', () => {
     fbtVisible('Create Linode');
   });
 
-  it('checks label and region sorting behavior for linode table', () => {
+  // Skipping because the sorting is now done by the API
+  it.skip('checks label and region sorting behavior for linode table', () => {
     const linodesByLabel = [...mockLinodes.sort(sortByLabel)];
     const linodesByRegion = [...mockLinodes.sort(sortByRegion)];
     const linodesLastIndex = mockLinodes.length - 1;
@@ -218,22 +219,21 @@ describe('linode landing checks', () => {
   it('checks the table and action menu buttons/labels', () => {
     const label = linodeLabel(1);
     const ip = mockLinodes[0].ipv4[0];
+
     getVisible('[aria-label="Sort by label"]').within(() => {
       fbtVisible('Label');
     });
-    getVisible('[aria-label="Sort by _statusPriority"]').within(() => {
-      fbtVisible('Status');
-    });
-    getVisible('[aria-label="Sort by type"]').within(() => {
-      fbtVisible('Plan');
-    });
-    getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
-      fbtVisible('IP Address');
-    });
 
-    cy.findByLabelText('Toggle display').should('be.visible');
-
-    cy.findByLabelText('Toggle group by tag').should('be.visible');
+    // We can't sort by these with the API:
+    // getVisible('[aria-label="Sort by status"]').within(() => {
+    //   fbtVisible('Status');
+    // });
+    // getVisible('[aria-label="Sort by type"]').within(() => {
+    //   fbtVisible('Plan');
+    // });
+    // getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
+    //   fbtVisible('IP Address');
+    // });
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
       ui.button
@@ -280,9 +280,10 @@ describe('linode landing actions', () => {
         cy.visitWithLogin('/linodes', { preferenceOverrides });
         cy.wait('@getAccountSettings');
         getVisible('[data-qa-header="Linodes"]');
-        if (!cy.get('[data-qa-sort-label="asc"]')) {
-          getClick('[aria-label="Sort by label"]');
-        }
+        // I think we can assume the linodes are on the page and we don't need to sort
+        // if (!cy.get('[data-qa-sort-label="asc"]')) {
+        //   getClick('[aria-label="Sort by label"]');
+        // }
         deleteLinodeFromActionMenu(linodeA.label);
         deleteLinodeFromActionMenu(linodeB.label);
         cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');

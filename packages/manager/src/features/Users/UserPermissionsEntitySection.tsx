@@ -8,7 +8,7 @@ import TableRow from 'src/components/TableRow/TableRow';
 import TableCell from 'src/components/TableCell/TableCell';
 import Radio from 'src/components/Radio/Radio';
 import TableBody from 'src/components/core/TableBody';
-import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { usePagination } from 'src/hooks/usePagination';
 import { createDisplayPage } from 'src/components/Paginate';
 import Typography from 'src/components/core/Typography';

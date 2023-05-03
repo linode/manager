@@ -8,7 +8,7 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';

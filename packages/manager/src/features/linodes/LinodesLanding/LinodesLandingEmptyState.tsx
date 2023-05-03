@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ListLinodesEmptyState: React.FC<{}> = (_) => {
+export const LinodesLandingEmptyState = () => {
   const classes = useStyles();
 
   const { push } = useHistory();
@@ -209,5 +209,3 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
     </Placeholder>
   );
 };
-
-export default React.memo(ListLinodesEmptyState);
