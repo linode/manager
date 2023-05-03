@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Resource links to empty state Volumes landing page #9065
 
 ### Changed:
+- Removed MongoDB reference from ClusterControl description #9081
 
 ### Fixed:
 
