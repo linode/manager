@@ -113,7 +113,10 @@ export const LinodeBackups = () => {
 
   const { data: linode } = useLinodeQuery(id);
   const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
-  const { data: backups, error, isLoading } = useLinodeBackupsQuery(id);
+  const { data: backups, error, isLoading } = useLinodeBackupsQuery(
+    id,
+    Boolean(linode?.backups.enabled)
+  );
 
   const {
     mutateAsync: updateLinode,

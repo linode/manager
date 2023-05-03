@@ -10,10 +10,11 @@ import {
   takeSnapshot,
 } from '@linode/api-v4';
 
-export const useLinodeBackupsQuery = (id: number) => {
+export const useLinodeBackupsQuery = (id: number, enabled = true) => {
   return useQuery<LinodeBackupsResponse, APIError[]>(
     [queryKey, 'linode', id, 'backups'],
-    () => getLinodeBackups(id)
+    () => getLinodeBackups(id),
+    { enabled }
   );
 };
 

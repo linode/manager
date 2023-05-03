@@ -25,11 +25,14 @@ describe('LinodeBackups', () => {
           snapshot: {
             in_progress: backupFactory.build({
               label: 'in-progress-test-backup',
+              created: '2023-05-03T04:00:05',
+              finished: '2023-05-03T04:02:06',
               type: 'snapshot',
             }),
             current: backupFactory.build({
               label: 'current-snapshot',
               type: 'snapshot',
+              status: 'needsPostProcessing',
             }),
           },
         };
@@ -37,10 +40,32 @@ describe('LinodeBackups', () => {
       })
     );
 
+    const { findByText, getByText } = renderWithTheme(<LinodeBackups />);
+
+    // Verify an automated backup renders
+    await findByText('current-snapshot');
+    getByText('Automatic');
+
+    // Verify an `in_progress` snapshot renders
+    getByText('in-progress-test-backup');
+    getByText('2 minutes, 1 second');
+
+    // Verify an `current` snapshot renders
+    getByText('current-snapshot');
+    getByText('Processing');
+  });
+
+  it('renders BackupsPlaceholder is backups are not enabled on this linode', async () => {
+    server.use(
+      rest.get('*/linode/instances/1', (req, res, ctx) => {
+        return res(
+          ctx.json(linodeFactory.build({ id: 1, backups: { enabled: false } }))
+        );
+      })
+    );
+
     const { findByText } = renderWithTheme(<LinodeBackups />);
 
-    await findByText('current-snapshot');
-    await findByText('in-progress-test-backup');
-    await findByText('Automatic');
+    await findByText('Enable Backups');
   });
 });
