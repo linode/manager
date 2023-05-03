@@ -114,8 +114,6 @@
     ]
   },
   "devDependencies": {
-    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@mdx-js/loader": "^2.1.5",
     "@storybook/addon-actions": "~7.0.6",
     "@storybook/addon-controls": "~7.0.6",
