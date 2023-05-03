@@ -12,7 +12,7 @@ import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
 
 interface Props {
-  linodeId: number;
+  linodeId: number | undefined;
   onClose: () => void;
   open: boolean;
 }
@@ -26,7 +26,7 @@ export const EnableBackupsDialog = (props: Props) => {
    * this information.
    */
   const { linodes } = useLinodes();
-  const thisLinode = linodes.itemsById[linodeId];
+  const thisLinode = linodes.itemsById[linodeId ?? -1];
   const typesQuery = useSpecificTypes(
     thisLinode?.type ? [thisLinode.type] : []
   );
@@ -41,7 +41,7 @@ export const EnableBackupsDialog = (props: Props) => {
 
   const handleEnableBackups = React.useCallback(() => {
     setSubmitting(true);
-    enableBackups(linodeId)
+    enableBackups(linodeId ?? -1)
       .then(() => {
         setSubmitting(false);
         resetEventsPolling();
