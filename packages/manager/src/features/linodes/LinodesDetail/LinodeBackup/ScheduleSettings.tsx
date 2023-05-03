@@ -12,7 +12,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
 import { initWindows } from 'src/utilities/initWindows';
 import {
   useLinodeQuery,
@@ -38,21 +38,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   linodeId: number;
+  isReadOnly: boolean;
 }
 
-export const ScheduleSettings = ({ linodeId }: Props) => {
+export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(linodeId);
-
-  const doesNotHavePermission =
-    Boolean(profile?.restricted) &&
-    grants?.linode.find(
-      (grant) => grant.id === linode?.id && grant.permissions !== 'read_write'
-    ) !== undefined;
 
   const {
     mutateAsync: updateLinode,
@@ -129,6 +123,7 @@ export const ScheduleSettings = ({ linodeId }: Props) => {
             value={dayOptions.find(
               (item) => item.value === settingsForm.values.day
             )}
+            disabled={isReadOnly}
             label="Day of Week"
             placeholder="Choose a day"
             isClearable={false}
@@ -151,6 +146,7 @@ export const ScheduleSettings = ({ linodeId }: Props) => {
               (item) => item.value === settingsForm.values.window
             )}
             label="Time of Day"
+            disabled={isReadOnly}
             placeholder="Choose a time"
             isClearable={false}
             name="Time of Day"
@@ -165,7 +161,7 @@ export const ScheduleSettings = ({ linodeId }: Props) => {
           <Button
             buttonType="primary"
             type="submit"
-            disabled={doesNotHavePermission || !settingsForm.dirty}
+            disabled={isReadOnly || !settingsForm.dirty}
             loading={isUpdating}
             data-qa-schedule
           >

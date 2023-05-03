@@ -2,27 +2,20 @@ import * as React from 'react';
 import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Button from 'src/components/Button';
-import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TextField from 'src/components/TextField';
 import LinodePermissionsError from '../LinodePermissionsError';
 import BackupsPlaceholder from './BackupsPlaceholder';
 import BackupTableRow from './BackupTableRow';
 import { Box, Stack } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import { useSnackbar } from 'notistack';
 import { useHistory, useParams } from 'react-router-dom';
-import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 import { useTypeQuery } from 'src/queries/types';
 import { makeStyles } from '@mui/styles';
@@ -30,27 +23,11 @@ import { CancelBackupsDialog } from './CancelBackupsDialog';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ScheduleSettings } from './ScheduleSettings';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { useFormik } from 'formik';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import {
-  useLinodeBackupSnapshotMutation,
-  useLinodeBackupsQuery,
-} from 'src/queries/linodes/backups';
+import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
+import { CaptureSnapshot } from './CaptureSnapshot';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  snapshotFormControl: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
-    '& > div': {
-      width: 'auto',
-      marginRight: theme.spacing(2),
-    },
-    '& button': {
-      marginTop: theme.spacing(4),
-    },
-  },
   cancelButton: {
     marginBottom: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
@@ -63,9 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
-  },
-  snapshotNameField: {
-    minWidth: 275,
   },
 }));
 
@@ -92,38 +66,14 @@ export const LinodeBackups = () => {
     Boolean(linode?.backups.enabled)
   );
 
-  const {
-    mutateAsync: takeSnapshot,
-    error: snapshotError,
-    isLoading: isSnapshotLoading,
-  } = useLinodeBackupSnapshotMutation(id);
-
-  const { enqueueSnackbar } = useSnackbar();
-
   const [isRestoreDrawerOpen, setIsRestoreDrawerOpen] = React.useState(false);
-  const [
-    isSnapshotConfirmationDialogOpen,
-    setIsSnapshotConfirmationDialogOpen,
-  ] = React.useState(false);
+
   const [
     isCancelBackupsDialogOpen,
     setIsCancelBackupsDialogOpen,
   ] = React.useState(false);
 
   const [selectedBackup, setSelectedBackup] = React.useState<LinodeBackup>();
-
-  const snapshotForm = useFormik({
-    initialValues: { label: '' },
-    async onSubmit(values, formikHelpers) {
-      await takeSnapshot(values);
-      enqueueSnackbar('Starting to capture snapshot', {
-        variant: 'info',
-      });
-      setIsSnapshotConfirmationDialogOpen(false);
-      formikHelpers.resetForm();
-      resetEventsPolling();
-    },
-  });
 
   const handleDeploy = (backup: LinodeBackup) => {
     history.push(
@@ -136,8 +86,6 @@ export const LinodeBackups = () => {
     setIsRestoreDrawerOpen(true);
     setSelectedBackup(backup);
   };
-
-  const hasErrorFor = getErrorMap(['label'], snapshotError);
 
   if (error) {
     return (
@@ -229,42 +177,8 @@ export const LinodeBackups = () => {
           </TableBody>
         </Table>
       </Paper>
-      <Paper>
-        <Typography variant="h2" data-qa-manual-heading>
-          Manual Snapshot
-        </Typography>
-        <Typography variant="body1" data-qa-manual-desc marginTop={1}>
-          You can make a manual backup of your Linode by taking a snapshot.
-          Creating the manual snapshot can take several minutes, depending on
-          the size of your Linode and the amount of data you have stored on it.
-          The manual snapshot will not be overwritten by automatic backups.
-        </Typography>
-        <FormControl className={classes.snapshotFormControl}>
-          {hasErrorFor.none && (
-            <Notice spacingBottom={8} error>
-              {hasErrorFor.none}
-            </Notice>
-          )}
-          <TextField
-            errorText={hasErrorFor.label}
-            label="Name Snapshot"
-            name="label"
-            value={snapshotForm.values.label}
-            onChange={snapshotForm.handleChange}
-            data-qa-manual-name
-            className={classes.snapshotNameField}
-          />
-          <Button
-            buttonType="primary"
-            onClick={() => setIsSnapshotConfirmationDialogOpen(true)}
-            data-qa-snapshot-button
-            disabled={snapshotForm.values.label === '' || doesNotHavePermission}
-          >
-            Take Snapshot
-          </Button>
-        </FormControl>
-      </Paper>
-      <ScheduleSettings linodeId={id} />
+      <CaptureSnapshot linodeId={id} isReadOnly={doesNotHavePermission} />
+      <ScheduleSettings linodeId={id} isReadOnly={doesNotHavePermission} />
       <Box>
         <Button
           buttonType="outlined"
@@ -284,12 +198,6 @@ export const LinodeBackups = () => {
           this will remove all existing backups.
         </Typography>
       </Box>
-      <CaptureSnapshotConfirmationDialog
-        open={isSnapshotConfirmationDialogOpen}
-        onClose={() => setIsSnapshotConfirmationDialogOpen(false)}
-        onSnapshot={() => snapshotForm.handleSubmit()}
-        loading={isSnapshotLoading}
-      />
       <RestoreToLinodeDrawer
         open={isRestoreDrawerOpen}
         linodeId={id}
