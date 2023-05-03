@@ -2,7 +2,7 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories';
+import { backupFactory, linodeFactory } from 'src/factories';
 
 describe('RestoreToLinodeDrawer', () => {
   it('renders without crashing', async () => {
@@ -14,15 +14,17 @@ describe('RestoreToLinodeDrawer', () => {
       })
     );
 
+    const backup = backupFactory.build({ created: '2023-05-03T04:00:47' });
+
     const { getByText } = renderWithTheme(
       <RestoreToLinodeDrawer
         open={true}
         linodeId={1}
-        backup={undefined}
+        backup={backup}
         onClose={jest.fn()}
       />
     );
 
-    getByText(/Restore Backup from/);
+    getByText(`Restore Backup from ${backup.created}`);
   });
 });
