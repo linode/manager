@@ -41,15 +41,18 @@ const youtubeLinkData = [
   {
     to: 'https://www.youtube.com/watch?v=7ti25oK7UMA',
     text: 'How to Use Block Storage with Your Linode',
+    external: true,
   },
   {
     to: 'https://www.youtube.com/watch?v=8G0cNZZIxNc',
     text: 'Block Storage Vs Object Storage',
+    external: true,
   },
   {
     to: 'https://www.youtube.com/watch?v=Z9jZv_IHO2s',
     text:
       'How to use Block Storage to Increase Space on Your Nextcloud Instance',
+    external: true,
   },
 ];
 

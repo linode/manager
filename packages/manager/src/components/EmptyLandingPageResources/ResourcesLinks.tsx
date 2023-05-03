@@ -2,11 +2,13 @@ import * as React from 'react';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import Link from 'src/components/Link';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 interface ResourcesLinkProps {
   to: string;
   text: string;
+  external?: boolean;
 }
 
 interface LinkGAEventTemplateProps {
@@ -31,6 +33,7 @@ export const ResourceLinks = (props: ResourcesLinksProps) => {
             onClick={getLinkOnClick(linkGAEvent, linkData.text)}
           >
             {linkData.text}
+            {linkData.external && <ExternalLinkIcon />}
           </Link>
         </ListItem>
       ))}

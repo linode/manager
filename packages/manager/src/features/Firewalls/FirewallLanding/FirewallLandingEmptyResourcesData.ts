@@ -39,10 +39,12 @@ export const youtubeLinkData = {
       to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
       text:
         'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
+      external: true,
     },
     {
       to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
       text: 'Simple Scalable Network Security | Linode Cloud Firewall',
+      external: true,
     },
   ],
 };
