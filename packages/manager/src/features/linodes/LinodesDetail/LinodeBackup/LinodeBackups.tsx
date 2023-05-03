@@ -19,7 +19,6 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 import LinodePermissionsError from '../LinodePermissionsError';
 import BackupsPlaceholder from './BackupsPlaceholder';
@@ -200,22 +199,6 @@ export const LinodeBackups = () => {
     setSelectedBackup(backup);
   };
 
-  const getErrorFor = getAPIErrorFor(
-    {
-      day: 'backups.day',
-      window: 'backups.window',
-      schedule: 'backups.schedule.window',
-    },
-    updateLinodeError ?? undefined
-  );
-
-  const errorText =
-    getErrorFor('none') ||
-    getErrorFor('backups.day') ||
-    getErrorFor('backups.window') ||
-    getErrorFor('backups.schedule.window') ||
-    getErrorFor('backups.schedule.day');
-
   const windows = initWindows(getUserTimezone(profile?.timezone), true);
 
   const windowOptions = windows.map((window) => {
@@ -228,7 +211,7 @@ export const LinodeBackups = () => {
     return { label, value: day[1] };
   });
 
-  const hasErrorFor = getErrorMap(['label'], snapshotError ?? undefined);
+  const hasErrorFor = getErrorMap(['label'], snapshotError);
 
   if (error) {
     return (
@@ -385,6 +368,11 @@ export const LinodeBackups = () => {
             when the backup is promoted to the weekly slot. Up to two weekly
             backups are saved.
           </Typography>
+          {Boolean(updateLinodeError) && (
+            <Notice error spacingTop={16} spacingBottom={0}>
+              {updateLinodeError?.[0].reason}
+            </Notice>
+          )}
           <FormControl className={classes.chooseDay}>
             <Select
               textFieldProps={{
@@ -400,7 +388,6 @@ export const LinodeBackups = () => {
               label="Day of Week"
               placeholder="Choose a day"
               isClearable={false}
-              menuPlacement="top"
               name="Day of Week"
               noMarginTop
             />
@@ -422,11 +409,10 @@ export const LinodeBackups = () => {
               label="Time of Day"
               placeholder="Choose a time"
               isClearable={false}
-              menuPlacement="top"
               name="Time of Day"
               noMarginTop
             />
-            <FormHelperText>
+            <FormHelperText sx={{ marginLeft: 0 }}>
               Time displayed in{' '}
               {getUserTimezone(profile?.timezone).replace('_', ' ')}
             </FormHelperText>
@@ -442,7 +428,6 @@ export const LinodeBackups = () => {
               Save Schedule
             </Button>
           </ActionsPanel>
-          {errorText && <FormHelperText error>{errorText}</FormHelperText>}
         </form>
       </Paper>
       <Button

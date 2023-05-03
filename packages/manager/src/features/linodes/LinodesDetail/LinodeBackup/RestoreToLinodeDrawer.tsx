@@ -125,7 +125,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
             }
           />
           <FormHelperText sx={{ marginLeft: 0 }}>
-            Overwriting will delete all Disks and Configs on the target Linode
+            Overwriting will delete all disks and configs on the target Linode
             before restoring
           </FormHelperText>
         </FormControl>
