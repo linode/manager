@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
+import { downloadFile } from 'src/utilities/downloadFile';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('@linode/api-v4/lib/domains', () => ({
@@ -28,14 +29,8 @@ describe('DownloadDNSZoneFileButton', () => {
       <DownloadDNSZoneFileButton domainLabel="test.com" domainId={1} />
     );
     fireEvent.click(getByText('Download DNS Zone File'));
-    await waitFor(() =>
-      expect(
-        require('src/utilities/downloadFile').downloadFile
-      ).toHaveBeenCalledTimes(1)
-    );
-    expect(
-      require('src/utilities/downloadFile').downloadFile
-    ).toHaveBeenCalledWith(
+    await waitFor(() => expect(downloadFile).toHaveBeenCalledTimes(1));
+    expect(downloadFile).toHaveBeenCalledWith(
       'test.com.txt',
       'example.com. 86400 IN SOA ns1.linode.com. test.example.com. 2013072519 14400 14400 1209600 86400'
     );
