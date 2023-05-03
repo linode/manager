@@ -4,6 +4,7 @@ import { searchableItems } from 'src/__data__/searchableItems';
 import * as RefinedSearch from './refinedSearch';
 import { QueryJSON } from './refinedSearch';
 import { SearchableItem } from './search.interfaces';
+import { COMPRESSED_IPV6_REGEX } from './refinedSearch';
 
 const {
   areAllTrue,
@@ -328,6 +329,17 @@ describe('isSimpleQuery', () => {
     const query = '2001:db8:3c4d:15::1a2f:1a2b';
     const parsedQuery = searchString.parse(query).getParsedQuery();
     expect(isSimpleQuery(query, parsedQuery)).toBe(true);
+  });
+});
+
+describe('IPv6 regex', () => {
+  it('matches compressed IPv6 addresses', () => {
+    expect(
+      '2001:db8:3c4d:15::1a2f:1a2b'.match(COMPRESSED_IPV6_REGEX)
+    ).toBeTruthy();
+    expect('2001:db8::'.match(COMPRESSED_IPV6_REGEX)).toBeTruthy();
+    expect('2001:db8::1234:5678'.match(COMPRESSED_IPV6_REGEX)).toBeTruthy();
+    expect('::1234:5678'.match(COMPRESSED_IPV6_REGEX)).toBeTruthy();
   });
 });
 

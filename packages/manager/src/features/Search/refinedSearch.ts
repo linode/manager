@@ -3,7 +3,7 @@ import { all, any, equals, isEmpty } from 'ramda';
 import searchString from 'search-string';
 import { SearchableItem, SearchField } from './search.interfaces';
 
-const COMPRESSED_IPV6_REGEX = /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
+export const COMPRESSED_IPV6_REGEX = /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
 const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips'];
 
 // =============================================================================
