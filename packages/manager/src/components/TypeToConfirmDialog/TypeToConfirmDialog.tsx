@@ -20,7 +20,7 @@ interface Props {
   children: React.ReactNode;
   loading: boolean;
   confirmationText?: string | JSX.Element;
-  errors?: APIError[] | undefined;
+  errors?: APIError[] | undefined | null;
   onClick: () => void;
 }
 

@@ -21,6 +21,10 @@ import {
   getLinodeConfigs,
   Config,
   updateLinode,
+  deleteLinode,
+  linodeBoot,
+  linodeReboot,
+  linodeShutdown,
 } from '@linode/api-v4/lib/linodes';
 
 export const queryKey = 'linodes';
@@ -33,7 +37,7 @@ export const useLinodesQuery = (
   return useQuery<ResourcePage<Linode>, APIError[]>(
     [queryKey, 'paginated', params, filter],
     () => getLinodes(params, filter),
-    { ...queryPresets.longLived, enabled }
+    { ...queryPresets.longLived, enabled, keepPreviousData: true }
   );
 };
 
@@ -115,3 +119,45 @@ const getAllLinodeConfigs = (id: number) =>
   getAll<Config>((params, filter) =>
     getLinodeConfigs(id, params, filter)
   )().then((data) => data.data);
+
+export const useDeleteLinodeMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteLinode(id), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
+
+export const useBootLinodeMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { config_id?: number }>(
+    ({ config_id }) => linodeBoot(id, config_id),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
+};
+
+export const useRebootLinodeMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { config_id?: number }>(
+    ({ config_id }) => linodeReboot(id, config_id),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
+};
+
+export const useShutdownLinodeMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => linodeShutdown(id), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
