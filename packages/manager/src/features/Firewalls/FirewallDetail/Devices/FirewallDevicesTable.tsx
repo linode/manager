@@ -1,15 +1,15 @@
 import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallDeviceRow from './FirewallDeviceRow';
 

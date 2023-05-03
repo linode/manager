@@ -1,11 +1,11 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import { Table } from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import BackupLinodes from './BackupLinodes';
 import { ExtendedLinode } from './types';

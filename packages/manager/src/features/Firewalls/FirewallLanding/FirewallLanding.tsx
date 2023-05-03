@@ -13,11 +13,11 @@ import { useOrder } from 'src/hooks/useOrder';
 import ErrorState from 'src/components/ErrorState/ErrorState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { Table } from 'src/components/Table';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/TableRow/TableRow';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import TableCell from 'src/components/TableCell/TableCell';
-import TableBody from 'src/components/core/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableBody } from 'src/components/TableBody';
 import Hidden from 'src/components/core/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 

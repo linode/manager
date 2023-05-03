@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { Table } from 'src/components/Table';
-import TableRow from 'src/components/core/TableRow';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableCell from 'src/components/TableCell/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
+import { TableCell } from 'src/components/TableCell';
 import Hidden from 'src/components/core/Hidden';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';

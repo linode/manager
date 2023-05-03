@@ -3,12 +3,11 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import Drawer from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
-import TableRow from 'src/components/TableRow';
+import { TableRow } from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import withLongviewStats, {
   DispatchProps,
@@ -16,6 +15,7 @@ import withLongviewStats, {
 } from 'src/containers/longview.stats.container';
 import LongviewPackageRow from './LongviewPackageRow';
 import { LongviewPackage } from './request.types';
+import { TableCell } from 'src/components/TableCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
   new: {

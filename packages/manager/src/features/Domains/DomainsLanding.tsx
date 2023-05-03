@@ -31,11 +31,11 @@ import {
 import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
 import { Table } from 'src/components/Table';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/TableRow/TableRow';
-import TableBody from 'src/components/core/TableBody';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell';
-import TableCell from 'src/components/core/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableBody } from 'src/components/TableBody';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { TableCell } from 'src/components/TableCell';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Hidden from 'src/components/core/Hidden';
 import { CloneDomainDrawer } from './CloneDomainDrawer';
