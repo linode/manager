@@ -41,7 +41,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   const { linodeId, backup, open } = props;
 
   const { data: grants } = useGrants();
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId, open);
 
   const { data: linodes, isLoading } = useAllLinodesQuery(
     {},

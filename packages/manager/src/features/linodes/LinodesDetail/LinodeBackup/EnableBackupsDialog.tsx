@@ -26,7 +26,10 @@ export const EnableBackupsDialog = (props: Props) => {
     error,
   } = useLinodeBackupsEnableMutation(linodeId ?? -1);
 
-  const { data: linode } = useLinodeQuery(linodeId ?? -1, Boolean(linodeId));
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    open && linodeId !== undefined && linodeId > 0
+  );
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
