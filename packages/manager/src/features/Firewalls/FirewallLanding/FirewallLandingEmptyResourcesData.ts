@@ -1,14 +1,22 @@
-export const headers = {
+import {
+  youtubeChannelLink,
+  youtubeMoreLinkText,
+} from 'src/utilities/emptyStateLandingUtils';
+import type {
+  ResourcesHeaders,
+  ResourcesLinksProps,
+  ResourcesLinkSectionProps,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
+
+export const headers: ResourcesHeaders = {
   title: 'Firewalls',
   subtitle: 'Secure cloud-based firewall',
   description:
     'Control network traffic to and from Linode Compute Instances with a simple management interface',
 };
 
-export const gettingStartedGuides = {
+export const gettingStartedGuides: ResourcesLinkSectionProps = {
   title: 'Getting Started Guides',
-  subtitle:
-    'Control network traffic to and from Linode Compute Instances with a simple management interface',
   links: [
     {
       to:
@@ -33,7 +41,8 @@ export const gettingStartedGuides = {
   },
 };
 
-export const youtubeLinkData = {
+export const youtubeLinkData: ResourcesLinkSectionProps = {
+  title: 'Video Playlist',
   links: [
     {
       to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
@@ -47,9 +56,13 @@ export const youtubeLinkData = {
       external: true,
     },
   ],
+  moreInfo: {
+    to: youtubeChannelLink,
+    text: youtubeMoreLinkText,
+  },
 };
 
-export const linkGAEvent = {
+export const linkGAEvent: ResourcesLinksProps['linkGAEvent'] = {
   category: 'Firewall landing page empty',
   action: 'Click:link',
 };

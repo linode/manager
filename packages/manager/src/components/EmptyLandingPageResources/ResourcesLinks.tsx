@@ -4,22 +4,7 @@ import ListItem from 'src/components/core/ListItem';
 import Link from 'src/components/Link';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
-
-interface ResourcesLinkProps {
-  to: string;
-  text: string;
-  external?: boolean;
-}
-
-interface LinkGAEventTemplateProps {
-  category: string;
-  action: string;
-}
-
-interface ResourcesLinksProps {
-  links: ResourcesLinkProps[];
-  linkGAEvent: LinkGAEventTemplateProps;
-}
+import type { ResourcesLinksProps } from './ResourcesLinksTypes';
 
 export const ResourceLinks = (props: ResourcesLinksProps) => {
   const { links, linkGAEvent } = props;

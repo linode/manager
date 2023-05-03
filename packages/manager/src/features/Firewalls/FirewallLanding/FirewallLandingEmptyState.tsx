@@ -82,7 +82,7 @@ export const FirewallLandingEmptyState = React.memo((props: Props) => {
             {GuideLinks}
           </ResourcesLinksSubSection>
           <ResourcesLinksSubSection
-            title="Video Playlist"
+            title={youtubeLinkData.title}
             icon={<YoutubeIcon />}
             external
             MoreLink={(props) => (
