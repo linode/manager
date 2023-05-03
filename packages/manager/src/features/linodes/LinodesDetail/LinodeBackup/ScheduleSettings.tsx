@@ -92,15 +92,12 @@ export const ScheduleSettings = ({ linodeId }: Props) => {
 
   const windows = initWindows(getUserTimezone(profile?.timezone), true);
 
-  const windowOptions = windows.map((window) => {
-    const label = window[0];
-    return { label, value: window[1] };
-  });
+  const windowOptions = windows.map((window) => ({
+    label: window[0],
+    value: window[1],
+  }));
 
-  const dayOptions = days.map((day: string[]) => {
-    const label = day[0];
-    return { label, value: day[1] };
-  });
+  const dayOptions = days.map((day) => ({ label: day[0], value: day[1] }));
 
   return (
     <Paper>
@@ -108,7 +105,7 @@ export const ScheduleSettings = ({ linodeId }: Props) => {
         <Typography variant="h2" data-qa-settings-heading>
           Settings
         </Typography>
-        <Typography variant="body1" data-qa-settings-desc>
+        <Typography variant="body1" data-qa-settings-desc marginTop={1}>
           Configure when automatic backups are initiated. The Linode Backup
           Service will generate a backup between the selected hours every day,
           and will overwrite the previous daily backup. The selected day is when

@@ -233,7 +233,7 @@ export const LinodeBackups = () => {
         <Typography variant="h2" data-qa-manual-heading>
           Manual Snapshot
         </Typography>
-        <Typography variant="body1" data-qa-manual-desc>
+        <Typography variant="body1" data-qa-manual-desc marginTop={1}>
           You can make a manual backup of your Linode by taking a snapshot.
           Creating the manual snapshot can take several minutes, depending on
           the size of your Linode and the amount of data you have stored on it.
