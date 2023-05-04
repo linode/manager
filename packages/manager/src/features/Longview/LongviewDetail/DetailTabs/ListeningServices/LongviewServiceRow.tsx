@@ -1,6 +1,6 @@
 import * as React from 'react';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { LongviewService } from 'src/features/Longview/request.types';
 
 interface Props {

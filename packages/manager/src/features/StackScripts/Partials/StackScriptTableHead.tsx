@@ -3,10 +3,10 @@ import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableHead from 'src/components/core/TableHead';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

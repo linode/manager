@@ -17,7 +17,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import {
   withProfile,
   WithProfileProps,
