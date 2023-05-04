@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => {
       display: 'flex',
       alignItems: 'center',
       gridColumn: 'span 1',
-      height: theme.spacing(4.25),
+      height: theme.spacing(4.75),
       maxWidth: theme.spacing(20),
       paddingLeft: theme.spacing(),
       justifyContent: 'space-between',
