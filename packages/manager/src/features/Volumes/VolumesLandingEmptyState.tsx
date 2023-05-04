@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/ga';
 import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
 import { useHistory } from 'react-router-dom';
-import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import {
   gettingStartedGuides,
   headers,

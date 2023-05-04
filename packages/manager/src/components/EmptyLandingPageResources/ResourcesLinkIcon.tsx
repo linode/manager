@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 
 interface ResourcesLinkIconProps {
   /**
-   * The icon to display as a rendered SVG (JSX))
+   * The icon to display as a rendered SVG (JSX)
    */
   icon: JSX.Element;
 }

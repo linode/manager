@@ -10,8 +10,6 @@ import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/Reso
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
-import { sendEvent } from 'src/utilities/ga';
-import { useHistory } from 'react-router-dom';
 import {
   getLinkOnClick,
   youtubeChannelLink,
@@ -61,16 +59,18 @@ interface ResourcesSectionProps {
   youtubeLinkData: ResourcesLinkSection;
 }
 
-const GuideLinks = (data: any) => (
-  <ResourceLinks links={data.links} linkGAEvent={data.linkGAEvent} />
+const GuideLinks = (guides: ResourcesLinkSection, linkGAEvent: LinkGAEvent) => (
+  <ResourceLinks links={guides.links} linkGAEvent={linkGAEvent} />
 );
 
-const YoutubeLinks = (data: any) => (
-  <ResourceLinks links={data.links} linkGAEvent={data} />
-);
+const YoutubeLinks = (
+  youtube: ResourcesLinkSection,
+  linkGAEvent: LinkGAEvent
+) => <ResourceLinks links={youtube.links} linkGAEvent={linkGAEvent} />;
 
 export const ResourcesSection = (props: ResourcesSectionProps) => {
   const {
+    buttonProps,
     gettingStartedGuidesData,
     headers,
     icon,
@@ -78,23 +78,10 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
     youtubeLinkData,
   } = props;
   const { title, subtitle, description } = headers;
-  const { push } = useHistory();
 
   return (
     <Placeholder
-      buttonProps={[
-        {
-          onClick: () => {
-            sendEvent({
-              category: linkGAEvent.category,
-              action: 'Click:button',
-              label: 'Create Volume',
-            });
-            push('/volumes/create');
-          },
-          children: 'Create Volume',
-        },
-      ]}
+      buttonProps={buttonProps}
       icon={icon}
       isEntity
       linksSection={
@@ -116,7 +103,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
             )}
             title={gettingStartedGuidesData.title}
           >
-            {GuideLinks(gettingStartedGuidesData)}
+            {GuideLinks(gettingStartedGuidesData, linkGAEvent)}
           </ResourcesLinksSubSection>
           <ResourcesLinksSubSection
             icon={<YoutubeIcon />}
@@ -133,7 +120,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
             )}
             title={youtubeLinkData.title}
           >
-            {YoutubeLinks(youtubeLinkData)}
+            {YoutubeLinks(youtubeLinkData, linkGAEvent)}
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }

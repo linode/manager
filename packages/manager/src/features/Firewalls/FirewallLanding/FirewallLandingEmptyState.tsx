@@ -1,7 +1,7 @@
 import * as React from 'react';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
-import { sendEvent } from 'src/utilities/ga';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
+import { sendEvent } from 'src/utilities/ga';
 import {
   gettingStartedGuides,
   headers,
