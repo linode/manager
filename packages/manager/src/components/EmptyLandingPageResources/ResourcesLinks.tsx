@@ -5,9 +5,9 @@ import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
-import type { ResourcesLinksProps } from './ResourcesLinksTypes';
+import type { ResourcesLinks } from './ResourcesLinksTypes';
 
-export const ResourceLinks = (props: ResourcesLinksProps) => {
+export const ResourceLinks = (props: ResourcesLinks) => {
   const { linkGAEvent, links } = props;
 
   return (

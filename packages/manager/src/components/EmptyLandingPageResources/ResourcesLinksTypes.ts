@@ -1,10 +1,10 @@
-interface ResourcesLinkProps {
+interface ResourcesLink {
   to: string;
   text: string;
   external?: boolean;
 }
 
-interface LinkGAEventTemplateProps {
+export interface LinkGAEvent {
   category: string;
   action: string;
 }
@@ -15,13 +15,13 @@ export interface ResourcesHeaders {
   description: string;
 }
 
-export interface ResourcesLinksProps {
-  links: ResourcesLinkProps[];
-  linkGAEvent: LinkGAEventTemplateProps;
+export interface ResourcesLinks {
+  links: ResourcesLink[];
+  linkGAEvent: LinkGAEvent;
 }
 
-export interface ResourcesLinkSectionProps {
+export interface ResourcesLinkSection {
   title: string;
-  links: ResourcesLinksProps['links'];
-  moreInfo: ResourcesLinkProps;
+  links: ResourcesLinks['links'];
+  moreInfo: ResourcesLink;
 }

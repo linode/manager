@@ -6,8 +6,8 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import type {
   ResourcesHeaders,
-  ResourcesLinkSectionProps,
-  ResourcesLinksProps,
+  ResourcesLinkSection,
+  ResourcesLinks,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -17,7 +17,7 @@ export const headers: ResourcesHeaders = {
   title: 'Volumes',
 };
 
-export const gettingStartedGuides: ResourcesLinkSectionProps = {
+export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       to: 'https://www.linode.com/docs/products/storage/block-storage/',
@@ -40,7 +40,7 @@ export const gettingStartedGuides: ResourcesLinkSectionProps = {
   title: 'Getting Started Guides',
 };
 
-export const youtubeLinkData: ResourcesLinkSectionProps = {
+export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
       to: 'https://www.youtube.com/watch?v=7ti25oK7UMA',
@@ -66,7 +66,7 @@ export const youtubeLinkData: ResourcesLinkSectionProps = {
   title: 'Video Playlist',
 };
 
-export const linkGAEvent: ResourcesLinksProps['linkGAEvent'] = {
+export const linkGAEvent: ResourcesLinks['linkGAEvent'] = {
   action: 'Click:link',
   category: 'Volumes landing page empty',
 };

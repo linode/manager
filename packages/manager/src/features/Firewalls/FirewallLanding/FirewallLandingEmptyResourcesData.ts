@@ -4,8 +4,8 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import type {
   ResourcesHeaders,
-  ResourcesLinkSectionProps,
-  ResourcesLinksProps,
+  ResourcesLinkSection,
+  ResourcesLinks,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -16,7 +16,7 @@ export const headers: ResourcesHeaders = {
   title: 'Firewalls',
 };
 
-export const gettingStartedGuides: ResourcesLinkSectionProps = {
+export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       to:
@@ -42,7 +42,7 @@ export const gettingStartedGuides: ResourcesLinkSectionProps = {
   title: 'Getting Started Guides',
 };
 
-export const youtubeLinkData: ResourcesLinkSectionProps = {
+export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
       to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
@@ -63,7 +63,7 @@ export const youtubeLinkData: ResourcesLinkSectionProps = {
   title: 'Video Playlist',
 };
 
-export const linkGAEvent: ResourcesLinksProps['linkGAEvent'] = {
+export const linkGAEvent: ResourcesLinks['linkGAEvent'] = {
   action: 'Click:link',
   category: 'Firewall landing page empty',
 };
