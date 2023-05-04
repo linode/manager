@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AddonsPanel, AddonsPanelProps } from './AddonsPanel';
@@ -5,14 +6,14 @@ import { AddonsPanel, AddonsPanelProps } from './AddonsPanel';
 const props: AddonsPanelProps = {
   accountBackups: true,
   backups: false,
-  changeBackups: jest.fn(),
-  togglePrivateIP: jest.fn(),
+  changeBackups: vi.fn(),
+  togglePrivateIP: vi.fn(),
   disabled: false,
   vlanLabel: 'abc',
   labelError: 'testError',
   ipamAddress: 'ipadAddress',
   ipamError: 'test ipad error',
-  handleVLANChange: jest.fn(),
+  handleVLANChange: vi.fn(),
   isPrivateIPChecked: false,
   selectedLinodeID: 45329311,
   selectedRegionID: '1234',

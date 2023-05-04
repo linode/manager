@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AddNodePoolDrawer, Props } from './AddNodePoolDrawer';
@@ -6,7 +7,7 @@ const props: Props = {
   clusterId: 0,
   clusterLabel: 'test',
   open: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
 };
 
 describe('AddNodePoolDrawer', () => {

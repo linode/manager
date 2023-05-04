@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import NodePoolPanel from './NodePoolPanel';
@@ -7,10 +8,10 @@ const props = {
   clusterId: 0,
   clusterLabel: 'test',
   open: true,
-  onClose: jest.fn(),
+  onClose: vi.fn(),
   types: extendedTypes,
   typesLoading: false,
-  addNodePool: jest.fn(),
+  addNodePool: vi.fn(),
 };
 
 describe('NodePoolPanel', () => {

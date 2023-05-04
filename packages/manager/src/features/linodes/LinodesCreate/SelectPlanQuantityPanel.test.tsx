@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
@@ -12,9 +13,9 @@ describe('Select Plan Panel', () => {
         types={extendedTypes}
         getTypeCount={() => 0}
         selectedID={undefined}
-        onSelect={jest.fn()}
-        resetValues={jest.fn()}
-        updatePlanCount={jest.fn()}
+        onSelect={vi.fn()}
+        resetValues={vi.fn()}
+        updatePlanCount={vi.fn()}
       />
     );
     await findByText('Dedicated CPU');
