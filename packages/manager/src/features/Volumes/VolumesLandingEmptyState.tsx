@@ -11,79 +11,44 @@ import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
 import {
-  docsLink,
   getLinkOnClick,
-  guidesMoreLinkText,
   youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
 import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
-
-const guidesLinkData = [
-  {
-    to: 'https://www.linode.com/docs/products/storage/block-storage/',
-    text: 'Overview of Block Storage',
-  },
-  {
-    to: 'https://www.linode.com/docs/products/storage/block-storage/guides/',
-    text: 'Create and Manage Block Storage Volumes',
-  },
-  {
-    to:
-      'https://www.linode.com/docs/products/storage/block-storage/guides/configure-volume/',
-    text: 'Configure a Volume on a Compute Instance',
-  },
-];
-
-const youtubeLinkData = [
-  {
-    to: 'https://www.youtube.com/watch?v=7ti25oK7UMA',
-    text: 'How to Use Block Storage with Your Linode',
-    external: true,
-  },
-  {
-    to: 'https://www.youtube.com/watch?v=8G0cNZZIxNc',
-    text: 'Block Storage Vs Object Storage',
-    external: true,
-  },
-  {
-    to: 'https://www.youtube.com/watch?v=Z9jZv_IHO2s',
-    text:
-      'How to use Block Storage to Increase Space on Your Nextcloud Instance',
-    external: true,
-  },
-];
-
-const gaCategory = 'Volumes landing page empty';
-const linkGAEventTemplate = {
-  category: gaCategory,
-  action: 'Click:link',
-};
+import {
+  headers,
+  gettingStartedGuides,
+  youtubeLinkData,
+  linkGAEvent,
+} from './VolumesLandingEmptyStateData';
 
 const GuideLinks = (
-  <ResourceLinks links={guidesLinkData} linkGAEvent={linkGAEventTemplate} />
+  <ResourceLinks links={gettingStartedGuides.links} linkGAEvent={linkGAEvent} />
 );
 
 const YoutubeLinks = (
-  <ResourceLinks links={youtubeLinkData} linkGAEvent={linkGAEventTemplate} />
+  <ResourceLinks links={youtubeLinkData.links} linkGAEvent={linkGAEvent} />
 );
+
+const { title, subtitle, description } = headers;
 
 const VolumesLandingEmptyState = () => {
   const { push } = useHistory();
 
   return (
     <Placeholder
-      title="Volumes"
-      subtitle="NVM block storage service"
+      title={title}
+      subtitle={subtitle}
       icon={StyledVolumeIcon}
       isEntity
       buttonProps={[
         {
           onClick: () => {
             sendEvent({
-              category: gaCategory,
+              category: linkGAEvent.category,
               action: 'Click:button',
               label: 'Create Volume',
             });
@@ -95,18 +60,18 @@ const VolumesLandingEmptyState = () => {
       linksSection={
         <ResourcesLinksSection wide={false}>
           <ResourcesLinksSubSection
-            title="Getting Started Guides"
+            title={gettingStartedGuides.title}
             icon={<DocsIcon />}
             MoreLink={(props) => (
               <Link
                 onClick={getLinkOnClick(
-                  linkGAEventTemplate,
-                  guidesMoreLinkText
+                  linkGAEvent,
+                  gettingStartedGuides.moreInfo.text
                 )}
-                to={docsLink}
+                to={gettingStartedGuides.moreInfo.to}
                 {...props}
               >
-                {guidesMoreLinkText}
+                {gettingStartedGuides.moreInfo.text}
                 <PointerIcon className="pointerIcon" />
               </Link>
             )}
@@ -114,15 +79,12 @@ const VolumesLandingEmptyState = () => {
             {GuideLinks}
           </ResourcesLinksSubSection>
           <ResourcesLinksSubSection
-            title="Video Playlist"
+            title={youtubeLinkData.title}
             icon={<YoutubeIcon />}
             external
             MoreLink={(props) => (
               <Link
-                onClick={getLinkOnClick(
-                  linkGAEventTemplate,
-                  youtubeMoreLinkLabel
-                )}
+                onClick={getLinkOnClick(linkGAEvent, youtubeMoreLinkLabel)}
                 to={youtubeChannelLink}
                 {...props}
               >
@@ -136,10 +98,7 @@ const VolumesLandingEmptyState = () => {
         </ResourcesLinksSection>
       }
     >
-      <Typography variant="subtitle1">
-        Attach scalable, fault-tolerant, and performant block storage volumes to
-        your Linode Compute Instances or Kubernetes Clusters.
-      </Typography>
+      <Typography variant="subtitle1">{description}</Typography>
     </Placeholder>
   );
 };
