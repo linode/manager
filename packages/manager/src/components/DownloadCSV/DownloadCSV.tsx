@@ -16,7 +16,7 @@ interface DownloadCSVProps {
 export const cleanCSVData = (data: any): any => {
   /** safety check because typeof null === 'object' */
   if (data === null) {
-    return '';
+    return null;
   }
 
   /** if it's an array, recursively clean each element in the array */
@@ -36,7 +36,7 @@ export const cleanCSVData = (data: any): any => {
 
   /** if it's a boolean or number, no need to sanitize */
   if (typeof data === 'boolean' || typeof data === 'number') {
-    return data.toString();
+    return data;
   }
 
   /**
