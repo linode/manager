@@ -23,8 +23,8 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
 import AppsSection from './AppsSection';
-import { ResourcesLinksSection } from '../../../components/EmptyLandingPageResources/ResourcesLinksSection';
-import { ResourcesLinksSubSection } from '../../../components/EmptyLandingPageResources/ResourcesLinksSubSection';
+import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
+import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 
 const gaCategory = 'Linodes landing page empty';
 const linkGAEventTemplate = {
