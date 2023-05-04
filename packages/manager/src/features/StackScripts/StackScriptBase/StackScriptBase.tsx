@@ -15,7 +15,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import {
   withProfile,
   WithProfileProps,

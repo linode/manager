@@ -25,8 +25,8 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -35,9 +35,9 @@ import Notice from 'src/components/Notice';
 import PromiseLoader, {
   PromiseLoaderResponse,
 } from 'src/components/PromiseLoader';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { events$ } from 'src/events';
 import { resetEventsPolling } from 'src/eventsPolling';

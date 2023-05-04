@@ -6,8 +6,8 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 

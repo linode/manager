@@ -9,8 +9,8 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import {
   getProgressOrDefault,
   linodeInTransition,

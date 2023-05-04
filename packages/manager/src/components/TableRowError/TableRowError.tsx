@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ErrorState from 'src/components/ErrorState';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 
 export interface Props {
   colSpan: number;
