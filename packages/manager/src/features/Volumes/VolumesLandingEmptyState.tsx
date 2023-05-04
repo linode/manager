@@ -93,7 +93,7 @@ const VolumesLandingEmptyState = () => {
         },
       ]}
       linksSection={
-        <ResourcesLinksSection>
+        <ResourcesLinksSection wide={false}>
           <ResourcesLinksSubSection
             title="Getting Started Guides"
             icon={<DocsIcon />}

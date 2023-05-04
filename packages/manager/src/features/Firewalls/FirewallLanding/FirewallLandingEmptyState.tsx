@@ -61,7 +61,7 @@ export const FirewallLandingEmptyState = (props: Props) => {
         },
       ]}
       linksSection={
-        <ResourcesLinksSection>
+        <ResourcesLinksSection wide={false}>
           <ResourcesLinksSubSection
             title={gettingStartedGuides.title}
             icon={<DocsIcon />}
