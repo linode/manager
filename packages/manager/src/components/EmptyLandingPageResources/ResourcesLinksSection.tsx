@@ -1,29 +1,27 @@
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
-import type { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  categoryWrapper: {
-    maxWidth: 762,
-    display: 'grid',
-    gridAutoColumns: '1fr',
-    gridAutoFlow: 'column',
-    columnGap: theme.spacing(5),
-    justifyItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      gridAutoFlow: 'row',
-      rowGap: theme.spacing(8),
-      justifyItems: 'start',
-    },
-  },
-}));
-
+import { styled } from '@mui/material/styles';
 interface ResourcesLinksSectionProps {
   children: JSX.Element[] | JSX.Element;
 }
 
-export const ResourcesLinksSection = (props: ResourcesLinksSectionProps) => {
-  const { classes } = useStyles();
+const StyledResourcesLinksSection = styled('div', {
+  label: 'StyledResourcesLinksSection',
+})<ResourcesLinksSectionProps>(({ theme }) => ({
+  maxWidth: 762,
+  display: 'grid',
+  gridAutoColumns: '1fr',
+  gridAutoFlow: 'column',
+  columnGap: theme.spacing(5),
+  justifyItems: 'center',
+  [theme.breakpoints.down('md')]: {
+    gridAutoFlow: 'row',
+    rowGap: theme.spacing(8),
+    justifyItems: 'start',
+  },
+}));
 
-  return <div className={classes.categoryWrapper}>{props.children}</div>;
+export const ResourcesLinksSection = (props: ResourcesLinksSectionProps) => {
+  return (
+    <StyledResourcesLinksSection>{props.children}</StyledResourcesLinksSection>
+  );
 };
