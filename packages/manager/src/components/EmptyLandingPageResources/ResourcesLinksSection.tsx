@@ -13,12 +13,12 @@ interface ResourcesLinksSectionProps {
 const StyledResourcesLinksSection = styled('div', {
   label: 'StyledResourcesLinksSection',
 })<ResourcesLinksSectionProps>(({ theme, ...props }) => ({
-  maxWidth: props.wide === false ? 762 : '100%',
+  columnGap: theme.spacing(5),
   display: 'grid',
   gridAutoColumns: '1fr',
   gridAutoFlow: 'column',
-  columnGap: theme.spacing(5),
   justifyItems: 'center',
+  maxWidth: props.wide === false ? 762 : '100%',
   [theme.breakpoints.down('md')]: {
     gridAutoFlow: 'row',
     rowGap: theme.spacing(8),

@@ -4,6 +4,12 @@ import { makeStyles } from 'tss-react/mui';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  externalLink: {
+    alignItems: 'baseline',
+  },
+  internalLink: {
+    alignItems: 'center',
+  },
   linksSubSection: {
     display: 'grid',
     gridTemplateRows: `22px minmax(${theme.spacing(3)}, 100%) 1.125rem`,
@@ -23,12 +29,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       fontWeight: 700,
       display: 'flex',
       color: theme.textColors.linkActiveLight,
-      '& > svg': {
-        color: theme.textColors.linkActiveLight,
-        marginLeft: theme.spacing(),
-        height: 12,
-        width: 12,
-      },
     },
     '& li': {
       paddingLeft: 0,
@@ -36,35 +36,23 @@ const useStyles = makeStyles()((theme: Theme) => ({
       '& > a': {
         fontSize: '0.875rem',
         color: theme.textColors.linkActiveLight,
-        '& > svg': {
-          color: theme.textColors.linkActiveLight,
-          marginLeft: theme.spacing(),
-          height: 12,
-          width: 12,
-        },
       },
     },
-  },
-  internalLink: {
-    alignItems: 'center',
-  },
-  externalLink: {
-    alignItems: 'baseline',
   },
 }));
 
 interface ResourcesLinksSubSectionProps {
   children?: JSX.Element[] | JSX.Element;
-  title: string;
+  external?: boolean;
   icon: JSX.Element;
   MoreLink: (props: { className: any }) => JSX.Element;
-  external?: boolean;
+  title: string;
 }
 
 export const ResourcesLinksSubSection = (
   props: ResourcesLinksSubSectionProps
 ) => {
-  const { title, icon, children, MoreLink, external } = props;
+  const { children, external, icon, MoreLink, title } = props;
   const { classes } = useStyles();
   const linkClassName = external ? classes.externalLink : classes.internalLink;
 

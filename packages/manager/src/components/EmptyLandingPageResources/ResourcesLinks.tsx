@@ -1,13 +1,14 @@
 import * as React from 'react';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
+import Link from 'src/components/Link';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import Link from 'src/components/Link';
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
+import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
 import type { ResourcesLinksProps } from './ResourcesLinksTypes';
 
 export const ResourceLinks = (props: ResourcesLinksProps) => {
-  const { links, linkGAEvent } = props;
+  const { linkGAEvent, links } = props;
 
   return (
     <List>
@@ -18,7 +19,9 @@ export const ResourceLinks = (props: ResourcesLinksProps) => {
             onClick={getLinkOnClick(linkGAEvent, linkData.text)}
           >
             {linkData.text}
-            {linkData.external && <ExternalLinkIcon />}
+            {linkData.external && (
+              <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
+            )}
           </Link>
         </ListItem>
       ))}

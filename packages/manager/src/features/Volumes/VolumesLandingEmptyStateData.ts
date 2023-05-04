@@ -6,19 +6,18 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import type {
   ResourcesHeaders,
-  ResourcesLinksProps,
   ResourcesLinkSectionProps,
+  ResourcesLinksProps,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
-  title: 'Volumes',
-  subtitle: 'NVM block storage service',
   description:
     'Attach scalable, fault-tolerant, and performant block storage volumes to your Linode Compute Instances or Kubernetes Clusters.',
+  subtitle: 'NVM block storage service',
+  title: 'Volumes',
 };
 
 export const gettingStartedGuides: ResourcesLinkSectionProps = {
-  title: 'Getting Started Guides',
   links: [
     {
       to: 'https://www.linode.com/docs/products/storage/block-storage/',
@@ -38,10 +37,10 @@ export const gettingStartedGuides: ResourcesLinkSectionProps = {
     to: docsLink,
     text: guidesMoreLinkText,
   },
+  title: 'Getting Started Guides',
 };
 
 export const youtubeLinkData: ResourcesLinkSectionProps = {
-  title: 'Video Playlist',
   links: [
     {
       to: 'https://www.youtube.com/watch?v=7ti25oK7UMA',
@@ -64,9 +63,10 @@ export const youtubeLinkData: ResourcesLinkSectionProps = {
     to: youtubeChannelLink,
     text: youtubeMoreLinkText,
   },
+  title: 'Video Playlist',
 };
 
 export const linkGAEvent: ResourcesLinksProps['linkGAEvent'] = {
-  category: 'Volumes landing page empty',
   action: 'Click:link',
+  category: 'Volumes landing page empty',
 };

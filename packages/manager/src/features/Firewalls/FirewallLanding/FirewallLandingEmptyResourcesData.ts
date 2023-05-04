@@ -4,19 +4,19 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import type {
   ResourcesHeaders,
-  ResourcesLinksProps,
   ResourcesLinkSectionProps,
+  ResourcesLinksProps,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
-  title: 'Firewalls',
-  subtitle: 'Secure cloud-based firewall',
   description:
     'Control network traffic to and from Linode Compute Instances with a simple management interface',
+
+  subtitle: 'Secure cloud-based firewall',
+  title: 'Firewalls',
 };
 
 export const gettingStartedGuides: ResourcesLinkSectionProps = {
-  title: 'Getting Started Guides',
   links: [
     {
       to:
@@ -39,10 +39,10 @@ export const gettingStartedGuides: ResourcesLinkSectionProps = {
       'https://www.linode.com/docs/products/networking/cloud-firewall/guides/',
     text: 'View additional Firewalls guides',
   },
+  title: 'Getting Started Guides',
 };
 
 export const youtubeLinkData: ResourcesLinkSectionProps = {
-  title: 'Video Playlist',
   links: [
     {
       to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
@@ -60,9 +60,10 @@ export const youtubeLinkData: ResourcesLinkSectionProps = {
     to: youtubeChannelLink,
     text: youtubeMoreLinkText,
   },
+  title: 'Video Playlist',
 };
 
 export const linkGAEvent: ResourcesLinksProps['linkGAEvent'] = {
-  category: 'Firewall landing page empty',
   action: 'Click:link',
+  category: 'Firewall landing page empty',
 };

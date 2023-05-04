@@ -1,22 +1,23 @@
 import * as React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import PointerIcon from 'src/assets/icons/pointer.svg';
-import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
-import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
-import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
+import PointerIcon from 'src/assets/icons/pointer.svg';
 import Typography from 'src/components/core/Typography';
+import YoutubeIcon from 'src/assets/icons/youtube.svg';
+import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
+import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
+import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
+import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
+import { sendEvent } from 'src/utilities/ga';
 import {
   getLinkOnClick,
   youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import { sendEvent } from 'src/utilities/ga';
 import {
   gettingStartedGuides,
   headers,
@@ -43,10 +44,6 @@ export const FirewallLandingEmptyState = (props: Props) => {
 
   return (
     <Placeholder
-      title={title}
-      subtitle={subtitle}
-      icon={FirewallIcon}
-      isEntity
       buttonProps={[
         {
           onClick: () => {
@@ -60,6 +57,8 @@ export const FirewallLandingEmptyState = (props: Props) => {
           children: 'Create Firewall',
         },
       ]}
+      icon={FirewallIcon}
+      isEntity
       linksSection={
         <ResourcesLinksSection wide={false}>
           <ResourcesLinksSubSection
@@ -92,7 +91,7 @@ export const FirewallLandingEmptyState = (props: Props) => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
               </Link>
             )}
           >
@@ -100,6 +99,8 @@ export const FirewallLandingEmptyState = (props: Props) => {
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }
+      subtitle={subtitle}
+      title={title}
     >
       <Typography variant="subtitle1">{description}</Typography>
     </Placeholder>

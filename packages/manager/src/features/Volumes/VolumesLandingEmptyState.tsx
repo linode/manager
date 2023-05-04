@@ -1,28 +1,29 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import PointerIcon from 'src/assets/icons/pointer.svg';
-import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
+import PointerIcon from 'src/assets/icons/pointer.svg';
+import Typography from 'src/components/core/Typography';
+import YoutubeIcon from 'src/assets/icons/youtube.svg';
+import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
+import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
-import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
+import { sendEvent } from 'src/utilities/ga';
+import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
+import { useHistory } from 'react-router-dom';
 import {
   getLinkOnClick,
   youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import { sendEvent } from 'src/utilities/ga';
-import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
 import {
-  headers,
   gettingStartedGuides,
-  youtubeLinkData,
+  headers,
   linkGAEvent,
+  youtubeLinkData,
 } from './VolumesLandingEmptyStateData';
 
 const GuideLinks = (
@@ -40,10 +41,6 @@ const VolumesLandingEmptyState = () => {
 
   return (
     <Placeholder
-      title={title}
-      subtitle={subtitle}
-      icon={StyledVolumeIcon}
-      isEntity
       buttonProps={[
         {
           onClick: () => {
@@ -57,6 +54,8 @@ const VolumesLandingEmptyState = () => {
           children: 'Create Volume',
         },
       ]}
+      icon={StyledVolumeIcon}
+      isEntity
       linksSection={
         <ResourcesLinksSection wide={false}>
           <ResourcesLinksSubSection
@@ -79,9 +78,9 @@ const VolumesLandingEmptyState = () => {
             {GuideLinks}
           </ResourcesLinksSubSection>
           <ResourcesLinksSubSection
-            title={youtubeLinkData.title}
-            icon={<YoutubeIcon />}
             external
+            icon={<YoutubeIcon />}
+            title={youtubeLinkData.title}
             MoreLink={(props) => (
               <Link
                 onClick={getLinkOnClick(linkGAEvent, youtubeMoreLinkLabel)}
@@ -89,7 +88,7 @@ const VolumesLandingEmptyState = () => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
               </Link>
             )}
           >
@@ -97,6 +96,8 @@ const VolumesLandingEmptyState = () => {
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }
+      subtitle={subtitle}
+      title={title}
     >
       <Typography variant="subtitle1">{description}</Typography>
     </Placeholder>
