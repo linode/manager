@@ -1,48 +1,22 @@
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
-import { compose } from 'recompose';
 
 /**
- * these aren't all the props provided by react-csv
- * check out the docs for all props: https://github.com/react-csv/react-csv
+ * These aren't all the props provided by react-csv.
+ * @see https://github.com/react-csv/react-csv
  */
-interface Props {
-  data: any[];
-  headers: { label: string; key: string }[];
-  filename: string;
+interface DownloadCSVProps {
   className?: string;
+  data: any[];
+  filename: string;
+  headers: { label: string; key: string }[];
+  children?: React.ReactNode;
 }
 
-type CombinedProps = Props;
-
-const DownloadCSV: React.FC<CombinedProps> = (props) => {
-  const { className, headers, filename, data, children } = props;
-  return (
-    <CSVLink
-      className={className}
-      headers={headers}
-      filename={filename}
-      data={cleanCSVData(data)}
-    >
-      {children}
-    </CSVLink>
-  );
-};
-
-/**
- * prevents CSV injections. Without this logic, a user
- * could, for example, add a tag of =cmd|' /C calc'!A0
- * then open the CSV up in Microsoft Excel and it would
- * automatically open the calculator.
- *
- * For now, we're just going to strip "=", "+", and "-"
- * signs, at the recommendation of hackerone discussions.
- * See M3-3022 for more info.
- */
 export const cleanCSVData = (data: any): any => {
   /** safety check because typeof null === 'object' */
   if (data === null) {
-    return null;
+    return '';
   }
 
   /** if it's an array, recursively clean each element in the array */
@@ -62,7 +36,7 @@ export const cleanCSVData = (data: any): any => {
 
   /** if it's a boolean or number, no need to sanitize */
   if (typeof data === 'boolean' || typeof data === 'number') {
-    return data;
+    return data.toString();
   }
 
   /**
@@ -77,4 +51,23 @@ export const cleanCSVData = (data: any): any => {
   return data;
 };
 
-export default compose<CombinedProps, Props>(React.memo)(DownloadCSV);
+export const DownloadCSV = ({
+  className,
+  headers,
+  filename,
+  data,
+  children,
+}: DownloadCSVProps) => {
+  return (
+    <CSVLink
+      className={className}
+      headers={headers}
+      filename={filename}
+      data={cleanCSVData(data)}
+    >
+      {children}
+    </CSVLink>
+  );
+};
+
+export const MemoizedDownloadCSV = React.memo(DownloadCSV);
