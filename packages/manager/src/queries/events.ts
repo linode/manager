@@ -12,12 +12,6 @@ import {
   markEventSeen,
 } from '@linode/api-v4/lib/account';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-
-export interface ExtendedEvent extends Event {
-  _deleted?: string;
-  _initial?: boolean;
-}
 
 export interface EntityEvent extends Omit<Event, 'entity'> {
   entity: Entity;
@@ -25,10 +19,8 @@ export interface EntityEvent extends Omit<Event, 'entity'> {
 
 const queryKey = 'events';
 
-export const useEventsPolling = (
-  eventHandler?: (event: ExtendedEvent) => void
-) => {
-  useQuery<ExtendedEvent[], APIError[]>(
+export const useEventsPolling = (eventHandler?: (event: Event) => void) => {
+  useQuery<Event[], APIError[]>(
     [queryKey, 'polling'],
     async () => {
       const events = await requestUnseenEvents();
@@ -50,76 +42,61 @@ export const useEvents = () => {
   const queryClient = useQueryClient();
 
   const eventsQueryKey = [queryKey, 'infinite', 'events'];
-  const eventsPageZeroKey = [queryKey, 'infinite', 'zero'];
-  const eventsLookupKey = [queryKey, 'infinite', 'lookup'];
 
-  const eventsCache = queryClient.getQueryData<InfiniteData<number[]>>(
-    eventsQueryKey
-  );
+  const eventsCache = queryClient.getQueryData<
+    InfiniteData<ResourcePage<Event>>
+  >(eventsQueryKey);
 
-  const pageZero =
-    queryClient.getQueryData<number[]>(eventsPageZeroKey) ??
-    queryClient.setQueryData<number[]>(eventsPageZeroKey, []);
-
-  // Maintain a look-up table for efficiently updating events
-  const eventsLookup =
-    queryClient.getQueryData<Map<number, ExtendedEvent>>(eventsLookupKey) ??
-    queryClient.setQueryData<Map<number, ExtendedEvent>>(
-      eventsLookupKey,
-      new Map()
-    );
-
-  // Update the cache with new/updated events
+  // Update existing events or invalidate when new events come in
   useEventsPolling((event) => {
     if (eventsCache) {
-      if (!eventsLookup.has(event.id)) {
-        pageZero.unshift(event.id);
+      const eventLocation = locateEvent(eventsCache, event.id);
+      if (eventLocation) {
+        eventsCache.pages[eventLocation.pageIdx].data[
+          eventLocation.eventIdx
+        ] = event;
+        queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
+          eventsQueryKey,
+          eventsCache
+        );
+      } else {
+        queryClient.invalidateQueries(eventsQueryKey);
       }
-      eventsLookup.set(event.id, event);
     }
   });
 
-  const mostRecentEventId = eventsCache?.pages?.[0][0];
-  const mostRecentEvent = mostRecentEventId
-    ? eventsLookup.get(mostRecentEventId)
-    : undefined;
-
-  const eventsData = useInfiniteQuery<ResourcePage<number>, APIError[]>(
+  return useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     eventsQueryKey,
-    async ({ pageParam }) => {
-      const eventsPage = await getEvents(
-        { page: pageParam, page_size: 25 },
-        mostRecentEvent ? { created: { '+lte': mostRecentEvent?.created } } : {} // ignore new events since these will change cached pages
-      );
-
-      // update the lookup table
-      eventsPage.data.forEach((event) => eventsLookup?.set(event.id, event));
-
-      return { ...eventsPage, data: eventsPage.data.map((event) => event.id) };
-    },
+    ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }),
     {
       getNextPageParam: ({ page, pages }) =>
         page < pages ? page + 1 : undefined,
     }
   );
-  return {
-    ...eventsData,
-    data: [pageZero, ...(eventsData.data?.pages.map((page) => page.data) ?? [])]
-      .map((page) =>
-        page
-          .map((eventId) => eventsLookup.get(eventId))
-          .filter(isNotNullOrUndefined)
-      )
-      .reduce((page, events) => [...page, ...events], []),
-  };
 };
 
-const requestUnseenEvents = (): Promise<ExtendedEvent[]> =>
+type EventLocation = { pageIdx: number; eventIdx: number };
+
+const locateEvent = (
+  eventsCache: InfiniteData<ResourcePage<Event>>,
+  eventId: number
+): EventLocation | void => {
+  for (let pageIdx = 0; pageIdx < eventsCache.pages.length; pageIdx++) {
+    const page = eventsCache.pages[pageIdx];
+    for (let eventIdx = 0; eventIdx < page.data.length; eventIdx++) {
+      if (page.data[eventIdx].id === eventId) {
+        return { pageIdx, eventIdx };
+      }
+    }
+  }
+};
+
+const requestUnseenEvents = (): Promise<Event[]> =>
   getEvents({ page_size: 25 }, { seen: false }).then(
     (response) => response.data
   );
 
-const markCompletedEventsAsSeen = async (events: ExtendedEvent[]) => {
+const markCompletedEventsAsSeen = async (events: Event[]) => {
   const completedEvents = events
     .filter((event) => !isInProgressEvent(event))
 
