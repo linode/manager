@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Removed MongoDB reference from ClusterControl description #9081
 
 ### Fixed:
+- Allow simple search for IPv6 addresses #5088
 
 ### Tech Stories:
 
