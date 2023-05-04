@@ -5,7 +5,7 @@ import { rest, server } from 'src/mocks/testServer';
 import { linodeFactory } from 'src/factories/linodes';
 import { profileFactory } from 'src/factories';
 
-describe('RestoreToLinodeDrawer', () => {
+describe('ScheduleSettings', () => {
   it('renders heading and copy', async () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
