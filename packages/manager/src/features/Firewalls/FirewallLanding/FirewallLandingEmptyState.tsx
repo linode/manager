@@ -1,27 +1,27 @@
 import * as React from 'react';
-import Placeholder from 'src/components/Placeholder';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
-import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import DocsIcon from 'src/assets/icons/docs.svg';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import PointerIcon from 'src/assets/icons/pointer.svg';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
+import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
-import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
-import { sendEvent } from 'src/utilities/ga';
+import Link from 'src/components/Link';
+import Placeholder from 'src/components/Placeholder';
+import Typography from 'src/components/core/Typography';
 import {
   getLinkOnClick,
   youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+import { sendEvent } from 'src/utilities/ga';
 import {
-  headers,
   gettingStartedGuides,
-  youtubeLinkData,
+  headers,
   linkGAEvent,
+  youtubeLinkData,
 } from './FirewallLandingEmptyResourcesData';
 
 interface Props {
@@ -38,7 +38,7 @@ const YoutubeLinks = (
 
 const { title, subtitle, description } = headers;
 
-export const FirewallLandingEmptyState = React.memo((props: Props) => {
+export const FirewallLandingEmptyState = (props: Props) => {
   const { openAddFirewallDrawer } = props;
 
   return (
@@ -104,4 +104,4 @@ export const FirewallLandingEmptyState = React.memo((props: Props) => {
       <Typography variant="subtitle1">{description}</Typography>
     </Placeholder>
   );
-});
+};
