@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 - Resource links to empty state Volumes landing page #9065
+- Ability to search Linodes by IPv6 #9073
+- Ability download DNS zone file #9075
 
 ### Changed:
 - Removed MongoDB reference from ClusterControl description #9081
@@ -16,6 +18,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Allow simple search for IPv6 addresses #5088
 
 ### Tech Stories:
+- Enable Cypress `experimentalMemoryManagement` #9076
+- MUI v5 Migration - `Components > Table` #9082
+- MUI v5 Migration - `Components > TableCell` #9082
+- MUI v5 Migration - `Components > TableHead` #9082
+- MUI v5 Migration - `Components > TableBody` #9082
+- MUI v5 Migration - `Components > TableSortCell` #9082
+- MUI v5 Migration - `Components > TableRow` #9082
+- React Query for Linodes Landing #9062
 
 ## [2023-05-01] - v1.92.0
 
