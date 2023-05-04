@@ -11,6 +11,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
+import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import {
@@ -100,7 +101,7 @@ const youtubeLinks = (
           to={linkData.to}
         >
           {linkData.text}
-          <ExternalLinkIcon />
+          <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
         </Link>
       </ListItem>
     ))}
@@ -166,7 +167,7 @@ const KubernetesEmptyState = () => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
               </Link>
             )}
           >

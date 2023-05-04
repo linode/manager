@@ -23,6 +23,7 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
 import AppsSection from './AppsSection';
+import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 
@@ -98,7 +99,7 @@ const youtubeLinks = (
           to={linkData.to}
         >
           {linkData.text}
-          <ExternalLinkIcon />
+          <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
         </Link>
       </ListItem>
     ))}
@@ -190,7 +191,7 @@ export const LinodesLandingEmptyState = () => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ExternalLinkIcon />
+                <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
               </Link>
             )}
           >

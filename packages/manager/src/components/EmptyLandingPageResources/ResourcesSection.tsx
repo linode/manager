@@ -30,11 +30,34 @@ interface ButtonProps {
 }
 
 interface ResourcesSectionProps {
+  /**
+   * The button's handlers and text
+   */
   buttonProps: ButtonProps[];
-  gettingStartedGuidesData: any;
+  /**
+   * The custom resource to be rendered between docs and youtube links
+   * @example <AppsSection /> on linodes empty state landing
+   */
+  customResource?: JSX.Element;
+  /**
+   * The data for the docs links section
+   */
+  gettingStartedGuidesData: ResourcesLinkSection;
+  /**
+   * The headers for the section (title, subtitle, description)
+   */
   headers: ResourcesHeaders;
+  /**
+   * The icon for the section
+   */
   icon: React.ComponentType<any>;
+  /**
+   * The event data to be sent when the call to action is clicked
+   */
   linkGAEvent: LinkGAEvent;
+  /**
+   * The data for the youtube links section
+   */
   youtubeLinkData: ResourcesLinkSection;
 }
 
