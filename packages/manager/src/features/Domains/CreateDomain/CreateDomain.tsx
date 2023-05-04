@@ -15,7 +15,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Grid from 'src/components/core/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles } from '@mui/styles';
@@ -29,7 +29,6 @@ import TextField from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -84,7 +83,7 @@ export const CreateDomain = () => {
   const { data: grants } = useGrants();
   const { mutateAsync: createDomain } = useCreateDomainMutation();
 
-  const disabled = profile?.restricted && !hasGrant('add_domains', grants);
+  const disabled = profile?.restricted && !grants?.global.add_domains;
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   // Errors for selecting Linode/NB for default records aren't part
@@ -309,7 +308,7 @@ export const CreateDomain = () => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/dns-manager/"
       />
-      <Grid item className={classes.main}>
+      <Grid className={classes.main}>
         {generalError && !disabled && (
           <Notice error spacingTop={8}>
             {generalError}

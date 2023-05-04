@@ -18,8 +18,12 @@ const props: Props = {
   linodeLabel: 'test-linode',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
-  openDialog: vi.fn(),
-  openPowerActionDialog: vi.fn(),
+  onOpenPowerDialog: vi.fn(),
+  onOpenDeleteDialog: vi.fn(),
+  onOpenResizeDialog: vi.fn(),
+  onOpenRebuildDialog: vi.fn(),
+  onOpenRescueDialog: vi.fn(),
+  onOpenMigrateDialog: vi.fn(),
 };
 
 describe('LinodeActionMenu', () => {

@@ -16,7 +16,12 @@ import {
 } from './BackupDrawer';
 import { ExtendedLinode } from './types';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { LinodeType } from '@linode/api-v4';
+import { AccountSettings, APIError, LinodeType } from '@linode/api-v4';
+import { queryClientFactory } from 'src/queries/base';
+import { accountSettingsFactory } from 'src/factories';
+import { UseQueryResult } from 'react-query';
+
+const queryClient = queryClientFactory();
 
 const cachedTypesData = (data.data as LinodeType[]).map(
   extendType
@@ -133,8 +138,16 @@ const { rerender, getByTestId, findByTestId, queryByTestId } = render(
     <BackupDrawer
       closeSnackbar={vi.fn()}
       enqueueSnackbar={vi.fn()}
+      queryClient={queryClient}
+      accountSettings={
+        { data: accountSettingsFactory.build() } as UseQueryResult<
+          AccountSettings,
+          APIError[]
+        >
+      }
       {...props}
-    />
+    />,
+    { queryClient }
   )
 );
 
@@ -200,7 +213,15 @@ describe('BackupDrawer component', () => {
             enqueueSnackbar={vi.fn()}
             {...props}
             enableErrors={[error]}
-          />
+            queryClient={queryClient}
+            accountSettings={
+              { data: accountSettingsFactory.build() } as UseQueryResult<
+                AccountSettings,
+                APIError[]
+              >
+            }
+          />,
+          { queryClient }
         )
       );
       expect(getByTestId('result-notice')).toBeDefined();
@@ -214,7 +235,15 @@ describe('BackupDrawer component', () => {
             {...props}
             enableErrors={[error]}
             updatedCount={2}
-          />
+            queryClient={queryClient}
+            accountSettings={
+              { data: accountSettingsFactory.build() } as UseQueryResult<
+                AccountSettings,
+                APIError[]
+              >
+            }
+          />,
+          { queryClient }
         )
       );
       expect(getByTestId('result-notice')).toHaveTextContent('1 Linode failed');
@@ -226,8 +255,16 @@ describe('BackupDrawer component', () => {
           <BackupDrawer
             closeSnackbar={vi.fn()}
             enqueueSnackbar={vi.fn()}
+            queryClient={queryClient}
+            accountSettings={
+              { data: accountSettingsFactory.build() } as UseQueryResult<
+                AccountSettings,
+                APIError[]
+              >
+            }
             {...props}
-          />
+          />,
+          { queryClient }
         )
       );
       const submit = await findByTestId('submit');
@@ -240,8 +277,16 @@ describe('BackupDrawer component', () => {
           <BackupDrawer
             closeSnackbar={vi.fn()}
             enqueueSnackbar={vi.fn()}
+            queryClient={queryClient}
+            accountSettings={
+              { data: accountSettingsFactory.build() } as UseQueryResult<
+                AccountSettings,
+                APIError[]
+              >
+            }
             {...props}
-          />
+          />,
+          { queryClient }
         )
       );
       const cancelButton = await findByTestId('cancel');

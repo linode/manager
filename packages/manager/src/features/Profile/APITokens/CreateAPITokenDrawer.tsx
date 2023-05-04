@@ -203,7 +203,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
           onChange={handleExpiryChange}
           value={expiryList.find((item) => item.value === form.values.expiry)}
           name="expiry"
-          labelId="expiry"
           label="Expiry"
           isClearable={false}
         />

@@ -16,7 +16,7 @@ import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -222,7 +222,7 @@ export const RebuildFromImage = (props: Props) => {
           );
 
         return (
-          <Grid item className={classes.root}>
+          <Grid className={classes.root}>
             <form>
               <ImageSelect
                 title="Select Image"

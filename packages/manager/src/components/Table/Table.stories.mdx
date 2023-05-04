@@ -1,18 +1,9 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import { Provider } from 'react-redux';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import OrderBy from 'src/components/OrderBy';
-import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { linodeFactory } from 'src/factories/linodes';
-import LinodeRow from 'src/features/linodes/LinodesLanding/LinodeRow';
-import SortableTableHead from 'src/features/linodes/LinodesLanding/SortableTableHead';
-import store from 'src/store';
-import capitalize from 'src/utilities/capitalize';
-import TableWrapper from './Table';
+import Table from './Table';
 
 export const linodes = linodeFactory.buildList(30);
 
@@ -42,7 +33,7 @@ export const linodes = linodeFactory.buildList(30);
 
 <Canvas>
   <Story name="Table">
-    <TableWrapper>
+    <Table>
       <TableHead>
         <TableRow>
           <TableCell>Label</TableCell>
@@ -67,85 +58,6 @@ export const linodes = linodeFactory.buildList(30);
           <TableCell>Newark, NJ</TableCell>
         </TableRow>
       </TableBody>
-    </TableWrapper>
+    </Table>
   </Story>
 </Canvas>
-
-## Paginated
-
-<Canvas>
-  <Story name="Paginated">
-    <PaginatedExample />
-  </Story>
-</Canvas>
-
-export const PaginatedExample = () => {
-  return (
-    <>
-      <Provider store={store}>
-        <OrderBy data={linodes} orderBy="label" order="asc">
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-            <Paginate data={orderedData}>
-              {({
-                data,
-                count,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-              }) => (
-                <>
-                  <TableWrapper>
-                    <SortableTableHead
-                      order={order}
-                      orderBy={orderBy}
-                      handleOrderChange={handleOrderChange}
-                      toggleLinodeView={() => 'grid'}
-                      linodesAreGrouped={false}
-                      toggleGroupLinodes={() => true}
-                      linodeViewPreference="list"
-                    />
-                    <TableBody>
-                      {data?.map((linode) => (
-                        <LinodeRow
-                          key={linode.id}
-                          id={linode.id}
-                          image={linode.image}
-                          ipv4={linode.ipv4}
-                          ipv6={linode.ipv6}
-                          label={linode.label}
-                          backups={linode.backups}
-                          displayStatus={capitalize(linode.status)}
-                          region={linode.region}
-                          status={linode.status}
-                          disk={linode.specs.disk}
-                          memory={linode.specs.memory}
-                          mostRecentBackup={linode.backups.last_successful}
-                          tags={linode.tags}
-                          openTagDrawer={() => null}
-                          type={{ label: 'Linode 2 GB' }}
-                          vcpus={linode.specs.vcpus}
-                          openDialog={() => null}
-                          openPowerActionDialog={() => null}
-                          openNotificationMenu={() => null}
-                        ></LinodeRow>
-                      ))}
-                    </TableBody>
-                  </TableWrapper>
-                  <PaginationFooter
-                    count={count}
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                    eventCategory="Paginated Table"
-                  />
-                </>
-              )}
-            </Paginate>
-          )}
-        </OrderBy>
-      </Provider>
-    </>
-  );
-};

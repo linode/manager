@@ -1,14 +1,14 @@
 import { DatabaseInstance } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';

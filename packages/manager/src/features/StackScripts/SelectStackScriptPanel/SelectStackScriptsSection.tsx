@@ -1,7 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -9,6 +9,7 @@ import TableRow from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 import { truncate } from 'src/utilities/truncate';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles(() => ({
   loadingWrapper: {
@@ -33,6 +34,8 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { onSelect, selectedId, data, isSorting, disabled } = props;
 
+  const { data: profile } = useProfile();
+
   const selectStackScript = (s: StackScript) => (
     <StackScriptSelectionRow
       key={s.id}
@@ -40,7 +43,10 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
       stackScriptUsername={s.username}
       description={truncate(s.description, 100)}
       deploymentsActive={s.deployments_active}
-      updated={formatDate(s.updated, { displayTime: false })}
+      updated={formatDate(s.updated, {
+        displayTime: false,
+        timezone: profile?.timezone,
+      })}
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id, classes]}

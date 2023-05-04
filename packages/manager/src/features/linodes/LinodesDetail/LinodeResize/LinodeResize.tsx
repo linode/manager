@@ -7,18 +7,21 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import Checkbox from 'src/components/CheckBox';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
@@ -117,7 +120,7 @@ type CombinedProps = Props &
   PreferencesProps &
   WithSnackbarProps &
   StateProps &
-  ProfileProps;
+  WithProfileProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
@@ -417,7 +420,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           }
         />
 
-        <ActionsPanel className={classes.actionPanel}>
+        <StyledActionPanel className={classes.actionPanel}>
           <TypeToConfirm
             title="Confirm"
             confirmationText={
@@ -450,7 +453,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           >
             Resize Linode
           </Button>
-        </ActionsPanel>
+        </StyledActionPanel>
       </Dialog>
     );
   }

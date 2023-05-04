@@ -168,11 +168,15 @@ export const printInvoice = (
   account: Account,
   invoice: Invoice,
   items: InvoiceItem[],
-  taxes: FlagSet['taxBanner'] | FlagSet['taxes']
+  taxes: FlagSet['taxBanner'] | FlagSet['taxes'],
+  timezone?: string
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
-    const date = formatDate(invoice.date, { displayTime: true });
+    const date = formatDate(invoice.date, {
+      displayTime: true,
+      timezone,
+    });
     const invoiceId = invoice.id;
 
     /**
@@ -215,7 +219,7 @@ export const printInvoice = (
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40);
+      doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, 'MEDIUM');
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -234,7 +238,7 @@ export const printInvoice = (
         text: `Invoice: #${invoiceId}`,
       });
 
-      createInvoiceItemsTable(doc, itemsChunk);
+      createInvoiceItemsTable(doc, itemsChunk, timezone);
       createFooter(doc, baseFont, account.country, invoice.date);
       if (index < itemsChunks.length - 1) {
         doc.addPage();
@@ -260,16 +264,20 @@ export const printInvoice = (
 export const printPayment = (
   account: Account,
   payment: Payment,
-  countryTax?: TaxDetail
+  countryTax?: TaxDetail,
+  timezone?: string
 ): PdfResult => {
   try {
-    const date = formatDate(payment.date, { displayTime: true });
+    const date = formatDate(payment.date, {
+      displayTime: true,
+      timezone,
+    });
     const doc = new jsPDF({
       unit: 'px',
     });
     doc.setFontSize(10);
 
-    doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40);
+    doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, 'MEDIUM');
 
     const leftHeaderYPosition = addLeftHeader(
       doc,
@@ -286,7 +294,7 @@ export const printPayment = (
       text: `Receipt for Payment #${payment.id}`,
     });
 
-    createPaymentsTable(doc, payment);
+    createPaymentsTable(doc, payment, timezone);
     createFooter(doc, baseFont, account.country, payment.date);
     createPaymentsTotalsTable(doc, payment);
 

@@ -3,7 +3,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import classNames from 'classnames';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -20,7 +20,7 @@ import {
   STATS_NOT_READY_MESSAGE,
   useLinodeStatsByDate,
   useLinodeTransferByDate,
-} from 'src/queries/linodes';
+} from 'src/queries/linodes/stats';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -183,6 +183,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
         timezone={profile?.timezone ?? 'UTC'}
         chartHeight={190}
         unit={`/s`}
+        accessibleDataTable={{ unit: 'Kb/s' }}
         formatData={convertNetworkData}
         formatTooltip={formatTooltip}
         showToday={true}

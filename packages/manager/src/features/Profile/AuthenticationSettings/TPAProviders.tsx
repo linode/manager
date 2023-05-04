@@ -4,7 +4,7 @@ import * as React from 'react';
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
 import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
 import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
-import LinodeLogo from 'src/assets/logo/logo-footer.svg';
+import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
@@ -13,7 +13,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import useFlags from 'src/hooks/useFlags';
@@ -101,15 +101,15 @@ interface Props {
 type CombinedProps = Props;
 
 const icons: Record<TPAProvider, any> = {
-  password: LinodeLogo,
+  password: AkamaiWaveOnlyIcon,
   google: GoogleIcon,
   github: GitHubIcon,
 };
 
 const linode = {
-  displayName: 'Linode',
+  displayName: 'Cloud Manager',
   name: 'password' as TPAProvider,
-  icon: LinodeLogo,
+  icon: AkamaiWaveOnlyIcon,
   href: '',
 };
 
@@ -141,21 +141,21 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
       <Paper className={classes.root}>
         <Typography variant="h3">Login Method</Typography>
         <Typography className={classes.copy}>
-          You can use your Linode credentials or another provider such as Google
-          or GitHub to log in to your Linode account. More information is
-          available in{' '}
+          You can use your Cloud Manager credentials or another provider such as
+          Google or GitHub to log in to your Cloud Manager account. More
+          information is available in{' '}
           <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
-            How to Enable Third Party Authentication on Your Linode Account
+            How to Enable Third Party Authentication on Your User Account
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (2FA).
         </Typography>
-        <Grid container className={classes.providersList}>
+        <Grid container className={classes.providersList} spacing={2}>
           {providersIncludingLinode.map((thisProvider) => {
             const ProviderIcon = icons[thisProvider.name];
             const isProviderEnabled = props.authType === thisProvider.name;
 
             return (
-              <Grid item md={4} key={thisProvider.displayName}>
+              <Grid xs={12} sm={6} md={4} key={thisProvider.displayName}>
                 <Button
                   data-testid={`Button-${thisProvider.displayName}`}
                   className={classNames({

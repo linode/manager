@@ -7,7 +7,7 @@ import Logo from 'src/assets/logo/akamai-logo.svg';
 import Box from 'src/components/core/Box';
 import { makeStyles, withTheme, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
     padding: `${theme.spacing(3)} 0`,
-    paddingTop: 20,
+    paddingTop: 12,
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('md')]: {
       paddingTop: theme.spacing(2),
@@ -316,7 +316,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                     role="main"
                   >
                     <Grid container spacing={0} className={classes.grid}>
-                      <Grid item className={`${classes.switchWrapper} p0`}>
+                      <Grid className={`${classes.switchWrapper} p0`}>
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>

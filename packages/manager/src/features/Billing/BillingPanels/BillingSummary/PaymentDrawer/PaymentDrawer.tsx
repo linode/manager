@@ -9,19 +9,18 @@ import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
-import SupportLink from 'src/components/SupportLink';
+import { SupportLink } from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
-import { queryClient } from 'src/queries/base';
 import isCreditCardExpired from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import GooglePayButton from './GooglePayButton';
@@ -29,6 +28,7 @@ import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import PayPalButton from './PayPalButton';
 import { SetSuccess } from './types';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   currentBalance: {
@@ -88,6 +88,8 @@ export const PaymentDrawer = (props: Props) => {
 
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
 
   const hasPaymentMethods = paymentMethods && paymentMethods.length > 0;
 

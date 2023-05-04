@@ -5,27 +5,23 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
-import Grid, { GridProps } from 'src/components/Grid';
+import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useSpecificTypes } from 'src/queries/types';
@@ -39,9 +35,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import EntityHeader from 'src/components/EntityHeader';
-import withRecentEvent, {
-  WithRecentEvent,
-} from './LinodesLanding/withRecentEvent';
+import { WithRecentEvent } from './LinodesLanding/withRecentEvent';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
@@ -51,19 +45,15 @@ import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
+import { useProfile } from 'src/queries/profile';
+import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
   id: number;
   linode: Linode;
   username?: string;
-  openDialog: OpenDialog;
-  openPowerActionDialog: (
-    bootAction: BootAction,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => void;
   backups: LinodeBackups;
   linodeConfigs: Config[];
   numVolumes: number;
@@ -72,22 +62,14 @@ interface LinodeEntityDetailProps {
   isSummaryView?: boolean;
 }
 
-interface StatusChange {
-  linodeConfigs: Config[];
-  linodeId: number;
-  linodeLabel: string;
-  status: BootAction;
-}
-
-export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
+export type CombinedProps = LinodeEntityDetailProps &
+  WithRecentEvent & { handlers: LinodeHandlers };
 
 const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const {
     variant,
     linode,
     username,
-    openDialog,
-    openPowerActionDialog,
     backups,
     linodeConfigs,
     isSummaryView,
@@ -95,6 +77,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     openTagDrawer,
     openNotificationMenu,
     recentEvent,
+    handlers,
   } = props;
 
   const { data: images } = useAllImagesQuery({}, {});
@@ -139,8 +122,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           linodeId={linode.id}
           linodeStatus={linode.status}
           linodePermissions={extendedLinode?._permissions}
-          openDialog={openDialog}
-          openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
           isSummaryView={isSummaryView}
@@ -150,6 +131,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           openNotificationMenu={openNotificationMenu || (() => null)}
           progress={progress}
           transitionText={transitionText}
+          handlers={handlers}
         />
       }
       body={
@@ -175,19 +157,13 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           linodeTags={linode.tags}
           linodeLabel={linode.label}
           openTagDrawer={openTagDrawer}
-          openDialog={openDialog}
         />
       }
     />
   );
 };
 
-const enhanced = compose<CombinedProps, LinodeEntityDetailProps>(
-  withRecentEvent,
-  React.memo
-);
-
-export default enhanced(LinodeEntityDetail);
+export default LinodeEntityDetail;
 
 // =============================================================================
 // Header
@@ -199,13 +175,6 @@ export interface HeaderProps {
   linodeId: number;
   linodeStatus: Linode['status'];
   linodePermissions?: GrantLevel;
-  openDialog: OpenDialog;
-  openPowerActionDialog: (
-    bootAction: BootAction,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => void;
   linodeRegionDisplay: string;
   backups: LinodeBackups;
   type: ExtendedType | null;
@@ -284,7 +253,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header: React.FC<HeaderProps> = (props) => {
+const Header: React.FC<HeaderProps & { handlers: LinodeHandlers }> = (
+  props
+) => {
   const classes = useHeaderStyles();
   const theme = useTheme();
 
@@ -293,16 +264,14 @@ const Header: React.FC<HeaderProps> = (props) => {
     linodeId,
     linodeStatus,
     linodeRegionDisplay,
-    openDialog,
-    openPowerActionDialog,
     backups,
     type,
     variant,
-    linodeConfigs,
     isSummaryView,
     progress,
     transitionText,
     openNotificationMenu,
+    handlers,
   } = props;
 
   const isRunning = linodeStatus === 'running';
@@ -339,16 +308,6 @@ const Header: React.FC<HeaderProps> = (props) => {
   const sxBoxFlex = {
     alignItems: 'center',
     display: 'flex',
-  };
-
-  const handleStatusChange = ({
-    linodeConfigs,
-    linodeId,
-    linodeLabel,
-    status,
-  }: StatusChange) => {
-    sendLinodeActionMenuItemEvent(`${status} Linode`);
-    openPowerActionDialog(status, linodeId, linodeLabel, linodeConfigs);
   };
 
   return (
@@ -397,12 +356,7 @@ const Header: React.FC<HeaderProps> = (props) => {
             sx={sxActionItem}
             disabled={!(isRunning || isOffline)}
             onClick={() =>
-              handleStatusChange({
-                linodeConfigs,
-                linodeId,
-                linodeLabel,
-                status: isRunning ? 'Power Off' : 'Power On',
-              })
+              handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
           >
             {isRunning ? 'Power Off' : 'Power On'}
@@ -411,14 +365,7 @@ const Header: React.FC<HeaderProps> = (props) => {
             buttonType="secondary"
             sx={sxActionItem}
             disabled={isOffline}
-            onClick={() =>
-              handleStatusChange({
-                linodeConfigs,
-                linodeId,
-                linodeLabel,
-                status: 'Reboot',
-              })
-            }
+            onClick={() => handlers.onOpenPowerDialog('Reboot')}
           >
             Reboot
           </Button>
@@ -440,8 +387,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           linodeRegion={linodeRegionDisplay}
           linodeStatus={linodeStatus}
           linodeType={type ?? undefined}
-          openDialog={openDialog}
-          openPowerActionDialog={openPowerActionDialog}
+          {...handlers}
         />
       </Box>
     </EntityHeader>
@@ -511,7 +457,7 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
     linodeId,
     numVolumes,
   } = props;
-
+  const theme = useTheme();
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   const firstAddress = ipv4[0];
@@ -521,43 +467,49 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
 
   return (
-    <Grid container item className={classes.body} direction="row">
+    <Grid container className={classes.body} direction="row" spacing={2}>
       {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
       <Grid
         container
-        item
         className={classes.summaryContainer}
         direction="column"
+        spacing={2}
       >
-        <Grid item className={classes.columnLabel}>
-          Summary
-        </Grid>
-        <Grid container item className={classes.summaryContent} direction="row">
-          <Grid item>
+        <Grid className={classes.columnLabel}>Summary</Grid>
+        <Grid
+          container
+          className={classes.summaryContent}
+          direction="row"
+          spacing={2}
+        >
+          <Grid>
             <Typography>
               {pluralize('CPU Core', 'CPU Cores', numCPUs)}
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>{gbStorage} GB Storage</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>{gbRAM} GB RAM</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>
               {pluralize('Volume', 'Volumes', numVolumes)}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
-
       <Grid
         container
-        item
         className={classes.rightColumn}
         direction="row"
         justifyContent="space-between"
+        spacing={2}
+        sx={{
+          paddingRight: 0,
+          paddingBottom: 0,
+        }}
       >
         <AccessTable
           title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
@@ -572,6 +524,11 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
             ) : undefined
           }
           gridProps={{ md: 5 }}
+          sx={{
+            [theme.breakpoints.up('md')]: {
+              paddingRight: theme.spacing(2.5),
+            },
+          }}
         />
 
         <AccessTable
@@ -584,6 +541,11 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
             },
           ]}
           gridProps={{ md: 7 }}
+          sx={{
+            [theme.breakpoints.up('md')]: {
+              paddingLeft: theme.spacing(2.5),
+            },
+          }}
         />
       </Grid>
     </Grid>
@@ -699,18 +661,24 @@ interface AccessTableRow {
 interface AccessTableProps {
   title: string;
   rows: AccessTableRow[];
-  gridProps?: GridProps;
+  gridProps?: Grid2Props;
   footer?: JSX.Element;
+  sx?: SxProps;
 }
 
 export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
   const classes = useAccessTableStyles();
   return (
-    <Grid container item md={6} direction="column" {...props.gridProps}>
-      <Grid item className={classes.columnLabel}>
-        {props.title}
-      </Grid>
-      <Grid item className={classes.accessTableContent}>
+    <Grid
+      container
+      md={6}
+      direction="column"
+      spacing={1}
+      sx={props.sx}
+      {...props.gridProps}
+    >
+      <Grid className={classes.columnLabel}>{props.title}</Grid>
+      <Grid className={classes.accessTableContent}>
         <Table className={classes.accessTable}>
           <TableBody>
             {props.rows.map((thisRow) => {
@@ -730,7 +698,7 @@ export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
             })}
           </TableBody>
         </Table>
-        {props.footer ? <Grid item>{props.footer}</Grid> : null}
+        {props.footer ? <Grid sx={{ padding: 0 }}>{props.footer}</Grid> : null}
       </Grid>
     </Grid>
   );
@@ -747,82 +715,12 @@ interface FooterProps {
   linodeTags: string[];
   linodeLabel: string;
   openTagDrawer: (tags: string[]) => void;
-  openDialog: OpenDialog;
 }
 
-const useFooterStyles = makeStyles((theme: Theme) => ({
-  details: {
-    flexWrap: 'nowrap',
-    '&.MuiGrid-item': {
-      paddingRight: 0,
-    },
-    [theme.breakpoints.up(1400)]: {
-      flexBasis: '66.67%',
-      flexGrow: 0,
-      maxWidth: '66.67%',
-    },
-    [theme.breakpoints.down(1400)]: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'stretch',
-      flexDirection: 'column',
-    },
-  },
-  detailRow: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      '&:first-of-type': {
-        paddingBottom: theme.spacing(0.5),
-      },
-    },
-  },
-  listItem: {
-    display: 'flex',
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    color: theme.textColors.tableStatic,
-    padding: `0px 10px`,
-    [theme.breakpoints.down('md')]: {
-      flex: '50%',
-      borderRight: 'none',
-      paddingRight: 0,
-    },
-  },
-  listItemLast: {
-    borderRight: 'none',
-    paddingRight: 0,
-  },
-  label: {
-    fontFamily: theme.font.bold,
-    marginRight: 4,
-  },
-  tags: {
-    [theme.breakpoints.up(1400)]: {
-      flexBasis: '33.33%',
-      flexGrow: 0,
-      maxWidth: '33.33%',
-    },
-    [theme.breakpoints.down(1400)]: {
-      marginLeft: theme.spacing(),
-      '& > div': {
-        flexDirection: 'row-reverse',
-        '& > button': {
-          marginRight: 4,
-        },
-        '& > div': {
-          justifyContent: 'flex-start !important',
-        },
-      },
-    },
-  },
-}));
-
 export const Footer: React.FC<FooterProps> = React.memo((props) => {
-  const classes = useFooterStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const theme = useTheme();
+
+  const { data: profile } = useProfile();
 
   const {
     linodePlan,
@@ -850,53 +748,141 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
     [linodeId, updateLinode, enqueueSnackbar]
   );
 
+  const sxListItemMdBp = {
+    flex: '50%',
+    borderRight: 0,
+    padding: 0,
+  };
+
+  const sxListItem = {
+    display: 'flex',
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    color: theme.textColors.tableStatic,
+    padding: `0px 10px`,
+    [theme.breakpoints.down('md')]: {
+      ...sxListItemMdBp,
+    },
+  };
+
+  const sxListItemFirstChild = {
+    [theme.breakpoints.down('md')]: {
+      ...sxListItemMdBp,
+      '&:first-of-type': {
+        paddingBottom: theme.spacing(0.5),
+      },
+    },
+  };
+
+  const sxLastListItem = {
+    borderRight: 0,
+    paddingRight: 0,
+  };
+
+  const sxBox = {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'column',
+    },
+  };
+
+  const sxLabel = {
+    fontFamily: theme.font.bold,
+    marginRight: '4px',
+  };
+
   return (
     <Grid
       container
       direction="row"
       alignItems="center"
       justifyContent="space-between"
+      spacing={2}
+      sx={{
+        padding: 0,
+        flex: 1,
+      }}
     >
       <Grid
-        container
-        item
-        className={classes.details}
         alignItems="flex-start"
-        md={12}
+        xs={12}
+        lg={8}
+        sx={{
+          display: 'flex',
+          padding: 0,
+          [theme.breakpoints.down('md')]: {
+            display: 'grid',
+            gridTemplateColumns: '50% 2fr',
+          },
+          [theme.breakpoints.down('lg')]: {
+            padding: '8px',
+          },
+        }}
       >
-        <div className={classes.detailRow}>
+        <Box sx={sxBox}>
           {linodePlan && (
-            <Typography className={classes.listItem}>
-              <span className={classes.label}>Plan: </span> {linodePlan}
+            <Typography
+              sx={{
+                ...sxListItem,
+                ...sxListItemFirstChild,
+                [theme.breakpoints.down('lg')]: {
+                  paddingLeft: 0,
+                },
+              }}
+            >
+              <Box sx={sxLabel}>Plan: </Box> {linodePlan}
             </Typography>
           )}
           {linodeRegionDisplay && (
             <Typography
-              className={classNames({
-                [classes.listItem]: true,
-                [classes.listItemLast]: matchesSmDown,
-              })}
+              sx={{
+                ...sxListItem,
+              }}
             >
-              <span className={classes.label}>Region:</span>{' '}
-              {linodeRegionDisplay}
+              <Box sx={sxLabel}>Region:</Box> {linodeRegionDisplay}
             </Typography>
           )}
-        </div>
-        <div className={classes.detailRow}>
-          <Typography className={classes.listItem}>
-            <span className={classes.label}>Linode ID:</span> {linodeId}
+        </Box>
+        <Box sx={sxBox}>
+          <Typography sx={{ ...sxListItem, ...sxListItemFirstChild }}>
+            <Box sx={sxLabel}>Linode ID:</Box> {linodeId}
           </Typography>
-          <Typography className={`${classes.listItem} ${classes.listItemLast}`}>
-            <span className={classes.label}>Created:</span>{' '}
-            {formatDate(linodeCreated)}
+          <Typography
+            sx={{
+              ...sxListItem,
+              ...sxLastListItem,
+            }}
+          >
+            <Box sx={sxLabel}>Created:</Box>{' '}
+            {formatDate(linodeCreated, {
+              timezone: profile?.timezone,
+            })}
           </Typography>
-        </div>
+        </Box>
       </Grid>
-      <Grid item className={classes.tags} md={12}>
+      <Grid
+        xs={12}
+        lg={4}
+        sx={{
+          [theme.breakpoints.down('lg')]: {
+            display: 'flex',
+            justifyContent: 'flex-start',
+          },
+        }}
+      >
         <TagCell
           tags={linodeTags}
           updateTags={updateTags}
           listAllTags={openTagDrawer}
+          sx={{
+            [theme.breakpoints.down('lg')]: {
+              flexDirection: 'row-reverse',
+              '& > button': {
+                marginRight: theme.spacing(0.5),
+              },
+            },
+          }}
         />
       </Grid>
     </Grid>

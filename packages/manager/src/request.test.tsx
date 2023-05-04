@@ -3,7 +3,10 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { profileFactory } from './factories';
 import { handleError, getURL, injectEuuidToProfile } from './request';
-import store from './store';
+import { storeFactory } from './store';
+import { queryClientFactory } from './queries/base';
+
+const store = storeFactory(queryClientFactory());
 
 const baseErrorConfig: AxiosRequestConfig = {
   method: 'POST',
@@ -51,7 +54,7 @@ describe('Expiring Tokens', () => {
         expires: 'never',
       })
     );
-    const expireToken = handleError(error401);
+    const expireToken = handleError(error401, store);
 
     /**
      * the redux state should nulled out and the function should return
@@ -76,7 +79,7 @@ describe('Expiring Tokens', () => {
         expires: 'never',
       })
     );
-    const expireToken = handleError(error400);
+    const expireToken = handleError(error400, store);
 
     /**
      * the redux state should nulled out and the function should return

@@ -14,16 +14,19 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
@@ -32,6 +35,10 @@ import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
 import Reply from './TabbedReply';
 import LandingHeader from 'src/components/LandingHeader';
+import {
+  withApplicationStore,
+  WithApplicationStoreProps,
+} from 'src/containers/withApplicationStore.container';
 
 export type ClassNames =
   | 'title'
@@ -104,7 +111,10 @@ interface State {
   ticketCloseSuccess: boolean;
 }
 
-export type CombinedProps = RouteProps & ProfileProps & WithStyles<ClassNames>;
+export type CombinedProps = RouteProps &
+  WithProfileProps &
+  WithApplicationStoreProps &
+  WithStyles<ClassNames>;
 
 export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -220,13 +230,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   renderEntityLabelWithIcon = () => {
-    const { classes } = this.props;
+    const { classes, store } = this.props;
     const { entity } = this.state.ticket!;
     if (!entity) {
       return null;
     }
     const icon: JSX.Element = this.getEntityIcon(entity.type);
-    const target = getLinkTargets(entity);
+    const target = getLinkTargets(entity, store);
     return (
       <Grid
         container
@@ -234,10 +244,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         justifyContent="flex-start"
         className={classes.label}
       >
-        <Grid item className={classes.labelIcon}>
-          {icon}
-        </Grid>
-        <Grid item className="p0">
+        <Grid className={classes.labelIcon}>{icon}</Grid>
+        <Grid className="p0">
           {target !== null ? (
             <Link
               to={target}
@@ -308,7 +316,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     }
 
     // Format date for header
-    const formattedDate = formatDate(ticket.updated);
+    const formattedDate = formatDate(ticket.updated, {
+      timezone: profile.data?.timezone,
+    });
     const status = ticket.status === 'closed' ? 'Closed' : 'Last updated';
 
     const _Chip = () => (
@@ -373,8 +383,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           <Notice success text={'Ticket has been closed.'} />
         )}
 
-        <Grid container>
-          <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid xs={12}>
             {/* If the ticket isn't blank, display it, followed by replies (if any). */}
             {ticket.description && (
               <ExpandableTicketPanel
@@ -397,7 +407,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
               />
             )}
           </Grid>
-          <Grid item xs={12} />
+          <Grid xs={12} />
         </Grid>
       </React.Fragment>
     );
@@ -405,4 +415,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 }
 const styled = withStyles(styles);
 
-export default compose(withProfile, styled)(SupportTicketDetail);
+export default compose(
+  withProfile,
+  withApplicationStore,
+  styled
+)(SupportTicketDetail);

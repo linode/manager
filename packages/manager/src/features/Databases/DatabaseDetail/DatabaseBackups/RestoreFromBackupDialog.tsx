@@ -4,15 +4,16 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
-import { DialogProps } from 'src/components/Dialog';
+import { DialogProps } from 'src/components/Dialog/Dialog';
 import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { usePreferences } from 'src/queries/preferences';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
+import { useProfile } from 'src/queries/profile';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -30,6 +31,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
   const [confirmationText, setConfirmationText] = React.useState('');
 
   const { data: preferences } = usePreferences();
+  const { data: profile } = useProfile();
 
   const {
     mutateAsync: restore,
@@ -75,7 +77,9 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
   return (
     <ConfirmationDialog
       {...rest}
-      title={`Restore from Backup ${formatDate(backup.created)}`}
+      title={`Restore from Backup ${formatDate(backup.created, {
+        timezone: profile?.timezone,
+      })}`}
       open={open}
       onClose={onClose}
       actions={actions}

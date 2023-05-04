@@ -3,8 +3,11 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { CombinedProps, FromImageContent } from './FromImageContent';
 import { Provider } from 'react-redux';
-import store from 'src/store';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { storeFactory } from 'src/store';
+import { queryClientFactory } from 'src/queries/base';
+
+const store = storeFactory(queryClientFactory());
 
 const mockProps: CombinedProps = {
   updateImageID: vi.fn(),

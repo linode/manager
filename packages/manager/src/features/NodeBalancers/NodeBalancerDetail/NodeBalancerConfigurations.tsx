@@ -29,12 +29,12 @@ import { compose as composeC } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import PromiseLoader, {
   PromiseLoaderResponse,
 } from 'src/components/PromiseLoader/PromiseLoader';
@@ -53,8 +53,11 @@ import {
   parseAddresses,
   transformConfigsForRequest,
 } from '../utils';
-import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/nodebalancers';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
 
 type ClassNames = 'title' | 'port' | 'nbStatuses' | 'button';
 
@@ -120,7 +123,8 @@ interface State {
 type CombinedProps = Props &
   RouteProps &
   WithStyles<ClassNames> &
-  PreloadedProps;
+  PreloadedProps &
+  WithQueryClientProps;
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -307,7 +311,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       configPayload
     )
       .then((nodeBalancerConfig) => {
-        queryClient.invalidateQueries([
+        this.props.queryClient.invalidateQueries([
           queryKey,
           'nodebalancer',
           Number(nodeBalancerId),
@@ -429,7 +433,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     createNodeBalancerConfig(Number(nodeBalancerId), configPayload)
       .then((nodeBalancerConfig) => {
-        queryClient.invalidateQueries([
+        this.props.queryClient.invalidateQueries([
           queryKey,
           'nodebalancer',
           Number(nodeBalancerId),
@@ -601,7 +605,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     // actually delete a real config
     deleteNodeBalancerConfig(Number(nodeBalancerId), config.id)
       .then((_) => {
-        queryClient.invalidateQueries([
+        this.props.queryClient.invalidateQueries([
           queryKey,
           'nodebalancer',
           Number(nodeBalancerId),
@@ -1123,7 +1127,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           )}
 
         {!hasUnsavedConfig && (
-          <Grid item style={{ marginTop: 16 }}>
+          <Box sx={{ marginTop: '16px' }}>
             <Button
               buttonType="outlined"
               className={classes.button}
@@ -1134,7 +1138,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                 ? 'Add a Configuration'
                 : 'Add Another Configuration'}
             </Button>
-          </Grid>
+          </Box>
         )}
 
         <ConfirmationDialog
@@ -1171,6 +1175,11 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-const enhanced = composeC<CombinedProps, Props>(styled, withRouter, preloaded);
+const enhanced = composeC<CombinedProps, Props>(
+  styled,
+  withRouter,
+  preloaded,
+  withQueryClient
+);
 
 export default enhanced(NodeBalancerConfigurations);

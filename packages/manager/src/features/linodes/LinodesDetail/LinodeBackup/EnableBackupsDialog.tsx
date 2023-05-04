@@ -3,23 +3,21 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
 
 interface Props {
-  linodeId: number;
+  linodeId: number | undefined;
   onClose: () => void;
   open: boolean;
 }
 
-export type CombinedProps = Props;
-
-export const EnableBackupsDialog: React.FC<Props> = (props) => {
+export const EnableBackupsDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
   /**
    * Calculate the monthly backup price here.
@@ -28,7 +26,7 @@ export const EnableBackupsDialog: React.FC<Props> = (props) => {
    * this information.
    */
   const { linodes } = useLinodes();
-  const thisLinode = linodes.itemsById[linodeId];
+  const thisLinode = linodes.itemsById[linodeId ?? -1];
   const typesQuery = useSpecificTypes(
     thisLinode?.type ? [thisLinode.type] : []
   );
@@ -43,7 +41,7 @@ export const EnableBackupsDialog: React.FC<Props> = (props) => {
 
   const handleEnableBackups = React.useCallback(() => {
     setSubmitting(true);
-    enableBackups(linodeId)
+    enableBackups(linodeId ?? -1)
       .then(() => {
         setSubmitting(false);
         resetEventsPolling();

@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { rest, server } from 'src/mocks/testServer';
+import { queryClientFactory } from 'src/queries/base';
 import { usePreferences } from 'src/queries/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -47,6 +48,8 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
+const queryClient = queryClientFactory();
+
 describe('useOrder hook', () => {
   // wait for preferences to load
   beforeEach(async () => {
@@ -64,14 +67,14 @@ describe('useOrder hook', () => {
       );
 
       await renderHook(() => usePreferences(), {
-        wrapper: wrapWithTheme,
+        wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
       }).waitForNextUpdate();
     });
   });
 
   it('should use default sort options when there are no query params or preference', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
-      wrapper: wrapWithTheme,
+      wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
     });
 
     expect(result.current.order).toBe(defaultOrder.order);
@@ -80,8 +83,9 @@ describe('useOrder hook', () => {
 
   it('query parameters with sort data should take precedence over defaults', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
-      wrapper: ({ children }) =>
-        wrapWithTheme(children, {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          queryClient,
           MemoryRouter: {
             initialEntries: [
               'https://cloud.linode.com/account/maintenance?order=desc&orderBy=when',
@@ -95,20 +99,22 @@ describe('useOrder hook', () => {
   });
 
   it('use preferences are used when there are no query params', async () => {
-    const { result } = renderHook(
+    const { waitFor, result } = renderHook(
       () => useOrder(defaultOrder, 'account-maintenance-order'),
       {
-        wrapper: wrapWithTheme,
+        wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
       }
     );
 
-    expect(result.current.order).toBe(preferenceOrder.order);
-    expect(result.current.orderBy).toBe(preferenceOrder.orderBy);
+    await waitFor(() => {
+      expect(result.current.order).toBe(preferenceOrder.order);
+      expect(result.current.orderBy).toBe(preferenceOrder.orderBy);
+    });
   });
 
   it('should change order when handleOrderChange is called with new values', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
-      wrapper: wrapWithTheme,
+      wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
     });
 
     act(() =>
@@ -124,7 +130,7 @@ describe('useOrder hook', () => {
 
   it('should update query params when handleOrderChange is called', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
-      wrapper: wrapWithTheme,
+      wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
     });
 
     act(() =>
@@ -147,7 +153,7 @@ describe('useOrder hook', () => {
     const { result } = renderHook(
       () => useOrder(defaultOrder, undefined, prefix),
       {
-        wrapper: wrapWithTheme,
+        wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
       }
     );
 

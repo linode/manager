@@ -7,10 +7,11 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import StatusIcon from 'src/components/StatusIcon';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { capitalize } from 'src/utilities/capitalize';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
@@ -51,6 +52,7 @@ export const DatabaseRow = ({ database }: Props) => {
   } = database;
 
   const { data: regions } = useRegionsQuery();
+  const { data: profile } = useProfile();
 
   const actualRegion = regions?.find((r) => r.id === region);
 
@@ -94,7 +96,9 @@ export const DatabaseRow = ({ database }: Props) => {
         <TableCell>
           {isWithinDays(3, created)
             ? parseAPIDate(created).toRelative()
-            : formatDate(created)}
+            : formatDate(created, {
+                timezone: profile?.timezone,
+              })}
         </TableCell>
       </Hidden>
     </TableRow>

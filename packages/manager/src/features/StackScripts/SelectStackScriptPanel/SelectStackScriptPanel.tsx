@@ -10,7 +10,7 @@ import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -18,7 +18,10 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import { truncate } from 'src/utilities/truncate';
@@ -91,7 +94,7 @@ interface Props extends RenderGuardProps {
 type CombinedProps = Props &
   RenderGuardProps &
   WithStyles<ClassNames> &
-  ProfileProps;
+  WithProfileProps;
 
 interface State {
   stackScript?: StackScript;
@@ -175,6 +178,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   description={truncate(stackScript.description, 100)}
                   deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, {
+                    timezone: profile.data?.timezone,
                     displayTime: false,
                   })}
                   checked={selectedId === stackScript.id}

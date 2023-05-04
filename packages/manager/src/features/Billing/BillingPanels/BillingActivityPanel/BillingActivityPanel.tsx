@@ -12,15 +12,15 @@ import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import TextTooltip from 'src/components/TextTooltip/TextTooltip';
-import Currency from 'src/components/Currency';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { TextTooltip } from 'src/components/TextTooltip';
+import { Currency } from 'src/components/Currency';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import Link from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
@@ -43,6 +43,7 @@ import { isAfter, parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -182,6 +183,7 @@ export interface Props {
 export const BillingActivityPanel = (props: Props) => {
   const { accountActiveSince } = props;
 
+  const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const isAkamaiCustomer = account?.billing_source === 'akamai';
 
@@ -357,6 +359,7 @@ export const BillingActivityPanel = (props: Props) => {
                   Account active since{' '}
                   {formatDate(accountActiveSince, {
                     displayTime: false,
+                    timezone: profile?.timezone,
                   })}
                 </Typography>
               </div>

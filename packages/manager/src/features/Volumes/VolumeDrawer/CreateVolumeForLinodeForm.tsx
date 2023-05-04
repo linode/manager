@@ -11,10 +11,9 @@ import Form from 'src/components/core/Form';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
+import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { MapState } from 'src/store/types';
@@ -28,14 +27,14 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
-import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
+import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
-import PricePanel from './PricePanel';
+import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
@@ -75,14 +74,14 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
-  const disabled = profile?.restricted && !hasGrant('add_volumes', grants);
+  const disabled = profile?.restricted && !grants?.global.add_volumes;
 
   // The original schema expects tags to be an array of strings, but Formik treats
   // tags as _Tag[], so we extend the schema to transform tags before validation.
   const extendedCreateVolumeSchema = CreateVolumeSchema.concat(
     object({
       tags: array()
-        .transform((tagItems: _Tag[]) =>
+        .transform((tagItems: Tag[]) =>
           tagItems.map((thisTagItem) => thisTagItem.value)
         )
         .of(string()),
@@ -118,7 +117,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               `Volume scheduled for creation.`
             );
             // GA Event
-            sendCreateVolumeEvent(`${label}: ${size}GB`, origin);
+            sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
@@ -269,7 +268,7 @@ interface FormState {
   region: string;
   linode_id: number;
   config_id: number;
-  tags: _Tag[];
+  tags: Tag[];
 }
 
 const initialValues: FormState = {

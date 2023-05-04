@@ -1,8 +1,9 @@
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
 
 import { ENABLE_DEV_TOOLS } from 'src/constants';
+import { ApplicationStore } from 'src/store';
 
-function loadDevTools(callback: () => any) {
+function loadDevTools(store: ApplicationStore, callback: () => any) {
   // we want it enabled by default everywhere but production and we also want
   // to support the dev tools in production (to make us more productive triaging production issues).
   // you can enable the DevTools via localStorage or the query string.
@@ -10,7 +11,7 @@ function loadDevTools(callback: () => any) {
     // use a dynamic import so the dev-tools code isn't bundled with the regular
     // app code so we don't worry about bundle size.
     import('./dev-tools')
-      .then((devTools) => devTools.install())
+      .then((devTools) => devTools.install(store))
       .finally(callback);
   } else {
     // if we don't need the DevTools, call the callback immediately.

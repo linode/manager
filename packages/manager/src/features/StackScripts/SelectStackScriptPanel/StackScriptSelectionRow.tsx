@@ -4,7 +4,7 @@ import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
 import { withStyles, WithStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell/TableCell';
@@ -59,7 +59,7 @@ export class StackScriptSelectionRow extends React.Component<
       };
       return (
         <Grid container alignItems="center" className={classes.selectionGrid}>
-          <Grid item className={classes.selectionGridDetails}>
+          <Grid className={classes.selectionGridDetails}>
             <Typography variant="h3">
               {stackScriptUsername && (
                 <label
@@ -82,7 +82,7 @@ export class StackScriptSelectionRow extends React.Component<
               </Typography>
             )}
           </Grid>
-          <Grid item className={classes.selectionGridButton}>
+          <Grid className={classes.selectionGridButton}>
             <Button
               buttonType="secondary"
               className={classes.detailsButton}

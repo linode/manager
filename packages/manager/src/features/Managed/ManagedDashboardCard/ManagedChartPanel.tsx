@@ -1,6 +1,6 @@
 import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles, WithTheme, withTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
@@ -120,6 +120,7 @@ const createTabs = (
             <div className={classes.canvasContainer}>
               <LineGraph
                 ariaLabel="CPU Usage Graph"
+                accessibleDataTable={{ unit: '%' }}
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
@@ -151,6 +152,7 @@ const createTabs = (
                 showToday={true}
                 nativeLegend
                 unit="/s"
+                accessibleDataTable={{ unit: 'Kb/s"' }}
                 formatData={convertNetworkData}
                 formatTooltip={_formatTooltip}
                 data={[
@@ -185,6 +187,7 @@ const createTabs = (
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
+                accessibleDataTable={{ unit: 'op/s' }}
                 data={[
                   {
                     borderColor: 'transparent',
@@ -207,7 +210,7 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   const { theme } = props;
   const classes = useStyles();
   const { data: profile } = useProfile();
-  const timezone = getUserTimezone(profile);
+  const timezone = getUserTimezone(profile?.timezone);
   const { data, isLoading, error } = useManagedStatsQuery();
 
   if (error) {

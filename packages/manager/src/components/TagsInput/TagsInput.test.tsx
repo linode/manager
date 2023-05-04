@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import TagsInput from './TagsInput';
+import { TagsInput } from './TagsInput';
 
 vi.mock('src/components/EnhancedSelect/Select');
 const mockGetTags = vi.spyOn<any, any>(tags, 'getTags');

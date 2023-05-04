@@ -6,8 +6,10 @@ import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
 import { UseQueryResult } from 'react-query';
 import { Grants, Profile } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
+import { queryClientFactory } from 'src/queries/base';
 
 const images = normalizeEntities(imageFactory.buildList(10));
+const queryClient = queryClientFactory();
 
 describe('StackScriptCreate', () => {
   const component = shallow(
@@ -25,6 +27,7 @@ describe('StackScriptCreate', () => {
         { data: profileFactory.build() } as UseQueryResult<Profile, APIError[]>
       }
       grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
+      queryClient={queryClient}
     />
   );
 

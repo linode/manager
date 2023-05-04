@@ -5,9 +5,9 @@ import CheckBox from 'src/components/CheckBox';
 import { makeStyles } from '@mui/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -48,7 +48,7 @@ export const Disks: React.FC<Props> = (props) => {
         return (
           <React.Fragment>
             <Grid container>
-              <Grid item xs={12} md={9}>
+              <Grid xs={12} md={9}>
                 <Table aria-label="List of Disks">
                   <TableHead>
                     <TableRow>

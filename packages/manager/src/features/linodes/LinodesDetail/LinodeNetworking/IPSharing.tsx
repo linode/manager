@@ -8,24 +8,25 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import Link from 'src/components/Link';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import useFlags from 'src/hooks/useFlags';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useAllLinodesQuery } from 'src/queries/linodes';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { areArraysEqual } from 'src/utilities/areArraysEqual';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addNewButton: {
@@ -234,6 +235,14 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     setSubmitting(localSubmitting);
     setSuccessMessage(undefined);
 
+    // if the user hasn't selected any IP to share or hasn't removed any, don't do anything
+    if (areArraysEqual(linodeSharedIPs, ipsToShare)) {
+      setErrors([{ reason: 'Please select an action.' }]);
+      setSubmitting(false);
+
+      return;
+    }
+
     const share = flags.ipv6Sharing ? shareAddresses : shareAddressesv4;
     const promises: Promise<void | {}>[] = [];
 
@@ -299,17 +308,17 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       <DialogContent loading={isLoading}>
         <>
           {generalError && (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Notice error text={generalError} />
             </Grid>
           )}
           {successMessage && (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Notice success text={successMessage} />
             </Grid>
           )}
           <Grid container>
-            <Grid item sm={12} lg={8} xl={6}>
+            <Grid sm={12} lg={8} xl={6}>
               {flags.ipv6Sharing ? (
                 <Notice warning>
                   <Typography style={{ fontSize: '0.875rem' }}>
@@ -332,9 +341,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 sharing.
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Grid container>
-                <Grid item className={classes.ipFieldLabel}>
+                <Grid className={classes.ipFieldLabel}>
                   <Typography style={{ fontWeight: 'bold' }}>
                     IP Addresses
                   </Typography>
@@ -376,30 +385,28 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 </React.Fragment>
               )}
             </Grid>
-            <Grid container item justifyContent="flex-end" className="m0">
-              <ActionsPanel>
-                <Button
-                  buttonType="secondary"
-                  disabled={submitting || noChoices}
-                  onClick={onReset}
-                  data-qa-reset
-                >
-                  Reset Form
-                </Button>
-                <Button
-                  buttonType="primary"
-                  disabled={readOnly || noChoices}
-                  loading={submitting}
-                  onClick={onSubmit}
-                  data-qa-submit
-                >
-                  Save
-                </Button>
-              </ActionsPanel>
-            </Grid>
           </Grid>
         </>
       </DialogContent>
+      <StyledActionPanel>
+        <Button
+          buttonType="secondary"
+          disabled={submitting || noChoices}
+          onClick={onReset}
+          data-qa-reset
+        >
+          Reset Form
+        </Button>
+        <Button
+          buttonType="primary"
+          disabled={readOnly || noChoices}
+          loading={submitting}
+          onClick={onSubmit}
+          data-qa-submit
+        >
+          Save
+        </Button>
+      </StyledActionPanel>
     </Dialog>
   );
 };
@@ -444,11 +451,11 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
   const { ip } = props;
   const classes = useStyles();
   return (
-    <Grid container key={ip}>
-      <Grid item xs={12}>
+    <Grid container key={ip} spacing={2}>
+      <Grid xs={12}>
         <Divider spacingBottom={0} />
       </Grid>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <TextField
           disabled
           value={ip}
@@ -495,11 +502,11 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   });
 
   return (
-    <Grid container key={idx}>
-      <Grid item xs={12}>
+    <Grid container key={idx} spacing={2}>
+      <Grid xs={12}>
         <Divider spacingBottom={0} />
       </Grid>
-      <Grid item xs={12} sm={10}>
+      <Grid xs={12} sm={10}>
         <Select
           value={selectedIP}
           options={ipList}
@@ -520,7 +527,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
         />
       </Grid>
       {handleDelete ? (
-        <Grid item sm={2} className={classes.removeCont}>
+        <Grid sm={2} className={classes.removeCont}>
           <Button
             buttonType="outlined"
             className={classes.remove}

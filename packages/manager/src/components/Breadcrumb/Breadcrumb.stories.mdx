@@ -1,5 +1,6 @@
+import React from 'react';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import Breadcrumb from 'src/components/Breadcrumb';
+import { Breadcrumb } from './Breadcrumb';
 import UserIcon from 'src/assets/icons/user.svg';
 
 <Meta
@@ -73,7 +74,12 @@ export const EditableBreadcrumbTemplate = (args, context) => {
   <Story name="Default">{BreadcrumbTemplate.bind({})}</Story>
 </Canvas>
 
-<ArgsTable story="Default" sort="requiredFirst" exclude={['className']} sort="requiredFirst"/>
+<ArgsTable
+  story="Default"
+  sort="requiredFirst"
+  exclude={['className']}
+  sort="requiredFirst"
+/>
 
 ### Breadcrumb with Subtitle
 

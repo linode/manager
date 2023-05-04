@@ -5,8 +5,8 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
@@ -80,8 +80,8 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
       ariaLabel={label}
     >
       <TableCell>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item>
+        <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+          <Grid>
             <div className={classes.bucketNameWrapper}>
               <Typography variant="body1" component="h3" data-qa-label>
                 <Link

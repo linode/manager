@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 import Divider from 'src/components/core/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import PaymentDrawer from './PaymentDrawer';
@@ -12,13 +12,13 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
 import { BillingPaper } from '../../BillingDetail';
 import { Breakpoint } from '@mui/material/styles';
-import { getGrantData } from 'src/queries/profile';
 import { GridSize } from '@mui/material/Grid';
 import { isWithinDays } from 'src/utilities/date';
 import { PaymentMethod } from '@linode/api-v4';
 import { PromoDisplay } from './PromoDisplay';
 import { styled, useTheme } from '@mui/material/styles';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { useGrants } from 'src/queries/profile';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 const GridContainer = styled(Grid)({
@@ -41,8 +41,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     false
   );
 
-  const grantData = getGrantData();
-  const accountAccessGrant = grantData?.global?.account_access;
+  const { data: grants } = useGrants();
+  const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.

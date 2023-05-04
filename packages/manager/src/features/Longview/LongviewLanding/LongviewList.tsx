@@ -1,7 +1,7 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
@@ -9,7 +9,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Props as LVProps } from 'src/containers/longview.container';
 import LongviewRows from './LongviewListRows';
 

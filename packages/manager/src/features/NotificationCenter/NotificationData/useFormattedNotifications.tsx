@@ -9,12 +9,11 @@ import { path } from 'ramda';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
-import { useStyles } from 'src/features/NotificationCenter/NotificationData/RenderNotification';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatDate } from 'src/utilities/formatDate';
@@ -23,6 +22,8 @@ import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { Profile } from '@linode/api-v4';
+import { useProfile } from 'src/queries/profile';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
@@ -36,6 +37,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
   } = useDismissibleNotifications();
 
   const { data: regions } = useRegionsQuery();
+  const { data: profile } = useProfile();
 
   const { data: notifications } = useNotificationsQuery();
 
@@ -43,8 +45,6 @@ export const useFormattedNotifications = (): NotificationItem[] => {
     (notification) =>
       notification.type === ('volume_migration_scheduled' as NotificationType)
   );
-
-  const classes = useStyles();
 
   const dayOfMonth = DateTime.local().day;
 
@@ -71,8 +71,8 @@ export const useFormattedNotifications = (): NotificationItem[] => {
     );
   });
 
-  if (volumeMigrationScheduledIsPresent) {
-    filteredNotifications?.push({
+  if (volumeMigrationScheduledIsPresent && filteredNotifications) {
+    filteredNotifications.push({
       type: 'volume_migration_scheduled' as NotificationType,
       entity: null,
       when: null,
@@ -91,8 +91,8 @@ export const useFormattedNotifications = (): NotificationItem[] => {
         interceptNotification(
           notification,
           handleClose,
-          classes,
-          regions ?? []
+          regions ?? [],
+          profile
         ),
         idx,
         handleClose,
@@ -114,8 +114,8 @@ export const useFormattedNotifications = (): NotificationItem[] => {
 const interceptNotification = (
   notification: Notification,
   onClose: () => void,
-  classes: any,
-  regions: Region[]
+  regions: Region[],
+  profile: Profile | undefined
 ): ExtendedNotification => {
   // Ticket interceptions
   if (notification.type === 'ticket_abuse') {
@@ -207,7 +207,10 @@ const interceptNotification = (
           {notification.entity?.label}
         </Link>
         , which will automatically execute on{' '}
-        {formatDate(notification.when as string)}.
+        {formatDate(notification.when as string, {
+          timezone: profile?.timezone,
+        })}
+        .
       </Typography>
     );
 
@@ -286,13 +289,13 @@ const interceptNotification = (
 
     const jsx = (
       <Typography>
-        <Link
+        <StyledLink
           to="/account/billing"
           onClick={onClose}
-          className={criticalSeverity ? classes.redLink : classes.greyLink}
+          severity={notification.severity}
         >
           {notification.message}
-        </Link>{' '}
+        </StyledLink>{' '}
         <Link to="/account/billing/make-payment" onClick={onClose}>
           Make a payment now.
         </Link>
@@ -342,6 +345,17 @@ const interceptNotification = (
   */
   return notification;
 };
+
+const StyledLink = styled(Link)<Pick<Notification, 'severity'>>(
+  ({ theme, ...props }) => ({
+    ...(props.severity === 'critical' && {
+      color: `${theme.color.red} !important`,
+      '&:hover': {
+        textDecoration: `${theme.color.red} underline`,
+      },
+    }),
+  })
+);
 
 const formatNotificationForDisplay = (
   notification: Notification,

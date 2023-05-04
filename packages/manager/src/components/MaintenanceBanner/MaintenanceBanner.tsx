@@ -9,6 +9,7 @@ import Notice from 'src/components/Notice';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import isPast from 'src/utilities/isPast';
+import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 
 type ClassNames = 'root' | 'dateTime';
 
@@ -38,6 +39,11 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
+  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+    {},
+    { status: { '+or': ['pending, started'] } }
+  );
+
   const { type, maintenanceEnd, maintenanceStart } = props;
   const {
     data: profile,
@@ -78,6 +84,10 @@ const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
     return null;
   }
 
+  if (!accountMaintenanceData || accountMaintenanceData?.length === 0) {
+    return null;
+  }
+
   return (
     <Notice warning important className={props.classes.root}>
       <Typography>
@@ -109,7 +119,8 @@ export default compose<CombinedProps, Props>(
 const generateIntroText = (
   type?: AccountMaintenance['type'],
   start?: string | null,
-  end?: string | null
+  end?: string | null,
+  timezone?: string
 ) => {
   const maintenanceInProgress = !!start
     ? isPast(start)(new Date().toISOString())
@@ -134,7 +145,9 @@ const generateIntroText = (
        * we're going to display both the raw and humanized versions of the date
        * to the user here.
        */
-      const rawDate = formatDate(start);
+      const rawDate = formatDate(start, {
+        timezone,
+      });
 
       return (
         <React.Fragment>

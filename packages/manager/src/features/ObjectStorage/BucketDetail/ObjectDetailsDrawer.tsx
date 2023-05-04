@@ -4,7 +4,7 @@ import {
   updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
@@ -14,6 +14,7 @@ import formatDate from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import AccessSelect from './AccessSelect';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles(() => ({
   copy: {
@@ -40,6 +41,8 @@ export interface Props {
 const ObjectDetailsDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
+  const { data: profile } = useProfile();
+
   const {
     open,
     onClose,
@@ -55,7 +58,9 @@ const ObjectDetailsDrawer: React.FC<Props> = (props) => {
   let formattedLastModified;
   try {
     if (lastModified) {
-      formattedLastModified = formatDate(lastModified);
+      formattedLastModified = formatDate(lastModified, {
+        timezone: profile?.timezone,
+      });
     }
   } catch {}
 
@@ -70,7 +75,7 @@ const ObjectDetailsDrawer: React.FC<Props> = (props) => {
           {readableBytes(size).formatted}
         </Typography>
       ) : null}
-      {formattedLastModified ? (
+      {formattedLastModified && Boolean(profile) ? (
         <Typography variant="subtitle2" data-testid="lastModified">
           Last modified: {formattedLastModified}
         </Typography>

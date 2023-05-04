@@ -10,7 +10,7 @@ import {
 import Button from 'src/components/Button';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -104,7 +104,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
       alignItems="flex-end"
       data-qa-linode={linode.label}
     >
-      <Grid item>
+      <Grid>
         <Breadcrumb
           pathname={props.location.pathname}
           firstAndLastOnly
@@ -124,7 +124,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className={classes.controls}>
+      <Grid className={classes.controls}>
         <Button
           buttonType="secondary"
           className={classes.launchButton}

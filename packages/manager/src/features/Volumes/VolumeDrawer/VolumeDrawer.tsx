@@ -3,8 +3,10 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Drawer from 'src/components/Drawer';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
-import { getGrants } from 'src/features/Profile/permissionsHelpers';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import {
@@ -21,7 +23,7 @@ import { ResizeVolumeForm } from './ResizeVolumeForm';
 import ResizeVolumesInstruction from './ResizeVolumesInstruction';
 import VolumeConfigForm from './VolumeConfigForm';
 
-type CombinedProps = StateProps & DispatchProps & ProfileProps;
+type CombinedProps = StateProps & DispatchProps & WithProfileProps;
 
 class VolumeDrawer extends React.PureComponent<CombinedProps> {
   render() {
@@ -44,9 +46,9 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       grants,
     } = this.props;
 
-    const volumesPermissions = getGrants(grants.data, 'volume');
+    const volumesPermissions = grants.data?.volume;
 
-    const volumePermissions = volumesPermissions.find(
+    const volumePermissions = volumesPermissions?.find(
       (v: Grant) => v.id === volumeId
     );
     const readOnly =

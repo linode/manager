@@ -13,13 +13,12 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Notice from 'src/components/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -37,8 +36,8 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
-import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
-import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
+import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
+import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import ConfigSelect, {
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
@@ -149,7 +148,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
       .map((thisRegion) => thisRegion.id) ?? [];
 
   const doesNotHavePermission =
-    profile?.restricted && !hasGrant('add_volumes', grants);
+    profile?.restricted && !grants?.global.add_volumes;
 
   const renderSelectTooltip = (tooltipText: string) => {
     return (
@@ -214,7 +213,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             );
             history.push('/volumes');
             // GA Event
-            sendCreateVolumeEvent(`${label}: ${size}GB`, origin);
+            sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;

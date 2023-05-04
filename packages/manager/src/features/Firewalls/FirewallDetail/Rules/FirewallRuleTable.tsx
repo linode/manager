@@ -11,7 +11,7 @@ import {
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Button from 'src/components/Button';
-import Grid from 'src/components/Grid';
+import Box from '@mui/material/Box';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -23,27 +23,13 @@ import {
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
 } from 'src/features/Firewalls/shared';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& .MuiGrid-root': {
-      margin: 0,
-      alignItems: 'center',
-      fontSize: '.875rem',
-    },
-    '& .MuiGrid-spacing-xs-2 > .MuiGrid-item': {
-      padding: 0,
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(),
-        marginRight: theme.spacing(),
-      },
-    },
-  },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -104,11 +90,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 0,
   },
   ruleHeaderRow: {
-    marginTop: '5px',
     backgroundColor: theme.bg.tableHeader,
     color: theme.textColors.tableHeader,
     fontWeight: 'bold',
     height: '46px',
+    fontSize: '.875rem',
   },
   ruleRow: {
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
@@ -132,27 +118,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: theme.spacing(),
     },
   },
-  policyText: {
-    textAlign: 'right',
-    padding: '0px 15px 0px 15px !important',
-  },
-  policySelect: {
-    paddingLeft: 4,
-  },
-  policySelectInner: {
-    width: 90,
-  },
-  policyRow: {
-    marginTop: '10px !important',
-    justifyContent: 'center',
-    height: '40px',
-  },
 }));
+
+const sxBox = {
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+};
+
+const sxItemSpacing = {
+  padding: `0 8px`,
+};
 
 interface RuleRow {
   type: string;
-  label?: string;
-  description?: string;
+  label?: string | null;
+  description?: string | null;
   action?: string;
   protocol: string;
   ports: string;
@@ -244,49 +225,41 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
           Add an {capitalize(category)} Rule
         </Button>
       </div>
-      <Grid
-        container
-        aria-label={`${category} Rules List`}
-        className={classNames(classes.root, classes.ruleGrid)}
-      >
-        <Grid
-          container
+      <Box aria-label={`${category} Rules List`} className={classes.ruleGrid}>
+        <Box
           className={classes.ruleHeaderRow}
           aria-label={`${category} Rules List Headers`}
           tabIndex={0}
+          sx={sxBox}
         >
-          <Grid
-            item
-            style={{
-              paddingLeft: 27,
-              width: xsDown ? '50%' : '30%',
+          <Box
+            sx={{
+              ...sxItemSpacing,
+              paddingLeft: '27px',
+              width: xsDown ? '50%' : '32%',
             }}
           >
             Label
-          </Grid>
+          </Box>
           <Hidden lgDown>
-            <Grid item style={{ width: '10%' }}>
-              Protocol
-            </Grid>
+            <Box sx={{ ...sxItemSpacing, width: '10%' }}>Protocol</Box>
           </Hidden>
           <Hidden smDown>
-            <Grid
-              item
-              style={{
-                width: '10%',
+            <Box
+              sx={{
+                ...sxItemSpacing,
+                width: '15%',
               }}
             >
               Port Range
-            </Grid>
-            <Grid item style={{ width: '15%' }}>
+            </Box>
+            <Box sx={{ ...sxItemSpacing, width: '15%' }}>
               {capitalize(addressColumnLabel)}
-            </Grid>
+            </Box>
           </Hidden>
-          <Grid item style={{ width: '5%' }}>
-            Action
-          </Grid>
-        </Grid>
-        <Grid container>
+          <Box sx={{ ...sxItemSpacing, width: '5%' }}>Action</Box>
+        </Box>
+        <Box sx={{ ...sxBox, flexDirection: 'column' }}>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable" isDropDisabled={disabled}>
               {(provided) => (
@@ -296,21 +269,23 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                   {...provided.droppableProps}
                 >
                   {rowData.length === 0 ? (
-                    <Grid
-                      container
+                    <Box
                       data-testid={'table-row-empty'}
                       className={classNames(
                         classes.unmodified,
                         classes.ruleRow
                       )}
-                      style={{
-                        padding: 8,
-                        width: '100%',
+                      sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        fontSize: '0.875rem',
                         justifyContent: 'center',
+                        padding: '8px',
+                        width: '100%',
                       }}
                     >
-                      <Grid item>{zeroRulesMessage}</Grid>
-                    </Grid>
+                      <Box>{zeroRulesMessage}</Box>
+                    </Box>
                   ) : (
                     rowData.map((thisRuleRow: RuleRow, index) => (
                       <Draggable
@@ -323,7 +298,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                             key={thisRuleRow.id}
                             role="option"
                             ref={provided.innerRef}
-                            aria-label={thisRuleRow.label}
+                            aria-label={
+                              thisRuleRow.label ??
+                              `firewall rule ${thisRuleRow.id}`
+                            }
                             aria-selected={false}
                             aria-roledescription={screenReaderMessage}
                             {...provided.draggableProps}
@@ -353,16 +331,14 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
               )}
             </Droppable>
           </DragDropContext>
-          <Grid container>
-            <PolicyRow
-              category={category}
-              policy={policy}
-              disabled={disabled}
-              handlePolicyChange={onPolicyChange}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
+          <PolicyRow
+            category={category}
+            policy={policy}
+            disabled={disabled}
+            handlePolicyChange={onPolicyChange}
+          />
+        </Box>
+      </Box>
     </>
   );
 };
@@ -409,10 +385,9 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     };
 
     return (
-      <Grid
-        container
+      <Box
         key={id}
-        aria-label={label}
+        aria-label={label ?? `firewall rule ${id}`}
         className={classNames({
           [classes.ruleGrid]: true,
           [classes.ruleRow]: true,
@@ -424,15 +399,19 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             status === 'MODIFIED' || status === 'NEW' || originalIndex !== id,
           [classes.disabled]: status === 'PENDING_DELETION' || disabled,
         })}
+        sx={{
+          ...sxBox,
+          fontSize: '0.875rem',
+        }}
       >
-        <Grid
-          item
-          style={{
-            paddingLeft: 8,
-            width: xsDown ? '50%' : '30%',
+        <Box
+          aria-label={`Label: ${label}`}
+          sx={{
+            ...sxItemSpacing,
+            paddingLeft: '8px',
+            width: xsDown ? '50%' : '32%',
             overflowWrap: 'break-word',
           }}
-          aria-label={`Label: ${label}`}
         >
           <DragIndicator
             className={classes.dragIcon}
@@ -450,35 +429,39 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
               Add a label
             </button>
           )}{' '}
-        </Grid>
+        </Box>
         <Hidden lgDown>
-          <Grid
-            item
-            style={{ width: '10%' }}
+          <Box
             aria-label={`Protocol: ${protocol}`}
+            sx={{ ...sxItemSpacing, width: '10%' }}
           >
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
-          </Grid>
+          </Box>
         </Hidden>
         <Hidden smDown>
-          <Grid item style={{ width: '10%' }} aria-label={`Ports: ${ports}`}>
+          <Box
+            aria-label={`Ports: ${ports}`}
+            sx={{ ...sxItemSpacing, width: '15%' }}
+          >
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
-          </Grid>
-          <Grid
-            item
-            style={{ width: '15%' }}
+          </Box>
+          <Box
             aria-label={`Addresses: ${addresses}`}
+            sx={{ ...sxItemSpacing, width: '15%' }}
           >
             {addresses}{' '}
             <ConditionalError errors={errors} formField="addresses" />
-          </Grid>
+          </Box>
         </Hidden>
-        <Grid item style={{ width: '5%' }} aria-label={`Action: ${action}`}>
+        <Box
+          aria-label={`Action: ${action}`}
+          sx={{ ...sxItemSpacing, width: '5%' }}
+        >
           {capitalize(action?.toLocaleLowerCase() ?? '')}
-        </Grid>
-        <Grid item style={{ marginLeft: 'auto' }}>
+        </Box>
+        <Box sx={{ ...sxItemSpacing, marginLeft: 'auto' }}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
               <button
@@ -497,8 +480,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           ) : (
             <FirewallRuleActionMenu {...actionMenuProps} />
           )}
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     );
   }
 );
@@ -515,16 +498,10 @@ const policyOptions: Item<FirewallPolicyType>[] = [
   { label: 'Drop', value: 'DROP' },
 ];
 
-export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
+export const PolicyRow = React.memo((props: PolicyRowProps) => {
   const { category, policy, disabled, handlePolicyChange } = props;
-  const classes = useStyles();
-
-  // Calculate how many cells the text should span so that the Select lines up
-  // with the Action column
-  const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('lg'));
-  const colSpan = xsDown ? 3 : mdDown ? 5 : 7;
 
   const helperText = mdDown ? (
     <strong>{capitalize(category)} policy:</strong>
@@ -535,22 +512,58 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
     </span>
   );
 
+  // Using a grid here to keep the Select and the helper text aligned
+  // with the Action column.
+  const sxBoxGrid = {
+    backgroundColor: theme.bg.bgPaper,
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    color: theme.textColors.tableStatic,
+    display: 'grid',
+    fontSize: '.875rem',
+    gridTemplateAreas: `'one two three four five'`,
+    gridTemplateColumns: '32% 10% 10% 15% 120px',
+    height: '40px',
+    alignItems: 'center',
+    marginTop: '10px',
+    width: '100%',
+    [theme.breakpoints.down('lg')]: {
+      gridTemplateAreas: `'one two three four'`,
+      gridTemplateColumns: '32% 15% 15% 120px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateAreas: `'one two'`,
+      gridTemplateColumns: '50% 50%',
+    },
+  };
+
+  const sxBoxPolicyText = {
+    textAlign: 'right',
+    padding: '0px 15px 0px 15px',
+
+    gridArea: '1 / 1 / 1 / 5',
+    [theme.breakpoints.down('lg')]: {
+      gridArea: '1 / 1 / 1 / 4',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridArea: 'one',
+    },
+  };
+
+  const sxBoxPolicySelect = {
+    gridArea: 'five',
+    [theme.breakpoints.down('lg')]: {
+      gridArea: 'four',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridArea: 'two',
+    },
+  };
+
   return (
-    <Grid
-      container
-      className={classNames(
-        classes.policyRow,
-        classes.unmodified,
-        classes.ruleRow
-      )}
-      tabIndex={0}
-    >
-      <Grid item xs={colSpan} className={classes.policyText}>
-        {helperText}
-      </Grid>
-      <Grid item xs={4} className={classes.policySelect}>
+    <Box sx={sxBoxGrid}>
+      <Box sx={sxBoxPolicyText}>{helperText}</Box>
+      <Box sx={sxBoxPolicySelect}>
         <Select
-          className={classes.policySelectInner}
           label={`${category} policy`}
           menuPlacement="top"
           hideLabel
@@ -564,8 +577,8 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
             handlePolicyChange(selected.value)
           }
         />
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 });
 

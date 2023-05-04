@@ -6,13 +6,13 @@ import { APIError } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import * as React from 'react';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
@@ -186,7 +186,7 @@ export const BucketLanding = () => {
       {unavailableClusters.length > 0 && (
         <UnavailableClustersDisplay unavailableClusters={unavailableClusters} />
       )}
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <OrderBy
           data={objectStorageBucketsResponse.buckets}
           order={'asc'}

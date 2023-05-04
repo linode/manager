@@ -13,7 +13,7 @@ import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
+import { Currency } from 'src/components/Currency';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
@@ -32,6 +32,7 @@ import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 import { useRegionsQuery } from 'src/queries/regions';
+import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -92,6 +93,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& a:hover': {
       color: '#3683dc',
+    },
+    '& p': {
+      fontFamily: '"LatoWebBold", sans-serif',
     },
   },
 }));
@@ -507,7 +511,7 @@ export const SelectPlanPanel = (props: Props) => {
           {getRegionsWithCapability('GPU Linodes')}.
         </>
       ) : (
-        <div className={classes.gpuGuideLink}>{gpuPlanText()}</div>
+        <div className={classes.gpuGuideLink}>{gpuPlanText(true)}</div>
       );
       tabs.push({
         render: () => {
@@ -568,9 +572,7 @@ export const SelectPlanPanel = (props: Props) => {
         render: () => {
           return (
             <>
-              <Notice warning>
-                This plan is only available in the Washington, DC region.
-              </Notice>
+              <PremiumPlansAvailabilityNotice />
               <Typography data-qa-gpu className={classes.copy}>
                 Premium CPU instances guarantee a minimum processor model, AMD
                 Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high

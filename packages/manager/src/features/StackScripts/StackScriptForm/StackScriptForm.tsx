@@ -9,12 +9,12 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import imageToItem from 'src/utilities/imageToItem';
+import { imageToItem } from 'src/utilities/imageToItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -121,8 +121,8 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
 
   return (
     <Paper className={classes.root}>
-      <Grid container>
-        <Grid item className={classes.gridWithTips}>
+      <Grid container spacing={2}>
+        <Grid className={classes.gridWithTips}>
           <TextField
             InputProps={{
               startAdornment: (
@@ -166,7 +166,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
             data-qa-stackscript-target-select
           />
         </Grid>
-        <Grid item className={classes.gridWithTips}>
+        <Grid className={classes.gridWithTips}>
           <Notice className={classes.tips}>
             <Typography variant="h2">Tips</Typography>
             <Typography>

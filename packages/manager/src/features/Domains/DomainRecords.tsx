@@ -24,17 +24,17 @@ import { compose as recompose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -694,8 +694,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 justifyContent="space-between"
                 alignItems="center"
                 className={classes.root}
+                spacing={2}
               >
-                <Grid item ref={ref}>
+                <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
                   <Typography
                     role="heading"
                     aria-level={2}
@@ -707,7 +708,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   </Typography>
                 </Grid>
                 {type.link && (
-                  <Grid item>
+                  <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
                     {' '}
                     <div className={classes.linkContainer}>
                       {type.link()}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
 import { useRecycleNodeMutation } from 'src/queries/kubernetes';
@@ -27,6 +27,7 @@ export const RecycleNodeDialog = (props: Props) => {
   const onSubmit = () => {
     mutateAsync().then(() => {
       enqueueSnackbar('Node queued for recycling.', { variant: 'success' });
+      onClose();
     });
   };
 

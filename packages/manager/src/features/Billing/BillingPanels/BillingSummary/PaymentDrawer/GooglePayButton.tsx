@@ -1,7 +1,7 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
@@ -16,6 +16,7 @@ import { useScript } from 'src/hooks/useScript';
 import { useAccount } from 'src/queries/account';
 import { useClientToken } from 'src/queries/accountPayment';
 import { SetSuccess } from './types';
+import { QueryClient, useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -74,6 +75,7 @@ export const GooglePayButton = (props: Props) => {
   const { classes, cx } = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
+  const queryClient = useQueryClient();
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
   );
@@ -115,8 +117,14 @@ export const GooglePayButton = (props: Props) => {
     }
   };
 
-  const handlePay = () => {
-    gPay('one-time-payment', transactionInfo, handleMessage, setProcessing);
+  const handlePay = (queryClient: QueryClient) => {
+    gPay(
+      'one-time-payment',
+      transactionInfo,
+      handleMessage,
+      setProcessing,
+      queryClient
+    );
   };
 
   if (status === 'error' || clientTokenError) {
@@ -158,7 +166,7 @@ export const GooglePayButton = (props: Props) => {
           [classes.disabled]: disabledDueToPrice || disabledDueToProcessing,
         })}
         disabled={disabledDueToPrice || disabledDueToProcessing}
-        onClick={handlePay}
+        onClick={() => handlePay(queryClient)}
         data-qa-button="gpayButton"
       >
         <GooglePayIcon />

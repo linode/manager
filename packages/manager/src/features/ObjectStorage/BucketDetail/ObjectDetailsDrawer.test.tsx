@@ -1,8 +1,11 @@
 import { vi } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
+import { act, waitFor } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import ObjectDetailsDrawer, { Props } from './ObjectDetailsDrawer';
+import { rest, server } from 'src/mocks/testServer';
+import { profileFactory } from 'src/factories';
+import { QueryClient } from 'react-query';
 
 vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
   const actual = await vi.importActual<any>(
@@ -37,24 +40,31 @@ describe('ObjectDetailsDrawer', () => {
     vi.clearAllMocks();
   });
   it('renders formatted size, formatted last modified, truncated URL', async () => {
-    renderWithTheme(<ObjectDetailsDrawer {...props} />);
-    await waitFor(() =>
-      expect(screen.getByText('12.1 KB')).toBeInTheDocument()
+    server.use(
+      rest.get('*/profile', (req, res, ctx) =>
+        res(ctx.json(profileFactory.build({ timezone: 'utc' })))
+      )
     );
+    const { getByText } = renderWithTheme(<ObjectDetailsDrawer {...props} />, {
+      queryClient: new QueryClient(),
+    });
+
+    // The date rendering depends on knowing the profile timezone
     await waitFor(() =>
-      expect(screen.getByText(/^Last modified: 2019-12-31/)).toBeInTheDocument()
+      expect(getByText(/^Last modified: 2019-12-31/)).toBeInTheDocument()
     );
-    await waitFor(() =>
-      expect(screen.getByText(/^https:\/\/my-bucket/)).toBeInTheDocument()
-    );
+
+    expect(getByText('12.1 KB')).toBeInTheDocument();
+    expect(getByText(/^https:\/\/my-bucket/)).toBeInTheDocument();
   });
 
   it("doesn't show last modified if the the time is invalid", async () => {
-    renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <ObjectDetailsDrawer {...props} lastModified="INVALID DATE" />
     );
-    await waitFor(() =>
-      expect(screen.queryByTestId('lastModified')).not.toBeInTheDocument()
-    );
+
+    await act(async () => {
+      expect(queryByTestId('lastModified')).not.toBeInTheDocument();
+    });
   });
 });

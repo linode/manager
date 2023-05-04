@@ -9,18 +9,20 @@ import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
-import DebouncedSearch from 'src/components/DebouncedSearchTextField';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
-import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
+import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -63,13 +65,17 @@ export interface State {
   successMessage: string;
 }
 
-type CombinedProps = StyleProps &
+interface Props {
+  publicImages: Record<string, Image>;
+  category: string;
+  request: StackScriptsRequest;
+}
+
+type CombinedProps = Props &
+  StyleProps &
   RouteComponentProps &
-  ProfileProps & {
-    publicImages: Record<string, Image>;
-    category: string;
-    request: StackScriptsRequest;
-  };
+  WithProfileProps &
+  WithQueryClientProps;
 
 interface HelperFunctions {
   getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any;
@@ -368,8 +374,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         didSearch: true, // table will show default empty state unless didSearch is true
       });
 
-      sendStackscriptsSearchEvent(lowerCaseValue);
-
       request({ page: 1, page_size: 50 }, { ...filter, ...currentFilter })
         .then((response: any) => {
           if (!this.mounted) {
@@ -431,7 +435,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       const userCannotCreateStackScripts =
         Boolean(profile.data?.restricted) &&
-        !hasGrant('add_stackscripts', grants.data);
+        !grants.data?.global.add_stackscripts;
 
       if (error) {
         return (
@@ -537,7 +541,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   [classes.landing]: !isSelecting,
                 })}
               >
-                <DebouncedSearch
+                <DebouncedSearchTextField
                   placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
                   debounceTime={400}

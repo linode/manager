@@ -1,32 +1,13 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { makeStyles } from '@mui/styles';
+import { CircleProgress } from 'src/components/CircleProgress';
+import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
 import { MapState } from 'src/store/types';
 import { srSpeak } from 'src/utilities/accessibility';
-import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
-import CircleProgress from '../CircleProgress';
 
-const useStyles = makeStyles({
-  root: {
-    backgroundColor: '#f4f4f4',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    width: '100vw',
-    position: 'fixed',
-    zIndex: 100,
-    top: 0,
-    left: 0,
-  },
-});
-
-type CombinedProps = StateProps;
-
-const SplashScreen = (props: CombinedProps) => {
-  const classes = useStyles();
-
+const SplashScreen = (props: StateProps) => {
   React.useEffect(() => {
     srSpeak('Loading Linode Cloud Manager', 'polite');
   }, []);
@@ -34,9 +15,9 @@ const SplashScreen = (props: CombinedProps) => {
   const { featureFlagsLoading } = useFeatureFlagsLoad();
 
   return props.appIsLoading || featureFlagsLoading ? (
-    <div className={classes.root} aria-label="Loading Cloud Manager">
+    <StyledDiv aria-label="Loading Cloud Manager">
       <CircleProgress />
-    </div>
+    </StyledDiv>
   ) : null;
 };
 
@@ -50,4 +31,17 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, {}>(connected, React.memo)(SplashScreen);
+export default compose<StateProps, {}>(connected, React.memo)(SplashScreen);
+
+const StyledDiv = styled('div')(({ theme }) => ({
+  backgroundColor: theme.bg.main,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+  width: '100vw',
+  position: 'fixed',
+  zIndex: 100,
+  top: 0,
+  left: 0,
+}));

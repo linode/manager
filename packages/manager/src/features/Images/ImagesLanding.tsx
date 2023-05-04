@@ -8,8 +8,8 @@ import { useHistory } from 'react-router-dom';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
@@ -22,7 +22,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table/Table';
 import TableCell from 'src/components/TableCell/TableCell';
@@ -44,6 +44,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -100,6 +101,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
 
   // Pagination, order, and query hooks for manual/custom images
   const paginationForManualImages = usePagination(
@@ -279,15 +282,15 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     imageLabel: string,
     imageDescription: string
   ) => {
-    removeImageFromCache();
+    removeImageFromCache(queryClient);
     history.push('/images/create/upload', {
       imageLabel,
       imageDescription,
     });
   };
 
-  const onCancelFailedClick = (imageId: string) => {
-    removeImageFromCache();
+  const onCancelFailedClick = () => {
+    removeImageFromCache(queryClient);
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {

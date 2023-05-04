@@ -1,3 +1,12 @@
+## [2023-05-01] - v0.23.0
+
+### Fixed:
+- Firewall ports regex to prevent exponential backtracking in the `validateFirewallPorts` schema #9010
+
+## [2023-04-17] - v0.22.0
+
+### Changed:
+- Make NodeBalancer label required #8964
 
 ## [2023-04-03] - v0.21.0
 

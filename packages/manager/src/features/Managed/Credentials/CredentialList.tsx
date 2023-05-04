@@ -4,17 +4,17 @@ import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import DeletionDialog from 'src/components/DeletionDialog';
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -36,7 +36,7 @@ import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type FormikProps = FormikBag<{}, CredentialPayload>;
 
 export const CredentialList = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading, error } = useAllManagedCredentialsQuery();
 
@@ -224,9 +224,12 @@ export const CredentialList = () => {
         container
         alignItems="center"
         justifyContent="flex-end"
-        updateFor={[credentials, error, isLoading]}
+        spacing={2}
+        sx={{
+          paddingRight: 0,
+        }}
       >
-        <Grid className={classes.addNewWrapper} item>
+        <Grid className={classes.addNewWrapper}>
           <AddNewLink
             label="Add Credential"
             onClick={() => setDrawerOpen(true)}

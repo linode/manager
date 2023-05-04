@@ -11,7 +11,7 @@ import { Theme } from '@mui/material/styles';
 import EntityIcon from 'src/components/EntityIcon';
 import MenuItem from 'src/components/MenuItem';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import PowerDialogOrDrawer, { Action } from '../../PowerActionsDialogOrDrawer';
+import { PowerActionsDialog, Action } from '../../PowerActionsDialogOrDrawer';
 
 type ClassNames =
   | 'root'
@@ -307,13 +307,11 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
             </MenuItem>
           )}
         </Menu>
-        <PowerDialogOrDrawer
+        <PowerActionsDialog
           isOpen={this.state.powerDialogOpen}
-          action={this.state.selectedBootAction}
-          linodeID={this.props.id}
-          linodeLabel={this.props.label}
-          close={this.closeDialog}
-          linodeConfigs={this.props.linodeConfigs}
+          action={this.state.selectedBootAction ?? 'Reboot'}
+          linodeId={this.props.id}
+          onClose={this.closeDialog}
         />
       </React.Fragment>
     );

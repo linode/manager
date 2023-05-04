@@ -12,7 +12,7 @@ import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { SecurityQuestionsData } from '@linode/api-v4';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { useSnackbar } from 'notistack';
 import { Link } from 'src/components/Link';
 
@@ -141,10 +141,11 @@ const SecurityQuestions = () => {
     <Box>
       <Typography variant="h3">Security Questions</Typography>
       <Typography variant="body1" className={classes.copy}>
-        Security questions enable you to regain access to your Linode user
-        account in certain situations, such as when 2FA is enabled and you no
-        longer have access to the token or recovery codes. Answers to security
-        questions should not be easily guessed or discoverable through research.{' '}
+        Security questions enable you to regain access to your Cloud Manager
+        user account in certain situations, such as when 2FA is enabled and you
+        no longer have access to the token or recovery codes. Answers to
+        security questions should not be easily guessed or discoverable through
+        research.{' '}
         <Link to="https://www.linode.com/docs/guides/user-security-controls#security-questions">
           Learn more about security options.
         </Link>

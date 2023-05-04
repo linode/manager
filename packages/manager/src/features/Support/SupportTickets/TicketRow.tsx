@@ -1,13 +1,14 @@
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { SupportTicket } from '@linode/api-v4/lib/support';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+import { ApplicationStore, useApplicationStore } from 'src/store';
 
 const useStyles = makeStyles(() => ({
   regarding: {
@@ -19,8 +20,8 @@ interface Props {
   ticket: SupportTicket;
 }
 
-const renderEntityLink = (ticket: SupportTicket) => {
-  const target = getLinkTargets(ticket.entity);
+const renderEntityLink = (ticket: SupportTicket, store: ApplicationStore) => {
+  const target = getLinkTargets(ticket.entity, store);
   return ticket.entity ? (
     target !== null ? (
       <Link to={target} className="secondaryLink">
@@ -38,6 +39,7 @@ const renderEntityLink = (ticket: SupportTicket) => {
 };
 
 const TicketRow: React.FC<Props> = ({ ticket }) => {
+  const store = useApplicationStore();
   const classes = useStyles();
 
   return (
@@ -54,7 +56,7 @@ const TicketRow: React.FC<Props> = ({ ticket }) => {
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
       <TableCell data-qa-support-entity className={classes.regarding}>
-        {renderEntityLink(ticket)}
+        {renderEntityLink(ticket, store)}
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-support-date>

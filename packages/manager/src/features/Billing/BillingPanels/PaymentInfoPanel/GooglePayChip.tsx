@@ -1,6 +1,6 @@
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from 'tss-react/mui';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import {
@@ -9,6 +9,7 @@ import {
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
+import { useQueryClient } from 'react-query';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles()(() => ({
@@ -49,6 +50,7 @@ export const GooglePayChip = (props: Props) => {
   const { classes, cx } = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
+  const queryClient = useQueryClient();
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
   );
@@ -83,7 +85,8 @@ export const GooglePayChip = (props: Props) => {
         countryCode: 'US',
       },
       handleMessage,
-      setProcessing
+      setProcessing,
+      queryClient
     );
   };
 

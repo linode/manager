@@ -9,17 +9,14 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import ResultRow from './ResultRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(3),
-  },
   entityHeading: {
     marginBottom: theme.spacing(),
     [theme.breakpoints.down('md')]: {
@@ -57,7 +54,7 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
     results.length > groupSize ? splitAt(groupSize, results) : [results, []];
 
   return (
-    <Grid item className={classes.root}>
+    <Grid>
       <Typography
         variant="h2"
         data-qa-entity-header={entity}

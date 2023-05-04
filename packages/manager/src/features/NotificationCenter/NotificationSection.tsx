@@ -2,11 +2,11 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExtendedAccordion from 'src/components/ExtendedAccordion';
 import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
     marginBottom: 6,
+    paddingBottom: theme.spacing(1),
   },
   content: {
     width: '100%',
@@ -186,6 +187,7 @@ interface BodyProps {
 }
 
 const ContentBody: React.FC<BodyProps> = React.memo((props) => {
+  const theme = useTheme();
   const classes = useStyles();
 
   const { header, content, count, emptyMessage, loading } = props;
@@ -206,12 +208,16 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
     // eslint-disable-next-line
     <>
       {_content.map((thisItem) => (
-        <div
+        <Box
           className={classes.notificationItem}
           key={`notification-row-${thisItem.id}`}
+          sx={{
+            marginTop: theme.spacing(1),
+            marginBottom: theme.spacing(1),
+          }}
         >
           {thisItem.body}
-        </div>
+        </Box>
       ))}
       {content.length > count ? (
         <Box display="flex" justifyContent="flex-end">

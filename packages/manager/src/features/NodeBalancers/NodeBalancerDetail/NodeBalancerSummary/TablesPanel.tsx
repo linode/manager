@@ -1,10 +1,9 @@
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import getUserTimezone from 'src/utilities/getUserTimezone';
@@ -80,7 +79,7 @@ const TablesPanel = () => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const { data: profile } = useProfile();
-  const timezone = getUserTimezone(profile);
+  const timezone = getUserTimezone(profile?.timezone);
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
@@ -140,6 +139,7 @@ const TablesPanel = () => {
             ariaLabel="Connections Graph"
             timezone={timezone}
             showToday={true}
+            accessibleDataTable={{ unit: 'CXN/s' }}
             data={[
               {
                 label: 'Connections',
@@ -151,20 +151,16 @@ const TablesPanel = () => {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'Connections',
-                    legendColor: 'purple',
-                    data: metrics,
-                    format: formatNumber,
-                  },
-                ]}
-              />
-            </Grid>
-          </Grid>
+          <MetricsDisplay
+            rows={[
+              {
+                legendTitle: 'Connections',
+                legendColor: 'purple',
+                data: metrics,
+                format: formatNumber,
+              },
+            ]}
+          />
         </div>
       </React.Fragment>
     );
@@ -212,6 +208,7 @@ const TablesPanel = () => {
             ariaLabel="Traffic Graph"
             timezone={timezone}
             showToday={true}
+            accessibleDataTable={{ unit: 'bits/s' }}
             data={[
               {
                 label: 'Traffic In',

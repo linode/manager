@@ -10,8 +10,7 @@ import Select, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { getGrants } from 'src/features/Profile/permissionsHelpers';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -90,8 +89,8 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
     overwrite: 'Overwrite',
   };
 
-  const volumesPermissions = getGrants(grants, 'volume');
-  const volumePermissions = volumesPermissions.find(
+  const volumesPermissions = grants?.volume;
+  const volumePermissions = volumesPermissions?.find(
     (v: Grant) => v.id === volumeId
   );
 

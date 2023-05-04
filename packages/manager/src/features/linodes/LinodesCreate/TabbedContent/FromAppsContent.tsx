@@ -6,7 +6,7 @@ import { assocPath } from 'ramda';
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
@@ -21,7 +21,7 @@ import {
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 import { APP_ROOT } from 'src/constants';
-import DebouncedSearch from 'src/components/DebouncedSearchTextField';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
@@ -167,10 +167,6 @@ const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
 
 const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
-const handleSearchFieldClick = () => {
-  sendMarketplaceSearchEvent('Search Field');
-};
-
 class FromAppsContent extends React.Component<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
@@ -253,7 +249,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
     const didUserSelectCategory = categoryItem !== null;
     let instancesInCategory: StackScript[] | undefined = [];
     if (didUserSelectCategory) {
-      sendMarketplaceSearchEvent('Category Dropdown', categoryItem.label);
+      sendMarketplaceSearchEvent(categoryItem.label);
       const appsInCategory = oneClickApps.filter((oca) =>
         oca.categories?.includes(categoryItem.value)
       );
@@ -318,23 +314,23 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid className={`${classes.main} mlMain py0`}>
           <Paper>
             <Typography variant="h2">Select an App</Typography>
             <Box className={classes.searchAndFilter}>
               <Box className={classes.search}>
-                <DebouncedSearch
+                <DebouncedSearchTextField
                   placeholder="Search for app name"
                   fullWidth
                   onSearch={this.onSearch}
                   label="Search marketplace"
-                  onClick={handleSearchFieldClick}
                   hideLabel
                   value={query}
                 />
               </Box>
               <Box className={classes.filter}>
                 <Select
+                  label="Select category"
                   placeholder="Select category"
                   options={appCategoryOptions}
                   onChange={this.handleSelectCategory}
@@ -357,6 +353,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
             error={hasErrorFor('stackscript_id')}
             isSearching={isSearching}
             isFiltering={isFiltering}
+            searchValue={query}
           />
           {!userCannotCreateLinode && selectedStackScriptLabel ? (
             <UserDefinedFieldsPanel

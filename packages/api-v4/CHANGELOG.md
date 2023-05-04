@@ -1,3 +1,14 @@
+## [2023-05-01] - v0.91.0
+
+### Added:
+- `InterfacePayload` type for network interface data when creating a Linode or a Linode configuration #9053
+- `id` to the `Interface` type #9053
+
+## [2023-04-17] - v0.90.0
+
+### Changed:
+- Accept URL query parameters for `getNodeBalancerConfigs` #8964
+- Accept `null` for `OAuthClient` thumbnail URL #8938
 
 ## [2023-04-03] - v0.89.0
 

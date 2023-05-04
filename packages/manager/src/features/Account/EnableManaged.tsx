@@ -4,16 +4,17 @@ import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
-import SupportLink from 'src/components/SupportLink';
+import Grid from '@mui/material/Unstable_Grid2';
+import { SupportLink } from 'src/components/SupportLink';
 import withLinodes, {
   DispatchProps,
 } from 'src/containers/withLinodes.container';
 import { pluralize } from 'src/utilities/pluralize';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import { useQueryClient } from 'react-query';
 
 interface Props {
   isManaged: boolean;
@@ -43,8 +44,8 @@ export const ManagedContent = (props: ContentProps) => {
   }
 
   return (
-    <Grid container direction="column">
-      <Grid item>
+    <Grid container direction="column" spacing={2}>
+      <Grid>
         <Typography variant="body1">
           Linode Managed includes Backups, Longview Pro, cPanel, and
           round-the-clock monitoring to help keep your systems up and running.
@@ -56,7 +57,7 @@ export const ManagedContent = (props: ContentProps) => {
           />
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <Button buttonType="outlined" onClick={openConfirmationModal}>
           Add Linode Managed
         </Button>
@@ -67,6 +68,7 @@ export const ManagedContent = (props: ContentProps) => {
 
 export const EnableManaged = (props: CombinedProps) => {
   const { isManaged, linodeCount } = props;
+  const queryClient = useQueryClient();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -87,7 +89,7 @@ export const EnableManaged = (props: CombinedProps) => {
     enableManaged()
       .then(() => {
         handleClose();
-        updateAccountSettingsData({ managed: true });
+        updateAccountSettingsData({ managed: true }, queryClient);
       })
       .catch(handleError);
   };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CopyableTextField from 'src/components/CopyableTextField';
+import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';

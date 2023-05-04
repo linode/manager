@@ -4,13 +4,14 @@ import Tooltip from 'src/components/core/Tooltip';
 import Link from 'src/components/Link';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import capitalize from 'src/utilities/capitalize';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import StatusIcon, { Status } from 'src/components/StatusIcon/StatusIcon';
+import { capitalize } from 'src/utilities/capitalize';
+import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { truncate } from 'src/utilities/truncate';
+import { useProfile } from 'src/queries/profile';
 
 const statusTextMap: Record<AccountMaintenance['status'], string> = {
   started: 'In Progress',
@@ -26,6 +27,8 @@ const statusIconMap: Record<AccountMaintenance['status'], Status> = {
 
 export const MaintenanceTableRow = (props: AccountMaintenance) => {
   const { entity, when, type, status, reason } = props;
+
+  const { data: profile } = useProfile();
 
   const truncatedReason = truncate(reason, 93);
 
@@ -48,7 +51,11 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
           {entity.label}
         </Link>
       </TableCell>
-      <TableCell noWrap>{formatDate(when)}</TableCell>
+      <TableCell noWrap>
+        {formatDate(when, {
+          timezone: profile?.timezone,
+        })}
+      </TableCell>
       <Hidden mdDown>
         <TableCell data-testid="relative-date">
           {parseAPIDate(when).toRelative()}

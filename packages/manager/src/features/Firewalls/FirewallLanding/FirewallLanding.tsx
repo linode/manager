@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import LandingHeader from 'src/components/LandingHeader';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import CreateFirewallDrawer from './CreateFirewallDrawer';
@@ -19,7 +19,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableBody from 'src/components/core/TableBody';
 import Hidden from 'src/components/core/Hidden';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 
 const preferenceKey = 'firewalls';
 

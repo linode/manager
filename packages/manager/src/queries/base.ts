@@ -34,9 +34,11 @@ export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
   },
 };
 
-export const queryClient = new QueryClient({
-  defaultOptions: { queries: queryPresets.longLived },
-});
+export const queryClientFactory = () => {
+  return new QueryClient({
+    defaultOptions: { queries: queryPresets.longLived },
+  });
+};
 
 // =============================================================================
 // Types
@@ -69,7 +71,8 @@ export const listToItemsByID = <E extends {}[]>(
 
 export const mutationHandlers = <T, V, E = APIError[]>(
   queryKey: string,
-  indexer: string = 'id'
+  indexer: string = 'id',
+  queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {
@@ -83,7 +86,8 @@ export const mutationHandlers = <T, V, E = APIError[]>(
 };
 
 export const simpleMutationHandlers = <T, V, E = APIError[]>(
-  queryKey: string
+  queryKey: string,
+  queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables: V) => {
@@ -97,7 +101,8 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
 
 export const creationHandlers = <T, V, E = APIError[]>(
   queryKey: string,
-  indexer: string = 'id'
+  indexer: string = 'id',
+  queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity) => {
@@ -112,7 +117,8 @@ export const creationHandlers = <T, V, E = APIError[]>(
 
 export const deletionHandlers = <T, V, E = APIError[]>(
   queryKey: string,
-  indexer: string = 'id'
+  indexer: string = 'id',
+  queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
@@ -131,7 +137,8 @@ export const itemInListMutationHandler = <
   V,
   E = APIError[]
 >(
-  queryKey: QueryKey
+  queryKey: QueryKey,
+  queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {
@@ -159,7 +166,8 @@ export const itemInListMutationHandler = <
 };
 
 export const itemInListCreationHandler = <T, V, E = APIError[]>(
-  queryKey: QueryKey
+  queryKey: QueryKey,
+  queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (createdEntity) => {
@@ -181,7 +189,8 @@ export const itemInListDeletionHandler = <
   V extends { id?: number | string },
   E = APIError[]
 >(
-  queryKey: QueryKey
+  queryKey: QueryKey,
+  queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
@@ -215,7 +224,8 @@ export const itemInListDeletionHandler = <
 export const updateInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
   id: number | string,
-  newData: Partial<T>
+  newData: Partial<T>,
+  queryClient: QueryClient
 ) => {
   queryClient.setQueriesData<ResourcePage<T> | undefined>(
     queryKey,
@@ -246,7 +256,8 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
 
 export const getItemInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
-  id: number
+  id: number,
+  queryClient: QueryClient
 ) => {
   const stores = queryClient.getQueriesData<ResourcePage<T> | undefined>(
     queryKey
@@ -267,8 +278,9 @@ export const doesItemExistInPaginatedStore = <
   T extends { id: number | string }
 >(
   queryKey: QueryKey,
-  id: number
+  id: number,
+  queryClient: QueryClient
 ) => {
-  const item = getItemInPaginatedStore<T>(queryKey, id);
+  const item = getItemInPaginatedStore<T>(queryKey, id, queryClient);
   return item !== null;
 };

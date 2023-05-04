@@ -41,6 +41,8 @@ import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
+import { ADOBE_ANALYTICS_URL } from './constants';
+import { linodeEventsHandler } from './queries/linodes/events';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -83,6 +85,11 @@ export class App extends React.Component<CombinedProps, State> {
       loadScript('/new-relic.js');
     }
 
+    // Load Adobe Analytics Launch Script
+    if (!!ADOBE_ANALYTICS_URL) {
+      loadScript(ADOBE_ANALYTICS_URL, { location: 'head' });
+    }
+
     /**
      * Send pageviews unless blocklisted.
      */
@@ -100,20 +107,29 @@ export class App extends React.Component<CombinedProps, State> {
     document.addEventListener('keydown', this.keyboardListener);
 
     events$
-      .filter((event) => event.action.startsWith('database') && !event._initial)
+      .filter(
+        ({ event }) => event.action.startsWith('database') && !event._initial
+      )
       .subscribe(databaseEventsHandler);
 
     events$
-      .filter((event) => event.action.startsWith('domain') && !event._initial)
+      .filter(
+        ({ event }) =>
+          event.action.startsWith('domain') &&
+          !event._initial &&
+          event.entity !== null
+      )
       .subscribe(domainEventsHandler);
 
     events$
-      .filter((event) => event.action.startsWith('volume') && !event._initial)
+      .filter(
+        ({ event }) => event.action.startsWith('volume') && !event._initial
+      )
       .subscribe(volumeEventsHandler);
 
     events$
       .filter(
-        (event) =>
+        ({ event }) =>
           (event.action.startsWith('image') ||
             event.action === 'disk_imagize') &&
           !event._initial
@@ -121,30 +137,43 @@ export class App extends React.Component<CombinedProps, State> {
       .subscribe(imageEventsHandler);
 
     events$
-      .filter((event) => event.action.startsWith('token') && !event._initial)
+      .filter(
+        ({ event }) => event.action.startsWith('token') && !event._initial
+      )
       .subscribe(tokenEventHandler);
 
     events$
       .filter(
-        (event) => event.action.startsWith('user_ssh_key') && !event._initial
+        ({ event }) =>
+          event.action.startsWith('user_ssh_key') && !event._initial
       )
       .subscribe(sshKeyEventHandler);
 
     events$
-      .filter((event) => event.action.startsWith('firewall') && !event._initial)
+      .filter(
+        ({ event }) => event.action.startsWith('firewall') && !event._initial
+      )
       .subscribe(firewallEventsHandler);
 
     events$
       .filter(
-        (event) => event.action.startsWith('nodebalancer') && !event._initial
+        ({ event }) =>
+          event.action.startsWith('nodebalancer') && !event._initial
       )
       .subscribe(nodebalanacerEventHandler);
 
     events$
       .filter(
-        (event) => event.action.startsWith('oauth_client') && !event._initial
+        ({ event }) =>
+          event.action.startsWith('oauth_client') && !event._initial
       )
       .subscribe(oauthClientsEventHandler);
+
+    events$
+      .filter(
+        ({ event }) => event.action.startsWith('linode') && !event._initial
+      )
+      .subscribe(linodeEventsHandler);
 
     /*
      * We want to listen for migration events side-wide
@@ -154,9 +183,10 @@ export class App extends React.Component<CombinedProps, State> {
      */
     this.eventsSub = events$
       .filter(
-        (event) => !event._initial && ['linode_migrate'].includes(event.action)
+        ({ event }) =>
+          !event._initial && ['linode_migrate'].includes(event.action)
       )
-      .subscribe((event) => {
+      .subscribe(({ event }) => {
         const { entity: migratedLinode } = event;
         if (event.action === 'linode_migrate' && event.status === 'finished') {
           this.props.enqueueSnackbar(

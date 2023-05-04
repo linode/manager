@@ -8,15 +8,15 @@ import { useFormik } from 'formik';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Typography from 'src/components/core/Typography';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { LinkButton } from 'src/components/LinkButton';
 import TextField from 'src/components/TextField';
-import { queryClient } from 'src/queries/base';
 import {
   queryKey,
   updateProfileData,
@@ -33,6 +33,8 @@ export const PhoneVerification = () => {
 
   const { data: profile } = useProfile();
   const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
 
   const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
 
@@ -62,6 +64,7 @@ export const PhoneVerification = () => {
 
   const {
     mutateAsync: sendVerificationCode,
+    reset: resetCodeMutation,
     error: verifyError,
   } = useVerifyPhoneVerificationCodeMutation();
 
@@ -70,6 +73,7 @@ export const PhoneVerification = () => {
   const onSubmitPhoneNumber = async (
     values: SendPhoneVerificationCodePayload
   ) => {
+    resetCodeMutation();
     return await sendPhoneVerificationCode(values);
   };
 
@@ -84,9 +88,12 @@ export const PhoneVerification = () => {
 
     if (countryOfNewPhoneNumber) {
       // if Cloud Manager is aware of the country the user used, we can assume how the API will parse and return the number
-      updateProfileData({
-        verified_phone_number: `${countryOfNewPhoneNumber.dialingCode}${sendCodeForm.values.phone_number}`,
-      });
+      updateProfileData(
+        {
+          verified_phone_number: `${countryOfNewPhoneNumber.dialingCode}${sendCodeForm.values.phone_number}`,
+        },
+        queryClient
+      );
     } else {
       // Cloud Manager does not know about the country, so lets refetch the user's phone number so we know it's displaying correctly
       queryClient.invalidateQueries(queryKey);
@@ -140,8 +147,7 @@ export const PhoneVerification = () => {
   };
 
   const onEnterDifferentPhoneNumber = () => {
-    resetSendCodeMutation();
-    sendCodeForm.resetForm();
+    reset();
   };
 
   const onResendVerificationCode = () => {
@@ -162,11 +168,12 @@ export const PhoneVerification = () => {
       marginLeft: '-1px !important',
       marginTop: '0px !important',
     }),
-    singleValue: (provided: React.CSSProperties) => ({
-      ...provided,
-      textAlign: 'center',
-      fontSize: '20px',
-    }),
+    singleValue: (provided: React.CSSProperties) =>
+      ({
+        ...provided,
+        textAlign: 'center',
+        fontSize: '20px',
+      } as const),
   };
 
   const selectedCountry = countries.find(
@@ -244,6 +251,7 @@ export const PhoneVerification = () => {
                 })}
               >
                 <Select
+                  label="ISO Code"
                   onFocus={() => setIsPhoneInputFocused(true)}
                   onBlur={() => setIsPhoneInputFocused(false)}
                   styles={customStyles}
@@ -251,16 +259,15 @@ export const PhoneVerification = () => {
                   className={classes.select}
                   id="iso_code"
                   name="iso_code"
-                  type="text"
                   isClearable={false}
                   value={{
                     value: sendCodeForm.values.iso_code,
                     label: getCountryFlag(sendCodeForm.values.iso_code),
                   }}
-                  isOptionSelected={(option: Item) =>
+                  isOptionSelected={(option) =>
                     sendCodeForm.values.iso_code === option.value
                   }
-                  onChange={(item: Item) =>
+                  onChange={(item) =>
                     sendCodeForm.setFieldValue('iso_code', item.value)
                   }
                   options={countries.map((counrty) => ({

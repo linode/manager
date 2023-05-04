@@ -6,7 +6,7 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
@@ -111,9 +111,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
               preferenceKey={`smtp-restriction-notice-${linodeLabel}`}
               spacingTop={32}
             >
-              <Grid item xs={12}>
-                {text}
-              </Grid>
+              <Grid xs={12}>{text}</Grid>
             </DismissibleBanner>
           ) : null
         }

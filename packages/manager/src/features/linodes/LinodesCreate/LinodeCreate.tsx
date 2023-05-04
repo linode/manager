@@ -1,4 +1,4 @@
-import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
+import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import { Theme } from '@mui/material/styles';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
@@ -11,16 +11,15 @@ import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import Button from 'src/components/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
-import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
@@ -46,7 +45,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { sendEvent } from 'src/utilities/ga';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
-import AddonsPanel from './AddonsPanel';
+import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
 import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
@@ -152,7 +151,7 @@ interface Props {
   showGeneralError?: boolean;
   vlanLabel: string | null;
   ipamAddress: string | null;
-  handleVLANChange: (updatedInterface: Interface) => void;
+  handleVLANChange: (updatedInterface: InterfacePayload) => void;
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   handleAgreementChange: () => void;
@@ -568,12 +567,20 @@ export class LinodeCreate extends React.PureComponent<
 
     return (
       <form className={classes.form}>
-        <Grid item className="py0">
+        <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
           {generalError && <Notice error spacingTop={8} text={generalError} />}
-          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
+          {userCannotCreateLinode && (
+            <Notice
+              text={
+                "You don't have permissions to create a new Linode. Please contact an account administrator for details."
+              }
+              error
+              important
+            />
+          )}
           <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
             <TabLinkList tabs={this.tabs} />
             <TabPanels>
@@ -772,9 +779,9 @@ export class LinodeCreate extends React.PureComponent<
             backups={this.props.backupsEnabled}
             accountBackups={accountBackupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
-            privateIP={this.props.privateIPEnabled}
+            isPrivateIPChecked={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}
-            changePrivateIP={this.props.togglePrivateIPEnabled}
+            togglePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
             selectedImageID={this.props.selectedImageID}
             selectedTypeID={this.props.selectedTypeID}
@@ -782,6 +789,8 @@ export class LinodeCreate extends React.PureComponent<
             ipamAddress={this.props.ipamAddress || ''}
             handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
+            selectedLinodeID={this.props.selectedLinodeID}
+            linodesData={this.props.linodesData}
             labelError={hasErrorFor['interfaces[1].label']}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
             createType={this.props.createType}
@@ -804,11 +813,7 @@ export class LinodeCreate extends React.PureComponent<
               })}
             >
               <SMTPRestrictionText>
-                {({ text }) => (
-                  <Grid item xs={12}>
-                    {text}
-                  </Grid>
-                )}
+                {({ text }) => <Grid xs={12}>{text}</Grid>}
               </SMTPRestrictionText>
               {showAgreement ? (
                 <EUAgreementCheckbox
@@ -865,7 +870,7 @@ export class LinodeCreate extends React.PureComponent<
   }
 }
 
-const defaultPublicInterface: Interface = {
+const defaultPublicInterface: InterfacePayload = {
   purpose: 'public',
   label: '',
   ipam_address: '',

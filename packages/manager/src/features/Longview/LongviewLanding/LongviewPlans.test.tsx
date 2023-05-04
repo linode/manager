@@ -18,20 +18,8 @@ import {
 import { rest, server } from 'src/mocks/testServer';
 import { profileFactory } from 'src/factories/profile';
 import { grantsFactory } from 'src/factories/grants';
-import { QueryClient } from 'react-query';
-import { queryPresets } from 'src/queries/base';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
-
-const queryClient = new QueryClient({
-  defaultOptions: { queries: queryPresets.oneTimeFetch },
-});
-
-afterEach(() => {
-  server.resetHandlers();
-  queryClient.clear();
-});
-afterAll(() => server.close());
 
 const props: CombinedProps = {
   subscriptionRequestHook: {
@@ -43,7 +31,7 @@ const props: CombinedProps = {
   },
 };
 
-const testRow = (
+const testRow = async (
   id: string,
   label: string,
   clients: string,
@@ -51,24 +39,28 @@ const testRow = (
   dataResolution: string,
   price: string
 ) => {
-  within(screen.getByTestId(`plan-cell-${id}`)).getByText(label);
-  within(screen.getByTestId(`clients-cell-${id}`)).getByText(String(clients));
-  within(screen.getByTestId(`data-retention-cell-${id}`)).getByText(
+  within(await screen.findByTestId(`plan-cell-${id}`)).getByText(label);
+  within(await screen.findByTestId(`clients-cell-${id}`)).getByText(
+    String(clients)
+  );
+  within(await screen.findByTestId(`data-retention-cell-${id}`)).getByText(
     dataRetention
   );
-  within(screen.getByTestId(`data-resolution-cell-${id}`)).getByText(
+  within(await screen.findByTestId(`data-resolution-cell-${id}`)).getByText(
     dataResolution
   );
-  within(screen.getByTestId(`price-cell-${id}`)).getByText(price);
+  within(await screen.findByTestId(`price-cell-${id}`)).getByText(price);
 };
 
-server.use(
-  rest.get('*/account/settings', (req, res, ctx) => {
-    return res(ctx.json(accountSettingsFactory.build({ managed: false })));
-  })
-);
-
 describe('LongviewPlans', () => {
+  beforeEach(() => {
+    server.use(
+      rest.get('*/account/settings', (req, res, ctx) => {
+        return res(ctx.json(accountSettingsFactory.build({ managed: false })));
+      })
+    );
+  });
+
   it('sets the document title to "Plan Details"', async () => {
     const WrappedComponent = withDocumentTitleProvider(LongviewPlans);
 
@@ -106,24 +98,12 @@ describe('LongviewPlans', () => {
   });
 
   it('highlights the LV subscription currently on the account', async () => {
-    renderWithTheme(<LongviewPlans {...props} />);
+    const { findByTestId } = renderWithTheme(<LongviewPlans {...props} />);
 
-    await screen.findByTestId('current-plan-longview-3');
+    expect(await findByTestId('current-plan-longview-3'));
   });
 
   it('displays a notice if the user does not have permissions to modify', async () => {
-    server.use(
-      rest.get('*/account/settings', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            accountSettingsFactory.build({
-              managed: false,
-            })
-          )
-        );
-      })
-    );
-
     // Build a restricted user's profile so we get a permission error
     server.use(
       rest.get('*/profile', (req, res, ctx) => {
@@ -153,14 +133,28 @@ describe('LongviewPlans', () => {
       })
     );
 
-    renderWithTheme(<LongviewPlans {...props} />, {
-      queryClient,
-    });
+    renderWithTheme(<LongviewPlans {...props} />);
 
     await waitForElementToBeRemoved(screen.getByTestId('loading'), {
       timeout: 5000,
     });
 
     screen.getByText(/don't have permission/gi);
+  });
+
+  it('displays a message id the account is managed', async () => {
+    server.use(
+      rest.get('*/account/settings', (req, res, ctx) => {
+        return res(ctx.json(accountSettingsFactory.build({ managed: true })));
+      })
+    );
+
+    const { findByText } = renderWithTheme(<LongviewPlans {...props} />);
+
+    expect(
+      await findByText((str) =>
+        str.includes('Longview Pro is included with Linode Managed.')
+      )
+    );
   });
 });

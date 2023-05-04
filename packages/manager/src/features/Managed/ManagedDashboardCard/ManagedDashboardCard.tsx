@@ -1,18 +1,18 @@
-import * as React from 'react';
-import Grid from 'src/components/Grid';
-import DashboardCard from './DashboardCard';
-import ManagedChartPanel from './ManagedChartPanel';
-import MonitorStatus from './MonitorStatus';
-import MonitorTickets from './MonitorTickets';
-import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { CircleProgress } from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState/ErrorState';
 import {
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import ErrorState from 'src/components/ErrorState/ErrorState';
-import CircleProgress from 'src/components/CircleProgress/CircleProgress';
+import DashboardCard from './DashboardCard';
+import ManagedChartPanel from './ManagedChartPanel';
+import MonitorStatus from './MonitorStatus';
+import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -94,7 +94,6 @@ export const ManagedDashboardCard = () => {
       >
         <Grid
           container
-          item
           direction="column"
           justifyContent="space-around"
           alignItems="center"
@@ -102,14 +101,14 @@ export const ManagedDashboardCard = () => {
           sm={5}
           className={classes.status}
         >
-          <Grid item className={classes.monitorStatusOuter}>
+          <Grid className={classes.monitorStatusOuter}>
             <MonitorStatus monitors={monitors || []} />
           </Grid>
-          <Grid item>
+          <Grid>
             <MonitorTickets issues={issues || []} />
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={8} className="p0">
+        <Grid xs={12} sm={8} className="p0">
           <ManagedChartPanel />
         </Grid>
       </Grid>

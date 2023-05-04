@@ -1,4 +1,5 @@
-import { vi } from 'vitest';
+import { queryClientFactory } from 'src/queries/base';
+import { ApplicationState, storeFactory } from 'src/store';
 import { linode1 as mockLinode } from 'src/__data__/linodes';
 
 const mockState = {
@@ -12,31 +13,25 @@ const mockState = {
 
 import { getEntityByIDFromStore } from './getEntityByIDFromStore';
 
-vi.mock('src/store', async () => {
-  return {
-    default: {
-      getState: () => mockState,
-    },
-  };
-});
+const store = storeFactory(queryClientFactory());
+store.getState = () => mockState as ApplicationState;
 
 describe('getEntityByIDFromStore utility function', () => {
   it('should retrieve an entity that exists in the store', () => {
-    expect(getEntityByIDFromStore('linode', mockLinode.id)).toEqual(mockLinode);
+    expect(getEntityByIDFromStore('linode', mockLinode.id, store)).toEqual(
+      mockLinode
+    );
   });
 
   it('should return undefined if the entity does not exist in the store', () => {
-    expect(getEntityByIDFromStore('linode', 234567)).toBeUndefined();
+    expect(getEntityByIDFromStore('linode', 234567, store)).toBeUndefined();
   });
 
   it('should return undefined if the type is wrong or undefined', () => {
     const x = undefined;
-    expect(getEntityByIDFromStore('lindodes' as any, 123456)).toBeUndefined();
-    expect(getEntityByIDFromStore(x as any, x as any)).toBeUndefined();
-  });
-
-  it('should work as a curried function', () => {
-    const getLinode = getEntityByIDFromStore('linode');
-    expect(getLinode(mockLinode.id)).toEqual(mockLinode);
+    expect(
+      getEntityByIDFromStore('lindodes' as any, 123456, store)
+    ).toBeUndefined();
+    expect(getEntityByIDFromStore(x as any, x as any, store)).toBeUndefined();
   });
 });

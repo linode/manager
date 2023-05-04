@@ -1,12 +1,11 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { getGrants, hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
   canUserModifyAccountStackScript,
   StackScriptCategory,
@@ -45,9 +44,8 @@ const StackScriptsSection: React.FC<Props> = (props) => {
   const { data: grants } = useGrants();
 
   const isRestrictedUser = Boolean(profile?.restricted);
-  const stackScriptGrants = getGrants(grants, 'stackscript');
-  const userCannotAddLinodes =
-    isRestrictedUser && !hasGrant('add_linodes', grants);
+  const stackScriptGrants = grants?.stackscript;
+  const userCannotAddLinodes = isRestrictedUser && grants?.global.add_linodes;
 
   const listStackScript = (s: StackScript) => (
     <StackScriptRow
@@ -58,13 +56,16 @@ const StackScriptsSection: React.FC<Props> = (props) => {
       isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsTotal={s.deployments_total}
-      updated={formatDate(s.updated, { displayTime: false })}
+      updated={formatDate(s.updated, {
+        displayTime: false,
+        timezone: profile?.timezone,
+      })}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
       triggerMakePublic={triggerMakePublic}
       canModify={canUserModifyAccountStackScript(
         isRestrictedUser,
-        stackScriptGrants,
+        stackScriptGrants ?? [],
         s.id
       )}
       canAddLinodes={!userCannotAddLinodes}

@@ -1,5 +1,8 @@
 import * as React from 'react';
-import Dialog, { DialogProps as _DialogProps } from 'src/components/Dialog';
+import {
+  Dialog,
+  DialogProps as _DialogProps,
+} from 'src/components/Dialog/Dialog';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Button from 'src/components/Button';
@@ -56,6 +59,7 @@ const PreferenceEditor: React.FC<DialogProps> = (props) => {
       open={props.open}
       onClose={props.onClose}
       maxWidth="sm"
+      fullWidth
     >
       {errorMessage && <Notice spacingBottom={8} error text={errorMessage} />}
       {successMessage && (

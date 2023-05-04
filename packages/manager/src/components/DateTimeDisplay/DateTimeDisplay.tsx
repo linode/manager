@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
+import { useProfile } from 'src/queries/profile';
 import formatDate, { TimeInterval } from 'src/utilities/formatDate';
 
-export interface Props {
+export interface DateTimeDisplayProps {
   value: string;
   format?: string;
   displayTime?: boolean;
@@ -11,15 +12,19 @@ export interface Props {
   styles?: React.CSSProperties;
 }
 
-type CombinedProps = Props;
-
-export const DateTimeDisplay: React.FC<CombinedProps> = (props) => {
+const DateTimeDisplay = (props: DateTimeDisplayProps) => {
   const { format, humanizeCutoff, displayTime, value, className } = props;
+  const { data: profile } = useProfile();
   return (
     <Typography style={props.styles} component="span" className={className}>
-      {formatDate(value, { format, humanizeCutoff, displayTime })}
+      {formatDate(value, {
+        format,
+        humanizeCutoff,
+        displayTime,
+        timezone: profile?.timezone,
+      })}
     </Typography>
   );
 };
 
-export default DateTimeDisplay;
+export { DateTimeDisplay };
