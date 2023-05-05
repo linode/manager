@@ -9,7 +9,7 @@ import {
   Entity,
   Event,
   getEvents,
-  markEventSeen,
+  markEventRead,
 } from '@linode/api-v4/lib/account';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 
@@ -23,8 +23,8 @@ export const useEventsPolling = (eventHandler?: (event: Event) => void) => {
   useQuery<Event[], APIError[]>(
     [queryKey, 'polling'],
     async () => {
-      const events = await requestUnseenEvents();
-      await markCompletedEventsAsSeen(events);
+      const events = await requestUnreadEvents();
+      await markCompletedEventsAsRead(events);
       return events;
     },
     {
@@ -91,12 +91,12 @@ const locateEvent = (
   }
 };
 
-const requestUnseenEvents = (): Promise<Event[]> =>
-  getEvents({ page_size: 25 }, { seen: false }).then(
+const requestUnreadEvents = (): Promise<Event[]> =>
+  getEvents({ page_size: 25 }, { read: false }).then(
     (response) => response.data
   );
 
-const markCompletedEventsAsSeen = async (events: Event[]) => {
+const markCompletedEventsAsRead = async (events: Event[]) => {
   const completedEvents = events
     .filter((event) => !isInProgressEvent(event))
 
@@ -106,5 +106,5 @@ const markCompletedEventsAsSeen = async (events: Event[]) => {
       (event) =>
         !(event.action === 'database_create' && event.status === 'notification')
     );
-  await Promise.all(completedEvents.map((event) => markEventSeen(event.id)));
+  await Promise.all(completedEvents.map((event) => markEventRead(event.id)));
 };
