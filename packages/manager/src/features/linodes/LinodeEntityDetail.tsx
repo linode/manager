@@ -46,7 +46,8 @@ import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { useProfile } from 'src/queries/profile';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import { Table } from 'src/components/Table';
+// This component was built asuming an unmodified MUI <Table />
+import Table from '@mui/material/Table';
 import { TableCell } from 'src/components/TableCell';
 
 interface LinodeEntityDetailProps {
