@@ -1,17 +1,20 @@
 import * as React from 'react';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/ga';
-import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
-import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,
   linkGAEvent,
   youtubeLinkData,
-} from './VolumesLandingEmptyStateData';
+} from './FirewallLandingEmptyResourcesData';
 
-export const VolumesLandingEmptyState = () => {
-  const { push } = useHistory();
+interface Props {
+  openAddFirewallDrawer: () => void;
+}
+
+export const FirewallLandingEmptyState = (props: Props) => {
+  const { openAddFirewallDrawer } = props;
 
   return (
     <ResourcesSection
@@ -21,16 +24,16 @@ export const VolumesLandingEmptyState = () => {
             sendEvent({
               category: linkGAEvent.category,
               action: 'Click:button',
-              label: 'Create Volume',
+              label: 'Create Firewall',
             });
-            push('/volumes/create');
+            openAddFirewallDrawer();
           },
-          children: 'Create Volume',
+          children: 'Create Firewall',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={StyledVolumeIcon}
+      icon={FirewallIcon}
       linkGAEvent={linkGAEvent}
       youtubeLinkData={youtubeLinkData}
     />

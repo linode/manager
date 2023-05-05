@@ -11,8 +11,9 @@ import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
-import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
-import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
+import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
+import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
+import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import {
   docsLink,
   getLinkOnClick,
@@ -87,7 +88,7 @@ const youtubeLinks = (
           onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
         >
           {linkData.text}
-          <ExternalLinkIcon />
+          <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
         </Link>
       </ListItem>
     ))}
@@ -129,8 +130,8 @@ const DatabaseEmptyState = () => {
           },
         ]}
         linksSection={
-          <LinksSection>
-            <LinkSubSection
+          <ResourcesLinksSection>
+            <ResourcesLinksSubSection
               title="Getting Started Guides"
               icon={<DocsIcon />}
               MoreLink={(props) => (
@@ -148,8 +149,8 @@ const DatabaseEmptyState = () => {
               )}
             >
               {guideLinks}
-            </LinkSubSection>
-            <LinkSubSection
+            </ResourcesLinksSubSection>
+            <ResourcesLinksSubSection
               title="Video Playlist"
               icon={<YoutubeIcon />}
               external
@@ -163,13 +164,13 @@ const DatabaseEmptyState = () => {
                   {...props}
                 >
                   {youtubeMoreLinkText}
-                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                  <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
                 </Link>
               )}
             >
               {youtubeLinks}
-            </LinkSubSection>
-          </LinksSection>
+            </ResourcesLinksSubSection>
+          </ResourcesLinksSection>
         }
       >
         <Typography variant="subtitle1">

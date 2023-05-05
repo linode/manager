@@ -8,14 +8,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 - Resource links to empty state Volumes landing page #9065
-- Ability to search Linodes by IPv6 #9073
+- Resource links to empty state Firewalls landing page #9078
 - Ability download DNS zone file #9075
 
 ### Changed:
 - Removed MongoDB reference from ClusterControl description #9081
 
 ### Fixed:
-- Allow simple search for IPv6 addresses #5088
+- Ability to search Linodes by IPv6 #9073
 
 ### Tech Stories:
 - Enable Cypress `experimentalMemoryManagement` #9076
