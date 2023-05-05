@@ -5,26 +5,15 @@ import {
   useQueryClient,
   InfiniteData,
 } from 'react-query';
-import {
-  Entity,
-  Event,
-  getEvents,
-  markEventRead,
-} from '@linode/api-v4/lib/account';
+import { Event, getEvents, markEventRead } from '@linode/api-v4/lib/account';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 import React from 'react';
 import { INTERVAL } from 'src/constants';
-
-export interface EntityEvent extends Omit<Event, 'entity'> {
-  entity: Entity;
-}
 
 const queryKey = 'events';
 
 export const useEventsPolling = (eventHandler?: (event: Event) => void) => {
   const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
-
-  const resetEventsPolling = () => setIntervalMultiplier(1);
 
   useQuery<Event[], APIError[]>(
     [queryKey, 'polling'],
@@ -44,10 +33,10 @@ export const useEventsPolling = (eventHandler?: (event: Event) => void) => {
     }
   );
 
-  return { resetEventsPolling };
+  return { resetEventsPolling: () => setIntervalMultiplier(1) };
 };
 
-export const useEvents = () => {
+export const useEventsInfiniteQuery = () => {
   const queryClient = useQueryClient();
 
   const eventsQueryKey = [queryKey, 'infinite', 'events'];
