@@ -1,17 +1,59 @@
 import * as React from 'react';
+import Button from 'src/components/Button';
 import { CSVLink } from 'react-csv';
+import { SxProps } from '@mui/system';
+import type { ButtonType } from 'src/components/Button/Button';
 
-/**
- * These aren't all the props provided by react-csv.
- * @see https://github.com/react-csv/react-csv
- */
 interface DownloadCSVProps {
+  buttonType?: ButtonType;
+  children?: React.ReactNode;
   className?: string;
+  csvRef?: React.RefObject<any>;
   data: any[];
   filename: string;
   headers: { label: string; key: string }[];
-  children?: React.ReactNode;
+  onClick: () => void;
+  sx?: SxProps;
+  text?: string;
 }
+
+/**
+ * Hidden CSVLink component controlled by a ref. This is done
+ * so we can use Button styles, and in other areas like
+ * "MaintainanceTable" to lazy load potentially large sets
+ * of events on mount.
+ *
+ * These aren't all the props provided by react-csv.
+ * @see https://github.com/react-csv/react-csv
+ */
+export const DownloadCSV = ({
+  buttonType = 'secondary',
+  className,
+  csvRef,
+  data,
+  filename,
+  headers,
+  onClick,
+  sx,
+  text = 'Download CSV',
+}: DownloadCSVProps) => {
+  return (
+    <>
+      <CSVLink
+        aria-hidden="true"
+        className={className}
+        data={cleanCSVData(data)}
+        filename={filename}
+        headers={headers}
+        ref={csvRef}
+        tabIndex={-1}
+      />
+      <Button buttonType={buttonType} onClick={onClick} sx={sx}>
+        {text}
+      </Button>
+    </>
+  );
+};
 
 export const cleanCSVData = (data: any): any => {
   /** safety check because typeof null === 'object' */
@@ -49,25 +91,6 @@ export const cleanCSVData = (data: any): any => {
   }
 
   return data;
-};
-
-export const DownloadCSV = ({
-  className,
-  headers,
-  filename,
-  data,
-  children,
-}: DownloadCSVProps) => {
-  return (
-    <CSVLink
-      className={className}
-      headers={headers}
-      filename={filename}
-      data={cleanCSVData(data)}
-    >
-      {children}
-    </CSVLink>
-  );
 };
 
 export const MemoizedDownloadCSV = React.memo(DownloadCSV);

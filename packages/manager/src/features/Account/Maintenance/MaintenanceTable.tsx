@@ -14,7 +14,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Typography from 'src/components/core/Typography';
 import { usePagination } from 'src/hooks/usePagination';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
-import { CSVLink } from 'react-csv';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
@@ -39,13 +39,6 @@ const headersForCSVDownload = [
 ];
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  csvLink: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-    color: theme.textColors.tableHeader,
-    fontSize: '.9rem',
-  },
   cell: {
     width: '12%',
   },
@@ -151,28 +144,14 @@ const MaintenanceTable = ({ type }: Props) => {
         <Typography variant="h3" style={{ textTransform: 'capitalize' }}>
           {type}
         </Typography>
-        {/*
-            We are using a hidden CSVLink and an <a> to allow us to lazy load the
-            entire maintenance list for the CSV download. The <a> is what shows up
-            to the user and the onClick fetches the full user data and then
-            uses a ref to 'click' the real CSVLink.
-            This adds some complexity but gives us the benefit of lazy loading a potentially
-            large set of maintenance events on mount for the CSV download.
-          */}
         <Box>
-          <CSVLink
-            ref={csvRef}
-            headers={headersForCSVDownload}
-            filename={`${type}-maintenance-${Date.now()}.csv`}
+          <DownloadCSV
+            csvRef={csvRef}
             data={cleanCSVData(csv || [])}
-          />
-          <a
-            className={classes.csvLink}
+            filename={`${type}-maintenance-${Date.now()}.csv`}
+            headers={headersForCSVDownload}
             onClick={downloadCSV}
-            aria-hidden="true"
-          >
-            Download CSV
-          </a>
+          />
         </Box>
       </Box>
       <Table>
