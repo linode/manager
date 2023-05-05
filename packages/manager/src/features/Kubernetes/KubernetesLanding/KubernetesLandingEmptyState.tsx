@@ -11,8 +11,9 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
-import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
-import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
+import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
+import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
+import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import {
   getLinkOnClick,
   guidesMoreLinkText,
@@ -100,7 +101,7 @@ const youtubeLinks = (
           to={linkData.to}
         >
           {linkData.text}
-          <ExternalLinkIcon />
+          <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
         </Link>
       </ListItem>
     ))}
@@ -133,8 +134,8 @@ const KubernetesEmptyState = () => {
         },
       ]}
       linksSection={
-        <LinksSection>
-          <LinkSubSection
+        <ResourcesLinksSection>
+          <ResourcesLinksSubSection
             title="Getting Started Guides"
             icon={<DocsIcon />}
             MoreLink={(props) => (
@@ -151,8 +152,8 @@ const KubernetesEmptyState = () => {
             )}
           >
             {guideLinks}
-          </LinkSubSection>
-          <LinkSubSection
+          </ResourcesLinksSubSection>
+          <ResourcesLinksSubSection
             title="Video Playlist"
             icon={<YoutubeIcon />}
             external
@@ -166,13 +167,13 @@ const KubernetesEmptyState = () => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
               </Link>
             )}
           >
             {youtubeLinks}
-          </LinkSubSection>
-        </LinksSection>
+          </ResourcesLinksSubSection>
+        </ResourcesLinksSection>
       }
     >
       {' '}
