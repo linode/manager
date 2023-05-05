@@ -1,4 +1,4 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import {
   useQuery,
   useInfiniteQuery,
@@ -12,13 +12,18 @@ import { INTERVAL } from 'src/constants';
 
 const queryKey = 'events';
 
-export const useEventsPolling = (eventHandler?: (event: Event) => void) => {
+export const useEventsPolling = (options: {
+  eventHandler?: (event: Event) => void;
+  filter?: Filter;
+}) => {
+  const { eventHandler, filter } = options;
+
   const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
 
   useQuery<Event[], APIError[]>(
-    [queryKey, 'polling'],
+    [queryKey, 'polling', filter ?? {}],
     async () => {
-      const events = await requestUnreadEvents();
+      const events = await requestUnreadEvents(filter);
       await markCompletedEventsAsRead(events);
       setIntervalMultiplier(Math.min(intervalMultiplier + 1, 16));
       return events;
@@ -36,36 +41,39 @@ export const useEventsPolling = (eventHandler?: (event: Event) => void) => {
   return { resetEventsPolling: () => setIntervalMultiplier(1) };
 };
 
-export const useEventsInfiniteQuery = () => {
+export const useEventsInfiniteQuery = (filter: Filter = {}) => {
   const queryClient = useQueryClient();
 
-  const eventsQueryKey = [queryKey, 'infinite', 'events'];
+  const eventsQueryKey = [queryKey, 'infinite', 'events', filter];
 
   const eventsCache = queryClient.getQueryData<
     InfiniteData<ResourcePage<Event>>
   >(eventsQueryKey);
 
   // Update existing events or invalidate when new events come in
-  useEventsPolling((event) => {
-    if (eventsCache) {
-      const eventLocation = locateEvent(eventsCache, event.id);
-      if (eventLocation) {
-        eventsCache.pages[eventLocation.pageIdx].data[
-          eventLocation.eventIdx
-        ] = event;
-        queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
-          eventsQueryKey,
-          eventsCache
-        );
-      } else {
-        queryClient.invalidateQueries(eventsQueryKey);
+  useEventsPolling({
+    eventHandler: (event) => {
+      if (eventsCache) {
+        const eventLocation = locateEvent(eventsCache, event.id);
+        if (eventLocation) {
+          eventsCache.pages[eventLocation.pageIdx].data[
+            eventLocation.eventIdx
+          ] = event;
+          queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
+            eventsQueryKey,
+            eventsCache
+          );
+        } else {
+          queryClient.invalidateQueries(eventsQueryKey);
+        }
       }
-    }
+    },
+    filter,
   });
 
   return useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     eventsQueryKey,
-    ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }),
+    ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }, filter),
     {
       getNextPageParam: ({ page, pages }) =>
         page < pages ? page + 1 : undefined,
@@ -89,8 +97,8 @@ const locateEvent = (
   }
 };
 
-const requestUnreadEvents = (): Promise<Event[]> =>
-  getEvents({ page_size: 25 }, { read: false }).then(
+const requestUnreadEvents = (filter: Filter = {}): Promise<Event[]> =>
+  getEvents({ page_size: 25 }, { ...filter, read: false }).then(
     (response) => response.data
   );
 

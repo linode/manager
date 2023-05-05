@@ -15,11 +15,11 @@ export const Help = ({ className }: Props) => {
       aria-label="Link to Linode Community site"
       to="https://linode.com/community"
     >
-      <StyledTopMenuIconWrapper>
-        <TopMenuIcon title="Linode Cloud Community">
+      <TopMenuIcon title="Linode Cloud Community">
+        <StyledTopMenuIconWrapper>
           <Community />
-        </TopMenuIcon>
-      </StyledTopMenuIconWrapper>
+        </StyledTopMenuIconWrapper>
+      </TopMenuIcon>
     </Link>
   );
 };

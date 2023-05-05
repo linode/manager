@@ -6,16 +6,16 @@ import { StyledTopMenuIconWrapper } from './TopMenuIcon';
 
 export const Help = () => {
   return (
-    <Link aria-label="Link to Linode Support" to="/support">
-      <StyledTopMenuIconWrapper
-        sx={{
-          marginLeft: [null, null, '8px'],
-        }}
-      >
-        <TopMenuIcon title={'Help & Support'}>
+    <Link aria-label="Link to Linode Support" to="/support" title="Help">
+      <TopMenuIcon title={'Help & Support'}>
+        <StyledTopMenuIconWrapper
+          sx={{
+            marginLeft: [null, null, '8px'],
+          }}
+        >
           <TooltipIcon status="help" />
-        </TopMenuIcon>
-      </StyledTopMenuIconWrapper>
+        </StyledTopMenuIconWrapper>
+      </TopMenuIcon>
     </Link>
   );
 };

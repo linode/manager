@@ -34,6 +34,23 @@ const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
   color: props.isMenuOpen ? '#606469' : '#c9c7c7',
 }));
 
+const StyledButton = styled(Button)(({ theme }) => ({
+  margin: 0,
+  padding: 0,
+  minWidth: 'unset',
+  ...(theme.name === 'light'
+    ? {
+        '&:hover': {
+          backgroundColor: 'unset',
+        },
+      }
+    : {
+        '&:hover:not([aria-expanded="true"])': {
+          backgroundColor: 'unset',
+        },
+      }),
+}));
+
 const NotificationIconBadge = styled('div')(({ theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.color.green,
@@ -110,20 +127,12 @@ export const NotificationMenu = () => {
   return (
     <>
       <TopMenuIcon title="Notifications">
-        <Button
+        <StyledButton
           id={menuButtonId}
           ref={anchorRef}
           aria-label="Notifications"
           aria-haspopup="true"
           onClick={handleNotificationMenuToggle}
-          sx={{
-            margin: 0,
-            padding: 0,
-            minWidth: 'unset',
-            '&:hover': {
-              backgroundColor: 'unset',
-            },
-          }}
           disableRipple
         >
           <NotificationIconWrapper isMenuOpen={notificationContext.menuOpen}>
@@ -132,7 +141,7 @@ export const NotificationMenu = () => {
               <NotificationIconBadge>{numNotifications}</NotificationIconBadge>
             ) : null}
           </NotificationIconWrapper>
-        </Button>
+        </StyledButton>
       </TopMenuIcon>
 
       <Popper

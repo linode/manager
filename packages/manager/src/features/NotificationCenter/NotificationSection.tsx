@@ -82,8 +82,11 @@ export interface NotificationItem {
 interface Props {
   header: string;
   count?: number;
-  showMoreText?: string;
-  showMoreTarget?: string;
+  showMore?: {
+    text: string;
+    target: string;
+    onClick?: () => void;
+  };
   content: NotificationItem[];
   loading?: boolean;
   emptyMessage?: string;
@@ -94,15 +97,7 @@ export type CombinedProps = Props;
 export const NotificationSection: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const {
-    content,
-    count,
-    header,
-    emptyMessage,
-    loading,
-    showMoreText,
-    showMoreTarget,
-  } = props;
+  const { content, count, header, emptyMessage, loading, showMore } = props;
 
   const _count = count ?? 5;
   const _loading = Boolean(loading); // false if not provided
@@ -136,14 +131,15 @@ export const NotificationSection: React.FC<Props> = (props) => {
               <div className={classes.content}>
                 <div className={classes.header}>
                   <Typography variant="h3">{header}</Typography>
-                  {showMoreTarget && (
+                  {showMore && (
                     <strong>
                       <Link
-                        to={showMoreTarget}
+                        to={showMore.target}
                         className={classes.menuItemLink}
                         style={{ padding: 0 }}
+                        onClick={showMore.onClick}
                       >
-                        {showMoreText ?? 'View history'}
+                        {showMore.text}
                       </Link>
                     </strong>
                   )}
