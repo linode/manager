@@ -12,6 +12,8 @@ import {
   markEventRead,
 } from '@linode/api-v4/lib/account';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
+import React from 'react';
+import { INTERVAL } from 'src/constants';
 
 export interface EntityEvent extends Omit<Event, 'entity'> {
   entity: Entity;
@@ -20,15 +22,20 @@ export interface EntityEvent extends Omit<Event, 'entity'> {
 const queryKey = 'events';
 
 export const useEventsPolling = (eventHandler?: (event: Event) => void) => {
+  const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
+
+  const resetEventsPolling = () => setIntervalMultiplier(1);
+
   useQuery<Event[], APIError[]>(
     [queryKey, 'polling'],
     async () => {
       const events = await requestUnreadEvents();
       await markCompletedEventsAsRead(events);
+      setIntervalMultiplier(Math.min(intervalMultiplier + 1, 16));
       return events;
     },
     {
-      refetchInterval: 5000,
+      refetchInterval: INTERVAL * intervalMultiplier,
       retryDelay: 5000,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
@@ -36,6 +43,8 @@ export const useEventsPolling = (eventHandler?: (event: Event) => void) => {
         eventHandler && events.reverse().forEach(eventHandler),
     }
   );
+
+  return { resetEventsPolling };
 };
 
 export const useEvents = () => {
