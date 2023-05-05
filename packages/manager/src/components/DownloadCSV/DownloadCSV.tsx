@@ -92,5 +92,3 @@ export const cleanCSVData = (data: any): any => {
 
   return data;
 };
-
-export const MemoizedDownloadCSV = React.memo(DownloadCSV);
