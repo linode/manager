@@ -20,13 +20,20 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import useFlags from 'src/hooks/useFlags';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import {
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
+import {
+  useAllDetailedIPv6RangesQuery,
+  useLinodeIPsQuery,
+} from 'src/queries/linodes/networking';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addNewButton: {
@@ -63,43 +70,70 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeID: number;
-  linodeRegion: string;
-  linodeIPs: string[];
-  linodeSharedIPs: string[];
-  availableRanges: IPRangeInformation[];
+  linodeId: number;
   readOnly?: boolean;
-  refreshIPs: () => Promise<void>[];
   open: boolean;
   onClose: () => void;
 }
 
-type CombinedProps = Props;
-
 type AvailableRangesMap = { [linode_id: number]: string[] };
 
-const IPSharingPanel: React.FC<CombinedProps> = (props) => {
+const IPSharingPanel = (props: Props) => {
   const classes = useStyles();
   const flags = useFlags();
-  const {
-    linodeID,
-    linodeIPs,
-    linodeRegion,
-    readOnly,
-    open,
-    onClose,
-    linodeSharedIPs,
-    availableRanges,
-  } = props;
+  const { linodeId, readOnly, open, onClose } = props;
+  const { data: linode } = useLinodeQuery(linodeId);
 
-  const availableRangesMap: AvailableRangesMap = formatAvailableRanges(
-    availableRanges
+  const { data: ips } = useLinodeIPsQuery(linodeId, open);
+
+  const { data: ranges } = useAllDetailedIPv6RangesQuery(
+    {},
+    { region: linode?.region },
+    open
   );
+
+  const queryClient = useQueryClient();
+
+  const rangeData = ranges?.reduce(
+    (
+      acc: {
+        sharedRanges: IPRangeInformation[],
+        availableRanges: IPRangeInformation[]
+      },
+      range
+    ) => {
+      if (
+        flags.ipv6Sharing &&
+        range.is_bgp &&
+        range.linodes.includes(linodeId)
+      ) {
+        // any range that is shared to this linode
+        acc.sharedRanges.push(range);
+      } else if (flags.ipv6Sharing) {
+        // any range that is not shared to this linode or static on this linode
+        acc.availableRanges.push(range);
+      }
+      return acc;
+    },
+    { sharedRanges: [], availableRanges: [] }
+  );
+
+  const sharedRanges = rangeData?.sharedRanges;
+  const availableRanges = rangeData?.availableRanges;
+
+  const linodeSharedIPs = [
+    ...(ips?.ipv4.shared.map((ip) => ip.address) ?? []),
+    ...(sharedRanges?.map((range) => `${range.range}/${range.prefix}`) ?? []),
+  ];
+
+  const linodeIPs = ips?.ipv4.public.map((i) => i.address) ?? [];
+
+  const availableRangesMap: AvailableRangesMap = formatAvailableRanges([]);
 
   const { data: linodes, isLoading } = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },
     {
-      region: linodeRegion,
+      region: linode?.region,
     },
     open // Only run the query if the modal is open
   );
@@ -153,9 +187,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     if (isLoading) {
       return;
     }
-    const ipChoices = getIPChoicesAndLabels(linodeID, linodes ?? []);
+    const ipChoices = getIPChoicesAndLabels(linodeId, linodes ?? []);
     setIPChoices(ipChoices);
-  }, [linodeID, linodes, availableRanges]);
+  }, [linodeId, linodes, availableRanges]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState<
@@ -273,9 +307,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
         return;
       }
 
-      share({ linode_id: props.linodeID, ips: finalIPs })
+      share({ linode_id: linodeId, ips: finalIPs })
         .then((_) => {
-          props.refreshIPs();
+          queryClient.invalidateQueries([])
           setErrors(undefined);
           setSubmitting(false);
           setSuccessMessage('IP Sharing updated successfully');
@@ -543,8 +577,4 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   );
 });
 
-const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard
-);
-
-export default enhanced(IPSharingPanel);
+export default IPSharingPanel;

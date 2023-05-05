@@ -6,6 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import DNSResolvers from './DNSResolvers';
 import NetworkTransfer from './NetworkTransfer';
 import TransferHistory from './TransferHistory';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -36,26 +37,29 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeRegion: string;
   linodeID: number;
-  linodeCreated: string;
-  linodeLabel: string;
 }
 
-type CombinedProps = Props;
-
-const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
-  const { linodeID, linodeRegion, linodeCreated, linodeLabel } = props;
+const LinodeNetworkingSummaryPanel = (props: Props) => {
+  // @todo maybe move this query closer to the consuming component
+  const { data: linode } = useLinodeQuery(props.linodeID);
   const classes = useStyles();
+
+  if (!linode) {
+    return null;
+  }
 
   return (
     <Paper className={classes.root}>
       <Grid container spacing={2} sx={{ flexGrow: 1 }}>
         <Grid xs={12} sm={6} md={3}>
-          <NetworkTransfer linodeID={linodeID} linodeLabel={linodeLabel} />
+          <NetworkTransfer linodeID={linode.id} linodeLabel={linode.label} />
         </Grid>
         <Grid xs={12} sm md className={classes.transferHistoryContainer}>
-          <TransferHistory linodeID={linodeID} linodeCreated={linodeCreated} />
+          <TransferHistory
+            linodeID={linode.id}
+            linodeCreated={linode.created}
+          />
         </Grid>
         <Grid
           xs={12}
@@ -66,7 +70,7 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
             paddingBottom: 0,
           }}
         >
-          <DNSResolvers region={linodeRegion} />
+          <DNSResolvers region={linode.region} />
         </Grid>
       </Grid>
     </Paper>

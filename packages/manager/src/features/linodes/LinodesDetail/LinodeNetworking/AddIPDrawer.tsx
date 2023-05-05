@@ -17,6 +17,8 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -89,15 +91,11 @@ const tooltipCopy: Record<IPType, JSX.Element | null> = {
 interface Props {
   open: boolean;
   onClose: () => void;
-  linodeID: number;
-  hasPrivateIPAddress: boolean;
-  onSuccess: () => Promise<void>[];
+  linodeId: number;
   readOnly: boolean;
 }
 
-type CombinedProps = Props;
-
-const AddIPDrawer: React.FC<CombinedProps> = (props) => {
+const AddIPDrawer = (props: Props) => {
   const classes = useStyles();
 
   const [selectedIPv4, setSelectedIPv4] = React.useState<IPType | null>(null);
@@ -112,14 +110,9 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
   const [submittingIPv6, setSubmittingIPv6] = React.useState(false);
   const [errorMessageIPv6, setErrorMessageIPv6] = React.useState('');
 
-  const {
-    open,
-    onClose,
-    linodeID,
-    hasPrivateIPAddress,
-    onSuccess,
-    readOnly,
-  } = props;
+  const { open, onClose, linodeId, readOnly } = props;
+
+  const { data: ips } = useLinodeIPsQuery(linodeId, open);
 
   React.useEffect(() => {
     if (open) {
@@ -149,13 +142,12 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
     setErrorMessageIPv4('');
 
     // Only IPv4 addresses can currently be allocated.
-    allocateIPAddress(linodeID, {
+    allocateIPAddress(linodeId, {
       type: 'ipv4',
       public: selectedIPv4 === 'v4Public',
     })
       .then((_) => {
         setSubmittingIPv4(false);
-        Promise.all(onSuccess());
         onClose();
       })
       .catch((errResponse) => {
@@ -169,12 +161,11 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
     setErrorMessageIPv6('');
 
     createIPv6Range({
-      linode_id: linodeID,
+      linode_id: linodeId,
       prefix_length: Number(selectedIPv6Prefix) as IPv6Prefix,
     })
       .then((_: any) => {
         setSubmittingIPv6(false);
-        Promise.all(onSuccess());
         onClose();
       })
       .catch((errResponse: APIError[]) => {
@@ -182,6 +173,8 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
         setErrorMessageIPv6(getErrorStringOrDefault(errResponse));
       });
   };
+
+  const hasPrivateIPAddress = ips !== undefined && ips.ipv4.private.length > 0;
 
   const disabledIPv4 =
     (selectedIPv4 === 'v4Private' && hasPrivateIPAddress) ||
