@@ -18,7 +18,7 @@ import { mockGetImage } from 'support/intercepts/images';
  * We extend the timeout used when waiting for image uploading and processing
  * since this operation can take a couple minutes.
  */
-const imageUploadWaitTimeout = 120000;
+const imageUploadWaitTimeout = 240000;
 
 /**
  * Returns a numeric image ID from a string-based image ID.
