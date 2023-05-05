@@ -23,8 +23,9 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
 import AppsSection from './AppsSection';
-import LinksSection from './LinksSection';
-import LinksSubSection from './LinksSubSection';
+import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
+import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
+import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 
 const gaCategory = 'Linodes landing page empty';
 const linkGAEventTemplate = {
@@ -98,7 +99,7 @@ const youtubeLinks = (
           to={linkData.to}
         >
           {linkData.text}
-          <ExternalLinkIcon />
+          <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
         </Link>
       </ListItem>
     ))}
@@ -140,8 +141,8 @@ export const LinodesLandingEmptyState = () => {
         },
       ]}
       linksSection={
-        <LinksSection>
-          <LinksSubSection
+        <ResourcesLinksSection>
+          <ResourcesLinksSubSection
             title="Getting Started Guides"
             icon={<DocsIcon />}
             MoreLink={(props) => (
@@ -159,8 +160,8 @@ export const LinodesLandingEmptyState = () => {
             )}
           >
             {guideLinks}
-          </LinksSubSection>
-          <LinksSubSection
+          </ResourcesLinksSubSection>
+          <ResourcesLinksSubSection
             title="Deploy an App"
             icon={<MarketplaceIcon />}
             MoreLink={(props) => (
@@ -175,8 +176,8 @@ export const LinodesLandingEmptyState = () => {
             )}
           >
             <AppsSection />
-          </LinksSubSection>
-          <LinksSubSection
+          </ResourcesLinksSubSection>
+          <ResourcesLinksSubSection
             title="Video Playlist"
             icon={<YoutubeIcon />}
             external
@@ -190,13 +191,13 @@ export const LinodesLandingEmptyState = () => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ExternalLinkIcon />
+                <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
               </Link>
             )}
           >
             {youtubeLinks}
-          </LinksSubSection>
-        </LinksSection>
+          </ResourcesLinksSubSection>
+        </ResourcesLinksSection>
       }
       showTransferDisplay
     >

@@ -12,13 +12,11 @@ import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Table from 'src/components/core/Table';
-import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
+import { TableBody } from 'src/components/TableBody';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import TableRow from 'src/components/TableRow';
+import { TableRow } from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
@@ -48,6 +46,8 @@ import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { useProfile } from 'src/queries/profile';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
