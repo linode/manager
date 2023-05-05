@@ -107,7 +107,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                 {...props}
               >
                 {gettingStartedGuidesData.moreInfo.text}
-                <PointerIcon className="pointerIcon" />
+                <ResourcesLinkIcon icon={<PointerIcon />} iconType="pointer" />
               </ResourcesMoreLink>
             )}
             title={gettingStartedGuidesData.title}
@@ -125,7 +125,10 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
+                <ResourcesLinkIcon
+                  icon={<ExternalLinkIcon />}
+                  iconType="external"
+                />
               </ResourcesMoreLink>
             )}
             title={youtubeLinkData.title}
