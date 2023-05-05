@@ -36,7 +36,7 @@ interface ResourcesSectionProps {
    * The custom resource to be rendered between docs and youtube links
    * @example <AppsSection /> on linodes empty state landing
    */
-  customResource?: JSX.Element;
+  CustomResource?: () => JSX.Element;
   /**
    * The data for the docs links section
    */
@@ -57,6 +57,13 @@ interface ResourcesSectionProps {
    * The data for the youtube links section
    */
   youtubeLinkData: ResourcesLinkSection;
+  /**
+   * If true, the section will be 100% width (more than 2 columns)
+   *
+   * @example true on linodes empty state landing
+   * @default true
+   * */
+  wide?: boolean;
 }
 
 const GuideLinks = (guides: ResourcesLinkSection, linkGAEvent: LinkGAEvent) => (
@@ -71,11 +78,13 @@ const YoutubeLinks = (
 export const ResourcesSection = (props: ResourcesSectionProps) => {
   const {
     buttonProps,
+    CustomResource = () => null,
     gettingStartedGuidesData,
     headers,
     icon,
     linkGAEvent,
     youtubeLinkData,
+    wide = false,
   } = props;
   const { title, subtitle, description } = headers;
 
@@ -85,7 +94,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
       icon={icon}
       isEntity
       linksSection={
-        <ResourcesLinksSection wide={false}>
+        <ResourcesLinksSection wide={wide}>
           <ResourcesLinksSubSection
             icon={<DocsIcon />}
             MoreLink={(props) => (
@@ -105,6 +114,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
           >
             {GuideLinks(gettingStartedGuidesData, linkGAEvent)}
           </ResourcesLinksSubSection>
+          {CustomResource && <CustomResource />}
           <ResourcesLinksSubSection
             icon={<YoutubeIcon />}
             MoreLink={(props) => (
