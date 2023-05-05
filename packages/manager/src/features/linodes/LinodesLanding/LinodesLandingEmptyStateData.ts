@@ -49,19 +49,23 @@ export const youtubeLinkData: ResourcesLinkSection = {
     {
       to: 'https://www.youtube.com/watch?v=KEK-ZxrGxMA',
       text: 'Linode Getting Started Guide',
+      external: true,
     },
     {
       to: 'https://www.youtube.com/watch?v=AVXYq8aL47Q',
       text: 'Common Linux Commands',
+      external: true,
     },
     {
       to: 'https://www.youtube.com/watch?v=lMC5VNoZFhg',
       text: 'Copying Files to a Compute Instance',
+      external: true,
     },
     {
       to:
         'https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2',
       text: 'How to use SSH',
+      external: true,
     },
   ],
   moreInfo: {

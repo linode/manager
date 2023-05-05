@@ -51,18 +51,22 @@ export const youtubeLinkData: ResourcesLinkSection = {
     {
       to: 'https://www.youtube.com/watch?v=erthAqqdD_c',
       text: 'Easily Deploy a Kubernetes Cluster on LKE',
+      external: true,
     },
     {
       to: 'https://www.youtube.com/watch?v=VYUr_WvXCsY',
       text: 'Enable High Availability on an LKE Cluster',
+      external: true,
     },
     {
       to: 'https://www.youtube.com/watch?v=odPmyT5DONg',
       text: 'Use a Load Balancer with an LKE Cluster',
+      external: true,
     },
     {
       to: 'https://www.youtube.com/watch?v=1564_DrFRSE',
       text: 'Use TOBS (The Observability Stack) with LKE',
+      external: true,
     },
   ],
   moreInfo: {

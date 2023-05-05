@@ -46,15 +46,18 @@ export const youtubeLinkData: ResourcesLinkSection = {
     {
       to: 'https://www.youtube.com/watch?v=loEVtzUN2i8',
       text: 'Linode Managed Databases Overview',
+      external: true,
     },
     {
       to: 'https://www.youtube.com/watch?v=dnV-6TtfYfY',
       text: 'How to Choose the Right Database for Your Application',
+      external: true,
     },
     {
       to:
         'https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC',
       text: 'MySQL Beginner Series',
+      external: true,
     },
   ],
   moreInfo: {
