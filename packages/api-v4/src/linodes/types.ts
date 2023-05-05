@@ -22,7 +22,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
-  type: null | string;
+  type: string | null;
   status: LinodeStatus;
   updated: string;
   hypervisor: Hypervisor;
@@ -149,10 +149,14 @@ export type LinodeStatus =
 export type InterfacePurpose = 'public' | 'vlan';
 
 export interface Interface {
+  id: number;
   label: string | null;
   purpose: InterfacePurpose;
   ipam_address: string | null;
 }
+
+export type InterfacePayload = Omit<Interface, 'id'>;
+
 export interface Config {
   id: number;
   kernel: string;
@@ -261,7 +265,7 @@ export interface LinodeConfigCreationData {
     devtmpfs_automount: boolean;
   };
   root_device: string;
-  interfaces?: Interface[];
+  interfaces?: InterfacePayload[];
 }
 
 export interface PriceObject {

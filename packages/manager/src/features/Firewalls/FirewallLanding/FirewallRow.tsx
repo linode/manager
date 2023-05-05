@@ -6,10 +6,10 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
-import capitalize from 'src/utilities/capitalize';
+import { capitalize } from 'src/utilities/capitalize';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({

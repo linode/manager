@@ -11,16 +11,16 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import {
   prefixToQueryKey,
   queryKey,

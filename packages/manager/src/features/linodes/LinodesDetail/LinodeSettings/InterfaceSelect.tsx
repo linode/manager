@@ -1,4 +1,7 @@
-import { Interface, InterfacePurpose } from '@linode/api-v4/lib/linodes/types';
+import {
+  InterfacePayload,
+  InterfacePurpose,
+} from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from '@mui/styles';
@@ -32,7 +35,7 @@ export interface Props {
 
 // To allow for empty slots, which the API doesn't account for
 export type ExtendedPurpose = InterfacePurpose | 'none';
-export interface ExtendedInterface extends Omit<Interface, 'purpose'> {
+export interface ExtendedInterface extends Omit<InterfacePayload, 'purpose'> {
   purpose: ExtendedPurpose;
 }
 

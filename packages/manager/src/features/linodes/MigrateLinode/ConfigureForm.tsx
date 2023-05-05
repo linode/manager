@@ -5,7 +5,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions';
-import { getHumanReadableCountry } from 'src/utilities/formatRegion';
+import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { Flag } from 'src/components/Flag';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -54,7 +54,7 @@ const ConfigureForm = (props: Props) => {
       <Typography>Current Region</Typography>
       <div className={classes.currentRegion}>
         <Flag country={country} />
-        <Typography>{`${getHumanReadableCountry(props.currentRegion)}: ${
+        <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
           currentActualRegion?.label ?? currentRegion
         }`}</Typography>
       </div>

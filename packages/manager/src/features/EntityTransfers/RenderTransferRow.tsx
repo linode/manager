@@ -1,13 +1,13 @@
 import { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
 import * as React from 'react';
-import CopyTooltip from 'src/components/CopyTooltip';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import capitalize from 'src/utilities/capitalize';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { capitalize } from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 import ActionMenu from './TransfersPendingActionMenu';
 

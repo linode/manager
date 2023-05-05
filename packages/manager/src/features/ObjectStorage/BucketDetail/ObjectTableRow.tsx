@@ -4,11 +4,11 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { readableBytes } from 'src/utilities/unitConversions';
 import ObjectActionMenu from './ObjectActionMenu';
 

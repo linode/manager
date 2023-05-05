@@ -4,9 +4,9 @@ import BarPercent from 'src/components/BarPercent';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import useEvents from 'src/hooks/useEvents';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 

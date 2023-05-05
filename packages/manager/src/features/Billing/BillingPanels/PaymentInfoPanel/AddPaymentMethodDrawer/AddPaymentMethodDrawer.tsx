@@ -80,7 +80,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
       {isProcessing ? (
         <LinearProgress
           sx={{
-            marginBottom: 18,
+            marginBottom: 2,
             width: '100%',
             height: 5,
           }}
@@ -147,6 +147,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
                   onClose={onClose}
                   setProcessing={setIsProcessing}
                   renderError={renderError}
+                  setMessage={setMessage}
                   disabled={disabled}
                 />
               </PayPalErrorBoundary>

@@ -45,10 +45,11 @@ interface Props {
   setConfirmed: (value: boolean) => void;
   error?: string;
   migrationTimeInMins: number;
-  linodeId: number;
+  linodeId: number | undefined;
+  metadataWarning?: string;
 }
 
-const CautionNotice: React.FC<Props> = (props) => {
+const CautionNotice = (props: Props) => {
   const classes = useStyles();
   const { data: account } = useAccount();
 
@@ -59,9 +60,14 @@ const CautionNotice: React.FC<Props> = (props) => {
   // the React Query store in a paginated shape. We want to keep data in a paginated shape
   // because the event handler automatically updates stored paginated data.
   // We can safely do this because linodes can't have more than 64 volumes.
-  const { data: volumesData } = useLinodeVolumesQuery(props.linodeId, {
-    page_size: API_MAX_PAGE_SIZE,
-  });
+  const { data: volumesData } = useLinodeVolumesQuery(
+    props.linodeId ?? -1,
+    {
+      page_size: API_MAX_PAGE_SIZE,
+    },
+    {},
+    props.linodeId !== undefined
+  );
 
   const amountOfAttachedVolumes = volumesData?.results ?? 0;
 
@@ -120,6 +126,7 @@ const CautionNotice: React.FC<Props> = (props) => {
             ?.replace('in', '')}{' '}
           to complete.
         </li>
+        {props.metadataWarning ? <li>{props.metadataWarning}</li> : null}
       </ul>
       {props.error && <Notice error text={props.error} />}
       <Checkbox

@@ -9,13 +9,13 @@ import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
-import DebouncedSearch from 'src/components/DebouncedSearchTextField';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import {
   withProfile,
   WithProfileProps,
@@ -23,7 +23,6 @@ import {
 import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -375,8 +374,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         didSearch: true, // table will show default empty state unless didSearch is true
       });
 
-      sendStackscriptsSearchEvent(lowerCaseValue);
-
       request({ page: 1, page_size: 50 }, { ...filter, ...currentFilter })
         .then((response: any) => {
           if (!this.mounted) {
@@ -544,7 +541,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   [classes.landing]: !isSelecting,
                 })}
               >
-                <DebouncedSearch
+                <DebouncedSearchTextField
                   placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
                   debounceTime={400}

@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import ActionMenu, { Handlers } from './DomainActionMenu';
 import { getDomainDisplayType } from './domainUtils';
 

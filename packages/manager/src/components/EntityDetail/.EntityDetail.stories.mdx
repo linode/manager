@@ -5,7 +5,6 @@ import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import { linodeBackupsFactory, linodeFactory } from 'src/factories/linodes';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import KubeSummaryPanel from 'src/features/Kubernetes/KubernetesClusterDetail/KubeSummaryPanel';
-import store from 'src/store';
 
 <Meta title="Features/Entity Detail" component={LinodeEntityDetail} />
 
@@ -13,23 +12,21 @@ import store from 'src/store';
 
 <Canvas>
   <Story name="Linode">
-    <Provider store={store}>
-      <div>
-        <h2 style={{ margin: 0 }}>Linode Details: </h2>
-        <LinodeEntityDetail
-          variant="details"
-          numVolumes={2}
-          id={0}
-          linode={linodeFactory.build()}
-          username="linode-user"
-          openTagDrawer={() => null}
-          openDialog={() => null}
-          openPowerActionDialog={() => null}
-          backups={linodeBackupsFactory.build()}
-          linodeConfigs={linodeConfigFactory.buildList(2)}
-        />
-      </div>
-    </Provider>
+    <div>
+      <h2 style={{ margin: 0 }}>Linode Details: </h2>
+      <LinodeEntityDetail
+        variant="details"
+        numVolumes={2}
+        id={0}
+        linode={linodeFactory.build()}
+        username="linode-user"
+        openTagDrawer={() => null}
+        openDialog={() => null}
+        openPowerActionDialog={() => null}
+        backups={linodeBackupsFactory.build()}
+        linodeConfigs={linodeConfigFactory.buildList(2)}
+      />
+    </div>
   </Story>
 </Canvas>
 

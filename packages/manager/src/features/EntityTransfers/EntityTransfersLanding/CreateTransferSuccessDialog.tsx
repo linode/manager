@@ -4,12 +4,12 @@ import { DateTime } from 'luxon';
 import { update } from 'ramda';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import CopyableTextField from 'src/components/CopyableTextField';
+import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import { parseAPIDate } from 'src/utilities/date';
 import {
   sendEntityTransferCopyDraftEmailEvent,

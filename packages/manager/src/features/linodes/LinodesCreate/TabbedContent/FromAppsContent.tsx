@@ -21,7 +21,7 @@ import {
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 import { APP_ROOT } from 'src/constants';
-import DebouncedSearch from 'src/components/DebouncedSearchTextField';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
@@ -167,10 +167,6 @@ const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
 
 const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
-const handleSearchFieldClick = () => {
-  sendMarketplaceSearchEvent('Search Field');
-};
-
 class FromAppsContent extends React.Component<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
@@ -253,7 +249,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
     const didUserSelectCategory = categoryItem !== null;
     let instancesInCategory: StackScript[] | undefined = [];
     if (didUserSelectCategory) {
-      sendMarketplaceSearchEvent('Category Dropdown', categoryItem.label);
+      sendMarketplaceSearchEvent(categoryItem.label);
       const appsInCategory = oneClickApps.filter((oca) =>
         oca.categories?.includes(categoryItem.value)
       );
@@ -323,12 +319,11 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
             <Typography variant="h2">Select an App</Typography>
             <Box className={classes.searchAndFilter}>
               <Box className={classes.search}>
-                <DebouncedSearch
+                <DebouncedSearchTextField
                   placeholder="Search for app name"
                   fullWidth
                   onSearch={this.onSearch}
                   label="Search marketplace"
-                  onClick={handleSearchFieldClick}
                   hideLabel
                   value={query}
                 />

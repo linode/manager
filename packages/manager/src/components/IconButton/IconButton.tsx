@@ -17,6 +17,10 @@ interface Props extends IconButtonProps {
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      color: theme.palette.primary.light,
+      '&:hover': {
+        color: theme.palette.primary.light,
+      },
       transition: theme.transitions.create(['opacity']),
     },
     destructive: {

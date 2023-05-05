@@ -6,18 +6,80 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added:
+- Resource links to empty state Volumes landing page #9065
+- Resource links to empty state Firewalls landing page #9078
+- Ability download DNS zone file #9075
+
 ### Changed:
-- `<RegionSelect />` can now dynamically get country flag and group all countrys #8996
+- Removed MongoDB reference from ClusterControl description #9081
 
 ### Fixed:
-- Typesafety of the `<Select />` component #8986
-- Clear the Kubernetes Delete Dialog when it is re-opened #9000
-- @linode/validation version badge Label in `README.md` #9011
-- Event entities should only be linked for true labels
+- Ability to search Linodes by IPv6 #9073
 
 ### Tech Stories:
-- MUIv5 Migration - Components > TagsInput, TagsPanel #8995
-- MUIv5 Migration - Grid v2 for Features #8985
+- Enable Cypress `experimentalMemoryManagement` #9076
+- MUI v5 Migration - `Components > Table` #9082
+- MUI v5 Migration - `Components > TableCell` #9082
+- MUI v5 Migration - `Components > TableHead` #9082
+- MUI v5 Migration - `Components > TableBody` #9082
+- MUI v5 Migration - `Components > TableSortCell` #9082
+- MUI v5 Migration - `Components > TableRow` #9082
+- React Query for Linodes Landing #9062
+
+## [2023-05-01] - v1.92.0
+
+### Added:
+- No Results section for Marketplace Search #8999
+- Private IP checkbox when cloning a Linode #9039
+- Metadata migrate warning #9033
+
+### Changed:
+- Region Select will dynamically get country flags and group all countries based on API data #8996
+- Removed MongoDB Marketplace Apps #9071
+
+### Fixed:
+- Kubernetes Delete Dialog clears when it is re-opened #9000
+- HTML showing up in event messages #9003
+- Inability to edit and save Linode Configurations #9053
+- Excessively large file size for invoices due to uncompressed JPG logo #9069
+- Marketplace One Click Cluster UDF caching issue #8997
+- Prevent IP transfer & sharing modals form submission if no action selected #9026
+- Increase radio button padding to fix hover effect shape #9031
+- Blank Kubernetes Node Pool plan selection #9009
+
+### Tech Stories:
+- MUI v5 Migration - `Components > CircleProgress` #9028
+- MUI v5 Migration - `Components > StatusIcon` #9014
+- MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
+- MUI v5 Migration - Grid v2 for Features #8985
+- MUI v5 Migration - `Components > Dialog` #9020
+- MUI v5 Migration - `Components > DeletionDialog` #9047
+- MUI v5 Migration - `Components > Currency` #9030
+- MUI v5 Migration - `Components > DisplayPrice` #9022
+- MUI v5 Migration - `Components > CreateLinodeDisabled` #9015
+- MUI v5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
+- MUI v5 Migration - `Components > ConfirmationDialog` #9016
+- MUI v5 Migration - `Components > CopyTooltip` #9040
+- MUI v5 Migration - `Components > CheckoutBar` #9051
+- MUI v5 Migration - `Components > CreateLinodeDisabled` #9015
+- MUI v5 Migration - `Components > ColorPalette` #9013
+- MUI v5 Migration - `Components > Tile` #9001
+- MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
+- MUI v5 Migration - `Components > DismissibleBanner` #8998
+- MUI v5 Migration - `Components > SupportLink, TextTooltip` #8993
+- MUI v5 Migration - `Components > Toggle` #8990
+- MUI v5 Migration - `Components > SplashScreen` #8994
+- Remove `ConditionalWrapper` #9002
+- Upgrade New Relic to v1230 #9005
+- Add basic Adobe Analytics tracking #8989
+- Add more eslint rules #9043
+- @linode/validation version badge Label in `README.md` #9011
+- Improve Firewall ports regex to prevent exponential backtracking #9010
+- Fix code scanning alert that DOM text is reinterpreted as HTML #9032
+- Fix the typesafety of the `<Select />` component #8986
+- Update PayPal and Braintree dependencies #9052
+
 ## [2023-04-18] - v1.91.1
 
 ### Fixed:
@@ -28,7 +90,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added:
 - Cross Data Center Clone warning #8937
 - `Plan` column header to plan select table #8943
-- Add No Results section for Marketplace Search #8999
 
 ### Changed:
 - Use Akamai logo for TPA provider screen #8982

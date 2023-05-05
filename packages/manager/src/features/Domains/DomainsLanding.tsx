@@ -4,11 +4,11 @@ import { useSnackbar } from 'notistack';
 import { useHistory, useLocation } from 'react-router-dom';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import DeletionDialog from 'src/components/DeletionDialog';
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
@@ -22,7 +22,7 @@ import DomainBanner from './DomainBanner';
 import DomainRow from './DomainTableRow';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 import { useProfile } from 'src/queries/profile';
-import { useLinodesQuery } from 'src/queries/linodes';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useDeleteDomainMutation,
   useDomainsQuery,
@@ -30,13 +30,13 @@ import {
 } from 'src/queries/domains';
 import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
-import Table from 'src/components/Table/Table';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/TableRow/TableRow';
-import TableBody from 'src/components/core/TableBody';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell';
-import TableCell from 'src/components/core/TableCell';
-import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableBody } from 'src/components/TableBody';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { TableCell } from 'src/components/TableCell';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import Hidden from 'src/components/core/Hidden';
 import { CloneDomainDrawer } from './CloneDomainDrawer';
 import { EditDomainDrawer } from './EditDomainDrawer';

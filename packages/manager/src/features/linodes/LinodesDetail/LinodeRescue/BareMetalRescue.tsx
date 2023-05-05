@@ -3,23 +3,27 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import RescueDescription from './RescueDescription';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Props {
-  linodeID: number;
-  linodeLabel: string;
+  linodeId: number | undefined;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const BareMetalRescue: React.FC<Props> = (props) => {
-  const { isOpen, onClose, linodeID, linodeLabel } = props;
+export const BareMetalRescue = (props: Props) => {
+  const { isOpen, onClose, linodeId } = props;
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const { enqueueSnackbar } = useSnackbar();
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && isOpen
+  );
 
   React.useEffect(() => {
     if (isOpen) {
@@ -31,7 +35,7 @@ export const BareMetalRescue: React.FC<Props> = (props) => {
   const handleSubmit = () => {
     setError(undefined);
     setLoading(true);
-    rescueMetalLinode(linodeID)
+    rescueMetalLinode(linodeId ?? -1)
       .then(() => {
         setLoading(false);
         enqueueSnackbar('Linode rescue started.', {
@@ -61,15 +65,13 @@ export const BareMetalRescue: React.FC<Props> = (props) => {
 
   return (
     <ConfirmationDialog
-      title={`Rescue Linode ${linodeLabel}`}
+      title={`Rescue Linode ${linode?.label ?? ''}`}
       open={isOpen}
       onClose={onClose}
       actions={actions}
       error={error}
     >
-      <RescueDescription linodeId={linodeID} isBareMetal />
+      {linodeId ? <RescueDescription linodeId={linodeId} isBareMetal /> : null}
     </ConfirmationDialog>
   );
 };
-
-export default BareMetalRescue;
