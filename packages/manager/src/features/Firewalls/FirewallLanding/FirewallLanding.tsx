@@ -6,7 +6,7 @@ import { useFirewallsQuery } from 'src/queries/firewalls';
 import CreateFirewallDrawer from './CreateFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import FirewallDialog, { Mode } from './FirewallDialog';
-import FirewallEmptyState from './FirewallEmptyState';
+import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
 import FirewallRow from './FirewallRow';
 import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
@@ -113,7 +113,7 @@ const FirewallLanding = () => {
   if (data?.results === 0) {
     return (
       <>
-        <FirewallEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
+        <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
           open={isCreateFirewallDrawerOpen}
           onClose={() => setIsCreateFirewallDrawerOpen(false)}
