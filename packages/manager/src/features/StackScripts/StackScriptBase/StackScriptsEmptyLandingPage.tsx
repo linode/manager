@@ -1,5 +1,5 @@
 import * as React from 'react';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
+import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/ga';
 import {
@@ -33,7 +33,7 @@ export const StackScriptsEmptyLandingState = (props: Props) => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={FirewallIcon}
+      icon={StackScriptsIcon}
       linkGAEvent={linkGAEvent}
       youtubeLinkData={youtubeLinkData}
     />
