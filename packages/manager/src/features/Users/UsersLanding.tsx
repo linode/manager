@@ -9,7 +9,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';

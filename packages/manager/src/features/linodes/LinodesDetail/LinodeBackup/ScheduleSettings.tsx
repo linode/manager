@@ -2,7 +2,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button/Button';
 import Select from 'src/components/EnhancedSelect/Select';
-import Notice from 'src/components/Notice/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';

@@ -11,7 +11,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import Prompt from 'src/components/Prompt';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';

@@ -4,7 +4,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';

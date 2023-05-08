@@ -3,7 +3,7 @@ import * as React from 'react';
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {

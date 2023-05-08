@@ -15,7 +15,7 @@ import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

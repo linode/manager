@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import useFlags from 'src/hooks/useFlags';
 
 // Ideally we should add premium as a capability so the availability is returned by the API,

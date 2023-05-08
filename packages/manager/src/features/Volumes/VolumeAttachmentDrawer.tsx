@@ -7,7 +7,7 @@ import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';

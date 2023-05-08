@@ -4,7 +4,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import LandingHeader from 'src/components/LandingHeader';
 import Grid from '@mui/material/Unstable_Grid2';

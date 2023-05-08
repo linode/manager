@@ -10,7 +10,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import usePrevious from 'src/hooks/usePrevious';
 import { useAllVolumesQuery } from 'src/queries/volumes';

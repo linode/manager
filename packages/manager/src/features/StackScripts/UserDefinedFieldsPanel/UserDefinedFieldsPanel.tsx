@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import Divider from 'src/components/core/Divider';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import AppInfo from '../../linodes/LinodesCreate/AppInfo';

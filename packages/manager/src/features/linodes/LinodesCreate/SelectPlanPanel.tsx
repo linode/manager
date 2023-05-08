@@ -16,7 +16,7 @@ import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';

@@ -7,7 +7,7 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Drawer from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { useFormik } from 'formik';
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { useSnackbar } from 'notistack';

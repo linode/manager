@@ -8,7 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import LinearProgress from 'src/components/LinearProgress';
 import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
