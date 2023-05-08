@@ -49,7 +49,7 @@ export const ResourcesLinksSubSection = (
 
   return (
     <StyledResourcesLinksSubSection>
-      <Typography variant="h2" style={{ textAlign: 'left' }}>
+      <Typography variant="h2">
         {icon} {title}
       </Typography>
       {children}
