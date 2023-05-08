@@ -32,7 +32,7 @@ import {
   useAllDetailedIPv6RangesQuery,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
-import { useQueryClient } from 'react-query';
+// import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addNewButton: {
@@ -91,7 +91,7 @@ const IPSharingPanel = (props: Props) => {
     open
   );
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const rangeData = ranges?.reduce(
     (
@@ -329,7 +329,7 @@ const IPSharingPanel = (props: Props) => {
   const errorMap = getErrorMap([], errors);
   const generalError = errorMap.none;
   return (
-    <Dialog title="IP Sharing" open={open} onClose={handleClose}>
+    <Dialog title="IP Sharing" open={open} onClose={handleClose} fullWidth>
       <DialogContent loading={isLoading}>
         <>
           {generalError && (

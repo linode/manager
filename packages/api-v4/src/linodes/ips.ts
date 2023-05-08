@@ -48,11 +48,11 @@ export const allocateIPAddress = (
  */
 export const removeIPAddress = (payload: {
   linodeID: number;
-  IPAddress: string;
+  address: string;
 }) => {
   return Request<{}>(
     setURL(
-      `${API_ROOT}/linode/instances/${payload.linodeID}/ips/${payload.IPAddress}`
+      `${API_ROOT}/linode/instances/${payload.linodeID}/ips/${payload.address}`
     ),
     setMethod('DELETE')
   );
@@ -65,9 +65,9 @@ export const removeIPAddress = (payload: {
  *
  * @param {IPv6Range: string} payload - the IPv6 Range for which you'd like the delete request to be invoked
  */
-export const removeIPv6Range = (payload: { IPv6Range: string }) => {
+export const removeIPv6Range = (payload: { range: string }) => {
   return Request<{}>(
-    setURL(`${API_ROOT}/networking/ipv6/ranges/${payload.IPv6Range}`),
+    setURL(`${API_ROOT}/networking/ipv6/ranges/${payload.range}`),
     setMethod('DELETE')
   );
 };

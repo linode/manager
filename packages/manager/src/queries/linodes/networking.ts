@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from 'react-query';
 import { queryKey } from './linodes';
+import { getAll } from 'src/utilities/getAll';
 import {
   APIError,
   Filter,
@@ -8,14 +9,14 @@ import {
   IPRangeInformation,
   LinodeIPsResponse,
   Params,
-  ResourcePage,
   getIPs,
   getIPv6RangeInfo,
   getIPv6Ranges,
   getLinodeIPs,
+  removeIPAddress,
+  removeIPv6Range,
   updateIP,
 } from '@linode/api-v4';
-import { getAll } from 'src/utilities/getAll';
 
 export const useLinodeIPsQuery = (
   linodeId: number,
@@ -34,6 +35,19 @@ export const useLinodeIPMutation = () => {
     APIError[],
     { address: string; rdns?: string | null }
   >(({ address, rdns }) => updateIP(address, rdns));
+};
+
+export const useLinodeIPDeleteMutation = (
+  linodeId: number,
+  address: string
+) => {
+  return useMutation<{}, APIError[]>(() =>
+    removeIPAddress({ linodeID: linodeId, address })
+  );
+};
+
+export const useLinodeRemoveRangeMutation = (range: string) => {
+  return useMutation<{}, APIError[]>(() => removeIPv6Range({ range }));
 };
 
 export const useAllIPsQuery = (

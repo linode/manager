@@ -1,29 +1,15 @@
-import {
-  getLinodeIPs,
-  Linode,
-  LinodeIPsResponse,
-} from '@linode/api-v4/lib/linodes';
-import {
-  getIPs,
-  getIPv6RangeInfo,
-  getIPv6Ranges,
-  IPAddress,
-  IPRange,
-  IPRangeInformation,
-} from '@linode/api-v4/lib/networking';
+import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
-import { isEmpty, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import { createStyles, makeStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -33,16 +19,8 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
-import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAll } from 'src/utilities/getAll';
-import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import AddIPDrawer from './AddIPDrawer';
-import DeleteIPConfirm from './DeleteIPConfirm';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import IPSharing from './IPSharing';
 import IPTransfer from './IPTransfer';
@@ -53,9 +31,15 @@ import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
+import {
+  useAllIPsQuery,
+  useLinodeIPsQuery,
+} from 'src/queries/linodes/networking';
 import { useParams } from 'react-router-dom';
 import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
+import { DeleteIPDialog } from './DeleteIPDialog';
+import { DeleteRangeDialog } from './DeleteRangeDialog';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -91,12 +75,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   multipleRDNSButton: {
     ...theme.applyLinkStyles,
   },
-  multipleRDNSText: {
-    color: theme.palette.primary.main,
-    '&:hover': {
-      color: theme.palette.primary.light,
-    },
-  },
+  multipleRDNSText: {},
   row: {
     '&:hover $copy > svg, & $copy:focus > svg': {
       opacity: 1,
@@ -116,40 +95,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface State {
-  linodeIPs?: LinodeIPsResponse;
-  allIPs?: IPAddress[];
-  removeIPDialogOpen: boolean;
-  removeIPRangeDialogOpen: boolean;
-  initialLoading: boolean;
-  ipv6Loading: boolean;
-  ipv6Error?: string;
-  currentlySelectedIP?: IPAddress;
-  currentlySelectedIPRange?: IPRange;
-  viewIPDrawerOpen: boolean;
-  viewRangeDrawerOpen: boolean;
-  sharedRanges: IPRange[];
-  availableRanges: IPRangeInformation[];
-  staticRanges: IPRange[];
-  editRDNSDrawerOpen: boolean;
-  viewRDNSDrawerOpen: boolean;
-  IPRequestError?: string;
-  addIPDrawerOpen: boolean;
-  transferDialogOpen: boolean;
-  sharingDialogOpen: boolean;
-}
-
-// Save some typing below
-export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
-
-// The API returns an error if more than 100 IPs are requested.
-const getAllIPs = getAll<IPAddress>(getIPs, 100);
-const getAllIPv6Ranges = getAll<IPRange>(getIPv6Ranges, 100);
-
 export const ipv4TableID = 'ips';
 
-const LinodeNetworking = (props: { readOnly: boolean }) => {
-  const { readOnly } = props;
+const LinodeNetworking = () => {
+  const readOnly = false;
   const classes = useStyles();
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
@@ -168,36 +117,11 @@ const LinodeNetworking = (props: { readOnly: boolean }) => {
   const [isRangeRdnsDrawerOpen, setIsRangeRdnsDrawerOpen] = React.useState(
     false
   );
-  const [isTransferDialogOpen, setIsTransferDialogOpen] = React.useState(
-    false
-  );
-  const [isShareDialogOpen, setIsShareDialogOpen] = React.useState(
-    false
-  );
+  const [isTransferDialogOpen, setIsTransferDialogOpen] = React.useState(false);
+  const [isShareDialogOpen, setIsShareDialogOpen] = React.useState(false);
 
-  const [isViewRDNSDialogOpen, setIsViewRDNSDialogOpen] = React.useState(
-    false
-  );
- const [isAddDrawerOpen, setIsAddDrawerOpen] = React.useState(
-    false
-  );
-
-  // state: State = {
-  //   removeIPDialogOpen: false,
-  //   removeIPRangeDialogOpen: false,
-  //   addIPDrawerOpen: false,
-  //   editRDNSDrawerOpen: false,
-  //   viewRDNSDrawerOpen: false,
-  //   viewIPDrawerOpen: false,
-  //   viewRangeDrawerOpen: false,
-  //   initialLoading: true,
-  //   ipv6Loading: false,
-  //   transferDialogOpen: false,
-  //   sharingDialogOpen: false,
-  //   sharedRanges: [],
-  //   availableRanges: [],
-  //   staticRanges: [],
-  // };
+  const [isViewRDNSDialogOpen, setIsViewRDNSDialogOpen] = React.useState(false);
+  const [isAddDrawerOpen, setIsAddDrawerOpen] = React.useState(false);
 
   const openRemoveIPDialog = (ip: IPAddress) => {
     setSelectedIP(ip);
@@ -207,128 +131,6 @@ const LinodeNetworking = (props: { readOnly: boolean }) => {
   const openRemoveIPRangeDialog = (range: IPRange) => {
     setIsDeleteRangeDialogOpen(true);
     setSelectedRange(range);
-  };
-
-  // const closeRemoveDialog = () => {
-  //   this.setState({
-  //     removeIPDialogOpen: false,
-  //     removeIPRangeDialogOpen: false,
-  //     currentlySelectedIP: undefined,
-  //     currentlySelectedIPRange: undefined,
-  //   });
-  // };
-
-  // refreshIPs = (): Promise<void>[] => {
-  //   this.setState({
-  //     IPRequestError: undefined,
-  //     ipv6Error: undefined,
-  //   });
-
-  //   const linodeIPs = getLinodeIPs(this.props.linode.id)
-  //     .then((ips) => {
-  //       const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
-
-  //       const shouldSetIPv6Loading = this.state.initialLoading;
-  //       this.setState({ linodeIPs: ips, initialLoading: false });
-  //       // If this user is assigned an IPv6 range in the DC this Linode resides
-  //       // in, we request all IPs on the account, so we can look for matching
-  //       // RDNS addresses.
-  //       if (hasIPv6Range) {
-  //         // Only set the IPv6 loading state if this is the initial load.
-  //         if (shouldSetIPv6Loading) {
-  //           this.setState({ ipv6Loading: true });
-  //         }
-  //         getAllIPs({}, { region: this.props.linode.region })
-  //           .then((response) => {
-  //             this.setState({
-  //               ipv6Loading: false,
-  //               allIPs: response.data,
-  //             });
-  //           })
-  //           .catch((errorResponse) => {
-  //             const errors = getAPIErrorOrDefault(
-  //               errorResponse,
-  //               'There was an error retrieving your IPv6 network information.'
-  //             );
-  //             this.setState({
-  //               ipv6Error: errors[0].reason,
-  //               ipv6Loading: false,
-  //             });
-  //           });
-  //       }
-  //     })
-  //     .catch((errorResponse) => {
-  //       const errors = getAPIErrorOrDefault(
-  //         errorResponse,
-  //         'There was an error retrieving your network information.'
-  //       );
-  //       this.setState({
-  //         IPRequestError: errors[0].reason,
-  //         initialLoading: false,
-  //       });
-  //     });
-
-  //   const IPv6Sharing = getAllIPv6Ranges()
-  //     .then(async (resp) => {
-  //       const ranges = resp.data;
-
-  //       const sharedRanges: IPRange[] = [];
-  //       const availableRanges: IPRangeInformation[] = [];
-  //       const rangeConstruction = await ranges.reduce(async (acc, range) => {
-  //         await acc;
-  //         // filter user ranges outside dc
-  //         if (range.region !== this.props.linode.region) {
-  //           return acc;
-  //         }
-
-  //         // get info on an IPv6 range; if its shared check if its shared to our Linode
-  //         const resp = await getIPv6RangeInfo(range.range);
-
-  //         if (
-  //           this.props.flags.ipv6Sharing &&
-  //           resp.is_bgp &&
-  //           resp.linodes.includes(this.props.linode.id)
-  //         ) {
-  //           // any range that is shared to this linode
-  //           sharedRanges.push(range);
-  //         } else if (this.props.flags.ipv6Sharing) {
-  //           // any range that is not shared to this linode or static on this linode
-  //           availableRanges.push(resp);
-  //         }
-
-  //         return [];
-  //       }, Promise.resolve([]));
-
-  //       return Promise.all(rangeConstruction).then(() => {
-  //         this.setState({
-  //           sharedRanges,
-  //           availableRanges,
-  //           ipv6Loading: false,
-  //         });
-  //       });
-  //     })
-  //     .catch((errorResponse) => {
-  //       const errors = getAPIErrorOrDefault(
-  //         errorResponse,
-  //         'There was an error retrieving your IPv6 network information.'
-  //       );
-  //       this.setState({
-  //         ipv6Error: errors[0].reason,
-  //         ipv6Loading: false,
-  //       });
-  //     });
-
-  //   return [linodeIPs, IPv6Sharing];
-  // };
-
-  const openRangeDrawer = (range: IPRange) => () => {
-    setSelectedRange(range);
-    setIsRangeDrawerOpen(true);
-  };
-
-  const openIPDrawer = (ip: IPAddress) => () => {
-    setSelectedIP(ip);
-    setIsIPDrawerOpen(true);
   };
 
   const handleOpenEditRDNS = (ip: IPAddress) => {
@@ -341,45 +143,9 @@ const LinodeNetworking = (props: { readOnly: boolean }) => {
     setIsRangeRdnsDrawerOpen(true);
   };
 
-  const renderRangeRDNSCell = (ipRange: IPRange) => {
-    const { range, prefix } = ipRange;
-
-    // The prefix is a prerequisite for finding IPs within the range, so we check for that here.
-    const ipsWithRDNS =
-      prefix && range ? listIPv6InRange(range, prefix, []) : [];
-
-    // if (ipv6Loading) {
-    //   return <CircleProgress noPadding mini />;
-    // }
-
-    // We don't show anything if there are no addresses.
-    if (ipsWithRDNS.length === 0) {
-      return null;
-    }
-
-    if (ipsWithRDNS.length === 1) {
-      return (
-        <span>
-          <Typography>{ipsWithRDNS[0].address}</Typography>
-          <Typography>{ipsWithRDNS[0].rdns}</Typography>
-        </span>
-      );
-    }
-
-    return (
-      <button
-        className={classes.multipleRDNSButton}
-        onClick={() => {
-          setSelectedRange(ipRange);
-          setIsViewRDNSDialogOpen(true);
-        }}
-        aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
-      >
-        <Typography className={classes.multipleRDNSText}>
-          {ipsWithRDNS.length} Addresses
-        </Typography>
-      </button>
-    );
+  const handleOpenIPV6Details = (range: IPRange) => {
+    setSelectedRange(range);
+    setIsViewRDNSDialogOpen(true);
   };
 
   const renderIPRow = (ipDisplay: IPDisplay) => {
@@ -406,7 +172,15 @@ const LinodeNetworking = (props: { readOnly: boolean }) => {
         <TableCell parentColumn="Subnet Mask">{subnetMask}</TableCell>
         <TableCell parentColumn="Reverse DNS" data-qa-rdns>
           {/* Ranges have special handling for RDNS. */}
-          {_range ? renderRangeRDNSCell(_range) : rdns}
+          {_range ? (
+            <RangeRDNSCell
+              linodeId={id}
+              onViewDetails={() => handleOpenIPV6Details(_range)}
+              range={_range}
+            />
+          ) : (
+            rdns
+          )}
         </TableCell>
         <TableCell className={classes.action} data-qa-action>
           {_ip ? (
@@ -442,19 +216,6 @@ const LinodeNetworking = (props: { readOnly: boolean }) => {
   if (!ips) {
     return null;
   }
-
-  // const ipsWithRDNS =
-  //   currentlySelectedIPRange && currentlySelectedIPRange.prefix
-  //     ? listIPv6InRange(
-  //         currentlySelectedIPRange.range,
-  //         currentlySelectedIPRange.prefix,
-  //         this.state.allIPs
-  //       )
-  //     : [];
-
-  const publicIPs = ips.ipv4.public.map((i: IPAddress) => i.address);
-  const privateIPs = ips.ipv4.private.map((i: IPAddress) => i.address);
-  const sharedIPs = ips.ipv4.shared.map((i: IPAddress) => i.address);
 
   const renderIPTable = () => {
     const ipDisplay = ipResponseToDisplayRows(ips);
@@ -585,21 +346,84 @@ const LinodeNetworking = (props: { readOnly: boolean }) => {
         linodeId={id}
         readOnly={readOnly}
       />
-      {/* {selectedIPAddress && (
-        <DeleteIPConfirm
-          handleClose={() => setIsDeleteIPDialogOpen(false)}
-          IPAddress={selectedIPAddress}
+      {selectedIP && (
+        <DeleteIPDialog
+          onClose={() => setIsDeleteIPDialogOpen(false)}
+          address={selectedIP.address}
           open={isDeleteIPDialogOpen}
           linodeId={id}
-          prefix={ipv6Prefix}
-          ipRemoveSuccess={this.handleRemoveIPSuccess}
         />
-      )} */}
+      )}
+      {selectedRange && (
+        <DeleteRangeDialog
+          onClose={() => setIsDeleteRangeDialogOpen(false)}
+          range={selectedRange}
+          open={isDeleteRangeDialogOpen}
+        />
+      )}
     </div>
   );
 };
 
 export default LinodeNetworking;
+
+const RangeRDNSCell = (props: {
+  range: IPRange;
+  linodeId: number;
+  onViewDetails: () => void;
+}) => {
+  const { range, linodeId, onViewDetails } = props;
+  const theme = useTheme();
+
+  const { data: linode } = useLinodeQuery(linodeId);
+
+  const { data: ipsInRegion, isLoading: ipv6Loading } = useAllIPsQuery(
+    {},
+    {
+      region: linode?.region,
+    },
+    linode !== undefined
+  );
+
+  const ipsWithRDNS = listIPv6InRange(range.range, range.prefix, ipsInRegion);
+
+  if (ipv6Loading) {
+    return <CircleProgress noPadding mini />;
+  }
+
+  // We don't show anything if there are no addresses.
+  if (ipsWithRDNS.length === 0) {
+    return null;
+  }
+
+  if (ipsWithRDNS.length === 1) {
+    return (
+      <span>
+        <Typography>{ipsWithRDNS[0].address}</Typography>
+        <Typography>{ipsWithRDNS[0].rdns}</Typography>
+      </span>
+    );
+  }
+
+  return (
+    <button
+      style={theme.applyLinkStyles}
+      onClick={onViewDetails}
+      aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
+    >
+      <Typography
+        sx={{
+          color: theme.palette.primary.main,
+          '&:hover': {
+            color: theme.palette.primary.light,
+          },
+        }}
+      >
+        {ipsWithRDNS.length} Addresses
+      </Typography>
+    </button>
+  );
+};
 
 // =============================================================================
 // Utilities

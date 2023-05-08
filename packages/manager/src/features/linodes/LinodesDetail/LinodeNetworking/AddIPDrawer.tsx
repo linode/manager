@@ -17,7 +17,6 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 
 const useStyles = makeStyles((theme: Theme) => ({
