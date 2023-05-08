@@ -30,11 +30,19 @@ export const MutationNotification = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId);
 
-  const { data: disks } = useAllLinodeDisksQuery(linodeId);
-
   const { data: currentTypeInfo } = useTypeQuery(
     linode?.type ?? '',
     linode !== undefined
+  );
+
+  const { data: sucessorTypeInfo } = useTypeQuery(
+    currentTypeInfo?.successor ?? '',
+    currentTypeInfo !== undefined && currentTypeInfo.successor !== null
+  );
+
+  const { data: disks } = useAllLinodeDisksQuery(
+    linodeId,
+    sucessorTypeInfo !== undefined
   );
 
   const [isMutationDrawerOpen, setIsMutationDrawerOpen] = React.useState(false);
@@ -44,11 +52,6 @@ export const MutationNotification = (props: Props) => {
     isLoading,
     error,
   } = useStartLinodeMutationMutation(linodeId);
-
-  const { data: sucessorTypeInfo } = useTypeQuery(
-    currentTypeInfo?.successor ?? '',
-    currentTypeInfo !== undefined && currentTypeInfo.successor !== null
-  );
 
   const initMutation = () => {
     startMutation().then(() => {

@@ -1,4 +1,4 @@
-import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
+import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
@@ -46,10 +46,7 @@ import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import Table from '@mui/material/Table';
 import { TableCell } from 'src/components/TableCell';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import {
-  useAllLinodeConfigsQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import useEvents from 'src/hooks/useEvents';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { useNotificationContext } from '../NotificationCenter/NotificationContext';
@@ -70,8 +67,6 @@ const LinodeEntityDetail = (props: Props) => {
   const { data: linode } = useLinodeQuery(id);
 
   const { data: volumesData } = useLinodeVolumesQuery(id);
-
-  const { data: configs } = useAllLinodeConfigsQuery(id);
 
   const { data: images } = useAllImagesQuery({}, {});
 
@@ -117,7 +112,6 @@ const LinodeEntityDetail = (props: Props) => {
           linodeRegionDisplay={linodeRegionDisplay}
           backups={linode.backups}
           isSummaryView={isSummaryView}
-          linodeConfigs={configs ?? []}
           type={type ?? null}
           image={linode.image ?? 'Unknown Image'}
           openNotificationMenu={() => openMenu()}
@@ -170,7 +164,6 @@ export interface HeaderProps {
   backups: LinodeBackups;
   type: LinodeType | null;
   image: string;
-  linodeConfigs: Config[];
   isSummaryView?: boolean;
   openNotificationMenu: () => void;
   progress?: number;
