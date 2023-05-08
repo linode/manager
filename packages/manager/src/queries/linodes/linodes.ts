@@ -8,6 +8,7 @@ import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from '../base';
 import {
   APIError,
+  DeepPartial,
   Filter,
   Params,
   ResourcePage,
@@ -19,6 +20,7 @@ import {
   getLinodeLishToken,
   getLinodeConfigs,
   Config,
+  updateLinode,
   deleteLinode,
   linodeBoot,
   linodeReboot,
@@ -71,6 +73,19 @@ export const useLinodeQuery = (id: number, enabled = true) => {
     () => getLinode(id),
     {
       enabled,
+    }
+  );
+};
+
+export const useLinodeUpdateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Linode, APIError[], DeepPartial<Linode>>(
+    (data) => updateLinode(id, data),
+    {
+      onSuccess(linode) {
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData([queryKey, 'linode', id], linode);
+      },
     }
   );
 };
