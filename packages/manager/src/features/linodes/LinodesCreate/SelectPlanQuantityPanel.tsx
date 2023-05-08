@@ -12,7 +12,7 @@ import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';

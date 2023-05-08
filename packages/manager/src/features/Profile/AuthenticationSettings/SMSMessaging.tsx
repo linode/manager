@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { makeStyles } from '@mui/styles';
