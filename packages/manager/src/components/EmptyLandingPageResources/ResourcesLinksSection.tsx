@@ -5,6 +5,7 @@ interface ResourcesLinksSectionProps {
   /**
    * If true, the section will be 100% width (more than 2 columns)
    *
+   * @example true on linodes empty state landing
    * @default true
    * */
   wide?: boolean;

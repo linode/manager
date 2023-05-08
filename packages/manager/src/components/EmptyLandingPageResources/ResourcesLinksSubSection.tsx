@@ -17,6 +17,9 @@ const StyledResourcesLinksSubSection = styled('div', {
   gridTemplateRows: `22px minmax(${theme.spacing(3)}, 100%) 1.125rem`,
   rowGap: theme.spacing(2),
   width: '100%',
+  [theme.breakpoints.between('md', 'lg')]: {
+    gridTemplateRows: `50px minmax(${theme.spacing(3)}, 100%) 1.125rem`,
+  },
   '& > h2': {
     color: theme.palette.text.primary,
   },
@@ -28,7 +31,7 @@ const StyledResourcesLinksSubSection = styled('div', {
   },
   '& > a': {
     color: theme.textColors.linkActiveLight,
-    display: 'flex',
+    display: 'inline-block',
     fontSize: '0.875rem',
     fontWeight: 700,
   },
