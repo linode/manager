@@ -1,9 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-import {
-  shareAddresses,
-  shareAddressesv4,
-  IPRangeInformation,
-} from '@linode/api-v4/lib/networking';
+import { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
@@ -31,6 +27,7 @@ import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import {
   useAllDetailedIPv6RangesQuery,
   useLinodeIPsQuery,
+  useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
 // import { useQueryClient } from 'react-query';
 
@@ -90,6 +87,8 @@ const IPSharingPanel = (props: Props) => {
     { region: linode?.region },
     open
   );
+
+  const { mutateAsync: shareAddresses } = useLinodeShareIPMutation();
 
   // const queryClient = useQueryClient();
 
@@ -268,7 +267,6 @@ const IPSharingPanel = (props: Props) => {
       return;
     }
 
-    const share = flags.ipv6Sharing ? shareAddresses : shareAddressesv4;
     const promises: Promise<void | {}>[] = [];
 
     if (flags.ipv6Sharing) {
@@ -298,9 +296,8 @@ const IPSharingPanel = (props: Props) => {
         return;
       }
 
-      share({ linode_id: linodeId, ips: finalIPs })
+      shareAddresses({ linode_id: linodeId, ips: finalIPs })
         .then((_) => {
-          // queryClient.invalidateQueries([])
           setErrors(undefined);
           setSubmitting(false);
           setSuccessMessage('IP Sharing updated successfully');

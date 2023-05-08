@@ -1,4 +1,4 @@
-import { assignAddresses, IPRange } from '@linode/api-v4/lib/networking';
+import { IPRange } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   both,
@@ -35,7 +35,10 @@ import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';
 import { useQueryClient } from 'react-query';
-import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
+import {
+  useAssignAdressesMutation,
+  useLinodeIPsQuery,
+} from 'src/queries/linodes/networking';
 
 const useStyles = makeStyles((theme: Theme) => ({
   sourceIPWrapper: {
@@ -142,6 +145,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
   const { linodeId, open, onClose, readOnly } = props;
   const classes = useStyles();
   const queryClient = useQueryClient();
+  const { mutateAsync: assignAddresses } = useAssignAdressesMutation();
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 
@@ -150,11 +154,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
   const publicIPs = _ips?.ipv4.public.map((i) => i.address) ?? [];
   const privateIPs = _ips?.ipv4.private.map((i) => i.address) ?? [];
 
-  const ipAddresses = [
-    ...publicIPs,
-    ...privateIPs,
-    // ...this.state.staticRanges.map((range) => `${range.range}/${range.prefix}`),
-  ];
+  const ipAddresses = [...publicIPs, ...privateIPs];
 
   const [ips, setIPs] = React.useState<IPRowState>(
     ipAddresses.reduce(

@@ -1,20 +1,24 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { queryKey } from './linodes';
 import { getAll } from 'src/utilities/getAll';
 import {
   APIError,
   Filter,
   IPAddress,
+  IPAssignmentPayload,
   IPRange,
   IPRangeInformation,
+  IPSharingPayload,
   LinodeIPsResponse,
   Params,
+  assignAddresses,
   getIPs,
   getIPv6RangeInfo,
   getIPv6Ranges,
   getLinodeIPs,
   removeIPAddress,
   removeIPv6Range,
+  shareAddresses,
   updateIP,
 } from '@linode/api-v4';
 
@@ -30,24 +34,58 @@ export const useLinodeIPsQuery = (
 };
 
 export const useLinodeIPMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<
     IPAddress,
     APIError[],
     { address: string; rdns?: string | null }
-  >(({ address, rdns }) => updateIP(address, rdns));
+  >(({ address, rdns }) => updateIP(address, rdns), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
 };
 
 export const useLinodeIPDeleteMutation = (
   linodeId: number,
   address: string
 ) => {
-  return useMutation<{}, APIError[]>(() =>
-    removeIPAddress({ linodeID: linodeId, address })
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(
+    () => removeIPAddress({ linodeID: linodeId, address }),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
   );
 };
 
 export const useLinodeRemoveRangeMutation = (range: string) => {
-  return useMutation<{}, APIError[]>(() => removeIPv6Range({ range }));
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => removeIPv6Range({ range }), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
+
+export const useLinodeShareIPMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], IPSharingPayload>(shareAddresses, {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
+
+export const useAssignAdressesMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], IPAssignmentPayload>(assignAddresses, {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
 };
 
 export const useAllIPsQuery = (
