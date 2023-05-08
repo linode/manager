@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed:
 - Removed MongoDB reference from ClusterControl description #9081
+- Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
 
 ### Fixed:
 - Ability to search Linodes by IPv6 #9073
