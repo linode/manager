@@ -8,7 +8,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { isEURegion } from 'src/utilities/formatRegion';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import ClusterSelect from './ClusterSelect';

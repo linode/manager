@@ -10,7 +10,7 @@ import { useCloneDomainMutation } from 'src/queries/domains';
 import { useFormik } from 'formik';
 import { Domain } from '@linode/api-v4';
 import { useProfile, useGrants } from 'src/queries/profile';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { useHistory } from 'react-router-dom';
 
 interface Props {
