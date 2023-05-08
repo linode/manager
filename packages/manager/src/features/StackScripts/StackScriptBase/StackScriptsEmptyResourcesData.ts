@@ -49,7 +49,8 @@ export const youtubeLinkData: ResourcesLinkSection = {
       external: true,
     },
     {
-      to: 'https://jira.linode.com/browse/M3-6470#10',
+      to:
+        'https://www.linode.com/docs/products/tools/stackscripts/guides/create/',
       text: 'Shell Scripts',
       external: true,
     },
