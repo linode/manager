@@ -25,17 +25,14 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import Notice from 'src/components/Notice';
 import usePrevious from 'src/hooks/usePrevious';
-import { ipv6RangeQueryKey } from 'src/queries/networking';
 import {
-  queryKey as linodesQueryKey,
   useAllLinodesQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';
-import { useQueryClient } from 'react-query';
 import {
+  useAllIPv6RangesQuery,
   useAssignAdressesMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
@@ -144,7 +141,6 @@ export const getLinodeIPv6Ranges = (
 const LinodeNetworkingIPTransferPanel = (props: Props) => {
   const { linodeId, open, onClose, readOnly } = props;
   const classes = useStyles();
-  const queryClient = useQueryClient();
   const { mutateAsync: assignAddresses } = useAssignAdressesMutation();
 
   const { data: linode } = useLinodeQuery(linodeId, open);
@@ -200,7 +196,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     data: ipv6RangesData,
     isLoading: ipv6RangesLoading,
     error: ipv6RangesError,
-  } = useIpv6RangesQuery();
+  } = useAllIPv6RangesQuery();
 
   const linodes = (allLinodes ?? []).filter((l) => l.id !== linodeId);
 
@@ -238,7 +234,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           setSelectedIP(ip, firstLinode.ipv4[0]),
           updateSelectedLinodesIPs(ip, () => {
             const linodeIPv6Ranges = getLinodeIPv6Ranges(
-              ipv6RangesData?.data,
+              ipv6RangesData,
               firstLinode.ipv6
             );
             return [...firstLinode.ipv4, ...linodeIPv6Ranges];
@@ -266,7 +262,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
             const linode = linodes.find((l) => l.id === Number(e.value));
             if (linode) {
               const linodeIPv6Ranges = getLinodeIPv6Ranges(
-                ipv6RangesData?.data,
+                ipv6RangesData,
                 linode?.ipv6
               );
               return [...linode.ipv4, ...linodeIPv6Ranges];
@@ -459,9 +455,6 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
         setSubmitting(false);
         setError(undefined);
         setSuccessMessage('IP transferred successfully.');
-        // get updated route_target for ipv6 ranges
-        queryClient.invalidateQueries(ipv6RangeQueryKey);
-        queryClient.invalidateQueries(`${linodesQueryKey}-all`);
       })
       .catch((err) => {
         const apiErrors = getAPIErrorOrDefault(
