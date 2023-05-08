@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added:
 - Resource links to empty state Volumes landing page #9065
 - Resource links to empty state Firewalls landing page #9078
+- Resource links to empty state StackScripts landing page #9091
 - Ability download DNS zone file #9075
 
 ### Changed:
