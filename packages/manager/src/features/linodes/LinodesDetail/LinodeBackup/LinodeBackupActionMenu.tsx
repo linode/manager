@@ -1,19 +1,16 @@
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 interface Props {
   backup: LinodeBackup;
   disabled: boolean;
-  onRestore: (backup: LinodeBackup) => void;
-  onDeploy: (backup: LinodeBackup) => void;
+  onRestore: () => void;
+  onDeploy: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
-  const { backup, disabled, onRestore, onDeploy } = props;
+export const LinodeBackupActionMenu = (props: Props) => {
+  const { disabled, onRestore, onDeploy } = props;
   const disabledProps = {
     disabled,
     tooltip: disabled
@@ -25,14 +22,14 @@ export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
     {
       title: 'Restore to Existing Linode',
       onClick: () => {
-        onRestore(backup);
+        onRestore();
       },
       ...disabledProps,
     },
     {
       title: 'Deploy New Linode',
       onClick: () => {
-        onDeploy(backup);
+        onDeploy();
       },
       ...disabledProps,
     },
@@ -45,5 +42,3 @@ export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
     />
   );
 };
-
-export default withRouter(LinodeBackupActionMenu);

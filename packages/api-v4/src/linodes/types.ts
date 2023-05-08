@@ -101,6 +101,7 @@ export interface LinodeBackup {
   finished: string;
   configs: string[];
   disks: LinodeBackupDisk[];
+  available: boolean;
 }
 
 export type LinodeBackupType = 'auto' | 'snapshot';

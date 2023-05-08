@@ -171,7 +171,10 @@ export class App extends React.Component<CombinedProps, State> {
 
     events$
       .filter(
-        ({ event }) => event.action.startsWith('linode') && !event._initial
+        ({ event }) =>
+          (event.action.startsWith('linode') ||
+            event.action.startsWith('backups')) &&
+          !event._initial
       )
       .subscribe(linodeEventsHandler);
 
