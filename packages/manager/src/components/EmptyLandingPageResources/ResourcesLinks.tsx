@@ -20,7 +20,10 @@ export const ResourceLinks = (props: ResourcesLinks) => {
           >
             {linkData.text}
             {linkData.external && (
-              <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
+              <ResourcesLinkIcon
+                icon={<ExternalLinkIcon />}
+                iconType="external"
+              />
             )}
           </Link>
         </ListItem>
