@@ -21,7 +21,6 @@ import TagCell from 'src/components/TagCell';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useTypeQuery } from 'src/queries/types';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -46,7 +45,10 @@ import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import Table from '@mui/material/Table';
 import { TableCell } from 'src/components/TableCell';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
 import useEvents from 'src/hooks/useEvents';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { useNotificationContext } from '../NotificationCenter/NotificationContext';
@@ -718,12 +720,13 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
     openTagDrawer,
   } = props;
 
-  const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 
   const updateTags = React.useCallback(
     (tags: string[]) => {
-      return updateLinode({ linodeId, tags }).catch((e) =>
+      return updateLinode({ tags }).catch((e) =>
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error updating tags')[0].reason,
           {
@@ -732,7 +735,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
         )
       );
     },
-    [linodeId, updateLinode, enqueueSnackbar]
+    [updateLinode, enqueueSnackbar]
   );
 
   const sxListItemMdBp = {
