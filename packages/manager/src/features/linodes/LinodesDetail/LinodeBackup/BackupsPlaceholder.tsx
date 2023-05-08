@@ -1,6 +1,6 @@
 import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
 import Placeholder from 'src/components/Placeholder';
@@ -13,7 +13,7 @@ interface Props {
   linodeId: number;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   empty: {
     '& svg': {
       transform: 'scale(0.75)',
@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const BackupsPlaceholder = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { backupsMonthlyPrice, linodeId, disabled } = props;
 

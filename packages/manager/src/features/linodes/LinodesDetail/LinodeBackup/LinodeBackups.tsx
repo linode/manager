@@ -18,7 +18,7 @@ import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { useHistory, useParams } from 'react-router-dom';
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 import { useTypeQuery } from 'src/queries/types';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { CancelBackupsDialog } from './CancelBackupsDialog';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ScheduleSettings } from './ScheduleSettings';
@@ -27,7 +27,7 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { CaptureSnapshot } from './CaptureSnapshot';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
     marginBottom: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
@@ -48,7 +48,7 @@ export const LinodeBackups = () => {
   const id = Number(linodeId);
 
   const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();

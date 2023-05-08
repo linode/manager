@@ -4,7 +4,7 @@ import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { useSnackbar } from 'notistack';
 import { useFormik } from 'formik';
@@ -19,7 +19,7 @@ interface Props {
   isReadOnly: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   snapshotFormControl: {
     display: 'flex',
     flexDirection: 'row',
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const CaptureSnapshot = ({ linodeId, isReadOnly }: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {

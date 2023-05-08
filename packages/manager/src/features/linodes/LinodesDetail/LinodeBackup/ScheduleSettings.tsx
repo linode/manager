@@ -9,7 +9,7 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { useProfile } from 'src/queries/profile';
@@ -19,7 +19,7 @@ import {
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   scheduleAction: {
     padding: 0,
     '& button': {
@@ -42,7 +42,7 @@ interface Props {
 }
 
 export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: profile } = useProfile();
