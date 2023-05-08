@@ -1,15 +1,14 @@
-import { enableBackups } from '@linode/api-v4/lib/linodes';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
-import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
-import useLinodes from 'src/hooks/useLinodes';
-import { useSpecificTypes } from 'src/queries/types';
+import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useTypeQuery } from 'src/queries/types';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   linodeId: number | undefined;
@@ -19,66 +18,58 @@ interface Props {
 
 export const EnableBackupsDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
-  /**
-   * Calculate the monthly backup price here.
-   * Since this component is used in LinodesLanding
-   * as well as detail, can't rely on parents knowing
-   * this information.
-   */
-  const { linodes } = useLinodes();
-  const thisLinode = linodes.itemsById[linodeId ?? -1];
-  const typesQuery = useSpecificTypes(
-    thisLinode?.type ? [thisLinode.type] : []
+
+  const {
+    mutateAsync: enableBackups,
+    reset,
+    isLoading,
+    error,
+  } = useLinodeBackupsEnableMutation(linodeId ?? -1);
+
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    open && linodeId !== undefined && linodeId > 0
   );
-  const thisLinodeType = typesQuery[0]?.data;
 
-  const price = thisLinodeType?.addons.backups.price.monthly ?? 0;
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
 
-  const [submitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<string | undefined>();
+  const price = type?.addons?.backups?.price?.monthly ?? 0;
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleEnableBackups = React.useCallback(() => {
-    setSubmitting(true);
-    enableBackups(linodeId ?? -1)
-      .then(() => {
-        setSubmitting(false);
-        resetEventsPolling();
-        enqueueSnackbar('Backups are being enabled for this Linode.', {
-          variant: 'success',
-        });
-        onClose();
-      })
-      .catch((error) => {
-        setError(error[0].reason);
-        setSubmitting(false);
-      });
-  }, [linodeId, onClose, enqueueSnackbar]);
+  const handleEnableBackups = async () => {
+    await enableBackups();
+    resetEventsPolling();
+    enqueueSnackbar('Backups are being enabled for this Linode.', {
+      variant: 'success',
+    });
+    onClose();
+  };
 
   React.useEffect(() => {
     if (open) {
-      setError(undefined);
+      reset();
     }
   }, [open]);
 
-  const actions = React.useMemo(() => {
-    return (
-      <ActionsPanel style={{ padding: 0 }}>
-        <Button buttonType="secondary" onClick={onClose} data-qa-cancel-cancel>
-          Close
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={handleEnableBackups}
-          loading={submitting}
-          data-qa-confirm-enable-backups
-        >
-          Enable Backups
-        </Button>
-      </ActionsPanel>
-    );
-  }, [onClose, submitting, handleEnableBackups]);
+  const actions = (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel-cancel>
+        Close
+      </Button>
+      <Button
+        buttonType="primary"
+        onClick={handleEnableBackups}
+        loading={isLoading}
+        data-qa-confirm-enable-backups
+      >
+        Enable Backups
+      </Button>
+    </ActionsPanel>
+  );
 
   return (
     <ConfirmationDialog
@@ -86,18 +77,14 @@ export const EnableBackupsDialog = (props: Props) => {
       actions={actions}
       open={open}
       onClose={onClose}
+      error={error?.[0].reason}
     >
-      <>
-        <Typography>
-          Are you sure you want to enable backups on this Linode?{` `}
-          This will add <Currency quantity={price} />
-          {` `}
-          to your monthly bill.
-        </Typography>
-        {error && <Notice error text={error} spacingTop={8} />}
-      </>
+      <Typography>
+        Are you sure you want to enable backups on this Linode?{` `}
+        This will add <Currency quantity={price} />
+        {` `}
+        to your monthly bill.
+      </Typography>
     </ConfirmationDialog>
   );
 };
-
-export default React.memo(EnableBackupsDialog);
