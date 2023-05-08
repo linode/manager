@@ -7,7 +7,6 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import Link from 'src/components/Link';
@@ -97,8 +96,8 @@ const IPSharingPanel = (props: Props) => {
   const rangeData = ranges?.reduce(
     (
       acc: {
-        sharedRanges: IPRangeInformation[],
-        availableRanges: IPRangeInformation[]
+        sharedRanges: IPRangeInformation[];
+        availableRanges: IPRangeInformation[];
       },
       range
     ) => {
@@ -118,17 +117,19 @@ const IPSharingPanel = (props: Props) => {
     { sharedRanges: [], availableRanges: [] }
   );
 
-  const sharedRanges = rangeData?.sharedRanges;
-  const availableRanges = rangeData?.availableRanges;
+  const sharedRanges = rangeData?.sharedRanges ?? [];
+  const availableRanges = rangeData?.availableRanges ?? [];
 
   const linodeSharedIPs = [
     ...(ips?.ipv4.shared.map((ip) => ip.address) ?? []),
-    ...(sharedRanges?.map((range) => `${range.range}/${range.prefix}`) ?? []),
+    ...sharedRanges?.map((range) => `${range.range}/${range.prefix}`),
   ];
 
   const linodeIPs = ips?.ipv4.public.map((i) => i.address) ?? [];
 
-  const availableRangesMap: AvailableRangesMap = formatAvailableRanges([]);
+  const availableRangesMap: AvailableRangesMap = formatAvailableRanges(
+    availableRanges
+  );
 
   const { data: linodes, isLoading } = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },
@@ -173,23 +174,13 @@ const IPSharingPanel = (props: Props) => {
     return choiceLabels;
   };
 
-  const [ipChoices, setIPChoices] = React.useState({});
-  const [ipToLinodeID, setIPToLinodeID] = React.useState({});
+  let ipToLinodeID = {};
 
   const updateIPToLinodeID = (newData: Record<string, number[]>) => {
-    setIPToLinodeID((previousState) => {
-      return { ...previousState, ...newData };
-    });
+    ipToLinodeID = { ...ipToLinodeID, ...newData };
   };
 
-  React.useEffect(() => {
-    // don't try anything until we've finished the request for the Linodes data
-    if (isLoading) {
-      return;
-    }
-    const ipChoices = getIPChoicesAndLabels(linodeId, linodes ?? []);
-    setIPChoices(ipChoices);
-  }, [linodeId, linodes, availableRanges]);
+  const ipChoices = getIPChoicesAndLabels(linodeId, linodes ?? []);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState<
@@ -199,11 +190,11 @@ const IPSharingPanel = (props: Props) => {
   const [submitting, setSubmitting] = React.useState(false);
 
   React.useEffect(() => {
-    if (open) {
+    if (ips && ranges && !areArraysEqual(linodeSharedIPs, ipsToShare)) {
       setIpsToShare(linodeSharedIPs);
       setErrors(undefined);
     }
-  }, [open, linodeSharedIPs]);
+  }, [ips, ranges]);
 
   const onIPSelect = (ipIdx: number, e: Item<string>) => {
     setIpsToShare((currentIps) => {
@@ -309,7 +300,7 @@ const IPSharingPanel = (props: Props) => {
 
       share({ linode_id: linodeId, ips: finalIPs })
         .then((_) => {
-          queryClient.invalidateQueries([])
+          // queryClient.invalidateQueries([])
           setErrors(undefined);
           setSubmitting(false);
           setSuccessMessage('IP Sharing updated successfully');
