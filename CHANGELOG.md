@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Resource links to empty state Firewalls landing page #9078
 - Resource links to empty state Domains landing page #9092
 - Resource links to empty state Images landing page #9095
+- Resource links to empty state Domains landing page #9092
 - Ability download DNS zone file #9075
 
 ### Changed:
