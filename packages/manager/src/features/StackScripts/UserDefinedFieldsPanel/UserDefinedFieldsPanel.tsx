@@ -252,18 +252,20 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
       {/* Optional Fields */}
       {optionalUDFs.length !== 0 && (
         <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
-          <Typography variant="body1" className={classes.advDescription}>
-            These fields are additional configuration options and are not
-            required for creation.
-          </Typography>
-          <div
-            className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
-          >
-            {optionalUDFs.map((field: UserDefinedField) => {
-              const error = getError(field, errors);
-              return renderField(udf_data, handleChange, field, error);
-            })}
-          </div>
+          <>
+            <Typography variant="body1" className={classes.advDescription}>
+              These fields are additional configuration options and are not
+              required for creation.
+            </Typography>
+            <div
+              className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
+            >
+              {optionalUDFs.map((field: UserDefinedField) => {
+                const error = getError(field, errors);
+                return renderField(udf_data, handleChange, field, error);
+              })}
+            </div>
+          </>
         </ShowMoreExpansion>
       )}
     </Paper>
