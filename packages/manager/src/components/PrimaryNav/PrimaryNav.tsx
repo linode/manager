@@ -1,5 +1,4 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import Account from 'src/assets/icons/account.svg';
@@ -71,7 +70,7 @@ export interface Props {
 
 export const PrimaryNav = (props: Props) => {
   const { closeMenu, isCollapsed } = props;
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   const flags = useFlags();
   const location = useLocation();
@@ -260,22 +259,25 @@ export const PrimaryNav = (props: Props) => {
     >
       <Grid>
         <div
-          className={classNames(classes.logoItemAkamai, {
-            [classes.logoItemAkamaiCollapsed]: isCollapsed,
-          })}
+          className={cx(
+            {
+              [classes.logoItemAkamaiCollapsed]: isCollapsed,
+            },
+            classes.logoItemAkamai
+          )}
         >
           <Link
             to={`/dashboard`}
             onClick={closeMenu}
             aria-label="Akamai - Dashboard"
             title="Akamai - Dashboard"
-            className={classNames({
+            className={cx({
               [classes.logoContainer]: isCollapsed,
             })}
           >
             <AkamaiLogo
               width={128}
-              className={classNames(
+              className={cx(
                 {
                   [classes.logoAkamaiCollapsed]: isCollapsed,
                 },
@@ -286,7 +288,7 @@ export const PrimaryNav = (props: Props) => {
         </div>
       </Grid>
       <div
-        className={classNames({
+        className={cx({
           ['fade-in-table']: true,
           [classes.fadeContainer]: true,
         })}
@@ -352,7 +354,7 @@ interface PrimaryLinkProps extends PrimaryLink {
 }
 
 const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   const {
     isBeta,
@@ -384,7 +386,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
       }}
       {...prefetchProps}
       {...attr}
-      className={classNames({
+      className={cx({
         [classes.listItem]: true,
         [classes.active]: isActiveLink,
       })}
@@ -397,7 +399,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
         </div>
       )}
       <p
-        className={classNames({
+        className={cx({
           [classes.linkItem]: true,
           primaryNavLink: true,
           hiddenWhenCollapsed: isCollapsed,

@@ -1,27 +1,30 @@
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
+import { keyframes } from 'tss-react';
+import { makeStyles } from 'tss-react/mui';
 
 const SLIDE_IN_TRANSFORM = 'matrix(0.01471, 0, 0, 1, 123.982745, 0.000015)';
 const SLIDE_OUT_TRANSFORM = 'translate(0)';
 
+const slideIn = keyframes`
+  from {
+    transform: ${SLIDE_IN_TRANSFORM},
+  }
+  to {
+    transform: ${SLIDE_OUT_TRANSFORM},
+  }
+`;
+
+const slideOut = keyframes`
+  from: {
+    transform: ${SLIDE_OUT_TRANSFORM},
+  },
+  to: {
+    transform: ${SLIDE_IN_TRANSFORM},
+  },
+`;
+
 const useStyles = makeStyles<void, 'linkItem'>()(
   (theme: Theme, _params, classes) => ({
-    '@keyframes slideIn': {
-      from: {
-        transform: SLIDE_IN_TRANSFORM,
-      },
-      to: {
-        transform: SLIDE_OUT_TRANSFORM,
-      },
-    },
-    '@keyframes slideOut': {
-      from: {
-        transform: SLIDE_OUT_TRANSFORM,
-      },
-      to: {
-        transform: SLIDE_IN_TRANSFORM,
-      },
-    },
     menuGrid: {
       minHeight: 64,
       height: '100%',
@@ -36,7 +39,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       },
       '&:hover': {
         '& path.akamai-clip-path': {
-          animation: '$slideIn .33s ease-in-out',
+          animation: `${slideIn} .33s ease-in-out`,
         },
       },
     },
@@ -51,7 +54,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       paddingLeft: 12,
       transition: 'padding-left .03s linear',
       '& path.akamai-clip-path': {
-        animation: '$slideIn .33s ease-in-out',
+        animation: `${slideIn} .33s ease-in-out`,
       },
     },
     logoItemAkamaiCollapsed: {
@@ -61,7 +64,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       background: theme.bg.primaryNavPaper,
       width: 96,
       '& path.akamai-clip-path': {
-        animation: '$slideOut 0s ease-in-out 0s forwards',
+        animation: `${slideOut} 0s ease-in-out 0s forwards`,
       },
     },
     listItem: {
@@ -140,14 +143,14 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       marginTop: 2,
     },
     logoSvgCollapsed: {
-      // Hide 'Akamai Cloud Computing' when the navigation is collapsed and the nav is not hovered
+      // Hide 'Akamai' text when the navigation is collapsed and the nav is not hovered
       '& > g ': {
         display: 'none',
       },
       'nav:hover & > g ': {
         display: 'unset',
       },
-      // Make the logo 115px so that the Linode 'bug' is centered when the navigation is collapsed
+      // Make the logo 115px so that the Akamai logo is centered when the navigation is collapsed
       width: 115,
     },
     logoContainer: {
