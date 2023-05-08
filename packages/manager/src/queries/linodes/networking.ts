@@ -3,15 +3,19 @@ import { queryKey } from './linodes';
 import { getAll } from 'src/utilities/getAll';
 import {
   APIError,
+  CreateIPv6RangePayload,
   Filter,
   IPAddress,
+  IPAllocationRequest,
   IPAssignmentPayload,
   IPRange,
   IPRangeInformation,
   IPSharingPayload,
   LinodeIPsResponse,
   Params,
+  allocateIPAddress,
   assignAddresses,
+  createIPv6Range,
   getIPs,
   getIPv6RangeInfo,
   getIPv6Ranges,
@@ -82,6 +86,27 @@ export const useLinodeShareIPMutation = () => {
 export const useAssignAdressesMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], IPAssignmentPayload>(assignAddresses, {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
+
+export const useAllocateIPMutation = (linodeId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], IPAllocationRequest>(
+    (data) => allocateIPAddress(linodeId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
+};
+
+export const useCreateIPv6RangeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], CreateIPv6RangePayload>(createIPv6Range, {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
     },

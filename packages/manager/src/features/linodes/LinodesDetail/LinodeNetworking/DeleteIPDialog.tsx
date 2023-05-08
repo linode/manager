@@ -24,7 +24,7 @@ export const DeleteIPDialog = (props: Props) => {
 
   const handleDeleteIP = async () => {
     await removeIP();
-    enqueueSnackbar(`Successfully removed ${address}`);
+    enqueueSnackbar(`Successfully removed ${address}`, { variant: 'success' });
     onClose();
   };
 

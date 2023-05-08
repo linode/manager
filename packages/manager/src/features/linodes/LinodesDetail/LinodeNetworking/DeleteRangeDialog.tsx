@@ -25,7 +25,9 @@ export const DeleteRangeDialog = (props: Props) => {
 
   const handleDeleteIP = async () => {
     await removeRange();
-    enqueueSnackbar(`Successfully removed ${range.range}/${range.prefix}`);
+    enqueueSnackbar(`Successfully removed ${range.range}/${range.prefix}`, {
+      variant: 'success',
+    });
     onClose();
   };
 
