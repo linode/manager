@@ -10,10 +10,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Resource links to empty state Volumes landing page #9065
 - Resource links to empty state Firewalls landing page #9078
 - Resource links to empty state StackScripts landing page #9091
+- Resource links to empty state Domains landing page #9092
 - Ability download DNS zone file #9075
 
 ### Changed:
 - Removed MongoDB reference from ClusterControl description #9081
+- Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
 
 ### Fixed:
 - Ability to search Linodes by IPv6 #9073
