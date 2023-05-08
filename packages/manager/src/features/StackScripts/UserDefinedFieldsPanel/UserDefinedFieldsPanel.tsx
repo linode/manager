@@ -258,7 +258,6 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
               required for creation.
             </Typography>
             <div
-              className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
             >
               {optionalUDFs.map((field: UserDefinedField) => {
                 const error = getError(field, errors);
