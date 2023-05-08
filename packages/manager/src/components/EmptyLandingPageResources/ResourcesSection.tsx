@@ -38,6 +38,10 @@ interface ResourcesSectionProps {
    */
   CustomResource?: () => JSX.Element;
   /**
+   * Allow to set a custom max width for the description (better word wrapping)
+   * */
+  descriptionMaxWidth?: number;
+  /**
    * The data for the docs links section
    */
   gettingStartedGuidesData: ResourcesLinkSection;
@@ -53,6 +57,10 @@ interface ResourcesSectionProps {
    * The event data to be sent when the call to action is clicked
    */
   linkGAEvent: LinkGAEvent;
+  /**
+   * If true, the transfer display will be shown at the bottom
+   * */
+  showTransferDisplay?: boolean;
   /**
    * The data for the youtube links section
    */
@@ -79,10 +87,12 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
   const {
     buttonProps,
     CustomResource = () => null,
+    descriptionMaxWidth,
     gettingStartedGuidesData,
     headers,
     icon,
     linkGAEvent,
+    showTransferDisplay,
     youtubeLinkData,
     wide = false,
   } = props;
@@ -91,6 +101,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
   return (
     <Placeholder
       buttonProps={buttonProps}
+      descriptionMaxWidth={descriptionMaxWidth}
       icon={icon}
       isEntity
       linksSection={
@@ -137,6 +148,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }
+      showTransferDisplay={showTransferDisplay}
       subtitle={subtitle}
       title={title}
     >

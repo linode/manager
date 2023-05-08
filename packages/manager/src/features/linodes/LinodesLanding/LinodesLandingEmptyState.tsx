@@ -55,10 +55,12 @@ export const LinodesLandingEmptyState = () => {
           <AppsSection />
         </ResourcesLinksSubSection>
       )}
+      descriptionMaxWidth={500}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={LinodeSvg}
       linkGAEvent={linkGAEvent}
+      showTransferDisplay={true}
       youtubeLinkData={youtubeLinkData}
       wide={true}
     />
