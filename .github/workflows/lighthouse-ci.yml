@@ -1,4 +1,4 @@
-name: CI
+name: Build project and run Lighthouse CI
 on: [push]
 jobs:
   lhci:
@@ -9,11 +9,12 @@ jobs:
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
         with:
-          node-version: 18.14
-      - name: yarn install, build
+          node-version: 16.x
+      - name: npm install, build
         run: |
-          yarn install
+          npm install
           yarn run build
       - name: run Lighthouse CI
         run: |
+          npm install -g @lhci/cli@0.11.x
           lhci autorun
