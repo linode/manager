@@ -129,7 +129,7 @@ export interface NoticeProps extends Grid2Props {
   dismissibleButton?: JSX.Element;
 }
 
-const Notice = (props: NoticeProps) => {
+export const Notice = (props: NoticeProps) => {
   const {
     className,
     important,
@@ -237,5 +237,3 @@ const Notice = (props: NoticeProps) => {
     </Grid>
   );
 };
-
-export { Notice };
