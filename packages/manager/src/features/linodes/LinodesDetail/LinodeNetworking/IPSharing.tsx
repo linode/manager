@@ -29,7 +29,6 @@ import {
   useLinodeIPsQuery,
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
-// import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addNewButton: {
@@ -89,8 +88,6 @@ const IPSharingPanel = (props: Props) => {
   );
 
   const { mutateAsync: shareAddresses } = useLinodeShareIPMutation();
-
-  // const queryClient = useQueryClient();
 
   const rangeData = ranges?.reduce(
     (
