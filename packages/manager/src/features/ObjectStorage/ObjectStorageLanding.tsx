@@ -1,25 +1,25 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import { useHistory, useParams } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
-import { Link } from 'src/components/Link';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
+import { DateTime } from 'luxon';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Link } from 'src/components/Link';
+import { makeStyles } from '@mui/styles';
+import { MODE } from './AccessKeyLanding/types';
+import { Theme } from '@mui/material/styles';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -44,19 +44,16 @@ export const ObjectStorageLanding = () => {
     action?: 'create';
     tab?: 'buckets' | 'access-keys';
   }>();
-
   const isCreateBucketOpen = tab === 'buckets' && action === 'create';
-
   const { _isRestrictedUser, accountSettings } = useAccountManagement();
-
   const { data: objectStorageClusters } = useObjectStorageClusters();
-
   const {
     data: objectStorageBucketsResponse,
     isLoading: areBucketsLoading,
     error: bucketsErrors,
   } = useObjectStorageBuckets(objectStorageClusters);
-
+  const userHasNoBucketCreated =
+    objectStorageBucketsResponse?.buckets.length === 0;
   const createOrEditDrawer = useOpenClose();
 
   const tabs = [
@@ -94,8 +91,14 @@ export const ObjectStorageLanding = () => {
   const shouldDisplayBillingNotice =
     !areBucketsLoading &&
     !bucketsErrors &&
-    objectStorageBucketsResponse?.buckets.length === 0 &&
+    userHasNoBucketCreated &&
     accountSettings?.object_storage === 'active';
+
+  // No need to display header since the it is redundant with the docs and CTA of the empty state
+  const shouldDisplayHeader =
+    !userHasNoBucketCreated &&
+    !areBucketsLoading &&
+    objectStorageClusters !== undefined;
 
   const createButtonText =
     tab === 'access-keys' ? 'Create Access Key' : 'Create Bucket';
@@ -113,15 +116,17 @@ export const ObjectStorageLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
       <ProductInformationBanner bannerLocation="Object Storage" />
-      <LandingHeader
-        title="Object Storage"
-        entity="Object Storage"
-        createButtonText={createButtonText}
-        docsLink="https://www.linode.com/docs/platform/object-storage/"
-        onButtonClick={createButtonAction}
-        removeCrumbX={1}
-        breadcrumbProps={{ pathname: '/object-storage' }}
-      />
+      {shouldDisplayHeader && (
+        <LandingHeader
+          title="Object Storage"
+          entity="Object Storage"
+          createButtonText={createButtonText}
+          docsLink="https://www.linode.com/docs/platform/object-storage/"
+          onButtonClick={createButtonAction}
+          removeCrumbX={1}
+          breadcrumbProps={{ pathname: '/object-storage' }}
+        />
+      )}
       <Tabs
         index={
           realTabs.findIndex((t) => t === tab) !== -1
@@ -130,7 +135,7 @@ export const ObjectStorageLanding = () => {
         }
         onChange={navToURL}
       >
-        <TabLinkList tabs={tabs} />
+        {shouldDisplayHeader && <TabLinkList tabs={tabs} />}
 
         {objPromotionalOffers.map((promotionalOffer) => (
           <PromotionalOfferCard
