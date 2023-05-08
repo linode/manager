@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Tech Stories:
+
 - React Query - Linodes - Networking #9046
 - React Query - Linodes - Details Header #9099
 
@@ -19,6 +20,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Resource links to empty state StackScripts landing page #9091
 - Resource links to empty state Domains landing page #9092
 - Resource links to empty state Images landing page #9095
+- Resource links to empty state Object Storage landing page #9092
 - Ability download DNS zone file #9075
 
 ### Changed:
