@@ -10,8 +10,11 @@ import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { useAllIPsQuery, useLinodeIPMutation } from 'src/queries/linodes/networking';
-import Notice from 'src/components/Notice';
+import {
+  useAllIPsQuery,
+  useLinodeIPMutation,
+} from 'src/queries/linodes/networking';
+import { Notice } from 'src/components/Notice/Notice';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { listIPv6InRange } from './LinodeNetworking';
 

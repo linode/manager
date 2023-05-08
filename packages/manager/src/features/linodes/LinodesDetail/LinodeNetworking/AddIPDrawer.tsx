@@ -13,12 +13,12 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/Link';
-import Notice from 'src/components/Notice';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
+import { Notice } from 'src/components/Notice/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {

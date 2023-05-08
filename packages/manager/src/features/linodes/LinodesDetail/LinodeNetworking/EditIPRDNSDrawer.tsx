@@ -8,7 +8,7 @@ import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { useLinodeIPMutation } from 'src/queries/linodes/networking';
 
 interface Props {

@@ -1,4 +1,4 @@
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { styled } from '@mui/material/styles';
 
 export const StyledNotice = styled(Notice)({
