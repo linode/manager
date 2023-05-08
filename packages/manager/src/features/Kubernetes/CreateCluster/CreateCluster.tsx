@@ -16,7 +16,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
 import {

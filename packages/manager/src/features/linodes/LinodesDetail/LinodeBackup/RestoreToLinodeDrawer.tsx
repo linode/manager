@@ -11,7 +11,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import withLinodes, {
   Props as LinodeProps,
 } from 'src/containers/withLinodes.container';

@@ -11,7 +11,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import { aggregateBackups } from 'src/features/linodes/LinodesDetail/LinodeBackup';

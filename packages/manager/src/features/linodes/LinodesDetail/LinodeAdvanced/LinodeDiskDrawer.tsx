@@ -19,7 +19,7 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'src/components/Link';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
 import {

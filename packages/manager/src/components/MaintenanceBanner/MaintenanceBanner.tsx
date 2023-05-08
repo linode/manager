@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import isPast from 'src/utilities/isPast';

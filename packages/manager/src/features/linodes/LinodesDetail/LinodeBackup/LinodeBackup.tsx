@@ -31,7 +31,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import PromiseLoader, {
   PromiseLoaderResponse,
 } from 'src/components/PromiseLoader';

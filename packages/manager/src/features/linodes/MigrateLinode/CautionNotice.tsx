@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAccount } from 'src/queries/account';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';

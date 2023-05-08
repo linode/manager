@@ -3,7 +3,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useLinodes from 'src/hooks/useLinodes';

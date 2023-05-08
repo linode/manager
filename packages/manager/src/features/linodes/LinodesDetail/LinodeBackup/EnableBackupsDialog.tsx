@@ -6,7 +6,7 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';

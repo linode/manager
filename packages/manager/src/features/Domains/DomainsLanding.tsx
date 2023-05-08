@@ -13,7 +13,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DisableDomainDialog from './DisableDomainDialog';
