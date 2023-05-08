@@ -3,13 +3,11 @@ import * as React from 'react';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
-import { DateTime } from 'luxon';
-import { useProfile } from 'src/queries/profile';
+import { useFormattedDate } from 'src/hooks/useFormattedDate';
 
 export const LinodesLandingCSVDownload = () => {
   const csvRef = React.useRef<any>();
-
-  const { data: profile } = useProfile();
+  const formattedDate = useFormattedDate();
 
   const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(
     {},
@@ -69,7 +67,7 @@ export const LinodesLandingCSVDownload = () => {
     <DownloadCSV
       csvRef={csvRef}
       data={data}
-      filename={`linodes-${DateTime.now().setZone(profile?.timezone)}.csv`}
+      filename={`linodes-${formattedDate}.csv`}
       headers={headers}
       onClick={downloadCSV}
     />

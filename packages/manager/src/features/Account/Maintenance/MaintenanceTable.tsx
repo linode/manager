@@ -17,10 +17,10 @@ import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import { useOrder } from 'src/hooks/useOrder';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
@@ -60,6 +60,7 @@ const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const { classes } = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
+  const formattedDate = useFormattedDate();
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
@@ -147,8 +148,8 @@ const MaintenanceTable = ({ type }: Props) => {
         <Box>
           <DownloadCSV
             csvRef={csvRef}
-            data={cleanCSVData(csv || [])}
-            filename={`${type}-maintenance-${Date.now()}.csv`}
+            data={csv || []}
+            filename={`${type}-maintenance-${formattedDate}.csv`}
             headers={headersForCSVDownload}
             onClick={downloadCSV}
           />

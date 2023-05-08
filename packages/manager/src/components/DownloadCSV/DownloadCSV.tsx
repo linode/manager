@@ -9,7 +9,7 @@ interface DownloadCSVProps {
   children?: React.ReactNode;
   className?: string;
   csvRef?: React.RefObject<any>;
-  data: any[];
+  data: unknown[];
   filename: string;
   headers: { label: string; key: string }[];
   onClick: () => void;
