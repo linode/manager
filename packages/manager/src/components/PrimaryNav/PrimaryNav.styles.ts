@@ -7,19 +7,19 @@ const SLIDE_OUT_TRANSFORM = 'translate(0)';
 
 const slideIn = keyframes`
   from {
-    transform: ${SLIDE_IN_TRANSFORM},
+    transform: ${SLIDE_IN_TRANSFORM};
   }
   to {
-    transform: ${SLIDE_OUT_TRANSFORM},
+    transform: ${SLIDE_OUT_TRANSFORM};
   }
 `;
 
 const slideOut = keyframes`
-  from: {
-    transform: ${SLIDE_OUT_TRANSFORM},
+  from {
+    transform: ${SLIDE_OUT_TRANSFORM};
   },
-  to: {
-    transform: ${SLIDE_IN_TRANSFORM},
+  to {
+    transform: ${SLIDE_IN_TRANSFORM};
   },
 `;
 

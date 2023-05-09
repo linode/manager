@@ -259,12 +259,9 @@ export const PrimaryNav = (props: Props) => {
     >
       <Grid>
         <div
-          className={cx(
-            {
-              [classes.logoItemAkamaiCollapsed]: isCollapsed,
-            },
-            classes.logoItemAkamai
-          )}
+          className={cx(classes.logoItemAkamai, {
+            [classes.logoItemAkamaiCollapsed]: isCollapsed,
+          })}
         >
           <Link
             to={`/dashboard`}
