@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { enqueueSnackbar, ProviderContext } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { useDispatch } from 'react-redux';
@@ -128,7 +128,7 @@ interface Props {
   onSuccess?: () => void;
 }
 
-type CombinedProps = Props & WithSnackbarProps;
+type CombinedProps = Props & ProviderContext;
 
 const FileUploader: React.FC<CombinedProps> = (props) => {
   const {
@@ -210,17 +210,17 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     }) exceeded`;
 
     if (wrongFileType) {
-      props.enqueueSnackbar(fileTypeErrorMessage, {
+      enqueueSnackbar(fileTypeErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
     } else if (moreThanOneFile) {
-      props.enqueueSnackbar(fileNumberErrorMessage, {
+      enqueueSnackbar(fileNumberErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
     } else {
-      props.enqueueSnackbar(fileSizeErrorMessage, {
+      enqueueSnackbar(fileSizeErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
@@ -271,7 +271,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
         const successfulUploadMessage = `Image ${label} uploaded successfully. It is being processed and will be available shortly.`;
 
-        props.enqueueSnackbar(successfulUploadMessage, {
+        enqueueSnackbar(successfulUploadMessage, {
           variant: 'success',
           autoHideDuration: 6000,
         });
@@ -476,7 +476,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withSnackbar, React.memo);
+const enhanced = compose<CombinedProps, Props>(React.memo);
 
 export default enhanced(FileUploader);
 

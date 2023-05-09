@@ -52,7 +52,7 @@
     "luxon": "^3.2.1",
     "markdown-it": "^12.3.2",
     "md5": "^2.2.1",
-    "notistack": "^2.0.5",
+    "notistack": "^3.0.1",
     "patch-package": "^6.1.0",
     "qrcode.react": "^0.8.0",
     "ramda": "~0.25.0",

@@ -1,6 +1,6 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { enqueueSnackbar, ProviderContext } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -109,7 +109,7 @@ interface Props {
 type CombinedProps = Props &
   LinodeContextProps &
   WithStyles<ClassNames> &
-  WithSnackbarProps;
+  ProviderContext;
 
 const defaultDrawerState: DrawerState = {
   open: false,
@@ -490,7 +490,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     }
 
     return resizeLinodeDisk(diskId, size).then((_) => {
-      this.props.enqueueSnackbar(`Disk queued for resizing.`, {
+      enqueueSnackbar(`Disk queued for resizing.`, {
         variant: 'info',
       });
       resetEventsPolling();
@@ -636,10 +636,6 @@ const linodeContext = withLinodeDetailContext(
   })
 );
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  linodeContext,
-  withSnackbar
-);
+const enhanced = compose<CombinedProps, {}>(styled, linodeContext);
 
 export default enhanced(LinodeDisks);

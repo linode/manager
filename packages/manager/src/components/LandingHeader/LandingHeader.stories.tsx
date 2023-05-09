@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import LandingHeader from './LandingHeader';
 import Button from '../Button';
+
 const meta: Meta<typeof LandingHeader> = {
   title: 'Components/LandingHeader',
   component: LandingHeader,

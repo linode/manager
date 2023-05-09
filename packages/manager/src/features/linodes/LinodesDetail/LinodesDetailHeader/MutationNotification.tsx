@@ -1,5 +1,5 @@
 import { Disk, LinodeSpecs, startMutation } from '@linode/api-v4/lib/linodes';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { enqueueSnackbar, ProviderContext } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -38,7 +38,7 @@ interface Props {
 type CombinedProps = Props &
   MutationDrawerProps &
   ContextProps &
-  WithSnackbarProps &
+  ProviderContext &
   DispatchProps &
   WithStyles<ClassNames>;
 
@@ -48,7 +48,6 @@ const MutationNotification: React.FC<CombinedProps> = (props) => {
     linodeId,
     linodeType,
     linodeSpecs,
-    enqueueSnackbar,
     openMutationDrawer,
     closeMutationDrawer,
     mutationFailed,
@@ -207,8 +206,7 @@ const enhanced = compose<CombinedProps, Props>(
     linodeId: linode.id,
     linodeType: linode._type,
   })),
-  withMutationDrawerState,
-  withSnackbar
+  withMutationDrawerState
 );
 
 export default enhanced(MutationNotification);

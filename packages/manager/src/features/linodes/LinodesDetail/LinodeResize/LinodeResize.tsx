@@ -1,7 +1,7 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import { Disk, LinodeStatus, resizeLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { enqueueSnackbar, ProviderContext } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -118,7 +118,7 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   DispatchProps &
   PreferencesProps &
-  WithSnackbarProps &
+  ProviderContext &
   StateProps &
   WithProfileProps;
 
@@ -134,7 +134,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const {
       linodeId,
       linodeType,
-      enqueueSnackbar,
       updateLinode,
       requestedTypesData,
     } = this.props;
@@ -579,7 +578,6 @@ export default compose<CombinedProps, Props>(
     withTypes(component, props.open)(props),
   withSpecificTypes,
   styled,
-  withSnackbar,
   connected,
   withProfile,
   withPreferences

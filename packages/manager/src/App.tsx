@@ -2,7 +2,7 @@ import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { enqueueSnackbar, ProviderContext } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -59,7 +59,7 @@ interface State {
 type CombinedProps = Props &
   StateProps &
   RouteComponentProps &
-  WithSnackbarProps &
+  ProviderContext &
   FeatureFlagConsumerProps &
   PreferencesStateProps &
   PreferencesActionsProps;
@@ -192,7 +192,7 @@ export class App extends React.Component<CombinedProps, State> {
       .subscribe(({ event }) => {
         const { entity: migratedLinode } = event;
         if (event.action === 'linode_migrate' && event.status === 'finished') {
-          this.props.enqueueSnackbar(
+          enqueueSnackbar(
             `Linode ${migratedLinode!.label} migrated successfully.`,
             {
               variant: 'success',
@@ -201,12 +201,9 @@ export class App extends React.Component<CombinedProps, State> {
         }
 
         if (event.action === 'linode_migrate' && event.status === 'failed') {
-          this.props.enqueueSnackbar(
-            `Linode ${migratedLinode!.label} migration failed.`,
-            {
-              variant: 'error',
-            }
-          );
+          enqueueSnackbar(`Linode ${migratedLinode!.label} migration failed.`, {
+            variant: 'error',
+          });
         }
       });
   }
@@ -317,7 +314,6 @@ const connected = connect(mapStateToProps);
 export default compose(
   connected,
   withDocumentTitleProvider,
-  withSnackbar,
   withFeatureFlagProvider,
   withFeatureFlagConsumer,
   withPreferences

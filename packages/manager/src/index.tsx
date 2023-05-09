@@ -11,7 +11,7 @@ import {
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
-import SnackBar from 'src/components/SnackBar';
+import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import SplashScreen from 'src/components/SplashScreen';
 import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
@@ -52,7 +52,7 @@ const Null = () => <span>null route</span>;
 const AppWrapper = (props: RouteComponentProps) => (
   <>
     <SplashScreen />
-    <SnackBar
+    <Snackbar
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       maxSnack={3}
       autoHideDuration={4000}
@@ -60,7 +60,7 @@ const AppWrapper = (props: RouteComponentProps) => (
       hideIconVariant={true}
     >
       <App location={props.location} history={props.history} />
-    </SnackBar>
+    </Snackbar>
   </>
 );
 
