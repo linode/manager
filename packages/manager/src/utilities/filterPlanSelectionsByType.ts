@@ -23,25 +23,36 @@ export const filterPlanSelectionsByType = (types: PlanSelectionType[]) => {
     premium: [],
   };
 
-  types.forEach((type) => {
-    if (/nanode/.test(type.class)) {
-      filteredPlansByType.nanodes.push(type);
-    } else if (/standard/.test(type.class)) {
-      filteredPlansByType.standard.push(type);
-    } else if (/highmem/.test(type.class)) {
-      filteredPlansByType.highMem.push(type);
-    } else if (/prodedicated/.test(type.class)) {
-      filteredPlansByType.proDedicated.push(type);
-    } else if (/^dedicated/.test(type.class)) {
-      filteredPlansByType.dedicated.push(type);
-    } else if (/gpu/.test(type.class)) {
-      filteredPlansByType.gpu.push(type);
-    } else if (/metal/.test(type.class)) {
-      filteredPlansByType.metal.push(type);
-    } else if (/premium/.test(type.class)) {
-      filteredPlansByType.premium.push(type);
+  for (const type of types) {
+    switch (type.class) {
+      case 'nanode':
+        filteredPlansByType.nanodes.push(type);
+        break;
+      case 'standard':
+        filteredPlansByType.standard.push(type);
+        break;
+      case 'highmem':
+        filteredPlansByType.highMem.push(type);
+        break;
+      case 'prodedicated':
+        filteredPlansByType.proDedicated.push(type);
+        break;
+      case 'dedicated':
+        filteredPlansByType.dedicated.push(type);
+        break;
+      case 'gpu':
+        filteredPlansByType.gpu.push(type);
+        break;
+      case 'metal':
+        filteredPlansByType.metal.push(type);
+        break;
+      case 'premium':
+        filteredPlansByType.premium.push(type);
+        break;
+      default:
+        break;
     }
-  });
+  }
 
   return filteredPlansByType;
 };
