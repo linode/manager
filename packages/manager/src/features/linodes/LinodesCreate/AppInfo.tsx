@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Info from 'src/assets/icons/info.svg';
-import IconButton from 'src/components/core/IconButton';
+import { IconButton } from 'src/components/IconButton';
 
 interface Props {
   onClick: () => void;
