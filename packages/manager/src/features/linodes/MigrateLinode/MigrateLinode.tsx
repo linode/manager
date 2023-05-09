@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
