@@ -95,10 +95,9 @@ export const ObjectStorageLanding = () => {
     accountSettings?.object_storage === 'active';
 
   // No need to display header since the it is redundant with the docs and CTA of the empty state
-  const shouldDisplayHeader =
-    !userHasNoBucketCreated &&
-    !areBucketsLoading &&
-    objectStorageClusters !== undefined;
+  // Meanwhile it will still display the header for the access keys tab at all times
+  const shouldHideDocsAndCreateButtons =
+    !areBucketsLoading && tab === 'buckets' && userHasNoBucketCreated;
 
   const createButtonText =
     tab === 'access-keys' ? 'Create Access Key' : 'Create Bucket';
@@ -116,17 +115,16 @@ export const ObjectStorageLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
       <ProductInformationBanner bannerLocation="Object Storage" />
-      {shouldDisplayHeader && (
-        <LandingHeader
-          title="Object Storage"
-          entity="Object Storage"
-          createButtonText={createButtonText}
-          docsLink="https://www.linode.com/docs/platform/object-storage/"
-          onButtonClick={createButtonAction}
-          removeCrumbX={1}
-          breadcrumbProps={{ pathname: '/object-storage' }}
-        />
-      )}
+      <LandingHeader
+        breadcrumbProps={{ pathname: '/object-storage' }}
+        createButtonText={createButtonText}
+        docsLink="https://www.linode.com/docs/platform/object-storage/"
+        entity="Object Storage"
+        onButtonClick={createButtonAction}
+        removeCrumbX={1}
+        shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
+        title="Object Storage"
+      />
       <Tabs
         index={
           realTabs.findIndex((t) => t === tab) !== -1
@@ -135,7 +133,7 @@ export const ObjectStorageLanding = () => {
         }
         onChange={navToURL}
       >
-        {shouldDisplayHeader && <TabLinkList tabs={tabs} />}
+        <TabLinkList tabs={tabs} />
 
         {objPromotionalOffers.map((promotionalOffer) => (
           <PromotionalOfferCard

@@ -24,6 +24,7 @@ export interface Props {
   onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onDocsClick?: () => void;
   removeCrumbX?: number;
+  shouldHideDocsAndCreateButtons?: boolean;
   title?: string | JSX.Element;
 }
 
@@ -47,6 +48,7 @@ export const LandingHeader = ({
   onButtonKeyPress,
   onDocsClick,
   removeCrumbX,
+  shouldHideDocsAndCreateButtons,
   title,
 }: Props) => {
   const theme = useTheme();
@@ -79,36 +81,38 @@ export const LandingHeader = ({
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item>
-        <Grid alignItems="center" container item justifyContent="flex-end">
-          {docsLink ? (
-            <DocsLink
-              href={docsLink}
-              label={docsLabel}
-              analyticsLabel={docsAnalyticsLabel}
-              onClick={onDocsClick}
-            />
-          ) : null}
-          {renderActions && (
-            <Actions>
-              {extraActions}
-              {onButtonClick ? (
-                <Button
-                  buttonType="primary"
-                  disabled={disabledCreateButton}
-                  loading={loading}
-                  onClick={onButtonClick}
-                  sx={sxButton}
-                  onKeyPress={onButtonKeyPress}
-                  {...buttonDataAttrs}
-                >
-                  {createButtonText ?? `Create ${entity}`}
-                </Button>
-              ) : null}
-            </Actions>
-          )}
+      {!shouldHideDocsAndCreateButtons && (
+        <Grid item>
+          <Grid alignItems="center" container item justifyContent="flex-end">
+            {docsLink ? (
+              <DocsLink
+                href={docsLink}
+                label={docsLabel}
+                analyticsLabel={docsAnalyticsLabel}
+                onClick={onDocsClick}
+              />
+            ) : null}
+            {renderActions && (
+              <Actions>
+                {extraActions}
+                {onButtonClick ? (
+                  <Button
+                    buttonType="primary"
+                    disabled={disabledCreateButton}
+                    loading={loading}
+                    onClick={onButtonClick}
+                    sx={sxButton}
+                    onKeyPress={onButtonKeyPress}
+                    {...buttonDataAttrs}
+                  >
+                    {createButtonText ?? `Create ${entity}`}
+                  </Button>
+                ) : null}
+              </Actions>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 };
