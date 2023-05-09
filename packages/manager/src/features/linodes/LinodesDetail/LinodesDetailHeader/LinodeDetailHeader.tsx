@@ -6,7 +6,6 @@ import {
   PowerActionsDialog,
   Action,
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
@@ -23,8 +22,11 @@ import { APIError } from '@linode/api-v4/lib/types';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useProfile, useGrants } from 'src/queries/profile';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
 
 interface TagDrawerProps {
   tags: string[];
@@ -47,6 +49,10 @@ const LinodeDetailHeader = () => {
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
   const { data: linode } = useLinodeQuery(matchedLinodeId);
+
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
+    matchedLinodeId
+  );
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -74,7 +80,6 @@ const LinodeDetailHeader = () => {
     tags: [],
   });
 
-  const { updateLinode } = useLinodeActions();
   const history = useHistory();
 
   const closeDialogs = () => {
@@ -110,8 +115,8 @@ const LinodeDetailHeader = () => {
     });
   };
 
-  const updateTags = (linodeId: number, tags: string[]) => {
-    return updateLinode({ linodeId, tags }).then((_) => {
+  const updateTags = (tags: string[]) => {
+    return updateLinode({ tags }).then((_) => {
       setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags }));
     });
   };
@@ -130,9 +135,9 @@ const LinodeDetailHeader = () => {
     grants?.linode.find((grant) => grant.id === matchedLinodeId)
       ?.permissions === 'read_only';
 
-  const updateLinodeLabel = async (linodeId: number, label: string) => {
+  const updateLinodeLabel = async (label: string) => {
     try {
-      await updateLinode({ linodeId, label });
+      await updateLinode({ label });
     } catch (updateError) {
       const errors: APIError[] = getAPIErrorOrDefault(
         updateError,
@@ -145,7 +150,7 @@ const LinodeDetailHeader = () => {
   };
 
   const handleLinodeLabelUpdate = (label: string) => {
-    return updateLinodeLabel(matchedLinodeId, label)
+    return updateLinodeLabel(label)
       .then(() => {
         resetEditableLabel();
       })
@@ -259,7 +264,7 @@ const LinodeDetailHeader = () => {
         entityLabel={linode?.label ?? ''}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        updateTags={(tags) => updateTags(matchedLinodeId, tags)}
+        updateTags={updateTags}
         onClose={closeTagDrawer}
       />
       <EnableBackupsDialog
