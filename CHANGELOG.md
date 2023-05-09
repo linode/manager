@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUI v5 Migration - `Components > TableRow` #9082
 - MUI v5 Migration - `Components > DownloadCSV` #9084
 - MUI v5 Migration - `Components > Notice` #9094
+- MUI v5 Migration - `Components > Snackbar` #9103
 - React Query for Linodes Landing #9062
 
 ## [2023-05-01] - v1.92.0
