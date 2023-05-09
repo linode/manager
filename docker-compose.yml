@@ -1,6 +1,7 @@
 ---
 version: '3.4'
 
+# Environment variables that will be exposed to every Cypress runner.
 x-e2e-env:
   &default-env
 
@@ -43,6 +44,7 @@ x-e2e-env:
   HUDSON_HOME: ${HUDSON_HOME}
   HUDSON_URL: ${HUDSON_URL}
 
+# Volumes that will be exposed to every Cypress runner.
 x-e2e-volumes:
   &default-volumes
   - ./.git:/home/node/app/.git
@@ -52,6 +54,9 @@ x-e2e-volumes:
   - ./package.json:/home/node/app/package.json
   - ./node_modules:/home/node/app/node_modules
 
+# Base Docker Compose service config for each Cypress runner.
+# This can be extended/overridden on a per-runner basis for e.g.container name
+# and OAuth token.
 x-e2e-runners:
   &default-runner
   build:
@@ -65,7 +70,7 @@ x-e2e-runners:
   volumes: *default-volumes
 
 services:
-
+  # Serves a local instance of Cloud Manager for Cypress to use for its tests.
   web:
     build:
       context: .
@@ -84,6 +89,7 @@ services:
       timeout: 10s
       retries: 10
 
+  # Cypress runners.
   e2e-1:
     <<: *default-runner
     container_name: cloud-e2e-1
