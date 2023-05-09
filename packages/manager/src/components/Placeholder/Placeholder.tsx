@@ -156,30 +156,32 @@ export interface ExtendedButtonProps extends ButtonProps {
 }
 
 export interface Props {
-  icon?: React.ComponentType<any>;
-  children?: string | React.ReactNode;
-  title: string;
   buttonProps?: ExtendedButtonProps[];
+  children?: string | React.ReactNode;
   className?: string;
+  dataQAPlaceholder?: string | boolean;
   descriptionMaxWidth?: number;
+  icon?: React.ComponentType<any>;
   isEntity?: boolean;
-  renderAsSecondary?: boolean;
-  subtitle?: string;
   linksSection?: JSX.Element;
+  renderAsSecondary?: boolean;
   showTransferDisplay?: boolean;
+  subtitle?: string;
+  title: string;
 }
 
 const Placeholder: React.FC<Props> = (props) => {
   const {
-    isEntity,
-    title,
-    icon: Icon,
     buttonProps,
+    dataQAPlaceholder,
     descriptionMaxWidth,
-    renderAsSecondary,
-    subtitle,
+    icon: Icon,
+    isEntity,
     linksSection,
+    renderAsSecondary,
     showTransferDisplay,
+    subtitle,
+    title,
   } = props;
 
   const classes = useStyles();
@@ -196,6 +198,7 @@ const Placeholder: React.FC<Props> = (props) => {
             showTransferDisplay && linksSection === undefined,
           [classes.rootWithShowTransferDisplay]: showTransferDisplay,
         })}
+        data-qa-placeholder-container={dataQAPlaceholder || true}
       >
         <div
           className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}

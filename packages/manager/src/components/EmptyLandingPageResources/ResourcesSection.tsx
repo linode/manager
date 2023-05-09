@@ -101,6 +101,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
   return (
     <Placeholder
       buttonProps={buttonProps}
+      dataQAPlaceholder="resources-section"
       descriptionMaxWidth={descriptionMaxWidth}
       icon={icon}
       isEntity
