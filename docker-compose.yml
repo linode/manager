@@ -42,7 +42,6 @@ x-e2e-env:
   # Miscellaneous Jenkins vars.
   HUDSON_HOME: ${HUDSON_HOME}
   HUDSON_URL: ${HUDSON_URL}
-  JENKINS_VERSION: ${JENKINS_VERSION}
 
 x-e2e-volumes:
   &default-volumes
