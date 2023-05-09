@@ -1,49 +1,52 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Button from 'src/components/Button';
 import Collapse from 'src/components/core/Collapse';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingLeft: 0,
-    paddingRight: 0,
-    backgroundColor: 'transparent !important',
-    display: 'flex',
-    alignItems: 'center',
-    fontFamily: theme.font.bold,
-    width: 'auto',
-    color: theme.color.headline,
-    transition: theme.transitions.create('color'),
-    '&:hover': {
-      color: theme.palette.primary.main,
-      '& $caret': {
-        color: theme.palette.primary.light,
+const useStyles = makeStyles<void, 'caret'>()(
+  (theme: Theme, _params, classes) => ({
+    root: {
+      paddingLeft: 0,
+      paddingRight: 0,
+      backgroundColor: 'transparent !important',
+      display: 'flex',
+      alignItems: 'center',
+      fontFamily: theme.font.bold,
+      width: 'auto',
+      color: theme.color.headline,
+      transition: theme.transitions.create('color'),
+      '&:hover': {
+        color: theme.palette.primary.main,
+        [`& .${classes.caret}`]: {
+          color: theme.palette.primary.light,
+        },
       },
     },
-  },
-  caret: {
-    color: theme.palette.primary.main,
-    marginRight: theme.spacing(0.5),
-    fontSize: 28,
-    transition: 'transform .1s ease-in-out',
-    '&.rotate': {
-      transition: 'transform .3s ease-in-out',
-      transform: 'rotate(90deg)',
+    caret: {
+      color: theme.palette.primary.main,
+      marginRight: theme.spacing(0.5),
+      fontSize: 28,
+      transition: 'transform .1s ease-in-out',
+      '&.rotate': {
+        transition: 'transform .3s ease-in-out',
+        transform: 'rotate(90deg)',
+      },
     },
-  },
-}));
+  })
+);
 
-interface Props {
+interface ShowMoreExpansionProps {
   name: string;
   defaultExpanded?: boolean;
+  children?: JSX.Element;
 }
 
-const ShowMoreExpansion: React.FC<Props> = (props) => {
+const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
   const { name, defaultExpanded, children } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [open, setOpen] = React.useState<boolean>(defaultExpanded || false);
 
