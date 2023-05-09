@@ -1,29 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { CSVLink } from 'react-csv';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
-import { DateTime } from 'luxon';
-import { useProfile } from 'src/queries/profile';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  csvLink: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-    color: theme.textColors.tableHeader,
-    fontSize: '.9rem',
-  },
-}));
+import { useFormattedDate } from 'src/hooks/useFormattedDate';
 
 export const LinodesLandingCSVDownload = () => {
   const csvRef = React.useRef<any>();
-
-  const { classes } = useStyles();
-
-  const { data: profile } = useProfile();
+  const formattedDate = useFormattedDate();
 
   const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(
     {},
@@ -80,16 +64,12 @@ export const LinodesLandingCSVDownload = () => {
     }) ?? [];
 
   return (
-    <>
-      <CSVLink
-        ref={csvRef}
-        data={data}
-        headers={headers}
-        filename={`linodes-${DateTime.now().setZone(profile?.timezone)}.csv`}
-      />
-      <a className={classes.csvLink} onClick={downloadCSV} aria-hidden="true">
-        Download CSV
-      </a>
-    </>
+    <DownloadCSV
+      csvRef={csvRef}
+      data={data}
+      filename={`linodes-${formattedDate}.csv`}
+      headers={headers}
+      onClick={downloadCSV}
+    />
   );
 };
