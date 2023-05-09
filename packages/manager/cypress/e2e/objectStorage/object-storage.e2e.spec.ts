@@ -115,7 +115,7 @@ describe('object storage end-to-end tests', () => {
     cy.wait('@getBuckets');
 
     // Click "Create Bucket", fill out bucket creation form in drawer.
-    ui.entityHeader.find().within(() => {
+    ui.landingPageEmptyStateResources.find().within(() => {
       cy.findByText('Create Bucket').should('be.visible').click();
     });
 
