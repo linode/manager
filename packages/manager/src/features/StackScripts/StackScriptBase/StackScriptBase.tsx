@@ -13,7 +13,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import ErrorState from 'src/components/ErrorState';
 import { Image } from '@linode/api-v4/lib/images';
 import { pathOr } from 'ramda';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';

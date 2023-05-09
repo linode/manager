@@ -8,7 +8,7 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/linodes/LinodesCreate/utilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
