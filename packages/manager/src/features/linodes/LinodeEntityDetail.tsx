@@ -137,7 +137,7 @@ const LinodeEntityDetail = (props: Props) => {
       }
       footer={
         <Footer
-          linodePlan={linode.type}
+          linodePlan={type?.label ?? null}
           linodeRegionDisplay={linodeRegionDisplay}
           linodeId={linode.id}
           linodeCreated={linode.created}
