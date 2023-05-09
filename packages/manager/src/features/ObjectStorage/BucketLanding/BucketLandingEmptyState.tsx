@@ -1,8 +1,8 @@
 import * as React from 'react';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { useHistory } from 'react-router-dom';
 import { sendEvent } from 'src/utilities/ga';
+import { StyledBucketIcon } from './StylesBucketIcon';
+import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,
@@ -31,10 +31,10 @@ export const BucketLandingEmptyState = () => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={FirewallIcon}
+      icon={StyledBucketIcon}
       linkGAEvent={linkGAEvent}
-      youtubeLinkData={youtubeLinkData}
       showTransferDisplay
+      youtubeLinkData={youtubeLinkData}
     />
   );
 };
