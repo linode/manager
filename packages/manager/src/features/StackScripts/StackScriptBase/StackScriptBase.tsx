@@ -13,7 +13,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { Table } from 'src/components/Table';
 import {
