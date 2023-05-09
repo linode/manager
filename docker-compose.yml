@@ -78,7 +78,6 @@ services:
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
     container_name: cloud-e2e-1
-    user: "${DOCKER_USER_ID}:${DOCKER_GROUP_ID}"
     depends_on:
       web:
         condition: service_healthy
@@ -94,7 +93,6 @@ services:
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
     container_name: cloud-e2e-2
-    user: "${DOCKER_USER_ID}:${DOCKER_GROUP_ID}"
     depends_on:
       web:
         condition: service_healthy
@@ -110,7 +108,6 @@ services:
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
     container_name: cloud-e2e-3
-    user: "${DOCKER_USER_ID}:${DOCKER_GROUP_ID}"
     depends_on:
       web:
         condition: service_healthy
@@ -126,7 +123,6 @@ services:
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
     container_name: cloud-e2e-4
-    user: "${DOCKER_USER_ID}:${DOCKER_GROUP_ID}"
     depends_on:
       web:
         condition: service_healthy
