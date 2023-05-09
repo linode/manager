@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   username: {
     color: theme.color.grey1,
   },
-  optionalFieldWrapper: {},
   header: {
     display: 'flex',
     alignItems: 'center',
@@ -257,8 +256,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
               These fields are additional configuration options and are not
               required for creation.
             </Typography>
-            <div
-            >
+            <div>
               {optionalUDFs.map((field: UserDefinedField) => {
                 const error = getError(field, errors);
                 return renderField(udf_data, handleChange, field, error);
