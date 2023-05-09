@@ -55,15 +55,15 @@ x-e2e-volumes:
 
 x-e2e-runners:
   &default-runner
-    build:
-      context: .
-      dockerfile: ./packages/manager/Dockerfile
-      target: e2e
-    depends_on:
-      web:
-        condition: service_healthy
-    env_file: ./packages/manager/.env
-    volumes: *default-volumes
+  build:
+    context: .
+    dockerfile: ./packages/manager/Dockerfile
+    target: e2e
+  depends_on:
+    web:
+      condition: service_healthy
+  env_file: ./packages/manager/.env
+  volumes: *default-volumes
 
 services:
 
