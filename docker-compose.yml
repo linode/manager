@@ -3,30 +3,46 @@ version: '3.4'
 
 x-e2e-env:
   &default-env
+
+  # CI build information for Cypress Dashboard.
   BUILD_ID: "${GIT_BRANCH}-${BUILD_NUMBER}"
-  BUILD_URL: ${BUILD_URL}
   BUILD_NUMBER: ${BUILD_NUMBER}
-  COMMIT_INFO_BRANCH: ${CHANGE_BRANCH}
-  COMMIT_INFO_SHA: ${GIT_COMMIT}
-  COMMIT_INFO_REMOTE: ${GIT_URL}
+  BUILD_URL: ${BUILD_URL}
+
+  # Exposing `COMMIT_INFO_*` environment variables to Cypress allows us to
+  # manually specify git commit information. This is required because Cypress
+  # cannot retrieve the information automatically from within the container due
+  # to file ownership differences.
+  #
+  # See also:
+  # - https://github.com/cypress-io/commit-info
+  # - https://github.blog/2022-04-18-highlights-from-git-2-36/#stricter-repository-ownership-checks
   COMMIT_INFO_AUTHOR: ${COMMIT_INFO_AUTHOR}
+  COMMIT_INFO_BRANCH: ${CHANGE_BRANCH}
   COMMIT_INFO_EMAIL: ${COMMIT_INFO_EMAIL}
   COMMIT_INFO_MESSAGE: ${COMMIT_INFO_MESSAGE}
-  DEBUG: commit-info
-  JENKINS_VERSION: ${JENKINS_VERSION}
-  HUDSON_URL: ${HUDSON_URL}
-  HUDSON_HOME: ${HUDSON_HOME}
+  COMMIT_INFO_REMOTE: ${GIT_URL}
+  COMMIT_INFO_SHA: ${GIT_COMMIT}
+
+  # Cypress environment variables for run environment and CI configuration.
   CYPRESS_BASE_URL: http://web:3000
-  CYPRESS_RECORD: ${CYPRESS_RECORD}
-  CYPRESS_RECORD_KEY: ${CYPRESS_RECORD_KEY}
   CYPRESS_PULL_REQUEST_ID: ${CHANGE_ID}
   CYPRESS_PULL_REQUEST_URL: ${CHANGE_URL}
+  CYPRESS_RECORD: ${CYPRESS_RECORD}
+  CYPRESS_RECORD_KEY: ${CYPRESS_RECORD_KEY}
+
+  # Cloud Manager build environment.
   HOME: /home/node
   REACT_APP_API_ROOT: ${REACT_APP_API_ROOT}
   REACT_APP_CLIENT_ID: ${REACT_APP_CLIENT_ID}
+  REACT_APP_DISABLE_NEW_RELIC: ${REACT_APP_DISABLE_NEW_RELIC}
   REACT_APP_LAUNCH_DARKLY_ID: ${REACT_APP_LAUNCH_DARKLY_ID}
   REACT_APP_LOGIN_ROOT: ${REACT_APP_LOGIN_ROOT}
 
+  # Miscellaneous Jenkins vars.
+  HUDSON_HOME: ${HUDSON_HOME}
+  HUDSON_URL: ${HUDSON_URL}
+  JENKINS_VERSION: ${JENKINS_VERSION}
 
 x-e2e-volumes:
   &default-volumes
