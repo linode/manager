@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface NotificationItem {
+  originalId: number;
   id: string;
   body: string | JSX.Element;
   countInTotal: boolean;

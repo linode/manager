@@ -363,6 +363,7 @@ const formatNotificationForDisplay = (
   onClose: () => void,
   shouldIncludeInCount: boolean = true
 ): NotificationItem => ({
+  originalId: idx,
   id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
   countInTotal: shouldIncludeInCount,

@@ -1,16 +1,25 @@
-import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import {
-  useQuery,
-  useInfiniteQuery,
-  useQueryClient,
-  InfiniteData,
-} from 'react-query';
-import { Event, getEvents, markEventRead } from '@linode/api-v4/lib/account';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
+  Event,
+  getEvents,
+  markEventRead,
+  markEventSeen,
+} from '@linode/api-v4/lib/account';
+import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
+import { DateTime } from 'luxon';
 import React from 'react';
-import { INTERVAL } from 'src/constants';
+import {
+  InfiniteData,
+  QueryClient,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+import { INTERVAL, ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { isInProgressEvent } from 'src/store/events/event.helpers';
 
 const queryKey = 'events';
+const eventsQueryKey = [queryKey, 'infinite'];
 
 export const useEventsPolling = (options: {
   eventHandler?: (event: Event) => void;
@@ -19,11 +28,23 @@ export const useEventsPolling = (options: {
   const { eventHandler, filter } = options;
 
   const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
+  const [mountTime] = React.useState(Date.now);
 
   useQuery<Event[], APIError[]>(
-    [queryKey, 'polling', filter ?? {}],
+    [queryKey, 'polling', filter],
     async () => {
-      const events = await requestUnreadEvents(filter);
+      const events = await getEvents(
+        { page_size: 25 },
+        {
+          read: false,
+          created: {
+            '+gte': DateTime.fromMillis(mountTime, { zone: 'utc' }).toFormat(
+              ISO_DATETIME_NO_TZ_FORMAT
+            ),
+          },
+          ...filter,
+        }
+      ).then((response) => response.data);
       await markCompletedEventsAsRead(events);
       setIntervalMultiplier(Math.min(intervalMultiplier + 1, 16));
       return events;
@@ -41,14 +62,14 @@ export const useEventsPolling = (options: {
   return { resetEventsPolling: () => setIntervalMultiplier(1) };
 };
 
-export const useEventsInfiniteQuery = (filter: Filter = {}) => {
+export const useEventsInfiniteQuery = (filter?: Filter) => {
   const queryClient = useQueryClient();
 
-  const eventsQueryKey = [queryKey, 'infinite', 'events', filter];
+  const queryKey = [...eventsQueryKey, filter];
 
   const eventsCache = queryClient.getQueryData<
     InfiniteData<ResourcePage<Event>>
-  >(eventsQueryKey);
+  >(queryKey);
 
   // Update existing events or invalidate when new events come in
   useEventsPolling({
@@ -60,11 +81,11 @@ export const useEventsInfiniteQuery = (filter: Filter = {}) => {
             eventLocation.eventIdx
           ] = event;
           queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
-            eventsQueryKey,
+            queryKey,
             eventsCache
           );
         } else {
-          queryClient.invalidateQueries(eventsQueryKey);
+          queryClient.invalidateQueries(queryKey);
         }
       }
     },
@@ -72,11 +93,22 @@ export const useEventsInfiniteQuery = (filter: Filter = {}) => {
   });
 
   return useInfiniteQuery<ResourcePage<Event>, APIError[]>(
-    eventsQueryKey,
+    queryKey,
     ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }, filter),
     {
       getNextPageParam: ({ page, pages }) =>
         page < pages ? page + 1 : undefined,
+    }
+  );
+};
+
+export const useMarkEventsAsSeen = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[], number>(
+    (eventId) => markEventSeen(eventId),
+    {
+      onSuccess: (_, eventId) => updateSeenEvents(eventId, queryClient),
     }
   );
 };
@@ -97,11 +129,6 @@ const locateEvent = (
   }
 };
 
-const requestUnreadEvents = (filter: Filter = {}): Promise<Event[]> =>
-  getEvents({ page_size: 25 }, { ...filter, read: false }).then(
-    (response) => response.data
-  );
-
 const markCompletedEventsAsRead = async (events: Event[]) => {
   const completedEvents = events
     .filter((event) => !isInProgressEvent(event))
@@ -113,4 +140,28 @@ const markCompletedEventsAsRead = async (events: Event[]) => {
         !(event.action === 'database_create' && event.status === 'notification')
     );
   await Promise.all(completedEvents.map((event) => markEventRead(event.id)));
+};
+
+const updateSeenEvents = (latestId: number, queryClient: QueryClient) => {
+  for (const [queryKey, data] of queryClient.getQueriesData<
+    InfiniteData<ResourcePage<Event>>
+  >(eventsQueryKey)) {
+    let foundLatestSeenEvent = false;
+    const updatedData = {
+      ...data,
+      pages: data.pages.map((page) => ({
+        ...page,
+        data: page.data.map((event) =>
+          foundLatestSeenEvent || event.id === latestId
+            ? ((foundLatestSeenEvent = true), { ...event, seen: true })
+            : event
+        ),
+      })),
+    };
+
+    queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
+      queryKey,
+      updatedData
+    );
+  }
 };

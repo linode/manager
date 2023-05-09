@@ -1,29 +1,29 @@
+import Popper from '@mui/material/Popper';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
-import { useTheme, styled } from '@mui/material/styles';
-import TopMenuIcon, { StyledTopMenuIconWrapper } from '../TopMenuIcon';
-import Notifications from 'src/features/NotificationCenter/Notifications';
-import {
-  menuId,
-  menuButtonId,
-  notificationContext as _notificationContext,
-} from 'src/features/NotificationCenter/NotificationContext';
-import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
-import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
-import MenuItem from 'src/components/MenuItem';
 import Button from 'src/components/Button';
+import MenuItem from 'src/components/MenuItem';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
-import Popper from '@mui/material/Popper';
 import Events from 'src/features/NotificationCenter/Events';
+import {
+  notificationContext as _notificationContext,
+  menuButtonId,
+  menuId,
+} from 'src/features/NotificationCenter/NotificationContext';
+import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
+import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
+import Notifications from 'src/features/NotificationCenter/Notifications';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import { markAllSeen } from 'src/store/events/event.request';
-import { ThunkDispatch } from 'src/store/types';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import usePrevious from 'src/hooks/usePrevious';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useMarkEventsAsSeen } from 'src/queries/events';
+import { ThunkDispatch } from 'src/store/types';
 import { isPropValid } from 'src/utilities/isPropValid';
+import TopMenuIcon, { StyledTopMenuIconWrapper } from '../TopMenuIcon';
 
 const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
   label: 'NotificationIconWrapper',
@@ -69,11 +69,13 @@ const NotificationIconBadge = styled('div')(({ theme }) => ({
 export const NotificationMenu = () => {
   const theme = useTheme();
 
+  const notificationContext = React.useContext(_notificationContext);
+
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
   const eventNotifications = useEventNotifications();
-  const notificationContext = React.useContext(_notificationContext);
+  const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
     eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
@@ -113,7 +115,7 @@ export const NotificationMenu = () => {
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
       // Dismiss seen notifications after the menu has closed.
-      dispatch(markAllSeen());
+      markEventsAsSeen(eventNotifications[0].originalId);
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
   }, [
@@ -122,6 +124,8 @@ export const NotificationMenu = () => {
     notifications,
     dispatch,
     prevOpen,
+    markEventsAsSeen,
+    eventNotifications,
   ]);
 
   return (
