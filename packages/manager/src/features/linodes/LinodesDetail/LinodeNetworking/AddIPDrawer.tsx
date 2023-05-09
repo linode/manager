@@ -243,7 +243,7 @@ const AddIPDrawer = (props: Props) => {
         <Typography variant="h2" className={classes.ipv6}>
           IPv6
         </Typography>
-        {ipv6Error && (
+        {Boolean(ipv6Error) && (
           <Notice error text={ipv6Error?.[0].reason} spacingTop={8} />
         )}
         <Typography variant="h3" className={classes.ipSubheader}>
