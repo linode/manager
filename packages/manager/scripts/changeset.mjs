@@ -36,7 +36,7 @@ async function run() {
   const prNumber = await getPRNumber();
 
   /**
-   * Prompt the user for the type of change and a description.
+   * Prompt the user for the type of change and a description and a commit option.
    */
   const { type } = await inquirer.prompt([
     {
@@ -57,7 +57,7 @@ async function run() {
     {
       type: 'confirm',
       name: 'commit',
-      message: 'Do you want to commit the changeset file? (enter for yes)',
+      message: 'Do you want to commit the changeset file? (Y or enter for yes)',
       default: true,
     },
   ]);
