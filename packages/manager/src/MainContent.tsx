@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import Box from 'src/components/core/Box';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import MainContentBanner from 'src/components/MainContentBanner';
@@ -44,15 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     backgroundColor: theme.bg.app,
     zIndex: 1,
-  },
-  wrapper: {
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('md')]: {
-      paddingTop: theme.spacing(2),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
@@ -135,13 +126,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  location: RouteComponentProps['location'];
-  history: RouteComponentProps['history'];
   appIsLoading: boolean;
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props & GlobalErrorProps & WithTheme;
+type CombinedProps = Props & GlobalErrorProps;
 
 const Account = React.lazy(() => import('src/features/Account'));
 const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
@@ -175,7 +164,7 @@ const AccountActivationLanding = React.lazy(
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
-const MainContent: React.FC<CombinedProps> = (props) => {
+const MainContent = (props: CombinedProps) => {
   const classes = useStyles();
   const flags = useFlags();
   const { data: preferences } = usePreferences();
@@ -293,15 +282,11 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                   closeMenu={() => toggleMenu(false)}
                 />
                 <div
-                  className={`
-                    ${classes.content}
-                    ${
+                  className={classNames(classes.content, {
+                    [classes.fullWidthContent]:
                       desktopMenuIsOpen ||
-                      (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                        ? classes.fullWidthContent
-                        : ''
-                    }
-                  `}
+                      (desktopMenuIsOpen && desktopMenuIsOpen === true),
+                  })}
                 >
                   <TopMenu
                     isSideMenuOpen={!desktopMenuIsOpen}
@@ -316,7 +301,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                     role="main"
                   >
                     <Grid container spacing={0} className={classes.grid}>
-                      <Grid className={`${classes.switchWrapper} p0`}>
+                      <Grid className={classNames(classes.switchWrapper, 'p0')}>
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
@@ -380,8 +365,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withGlobalErrors(),
-  withTheme
+  withGlobalErrors()
 )(MainContent);
 
 // =============================================================================
