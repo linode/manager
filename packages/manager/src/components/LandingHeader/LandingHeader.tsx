@@ -5,7 +5,7 @@ import {
   BreadcrumbProps,
 } from 'src/components/Breadcrumb/Breadcrumb';
 import DocsLink from '../DocsLink';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme, styled } from '@mui/material/styles';
 
 export interface Props {
@@ -70,7 +70,7 @@ export const LandingHeader = ({
       justifyContent="space-between"
       alignItems="center"
     >
-      <Grid item>
+      <Grid>
         <Breadcrumb
           data-qa-title
           labelTitle={labelTitle}
@@ -82,8 +82,8 @@ export const LandingHeader = ({
         />
       </Grid>
       {!shouldHideDocsAndCreateButtons && (
-        <Grid item>
-          <Grid alignItems="center" container item justifyContent="flex-end">
+        <Grid>
+          <Grid alignItems="center" container justifyContent="flex-end">
             {docsLink ? (
               <DocsLink
                 href={docsLink}
