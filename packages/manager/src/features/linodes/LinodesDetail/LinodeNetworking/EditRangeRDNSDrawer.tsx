@@ -2,7 +2,7 @@ import { IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -18,7 +18,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { listIPv6InRange } from './LinodeNetworking';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   section: {
     marginTop: theme.spacing(2),
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -85,7 +85,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
     },
   });
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   React.useEffect(() => {
     if (open) {

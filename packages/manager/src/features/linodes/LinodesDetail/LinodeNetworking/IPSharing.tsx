@@ -8,7 +8,7 @@ import Button from 'src/components/Button';
 import Link from 'src/components/Link';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
@@ -30,7 +30,7 @@ import {
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   addNewButton: {
     marginTop: theme.spacing(3),
     marginBottom: `-${theme.spacing(2)}`,
@@ -74,7 +74,7 @@ interface Props {
 type AvailableRangesMap = { [linode_id: number]: string[] };
 
 const IPSharingPanel = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const flags = useFlags();
   const { linodeId, readOnly, open, onClose } = props;
   const { data: linode } = useLinodeQuery(linodeId);
@@ -468,7 +468,7 @@ interface RowProps {
 
 export const IPRow: React.FC<RowProps> = React.memo((props) => {
   const { ip } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Grid container key={ip} spacing={2}>
       <Grid xs={12}>
@@ -507,7 +507,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
     labels,
     readOnly,
   } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const ipList = getRemainingChoices(ip).map((ipChoice: string) => {
     const label = `${ipChoice} ${

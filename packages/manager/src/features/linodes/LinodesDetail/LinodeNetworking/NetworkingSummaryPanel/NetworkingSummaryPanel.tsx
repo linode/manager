@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import DNSResolvers from './DNSResolvers';
@@ -8,7 +8,7 @@ import NetworkTransfer from './NetworkTransfer';
 import TransferHistory from './TransferHistory';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -43,7 +43,7 @@ interface Props {
 const LinodeNetworkingSummaryPanel = (props: Props) => {
   // @todo maybe move this query closer to the consuming component
   const { data: linode } = useLinodeQuery(props.linodeID);
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (!linode) {
     return null;

@@ -8,7 +8,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme, useTheme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -27,8 +27,8 @@ import IPTransfer from './IPTransfer';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
 import { IPTypes } from './types';
-import ViewIPDrawer from './ViewIPDrawer';
-import ViewRangeDrawer from './ViewRangeDrawer';
+import { ViewIPDrawer } from './ViewIPDrawer';
+import { ViewRangeDrawer } from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
@@ -41,65 +41,67 @@ import { DeleteIPDialog } from './DeleteIPDialog';
 import { DeleteRangeDialog } from './DeleteRangeDialog';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    width: '100%',
-  },
-  headline: {
-    marginTop: 8,
-    marginBottom: 8,
-    marginLeft: 15,
-    lineHeight: '1.5rem',
-  },
-  addNewWrapper: {
-    [theme.breakpoints.down('sm')]: {
-      marginLeft: `-${theme.spacing(1.5)}`,
-      marginTop: `-${theme.spacing(1)}`,
+const useStyles = makeStyles<void, 'copy'>()(
+  (theme: Theme, _params, classes) => ({
+    root: {
+      backgroundColor: theme.color.white,
+      margin: 0,
+      width: '100%',
     },
-    '&.MuiGrid-item': {
-      padding: 5,
+    headline: {
+      marginTop: 8,
+      marginBottom: 8,
+      marginLeft: 15,
+      lineHeight: '1.5rem',
     },
-  },
-  action: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-    '& a': {
-      marginRight: theme.spacing(1),
+    addNewWrapper: {
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: `-${theme.spacing(1.5)}`,
+        marginTop: `-${theme.spacing(1)}`,
+      },
+      '&.MuiGrid-item': {
+        padding: 5,
+      },
     },
-    paddingRight: `0px !important`,
-  },
-  multipleRDNSButton: {
-    ...theme.applyLinkStyles,
-  },
-  multipleRDNSText: {},
-  row: {
-    '&:hover $copy > svg, & $copy:focus > svg': {
-      opacity: 1,
+    action: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: 0,
+      '& a': {
+        marginRight: theme.spacing(1),
+      },
+      paddingRight: `0px !important`,
     },
-  },
-  ipAddress: {
-    whiteSpace: 'nowrap',
-  },
-  copy: {
-    marginLeft: 4,
-    top: 1,
-    '& svg': {
-      height: `12px`,
-      width: `12px`,
-      opacity: 0,
+    multipleRDNSButton: {
+      ...theme.applyLinkStyles,
     },
-  },
-}));
+    multipleRDNSText: {},
+    row: {
+      [`&:hover .${classes.copy} > svg, & .${classes.copy}:focus > svg`]: {
+        opacity: 1,
+      },
+    },
+    ipAddress: {
+      whiteSpace: 'nowrap',
+    },
+    copy: {
+      marginLeft: 4,
+      top: 1,
+      '& svg': {
+        height: `12px`,
+        width: `12px`,
+        opacity: 0,
+      },
+    },
+  })
+);
 
 export const ipv4TableID = 'ips';
 
 const LinodeNetworking = () => {
   const readOnly = false;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const { data: ips, isLoading, error } = useLinodeIPsQuery(id);

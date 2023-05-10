@@ -6,7 +6,7 @@ import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Radio from 'src/components/core/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
@@ -20,7 +20,7 @@ import {
 } from 'src/queries/linodes/networking';
 import { Notice } from 'src/components/Notice/Notice';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(2),
   },
@@ -97,7 +97,7 @@ interface Props {
 
 const AddIPDrawer = (props: Props) => {
   const { open, onClose, readOnly, linodeId } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const {
     mutateAsync: allocateIPAddress,

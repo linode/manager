@@ -17,7 +17,7 @@ import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
@@ -37,7 +37,7 @@ import {
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   sourceIPWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -140,7 +140,7 @@ export const getLinodeIPv6Ranges = (
 
 const LinodeNetworkingIPTransferPanel = (props: Props) => {
   const { linodeId, open, onClose, readOnly } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { mutateAsync: assignAddresses } = useAssignAdressesMutation();
 
   const { data: linode } = useLinodeQuery(linodeId, open);
