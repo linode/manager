@@ -2,7 +2,6 @@ import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -14,7 +13,7 @@ import { debounce } from 'throttle-debounce';
 import AttachFileForm from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
 import Reference from './MarkdownReference';
-import ReplyActions from './ReplyActions';
+import { ReplyActions } from './ReplyActions';
 import TabbedReply from './TabbedReply';
 import { useSupportTicketReplyMutation } from 'src/queries/support';
 
@@ -56,9 +55,7 @@ interface Props {
   lastReply?: SupportReply;
 }
 
-type CombinedProps = Props;
-
-const ReplyContainer: React.FC<CombinedProps> = (props) => {
+export const ReplyContainer = (props: Props) => {
   const classes = useStyles();
 
   const { onSuccess, reloadAttachments, lastReply, ...rest } = props;
@@ -202,5 +199,3 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
     </Grid>
   );
 };
-
-export default compose<CombinedProps, Props>(React.memo)(ReplyContainer);

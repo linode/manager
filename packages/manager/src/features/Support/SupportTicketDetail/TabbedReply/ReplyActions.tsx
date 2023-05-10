@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import CloseTicketLink from '../CloseTicketLink';
+import { CloseTicketLink } from '../CloseTicketLink';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
@@ -19,7 +19,7 @@ interface Props {
   ticketId: number;
 }
 
-const ReplyActions = (props: Props) => {
+export const ReplyActions = (props: Props) => {
   const classes = useStyles();
 
   const { isSubmitting, submitForm, closable, value, ticketId } = props;
@@ -43,5 +43,3 @@ const ReplyActions = (props: Props) => {
     </>
   );
 };
-
-export default React.memo(ReplyActions);

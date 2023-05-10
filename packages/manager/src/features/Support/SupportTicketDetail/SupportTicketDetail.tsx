@@ -12,10 +12,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import formatDate from 'src/utilities/formatDate';
-import ExpandableTicketPanel from '../ExpandableTicketPanel';
+import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
-import Reply from './TabbedReply';
+import { ReplyContainer } from './TabbedReply/ReplyContainer';
 import LandingHeader from 'src/components/LandingHeader';
 import {
   useInfiniteSupportTicketRepliesQuery,
@@ -201,7 +201,7 @@ const SupportTicketDetail = () => {
           <TicketAttachmentList attachments={ticket.attachments} />
           {/* If the ticket is open, allow users to reply to it. */}
           {['open', 'new'].includes(ticket.status) && (
-            <Reply
+            <ReplyContainer
               ticketId={ticket.id}
               closable={ticket.closable}
               reloadAttachments={refetch}

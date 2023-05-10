@@ -1,6 +1,5 @@
 import { SupportReply, SupportTicket } from '@linode/api-v4';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
@@ -11,10 +10,6 @@ import TicketDetailBody from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 import UserIcon from 'src/assets/icons/account.svg';
 import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import EntityIcon, { Variant } from 'src/components/EntityIcon';
-import { Link } from 'react-router-dom';
-import { Notice } from 'src/components/Notice/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -92,8 +87,6 @@ export interface Props {
   ticketUpdated?: string;
 }
 
-type CombinedProps = Props;
-
 interface Data {
   gravatar_id: string;
   date: string;
@@ -106,7 +99,7 @@ interface Data {
   updated: string;
 }
 
-export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
+export const ExpandableTicketPanel = (props: Props) => {
   const classes = useStyles();
 
   const { parentTicket, ticket, open, reply, ticketUpdated } = props;
@@ -158,8 +151,6 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  
-
   /**
    * data.description will be a blank string if it contained ONLY malicious markup
    * because we sanitize it in this.getData()
@@ -203,5 +194,3 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
     </Grid>
   );
 };
-
-export default compose<CombinedProps, Props>(React.memo)(ExpandableTicketPanel);

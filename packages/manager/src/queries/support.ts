@@ -6,6 +6,7 @@ import {
 } from 'react-query';
 import { EventWithStore } from 'src/events';
 import {
+  closeSupportTicket,
   createReply,
   getTicket,
   getTicketReplies,
@@ -52,6 +53,15 @@ export const useInfiniteSupportTicketRepliesQuery = (id: number) =>
 export const useSupportTicketReplyMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<SupportReply, APIError[], ReplyRequest>(createReply, {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
+
+export const useSupportTicketCloseMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => closeSupportTicket(id), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
     },
