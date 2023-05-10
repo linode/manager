@@ -49,9 +49,8 @@ export const youtubeLinkData: ResourcesLinkSection = {
       external: true,
     },
     {
-      to:
-        'https://www.linode.com/docs/products/tools/stackscripts/guides/create/',
-      text: 'Shell Scripts',
+      to: 'https://www.youtube.com/watch?v=EbyA5rZwyRw',
+      text: 'Shell Scripts Explained',
       external: true,
     },
     {
