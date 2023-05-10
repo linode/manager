@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added:
 - Resource links to empty state Volumes landing page #9065
 - Resource links to empty state Firewalls landing page #9078
+- Resource links to empty state StackScripts landing page #9091
 - Resource links to empty state Domains landing page #9092
 - Ability download DNS zone file #9075
 
@@ -27,7 +28,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUI v5 Migration - `Components > TableBody` #9082
 - MUI v5 Migration - `Components > TableSortCell` #9082
 - MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > DownloadCSV` #9084
 - MUI v5 Migration - `Components > Notice` #9094
+- MUI v5 Migration - `Components > CheckoutSummary` #9100
+- MUI v5 Migration - `Components > PrimaryNav` #9090
 - React Query for Linodes Landing #9062
 
 ## [2023-05-01] - v1.92.0
