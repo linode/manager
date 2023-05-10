@@ -43,6 +43,7 @@ import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { ADOBE_ANALYTICS_URL } from './constants';
 import { linodeEventsHandler } from './queries/linodes/events';
+import { supportTicketEventHandler } from './queries/support';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -177,6 +178,12 @@ export class App extends React.Component<CombinedProps, State> {
           !event._initial
       )
       .subscribe(linodeEventsHandler);
+
+    events$
+      .filter(
+        ({ event }) => event.action.startsWith('ticket') && !event._initial
+      )
+      .subscribe(supportTicketEventHandler);
 
     /*
      * We want to listen for migration events side-wide

@@ -21,7 +21,6 @@ const styles = (theme: Theme) =>
 
 interface Props {
   ticketId: number;
-  closeTicketSuccess: () => void;
 }
 
 interface State {
@@ -71,7 +70,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
   };
 
   closeTicket = () => {
-    const { closeTicketSuccess, ticketId } = this.props;
+    const { ticketId } = this.props;
     if (this.mounted) {
       this.setState({ isClosingTicket: true });
     }
@@ -81,7 +80,6 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
           this.setState({ isClosingTicket: false, dialogOpen: false });
           scrollTo();
         }
-        closeTicketSuccess();
       })
       .catch((errorResponse) => {
         const apiError = getErrorStringOrDefault(

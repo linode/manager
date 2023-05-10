@@ -11,6 +11,10 @@ import TicketDetailBody from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 import UserIcon from 'src/assets/icons/account.svg';
 import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import EntityIcon, { Variant } from 'src/components/EntityIcon';
+import { Link } from 'react-router-dom';
+import { Notice } from 'src/components/Notice/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -153,6 +157,8 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
       </div>
     );
   };
+
+  
 
   /**
    * data.description will be a blank string if it contained ONLY malicious markup

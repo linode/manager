@@ -13,26 +13,16 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   isSubmitting: boolean;
-  closeTicketSuccess: () => void;
   value: string;
   submitForm: (value: string) => void;
   closable: boolean;
   ticketId: number;
 }
 
-type CombinedProps = Props;
-
-const ReplyActions: React.FC<CombinedProps> = (props) => {
+const ReplyActions = (props: Props) => {
   const classes = useStyles();
 
-  const {
-    isSubmitting,
-    submitForm,
-    closeTicketSuccess,
-    closable,
-    value,
-    ticketId,
-  } = props;
+  const { isSubmitting, submitForm, closable, value, ticketId } = props;
 
   const handleSubmitForm = () => {
     submitForm(value);
@@ -40,12 +30,7 @@ const ReplyActions: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      {closable && (
-        <CloseTicketLink
-          ticketId={ticketId}
-          closeTicketSuccess={closeTicketSuccess}
-        />
-      )}
+      {closable && <CloseTicketLink ticketId={ticketId} />}
       <ActionsPanel className={classes.actions}>
         <Button
           buttonType="primary"
