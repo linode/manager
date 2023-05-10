@@ -52,6 +52,7 @@ import {
 import useEvents from 'src/hooks/useEvents';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { useNotificationContext } from '../NotificationCenter/NotificationContext';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -137,7 +138,9 @@ const LinodeEntityDetail = (props: Props) => {
       }
       footer={
         <Footer
-          linodePlan={type?.label ?? null}
+          linodePlan={
+            type?.label ? formatStorageUnits(type.label) : linode.type
+          }
           linodeRegionDisplay={linodeRegionDisplay}
           linodeId={linode.id}
           linodeCreated={linode.created}
