@@ -1,4 +1,5 @@
 import { PlanSelectionType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { ExtendedType } from 'src/utilities/extendType';
 
 interface FilteredPlansTypes {
   nanodes: PlanSelectionType[];
@@ -10,6 +11,24 @@ interface FilteredPlansTypes {
   metal: PlanSelectionType[];
   premium: PlanSelectionType[];
 }
+
+interface LKEPlansTypes {
+  nanodes: ExtendedType[];
+  standard: ExtendedType[];
+  highMem: ExtendedType[];
+  proDedicated: ExtendedType[];
+  dedicated: ExtendedType[];
+  gpu: ExtendedType[];
+  metal: ExtendedType[];
+  premium: ExtendedType[];
+}
+
+/*
+The function 'filterPlanSelectionsByType' supports the Database plan selection table and the Linode create Plans table, 
+while the function 'filterLKEPlansSelectionsByType' supports the LKE plan selection table. Since the types are 
+tightly coupled among the components that consume these functions, we have kept them as two separate functions 
+until we find a more robust solution to combine them into a single function.
+*/
 
 export const filterPlanSelectionsByType = (types: PlanSelectionType[]) => {
   const filteredPlansByType: FilteredPlansTypes = {
@@ -55,4 +74,50 @@ export const filterPlanSelectionsByType = (types: PlanSelectionType[]) => {
   }
 
   return filteredPlansByType;
+};
+
+export const filterLKEPlansSelectionsByType = (types: ExtendedType[]) => {
+  const filteredLKEPlansTypes: LKEPlansTypes = {
+    nanodes: [],
+    standard: [],
+    highMem: [],
+    proDedicated: [],
+    dedicated: [],
+    gpu: [],
+    metal: [],
+    premium: [],
+  };
+
+  for (const type of types) {
+    switch (type.class) {
+      case 'nanode':
+        filteredLKEPlansTypes.nanodes.push(type);
+        break;
+      case 'standard':
+        filteredLKEPlansTypes.standard.push(type);
+        break;
+      case 'highmem':
+        filteredLKEPlansTypes.highMem.push(type);
+        break;
+      case 'prodedicated':
+        filteredLKEPlansTypes.proDedicated.push(type);
+        break;
+      case 'dedicated':
+        filteredLKEPlansTypes.dedicated.push(type);
+        break;
+      case 'gpu':
+        filteredLKEPlansTypes.gpu.push(type);
+        break;
+      case 'metal':
+        filteredLKEPlansTypes.metal.push(type);
+        break;
+      case 'premium':
+        filteredLKEPlansTypes.premium.push(type);
+        break;
+      default:
+        break;
+    }
+  }
+
+  return filteredLKEPlansTypes;
 };

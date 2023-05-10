@@ -24,6 +24,7 @@ import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
+import { filterLKEPlansSelectionsByType } from 'src/utilities/filterPlanSelectionsByType';
 
 type ClassNames =
   | 'root'
@@ -109,24 +110,6 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
-const getNanodes = (types: ExtendedType[]) =>
-  types.filter((t) => /nanode/.test(t.class));
-
-const getStandard = (types: ExtendedType[]) =>
-  types.filter((t) => /standard/.test(t.class));
-
-const getHighMem = (types: ExtendedType[]) =>
-  types.filter((t) => /highmem/.test(t.class));
-
-const getDedicated = (types: ExtendedType[]) =>
-  types.filter((t) => /dedicated/.test(t.class));
-
-const getGPU = (types: ExtendedType[]) =>
-  types.filter((t) => /gpu/.test(t.class));
-
-const getPremium = (types: ExtendedType[]) =>
-  types.filter((t) => /premium/.test(t.class));
 
 export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
   onSelect = (id: string) => () => this.props.onSelect(id);
@@ -281,12 +264,14 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
   createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const { classes, types, onAdd } = this.props;
     const tabs: Tab[] = [];
-    const nanodes = getNanodes(types);
-    const standards = getStandard(types);
-    const highmem = getHighMem(types);
-    const dedicated = getDedicated(types);
-    const gpu = getGPU(types);
-    const premium = getPremium(types);
+    const {
+      nanodes,
+      standard: standards,
+      highMem: highmem,
+      dedicated,
+      gpu,
+      premium,
+    } = filterLKEPlansSelectionsByType(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
