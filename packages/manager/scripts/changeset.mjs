@@ -6,9 +6,8 @@ import inquirer from 'inquirer';
 
 const writeFileAsync = promisify(fs.writeFile);
 const changesetTypes = ['Added', 'Fixed', 'Changed', 'Removed', 'Tech Stories'];
-const separator = chalk.white(
-  '\n==============================================\n'
-);
+const separator = (color = 'white') =>
+  chalk[color]('\n======================================================\n');
 
 async function run() {
   /**
@@ -17,14 +16,16 @@ async function run() {
   try {
     execSync('gh version');
   } catch (error) {
-    console.log(separator);
+    console.log(separator());
     console.log(
       chalk.red('Error: The "gh" command-line tool is not installed.')
     );
     console.log(
-      'Please install it from https://github.com/cli/cli#installation'
+      chalk.white(
+        'Please install it from https://github.com/cli/cli#installation\nand sign in with your GitHub account.'
+      )
     );
-    console.log(separator);
+    console.log(separator());
     process.exit(1);
   }
 
@@ -49,11 +50,15 @@ async function run() {
     {
       type: 'input',
       name: 'description',
-      message: 'Describe the change:',
-      validate: (value) =>
-        value.trim()
-          ? true
-          : "Please enter a sentence to describe the change. (don't include the PR number)",
+      message: "Describe the change (don't include the PR number):",
+    },
+  ]);
+  const { commit } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'commit',
+      message: 'Do you want to commit the changeset file? (enter for yes)',
+      default: true,
     },
   ]);
 
@@ -61,14 +66,27 @@ async function run() {
    * Create the changeset file.
    */
   const prLink = `https://github.com/linode/manager/pull/${prNumber}`;
-  const changesetFile = `./changesets/${Date.now()}-${type
+  const changesetFile = `.changesets/${Date.now()}-${type
     .toLowerCase()
     .replace(/\s/g, '-')}.md`;
-  const changesetContent = `---\n"@linode/manager": [${type}]\n---\n\n${description} (${prLink})\n`;
+  const changesetContent = `---\n"@linode/manager": ${type}\n---\n\n${description} ([#${prNumber}](${prLink}))\n`;
 
   await writeFileAsync(changesetFile, changesetContent, { encoding: 'utf-8' });
 
-  console.log(`Changeset created: ${changesetFile}`);
+  console.log(separator('green'));
+  console.error(chalk.greenBright(`Changeset created!: ${changesetFile}`));
+  console.log(separator('green'));
+
+  if (commit) {
+    const addCmd = `git add ${changesetFile}`;
+    const commitCmd = `git commit -m "Add changeset"`;
+    execSync(addCmd);
+    execSync(commitCmd);
+
+    console.log(separator('green'));
+    console.error(chalk.greenBright(`Changeset committed!: ${changesetFile}`));
+    console.log(separator('green'));
+  }
 }
 
 /**
@@ -78,19 +96,21 @@ async function run() {
  */
 async function getPRNumber() {
   try {
-    const output = execSync(`gh pr view --json number --jq=".number"`, {
-      encoding: 'utf-8',
-    });
+    const branchName = execSync('git branch --show-current').toString().trim();
+    const prListOutput = execSync(`gh pr list --head ${branchName}`)
+      .toString()
+      .trim();
+    const prNumberMatch = prListOutput.match(/^\s*(\d+)/);
 
-    return parseInt(output.trim(), 0);
+    return prNumberMatch ? parseInt(prNumberMatch[1], 10) : NaN;
   } catch (error) {
-    console.log(separator);
+    console.log(separator());
     console.error(
       chalk.red(
         "Failed to get pull request number.\nPlease open a pull request for the current branch and let's try this again!"
       )
     );
-    console.log(separator);
+    console.log(separator());
     process.exit(1);
   }
 }
