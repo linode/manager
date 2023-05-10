@@ -4,7 +4,7 @@ import WarningOutline from '@mui/icons-material/WarningAmberOutlined';
 import InfoOutline from '@mui/icons-material/InfoOutlined';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
-import IconButton from 'src/components/core/IconButton';
+import { IconButton } from 'src/components/IconButton';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 import { SxProps } from '@mui/system';
 import { useTheme } from '@mui/material/styles';

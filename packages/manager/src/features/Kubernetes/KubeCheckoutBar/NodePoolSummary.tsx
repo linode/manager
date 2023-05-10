@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
-import IconButton from 'src/components/IconButton';
+import { IconButton } from 'src/components/IconButton';
 import { ExtendedType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 
