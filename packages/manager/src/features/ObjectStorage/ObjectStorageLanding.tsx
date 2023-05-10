@@ -193,7 +193,7 @@ export const BillingNotice = React.memo(() => {
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
       }}
     >
-      <Typography variant="body2">
+      <Typography variant="body1">
         You are being billed for Object Storage but do not have any Buckets. You
         can cancel Object Storage in your{' '}
         <Link to="/account/settings">Account Settings</Link>, or{' '}
