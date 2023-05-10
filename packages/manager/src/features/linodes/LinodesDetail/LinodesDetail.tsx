@@ -46,7 +46,7 @@ const LinodeDetail = () => {
     return <CircleProgress />;
   }
 
-  // We will delete this as soon a we react query all consumers of this context
+  // We will delete this as soon as we react query all consumers of this context
   const ctx: LinodeDetailContext = createLinodeDetailContext(
     extendedLinode,
     dispatch

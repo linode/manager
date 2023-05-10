@@ -35,14 +35,14 @@ export const MutationNotification = (props: Props) => {
     linode !== undefined
   );
 
-  const { data: sucessorTypeInfo } = useTypeQuery(
+  const { data: successorTypeInfo } = useTypeQuery(
     currentTypeInfo?.successor ?? '',
     currentTypeInfo !== undefined && currentTypeInfo.successor !== null
   );
 
   const { data: disks } = useAllLinodeDisksQuery(
     linodeId,
-    sucessorTypeInfo !== undefined
+    successorTypeInfo !== undefined
   );
 
   const [isMutationDrawerOpen, setIsMutationDrawerOpen] = React.useState(false);
@@ -69,7 +69,7 @@ export const MutationNotification = (props: Props) => {
   );
 
   /** Mutate */
-  if (!currentTypeInfo || !sucessorTypeInfo) {
+  if (!currentTypeInfo || !successorTypeInfo) {
     return null;
   }
 
@@ -112,22 +112,24 @@ export const MutationNotification = (props: Props) => {
         handleClose={() => setIsMutationDrawerOpen(false)}
         isMovingFromSharedToDedicated={isMovingFromSharedToDedicated(
           currentTypeInfo.id,
-          sucessorTypeInfo.id
+          successorTypeInfo.id
         )}
         mutateInfo={{
           vcpus:
-            sucessorTypeInfo.vcpus !== vcpus ? sucessorTypeInfo.vcpus : null,
+            successorTypeInfo.vcpus !== vcpus ? successorTypeInfo.vcpus : null,
           network_out:
-            sucessorTypeInfo.network_out !== network_out
-              ? sucessorTypeInfo.network_out
+            successorTypeInfo.network_out !== network_out
+              ? successorTypeInfo.network_out
               : null,
-          disk: sucessorTypeInfo.disk !== disk ? sucessorTypeInfo.disk : null,
+          disk: successorTypeInfo.disk !== disk ? successorTypeInfo.disk : null,
           transfer:
-            sucessorTypeInfo.transfer !== transfer
-              ? sucessorTypeInfo.transfer
+            successorTypeInfo.transfer !== transfer
+              ? successorTypeInfo.transfer
               : null,
           memory:
-            sucessorTypeInfo.memory !== memory ? sucessorTypeInfo.memory : null,
+            successorTypeInfo.memory !== memory
+              ? successorTypeInfo.memory
+              : null,
         }}
         currentTypeInfo={{
           vcpus: currentTypeInfo.vcpus,
