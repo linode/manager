@@ -1,7 +1,7 @@
 import { PlanSelectionType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { ExtendedType } from 'src/utilities/extendType';
 
-interface FilteredPlansTypes {
+interface FilteredLinodeDatabasePlansTypes {
   nanodes: PlanSelectionType[];
   standard: PlanSelectionType[];
   highMem: PlanSelectionType[];
@@ -24,14 +24,16 @@ interface LKEPlansTypes {
 }
 
 /*
-The function 'filterPlanSelectionsByType' supports the Database plan selection table and the Linode create Plans table, 
-while the function 'filterLKEPlansSelectionsByType' supports the LKE plan selection table. Since the types are 
+The function 'filterLinodeOrDatabasePlanSelectionsByType' supports the Database plan selection table and the Linode create Plans table, 
+while the function 'filterLKEPlanSelectionsByType' supports the LKE plan selection table. Since the types are 
 tightly coupled among the components that consume these functions, we have kept them as two separate functions 
 until we find a more robust solution to combine them into a single function.
 */
 
-export const filterPlanSelectionsByType = (types: PlanSelectionType[]) => {
-  const filteredPlansByType: FilteredPlansTypes = {
+export const filterLinodeOrDatabasePlanSelectionsByType = (
+  types: PlanSelectionType[]
+) => {
+  const filteredPlansByType: FilteredLinodeDatabasePlansTypes = {
     nanodes: [],
     standard: [],
     highMem: [],
@@ -76,7 +78,7 @@ export const filterPlanSelectionsByType = (types: PlanSelectionType[]) => {
   return filteredPlansByType;
 };
 
-export const filterLKEPlansSelectionsByType = (types: ExtendedType[]) => {
+export const filterLKEPlanSelectionsByType = (types: ExtendedType[]) => {
   const filteredLKEPlansTypes: LKEPlansTypes = {
     nanodes: [],
     standard: [],

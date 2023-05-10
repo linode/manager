@@ -24,7 +24,7 @@ import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
-import { filterLKEPlansSelectionsByType } from 'src/utilities/filterPlanSelectionsByType';
+import { filterLKEPlanSelectionsByType } from 'src/utilities/filterPlanSelectionsByType';
 
 type ClassNames =
   | 'root'
@@ -271,7 +271,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
       dedicated,
       gpu,
       premium,
-    } = filterLKEPlansSelectionsByType(types);
+    } = filterLKEPlanSelectionsByType(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 

@@ -33,7 +33,7 @@ import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 import { useRegionsQuery } from 'src/queries/regions';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
-import { filterPlanSelectionsByType } from 'src/utilities/filterPlanSelectionsByType';
+import { filterLinodeOrDatabasePlanSelectionsByType } from 'src/utilities/filterPlanSelectionsByType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -402,7 +402,7 @@ export const SelectPlanPanel = (props: Props) => {
       gpu,
       metal,
       premium,
-    } = filterPlanSelectionsByType(types);
+    } = filterLinodeOrDatabasePlanSelectionsByType(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
