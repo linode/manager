@@ -43,8 +43,8 @@ export const allocateIPAddress = (
  * Deletes a Linode's public IP Address. This request will fail if this is the last IP
  * address allocated to the Linode. This request cannot be invoked on a private IP Address
  *
- * @param {linodeID: number, IPAddress: string} payload - the linode ID and IP Address for
- * which you'd like the delete request to be invoked
+ * @param payload.linodeID {number} - the linode ID for which you'd like the delete request to be invoked
+ * @param payload.address {string} - the IP Address for which you'd like the delete request to be invoked
  */
 export const removeIPAddress = (payload: {
   linodeID: number;
@@ -63,7 +63,7 @@ export const removeIPAddress = (payload: {
  *
  * Deletes a Linode's IPv6 range.
  *
- * @param {IPv6Range: string} payload - the IPv6 Range for which you'd like the delete request to be invoked
+ * @param payload.range { string } - the IPv6 Range for which you'd like the delete request to be invoked
  */
 export const removeIPv6Range = (payload: { range: string }) => {
   return Request<{}>(
