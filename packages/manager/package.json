@@ -106,7 +106,8 @@
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "release": "./scripts/release_changelog.sh",
     "typecheck": "tsc",
-    "changeset": "node scripts/changeset.mjs"
+    "changeset": "node scripts/changelog/changeset.mjs",
+    "generate-changelog": "node scripts/changelog/generate-changelog.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

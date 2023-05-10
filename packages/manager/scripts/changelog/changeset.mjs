@@ -1,15 +1,22 @@
 import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 import { promisify } from 'util';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
+import path from 'path';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Path to the changesets directory
+const changesetsDirectory = path.join(__dirname, '../../.changeset');
 const writeFileAsync = promisify(fs.writeFile);
 const changesetTypes = ['Added', 'Fixed', 'Changed', 'Removed', 'Tech Stories'];
 const separator = (color = 'white') =>
   chalk[color]('\n======================================================\n');
 
-async function run() {
+async function generateChangeset() {
   /**
    * Check if the "gh" command-line tool is installed.
    */
@@ -31,7 +38,7 @@ async function run() {
 
   /**
    * Get the pull request number for the current branch.
-   * This will fail if the current branch is not a pull request.
+   * This will fail if the current branch is not a pull request and use will get a message to open a pull request.
    */
   const prNumber = await getPRNumber();
 
@@ -66,7 +73,7 @@ async function run() {
    * Create the changeset file.
    */
   const prLink = `https://github.com/linode/manager/pull/${prNumber}`;
-  const changesetFile = `.changesets/${Date.now()}-${type
+  const changesetFile = `${changesetsDirectory}/${Date.now()}-${type
     .toLowerCase()
     .replace(/\s/g, '-')}.md`;
   const changesetContent = `---\n"@linode/manager": ${type}\n---\n\n${description} ([#${prNumber}](${prLink}))\n`;
@@ -77,6 +84,9 @@ async function run() {
   console.error(chalk.greenBright(`Changeset created!: ${changesetFile}`));
   console.log(separator('green'));
 
+  /**
+   * Commit file with generic message if user opts in.
+   */
   if (commit) {
     const addCmd = `git add ${changesetFile}`;
     const commitCmd = `git commit -m "Add changeset"`;
@@ -115,4 +125,7 @@ async function getPRNumber() {
   }
 }
 
-run();
+/**
+ * Run the script
+ */
+generateChangeset();
