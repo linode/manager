@@ -24,7 +24,7 @@ import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
-import { filterLKEPlanSelectionsByType } from 'src/utilities/filterPlanSelectionsByType';
+import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
 
 type ClassNames =
   | 'root'
@@ -265,17 +265,17 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
     const { classes, types, onAdd } = this.props;
     const tabs: Tab[] = [];
     const {
-      nanodes,
-      standard: standards,
-      highMem: highmem,
+      nanode,
+      standard,
+      highmem,
       dedicated,
       gpu,
       premium,
-    } = filterLKEPlanSelectionsByType(types);
+    } = getPlanSelectionsByPlanType(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
-    const shared = [...nanodes, ...standards];
+    const shared = [...nanode, ...standard];
 
     if (!isEmpty(dedicated)) {
       tabs.push({

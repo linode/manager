@@ -33,7 +33,7 @@ import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 import { useRegionsQuery } from 'src/queries/regions';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
-import { filterLinodeOrDatabasePlanSelectionsByType } from 'src/utilities/filterPlanSelectionsByType';
+import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -394,21 +394,21 @@ export const SelectPlanPanel = (props: Props) => {
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const tabs: Tab[] = [];
     const {
-      nanodes,
-      standard: standards,
-      highMem: highmem,
-      proDedicated,
+      nanode,
+      standard,
+      highmem,
+      prodedicated,
       dedicated,
       gpu,
       metal,
       premium,
-    } = filterLinodeOrDatabasePlanSelectionsByType(types);
+    } = getPlanSelectionsByPlanType(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
-    const shared = [...nanodes, ...standards];
+    const shared = [...nanode, ...standard];
 
-    if (!isEmpty(proDedicated)) {
+    if (!isEmpty(prodedicated)) {
       tabs.push({
         render: () => {
           return (
@@ -417,7 +417,7 @@ export const SelectPlanPanel = (props: Props) => {
                 Pro Dedicated CPU instances are for very demanding workloads.
                 They only have AMD 2nd generation processors or newer.
               </Typography>
-              {renderPlanContainer(proDedicated)}
+              {renderPlanContainer(prodedicated)}
             </>
           );
         },
