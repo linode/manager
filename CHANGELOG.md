@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [2023-05-10] - v1.93.0
 
 ### Added:
 - Resource links to empty state Volumes landing page #9065
@@ -12,27 +12,42 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Resource links to empty state StackScripts landing page #9091
 - Resource links to empty state Domains landing page #9092
 - Ability download DNS zone file #9075
+- Add new flag to deliver DC availability notice for premium plans #9066
+- Accessible graph data #9045
 
 ### Changed:
+- style: [M3-6030] - Adjust banner text size and spacing to improve readability #9064
 - Removed MongoDB reference from ClusterControl description #9081
 - Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
+- Move linodes, k8s & dbs empty landing pages resources to HOC #9088
 
 ### Fixed:
 - Ability to search Linodes by IPv6 #9073
+- Surface general errors in the Object Storage Bucket Create Drawer #9067
+- Add compression to logo when rendering in JPG format during invoice PDF generation #9069
+- Phone Verification - Verification Code State Does Not Reset #9059
+- Show error for PayPal payments #9058
 
 ### Tech Stories:
 - Enable Cypress `experimentalMemoryManagement` #9076
-- MUI v5 Migration - `Components > Table` #9082
-- MUI v5 Migration - `Components > TableCell` #9082
-- MUI v5 Migration - `Components > TableHead` #9082
-- MUI v5 Migration - `Components > TableBody` #9082
-- MUI v5 Migration - `Components > TableSortCell` #9082
-- MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > CheckoutSummary` #9100
+- MUI v5 Migration - `Components > CopyableTextField` #9018
+- MUI v5 Migration - `Components > DialogTitle` #9050
 - MUI v5 Migration - `Components > DownloadCSV` #9084
 - MUI v5 Migration - `Components > Notice` #9094
-- MUI v5 Migration - `Components > CheckoutSummary` #9100
 - MUI v5 Migration - `Components > PrimaryNav` #9090
-- React Query for Linodes Landing #9062
+- MUI v5 Migration - `Components > ShowMoreExpansion` #9096
+- MUI v5 Migration - `Components > Table` #9082
+- MUI v5 Migration - `Components > TableBody` #9082
+- MUI v5 Migration - `Components > TableCell` #9082
+- MUI v5 Migration - `Components > TableHead` #9082
+- MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > TableSortCell` #9082
+- React Query - Linodes - Prepare for React Query for Linodes #9049
+- React Query - Linodes - Landing #9062
+- React Query - Linodes - Detail - Backups #9079
+- Upgrade Cypress to v12.11 #9038
+
 
 ## [2023-05-01] - v1.92.0
 

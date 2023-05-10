@@ -1,3 +1,14 @@
+
+## [2023-05-10] - v0.92.0
+
+### Added:
+- Ability download DNS zone file #9075
+- React Query - Linodes - Landing #9062
+- React Query - Linodes - Detail - Backups #9079
+
+### Fixed:
+- Show error for PayPal payments #9058
+
 ## [2023-05-01] - v0.91.0
 
 ### Added:
