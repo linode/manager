@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  filter: Filter;
+  filter?: Filter;
   entityId?: number;
   errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
