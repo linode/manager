@@ -1,6 +1,6 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -106,10 +106,7 @@ interface Props {
   errors?: APIError[];
 }
 
-type CombinedProps = Props &
-  LinodeContextProps &
-  WithStyles<ClassNames> &
-  ProviderContext;
+type CombinedProps = Props & LinodeContextProps & WithStyles<ClassNames>;
 
 const defaultDrawerState: DrawerState = {
   open: false,

@@ -1,5 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -72,7 +72,6 @@ interface StateProps {
 
 type CombinedProps = DispatchProps &
   StateProps &
-  ProviderContext &
   WithSpecificTypesProps &
   WithQueryClientProps &
   WithAccountSettingsProps;

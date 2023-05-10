@@ -29,8 +29,6 @@ describe('LinodeResize', () => {
       grants={
         { data: grantsFactory.build() } as UseQueryResult<Grants, APIError[]>
       }
-      closeSnackbar={jest.fn()}
-      enqueueSnackbar={jest.fn()}
       {...reactRouterProps}
       classes={{
         title: '',

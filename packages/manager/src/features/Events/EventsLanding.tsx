@@ -1,6 +1,6 @@
 import { Event, getEvents } from '@linode/api-v4/lib/account';
 import { ResourcePage } from '@linode/api-v4/lib/types';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -61,7 +61,7 @@ interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
 }
 
-type CombinedProps = Props & StateProps & ProviderContext;
+type CombinedProps = Props & StateProps;
 
 const appendToEvents = (oldEvents: Event[], newEvents: Event[]) =>
   rCompose<Event[], Event[], Event[], Event[]>(
@@ -173,7 +173,7 @@ export const reducer: EventsReducer = (state, action) => {
 
 export const EventsLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-
+  const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [loadMoreEvents, setLoadMoreEvents] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);

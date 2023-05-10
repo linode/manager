@@ -3,7 +3,6 @@ import {
   LongviewClient,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import { ProviderContext } from 'notistack';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -79,14 +78,12 @@ interface Props {
 export type CombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
-  ProviderContext &
   StateProps;
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = (props) => {
   const { getLongviewClients } = props;
-
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: accountSettings } = useAccountSettings();

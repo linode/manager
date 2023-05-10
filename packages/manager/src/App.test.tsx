@@ -24,8 +24,6 @@ it('renders without crashing.', () => {
             {...reactRouterProps}
             linodes={[]}
             isLoggedInAsCustomer={false}
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
             location={{
               pathname: '',
               hash: '',

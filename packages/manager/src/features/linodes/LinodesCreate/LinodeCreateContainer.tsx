@@ -12,7 +12,7 @@ import {
 import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -115,8 +115,7 @@ interface State {
   userData: string | undefined;
 }
 
-type CombinedProps = ProviderContext &
-  CreateType &
+type CombinedProps = CreateType &
   LinodeActionsProps &
   ImagesProps &
   WithTypesProps &

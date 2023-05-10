@@ -1,5 +1,5 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -19,12 +19,13 @@ interface Props {
   openDialog: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & ProviderContext;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = (
   props
 ) => {
   const theme = useTheme<Theme>();
+  const { enqueueSnackbar } = useSnackbar();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { clusterId, clusterLabel, openDialog } = props;

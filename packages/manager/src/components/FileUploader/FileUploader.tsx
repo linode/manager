@@ -1,12 +1,11 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'src/hooks/types';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -115,7 +114,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+interface FileUploaderProps {
   label: string;
   description?: string;
   isCloudInit?: boolean;
@@ -128,9 +127,7 @@ interface Props {
   onSuccess?: () => void;
 }
 
-type CombinedProps = Props & ProviderContext;
-
-const FileUploader: React.FC<CombinedProps> = (props) => {
+const FileUploader = (props: FileUploaderProps) => {
   const {
     label,
     description,
@@ -141,7 +138,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     setErrors,
     onSuccess,
   } = props;
-
+  const { enqueueSnackbar } = useSnackbar();
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
   const queryClient = useQueryClient();
   const { mutateAsync: uploadImage } = useUploadImageQuery({
@@ -476,9 +473,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(React.memo);
-
-export default enhanced(FileUploader);
+export default React.memo(FileUploader);
 
 const recordImageAnalytics = (
   action: 'start' | 'success' | 'fail',

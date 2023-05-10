@@ -37,7 +37,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import Tab from 'src/components/core/ReachTab';
 import SafeTabPanel from 'src/components/SafeTabPanel/SafeTabPanel';
 import TabList from 'src/components/core/ReachTabList';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import {
   withQueryClient,
   WithQueryClientProps,
@@ -126,7 +126,7 @@ interface State {
   tabs?: string[];
 }
 
-type CombinedProps = Props & ProviderContext & WithQueryClientProps;
+type CombinedProps = Props & WithQueryClientProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {

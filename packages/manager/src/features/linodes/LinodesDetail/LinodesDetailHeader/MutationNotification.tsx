@@ -1,5 +1,5 @@
 import { Disk, LinodeSpecs, startMutation } from '@linode/api-v4/lib/linodes';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -38,7 +38,6 @@ interface Props {
 type CombinedProps = Props &
   MutationDrawerProps &
   ContextProps &
-  ProviderContext &
   DispatchProps &
   WithStyles<ClassNames>;
 
@@ -56,7 +55,7 @@ const MutationNotification: React.FC<CombinedProps> = (props) => {
     mutationDrawerOpen,
     updateLinode,
   } = props;
-
+  const { enqueueSnackbar } = useSnackbar();
   const typesQuery = useSpecificTypes(
     linodeType?.successor ? [linodeType?.successor] : []
   );

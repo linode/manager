@@ -6,7 +6,6 @@ import {
   linodeReboot,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { ProviderContext } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -74,7 +73,6 @@ const styles = (theme: Theme) =>
 type CombinedProps = LinodeContext &
   FeatureFlagConsumerProps &
   WithStyles<ClassNames> &
-  ProviderContext &
   StateProps;
 
 interface State {

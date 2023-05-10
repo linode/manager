@@ -2,7 +2,7 @@ import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -59,7 +59,6 @@ interface State {
 type CombinedProps = Props &
   StateProps &
   RouteComponentProps &
-  ProviderContext &
   FeatureFlagConsumerProps &
   PreferencesStateProps &
   PreferencesActionsProps;

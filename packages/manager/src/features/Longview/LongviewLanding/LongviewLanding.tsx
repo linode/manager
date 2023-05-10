@@ -6,7 +6,7 @@ import {
   ActiveLongviewPlan,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
@@ -28,11 +28,12 @@ import SubscriptionDialog from './SubscriptionDialog';
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
-type CombinedProps = LongviewProps & RouteComponentProps<{}> & ProviderContext;
+type CombinedProps = LongviewProps & RouteComponentProps<{}>;
 
 export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   props
 ) => {
+  const { enqueueSnackbar } = useSnackbar();
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
     () => getActiveLongviewPlan().then((response) => response),
     {}

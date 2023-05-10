@@ -20,7 +20,7 @@ const StyledVariants = styled(MaterialDesignContent)(({ theme }) => ({
     borderLeft: `6px solid ${theme.palette.primary.main}`,
   },
   '&.notistack-MuiContent-success': {
-    borderLeft: `6px solid ${theme.color.green}`,
+    borderLeft: `6px solid ${theme.palette.primary.main}`, // TODO: UX is revisiting whether this should be 'green'
   },
   '&.notistack-MuiContent-warning': {
     borderLeft: `6px solid ${theme.palette.warning.dark}`,

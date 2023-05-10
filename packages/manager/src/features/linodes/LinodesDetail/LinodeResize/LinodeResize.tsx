@@ -1,7 +1,7 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import { Disk, LinodeStatus, resizeLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { enqueueSnackbar, ProviderContext } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -118,7 +118,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   DispatchProps &
   PreferencesProps &
-  ProviderContext &
   StateProps &
   WithProfileProps;
 
