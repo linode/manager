@@ -1,23 +1,3 @@
-## [2023-12-12] - v1.93.0
-
-
-### Changed:
-
-- iza chang-a ([#9104](https://github.com/linode/manager/pull/9104))
-
-### Tech Stories:
-
-- izza techa story! ([#9104](https://github.com/linode/manager/pull/9104))
-- Izza anotha techa story, ya? ([#9104](https://github.com/linode/manager/pull/9104))
-
-### Added:
-
-- Added a thing ([#9104](https://github.com/linode/manager/pull/9104))
-
-### Removed:
-
-- removed a thing ([#9104](https://github.com/linode/manager/pull/9104))
-
 # Change Log
 
 All notable changes to this project will be documented in this file.
