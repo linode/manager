@@ -89,6 +89,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
 
   React.useEffect(() => {
     if (open) {
+      formik.resetForm();
       reset();
     }
   }, [open]);

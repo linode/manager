@@ -48,6 +48,7 @@ export const EditIPRDNSDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       reset();
+      formik.resetForm();
     }
   }, [open]);
 
