@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
 import { defineConfig } from 'cypress';
 import { resolve } from 'path';
-// switch to import syntax when esModuleInterop": true
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const vitePreprocessor = require('cypress-vite');
 import * as dotenv from 'dotenv';
+
+// Dependencies used in hooks have to use `require()` syntax.
+const vitePreprocessor = require('cypress-vite'); // eslint-disable-line
+const fs = require('fs'); // eslint-disable-line
 
 /**
  * Returns a configuration object containing environment variables.
@@ -82,6 +83,12 @@ export default defineConfig({
       // Display warning if running an unsupported version of Node JS.
       nodeVersionCheck();
 
+      // Get configuration by loading .env file, if one exists.
+      const configWithEnv = {
+        ...config,
+        ...loadConfiguration(),
+      };
+
       on(
         'file:preprocessor',
         vitePreprocessor(resolve(__dirname, 'cypress', 'vite.config.ts'))
@@ -105,11 +112,29 @@ export default defineConfig({
         return launchOptions;
       });
 
-      // Return configuration by loading .env file, if one exists.
-      return {
-        ...config,
-        ...loadConfiguration(),
-      };
+      /*
+       * Delete recordings for any specs that passed without requiring any
+       * retries (ie only keep recordings for failed and flaky tests) during
+       * runs in CI environments.
+       *
+       * This should save time by avoiding compressing and uploading recordings
+       * that we don't need.
+       */
+      on('after:spec', (spec, results) => {
+        if (results?.video) {
+          const isFailedOrFlaky = results.tests.some((testResult) => {
+            return testResult.attempts.some(
+              (attempt) => attempt.state === 'failed'
+            );
+          });
+
+          if (!isFailedOrFlaky && configWithEnv.env['CI']) {
+            fs.unlinkSync(results.video);
+          }
+        }
+      });
+
+      return configWithEnv;
     },
   },
 });
