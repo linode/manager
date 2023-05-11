@@ -4,9 +4,12 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import MarkdownIt from 'markdown-it';
 import { fileURLToPath } from 'url';
+import { promisify } from 'util';
 import { readFile } from 'fs/promises';
 
 const md = new MarkdownIt();
+const readdir = promisify(fs.readdir);
+const unlink = promisify(fs.unlink);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const separator = (color = 'white') =>
@@ -65,61 +68,71 @@ inquirer
         process.exit(1);
       }
 
-      files.forEach((file) => {
-        // Skipping the readme file
-        if (file === 'README.md') {
-          return;
-        }
+      try {
+        files.forEach((file) => {
+          // Skipping the readme file
+          if (file === 'README.md') {
+            return;
+          }
 
-        // Logic to parse the changeset file and generate the changelog content
-        const filePath = path.join(changesetsDirectory, file);
-        const content = fs.readFileSync(filePath, 'utf-8');
-        const matches = content.match(/"@linode\/manager": ([^\n]+)/);
-        const changesetType = matches ? matches[1].trim() : '';
+          // Logic to parse the changeset file and generate the changelog content
+          const filePath = path.join(changesetsDirectory, file);
+          const content = fs.readFileSync(filePath, 'utf-8');
+          const matches = content.match(/"@linode\/manager": ([^\n]+)/);
+          const changesetType = matches ? matches[1].trim() : '';
 
-        if (!changesetEntries[changesetType]) {
-          changesetEntries[changesetType] = [];
-        }
+          if (!changesetEntries[changesetType]) {
+            changesetEntries[changesetType] = [];
+          }
 
-        changesetEntries[changesetType].push({
-          content,
-          filePath,
+          changesetEntries[changesetType].push({
+            content,
+            filePath,
+          });
         });
-      });
 
-      // Generate the final changelog content
-      populateChangelogEntries(changesetEntries, changelogContent);
+        // Generate the final changelog content
+        populateChangelogEntries(changesetEntries, changelogContent);
 
-      // Read the existing changelog content
-      let existingChangelogContent = '';
-      if (fs.existsSync(changelogPath)) {
-        existingChangelogContent = fs.readFileSync(changelogPath, 'utf-8');
+        // Read the existing changelog content
+        let existingChangelogContent = '';
+        if (fs.existsSync(changelogPath)) {
+          existingChangelogContent = fs.readFileSync(changelogPath, 'utf-8');
+        }
+
+        // Find the index of the first entry
+        const firstEntryIndex = existingChangelogContent.indexOf('## [');
+
+        // Prepare the updated changelog content
+        let updatedChangelogContent;
+        if (firstEntryIndex !== -1) {
+          updatedChangelogContent = `${existingChangelogContent.slice(
+            0,
+            firstEntryIndex
+          )}${changelogContent.join('\n')}\n\n${existingChangelogContent.slice(
+            firstEntryIndex
+          )}`;
+        } else {
+          updatedChangelogContent = `${changelogContent.join(
+            '\n'
+          )}\n\n${existingChangelogContent}`;
+        }
+
+        // Write the updated changelog content
+        fs.writeFileSync(changelogPath, updatedChangelogContent);
+
+        console.log(separator('green'));
+        console.error(chalk.greenBright('Changelog generated successfully!'));
+        console.log(separator('green'));
+      } catch (e) {
+        console.log(separator());
+        console.error(chalk.red(e));
+        console.log(separator());
+        process.exit(1);
       }
 
-      // Find the index of the first entry
-      const firstEntryIndex = existingChangelogContent.indexOf('## [');
-
-      // Prepare the updated changelog content
-      let updatedChangelogContent;
-      if (firstEntryIndex !== -1) {
-        updatedChangelogContent = `${existingChangelogContent.slice(
-          0,
-          firstEntryIndex
-        )}${changelogContent.join('\n')}\n\n${existingChangelogContent.slice(
-          firstEntryIndex
-        )}`;
-      } else {
-        updatedChangelogContent = `${changelogContent.join(
-          '\n'
-        )}\n\n${existingChangelogContent}`;
-      }
-
-      // Write the updated changelog content
-      fs.writeFileSync(changelogPath, updatedChangelogContent);
-
-      console.log(separator('green'));
-      console.error(chalk.greenBright('Changelog generated successfully!'));
-      console.log(separator('green'));
+      // Delete the changeset files
+      deleteOldChangesets();
     });
   })
   .catch((error) => {
@@ -196,5 +209,38 @@ function populateChangelogEntries(entries, changelogContent) {
     console.error(chalk.red(e));
     console.log(separator());
     process.exit(1);
+  }
+}
+
+/**
+ * Populates the changelog content with the provided entries.
+ * @returns {void} Deletes the changeset files.
+ */
+async function deleteOldChangesets() {
+  try {
+    const files = await readdir(changesetsDirectory);
+
+    for (const file of files) {
+      if (file !== 'README.md') {
+        const filePath = path.join(changesetsDirectory, file);
+        (async () => {
+          try {
+            await unlink(filePath);
+            console.log(`Deleted: ${filePath}`);
+          } catch (error) {
+            console.error(`Error occurred while deleting ${filePath}:`, error);
+          }
+        })();
+      }
+    }
+
+    console.log(separator('green'));
+    console.log(chalk.greenBright('Deleted all changesets!'));
+    console.log(
+      chalk.greenBright('You can now commit the changesets and the changelog.')
+    );
+    console.log(separator());
+  } catch (error) {
+    console.error('Error occurred while reading directory:', error);
   }
 }
