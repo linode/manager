@@ -1,28 +1,10 @@
-import { ipResponse } from 'src/__data__/ipResponse';
 import { ipAddressFactory } from 'src/factories/networking';
 import {
   createType,
   ipResponseToDisplayRows,
   listIPv6InRange,
-  uniqByIP,
 } from './LinodeNetworking';
 import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
-
-const {
-  private: _privateIPs,
-  public: _publicIPs,
-  shared: _sharedIPs,
-  reserved: _reservedIPs,
-} = ipResponse.ipv4;
-
-describe('Linode Networking tab', () => {
-  it('should remove duplicate values from lists of IP addresses', () => {
-    expect(uniqByIP(_privateIPs)).toHaveLength(1);
-    expect(uniqByIP(_publicIPs)).toHaveLength(2);
-    expect(uniqByIP(_sharedIPs)).toHaveLength(2);
-    expect(uniqByIP(_reservedIPs)).toHaveLength(0);
-  });
-});
 
 describe('listIPv6InRange utility function', () => {
   const ipv4List = ipAddressFactory.buildList(4);
