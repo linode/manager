@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Tech Stories:
+- React Query - Linodes - Networking #9046
+
+## [2023-05-15] - v1.93.0
+
 ### Added:
 - Resource links to empty state Volumes landing page #9065
 - Resource links to empty state Firewalls landing page #9078
