@@ -36,7 +36,7 @@ interface Props {
   currentTypeInfo: MutateInfo;
   linodeId: number;
   loading: boolean;
-  error: string;
+  error: string | undefined;
   estimatedTimeToUpgradeInMins: number;
   isMovingFromSharedToDedicated: boolean;
 }
