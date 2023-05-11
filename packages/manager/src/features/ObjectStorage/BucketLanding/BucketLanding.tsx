@@ -16,7 +16,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
-import TransferDisplay from 'src/components/TransferDisplay';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import useOpenClose from 'src/hooks/useOpenClose';
 import {
