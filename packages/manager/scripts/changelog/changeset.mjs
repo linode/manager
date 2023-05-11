@@ -81,7 +81,8 @@ async function generateChangeset() {
   await writeFileAsync(changesetFile, changesetContent, { encoding: 'utf-8' });
 
   console.log(separator('green'));
-  console.error(chalk.greenBright(`Changeset created!: ${changesetFile}`));
+  console.log(chalk.greenBright(`Changeset created!\n`));
+  console.log(chalk.blue(changesetFile));
   console.log(separator('green'));
 
   /**
@@ -94,7 +95,7 @@ async function generateChangeset() {
     execSync(commitCmd);
 
     console.log(separator('green'));
-    console.error(chalk.greenBright(`Changeset committed!: ${changesetFile}`));
+    console.log(chalk.greenBright(`Changeset committed!:\n${changesetFile}`));
     console.log(separator('green'));
   }
 }

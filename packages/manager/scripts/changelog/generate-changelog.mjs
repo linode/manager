@@ -57,6 +57,14 @@ inquirer
         throw err;
       }
 
+      // If only README.md in there, no changeset(s), exit the process
+      if (files.length === 1) {
+        console.log(separator());
+        console.error(chalk.red('No Changeset files found.'));
+        console.log(separator());
+        process.exit(1);
+      }
+
       files.forEach((file) => {
         // Skipping the readme file
         if (file === 'README.md') {
@@ -88,11 +96,26 @@ inquirer
         existingChangelogContent = fs.readFileSync(changelogPath, 'utf-8');
       }
 
+      // Find the index of the first entry
+      const firstEntryIndex = existingChangelogContent.indexOf('## [');
+
+      // Prepare the updated changelog content
+      let updatedChangelogContent;
+      if (firstEntryIndex !== -1) {
+        updatedChangelogContent = `${existingChangelogContent.slice(
+          0,
+          firstEntryIndex
+        )}${changelogContent.join('\n')}\n\n${existingChangelogContent.slice(
+          firstEntryIndex
+        )}`;
+      } else {
+        updatedChangelogContent = `${changelogContent.join(
+          '\n'
+        )}\n\n${existingChangelogContent}`;
+      }
+
       // Write the updated changelog content
-      fs.writeFileSync(
-        changelogPath,
-        `${changelogContent.join('\n')}\n\n${existingChangelogContent}`
-      );
+      fs.writeFileSync(changelogPath, updatedChangelogContent);
 
       console.log(separator('green'));
       console.error(chalk.greenBright('Changelog generated successfully!'));
@@ -133,21 +156,6 @@ function initiateChangelogEntry(releaseDate, newVersion) {
 
   changelogContent.push(`## [${releaseDate}] - v${newVersion}\n`);
 
-  const types = ['Added', 'Changed', 'Fixed', 'Removed', 'Tech Stories'];
-
-  try {
-    types.forEach((type) => {
-      const entries = changesetEntries[type];
-      if (entries && entries.length > 0) {
-        changelogContent.push(`### ${type}:\n`);
-
-        changelogContent.push('\n');
-      }
-    });
-  } catch (e) {
-    console.log(e);
-  }
-
   return changelogContent;
 }
 
@@ -158,26 +166,35 @@ function initiateChangelogEntry(releaseDate, newVersion) {
  * @returns {void} Pushes the entries to the changelog content array.
  */
 function populateChangelogEntries(entries, changelogContent) {
-  Object.entries(entries).forEach(([type, entries]) => {
-    if (entries && entries.length > 0) {
-      changelogContent.push(`\n### ${type}:\n`);
-      entries.forEach(({ content }) => {
-        const tokens = md.parse(content);
-        let description = '';
-        for (const token of tokens) {
-          if (
-            token.type === 'inline' &&
-            token.content.includes('github.com/linode/manager/pull/')
-          ) {
-            description = token.content;
-            break;
-          }
-        }
+  try {
+    Object.entries(entries)
+      .sort()
+      .forEach(([type, entries]) => {
+        if (entries && entries.length > 0) {
+          changelogContent.push(`\n### ${type}:\n`);
+          entries.forEach(({ content }) => {
+            const tokens = md.parse(content);
+            let description = '';
+            for (const token of tokens) {
+              if (
+                token.type === 'inline' &&
+                token.content.includes('github.com/linode/manager/pull/')
+              ) {
+                description = token.content;
+                break;
+              }
+            }
 
-        if (description) {
-          changelogContent.push(`- ${description}`);
+            if (description) {
+              changelogContent.push(`- ${description}`);
+            }
+          });
         }
       });
-    }
-  });
+  } catch (e) {
+    console.log(separator());
+    console.error(chalk.red(e));
+    console.log(separator());
+    process.exit(1);
+  }
 }
