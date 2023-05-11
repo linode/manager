@@ -31,126 +31,141 @@ const currentVersion = parsedPackageJson.version;
 
 const changesetEntries = {};
 
+const { releaseDate } = await inquirer.prompt([
+  {
+    type: 'input',
+    name: 'releaseDate',
+    message: 'Enter the release date (YYYY-MM-DD):',
+    validate: (input) => {
+      if (!input.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return 'Please enter a valid date in the format YYYY-MM-DD.';
+      }
+
+      return true;
+    },
+  },
+]);
+const { semver } = await inquirer.prompt([
+  {
+    type: 'list',
+    name: 'semver',
+    message: 'Choose the type of version bump:',
+    choices: ['patch', 'minor', 'major'],
+  },
+]);
+
 /**
  * Generates the changelog content with the provided release date and version.
  */
-inquirer
-  .prompt([
-    {
-      type: 'input',
-      name: 'releaseDate',
-      message: 'Enter the release date (YYYY-MM-DD):',
-      validate: (input) => {
-        if (!input.match(/^\d{4}-\d{2}-\d{2}$/)) {
-          return 'Please enter a valid date in the format YYYY-MM-DD.';
-        }
+const newVersion = incrementVersion(currentVersion, semver);
+const changelogContent = initiateChangelogEntry(releaseDate, newVersion);
 
-        return true;
-      },
-    },
-  ])
-  .then((answers) => {
-    const releaseDate = answers.releaseDate;
-    const newVersion = incrementMinorVersion(currentVersion);
-    const changelogContent = initiateChangelogEntry(releaseDate, newVersion);
+// Parse the changeset files and generate the changelog content
+fs.readdir(changesetsDirectory, (err, files) => {
+  if (err) {
+    throw err;
+  }
 
-    // Parse the changeset files and generate the changelog content
-    fs.readdir(changesetsDirectory, (err, files) => {
-      if (err) {
-        throw err;
+  // If only README.md in there, no changeset(s), exit the process
+  if (files.length === 1) {
+    console.log(separator());
+    console.error(chalk.red('No Changeset files found.'));
+    console.log(separator());
+    process.exit(1);
+  }
+
+  try {
+    files.forEach((file) => {
+      // Skipping the readme file
+      if (file === 'README.md') {
+        return;
       }
 
-      // If only README.md in there, no changeset(s), exit the process
-      if (files.length === 1) {
-        console.log(separator());
-        console.error(chalk.red('No Changeset files found.'));
-        console.log(separator());
-        process.exit(1);
+      // Logic to parse the changeset file and generate the changelog content
+      const filePath = path.join(changesetsDirectory, file);
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const matches = content.match(/"@linode\/manager": ([^\n]+)/);
+      const changesetType = matches ? matches[1].trim() : '';
+
+      if (!changesetEntries[changesetType]) {
+        changesetEntries[changesetType] = [];
       }
 
-      try {
-        files.forEach((file) => {
-          // Skipping the readme file
-          if (file === 'README.md') {
-            return;
-          }
-
-          // Logic to parse the changeset file and generate the changelog content
-          const filePath = path.join(changesetsDirectory, file);
-          const content = fs.readFileSync(filePath, 'utf-8');
-          const matches = content.match(/"@linode\/manager": ([^\n]+)/);
-          const changesetType = matches ? matches[1].trim() : '';
-
-          if (!changesetEntries[changesetType]) {
-            changesetEntries[changesetType] = [];
-          }
-
-          changesetEntries[changesetType].push({
-            content,
-            filePath,
-          });
-        });
-
-        // Generate the final changelog content
-        populateChangelogEntries(changesetEntries, changelogContent);
-
-        // Read the existing changelog content
-        let existingChangelogContent = '';
-        if (fs.existsSync(changelogPath)) {
-          existingChangelogContent = fs.readFileSync(changelogPath, 'utf-8');
-        }
-
-        // Find the index of the first entry
-        const firstEntryIndex = existingChangelogContent.indexOf('## [');
-
-        // Prepare the updated changelog content
-        let updatedChangelogContent;
-        if (firstEntryIndex !== -1) {
-          updatedChangelogContent = `${existingChangelogContent.slice(
-            0,
-            firstEntryIndex
-          )}${changelogContent.join('\n')}\n\n${existingChangelogContent.slice(
-            firstEntryIndex
-          )}`;
-        } else {
-          updatedChangelogContent = `${changelogContent.join(
-            '\n'
-          )}\n\n${existingChangelogContent}`;
-        }
-
-        // Write the updated changelog content
-        fs.writeFileSync(changelogPath, updatedChangelogContent);
-
-        console.log(separator('green'));
-        console.error(chalk.greenBright('Changelog generated successfully!'));
-        console.log(separator('green'));
-      } catch (e) {
-        console.log(separator());
-        console.error(chalk.red(e));
-        console.log(separator());
-        process.exit(1);
-      }
-
-      // Delete the changeset files
-      deleteOldChangesets();
+      changesetEntries[changesetType].push({
+        content,
+        filePath,
+      });
     });
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+
+    // Generate the final changelog content
+    populateChangelogEntries(changesetEntries, changelogContent);
+
+    // Read the existing changelog content
+    let existingChangelogContent = '';
+    if (fs.existsSync(changelogPath)) {
+      existingChangelogContent = fs.readFileSync(changelogPath, 'utf-8');
+    }
+
+    // Find the index of the first entry
+    const firstEntryIndex = existingChangelogContent.indexOf('## [');
+
+    // Prepare the updated changelog content
+    let updatedChangelogContent;
+    if (firstEntryIndex !== -1) {
+      updatedChangelogContent = `${existingChangelogContent.slice(
+        0,
+        firstEntryIndex
+      )}${changelogContent.join('\n')}\n\n${existingChangelogContent.slice(
+        firstEntryIndex
+      )}`;
+    } else {
+      updatedChangelogContent = `${changelogContent.join(
+        '\n'
+      )}\n\n${existingChangelogContent}`;
+    }
+
+    // Write the updated changelog content
+    fs.writeFileSync(changelogPath, updatedChangelogContent);
+
+    console.log(separator('green'));
+    console.error(chalk.greenBright('Changelog generated successfully!'));
+    console.log(separator('green'));
+  } catch (e) {
+    console.log(separator());
+    console.error(chalk.red(e));
+    console.log(separator());
+    process.exit(1);
+  }
+
+  // Delete the changeset files
+  deleteOldChangesets();
+});
 
 /**
- * Increments the minor version of a semantic version string.
+ * Increments the version of a semantic version string.
  * @param {string} version - The current version.
- * @returns {string} The new version with the incremented minor version.
+ * @returns {string} The new version with the incremented semver version.
  */
-function incrementMinorVersion(version) {
+function incrementVersion(version, semver) {
   const parts = version.split('.');
 
   try {
-    const minorVersion = parseInt(parts[1], 0);
+    const patchVersion = parseInt(parts[2], 10);
+    const minorVersion = parseInt(parts[1], 10);
+    const majorVersion = parseInt(parts[0], 10);
 
-    parts[1] = (minorVersion + 1).toString();
+    if (semver === 'patch') {
+      parts[2] = (patchVersion + 1).toString();
+    } else if (semver === 'minor') {
+      parts[2] = '0';
+      parts[1] = (minorVersion + 1).toString();
+    } else if (semver === 'major') {
+      parts[2] = '0';
+      parts[1] = '0';
+      parts[0] = (majorVersion + 1).toString();
+    } else {
+      throw new Error('Invalid semver argument');
+    }
   } catch (e) {
     console.log(e);
   }
