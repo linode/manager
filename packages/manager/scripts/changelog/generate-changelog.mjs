@@ -30,6 +30,9 @@ const currentSemver = parsedPackageJson.version;
 
 const changesetEntries = {};
 
+/**
+ * Prompt the user for the release date and the type of version bump.
+ */
 const { releaseDate } = await inquirer.prompt([
   {
     type: 'input',
@@ -44,10 +47,10 @@ const { releaseDate } = await inquirer.prompt([
     },
   },
 ]);
-const { semver } = await inquirer.prompt([
+const { semverBump } = await inquirer.prompt([
   {
     type: 'list',
-    name: 'semver',
+    name: 'semverBump',
     message: 'Choose the type of version bump:',
     choices: ['patch', 'minor', 'major'],
   },
