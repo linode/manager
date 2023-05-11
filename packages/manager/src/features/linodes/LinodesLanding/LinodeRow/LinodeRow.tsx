@@ -30,6 +30,7 @@ import { useStyles } from './LinodeRow.style';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 type Props = Linode & { handlers: LinodeHandlers };
 
@@ -143,7 +144,9 @@ export const LinodeRow = (props: Props) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell noWrap>{linodeType?.label ?? type}</TableCell>
+        <TableCell noWrap>
+          {linodeType?.label ? formatStorageUnits(linodeType.label) : type}
+        </TableCell>
         <TableCell data-qa-ips className={classes.ipCellWrapper}>
           <IPAddress ips={ipv4} />
         </TableCell>

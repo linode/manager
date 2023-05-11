@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { linodeFactory } from '@src/factories';
 import { createLinode } from 'support/api/linodes';
 import {
   getClick,
@@ -8,6 +9,7 @@ import {
   fbtVisible,
   containsVisible,
 } from 'support/helpers';
+import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { selectRegionString } from 'support/ui/constants';
 import { apiMatcher } from 'support/util/intercepts';
@@ -87,7 +89,7 @@ describe('Migrate Linode With Firewall', () => {
       });
     }).as('getFirewalls');
 
-    const fakeLinodeData = {
+    const fakeLinodeData = linodeFactory.build({
       id: fakeLinodeId,
       label: 'debian-us-central',
       group: '',
@@ -121,7 +123,7 @@ describe('Migrate Linode With Firewall', () => {
       hypervisor: 'kvm',
       watchdog_enabled: true,
       tags: [],
-    };
+    });
 
     // modify incoming response
     cy.intercept(apiMatcher('regions*'), (req) => {
@@ -140,16 +142,7 @@ describe('Migrate Linode With Firewall', () => {
     ).as('migrateReq');
 
     // modify incoming response
-    cy.intercept(apiMatcher('linode/instances/*'), (req) => {
-      req.reply((res) => {
-        res.send({
-          data: [fakeLinodeData],
-          page: 1,
-          pages: 1,
-          results: 1,
-        });
-      });
-    }).as('getLinodes');
+    mockGetLinodeDetails(fakeLinodeId, fakeLinodeData).as('getLinode');
 
     // modify incoming response
     cy.intercept(
@@ -163,7 +156,7 @@ describe('Migrate Linode With Firewall', () => {
     ).as('getLinode');
 
     cy.visitWithLogin(`/linodes/${fakeLinodeId}/migrate`);
-    cy.wait('@getLinodes');
+    cy.wait('@getLinode');
     cy.wait('@getRegions');
     cy.findByText('Dallas, TX').should('be.visible');
     getClick('[data-qa-checked="false"]');

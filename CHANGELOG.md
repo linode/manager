@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Tech Stories:
 - React Query - Linodes - Networking #9046
+- React Query - Linodes - Details Header #9099
 
 ## [2023-05-15] - v1.93.0
 

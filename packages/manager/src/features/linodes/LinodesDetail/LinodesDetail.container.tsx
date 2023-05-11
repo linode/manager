@@ -13,22 +13,21 @@ import { ThunkDispatch } from 'src/store/types';
 import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 import LinodesDetail from './LinodesDetail';
 
-interface Props {
-  linodeId?: string;
-}
+// @todo delete this file after we react queryify most linode features
+// React Query will fetch data when it needs to. A file like this won't be needed
 
 /**
  * We want to hold off loading this screen until Linode data is available.
  * If we have recently requested all Linode data, we're good. If not,
  * we show a loading spinner until the requests are complete.
  */
-export const LinodesDetailContainer: React.FC<Props> = (props) => {
+export const LinodesDetailContainer = () => {
   const { linodes } = useLinodes();
   const dispatch = useDispatch<ThunkDispatch>();
   const { account } = useAccountManagement();
 
   const params = useParams<{ linodeId: string }>();
-  const linodeId = props.linodeId ? props.linodeId : params.linodeId;
+  const linodeId = params.linodeId;
 
   const { isLoading: imagesLoading } = useAllImagesQuery({}, {});
 
@@ -72,7 +71,7 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
     return <CircleProgress />;
   }
 
-  return <LinodesDetail linodeId={linodeId} />;
+  return <LinodesDetail />;
 };
 
 export default React.memo(LinodesDetailContainer);
