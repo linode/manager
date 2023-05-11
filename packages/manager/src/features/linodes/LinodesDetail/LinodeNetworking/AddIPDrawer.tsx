@@ -1,6 +1,4 @@
-import { allocateIPAddress } from '@linode/api-v4/lib/linodes';
-import { createIPv6Range, IPv6Prefix } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
+import { IPv6Prefix } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -8,17 +6,21 @@ import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Radio from 'src/components/core/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/Link';
+import {
+  useAllocateIPMutation,
+  useCreateIPv6RangeMutation,
+  useLinodeIPsQuery,
+} from 'src/queries/linodes/networking';
 import { Notice } from 'src/components/Notice/Notice';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(2),
   },
@@ -89,44 +91,43 @@ const tooltipCopy: Record<IPType, JSX.Element | null> = {
 interface Props {
   open: boolean;
   onClose: () => void;
-  linodeID: number;
-  hasPrivateIPAddress: boolean;
-  onSuccess: () => Promise<void>[];
+  linodeId: number;
   readOnly: boolean;
 }
 
-type CombinedProps = Props;
+const AddIPDrawer = (props: Props) => {
+  const { open, onClose, readOnly, linodeId } = props;
+  const { classes } = useStyles();
 
-const AddIPDrawer: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const {
+    mutateAsync: allocateIPAddress,
+    isLoading: ipv4Loading,
+    error: ipv4Error,
+    reset: resetIPv4,
+  } = useAllocateIPMutation(linodeId);
+
+  const {
+    mutateAsync: createIPv6Range,
+    isLoading: ipv6Loading,
+    error: ipv6Error,
+    reset: resetIPv6,
+  } = useCreateIPv6RangeMutation();
 
   const [selectedIPv4, setSelectedIPv4] = React.useState<IPType | null>(null);
-  const [submittingIPv4, setSubmittingIPv4] = React.useState(false);
-  const [errorMessageIPv4, setErrorMessageIPv4] = React.useState('');
 
   const [
     selectedIPv6Prefix,
     setSelectedIPv6Prefix,
   ] = React.useState<IPv6Prefix | null>(null);
 
-  const [submittingIPv6, setSubmittingIPv6] = React.useState(false);
-  const [errorMessageIPv6, setErrorMessageIPv6] = React.useState('');
-
-  const {
-    open,
-    onClose,
-    linodeID,
-    hasPrivateIPAddress,
-    onSuccess,
-    readOnly,
-  } = props;
+  const { data: ips } = useLinodeIPsQuery(linodeId, open);
 
   React.useEffect(() => {
     if (open) {
       setSelectedIPv4(null);
       setSelectedIPv6Prefix(null);
-      setErrorMessageIPv4('');
-      setErrorMessageIPv6('');
+      resetIPv4();
+      resetIPv6();
     }
   }, [open]);
 
@@ -144,44 +145,24 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
     setSelectedIPv6Prefix(value);
   };
 
-  const handleAllocateIPv4 = () => {
-    setSubmittingIPv4(true);
-    setErrorMessageIPv4('');
-
+  const handleAllocateIPv4 = async () => {
     // Only IPv4 addresses can currently be allocated.
-    allocateIPAddress(linodeID, {
+    await allocateIPAddress({
       type: 'ipv4',
       public: selectedIPv4 === 'v4Public',
-    })
-      .then((_) => {
-        setSubmittingIPv4(false);
-        Promise.all(onSuccess());
-        onClose();
-      })
-      .catch((errResponse) => {
-        setSubmittingIPv4(false);
-        setErrorMessageIPv4(getErrorStringOrDefault(errResponse));
-      });
+    });
+    onClose();
   };
 
-  const handleCreateIPv6Range = () => {
-    setSubmittingIPv6(true);
-    setErrorMessageIPv6('');
-
-    createIPv6Range({
-      linode_id: linodeID,
+  const handleCreateIPv6Range = async () => {
+    await createIPv6Range({
+      linode_id: linodeId,
       prefix_length: Number(selectedIPv6Prefix) as IPv6Prefix,
-    })
-      .then((_: any) => {
-        setSubmittingIPv6(false);
-        Promise.all(onSuccess());
-        onClose();
-      })
-      .catch((errResponse: APIError[]) => {
-        setSubmittingIPv6(false);
-        setErrorMessageIPv6(getErrorStringOrDefault(errResponse));
-      });
+    });
+    onClose();
   };
+
+  const hasPrivateIPAddress = ips !== undefined && ips.ipv4.private.length > 0;
 
   const disabledIPv4 =
     (selectedIPv4 === 'v4Private' && hasPrivateIPAddress) ||
@@ -202,7 +183,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
 
     const onClick = IPv4 ? handleAllocateIPv4 : handleCreateIPv6Range;
     const disabled = IPv4 ? disabledIPv4 : disabledIPv6;
-    const submitting = IPv4 ? submittingIPv4 : submittingIPv6;
+    const submitting = IPv4 ? ipv4Loading : ipv6Loading;
 
     return (
       <Button
@@ -221,8 +202,8 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
     <Drawer open={open} onClose={onClose} title="Add an IP Address">
       <React.Fragment>
         <Typography variant="h2">IPv4</Typography>
-        {errorMessageIPv4 && (
-          <Notice error text={errorMessageIPv4} spacingTop={8} />
+        {Boolean(ipv4Error) && (
+          <Notice error text={ipv4Error?.[0].reason} spacingTop={8} />
         )}
         <Typography variant="h3" className={classes.ipSubheader}>
           Select type
@@ -262,8 +243,8 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
         <Typography variant="h2" className={classes.ipv6}>
           IPv6
         </Typography>
-        {errorMessageIPv6 && (
-          <Notice error text={errorMessageIPv6} spacingTop={8} />
+        {Boolean(ipv6Error) && (
+          <Notice error text={ipv6Error?.[0].reason} spacingTop={8} />
         )}
         <Typography variant="h3" className={classes.ipSubheader}>
           Select prefix

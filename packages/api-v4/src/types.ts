@@ -50,7 +50,7 @@ type LinodeFilter =
   | {
       [key in keyof FilterConditionTypes]: FilterConditionTypes[key];
     }
-  | { [key: string]: string | number | boolean | Filter | undefined };
+  | { [key: string]: string | number | boolean | Filter | null | undefined };
 
 // const filter: Filter = {
 //   '+or': [{ vcpus: 1 }, { class: 'standard' }],
