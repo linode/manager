@@ -27,6 +27,10 @@ const StyledVariants = styled(MaterialDesignContent)(({ theme }) => ({
   },
 }));
 
+interface CustomSnackbarProps extends SnackbarProviderProps {
+  'data-qa-toast'?: boolean;
+}
+
 export const Snackbar = (props: SnackbarProviderProps) => {
   const { children, ...rest } = props;
 
@@ -43,8 +47,9 @@ export const Snackbar = (props: SnackbarProviderProps) => {
 
   return (
     <SnackbarProvider
-      ref={notistackRef}
       {...rest}
+      ref={notistackRef}
+      SnackbarProps={{ 'data-qa-toast': true } as CustomSnackbarProps}
       action={(key) => (
         <CloseSnackbar
           onClick={onClickDismiss(key)}

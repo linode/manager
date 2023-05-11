@@ -54,10 +54,9 @@ const AppWrapper = (props: RouteComponentProps) => (
     <SplashScreen />
     <Snackbar
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      maxSnack={3}
       autoHideDuration={4000}
-      data-qa-toast
       hideIconVariant={true}
+      maxSnack={3}
     >
       <App location={props.location} history={props.history} />
     </Snackbar>
