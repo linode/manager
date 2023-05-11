@@ -1,18 +1,12 @@
 import fs from 'fs';
 import inquirer from 'inquirer';
-import path from 'path';
-import process from 'process';
 import { execSync } from 'child_process';
-import { fileURLToPath } from 'url';
 import { getPullRequestId } from './utils/getPullRequestId.mjs';
 import { promisify } from 'util';
-import { consoleError, consoleLog, logSeparator } from './utils/chalk.mjs';
+import { logger } from './utils/logger.mjs';
+import { CHANGESET_DIRECTORY, CHANGESET_TYPES } from './utils/constants.mjs';
 
 const writeFileAsync = promisify(fs.writeFile);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const changesetsDirectory = path.join(__dirname, '../../.changeset');
-const changesetTypes = ['Added', 'Fixed', 'Changed', 'Removed', 'Tech Stories'];
 
 async function generateChangeset() {
   /**
@@ -21,13 +15,11 @@ async function generateChangeset() {
   try {
     execSync('gh version');
   } catch (error) {
-    logSeparator();
-    consoleError('Error: The "gh" command-line tool is not installed.');
-    consoleLog(
-      'Please install it from https://github.com/cli/cli#installation\nand sign in with your GitHub account.'
-    );
-    logSeparator();
-    process.exit(1);
+    logger.error({
+      message: 'Error: The "gh" command-line tool is not installed.',
+      info:
+        'Please install it from https://github.com/cli/cli#installation\nand sign in with your GitHub account.',
+    });
   }
 
   /**
@@ -44,7 +36,7 @@ async function generateChangeset() {
       type: 'list',
       name: 'type',
       message: 'What type of change is this?',
-      choices: changesetTypes,
+      choices: CHANGESET_TYPES,
     },
   ]);
   const { description } = await inquirer.prompt([
@@ -68,7 +60,7 @@ async function generateChangeset() {
    */
   try {
     const prLink = `https://github.com/linode/manager/pull/${pullRequestId}`;
-    const changesetFile = `${changesetsDirectory}/${Date.now()}-${type
+    const changesetFile = `${CHANGESET_DIRECTORY}/${Date.now()}-${type
       .toLowerCase()
       .replace(/\s/g, '-')}.md`;
     const changesetContent = `---\n"@linode/manager": ${type}\n---\n\n${description} ([#${pullRequestId}](${prLink}))\n`;
@@ -76,14 +68,9 @@ async function generateChangeset() {
     await writeFileAsync(changesetFile, changesetContent, {
       encoding: 'utf-8',
     });
-
-    logSeparator('green');
-    consoleLog(`Changeset created!\n`, 'greenBright');
-    consoleLog(changesetFile, 'blue');
-    logSeparator('green');
+    logger.success({ message: 'Changeset created!', info: changesetFile });
   } catch (error) {
-    consoleError(error);
-    process.exit(1);
+    logger.error({ message: error });
   }
 
   /**
@@ -99,12 +86,9 @@ async function generateChangeset() {
     execSync(addCmd);
     execSync(commitCmd);
 
-    logSeparator('green');
-    consoleLog(`Changeset committed!:\n${changesetFile}`, 'greenBright');
-    logSeparator('green');
+    logger.success({ message: 'Changeset committed!', info: changesetFile });
   } catch (error) {
-    consoleError(error);
-    process.exit(1);
+    logger.error({ message: error });
   }
 }
 

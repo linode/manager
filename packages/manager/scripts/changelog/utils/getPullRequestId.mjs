@@ -1,6 +1,5 @@
-import process from 'process';
 import { execSync } from 'child_process';
-import { consoleError, logSeparator } from './chalk.mjs';
+import { logger } from './logger.mjs';
 
 /**
  * Utility to get the pull request number for the current branch.
@@ -17,11 +16,10 @@ export const getPullRequestId = async () => {
 
     return prNumberMatch ? parseInt(prNumberMatch[1], 10) : NaN;
   } catch (error) {
-    logSeparator();
-    consoleError(
-      "Failed to get pull request number.\nPlease open a pull request for the current branch and let's try this again!"
-    );
-    logSeparator();
-    process.exit(1);
+    logger.error({
+      message:
+        "Failed to get pull request number.\nPlease open a pull request for the current branch and let's try this again!",
+      info: error,
+    });
   }
 };

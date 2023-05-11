@@ -1,36 +1,38 @@
-import chalk from 'chalk';
-import path from 'path';
 import fs from 'fs';
 import inquirer from 'inquirer';
-import MarkdownIt from 'markdown-it';
-import { fileURLToPath } from 'url';
-import { promisify } from 'util';
+import path from 'path';
+import { deleteChangesets } from './utils/deleteChangesets.mjs';
+import { incrementSemver } from './utils/incrementSemver.mjs';
+import { initiateChangelogEntry } from './utils/initiateChangelogEntry.mjs';
+import { logger } from './utils/logger.mjs';
+import { populateChangelogEntry } from './utils/populateChangelogEntry.mjs';
 import { readFile } from 'fs/promises';
+import {
+  CHANGELOG_PATH,
+  CHANGESET_DIRECTORY,
+  PACKAGE_JSON_PATH,
+} from './utils/constants.mjs';
 
-const md = new MarkdownIt();
-const readdir = promisify(fs.readdir);
-const unlink = promisify(fs.unlink);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const separator = (color = 'white') =>
-  chalk[color]('\n======================================================\n');
+let packageJson;
 
-// Path to the changesets directory
-const changesetsDirectory = path.join(__dirname, '../../.changeset');
-// Path to the package.json file
-const packageJsonPath = path.join(__dirname, '../../package.json');
-// Path to the CHANGELOG.md file
-const changelogPath = path.join(__dirname, '../../CHANGELOG.md');
-
-// Read the package.json file
-const packageJson = await readFile(packageJsonPath, 'utf-8');
+try {
+  packageJson = await readFile(PACKAGE_JSON_PATH, 'utf-8');
+} catch (error) {
+  logger.error({
+    message: 'Error: Could not read package.json file.',
+    info: error,
+  });
+}
 const parsedPackageJson = JSON.parse(packageJson);
 
 // Get the current version from package.json
-const currentVersion = parsedPackageJson.version;
+const currentSemver = parsedPackageJson.version;
 
 const changesetEntries = {};
 
+/**
+ * Prompt the user for the release date and the type of version bump.
+ */
 const { releaseDate } = await inquirer.prompt([
   {
     type: 'input',
@@ -45,10 +47,10 @@ const { releaseDate } = await inquirer.prompt([
     },
   },
 ]);
-const { semver } = await inquirer.prompt([
+const { semverBump } = await inquirer.prompt([
   {
     type: 'list',
-    name: 'semver',
+    name: 'semverBump',
     message: 'Choose the type of version bump:',
     choices: ['patch', 'minor', 'major'],
   },
@@ -57,32 +59,29 @@ const { semver } = await inquirer.prompt([
 /**
  * Generates the changelog content with the provided release date and version.
  */
-const newVersion = incrementVersion(currentVersion, semver);
-const changelogContent = initiateChangelogEntry(releaseDate, newVersion);
+const newSemver = incrementSemver(currentSemver, semverBump);
+const changelogContent = initiateChangelogEntry(releaseDate, newSemver);
 
 // Parse the changeset files and generate the changelog content
-fs.readdir(changesetsDirectory, (err, files) => {
+fs.readdir(CHANGESET_DIRECTORY, (err, files) => {
   if (err) {
     throw err;
   }
 
   // If only README.md in there, no changeset(s), exit the process
   if (files.length === 1) {
-    console.log(separator());
-    console.error(chalk.red('No Changeset files found.'));
-    console.log(separator());
-    process.exit(1);
+    logger.error({ message: 'No Changeset file(s) found!' });
   }
 
   try {
     files.forEach((file) => {
-      // Skipping the readme file
+      // Skipping the README file
       if (file === 'README.md') {
         return;
       }
 
       // Logic to parse the changeset file and generate the changelog content
-      const filePath = path.join(changesetsDirectory, file);
+      const filePath = path.join(CHANGESET_DIRECTORY, file);
       const content = fs.readFileSync(filePath, 'utf-8');
       const matches = content.match(/"@linode\/manager": ([^\n]+)/);
       const changesetType = matches ? matches[1].trim() : '';
@@ -96,166 +95,45 @@ fs.readdir(changesetsDirectory, (err, files) => {
         filePath,
       });
     });
+  } catch (error) {
+    logger.error({
+      message: 'Error occurred while parsing changeset files:',
+      info: error,
+    });
+  }
 
-    // Generate the final changelog content
-    populateChangelogEntries(changesetEntries, changelogContent);
+  // Generate the final changelog content
+  populateChangelogEntry(changesetEntries, changelogContent);
 
+  try {
     // Read the existing changelog content
-    let existingChangelogContent = '';
-    if (fs.existsSync(changelogPath)) {
-      existingChangelogContent = fs.readFileSync(changelogPath, 'utf-8');
-    }
+    const existingChangelogContent = fs.readFileSync(CHANGELOG_PATH, 'utf-8');
 
     // Find the index of the first entry
     const firstEntryIndex = existingChangelogContent.indexOf('## [');
 
     // Prepare the updated changelog content
-    let updatedChangelogContent;
-    if (firstEntryIndex !== -1) {
-      updatedChangelogContent = `${existingChangelogContent.slice(
-        0,
-        firstEntryIndex
-      )}${changelogContent.join('\n')}\n\n${existingChangelogContent.slice(
-        firstEntryIndex
-      )}`;
-    } else {
-      updatedChangelogContent = `${changelogContent.join(
-        '\n'
-      )}\n\n${existingChangelogContent}`;
-    }
+    const updatedChangelogContent =
+      firstEntryIndex === -1
+        ? `${changelogContent.join('\n')}\n\n${existingChangelogContent}`
+        : `${existingChangelogContent.slice(
+            0,
+            firstEntryIndex
+          )}${changelogContent.join('\n')}\n\n${existingChangelogContent.slice(
+            firstEntryIndex
+          )}`;
 
     // Write the updated changelog content
-    fs.writeFileSync(changelogPath, updatedChangelogContent);
+    fs.writeFileSync(CHANGELOG_PATH, updatedChangelogContent);
 
-    console.log(separator('green'));
-    console.error(chalk.greenBright('Changelog generated successfully!'));
-    console.log(separator('green'));
-  } catch (e) {
-    console.log(separator());
-    console.error(chalk.red(e));
-    console.log(separator());
-    process.exit(1);
+    logger.success({ message: 'Changelog generated successfully!' });
+  } catch (error) {
+    logger.error({
+      message: 'Error occurred while generating the changelog.',
+      info: error,
+    });
   }
 
   // Delete the changeset files
-  deleteOldChangesets();
+  deleteChangesets();
 });
-
-/**
- * Increments the version of a semantic version string.
- * @param {string} version - The current version.
- * @returns {string} The new version with the incremented semver version.
- */
-function incrementVersion(version, semver) {
-  const parts = version.split('.');
-
-  try {
-    const patchVersion = parseInt(parts[2], 10);
-    const minorVersion = parseInt(parts[1], 10);
-    const majorVersion = parseInt(parts[0], 10);
-
-    if (semver === 'patch') {
-      parts[2] = (patchVersion + 1).toString();
-    } else if (semver === 'minor') {
-      parts[2] = '0';
-      parts[1] = (minorVersion + 1).toString();
-    } else if (semver === 'major') {
-      parts[2] = '0';
-      parts[1] = '0';
-      parts[0] = (majorVersion + 1).toString();
-    } else {
-      throw new Error('Invalid semver argument');
-    }
-  } catch (e) {
-    console.log(e);
-  }
-
-  return parts.join('.');
-}
-
-/**
- * Generates the changelog content with the provided release date and version.
- * @param {string} releaseDate - The release date in YYYY-MM-DD format.
- * @param {string} newVersion - The new version.
- * @returns {string[]} The array of lines for the changelog content.
- */
-function initiateChangelogEntry(releaseDate, newVersion) {
-  const changelogContent = [];
-
-  changelogContent.push(`## [${releaseDate}] - v${newVersion}\n`);
-
-  return changelogContent;
-}
-
-/**
- * Populates the changelog content with the provided entries.
- * @param {Object} entries - Entries grouped by type.
- * @param {string[]} changelogContent - The array of lines for the changelog content.
- * @returns {void} Pushes the entries to the changelog content array.
- */
-function populateChangelogEntries(entries, changelogContent) {
-  try {
-    Object.entries(entries)
-      .sort()
-      .forEach(([type, entries]) => {
-        if (entries && entries.length > 0) {
-          changelogContent.push(`\n### ${type}:\n`);
-          entries.forEach(({ content }) => {
-            const tokens = md.parse(content);
-            let description = '';
-            for (const token of tokens) {
-              if (
-                token.type === 'inline' &&
-                token.content.includes('github.com/linode/manager/pull/')
-              ) {
-                description = token.content;
-                break;
-              }
-            }
-
-            if (description) {
-              changelogContent.push(`- ${description}`);
-            }
-          });
-        }
-      });
-  } catch (e) {
-    console.log(separator());
-    console.error(chalk.red(e));
-    console.log(separator());
-    process.exit(1);
-  }
-}
-
-/**
- * Populates the changelog content with the provided entries.
- * @returns {void} Deletes the changeset files.
- */
-async function deleteOldChangesets() {
-  try {
-    const files = await readdir(changesetsDirectory);
-
-    for (const file of files) {
-      if (file !== 'README.md') {
-        const filePath = path.join(changesetsDirectory, file);
-        (async () => {
-          try {
-            await unlink(filePath);
-            console.log(`Deleted: ${filePath}`);
-          } catch (error) {
-            console.error(`Error occurred while deleting ${filePath}:`, error);
-          }
-        })();
-      }
-    }
-
-    console.log(separator('green'));
-    console.log(chalk.greenBright('Deleted all changesets!'));
-    console.log(
-      chalk.greenBright('You can now commit the changesets and the changelog.')
-    );
-    console.log(separator());
-  } catch (error) {
-    console.error('Error occurred while reading directory:', error);
-  }
-}

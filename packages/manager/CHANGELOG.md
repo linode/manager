@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-12-12] - v1.93.0
+
+
+### Added:
+
+- test ([#9104](https://github.com/linode/manager/pull/9104))
+- test ([#9104](https://github.com/linode/manager/pull/9104))
+
+### Changed:
+
+- test ([#9104](https://github.com/linode/manager/pull/9104))
+
+### Fixed:
+
+- yo! ([#9104](https://github.com/linode/manager/pull/9104))
+
+## [2023-12-12] - v1.92.1
+
+
+### Fixed:
+
+- kjhlskjdf ([#9104](https://github.com/linode/manager/pull/9104))
+
 ## [2023-12-12] - v1.92.1
 
 
