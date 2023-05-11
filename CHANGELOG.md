@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUI v5 Migration - `Components > Notice` #9094
 - MUI v5 Migration - `Components > CheckoutSummary` #9100
 - MUI v5 Migration - `Components > PrimaryNav` #9090
+- MUI v5 Migration - `Components > TransferDisplay` #9107
 - React Query for Linodes Landing #9062
 
 ## [2023-05-01] - v1.92.0
