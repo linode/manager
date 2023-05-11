@@ -2,7 +2,7 @@ import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -11,7 +11,7 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     paddingBottom: 10,
   },
@@ -50,7 +50,7 @@ interface Props {
 
 export const NetworkTransfer: React.FC<Props> = (props) => {
   const { linodeID, linodeLabel } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const linodeTransfer = useAPIRequest(
     () => getLinodeTransfer(linodeID),
@@ -114,7 +114,7 @@ const TransferContent: React.FC<ContentProps> = (props) => {
     accountQuotaInGB,
     // accountBillableInGB
   } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   /**
    * In this component we display three pieces of information:

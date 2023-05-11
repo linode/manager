@@ -2,7 +2,7 @@ import * as React from 'react';
 import _DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
-import IconButton from 'src/components/IconButton/IconButton';
+import { IconButton } from 'src/components/IconButton';
 import { SxProps } from '@mui/system';
 
 interface DialogTitleProps {
