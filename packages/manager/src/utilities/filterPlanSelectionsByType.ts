@@ -2,6 +2,11 @@ import type { LinodeTypeClass } from '@linode/api-v4';
 
 type FilteredPlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
+/**
+ * getPlanSelectionsByPlanType is common util funtion used to provide filtered plans by
+ * type to Linode, Databse and LKE plan tables.
+ */
+
 export const getPlanSelectionsByPlanType = <
   T extends { class: LinodeTypeClass }
 >(
