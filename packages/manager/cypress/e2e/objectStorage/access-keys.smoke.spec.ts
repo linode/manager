@@ -9,7 +9,7 @@ import {
   mockGetAccessKeys,
 } from 'support/intercepts/object-storage';
 import { paginateResponse } from 'support/util/paginate';
-import { randomLabel, randomNumber } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 
 describe('object storage access keys smoke tests', () => {
@@ -21,8 +21,9 @@ describe('object storage access keys smoke tests', () => {
    */
   it('can create access key - smoke', () => {
     const keyLabel = randomLabel();
-    const accessKey = '1Yx6kbVF35t15k2CmNQJ';
-    const secretKey = 'bN12cDCBbb90meUgwvb0Tu9KWmNyFqMl2MGK1Ol';
+    // Mocked key values
+    const accessKey = randomString(20);
+    const secretKey = randomString(39);
 
     mockGetAccessKeys(paginateResponse([])).as('getKeys');
 
@@ -100,8 +101,9 @@ describe('object storage access keys smoke tests', () => {
   it('can revoke access key - smoke', () => {
     const keyId = randomNumber(1, 99999);
     const keyLabel = randomLabel();
-    const accessKey = '1Yx6kbVF35t15k2CmNQJ';
-    const secretKey = 'bN12cDCBbb90meUgwvb0Tu9KWmNyFqMl2MGK1Ol';
+    // Mocked key values
+    const accessKey = randomString(20);
+    const secretKey = randomString(39);
 
     // Mock initial GET request to include an access key.
     mockGetAccessKeys(
