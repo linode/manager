@@ -37,7 +37,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const CancelLanding = () => {
+export const CancelLanding = React.memo(() => {
   const { classes } = useStyles();
   const location = useLocation();
 
@@ -72,6 +72,6 @@ const CancelLanding = () => {
       </Button>
     </div>
   );
-};
+});
 
-export default React.memo(CancelLanding);
+export default CancelLanding;
