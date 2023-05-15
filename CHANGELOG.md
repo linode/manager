@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add compression to logo when rendering in JPG format during invoice PDF generation #9069
 - Phone Verification - Verification Code State Does Not Reset #9059
 - Show error for PayPal payments #9058
+- Send Adobe Analytics Page Views #9108
 
 ### Tech Stories:
 - Enable Cypress `experimentalMemoryManagement` #9076
