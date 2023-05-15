@@ -99,7 +99,7 @@ interface Data {
   updated: string;
 }
 
-export const ExpandableTicketPanel = (props: Props) => {
+export const ExpandableTicketPanel = React.memo((props: Props) => {
   const classes = useStyles();
 
   const { parentTicket, ticket, open, reply, ticketUpdated } = props;
@@ -193,4 +193,4 @@ export const ExpandableTicketPanel = (props: Props) => {
       </Grid>
     </Grid>
   );
-};
+});
