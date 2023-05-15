@@ -6,10 +6,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added:
+- Resource links to empty state Images landing page #9095
+- Resource links to empty state Object Storage landing page #9098
+
+### Changed:
+
+
+### Fixed:
+
+- Ability to search Linodes by IPv6 #9073
+
 ### Tech Stories:
 
 - React Query - Linodes - Networking #9046
 - React Query - Linodes - Details Header #9099
+- MUI v5 Migration - `Components > IconButton` #9102
+- MUI v5 Migration - `Components > EntityHeader` #9109
 
 ## [2023-05-15] - v1.93.0
 
@@ -19,8 +32,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Resource links to empty state Firewalls landing page #9078
 - Resource links to empty state StackScripts landing page #9091
 - Resource links to empty state Domains landing page #9092
-- Resource links to empty state Images landing page #9095
-- Resource links to empty state Object Storage landing page #9092
 - Ability download DNS zone file #9075
 
 ### Changed:
@@ -43,7 +54,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUI v5 Migration - `Components > TableRow` #9082
 - MUI v5 Migration - `Components > DownloadCSV` #9084
 - MUI v5 Migration - `Components > Notice` #9094
-- MUI v5 Migration - `Components > IconButton` #9102
 - MUI v5 Migration - `Components > CheckoutSummary` #9100
 - MUI v5 Migration - `Components > PrimaryNav` #9090
 - React Query for Linodes Landing #9062
