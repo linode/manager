@@ -10,12 +10,12 @@ export interface HeaderProps {
   variant?: TypographyProps['variant'];
 }
 
-export const EntityHeader: React.FC<HeaderProps> = ({
+export const EntityHeader = ({
   children,
   isSummaryView,
   title,
   variant = 'h2',
-}) => {
+}: HeaderProps) => {
   return (
     <Wrapper>
       {isSummaryView ? (
@@ -38,8 +38,6 @@ export const EntityHeader: React.FC<HeaderProps> = ({
     </Wrapper>
   );
 };
-
-export default EntityHeader;
 
 const Wrapper = styled('div', {
   name: 'EntityHeader',
