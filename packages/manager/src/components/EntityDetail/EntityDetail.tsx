@@ -22,7 +22,6 @@ export const EntityDetail = (props: EntityDetailProps) => {
   return (
     <>
       {header}
-
       {body !== undefined && <GridBody xs={12}>{body}</GridBody>}
       <GridFooter xs={12} body={body}>
         {footer}
