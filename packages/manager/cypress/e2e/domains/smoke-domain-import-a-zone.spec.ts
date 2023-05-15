@@ -25,6 +25,16 @@ describe('Import a Zone', () => {
       group: 'test-group',
     });
 
+    mockGetDomains(mockDomain).as('getDomains');
+    cy.visitWithLogin('/domains');
+    cy.wait('@getDomains');
+
+    ui.button
+      .findByTitle('Import a Zone')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
     ui.drawer
       .findByTitle('Import a Zone')
       .should('be.visible')

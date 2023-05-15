@@ -40,5 +40,5 @@ export const domainRecordFactory = Factory.Sync.makeFactory<DomainRecord>({
 });
 
 export const domainZoneFileFactory = Factory.Sync.makeFactory<ZoneFile>({
-  zone_file: ['test.txt', 'test2.txt'],
+  zone_file: ['test line 1', 'test line 2'],
 });
