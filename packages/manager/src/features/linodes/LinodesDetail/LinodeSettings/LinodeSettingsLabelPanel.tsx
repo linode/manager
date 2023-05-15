@@ -6,7 +6,7 @@ import { compose as recompose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import {

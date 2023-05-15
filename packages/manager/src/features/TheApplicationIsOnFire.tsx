@@ -4,7 +4,7 @@ import DialogContent from 'src/components/core/DialogContent';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import DialogTitle from 'src/components/DialogTitle';
+import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   restartButton: {

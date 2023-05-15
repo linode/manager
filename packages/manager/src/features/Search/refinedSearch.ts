@@ -3,6 +3,7 @@ import { all, any, equals, isEmpty } from 'ramda';
 import searchString from 'search-string';
 import { SearchableItem, SearchField } from './search.interfaces';
 
+export const COMPRESSED_IPV6_REGEX = /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
 const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips'];
 
 // =============================================================================
@@ -108,7 +109,7 @@ export const testItem = (item: SearchableItem, query: string) => {
   const parsedQuery = searchString.parse(query).getParsedQuery();
 
   // If there are no specified search fields, we search the default fields.
-  if (isSimpleQuery(parsedQuery)) {
+  if (isSimpleQuery(query, parsedQuery)) {
     return searchDefaultFields(item, query);
   }
 
@@ -122,11 +123,25 @@ export const testItem = (item: SearchableItem, query: string) => {
   return areAllTrue(matchedSearchTerms);
 };
 
+// Force to skip field search (make a simple query) if there's a match
+const shouldSkipFieldSearch = (query: string): boolean => {
+  const skipConditions = {
+    // matches a compressed ipv6 addresses. e.g. xxxx:xxxx::xxxx:xxxx:xxxx:xxxx
+    isIPV6: query.match(COMPRESSED_IPV6_REGEX),
+  };
+
+  return Object.values(skipConditions).some((condition) => condition);
+};
+
 // Determines whether a query is "simple", i.e., doesn't contain any search fields,
 // like "tags:my-tag" or "-label:my-linode".
-export const isSimpleQuery = (parsedQuery: any) => {
+export const isSimpleQuery = (originalQuery: string, parsedQuery: any) => {
   const { exclude, ...include } = parsedQuery;
-  return isEmpty(exclude) && isEmpty(include);
+
+  return (
+    (isEmpty(exclude) && isEmpty(include)) ||
+    shouldSkipFieldSearch(originalQuery)
+  );
 };
 
 export const searchDefaultFields = (item: SearchableItem, query: string) => {

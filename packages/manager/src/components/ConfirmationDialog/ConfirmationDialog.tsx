@@ -5,7 +5,7 @@ import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import DialogTitle from 'src/components/DialogTitle';
+import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -38,14 +38,14 @@ export interface ConfirmationDialogProps extends DialogProps {
 export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const { classes } = useStyles();
 
-  const { title, children, actions, error, ...dialogProps } = props;
+  const { title, children, actions, error, onClose, ...dialogProps } = props;
 
   return (
     <Dialog
       {...dialogProps}
       onClose={(_, reason) => {
         if (reason !== 'backdropClick') {
-          dialogProps.onClose();
+          onClose();
         }
       }}
       className={classes.root}
@@ -55,7 +55,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       data-qa-dialog
       data-testid="drawer"
     >
-      <DialogTitle className="dialog-title" title={title} />
+      <DialogTitle title={title} onClose={onClose} />
       <DialogContent data-qa-dialog-content className="dialog-content">
         {children}
         {error && (

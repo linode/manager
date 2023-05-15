@@ -1,102 +1,54 @@
 import { Notification } from '@linode/api-v4/lib/account';
-import {
-  Config,
-  LinodeBackups,
-  LinodeStatus,
-} from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import {
   getProgressOrDefault,
   linodeInTransition,
   transitionText,
 } from 'src/features/linodes/transitions';
-import { DialogType } from 'src/features/linodes/types';
-import { ExtendedType } from 'src/utilities/extendType';
-import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
+import { capitalizeAllWords } from 'src/utilities/capitalize';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
-import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
-import styled, { StyleProps } from './LinodeRow.style';
-import LinodeRowBackupCell from './LinodeRowBackupCell';
-import LinodeRowHeadCell from './LinodeRowHeadCell';
 import { SxProps } from '@mui/system';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { LinodeHandlers } from '../LinodesLanding';
+import { useTypeQuery } from 'src/queries/types';
+import useEvents from 'src/hooks/useEvents';
+import { useStyles } from './LinodeRow.style';
+import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
+import { useNotificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 
-interface Props {
-  backups: LinodeBackups;
-  id: number;
-  image: string | null;
-  ipv4: string[];
-  ipv6: string;
-  label: string;
-  maintenanceStartTime?: string | null;
-  region: string;
-  disk: number;
-  memory: number;
-  vcpus: number;
-  status: LinodeStatus;
-  displayStatus: string;
-  type?: ExtendedType;
-  tags: string[];
-  mostRecentBackup: string | null;
-  openDialog: (
-    type: DialogType,
-    linodeID: number,
-    linodeLabel?: string
-  ) => void;
-  openPowerActionDialog: (
-    bootAction: Action,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => void;
-  openNotificationMenu: () => void;
-}
+type Props = Linode & { handlers: LinodeHandlers };
 
-export type CombinedProps = Props & WithRecentEvent & StyleProps;
+export const LinodeRow = (props: Props) => {
+  const classes = useStyles();
+  const { backups, id, ipv4, label, region, status, type, handlers } = props;
 
-export const LinodeRow: React.FC<CombinedProps> = (props) => {
-  const {
-    // linode props
-    backups,
-    id,
-    ipv4,
-    ipv6,
-    maintenanceStartTime,
-    label,
-    region,
-    status,
-    displayStatus,
-    mostRecentBackup,
-    disk,
-    vcpus,
-    memory,
-    type,
-    tags,
-    image,
-    // other props
-    classes,
-    openDialog,
-    openPowerActionDialog,
-    openNotificationMenu,
-    recentEvent,
-  } = props;
+  const { openMenu } = useNotificationContext();
 
   const { data: notifications } = useNotificationsQuery();
+
+  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+    {},
+    { status: { '+or': ['pending, started'] } }
+  );
+
+  const maintenance = accountMaintenanceData?.find(
+    (m) => m.entity.id === id && m.entity.type === 'linode'
+  );
 
   const linodeNotifications =
     notifications?.filter(
@@ -104,11 +56,20 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
         notification.entity?.type === 'linode' && notification.entity?.id === id
     ) ?? [];
 
-  const isBareMetalInstance = type?.class === 'metal';
+  const { data: linodeType } = useTypeQuery(type ?? '', type !== null);
+
+  const { events } = useEvents();
+
+  const recentEvent = events.find(
+    (e) => e.entity?.id === id && e.entity.type === 'linode'
+  );
+
+  const isBareMetalInstance = linodeType?.class === 'metal';
 
   const loading = linodeInTransition(status, recentEvent);
+
   const parsedMaintenanceStartTime = parseMaintenanceStartTime(
-    maintenanceStartTime
+    maintenance?.when
   );
 
   const MaintenanceText = () => {
@@ -130,28 +91,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
       ? 'inactive'
       : 'other';
 
-  const headCell = (
-    <LinodeRowHeadCell
-      loading={loading}
-      recentEvent={recentEvent}
-      backups={backups}
-      id={id}
-      ipv4={ipv4}
-      ipv6={ipv6}
-      label={label}
-      region={region}
-      status={status}
-      displayStatus={displayStatus}
-      tags={tags}
-      mostRecentBackup={mostRecentBackup}
-      disk={disk}
-      vcpus={vcpus}
-      memory={memory}
-      image={image}
-      maintenance={maintenanceStartTime}
-    />
-  );
-
   return (
     <TableRow
       key={id}
@@ -160,23 +99,23 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
       data-qa-linode={label}
       ariaLabel={label}
     >
-      {headCell}
+      <TableCell>
+        <Link to={`/linodes/${id}`} tabIndex={0}>
+          {label}
+        </Link>
+      </TableCell>
       <TableCell
         className={classNames({
-          [classes.statusCell]: true,
-          [classes.statusCellMaintenance]: maintenanceStartTime,
+          [classes.statusCellMaintenance]: Boolean(maintenance),
         })}
         statusCell
         data-qa-status
       >
-        {!maintenanceStartTime ? (
+        {!Boolean(maintenance) ? (
           loading ? (
             <>
               <StatusIcon status={iconStatus} />
-              <button
-                className={classes.statusLink}
-                onClick={() => openNotificationMenu()}
-              >
+              <button className={classes.statusLink} onClick={() => openMenu()}>
                 <ProgressDisplay
                   className={classes.progressDisplay}
                   progress={getProgressOrDefault(recentEvent)}
@@ -187,9 +126,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           ) : (
             <>
               <StatusIcon status={iconStatus} />
-              {displayStatus.includes('_')
-                ? capitalizeAllWords(displayStatus.replace('_', ' '))
-                : capitalize(displayStatus)}
+              {capitalizeAllWords(status.replace('_', ' '))}
             </>
           )
         ) : (
@@ -205,34 +142,32 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           </div>
         )}
       </TableCell>
-
       <Hidden smDown>
-        <TableCell className={classes.planCell} data-qa-ips>
-          <div className={classes.planCell}>{type?.formattedLabel}</div>
-        </TableCell>
-        <TableCell className={classes.ipCell} data-qa-ips>
-          <div className={classes.ipCellWrapper}>
-            <IPAddress ips={ipv4} />
-          </div>
+        <TableCell noWrap>{linodeType?.label ?? type}</TableCell>
+        <TableCell data-qa-ips className={classes.ipCellWrapper}>
+          <IPAddress ips={ipv4} />
         </TableCell>
         <Hidden lgDown>
-          <TableCell className={classes.regionCell} data-qa-region>
+          <TableCell data-qa-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
       </Hidden>
       <Hidden lgDown>
-        <LinodeRowBackupCell
-          linodeId={id}
-          backupsEnabled={backups.enabled || false}
-          mostRecentBackup={mostRecentBackup || ''}
-          isBareMetalInstance={isBareMetalInstance}
-        />
+        <TableCell>
+          <BackupStatus
+            linodeId={id}
+            backupsEnabled={backups.enabled}
+            mostRecentBackup={backups.last_successful}
+            isBareMetalInstance={isBareMetalInstance}
+          />
+        </TableCell>
       </Hidden>
-
       <TableCell actionCell data-qa-notifications>
         <RenderFlag
-          mutationAvailable={type?.isDeprecated ?? false}
+          mutationAvailable={
+            linodeType !== undefined && linodeType?.successor !== null
+          }
           linodeNotifications={linodeNotifications}
           classes={classes}
         />
@@ -240,25 +175,16 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           linodeId={id}
           linodeLabel={label}
           linodeRegion={region}
-          linodeType={type}
+          linodeType={linodeType}
           linodeStatus={status}
           linodeBackups={backups}
-          openDialog={openDialog}
-          openPowerActionDialog={openPowerActionDialog}
+          {...handlers}
           inListView
         />
       </TableCell>
     </TableRow>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(
-  withRecentEvent,
-  styled,
-  React.memo
-);
-
-export default enhanced(LinodeRow);
 
 export const RenderFlag: React.FC<{
   mutationAvailable: boolean;

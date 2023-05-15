@@ -1,22 +1,21 @@
-import {
-  Config,
-  linodeBoot,
-  linodeReboot,
-  linodeShutdown,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
+import Select from 'src/components/EnhancedSelect/Select';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
+import { Notice } from 'src/components/Notice/Notice';
+import { Config } from '@linode/api-v4/lib/linodes';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
-import Notice from 'src/components/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
-import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
+import {
+  useAllLinodeConfigsQuery,
+  useBootLinodeMutation,
+  useLinodeQuery,
+  useRebootLinodeMutation,
+  useShutdownLinodeMutation,
+} from 'src/queries/linodes/linodes';
 
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
@@ -42,16 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  action?: Action;
-  linodeID: number;
-  linodeLabel: string;
+  linodeId: number | undefined;
   isOpen: boolean;
-  close: () => void;
-  /** if a Linode has multiple configs, we need to boot a specific config */
-  linodeConfigs?: Config[];
+  onClose: () => void;
+  action: Action;
 }
-
-type CombinedProps = Props;
 
 /**
  * In special cases, such as Rescue mode, the API's method
@@ -64,105 +58,123 @@ type CombinedProps = Props;
 export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
-const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
-  const { linodeConfigs } = props;
+export const PowerActionsDialog = (props: Props) => {
+  const { onClose, linodeId, isOpen, action } = props;
   const classes = useStyles();
-  const [isTakingAction, setTakingAction] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
-  const [selectedConfigID, selectConfigID] = React.useState<number | undefined>(
-    selectDefaultConfig(linodeConfigs)
+
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && isOpen
   );
 
-  const hasMoreThanOneConfigOnSelectedLinode =
-    !!props.linodeConfigs && props.linodeConfigs.length > 1;
+  const {
+    data: configs,
+    isLoading: configsLoading,
+    error: configsError,
+  } = useAllLinodeConfigsQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && isOpen
+  );
 
-  React.useEffect(() => {
-    if (props.isOpen) {
-      /**
-       * reset error and loading state when we open the modal
-       */
-      setErrors(undefined);
-      setTakingAction(false);
-      selectConfigID(selectDefaultConfig(linodeConfigs));
-    }
-  }, [props.isOpen]);
+  const {
+    mutateAsync: bootLinode,
+    isLoading: isBooting,
+    error: bootError,
+  } = useBootLinodeMutation(linodeId ?? -1);
 
-  const handleSubmit = () => {
-    /** this will never happen but handle gracefully */
-    if (!props.action || !props.linodeID) {
-      return setErrors([{ reason: 'An unexpected error occurred.' }]);
-    }
+  const {
+    mutateAsync: rebootLinode,
+    isLoading: isRebooting,
+    error: rebootError,
+  } = useRebootLinodeMutation(linodeId ?? -1);
 
-    /** throw an error if we have need to select a config and haven't */
-    if (
-      hasMoreThanOneConfigOnSelectedLinode &&
-      ((props.action === 'Power On' && !selectedConfigID) ||
-        (props.action === 'Reboot' && !selectedConfigID))
-    ) {
-      /** force the user into selecting a config when they boot */
-      return setErrors([
-        { reason: 'Please select a Config Profile to boot with.' },
-      ]);
-    }
+  const {
+    mutateAsync: shutdownLinode,
+    isLoading: isShuttingDown,
+    error: shutdownError,
+  } = useShutdownLinodeMutation(linodeId ?? -1);
 
-    setTakingAction(true);
-    determineBootPromise(props.action)(props.linodeID, selectedConfigID)
-      .then(() => {
-        resetEventsPolling();
-        props.close();
-      })
-      .catch((e) => {
-        setTakingAction(false);
-        setErrors(e);
-      });
+  const [selectedConfigID, setSelectConfigID] = React.useState<number | null>(
+    null
+  );
+
+  const mutationMap = {
+    Reboot: rebootLinode,
+    'Power Off': shutdownLinode,
+    'Power On': bootLinode,
+  } as const;
+
+  const errorMap = {
+    Reboot: rebootError,
+    'Power Off': shutdownError,
+    'Power On': bootError,
   };
 
-  /**
-   * if we're rebooting or booting a Linode with many configs, we need the user to
-   * confirm which config they actually want to boot, rather than
-   * confirming the action with a dialog message.
-   */
-  if (
-    (props.action === 'Power On' && hasMoreThanOneConfigOnSelectedLinode) ||
-    (props.action === 'Reboot' && hasMoreThanOneConfigOnSelectedLinode)
-  ) {
-    return (
-      <LinodeConfigDrawer
-        loading={isTakingAction}
-        error={errors}
-        isOpen={props.isOpen}
-        onSelectConfig={selectConfigID}
-        onSubmit={handleSubmit}
-        onClose={props.close}
-        linodeConfigs={props.linodeConfigs ?? []}
-        selectedConfigID={selectedConfigID}
-      />
-    );
-  }
+  const loadingMap = {
+    Reboot: isRebooting,
+    'Power Off': isShuttingDown,
+    'Power On': isBooting,
+  };
 
-  if (!props.action) {
-    return null;
-  }
+  const error = errorMap[action];
+  const isLoading = loadingMap[action];
+
+  const onSubmit = async () => {
+    if (props.action === 'Power On' || props.action === 'Reboot') {
+      const mutateAsync = mutationMap[action as 'Power On' | 'Reboot'];
+      await mutateAsync({
+        config_id: selectedConfigID ?? selectDefaultConfig(configs),
+      });
+    } else {
+      const mutateAsync = mutationMap[action as 'Power Off'];
+      await mutateAsync();
+    }
+    onClose();
+  };
+
+  const showConfigSelect =
+    configs !== undefined &&
+    configs?.length > 1 &&
+    (props.action === 'Power On' || props.action === 'Reboot');
+
+  const configOptions =
+    configs?.map((config) => ({
+      label: config.label,
+      value: config.id,
+    })) ?? [];
 
   return (
     <ConfirmationDialog
       className={classes.dialog}
-      open={props.isOpen}
-      title={`${props.action} Linode ${props.linodeLabel}?`}
-      onClose={props.close}
-      error={errors ? errors[0].reason : ''}
+      open={isOpen}
+      title={`${action} Linode ${linode?.label ?? ''}?`}
+      onClose={onClose}
+      error={error?.[0].reason}
       actions={
-        <Actions
-          onClose={props.close}
-          loading={isTakingAction}
-          onSubmit={handleSubmit}
-          action={props.action}
-        />
+        <ActionsPanel>
+          <Button buttonType="secondary" onClick={props.onClose}>
+            Cancel
+          </Button>
+          <Button buttonType="primary" onClick={onSubmit} loading={isLoading}>
+            {props.action} Linode
+          </Button>
+        </ActionsPanel>
       }
     >
       <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
+      {showConfigSelect && (
+        <Select
+          label="Config"
+          options={configOptions}
+          value={configOptions.find((o) => o.value === selectedConfigID)}
+          onChange={(o) => setSelectConfigID(o === null ? null : o.value)}
+          isLoading={configsLoading}
+          errorText={configsError?.[0].reason}
+          overflowPortal
+        />
+      )}
       {props.action === 'Power Off' && (
         <span>
           <Notice warning important className={classes.notice}>
@@ -180,44 +192,3 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  loading: boolean;
-  action: Action;
-}
-
-const Actions: React.FC<ActionsProps> = (props) => {
-  return (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={props.onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.loading}
-      >
-        {props.action} Linode
-      </Button>
-    </ActionsPanel>
-  );
-};
-
-const determineBootPromise = (action: Action) => {
-  switch (action) {
-    case 'Reboot':
-      return linodeReboot;
-    case 'Power On':
-      return linodeBoot;
-    case 'Power Off':
-      return linodeShutdown;
-    default:
-      return linodeReboot;
-  }
-};
-
-export default compose<CombinedProps, Props>(React.memo)(
-  PowerActionsDialogOrDrawer
-);
