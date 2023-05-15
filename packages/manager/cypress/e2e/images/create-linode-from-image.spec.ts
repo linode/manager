@@ -68,6 +68,25 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
 };
 
 describe('create linode from image, mocked data', () => {
+  /*
+   * - Confirms UI flow when user attempts to create a Linode from images without having any images.
+   */
+  it('cannot create a Linode when the user has no private images', () => {
+    // Substrings of the message shown to ensure user is informed of why they
+    // cannot create a Linode and guided towards creating an Image.
+    const noImagesMessages = [
+      'You don’t have any private Images.',
+      'create an Image from one of your Linode’s disks.',
+    ];
+
+    mockGetAllImages([]).as('getImages');
+    cy.visitWithLogin('/linodes/create?type=Images');
+    cy.wait('@getImages');
+    noImagesMessages.forEach((message: string) => {
+      cy.findByText(message, { exact: false }).should('be.visible');
+    });
+  });
+
   it('creates linode from image on images tab', () => {
     cy.visitWithLogin('/linodes/create?type=Images');
     createLinodeWithImageMock(false);
