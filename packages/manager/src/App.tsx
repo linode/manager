@@ -277,8 +277,6 @@ export class App extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Linode Manager" />
         {this.props.featureFlagsLoading ? null : (
           <MainContent
-            history={this.props.history}
-            location={this.props.location}
             appIsLoading={this.props.appIsLoading}
             isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
           />
