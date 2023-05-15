@@ -196,6 +196,10 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     setMigrateDialogOpen(true);
   };
 
+  const onDeleteSuccess = () => {
+    history.push('/linodes');
+  };
+
   const handlers = {
     onOpenPowerDialog,
     onOpenDeleteDialog,
@@ -253,6 +257,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         open={deleteDialogOpen}
         onClose={closeDialogs}
         linodeId={matchedLinodeId}
+        onSuccess={onDeleteSuccess}
       />
       <LinodeResize
         open={resizeDialogOpen}
