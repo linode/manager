@@ -6,20 +6,34 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Tech Stories:
+
+- React Query - Linodes - Networking #9046
+- React Query - Linodes - Details Header #9099
+
+## [2023-05-15] - v1.93.0
+
 ### Added:
+
 - Resource links to empty state Volumes landing page #9065
 - Resource links to empty state Firewalls landing page #9078
+- Resource links to empty state StackScripts landing page #9091
 - Resource links to empty state Domains landing page #9092
+- Resource links to empty state Images landing page #9095
+- Resource links to empty state Object Storage landing page #9092
 - Ability download DNS zone file #9075
 
 ### Changed:
+
 - Removed MongoDB reference from ClusterControl description #9081
 - Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
 
 ### Fixed:
+
 - Ability to search Linodes by IPv6 #9073
 
 ### Tech Stories:
+
 - Enable Cypress `experimentalMemoryManagement` #9076
 - MUI v5 Migration - `Components > Table` #9082
 - MUI v5 Migration - `Components > TableCell` #9082
@@ -27,20 +41,28 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUI v5 Migration - `Components > TableBody` #9082
 - MUI v5 Migration - `Components > TableSortCell` #9082
 - MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > DownloadCSV` #9084
+- MUI v5 Migration - `Components > Notice` #9094
+- MUI v5 Migration - `Components > IconButton` #9102
+- MUI v5 Migration - `Components > CheckoutSummary` #9100
+- MUI v5 Migration - `Components > PrimaryNav` #9090
 - React Query for Linodes Landing #9062
 
 ## [2023-05-01] - v1.92.0
 
 ### Added:
+
 - No Results section for Marketplace Search #8999
 - Private IP checkbox when cloning a Linode #9039
 - Metadata migrate warning #9033
 
 ### Changed:
+
 - Region Select will dynamically get country flags and group all countries based on API data #8996
 - Removed MongoDB Marketplace Apps #9071
 
 ### Fixed:
+
 - Kubernetes Delete Dialog clears when it is re-opened #9000
 - HTML showing up in event messages #9003
 - Inability to edit and save Linode Configurations #9053
@@ -51,6 +73,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Blank Kubernetes Node Pool plan selection #9009
 
 ### Tech Stories:
+
 - MUI v5 Migration - `Components > CircleProgress` #9028
 - MUI v5 Migration - `Components > StatusIcon` #9014
 - MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
@@ -85,27 +108,32 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-04-18] - v1.91.1
 
 ### Fixed:
+
 - Add Premium plans to LKE #9021
 
 ## [2023-04-17] - v1.91.0
 
 ### Added:
+
 - Cross Data Center Clone warning #8937
 - `Plan` column header to plan select table #8943
 
 ### Changed:
+
 - Use Akamai logo for TPA provider screen #8982
 - Use Akamai logo for the favicon #8988
 - Only fetch grants when the user is restricted #8941
 - Improve the StackScript user defined fields (UDF) forms #8973
 
 ### Fixed:
+
 - Styling of Linode Details Add Configurations modal header #8981
 - Alignment issues with Kubernetes Node Pool table and buttons #8967
 - Domain Records not updating when navigating #8957
 - Notification menu displaying empty menu on secondary status click #8902
 
 ### Tech Story:
+
 - React Query for NodeBalancers #8964
 - React Query for Profile - Trusted Devices #8942
 - React Query for OAuth Apps #8938

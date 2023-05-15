@@ -5,7 +5,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { components } from 'react-select';
 import { compose } from 'recompose';
-import IconButton from 'src/components/core/IconButton';
+import { IconButton } from 'src/components/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import useAPISearch from 'src/features/Search/useAPISearch';

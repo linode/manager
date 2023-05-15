@@ -5,6 +5,7 @@ interface ResourcesLinksSectionProps {
   /**
    * If true, the section will be 100% width (more than 2 columns)
    *
+   * @example true on linodes empty state landing
    * @default true
    * */
   wide?: boolean;
@@ -19,7 +20,7 @@ const StyledResourcesLinksSection = styled('div', {
   gridAutoFlow: 'column',
   justifyItems: 'center',
   maxWidth: props.wide === false ? 762 : '100%',
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down(props.wide ? 'lg' : 'md')]: {
     gridAutoFlow: 'row',
     rowGap: theme.spacing(8),
     justifyItems: 'start',

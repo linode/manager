@@ -39,7 +39,7 @@ import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
-import MutationNotification from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
+import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
 import Details from './Details';
 import {
@@ -51,7 +51,7 @@ import {
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
 const LinodesDetailHeader = React.lazy(
-  () => import('../LinodesDetail/LinodesDetailHeader')
+  () => import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader')
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -297,7 +297,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
       ...Because we don't want the Nav tabs and we want <LinodeControls /> with a custom <Breadcrumb />.
       @todo: DRY this up a bit?
       */}
-      <MutationNotification disks={props.disks} />
+      <MutationNotification linodeId={props.linodeId} />
       <Notifications />
       <LinodesDetailHeader />
       <Grid container className={classes.root}>

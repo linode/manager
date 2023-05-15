@@ -36,7 +36,11 @@ interface ResourcesSectionProps {
    * The custom resource to be rendered between docs and youtube links
    * @example <AppsSection /> on linodes empty state landing
    */
-  customResource?: JSX.Element;
+  CustomResource?: () => JSX.Element;
+  /**
+   * Allow to set a custom max width for the description (better word wrapping)
+   * */
+  descriptionMaxWidth?: number;
   /**
    * The data for the docs links section
    */
@@ -54,9 +58,20 @@ interface ResourcesSectionProps {
    */
   linkGAEvent: LinkGAEvent;
   /**
+   * If true, the transfer display will be shown at the bottom
+   * */
+  showTransferDisplay?: boolean;
+  /**
    * The data for the youtube links section
    */
   youtubeLinkData: ResourcesLinkSection;
+  /**
+   * If true, the section will be 100% width (more than 2 columns)
+   *
+   * @example true on linodes empty state landing
+   * @default true
+   * */
+  wide?: boolean;
 }
 
 const GuideLinks = (guides: ResourcesLinkSection, linkGAEvent: LinkGAEvent) => (
@@ -71,21 +86,27 @@ const YoutubeLinks = (
 export const ResourcesSection = (props: ResourcesSectionProps) => {
   const {
     buttonProps,
+    CustomResource = () => null,
+    descriptionMaxWidth,
     gettingStartedGuidesData,
     headers,
     icon,
     linkGAEvent,
+    showTransferDisplay,
     youtubeLinkData,
+    wide = false,
   } = props;
   const { title, subtitle, description } = headers;
 
   return (
     <Placeholder
       buttonProps={buttonProps}
+      dataQAPlaceholder="resources-section"
+      descriptionMaxWidth={descriptionMaxWidth}
       icon={icon}
       isEntity
       linksSection={
-        <ResourcesLinksSection wide={false}>
+        <ResourcesLinksSection wide={wide}>
           <ResourcesLinksSubSection
             icon={<DocsIcon />}
             MoreLink={(props) => (
@@ -98,13 +119,14 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                 {...props}
               >
                 {gettingStartedGuidesData.moreInfo.text}
-                <PointerIcon className="pointerIcon" />
+                <ResourcesLinkIcon icon={<PointerIcon />} iconType="pointer" />
               </ResourcesMoreLink>
             )}
             title={gettingStartedGuidesData.title}
           >
             {GuideLinks(gettingStartedGuidesData, linkGAEvent)}
           </ResourcesLinksSubSection>
+          {CustomResource && <CustomResource />}
           <ResourcesLinksSubSection
             icon={<YoutubeIcon />}
             MoreLink={(props) => (
@@ -115,7 +137,10 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                 {...props}
               >
                 {youtubeMoreLinkText}
-                <ResourcesLinkIcon icon={<ExternalLinkIcon />} />
+                <ResourcesLinkIcon
+                  icon={<ExternalLinkIcon />}
+                  iconType="external"
+                />
               </ResourcesMoreLink>
             )}
             title={youtubeLinkData.title}
@@ -124,6 +149,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }
+      showTransferDisplay={showTransferDisplay}
       subtitle={subtitle}
       title={title}
     >

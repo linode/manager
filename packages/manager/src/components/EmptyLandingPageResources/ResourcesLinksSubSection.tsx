@@ -28,7 +28,7 @@ const StyledResourcesLinksSubSection = styled('div', {
   },
   '& > a': {
     color: theme.textColors.linkActiveLight,
-    display: 'flex',
+    display: 'inline-block',
     fontSize: '0.875rem',
     fontWeight: 700,
   },
