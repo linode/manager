@@ -7,31 +7,34 @@ import { logger } from './logger.mjs';
  * @note This is will NOT increment the package.json version. Just the changelog version.
  */
 export const incrementSemver = (currentVersion, semver) => {
-  const parts = currentVersion.split('.');
-
   try {
-    const patchVersion = parseInt(parts[2], 10);
-    const minorVersion = parseInt(parts[1], 10);
-    const majorVersion = parseInt(parts[0], 10);
+    const parts = currentVersion.split('.');
+    const [major, minor, patch] = parts.map((part) => parseInt(part, 10));
+
+    let updatedMajor = major;
+    let updatedMinor = minor;
+    let updatedPatch = patch;
 
     if (semver === 'patch') {
-      parts[2] = (patchVersion + 1).toString();
+      updatedPatch += 1;
     } else if (semver === 'minor') {
-      parts[2] = '0';
-      parts[1] = (minorVersion + 1).toString();
+      updatedMinor += 1;
+      updatedPatch = 0;
     } else if (semver === 'major') {
-      parts[2] = '0';
-      parts[1] = '0';
-      parts[0] = (majorVersion + 1).toString();
+      updatedMajor += 1;
+      updatedMinor = 0;
+      updatedPatch = 0;
     } else {
       throw new Error('Invalid semver argument');
     }
+
+    const updatedParts = [updatedMajor, updatedMinor, updatedPatch];
+    return updatedParts.join('.');
   } catch (error) {
     logger.error({
       message: 'Error: Could not increment semver.',
       info: error,
     });
+    return currentVersion;
   }
-
-  return parts.join('.');
 };
