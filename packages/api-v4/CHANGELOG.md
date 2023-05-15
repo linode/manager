@@ -4,7 +4,7 @@
 ### Added:
 - Ability download DNS zone file #9075
 - React Query - Linodes - Landing #9062
-- React Query - Linodes - Detail - Backups #9079
+- Added `available` to the `LinodeBackup` type #9079
 
 ### Fixed:
 - Show error for PayPal payments #9058

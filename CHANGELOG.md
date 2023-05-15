@@ -25,7 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Surface general errors in the Object Storage Bucket Create Drawer #9067
 - Large file size for invoices due to uncompressed JPG logo #9069
 - Phone Verification error does not reset #9059
-- Show error for PayPal payments #9058
+- Removed deprecated PayPal endpoints #9058
 - Send Adobe Analytics page views #9108
 
 ### Tech Stories:
