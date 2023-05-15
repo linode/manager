@@ -7,7 +7,7 @@ import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';

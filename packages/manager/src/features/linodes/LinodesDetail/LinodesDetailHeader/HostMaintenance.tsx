@@ -1,7 +1,7 @@
 import { LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 
 interface Props {
   linodeStatus: LinodeStatus;

@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import Typography from 'src/components/core/Typography';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import TextField from 'src/components/TextField';

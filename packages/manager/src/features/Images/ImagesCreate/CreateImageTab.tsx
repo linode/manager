@@ -12,7 +12,7 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';

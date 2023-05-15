@@ -2,7 +2,7 @@ import { Notification } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 
 interface Props {

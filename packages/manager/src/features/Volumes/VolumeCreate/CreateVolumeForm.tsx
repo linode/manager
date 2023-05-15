@@ -15,7 +15,7 @@ import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';

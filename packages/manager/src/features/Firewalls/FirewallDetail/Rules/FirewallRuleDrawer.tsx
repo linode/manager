@@ -22,7 +22,7 @@ import Drawer from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import {

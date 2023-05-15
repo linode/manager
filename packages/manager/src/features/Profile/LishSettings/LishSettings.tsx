@@ -11,7 +11,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

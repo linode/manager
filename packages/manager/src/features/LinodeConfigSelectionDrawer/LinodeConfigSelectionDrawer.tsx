@@ -5,7 +5,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 
 export type LinodeConfigSelectionDrawerCallback = (id: number) => void;

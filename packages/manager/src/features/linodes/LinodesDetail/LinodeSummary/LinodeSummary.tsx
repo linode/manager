@@ -16,7 +16,7 @@ import {
   STATS_NOT_READY_MESSAGE,
   useLinodeStats,
   useLinodeStatsByDate,
-} from 'src/queries/linodes';
+} from 'src/queries/linodes/stats';
 import { useProfile } from 'src/queries/profile';
 import { setUpCharts } from 'src/utilities/charts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -158,6 +158,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
     return (
       <LineGraph
         ariaLabel="CPU Usage Graph"
+        accessibleDataTable={{ unit: '%' }}
         timezone={timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}
@@ -190,6 +191,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
     return (
       <LineGraph
         ariaLabel="Disk I/O Graph"
+        accessibleDataTable={{ unit: 'blocks/s' }}
         timezone={timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}

@@ -5,7 +5,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import StackScriptPanel from './StackScriptPanel';

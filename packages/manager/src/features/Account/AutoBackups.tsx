@@ -4,7 +4,7 @@ import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Toggle } from 'src/components/Toggle';
 import Typography from 'src/components/core/Typography';

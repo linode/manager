@@ -3,6 +3,7 @@ import { createMockLinodeList } from 'support/api/linodes';
 import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomString } from 'support/util/random';
+import { mockGetImages } from 'support/intercepts/images';
 
 const mockImage = createMockImage().data[0];
 const imageLabel = mockImage.label;
@@ -22,9 +23,7 @@ const mockLinodeList = createMockLinodeList({
 const mockLinode = mockLinodeList.data[0];
 
 const createLinodeWithImageMock = (preselectedImage: boolean) => {
-  cy.intercept(apiMatcher('images*'), (req) => {
-    req.reply(createMockImage());
-  }).as('mockImage');
+  mockGetImages(createMockImage().data).as('mockImage');
 
   cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
     req.reply({

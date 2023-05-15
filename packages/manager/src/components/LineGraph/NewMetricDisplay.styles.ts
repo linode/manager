@@ -24,10 +24,11 @@ const newMetricDisplayStyles = (theme: Theme) =>
   createStyles({
     wrapper: {
       display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: 'column-reverse',
+      flex: 1,
+      width: '100%',
       '& > div': {
-        flexBasis: '100%',
+        width: '100%',
       },
     },
     container: {
