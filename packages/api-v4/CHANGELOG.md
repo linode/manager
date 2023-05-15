@@ -7,7 +7,7 @@
 - Added `available` to the `LinodeBackup` type #9079
 
 ### Fixed:
-- Show error for PayPal payments #9058
+- Removed deprecated PayPal endpoints #9058
 
 ## [2023-05-01] - v0.91.0
 
