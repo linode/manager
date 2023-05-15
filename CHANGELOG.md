@@ -12,25 +12,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Resource links to empty state StackScripts landing page #9091
 - Resource links to empty state Domains landing page #9092
 - Ability download DNS zone file #9075
-- Add new flag to deliver DC availability notice for premium plans #9066
-- Accessible graph data #9045
+- New flag to deliver DC availability notice for premium plans #9066
+- Accessible graph data for LineGraphs #9045
 
 ### Changed:
-- style: [M3-6030] - Adjust banner text size and spacing to improve readability #9064
-- Removed MongoDB reference from ClusterControl description #9081
+- Banner text size and spacing to improve readability #9064
+- Updated ClusterControl description #9081
 - Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
-- Move linodes, k8s & dbs empty landing pages resources to HOC #9088
 
 ### Fixed:
 - Ability to search Linodes by IPv6 #9073
 - Surface general errors in the Object Storage Bucket Create Drawer #9067
-- Add compression to logo when rendering in JPG format during invoice PDF generation #9069
-- Phone Verification - Verification Code State Does Not Reset #9059
+- Large file size for invoices due to uncompressed JPG logo #9069
+- Phone Verification error does not reset #9059
 - Show error for PayPal payments #9058
-- Send Adobe Analytics Page Views #9108
+- Send Adobe Analytics page views #9108
 
 ### Tech Stories:
-- Enable Cypress `experimentalMemoryManagement` #9076
 - MUI v5 Migration - `Components > CheckoutSummary` #9100
 - MUI v5 Migration - `Components > CopyableTextField` #9018
 - MUI v5 Migration - `Components > DialogTitle` #9050
@@ -47,7 +45,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - React Query - Linodes - Prepare for React Query for Linodes #9049
 - React Query - Linodes - Landing #9062
 - React Query - Linodes - Detail - Backups #9079
-- Upgrade Cypress to v12.11 #9038
+- Add Adobe Analytics custom event tracking #9004
 
 
 ## [2023-05-01] - v1.92.0
