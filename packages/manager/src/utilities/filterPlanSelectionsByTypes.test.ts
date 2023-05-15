@@ -1,21 +1,13 @@
 import { getPlanSelectionsByPlanType } from './filterPlanSelectionsByType';
-import { extendedTypes } from 'src/__data__/ExtendedType';
+import { typeFactory } from 'src/factories/types';
+
+const standard = typeFactory.build({ id: 'g6-standard-1' });
+const metal = typeFactory.build({ id: 'g6-metal-alpha-2', class: 'metal' });
 
 describe('getPlanSelectionsByPlanType', () => {
   it('returns an object with plans grouped by type', () => {
-    const highmemPlans = extendedTypes.filter(
-      (type) => type.class === 'highmem'
-    );
-    const nanodePlans = extendedTypes.filter((type) => type.class === 'nanode');
-    const standardPlans = extendedTypes.filter(
-      (type) => type.class === 'standard'
-    );
-    const { nanode, highmem, standard } = getPlanSelectionsByPlanType(
-      extendedTypes
-    );
-
-    expect(highmem).toEqual(highmemPlans);
-    expect(standard).toEqual(standardPlans);
-    expect(nanode).toEqual(nanodePlans);
+    const actual = getPlanSelectionsByPlanType([standard, metal]);
+    expect([standard]).toEqual(actual.standard);
+    expect([metal]).toEqual(actual.metal);
   });
 });
