@@ -1,11 +1,10 @@
-import classNames from 'classnames';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import MainContentBanner from 'src/components/MainContentBanner';
@@ -36,7 +35,7 @@ import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
@@ -165,7 +164,7 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
 const MainContent = (props: CombinedProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const flags = useFlags();
   const { data: preferences } = usePreferences();
 
@@ -248,7 +247,7 @@ const MainContent = (props: CombinedProps) => {
    */
   return (
     <div
-      className={classNames({
+      className={cx({
         [classes.appFrame]: true,
         /**
          * hidden to prevent some jankiness with the app loading before the splash screen
@@ -282,7 +281,7 @@ const MainContent = (props: CombinedProps) => {
                   closeMenu={() => toggleMenu(false)}
                 />
                 <div
-                  className={classNames(classes.content, {
+                  className={cx(classes.content, {
                     [classes.fullWidthContent]:
                       desktopMenuIsOpen ||
                       (desktopMenuIsOpen && desktopMenuIsOpen === true),
@@ -301,7 +300,7 @@ const MainContent = (props: CombinedProps) => {
                     role="main"
                   >
                     <Grid container spacing={0} className={classes.grid}>
-                      <Grid className={classNames(classes.switchWrapper, 'p0')}>
+                      <Grid className={cx(classes.switchWrapper, 'p0')}>
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
