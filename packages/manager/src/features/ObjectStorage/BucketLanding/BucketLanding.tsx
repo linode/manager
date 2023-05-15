@@ -2,41 +2,38 @@ import {
   ObjectStorageBucket,
   ObjectStorageCluster,
 } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
-import classNames from 'classnames';
 import * as React from 'react';
-import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import BucketDetailsDrawer from './BucketDetailsDrawer';
+import BucketTable from './BucketTable';
+import CancelNotice from '../CancelNotice';
 import ErrorState from 'src/components/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
-import Placeholder from 'src/components/Placeholder';
 import TransferDisplay from 'src/components/TransferDisplay';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
+import Typography from 'src/components/core/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';
+import { APIError } from '@linode/api-v4/lib/types';
+import { BucketLandingEmptyState } from './BucketLandingEmptyState';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { makeStyles } from '@mui/styles';
+import { readableBytes } from 'src/utilities/unitConversions';
+import { Theme } from '@mui/material/styles';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+
+import {
+  sendDeleteBucketEvent,
+  sendDeleteBucketFailedEvent,
+} from 'src/utilities/ga';
 import {
   BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions';
-import {
-  sendDeleteBucketEvent,
-  sendDeleteBucketFailedEvent,
-  sendObjectStorageDocsEvent,
-} from 'src/utilities/ga';
-import { readableBytes } from 'src/utilities/unitConversions';
-import CancelNotice from '../CancelNotice';
-import BucketDetailsDrawer from './BucketDetailsDrawer';
-import BucketTable from './BucketTable';
-import { useProfile } from 'src/queries/profile';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -279,46 +276,7 @@ export const BucketLanding = () => {
 };
 
 const RenderEmpty = () => {
-  const classes = useStyles();
-  const history = useHistory();
-
-  return (
-    <React.Fragment>
-      <DocumentTitleSegment segment="Buckets" />
-      <Placeholder
-        title="Object Storage"
-        className={classNames({
-          [classes.empty]: true,
-          [classes.placeholderAdjustment]: true,
-        })}
-        isEntity
-        icon={BucketIcon}
-        renderAsSecondary
-        buttonProps={[
-          {
-            onClick: () => history.replace('/object-storage/buckets/create'),
-            children: 'Create Bucket',
-          },
-        ]}
-        showTransferDisplay
-      >
-        <Typography variant="subtitle1">Need help getting started?</Typography>
-        <Typography variant="subtitle1">
-          <a
-            onClick={() => sendObjectStorageDocsEvent('Empty state')}
-            href="https://linode.com/docs/platform/object-storage"
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-            className="h-u"
-          >
-            Learn more about storage options for your multimedia, archives, and
-            data backups here.
-          </a>
-        </Typography>
-      </Placeholder>
-    </React.Fragment>
-  );
+  return <BucketLandingEmptyState />;
 };
 
 export default BucketLanding;

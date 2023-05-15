@@ -1,25 +1,25 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import { useHistory, useParams } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
-import { Link } from 'src/components/Link';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
+import { DateTime } from 'luxon';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Link } from 'src/components/Link';
+import { makeStyles } from '@mui/styles';
+import { MODE } from './AccessKeyLanding/types';
+import { Theme } from '@mui/material/styles';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -44,19 +44,16 @@ export const ObjectStorageLanding = () => {
     action?: 'create';
     tab?: 'buckets' | 'access-keys';
   }>();
-
   const isCreateBucketOpen = tab === 'buckets' && action === 'create';
-
   const { _isRestrictedUser, accountSettings } = useAccountManagement();
-
   const { data: objectStorageClusters } = useObjectStorageClusters();
-
   const {
     data: objectStorageBucketsResponse,
     isLoading: areBucketsLoading,
     error: bucketsErrors,
   } = useObjectStorageBuckets(objectStorageClusters);
-
+  const userHasNoBucketCreated =
+    objectStorageBucketsResponse?.buckets.length === 0;
   const createOrEditDrawer = useOpenClose();
 
   const tabs = [
@@ -94,8 +91,13 @@ export const ObjectStorageLanding = () => {
   const shouldDisplayBillingNotice =
     !areBucketsLoading &&
     !bucketsErrors &&
-    objectStorageBucketsResponse?.buckets.length === 0 &&
+    userHasNoBucketCreated &&
     accountSettings?.object_storage === 'active';
+
+  // No need to display header since the it is redundant with the docs and CTA of the empty state
+  // Meanwhile it will still display the header for the access keys tab at all times
+  const shouldHideDocsAndCreateButtons =
+    !areBucketsLoading && tab === 'buckets' && userHasNoBucketCreated;
 
   const createButtonText =
     tab === 'access-keys' ? 'Create Access Key' : 'Create Bucket';
@@ -114,13 +116,14 @@ export const ObjectStorageLanding = () => {
       <DocumentTitleSegment segment="Object Storage" />
       <ProductInformationBanner bannerLocation="Object Storage" />
       <LandingHeader
-        title="Object Storage"
-        entity="Object Storage"
+        breadcrumbProps={{ pathname: '/object-storage' }}
         createButtonText={createButtonText}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
+        entity="Object Storage"
         onButtonClick={createButtonAction}
         removeCrumbX={1}
-        breadcrumbProps={{ pathname: '/object-storage' }}
+        shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
+        title="Object Storage"
       />
       <Tabs
         index={
@@ -190,7 +193,7 @@ export const BillingNotice = React.memo(() => {
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
       }}
     >
-      <Typography>
+      <Typography variant="body1">
         You are being billed for Object Storage but do not have any Buckets. You
         can cancel Object Storage in your{' '}
         <Link to="/account/settings">Account Settings</Link>, or{' '}
