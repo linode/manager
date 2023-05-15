@@ -1,11 +1,10 @@
 import { SupportReply } from '@linode/api-v4/lib/support';
-import classNames from 'classnames';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -27,8 +26,9 @@ import { Waypoint } from 'react-waypoint';
 import Stack from '@mui/material/Stack';
 import { Notice } from 'src/components/Notice/Notice';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+import { capitalize } from 'src/utilities/capitalize';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   title: {
     display: 'flex',
     alignItems: 'center',
@@ -61,7 +61,7 @@ const SupportTicketDetail = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
   const id = Number(ticketId);
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const attachmentErrors = history.location.state?.attachmentErrors;
 
@@ -110,7 +110,7 @@ const SupportTicketDetail = () => {
         <Stack direction="row" spacing={1} alignItems="center">
           <EntityIcon size={20} variant={entity.type as Variant} />
           <Typography>
-            This ticket linked to your {entity.type}{' '}
+            This ticket is associated with your {capitalize(entity.type)}{' '}
             {target ? <Link to={target}>{entity.label}</Link> : entity.label}
           </Typography>
         </Stack>
@@ -120,7 +120,7 @@ const SupportTicketDetail = () => {
 
   const _Chip = () => (
     <Chip
-      className={classNames({
+      className={cx({
         [classes.status]: true,
         [classes.open]: ticket.status === 'open' || ticket.status === 'new',
         [classes.closed]: ticket.status === 'closed',
