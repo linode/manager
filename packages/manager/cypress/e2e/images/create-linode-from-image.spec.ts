@@ -1,65 +1,70 @@
-import { createMockImage } from 'support/api/images';
-import { createMockLinodeList } from 'support/api/linodes';
 import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
-import { randomString } from 'support/util/random';
-import { mockGetImages } from 'support/intercepts/images';
+import {
+  randomLabel,
+  randomNumber,
+  randomString,
+  randomItem,
+} from 'support/util/random';
+import { mockGetAllImages } from 'support/intercepts/images';
+import { imageFactory, linodeFactory } from '@src/factories';
+import { regions, regionsMap } from 'support/constants/regions';
 
-const mockImage = createMockImage().data[0];
-const imageLabel = mockImage.label;
-const linodeId = 99999999;
-const rootpass = randomString(32);
-const region = 'us-west';
-const regionSelect = 'Fremont, CA';
-const imageId = mockImage.id;
-const type = 'g6-nanode-1';
-const mockLinodeList = createMockLinodeList({
-  id: linodeId,
-  label: `${imageLabel}-${region}`,
-  region,
-  type,
+const mockLinode = linodeFactory.build({
+  region: randomItem(regions),
 });
 
-const mockLinode = mockLinodeList.data[0];
+const mockImage = imageFactory.build({
+  label: randomLabel(),
+  is_public: false,
+  eol: null,
+  id: `private/${randomNumber()}`,
+});
 
 const createLinodeWithImageMock = (preselectedImage: boolean) => {
-  mockGetImages(createMockImage().data).as('mockImage');
+  mockGetAllImages([mockImage]).as('mockImage');
 
   cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
     req.reply({
       body: mockLinode,
-      headers: { image: imageId },
+      headers: { image: mockImage.id },
     });
   }).as('mockLinodeRequest');
-  cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}`), (req) => {
-    req.reply(mockLinode);
-  }).as('mockLinodeResponse');
+
+  cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${mockLinode.id}`),
+    (req) => {
+      req.reply(mockLinode);
+    }
+  ).as('mockLinodeResponse');
 
   cy.wait('@mockImage');
   if (!preselectedImage) {
     cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
       containsClick('Choose an image');
     });
-    cy.get(`[data-qa-image-select-item="${imageId}"]`).within(() => {
+    cy.get(`[data-qa-image-select-item="${mockImage.id}"]`).within(() => {
       cy.get('span').should('have.class', 'fl-tux');
-      fbtClick(imageLabel);
+      fbtClick(mockImage.label);
     });
   }
+
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
-  containsClick(regionSelect);
+  containsClick(regionsMap[mockLinode.region]);
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
-  cy.get('[id="root-password"]').type(rootpass);
+  cy.get('[id="root-password"]').type(randomString(32));
   getClick('[data-qa-deploy-linode="true"]');
 
   cy.wait('@mockLinodeRequest');
   cy.wait('@mockLinodeResponse');
 
   fbtVisible(mockLinode.label);
-  fbtVisible(regionSelect);
-  fbtVisible(linodeId);
+  fbtVisible(regionsMap[mockLinode.region]);
+  fbtVisible(mockLinode.id);
 };
 
 describe('create linode from image, mocked data', () => {
@@ -69,7 +74,7 @@ describe('create linode from image, mocked data', () => {
   });
 
   it('creates linode from preselected image on images tab', () => {
-    cy.visitWithLogin(`/linodes/create/?type=Images&imageID=${imageId}`);
+    cy.visitWithLogin(`/linodes/create/?type=Images&imageID=${mockImage.id}`);
     createLinodeWithImageMock(true);
   });
 });
