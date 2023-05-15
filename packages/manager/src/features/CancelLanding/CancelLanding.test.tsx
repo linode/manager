@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { CancelLanding } from './CancelLanding';
+import CancelLanding from './CancelLanding';
 
 const realLocation = window.location;
 

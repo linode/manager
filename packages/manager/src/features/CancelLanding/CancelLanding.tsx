@@ -1,7 +1,7 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
@@ -9,7 +9,7 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import H1Header from 'src/components/H1Header';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     height: '100vh',
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CancelLanding = () => {
-  const classes = useStyles();
+const CancelLanding = () => {
+  const { classes } = useStyles();
   const location = useLocation();
 
   const survey_link = path<string>(['state', 'survey_link'], location);
