@@ -1,5 +1,5 @@
 
-## [2023-05-10] - v0.92.0
+## [2023-05-15] - v0.92.0
 
 ### Added:
 - Ability download DNS zone file #9075
