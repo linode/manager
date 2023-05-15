@@ -117,6 +117,7 @@
   },
   "devDependencies": {
     "@mdx-js/loader": "^2.1.5",
+    "@octokit/rest": "^19.0.8",
     "@storybook/addon-actions": "~7.0.6",
     "@storybook/addon-controls": "~7.0.6",
     "@storybook/addon-docs": "^7.0.6",
