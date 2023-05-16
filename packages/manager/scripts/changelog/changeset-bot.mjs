@@ -3,12 +3,12 @@ dotenv.config({ path: '.env' });
 
 import { getPullRequestId } from './utils/getPullRequestId.mjs';
 import { Octokit } from '@octokit/rest';
-import { OWNER, REPO } from './utils/constants.mjs';
+import { BOT, OWNER, REPO } from './utils/constants.mjs';
 
 const octokit = new Octokit({
   // Uncomment to debug
   // log: console,
-  auth: process.env.GITHUB_TOKEN,
+  auth: process.env.CHANGESET_BOT,
 });
 
 export const findChangesetInPr = async ({ owner, repo }) => {
@@ -25,30 +25,25 @@ export const findChangesetInPr = async ({ owner, repo }) => {
 
     const changesetCommitted = PrData.includes(`pr-${pullRequestId}`);
     try {
-      // Get the authenticated user's information
-      // const { data: authUser } = await octokit.users.getAuthenticated();
       const { data: comments } = await octokit.issues.listComments({
         owner,
         repo,
         issue_number: pullRequestId,
       });
 
-      const botComment = comments.find(
-        // TODO: Change this to the bot's actual username
-        (comment) => comment.user.login === 'linode-changeset-bot'
+      const changesetBotComment = comments.find(
+        (comment) =>
+          comment.user.login === BOT && comment.body.includes('Changeset Found')
       );
-
-      // console.warn('comments', comments);
-
       const comment = changesetCommitted
-        ? `:heavy_check_mark: **Changeset Found**\n\nPR #${pullRequestId} has a changeset!`
+        ? `:heavy_check_mark: **Changeset Found!**\n\nThis incredibly attractive PR is getting closer to being released.`
         : `:warning: **No Changeset Found**\n\nPR #${pullRequestId} does not have a changeset.\nNot every PR needs one, but if this PR is a user-facing change, or is relevant to an 'Added', 'Fixed', 'Changed', 'Removed' or 'Tech Stories' type, please consider adding one.`;
 
-      if (botComment) {
+      if (changesetBotComment) {
         await octokit.issues.updateComment({
           owner,
           repo,
-          comment_id: botComment.id,
+          comment_id: changesetBotComment.id,
           body: comment,
         });
       } else {
