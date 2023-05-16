@@ -1,77 +1,62 @@
-import { GrantLevel } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { Notice } from 'src/components/Notice/Notice';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
-  UpdateLinode,
-  withLinodeDetailContext,
-} from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
 
-type CombinedProps = ContextProps;
+interface Props {
+  linodeId: number;
+  isReadOnly?: boolean;
+}
 
-export const LinodeSettingsLabelPanel: React.FC<CombinedProps> = (props) => {
-  const { linodeLabel, permissions, updateLinode } = props;
+export const LinodeSettingsLabelPanel = (props: Props) => {
+  const { linodeId, isReadOnly } = props;
+  const { enqueueSnackbar } = useSnackbar();
 
-  const [initialValue, setInitialValue] = React.useState<string>(linodeLabel);
-  const [updatedValue, setUpdatedValue] = React.useState<string>(linodeLabel);
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<string | undefined>(undefined);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const { data: linode } = useLinodeQuery(linodeId);
 
-  const changeLabel = () => {
-    setInitialValue(updatedValue);
-    setSubmitting(true);
-    setSuccess(undefined);
-    setErrors(undefined);
+  const {
+    mutateAsync: updateLinode,
+    isLoading,
+    error,
+  } = useLinodeUpdateMutation(linodeId);
 
-    updateLinode({ label: updatedValue })
-      .then(() => {
-        setSuccess('Linode label changed successfully.');
-        setSubmitting(false);
-      })
-      .catch((error) => {
-        setSubmitting(false);
-        setErrors(
-          getAPIErrorOrDefault(error, 'An error occurred while updating label')
-        );
-        scrollErrorIntoView('linode-settings-label');
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      label: linode?.label,
+    },
+    async onSubmit({ label }) {
+      await updateLinode({ label });
+      enqueueSnackbar(`Successfully updated Linode label to ${label}`, {
+        variant: 'success',
       });
-  };
+    },
+  });
 
-  const hasErrorFor = getAPIErrorFor({}, errors);
-  const labelError = hasErrorFor('label');
-  const disabled = permissions === 'read_only';
-  const genericError =
-    errors &&
-    !labelError &&
-    pathOr('An error occurred while updating label', [0, 'reason'], errors);
+  const errorMap = getErrorMap(['label'], error);
+  const labelError = errorMap.label;
+  const generalError = errorMap.none;
 
   return (
     <Accordion
       defaultExpanded
       heading="Linode Label"
-      success={success}
       actions={() => (
         <ActionsPanel>
           <Button
             buttonType="primary"
-            disabled={
-              disabled ||
-              (submitting && !labelError) ||
-              initialValue === updatedValue
-            }
-            loading={submitting && !labelError}
-            onClick={changeLabel}
+            disabled={isReadOnly || !formik.dirty}
+            loading={isLoading}
+            onClick={() => formik.handleSubmit()}
             data-qa-label-save
           >
             Save
@@ -79,40 +64,17 @@ export const LinodeSettingsLabelPanel: React.FC<CombinedProps> = (props) => {
         </ActionsPanel>
       )}
     >
-      {genericError && <Notice error text={genericError} />}
+      {Boolean(generalError) && <Notice error text={generalError} />}
       <TextField
         label="Label"
-        disabled={disabled}
+        disabled={isReadOnly}
         errorText={labelError}
         errorGroup="linode-settings-label"
-        error={Boolean(labelError)}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setUpdatedValue(e.target.value)
-        }
-        value={updatedValue}
+        name="label"
+        onChange={formik.handleChange}
+        value={formik.values.label}
         data-qa-label
       />
     </Accordion>
   );
 };
-
-const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
-
-interface ContextProps {
-  linodeLabel: string;
-  updateLinode: UpdateLinode;
-  permissions: GrantLevel;
-}
-
-const linodeContext = withLinodeDetailContext<ContextProps>(
-  ({ linode, updateLinode }) => ({
-    linodeLabel: linode.label,
-    permissions: linode._permissions,
-    updateLinode,
-  })
-);
-
-export default recompose<CombinedProps, {}>(
-  errorBoundary,
-  linodeContext
-)(LinodeSettingsLabelPanel) as React.ComponentType<{}>;

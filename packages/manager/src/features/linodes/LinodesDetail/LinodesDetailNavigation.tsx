@@ -158,7 +158,7 @@ const LinodesDetailNavigation = () => {
                 <LinodeActivity />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeSettings isBareMetalInstance={isBareMetalInstance} />
+                <LinodeSettings />
               </SafeTabPanel>
             </TabPanels>
           </React.Suspense>

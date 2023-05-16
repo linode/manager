@@ -1,228 +1,185 @@
-import { GrantLevel } from '@linode/api-v4/lib/account';
-import { LinodeAlerts } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { compose, lensPath, set } from 'ramda';
+import { Linode } from '@linode/api-v4';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose as rCompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Accordion from 'src/components/Accordion';
 import { Notice } from 'src/components/Notice/Notice';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
-  LinodeActionsProps,
-  withLinodeActions,
-} from 'src/store/linodes/linode.containers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
+import { useTypeQuery } from 'src/queries/types';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AlertSection from './AlertSection';
+import Accordion from 'src/components/Accordion/Accordion';
 
 interface Props {
-  isBareMetalInstance?: boolean;
   linodeId: number;
-  linodeLabel: string;
-  linodeAlerts: LinodeAlerts;
+  isReadOnly?: boolean;
 }
 
-interface State {
-  submitting: boolean;
-  success?: string;
-  cpuusage: AlertState;
-  diskio: AlertState;
-  incoming: AlertState;
-  outbound: AlertState;
-  transfer: AlertState;
-  errors?: APIError[];
-}
+export const LinodeSettingsAlertsPanel = (props: Props) => {
+  const { linodeId, isReadOnly } = props;
+  const { enqueueSnackbar } = useSnackbar();
 
-interface AlertState {
-  state: boolean;
-  value: number;
-}
+  const { data: linode } = useLinodeQuery(linodeId);
 
-interface Section {
-  title: string;
-  textTitle: string;
-  radioInputLabel: string;
-  textInputLabel: string;
-  copy: string;
-  state: boolean;
-  value: number;
-  onStateChange: (e: React.ChangeEvent<{}>, checked: boolean) => void;
-  onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: string;
-  endAdornment: string;
-}
+  const {
+    mutateAsync: updateLinode,
+    isLoading,
+    error,
+  } = useLinodeUpdateMutation(linodeId);
 
-type CombinedProps = Props & ContextProps & LinodeActionsProps;
+  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
 
-const maybeNumber = (v: string) => (v === '' ? '' : Number(v));
+  const isBareMetalInstance = type?.class === 'metal';
 
-class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
-  public state: State = {
-    submitting: false,
-    cpuusage: {
-      state: this.props.linodeAlerts.cpu > 0,
-      value: this.props.linodeAlerts.cpu,
+  const formik = useFormik<Linode['alerts']>({
+    enableReinitialize: true,
+    initialValues: {
+      cpu: linode?.alerts.cpu ?? 0,
+      io: linode?.alerts.io ?? 0,
+      network_in: linode?.alerts.network_in ?? 0,
+      network_out: linode?.alerts.network_out ?? 0,
+      transfer_quota: linode?.alerts.transfer_quota ?? 0,
     },
-    diskio: {
-      state: this.props.linodeAlerts.io > 0,
-      value: this.props.linodeAlerts.io,
-    },
-    incoming: {
-      state: this.props.linodeAlerts.network_in > 0,
-      value: this.props.linodeAlerts.network_in,
-    },
-    outbound: {
-      state: this.props.linodeAlerts.network_out > 0,
-      value: this.props.linodeAlerts.network_out,
-    },
-    transfer: {
-      state: this.props.linodeAlerts.transfer_quota > 0,
-      value: this.props.linodeAlerts.transfer_quota,
-    },
-  };
-
-  renderAlertSections = () => {
-    const hasErrorFor = getAPIErrorFor(
-      {
-        'alerts.cpu': 'CPU',
-        'alerts.network_in': 'Incoming traffic',
-        'alerts.network_out': 'Outbound traffic',
-        'alerts.transfer_quota': 'Transfer quota',
-        'alerts.io': 'Disk I/O rate',
-      },
-      this.state.errors
-    );
-
-    const { isBareMetalInstance } = this.props;
-
-    return [
-      {
-        title: 'CPU Usage',
-        textTitle: 'Usage Threshold',
-        radioInputLabel: 'cpu_usage_state',
-        textInputLabel: 'cpu_usage_threshold',
-        copy:
-          'Average CPU usage over 2 hours exceeding this value triggers this alert.',
-        state: this.state.cpuusage.state,
-        value: this.state.cpuusage.value,
-        onStateChange: (
-          e: React.ChangeEvent<HTMLInputElement>,
-          checked: boolean
-        ) => this.setState(set(lensPath(['cpuusage', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-          this.setState(
-            set(lensPath(['cpuusage', 'value']), maybeNumber(e.target.value))
-          );
+    async onSubmit({ cpu, network_in, network_out, transfer_quota, io }) {
+      await updateLinode({
+        alerts: {
+          cpu: isBareMetalInstance ? undefined : cpu,
+          network_in: isBareMetalInstance ? undefined : network_in,
+          network_out,
+          transfer_quota,
+          io,
         },
-        error: hasErrorFor('alerts.cpu'),
-        endAdornment: '%',
-        hidden: isBareMetalInstance,
-      },
-      {
-        radioInputLabel: 'disk_io_state',
-        textInputLabel: 'disk_io_threshold',
-        textTitle: 'I/O Threshold',
-        title: 'Disk I/O Rate',
-        copy:
-          'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
-        state: this.state.diskio.state,
-        value: this.state.diskio.value,
-        onStateChange: (
-          e: React.ChangeEvent<HTMLInputElement>,
-          checked: boolean
-        ) => this.setState(set(lensPath(['diskio', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          this.setState(
-            set(lensPath(['diskio', 'value']), maybeNumber(e.target.value))
-          ),
-        error: hasErrorFor('alerts.io'),
-        endAdornment: 'IOPS',
-        hidden: isBareMetalInstance,
-      },
-      {
-        radioInputLabel: 'incoming_traffic_state',
-        textInputLabel: 'incoming_traffic_threshold',
-        textTitle: 'Traffic Threshold',
-        title: 'Incoming Traffic',
-        copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
-        alert.`,
-        state: this.state.incoming.state,
-        value: this.state.incoming.value,
-        onStateChange: (
-          e: React.ChangeEvent<HTMLInputElement>,
-          checked: boolean
-        ) => this.setState(set(lensPath(['incoming', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          this.setState(
-            set(lensPath(['incoming', 'value']), maybeNumber(e.target.value))
-          ),
-        error: hasErrorFor('alerts.network_in'),
-        endAdornment: 'Mb/s',
-      },
-      {
-        radioInputLabel: 'outbound_traffic_state',
-        textInputLabel: 'outbound_traffic_threshold',
-        textTitle: 'Traffic Threshold',
-        title: 'Outbound Traffic',
-        copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
-        alert.`,
-        state: this.state.outbound.state,
-        value: this.state.outbound.value,
-        onStateChange: (
-          e: React.ChangeEvent<HTMLInputElement>,
-          checked: boolean
-        ) => this.setState(set(lensPath(['outbound', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          this.setState(
-            set(lensPath(['outbound', 'value']), maybeNumber(e.target.value))
-          ),
-        error: hasErrorFor('alerts.network_out'),
-        endAdornment: 'Mb/s',
-      },
-      {
-        radioInputLabel: 'transfer_quota_state',
-        textInputLabel: 'transfer_quota_threshold',
-        textTitle: 'Quota Threshold',
-        title: 'Transfer Quota',
-        copy: `Percentage of network transfer quota used being greater than this value will trigger
-          this alert.`,
-        state: this.state.transfer.state,
-        value: this.state.transfer.value,
-        onStateChange: (
-          e: React.ChangeEvent<HTMLInputElement>,
-          checked: boolean
-        ) => this.setState(set(lensPath(['transfer', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          this.setState(
-            set(lensPath(['transfer', 'value']), maybeNumber(e.target.value))
-          ),
-        error: hasErrorFor('alerts.transfer_quota'),
-        endAdornment: '%',
-      },
-    ].filter((thisAlert) => !thisAlert.hidden);
-  };
+      });
 
-  renderExpansionActions = () => {
-    const noError =
-      this.state.submitting &&
-      !this.renderAlertSections().reduce(
-        (result, s) => result || Boolean(s.error),
-        false
+      enqueueSnackbar(
+        `Successfully updated alert settings for ${linode?.label}`,
+        { variant: 'success' }
       );
+    },
+  });
 
-    const { permissions } = this.props;
+  const hasErrorFor = getAPIErrorFor(
+    {
+      'alerts.cpu': 'CPU',
+      'alerts.network_in': 'Incoming traffic',
+      'alerts.network_out': 'Outbound traffic',
+      'alerts.transfer_quota': 'Transfer quota',
+      'alerts.io': 'Disk I/O rate',
+    },
+    error ?? undefined
+  );
 
+  const alertSections = [
+    {
+      title: 'CPU Usage',
+      textTitle: 'Usage Threshold',
+      radioInputLabel: 'cpu_usage_state',
+      textInputLabel: 'cpu_usage_threshold',
+      copy:
+        'Average CPU usage over 2 hours exceeding this value triggers this alert.',
+      state: formik.values.cpu > 0,
+      value: formik.values.cpu,
+      onStateChange: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        checked: boolean
+      ) =>
+        formik.setFieldValue(
+          'cpu',
+          checked ? 90 * (linode?.specs.vcpus ?? 1) : 0
+        ),
+      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        formik.setFieldValue('cpu', e.target.valueAsNumber),
+      error: hasErrorFor('alerts.cpu'),
+      endAdornment: '%',
+      hidden: isBareMetalInstance,
+    },
+    {
+      radioInputLabel: 'disk_io_state',
+      textInputLabel: 'disk_io_threshold',
+      textTitle: 'I/O Threshold',
+      title: 'Disk I/O Rate',
+      copy:
+        'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
+      state: formik.values.io > 0,
+      value: formik.values.io,
+      onStateChange: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        checked: boolean
+      ) => formik.setFieldValue('io', checked ? 10000 : 0),
+      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        formik.setFieldValue('io', e.target.valueAsDate),
+      error: hasErrorFor('alerts.io'),
+      endAdornment: 'IOPS',
+      hidden: isBareMetalInstance,
+    },
+    {
+      radioInputLabel: 'incoming_traffic_state',
+      textInputLabel: 'incoming_traffic_threshold',
+      textTitle: 'Traffic Threshold',
+      title: 'Incoming Traffic',
+      copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
+        alert.`,
+      state: formik.values.network_in > 0,
+      value: formik.values.network_in,
+      onStateChange: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        checked: boolean
+      ) => formik.setFieldValue('network_in', checked ? 10 : 0),
+      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        formik.setFieldValue('network_in', e.target.valueAsNumber),
+      error: hasErrorFor('alerts.network_in'),
+      endAdornment: 'Mb/s',
+    },
+    {
+      radioInputLabel: 'outbound_traffic_state',
+      textInputLabel: 'outbound_traffic_threshold',
+      textTitle: 'Traffic Threshold',
+      title: 'Outbound Traffic',
+      copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
+        alert.`,
+      state: formik.values.network_out > 0,
+      value: formik.values.network_out,
+      onStateChange: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        checked: boolean
+      ) => formik.setFieldValue('network_out', checked ? 10 : 0),
+      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        formik.setFieldValue('network_out', e.target.valueAsNumber),
+      error: hasErrorFor('alerts.network_out'),
+      endAdornment: 'Mb/s',
+    },
+    {
+      radioInputLabel: 'transfer_quota_state',
+      textInputLabel: 'transfer_quota_threshold',
+      textTitle: 'Quota Threshold',
+      title: 'Transfer Quota',
+      copy: `Percentage of network transfer quota used being greater than this value will trigger
+          this alert.`,
+      state: formik.values.transfer_quota > 0,
+      value: formik.values.transfer_quota,
+      onStateChange: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        checked: boolean
+      ) => formik.setFieldValue('transfer_quota', checked ? 80 : 0),
+      onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        formik.setFieldValue('transfer_quota', e.target.valueAsNumber),
+      error: hasErrorFor('alerts.transfer_quota'),
+      endAdornment: '%',
+    },
+  ].filter((thisAlert) => !thisAlert.hidden);
+
+  const renderExpansionActions = () => {
     return (
       <ActionsPanel>
         <Button
           buttonType="primary"
-          onClick={this.setLinodeAlertThresholds}
-          disabled={noError || permissions === 'read_only'}
-          loading={noError}
+          onClick={() => formik.handleSubmit()}
+          disabled={isReadOnly || !formik.dirty}
+          loading={isLoading}
           data-qa-alerts-save
         >
           Save
@@ -231,97 +188,18 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     );
   };
 
-  setLinodeAlertThresholds = () => {
-    const {
-      linodeActions: { updateLinode },
-      isBareMetalInstance,
-    } = this.props;
-    this.setState(set(lensPath(['errors']), undefined));
-    this.setState(set(lensPath(['success']), undefined));
-    this.setState(set(lensPath(['submitting']), true));
+  const generalError = hasErrorFor('none');
 
-    updateLinode({
-      linodeId: this.props.linodeId,
-      alerts: {
-        cpu: isBareMetalInstance
-          ? undefined
-          : valueUnlessOff(this.state.cpuusage),
-        network_in: isBareMetalInstance
-          ? undefined
-          : valueUnlessOff(this.state.incoming),
-        network_out: valueUnlessOff(this.state.outbound),
-        transfer_quota: valueUnlessOff(this.state.transfer),
-        io: valueUnlessOff(this.state.diskio),
-      },
-    })
-      .then((_) => {
-        this.setState(
-          compose<State, State, State>(
-            set(
-              lensPath(['success']),
-              `Linode alert thresholds changed successfully.`
-            ),
-            set(lensPath(['submitting']), false)
-          )
-        );
-      })
-      .catch((error) => {
-        this.setState(
-          {
-            submitting: false,
-            errors: getAPIErrorOrDefault(
-              error,
-              'Unable to update alerts thresholds.'
-            ),
-          },
-          () => scrollErrorIntoView()
-        );
-      });
-  };
-
-  public render() {
-    const { permissions } = this.props;
-    const alertSections: Section[] = this.renderAlertSections();
-    const hasErrorFor = getAPIErrorFor({}, this.state.errors);
-    const generalError = hasErrorFor('none');
-
-    return (
-      <Accordion
-        heading="Notification Thresholds"
-        success={this.state.success}
-        actions={this.renderExpansionActions}
-        defaultExpanded
-      >
-        {generalError && <Notice error>{generalError}</Notice>}
-        {alertSections.map((p, idx) => (
-          <AlertSection
-            key={idx}
-            {...p}
-            readOnly={permissions === 'read_only'}
-          />
-        ))}
-      </Accordion>
-    );
-  }
-}
-
-const valueUnlessOff = ({ state, value }: { state: boolean; value: number }) =>
-  state ? value : 0;
-
-const errorBoundary = PanelErrorBoundary({
-  heading: 'Notification Thresholds',
-});
-
-interface ContextProps {
-  permissions: GrantLevel;
-}
-
-const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  permissions: linode._permissions,
-}));
-
-export default rCompose<CombinedProps, Props>(
-  errorBoundary,
-  linodeContext,
-  withLinodeActions
-)(LinodeSettingsAlertsPanel) as React.ComponentType<Props>;
+  return (
+    <Accordion
+      heading="Notification Thresholds"
+      actions={renderExpansionActions}
+      defaultExpanded
+    >
+      {generalError && <Notice error>{generalError}</Notice>}
+      {alertSections.map((p, idx) => (
+        <AlertSection key={idx} {...p} readOnly={isReadOnly} />
+      ))}
+    </Accordion>
+  );
+};
