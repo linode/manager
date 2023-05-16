@@ -11,10 +11,11 @@ interface Props {
   linodeId: number | undefined;
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 export const DeleteLinodeDialog = (props: Props) => {
-  const { linodeId, open, onClose } = props;
+  const { linodeId, open, onClose, onSuccess } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -34,6 +35,10 @@ export const DeleteLinodeDialog = (props: Props) => {
   const onDelete = async () => {
     await mutateAsync();
     onClose();
+
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   return (
