@@ -1,14 +1,14 @@
 # Changesets
 
 This directory gets auto-populated when running `yarn changeset`.
-You can however add your changesets manually as well, knowing that your types are limited to `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, and follow this format:
+You can however add your changesets manually as well, knowing that the [type] is limited to the following options `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, and follow this format:
 
 ```md
 ---
-"@linode/manager": `type`
+"@linode/manager": [type]
 ---
 
-My PR Description ([#`pr number`](`pr link`))
+My PR Description ([#`PR number`](`PR link`))
 ```
 
 You must commit them to the repo so they can be picked up for the changelog generation.
