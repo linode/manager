@@ -57,32 +57,6 @@ const { semverBump } = await inquirer.prompt([
 ]);
 
 /**
- * Prompt the user for the release date and the type of version bump.
- */
-const { releaseDate } = await inquirer.prompt([
-  {
-    type: 'input',
-    name: 'releaseDate',
-    message: 'Enter the release date (YYYY-MM-DD):',
-    validate: (input) => {
-      if (!input.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        return 'Please enter a valid date in the format YYYY-MM-DD.';
-      }
-
-      return true;
-    },
-  },
-]);
-const { semverBump } = await inquirer.prompt([
-  {
-    type: 'list',
-    name: 'semverBump',
-    message: 'Choose the type of version bump:',
-    choices: ['patch', 'minor', 'major'],
-  },
-]);
-
-/**
  * Generates the changelog content with the provided release date and version.
  */
 const newSemver = incrementSemver(currentSemver, semverBump);
