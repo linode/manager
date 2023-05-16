@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 
 interface Props {
   fileName: string;

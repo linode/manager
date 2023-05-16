@@ -15,7 +15,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import useFlags from 'src/hooks/useFlags';
 import TPADialog from './TPADialog';
 

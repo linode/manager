@@ -9,7 +9,7 @@ import {
   updateLinode as _updateLinode,
 } from '@linode/api-v4/lib/linodes';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
-import { getAllLinodeFirewalls } from 'src/queries/linodes';
+import { getAllLinodeFirewalls } from 'src/queries/linodes/firewalls';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -58,11 +58,9 @@ export const deleteLinode = createRequestThunk(
     }
 
     // Removed unneeded volume stores
-    queryClient.removeQueries([`${volumesQueryKey}-list`, 'linode', linodeId]);
-
-    // A Linode that was deleted may have had volumes attached.
-    // Invalidate paginated volume stores so they will reflect there is no attached Linode.
-    queryClient.invalidateQueries([`${volumesQueryKey}-list`]);
+    queryClient.removeQueries([volumesQueryKey, 'linode', linodeId]);
+    // Invalidate volume stores so they will reflect there is no attached Linode.
+    queryClient.invalidateQueries([volumesQueryKey]);
 
     return response;
   }

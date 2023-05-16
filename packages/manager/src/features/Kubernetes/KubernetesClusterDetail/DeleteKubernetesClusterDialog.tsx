@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { usePreferences } from 'src/queries/preferences';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
 import { KubeNodePoolResponse } from '@linode/api-v4';

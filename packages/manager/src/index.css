@@ -68,10 +68,6 @@ body.searchOverlay #main-content {
     color: #000 !important;
   }
 
-  .tableWrapper {
-    border: 1px solid #f4f4f4 !important;
-  }
-
   thead {
     display: table-header-group !important;
     border-bottom: 1px solid #f4f4f4 !important;

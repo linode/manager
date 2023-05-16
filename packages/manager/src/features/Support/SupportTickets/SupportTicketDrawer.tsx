@@ -16,7 +16,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import TextField from 'src/components/TextField';

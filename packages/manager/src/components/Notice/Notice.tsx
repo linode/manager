@@ -4,7 +4,6 @@ import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
 import { makeStyles } from 'tss-react/mui';
-import { withTheme, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
@@ -57,9 +56,6 @@ export const useStyles = makeStyles<
   },
   inner: {
     width: '100%',
-    '& p': {
-      fontSize: '1rem',
-    },
   },
   breakWords: {
     [`& .${classes.noticeText}`]: {
@@ -112,7 +108,7 @@ export const useStyles = makeStyles<
   },
 }));
 
-export interface Props extends Grid2Props {
+export interface NoticeProps extends Grid2Props {
   text?: string;
   error?: boolean;
   errorGroup?: string;
@@ -133,9 +129,7 @@ export interface Props extends Grid2Props {
   dismissibleButton?: JSX.Element;
 }
 
-type CombinedProps = Props & WithTheme;
-
-const Notice: React.FC<CombinedProps> = (props) => {
+export const Notice = (props: NoticeProps) => {
   const {
     className,
     important,
@@ -243,5 +237,3 @@ const Notice: React.FC<CombinedProps> = (props) => {
     </Grid>
   );
 };
-
-export default withTheme(Notice);

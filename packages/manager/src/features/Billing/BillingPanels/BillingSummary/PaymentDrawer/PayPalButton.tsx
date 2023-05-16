@@ -209,6 +209,7 @@ export const PayPalButton = (props: Props) => {
       'An error occurred when trying to make a one-time PayPal payment.',
       { error }
     );
+    setError('Unable to open PayPal.');
   };
 
   if (clientTokenLoading || isPending || !options['data-client-token']) {

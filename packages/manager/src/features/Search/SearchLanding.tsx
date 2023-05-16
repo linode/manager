@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import H1Header from 'src/components/H1Header';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { REFRESH_INTERVAL } from 'src/constants';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
