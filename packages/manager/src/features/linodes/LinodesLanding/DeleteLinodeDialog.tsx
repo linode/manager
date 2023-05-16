@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import {
   useDeleteLinodeMutation,
   useLinodeQuery,

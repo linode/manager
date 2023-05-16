@@ -1,11 +1,10 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import TextField from 'src/components/TextField';
+import Typography from 'src/components/core/Typography';
 
-export interface Props {
+export interface TypeToConfirmProps {
   confirmationText?: JSX.Element | string;
   onChange: (str: string) => void;
   label: string;
@@ -20,13 +19,7 @@ export interface Props {
   [propName: string]: any;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  description: {
-    marginTop: theme.spacing(),
-  },
-}));
-
-const TypeToConfirm: React.FC<Props> = (props) => {
+export const TypeToConfirm = (props: TypeToConfirmProps) => {
   const {
     confirmationText,
     onChange,
@@ -39,8 +32,6 @@ const TypeToConfirm: React.FC<Props> = (props) => {
     hideInstructions,
     ...rest
   } = props;
-
-  const classes = useStyles();
 
   /*
     There was an edge case bug where, when preferences?.type_to_confirm was undefined,
@@ -67,16 +58,15 @@ const TypeToConfirm: React.FC<Props> = (props) => {
         </>
       ) : null}
       {!hideInstructions ? (
-        <Typography
-          data-testid="instructions-to-enable-or-disable"
-          className={classes.description}
-        >
+        <StyledTypography data-testid="instructions-to-enable-or-disable">
           To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm
           section of <Link to="/profile/settings">My Settings</Link>.
-        </Typography>
+        </StyledTypography>
       ) : null}
     </>
   );
 };
 
-export default TypeToConfirm;
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  marginTop: theme.spacing(),
+}));
