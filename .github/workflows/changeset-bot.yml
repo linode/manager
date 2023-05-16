@@ -23,5 +23,5 @@ jobs:
 
       - name: Run Changeset Checker
         run: |
-          yarn add @octokit/rest
+          yarn add -W @octokit/rest
           node packages/manager/scripts/changelog/changeset-bot.mjs
