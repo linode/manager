@@ -105,7 +105,9 @@
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "release": "./scripts/release_changelog.sh",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "changeset": "node scripts/changelog/changeset.mjs",
+    "generate-changelog": "node scripts/changelog/generate-changelog.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
@@ -172,6 +174,7 @@
     "axe-core": "^3.5.1",
     "browserslist": "^4.16.5",
     "chai-string": "^1.5.0",
+    "chalk": "^5.2.0",
     "core-js": "^2.6.5",
     "cypress": "^12.11.0",
     "cypress-axe": "^1.0.0",
