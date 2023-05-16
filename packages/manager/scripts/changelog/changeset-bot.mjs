@@ -1,11 +1,12 @@
 import { getPullRequestId } from './utils/getPullRequestId.mjs';
 import { Octokit } from '@octokit/rest';
 import { OWNER, REPO } from './utils/constants.mjs';
+import { env } from 'process';
 
 const octokit = new Octokit({
   // Uncomment to debug
   // log: console,
-  auth: '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',
+  auth: process.env.GITHUB_TOKEN,
 });
 
 export const findChangesetInPr = async ({ owner, repo }) => {
