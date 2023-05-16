@@ -308,6 +308,7 @@ export type EventAction =
   | 'tfa_enabled'
   | 'tfa_disabled'
   | 'ticket_attachment_upload'
+  | 'ticket_update'
   | 'user_ssh_key_add'
   | 'user_ssh_key_update'
   | 'user_ssh_key_delete'

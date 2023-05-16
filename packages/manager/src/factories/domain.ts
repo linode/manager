@@ -1,5 +1,9 @@
 import * as Factory from 'factory.ts';
-import { Domain, DomainRecord } from '@linode/api-v4/lib/domains/types';
+import {
+  Domain,
+  DomainRecord,
+  ZoneFile,
+} from '@linode/api-v4/lib/domains/types';
 
 export const domainFactory = Factory.Sync.makeFactory<Domain>({
   domain: Factory.each((id) => `domain-${id}`),
@@ -33,4 +37,8 @@ export const domainRecordFactory = Factory.Sync.makeFactory<DomainRecord>({
   tag: null,
   created: '2020-05-19T19:07:36',
   updated: '2020-05-19T19:07:36',
+});
+
+export const domainZoneFileFactory = Factory.Sync.makeFactory<ZoneFile>({
+  zone_file: ['test line 1', 'test line 2'],
 });

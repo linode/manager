@@ -43,6 +43,7 @@ import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { ADOBE_ANALYTICS_URL } from './constants';
 import { linodeEventsHandler } from './queries/linodes/events';
+import { supportTicketEventHandler } from './queries/support';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -91,11 +92,19 @@ export class App extends React.Component<CombinedProps, State> {
     }
 
     /**
-     * Send pageviews unless blocklisted.
+     * Send pageviews
      */
     this.props.history.listen(({ pathname }) => {
+      // Send Google Analytics page view events
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
+      }
+
+      // Send Adobe Analytics page view events
+      if ((window as any)._satellite) {
+        (window as any)._satellite.track('page view', {
+          url: pathname,
+        });
       }
     });
 
@@ -177,6 +186,12 @@ export class App extends React.Component<CombinedProps, State> {
           !event._initial
       )
       .subscribe(linodeEventsHandler);
+
+    events$
+      .filter(
+        ({ event }) => event.action.startsWith('ticket') && !event._initial
+      )
+      .subscribe(supportTicketEventHandler);
 
     /*
      * We want to listen for migration events side-wide
