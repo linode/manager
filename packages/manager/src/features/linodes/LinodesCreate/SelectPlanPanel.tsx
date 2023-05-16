@@ -1,105 +1,28 @@
-import { useSelector } from 'react-redux';
+import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
-import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { isEmpty, pathOr } from 'ramda';
-import * as React from 'react';
-import Chip from 'src/components/core/Chip';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import { Currency } from 'src/components/Currency';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
-import Radio from 'src/components/Radio';
-import RenderGuard from 'src/components/RenderGuard';
-import SelectionCard from 'src/components/SelectionCard';
-import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { LINODE_NETWORK_IN } from 'src/constants';
-import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { gpuPlanText } from './utilities';
-import { ExtendedType } from 'src/utilities/extendType';
-import { ApplicationState } from 'src/store';
+import { Notice } from 'src/components/Notice/Notice';
+import Hidden from 'src/components/core/Hidden';
+import RenderGuard from 'src/components/RenderGuard';
+import TabbedPanel from 'src/components/TabbedPanel';
+import Typography from 'src/components/core/Typography';
 import { useRegionsQuery } from 'src/queries/regions';
-import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
+import { ExtendedType } from 'src/utilities/extendType';
 import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(3),
-    width: '100%',
-  },
-  copy: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3),
-  },
-  disabledRow: {
-    backgroundColor: theme.bg.tableHeader,
-    cursor: 'not-allowed',
-    opacity: 0.4,
-  },
-  table: {
-    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-    borderRight: `1px solid ${theme.borderColors.borderTable}`,
-    overflowX: 'hidden',
-  },
-  headingCellContainer: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  headerCell: {
-    borderTop: `1px solid ${theme.borderColors.borderTable} !important`,
-    borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-    '&.emptyCell': {
-      borderRight: 'none',
-    },
-    '&:not(.emptyCell)': {
-      borderLeft: 'none !important',
-    },
-    '&:last-child': {
-      paddingRight: 15,
-    },
-  },
-  chip: {
-    backgroundColor: theme.color.green,
-    color: '#fff',
-    textTransform: 'uppercase',
-    marginLeft: theme.spacing(2),
-  },
-  radioCell: {
-    height: theme.spacing(6),
-    width: '5%',
-    paddingRight: 0,
-  },
-  focusedRow: {
-    '&:focus-within': {
-      backgroundColor: theme.bg.lightBlue1,
-    },
-  },
-  gpuGuideLink: {
-    fontSize: '0.9em',
-    '& a': {
-      color: theme.textColors.linkActiveLight,
-    },
-    '& a:hover': {
-      color: '#3683dc',
-    },
-    '& p': {
-      fontFamily: '"LatoWebBold", sans-serif',
-    },
-  },
-}));
+import { RenderSelection } from './SelectPlanPanel/RenderSelection';
+import { useSelectPlanPanelStyles } from './SelectPlanPanel/selectPlanPanelStyles';
+import { gpuPlanText } from './utilities';
+import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 
 export interface PlanSelectionType extends BaseType {
   formattedLabel: ExtendedType['formattedLabel'];
@@ -148,16 +71,7 @@ export const SelectPlanPanel = (props: Props) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const selectedLinodePlanType = useSelector((state: ApplicationState) => {
-    if (linodeID) {
-      return state?.__resources.linodes.itemsById[linodeID]?.type;
-    }
-    return linodeID;
-  });
-
-  const classes = useStyles();
-
-  const onSelect = (id: string) => () => props.onSelect(id);
+  const { classes } = useSelectPlanPanelStyles();
 
   const getDisabledClass = (thisClass: string) => {
     const disabledClasses = (props.disabledClasses as string[]) ?? []; // Not a big fan of the casting here but it works
@@ -169,135 +83,6 @@ export const SelectPlanPanel = (props: Props) => {
       ?.filter((thisRegion) => thisRegion.capabilities.includes(capability))
       .map((thisRegion) => thisRegion.label);
     return arrayToList(withCapability ?? []);
-  };
-
-  const renderSelection = (type: PlanSelectionType, idx: number) => {
-    const selectedDiskSize = props.selectedDiskSize
-      ? props.selectedDiskSize
-      : 0;
-    let tooltip;
-    const planTooSmall = selectedDiskSize > type.disk;
-    const isSamePlan = type.heading === currentPlanHeading;
-    const isGPU = type.class === 'gpu';
-    const isDisabledClass = getDisabledClass(type.class);
-    const shouldShowTransfer = showTransfer && type.transfer;
-    const shouldShowNetwork = showTransfer && type.network_out;
-
-    if (planTooSmall) {
-      tooltip = `This plan is too small for the selected image.`;
-    }
-
-    const rowAriaLabel =
-      type && type.formattedLabel && isSamePlan
-        ? `${type.formattedLabel} this is your current plan`
-        : planTooSmall
-        ? `${type.formattedLabel} this plan is too small for resize`
-        : type.formattedLabel;
-
-    return (
-      <React.Fragment key={`tabbed-panel-${idx}`}>
-        {/* Displays Table Row for larger screens */}
-        <Hidden lgDown={isCreate} mdDown={!isCreate}>
-          <TableRow
-            data-qa-plan-row={type.formattedLabel}
-            aria-label={rowAriaLabel}
-            key={type.id}
-            onClick={
-              !isSamePlan && !isDisabledClass ? onSelect(type.id) : undefined
-            }
-            aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
-            className={classNames(classes.focusedRow, {
-              [classes.disabledRow]:
-                isSamePlan || planTooSmall || isDisabledClass,
-            })}
-          >
-            <TableCell className={classes.radioCell}>
-              {!isSamePlan && (
-                <FormControlLabel
-                  label={type.heading}
-                  aria-label={type.heading}
-                  className={'label-visually-hidden'}
-                  control={
-                    <Radio
-                      checked={!planTooSmall && type.id === String(selectedID)}
-                      onChange={onSelect(type.id)}
-                      disabled={planTooSmall || disabled || isDisabledClass}
-                      id={type.id}
-                    />
-                  }
-                />
-              )}
-            </TableCell>
-            <TableCell data-qa-plan-name>
-              <div className={classes.headingCellContainer}>
-                {type.heading}{' '}
-                {(isSamePlan || type.id === selectedLinodePlanType) && (
-                  <Chip
-                    data-qa-current-plan
-                    label="Current Plan"
-                    aria-label="This is your current plan"
-                    className={classes.chip}
-                  />
-                )}
-                {tooltip && (
-                  <TooltipIcon
-                    text={tooltip}
-                    tooltipPosition="right-end"
-                    sxTooltipIcon={{
-                      paddingTop: '0px !important',
-                      paddingBottom: '0px !important',
-                    }}
-                    status="help"
-                  />
-                )}
-              </div>
-            </TableCell>
-            <TableCell data-qa-monthly> ${type.price?.monthly}</TableCell>
-            <TableCell data-qa-hourly>
-              {isGPU ? (
-                <Currency quantity={type.price.hourly ?? 0} />
-              ) : (
-                `$${type.price?.hourly}`
-              )}
-            </TableCell>
-            <TableCell center noWrap data-qa-ram>
-              {convertMegabytesTo(type.memory, true)}
-            </TableCell>
-            <TableCell center data-qa-cpu>
-              {type.vcpus}
-            </TableCell>
-            <TableCell center noWrap data-qa-storage>
-              {convertMegabytesTo(type.disk, true)}
-            </TableCell>
-            {shouldShowTransfer && type.transfer ? (
-              <TableCell center data-qa-transfer>
-                {type.transfer / 1000} TB
-              </TableCell>
-            ) : null}
-            {shouldShowNetwork && type.network_out ? (
-              <TableCell center noWrap data-qa-network>
-                {LINODE_NETWORK_IN} Gbps{' '}
-                <span style={{ color: '#9DA4A6' }}>/</span>{' '}
-                {type.network_out / 1000} Gbps
-              </TableCell>
-            ) : null}
-          </TableRow>
-        </Hidden>
-
-        {/* Displays SelectionCard for small screens */}
-        <Hidden lgUp={isCreate} mdUp={!isCreate}>
-          <SelectionCard
-            key={type.id}
-            checked={type.id === String(selectedID)}
-            onClick={onSelect(type.id)}
-            heading={type.heading}
-            subheadings={type.subHeadings}
-            disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
-            tooltip={tooltip}
-          />
-        </Hidden>
-      </React.Fragment>
-    );
   };
 
   const renderPlanContainer = (plans: PlanSelectionType[]) => {
@@ -312,7 +97,22 @@ export const SelectPlanPanel = (props: Props) => {
     return (
       <Grid container spacing={2}>
         <Hidden lgUp={isCreate} mdUp={!isCreate}>
-          {plans.map(renderSelection)}
+          {plans.map((plan, id) => (
+            <RenderSelection
+              currentPlanHeading={currentPlanHeading}
+              disabled={disabled}
+              disabledClasses={props.disabledClasses}
+              idx={id}
+              isCreate={isCreate}
+              key={id}
+              linodeID={linodeID}
+              onSelect={props.onSelect}
+              selectedDiskSize={props.selectedDiskSize}
+              selectedID={selectedID}
+              showTransfer={showTransfer}
+              type={plan}
+            />
+          ))}
         </Hidden>
         <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <Grid xs={12}>
@@ -382,7 +182,22 @@ export const SelectPlanPanel = (props: Props) => {
                 </TableRow>
               </TableHead>
               <TableBody role="radiogroup">
-                {plans.map(renderSelection)}
+                {plans.map((plan, id) => (
+                  <RenderSelection
+                    currentPlanHeading={currentPlanHeading}
+                    disabled={disabled}
+                    disabledClasses={props.disabledClasses}
+                    idx={id}
+                    isCreate={isCreate}
+                    key={id}
+                    linodeID={linodeID}
+                    onSelect={props.onSelect}
+                    selectedDiskSize={props.selectedDiskSize}
+                    selectedID={selectedID}
+                    showTransfer={showTransfer}
+                    type={plan}
+                  />
+                ))}
               </TableBody>
             </Table>
           </Grid>
