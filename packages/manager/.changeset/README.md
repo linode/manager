@@ -5,7 +5,7 @@ You can however add your changesets manually as well, knowing that the [TYPE] is
 
 ```md
 ---
-'@linode/manager': [TYPE]
+"@linode/manager": [TYPE]
 ---
 
 My PR Description ([#`PR number`](`PR link`))

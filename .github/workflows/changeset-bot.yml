@@ -1,0 +1,27 @@
+name: Changeset Bot
+env:
+  BOT_TOKEN: ${{ secrets.CHANGESET_BOT }}
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  changeset-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.14.1'
+
+      - name: Run Changeset Checker
+        run: |
+          npm install @octokit/rest
+          node packages/manager/scripts/changelog/changeset-bot.js
