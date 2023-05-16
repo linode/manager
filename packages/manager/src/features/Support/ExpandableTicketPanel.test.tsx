@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { supportReplyFactory } from 'src/factories/support';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { ExpandableTicketPanel, Props } from './ExpandableTicketPanel';
+import { ExpandableTicketPanel } from './ExpandableTicketPanel';
 import { shouldRenderHively } from './Hively';
 
 const recent = DateTime.utc()
@@ -17,7 +17,7 @@ const user = 'Linode';
 
 const reply = supportReplyFactory.build();
 
-const props: Props = {
+const props = {
   reply,
   isCurrentUser: false,
 };
