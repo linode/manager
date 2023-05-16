@@ -291,13 +291,13 @@ export const portStringToItems = (
   return [uniq(items), customInput.join(', ')];
 };
 
-export const validateForm = (
-  protocol?: string,
-  ports?: string,
-  label?: string,
-  description?: string,
-  addresses?: string
-) => {
+export const validateForm = ({
+  protocol,
+  ports,
+  label,
+  description,
+  addresses,
+}: Partial<FormState>) => {
   const errors: Partial<FormState> = {};
 
   if (label) {
@@ -326,7 +326,7 @@ export const validateForm = (
     errors.addresses = 'Sources is a required field.';
   }
 
-  if (!ports) {
+  if (!ports && protocol !== 'ICMP' && protocol !== 'IPENCAP') {
     errors.ports = 'Ports is a required field.';
   }
 
