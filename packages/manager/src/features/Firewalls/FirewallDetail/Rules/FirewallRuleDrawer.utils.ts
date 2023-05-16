@@ -295,7 +295,8 @@ export const validateForm = (
   protocol?: string,
   ports?: string,
   label?: string,
-  description?: string
+  description?: string,
+  addresses?: string
 ) => {
   const errors: Partial<FormState> = {};
 
@@ -308,6 +309,8 @@ export const validateForm = (
       errors.label =
         'Label must include only ASCII letters, numbers, underscores, periods, and dashes.';
     }
+  } else {
+    errors.label = 'Label is required.';
   }
 
   if (description && description.length > 100) {
@@ -317,6 +320,14 @@ export const validateForm = (
   if (!protocol) {
     // eslint-disable-next-line
     errors.protocol = 'Protocol is required.';
+  }
+
+  if (!addresses) {
+    errors.addresses = 'Sources is a required field.';
+  }
+
+  if (!ports) {
+    errors.ports = 'Ports is a required field.';
   }
 
   if ((protocol === 'ICMP' || protocol === 'IPENCAP') && ports) {

@@ -41,10 +41,6 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
   (props) => {
     const classes = useStyles();
 
-    // This will be set to `true` once a form field has been touched. This is used to disable the
-    // "Submit" button unless there have been changes to the form.
-    const [formTouched, setFormTouched] = React.useState<boolean>(false);
-
     const {
       values,
       errors,
@@ -112,10 +108,6 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           return;
         }
 
-        if (!formTouched) {
-          setFormTouched(true);
-        }
-
         if (!touched.label) {
           setFieldValue(
             'label',
@@ -134,7 +126,6 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         }
       },
       [
-        formTouched,
         setFieldValue,
         touched,
         category,
@@ -146,20 +137,13 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
 
     const handleTextFieldChange = React.useCallback(
       (e: React.ChangeEvent) => {
-        if (!formTouched) {
-          setFormTouched(true);
-        }
         handleChange(e);
       },
-      [formTouched, handleChange]
+      [handleChange]
     );
 
     const handleProtocolChange = React.useCallback(
       (item: Item | null) => {
-        if (!formTouched) {
-          setFormTouched(true);
-        }
-
         setFieldValue('protocol', item?.value);
         if (item?.value === 'ICMP' || item?.value === 'IPENCAP') {
           // Submitting the form with ICMP or IPENCAP and defined ports causes an error
@@ -167,41 +151,30 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           setPresetPorts([]);
         }
       },
-      [formTouched, setFieldValue, setPresetPorts]
+      [setFieldValue, setPresetPorts]
     );
 
     const handleAddressesChange = React.useCallback(
       (item: Item | null) => {
-        if (!formTouched) {
-          setFormTouched(true);
-        }
-
         setFieldValue('addresses', item?.value);
         // Reset custom IPs
         setIPs([{ address: '' }]);
       },
-      [formTouched, setFieldValue, setFormTouched, setIPs]
+      [setFieldValue, setIPs]
     );
 
     const handleActionChange = React.useCallback(
       (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
-        if (!formTouched) {
-          setFormTouched(true);
-        }
-
         setFieldValue('action', value);
       },
-      [formTouched, setFieldValue, setFormTouched]
+      [setFieldValue]
     );
 
     const handleIPChange = React.useCallback(
       (_ips: ExtendedIP[]) => {
-        if (!formTouched) {
-          setFormTouched(true);
-        }
         setIPs(_ips);
       },
-      [formTouched, setIPs]
+      [setIPs]
     );
 
     const handleIPBlur = (_ips: ExtendedIP[]) => {
@@ -212,9 +185,6 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
 
     const handlePortPresetChange = React.useCallback(
       (items: Item<string>[]) => {
-        if (!formTouched) {
-          setFormTouched(true);
-        }
         // If the user is selecting "ALL", it doesn't make sense
         // to show additional selections.
         if (
@@ -229,7 +199,7 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           setFieldValue('ports', '');
         }
       },
-      [setPresetPorts, formTouched, setFieldValue]
+      [setPresetPorts, setFieldValue]
     );
 
     const addressesValue = React.useMemo(() => {
@@ -264,6 +234,7 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           errorText={errors.label}
           onChange={handleTextFieldChange}
           onBlur={handleBlur}
+          required
         />
         <TextField
           label="Description"
@@ -286,6 +257,7 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           onChange={handleProtocolChange}
           onBlur={handleBlur}
           isClearable={false}
+          required
         />
         <Select
           isMulti
@@ -300,6 +272,7 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
               ? `Ports are not allowed for ${values.protocol} protocols.`
               : undefined,
           }}
+          required
         />
         {hasCustomInput ? (
           <TextField
@@ -319,10 +292,12 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           placeholder={`Select ${addressesLabel}s...`}
           aria-label={`Select rule ${addressesLabel}s.`}
           options={addressOptions}
+          errorText={errors.addresses}
           value={addressesValue}
           onChange={handleAddressesChange}
           onBlur={handleBlur}
           isClearable={false}
+          required
         />
         {/* Show this field only if "IP / Netmask has been selected." */}
         {values.addresses === 'ip/netmask' && (
@@ -342,7 +317,6 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           <Typography>
             <strong>Action</strong>
           </Typography>
-
           <RadioGroup
             aria-label="action"
             name="action"
@@ -367,7 +341,6 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           <Button
             buttonType="primary"
             onClick={() => handleSubmit()}
-            disabled={!formTouched}
             data-qa-submit
           >
             {mode === 'create' ? 'Add Rule' : 'Add Changes'}
