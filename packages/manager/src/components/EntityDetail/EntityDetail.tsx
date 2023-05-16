@@ -45,7 +45,7 @@ const GridFooter = styled(Grid)<Partial<EntityDetailProps>>(
     borderTop:
       props.body === undefined
         ? `1px solid ${theme.borderColors.borderTable}`
-        : '',
+        : undefined,
     display: 'flex',
     flexDirection: 'row',
     padding: `7px 16px`,
