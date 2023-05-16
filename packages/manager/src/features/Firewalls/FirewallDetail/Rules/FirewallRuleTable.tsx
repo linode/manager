@@ -25,9 +25,9 @@ import {
 } from 'src/features/Firewalls/shared';
 import { capitalize } from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
-import { Mode } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
+import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -155,21 +155,19 @@ interface RowActionHandlers {
   triggerUndo: (idx: number) => void;
   triggerReorder: (startIdx: number, endIdx: number) => void;
 }
-interface Props extends RowActionHandlers {
+interface FirewallRuleTableProps extends RowActionHandlers {
   category: Category;
   policy: FirewallPolicyType;
   handlePolicyChange: (
     category: Category,
     newPolicy: FirewallPolicyType
   ) => void;
-  openRuleDrawer: (category: Category, mode: Mode) => void;
+  openRuleDrawer: (category: Category, mode: FirewallRuleDrawerMode) => void;
   rulesWithStatus: ExtendedFirewallRule[];
   disabled: boolean;
 }
 
-type CombinedProps = Props;
-
-const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
+export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
   const {
     category,
     openRuleDrawer,
@@ -342,8 +340,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default React.memo(FirewallRuleTable);
 
 // =============================================================================
 // <FirewallRuleTableRow />

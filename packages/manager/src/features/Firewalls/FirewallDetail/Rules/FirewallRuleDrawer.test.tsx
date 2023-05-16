@@ -5,9 +5,8 @@ import * as React from 'react';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import RuleDrawer, {
+import {
   classifyIPs,
-  CombinedProps,
   deriveTypeFromValuesAndIPs,
   formValueToIPs,
   getInitialIPs,
@@ -16,9 +15,11 @@ import RuleDrawer, {
   IP_ERROR_MESSAGE,
   validateForm,
   validateIPs,
-} from './FirewallRuleDrawer';
+} from './FirewallRuleDrawer.utils';
+import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
 import { FirewallRuleError, PORT_PRESETS } from './shared';
+import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
 
 const mockOnClose = jest.fn();
 const mockOnSubmit = jest.fn();
@@ -27,7 +28,7 @@ const baseItems = [PORT_PRESETS['22'], PORT_PRESETS['443']];
 
 jest.mock('src/components/EnhancedSelect/Select');
 
-const props: CombinedProps = {
+const props: FirewallRuleDrawerProps = {
   category: 'inbound',
   mode: 'create',
   isOpen: true,
@@ -38,20 +39,24 @@ const props: CombinedProps = {
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
     const { getByText } = renderWithTheme(
-      <RuleDrawer {...props} mode="create" category="inbound" />
+      <FirewallRuleDrawer {...props} mode="create" category="inbound" />
     );
     getByText('Add an Inbound Rule');
   });
 
   it('disables the port input when the ICMP protocol is selected', () => {
-    renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
+    renderWithTheme(
+      <FirewallRuleDrawer {...props} mode="create" category="inbound" />
+    );
     expect(screen.getByLabelText('Ports')).not.toBeDisabled();
     userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
     expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
 
   it('disables the port input when the IPENCAP protocol is selected', () => {
-    renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
+    renderWithTheme(
+      <FirewallRuleDrawer {...props} mode="create" category="inbound" />
+    );
     expect(screen.getByLabelText('Ports')).not.toBeDisabled();
     userEvent.selectOptions(
       screen.getByPlaceholderText(/protocol/i),
