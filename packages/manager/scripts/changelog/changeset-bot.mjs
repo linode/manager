@@ -1,7 +1,9 @@
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
+
 import { getPullRequestId } from './utils/getPullRequestId.mjs';
 import { Octokit } from '@octokit/rest';
 import { OWNER, REPO } from './utils/constants.mjs';
-import { env } from 'process';
 
 const octokit = new Octokit({
   // Uncomment to debug
