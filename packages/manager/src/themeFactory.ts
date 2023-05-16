@@ -835,6 +835,9 @@ export const base: ThemeOptions = {
           marginRight: 0,
         },
       },
+      defaultProps: {
+        size: 'large',
+      },
     },
     MuiInput: {
       styleOverrides: {

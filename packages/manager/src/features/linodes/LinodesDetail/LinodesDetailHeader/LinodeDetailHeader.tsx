@@ -1,28 +1,19 @@
-import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { compose } from 'recompose';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import {
   PowerActionsDialog,
   Action,
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import useLinodeActions from 'src/hooks/useLinodeActions';
-import { useProfile } from 'src/queries/profile';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
-import {
-  LinodeDetailContext,
-  withLinodeDetailContext,
-} from '../linodeDetailContext';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
-import MutationNotification from './MutationNotification';
+import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 import LandingHeader from 'src/components/LandingHeader';
 import { sendEvent } from 'src/utilities/ga';
@@ -30,23 +21,19 @@ import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { APIError } from '@linode/api-v4/lib/types';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ACCESS_LEVELS } from 'src/constants';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
-
-interface Props {
-  numVolumes: number;
-  username: string;
-  linodeConfigs: Config[];
-}
+import { useProfile, useGrants } from 'src/queries/profile';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
 
 interface TagDrawerProps {
   tags: string[];
   open: boolean;
 }
 
-type CombinedProps = Props & LinodeDetailContext & LinodeContext;
-
-const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
+const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect
@@ -61,7 +48,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
+  const { data: linode } = useLinodeQuery(matchedLinodeId);
+
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
+    matchedLinodeId
+  );
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -89,7 +80,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     tags: [],
   });
 
-  const { updateLinode } = useLinodeActions();
   const history = useHistory();
 
   const closeDialogs = () => {
@@ -125,27 +115,29 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const updateTags = (linodeId: number, tags: string[]) => {
-    return updateLinode({ linodeId, tags }).then((_) => {
+  const updateTags = (tags: string[]) => {
+    return updateLinode({ tags }).then((_) => {
       setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags }));
     });
   };
-
-  const { data: profile } = useProfile();
-  const { data: volumesData } = useLinodeVolumesQuery(matchedLinodeId);
-
-  const numAttachedVolumes = volumesData?.results ?? 0;
 
   const {
     editableLabelError,
     setEditableLabelError,
     resetEditableLabel,
   } = useEditableLabelState();
-  const disabled = linode._permissions === ACCESS_LEVELS.readOnly;
 
-  const updateLinodeLabel = async (linodeId: number, label: string) => {
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const disabled =
+    Boolean(profile?.restricted) &&
+    grants?.linode.find((grant) => grant.id === matchedLinodeId)
+      ?.permissions === 'read_only';
+
+  const updateLinodeLabel = async (label: string) => {
     try {
-      await updateLinode({ linodeId, label });
+      await updateLinode({ label });
     } catch (updateError) {
       const errors: APIError[] = getAPIErrorOrDefault(
         updateError,
@@ -158,8 +150,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   };
 
   const handleLinodeLabelUpdate = (label: string) => {
-    const linodeId = linode.id;
-    return updateLinodeLabel(linodeId, label)
+    return updateLinodeLabel(label)
       .then(() => {
         resetEditableLabel();
       })
@@ -207,18 +198,18 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <HostMaintenance linodeStatus={linodeStatus} />
-      <MutationNotification disks={linodeDisks} />
+      <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
+      <MutationNotification linodeId={matchedLinodeId} />
       <Notifications />
       <LandingHeader
         title="Create"
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         breadcrumbProps={{
-          pathname: `/linodes/${linode.label}`,
+          pathname: `/linodes/${linode?.label}`,
           onEditHandlers: !disabled
             ? {
-                editableTextTitle: linode.label,
+                editableTextTitle: linode?.label ?? '',
                 onEdit: handleLinodeLabelUpdate,
                 onCancel: resetEditableLabel,
                 errorText: editableLabelError,
@@ -234,12 +225,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         }}
       />
       <LinodeEntityDetail
-        id={linode.id}
-        linode={linode}
-        numVolumes={numAttachedVolumes}
-        username={profile?.username}
-        linodeConfigs={linodeConfigs}
-        backups={linode.backups}
+        id={matchedLinodeId}
         openTagDrawer={openTagDrawer}
         handlers={handlers}
       />
@@ -275,10 +261,10 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         linodeId={matchedLinodeId}
       />
       <TagDrawer
-        entityLabel={linode.label}
+        entityLabel={linode?.label ?? ''}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        updateTags={(tags) => updateTags(linode.id, tags)}
+        updateTags={updateTags}
         onClose={closeTagDrawer}
       />
       <EnableBackupsDialog
@@ -290,16 +276,4 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface LinodeContext {
-  linodeStatus: LinodeStatus;
-  linodeDisks: Disk[];
-}
-
-export default compose<CombinedProps, {}>(
-  withLinodeDetailContext<LinodeContext>(({ linode }) => ({
-    linode,
-    linodeStatus: linode.status,
-    linodeDisks: linode._disks,
-    configs: linode._configs,
-  }))
-)(LinodeDetailHeader);
+export default LinodeDetailHeader;

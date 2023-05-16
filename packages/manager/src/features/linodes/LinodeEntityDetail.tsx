@@ -1,5 +1,5 @@
-import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
-import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { LinodeBackups } from '@linode/api-v4/lib/linodes';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -21,9 +21,7 @@ import TagCell from 'src/components/TagCell';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import useLinodeActions from 'src/hooks/useLinodeActions';
-import { useSpecificTypes } from 'src/queries/types';
-import { listToItemsByID } from 'src/queries/base';
+import { useTypeQuery } from 'src/queries/types';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -32,16 +30,13 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import EntityHeader from 'src/components/EntityHeader';
-import { WithRecentEvent } from './LinodesLanding/withRecentEvent';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { GrantLevel } from '@linode/api-v4/lib/account';
-import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { useProfile } from 'src/queries/profile';
@@ -49,58 +44,53 @@ import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
 import { TableCell } from 'src/components/TableCell';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
+import useEvents from 'src/hooks/useEvents';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { useNotificationContext } from '../NotificationCenter/NotificationContext';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
   id: number;
-  linode: Linode;
-  username?: string;
-  backups: LinodeBackups;
-  linodeConfigs: Config[];
-  numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
   openNotificationMenu?: () => void;
   isSummaryView?: boolean;
 }
 
-export type CombinedProps = LinodeEntityDetailProps &
-  WithRecentEvent & { handlers: LinodeHandlers };
+export type Props = LinodeEntityDetailProps & { handlers: LinodeHandlers };
 
-const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
-  const {
-    variant,
-    linode,
-    username,
-    backups,
-    linodeConfigs,
-    isSummaryView,
-    numVolumes,
-    openTagDrawer,
-    openNotificationMenu,
-    recentEvent,
-    handlers,
-  } = props;
+const LinodeEntityDetail = (props: Props) => {
+  const { id, variant, isSummaryView, openTagDrawer, handlers } = props;
+
+  const { data: linode } = useLinodeQuery(id);
+
+  const { data: volumesData } = useLinodeVolumesQuery(id);
 
   const { data: images } = useAllImagesQuery({}, {});
-  const imagesItemsById = listToItemsByID(images ?? []);
 
-  const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
-  const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
+  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
 
-  const extendedLinode = useExtendedLinode(linode.id);
+  const { openMenu } = useNotificationContext();
 
   const { data: regions } = useRegionsQuery();
+  const { events } = useEvents();
 
-  const imageSlug = linode.image;
+  if (!linode) {
+    return <CircleProgress />;
+  }
 
-  const imageVendor =
-    imageSlug && imagesItemsById[imageSlug]
-      ? imagesItemsById[imageSlug].vendor
-      : null;
+  const numberOfVolumes = volumesData?.results ?? 0;
 
-  const linodeType = Boolean(linode.type) ? type ?? null : null;
+  const image = images?.find((image) => image.id === linode.image) ?? null;
 
-  const linodePlan = linodeType?.formattedLabel ?? null;
+  const recentEvent = events.find(
+    (e) => e.entity?.type === 'linode' && e.entity.id === linode.id
+  );
 
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
@@ -111,25 +101,23 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     progress = getProgressOrDefault(recentEvent);
     transitionText = _transitionText(linode.status, linode.id, recentEvent);
   }
-  const trimmedIPv6 = linode.ipv6?.replace('/128', '') || null;
+  const trimmedIPv6 = linode?.ipv6?.replace('/128', '') || null;
 
   return (
     <EntityDetail
       header={
         <Header
           variant={variant}
-          imageVendor={imageVendor}
+          imageVendor={image?.vendor ?? null}
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
-          linodePermissions={extendedLinode?._permissions}
           linodeRegionDisplay={linodeRegionDisplay}
-          backups={backups}
+          backups={linode.backups}
           isSummaryView={isSummaryView}
-          linodeConfigs={linodeConfigs}
-          type={linodeType}
+          type={type ?? null}
           image={linode.image ?? 'Unknown Image'}
-          openNotificationMenu={openNotificationMenu || (() => null)}
+          openNotificationMenu={() => openMenu()}
           progress={progress}
           transitionText={transitionText}
           handlers={handlers}
@@ -138,7 +126,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
       body={
         <Body
           linodeLabel={linode.label}
-          numVolumes={numVolumes}
+          numVolumes={numberOfVolumes}
           numCPUs={linode.specs.vcpus}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
@@ -146,12 +134,13 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           ipv4={linode.ipv4}
           ipv6={trimmedIPv6}
           linodeId={linode.id}
-          username={username ? username : 'none'}
         />
       }
       footer={
         <Footer
-          linodePlan={linodePlan}
+          linodePlan={
+            type?.label ? formatStorageUnits(type.label) : linode.type
+          }
           linodeRegionDisplay={linodeRegionDisplay}
           linodeId={linode.id}
           linodeCreated={linode.created}
@@ -178,9 +167,8 @@ export interface HeaderProps {
   linodePermissions?: GrantLevel;
   linodeRegionDisplay: string;
   backups: LinodeBackups;
-  type: ExtendedType | null;
+  type: LinodeType | null;
   image: string;
-  linodeConfigs: Config[];
   isSummaryView?: boolean;
   openNotificationMenu: () => void;
   progress?: number;
@@ -406,7 +394,6 @@ export interface BodyProps {
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   linodeId: number;
-  username: string;
   linodeLabel: string;
   numVolumes: number;
 }
@@ -444,7 +431,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Body: React.FC<BodyProps> = React.memo((props) => {
+export const Body = React.memo((props: BodyProps) => {
   const classes = useBodyStyles();
   const {
     numCPUs,
@@ -453,11 +440,11 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
     region,
     ipv4,
     ipv6,
-    username,
     linodeLabel,
     linodeId,
     numVolumes,
   } = props;
+  const { data: profile } = useProfile();
   const theme = useTheme();
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
@@ -538,7 +525,11 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
             { heading: 'SSH Access', text: sshLink(ipv4[0]) },
             {
               heading: 'LISH Console via SSH',
-              text: lishLink(username, region, linodeLabel),
+              text: lishLink(
+                profile?.username ?? 'unknown',
+                region,
+                linodeLabel
+              ),
             },
           ]}
           gridProps={{ md: 7 }}
@@ -732,12 +723,13 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
     openTagDrawer,
   } = props;
 
-  const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 
   const updateTags = React.useCallback(
     (tags: string[]) => {
-      return updateLinode({ linodeId, tags }).catch((e) =>
+      return updateLinode({ tags }).catch((e) =>
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error updating tags')[0].reason,
           {
@@ -746,7 +738,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
         )
       );
     },
-    [linodeId, updateLinode, enqueueSnackbar]
+    [updateLinode, enqueueSnackbar]
   );
 
   const sxListItemMdBp = {

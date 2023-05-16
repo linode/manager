@@ -3,13 +3,14 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { makeStyles, useTheme } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
+import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { IPTypes } from './types';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   emptyCell: {
     height: 40,
   },
@@ -26,7 +27,7 @@ interface Props {
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
