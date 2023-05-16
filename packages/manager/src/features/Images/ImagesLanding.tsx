@@ -1,50 +1,48 @@
-import { Event, Image, ImageStatus } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
-import produce from 'immer';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import ErrorState from 'src/components/ErrorState';
+import Hidden from 'src/components/core/Hidden';
+import imageEvents from 'src/store/selectors/imageEvents';
+import ImageRow, { ImageWithEvent } from './ImageRow';
+import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
+import LandingHeader from 'src/components/LandingHeader';
+import Paper from 'src/components/core/Paper';
+import produce from 'immer';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import Typography from 'src/components/core/Typography';
+import { APIError } from '@linode/api-v4/lib/types';
+import { ApplicationState } from 'src/store';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Hidden from 'src/components/core/Hidden';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
-import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
-import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
-import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table/Table';
-import TableCell from 'src/components/TableCell/TableCell';
-import TableRow from 'src/components/TableRow/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell';
+import { Event, Image, ImageStatus } from '@linode/api-v4';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { Handlers as ImageHandlers } from './ImagesActionMenu';
+import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
+import { listToItemsByID } from 'src/queries/base';
+import { makeStyles } from '@mui/styles';
+import { Notice } from 'src/components/Notice/Notice';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { Theme } from '@mui/material/styles';
+import { useHistory } from 'react-router-dom';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { listToItemsByID } from 'src/queries/base';
+import { useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
 import {
   queryKey,
   removeImageFromCache,
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
-import { ApplicationState } from 'src/store';
-import imageEvents from 'src/store/selectors/imageEvents';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import ImageRow, { ImageWithEvent } from './ImageRow';
-import { Handlers as ImageHandlers } from './ImagesActionMenu';
-import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -273,10 +271,6 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
       });
   };
 
-  const onCreateButtonClick = () => {
-    history.push('/images/create');
-  };
-
   const onRetryClick = (
     imageId: string,
     imageLabel: string,
@@ -420,35 +414,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   };
 
   const renderEmpty = () => {
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Images" />
-        <Placeholder
-          title="Images"
-          icon={ImageIcon}
-          isEntity
-          buttonProps={[
-            {
-              onClick: onCreateButtonClick,
-              children: 'Create Image',
-            },
-          ]}
-        >
-          <Typography variant="subtitle1">
-            Adding an image is easy. Click here to
-          </Typography>
-          <Typography variant="subtitle1">
-            <Link to="https://linode.com/docs/platform/disk-images/linode-images-new-manager/">
-              learn more about Images
-            </Link>
-            &nbsp;or&nbsp;
-            <Link to="https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode">
-              deploy an Image to a Linode.
-            </Link>
-          </Typography>
-        </Placeholder>
-      </React.Fragment>
-    );
+    return <ImagesLandingEmptyState />;
   };
 
   if (manualImagesLoading || automaticImagesLoading) {
@@ -489,7 +455,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
       <LandingHeader
         title="Images"
         entity="Image"
-        onButtonClick={onCreateButtonClick}
+        onButtonClick={() => history.push('/images/create')}
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
       <Paper className={classes.imageTable}>

@@ -1,8 +1,32 @@
-import type { Linode } from '@linode/api-v4/types';
+import type { Image, Linode, Disk } from '@linode/api-v4/types';
 import { imageFactory } from 'src/factories/images';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
-import { apiMatcher } from 'support/util/intercepts';
+import { interceptCreateImage, mockGetImages } from 'support/intercepts/images';
+import { mockGetLinodeDisks } from 'support/intercepts/linodes';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
+
+const diskLabel = 'Debian 10 Disk';
+
+const mockDisks: Disk[] = [
+  {
+    id: 44311273,
+    status: 'ready',
+    label: diskLabel,
+    created: '2020-08-21T17:26:14',
+    updated: '2020-08-21T17:26:30',
+    filesystem: 'ext4',
+    size: 81408,
+  },
+  {
+    id: 44311274,
+    status: 'ready',
+    label: '512 MB Swap Image',
+    created: '2020-08-21T17:26:14',
+    updated: '2020-08-21T17:26:31',
+    filesystem: 'swap',
+    size: 512,
+  },
+];
 
 describe('create image', () => {
   it('captures image from Linode and mocks create image', () => {
@@ -22,40 +46,12 @@ describe('create image', () => {
     });
 
     // stub incoming response
-    cy.intercept(apiMatcher('images?*'), {
-      results: 0,
-      data: [],
-      page: 1,
-      pages: 1,
-    }).as('getImages');
-    cy.intercept('POST', apiMatcher('images'), mockNewImage).as('createImage');
+    const mockImages = imageFactory.buildList(2);
+    mockGetImages(mockImages).as('getImages');
+    interceptCreateImage(mockNewImage).as('createImage');
     createLinode().then((linode: Linode) => {
       // stub incoming disks response
-      cy.intercept('GET', apiMatcher(`linode/instances/${linode.id}/disks*`), {
-        results: 2,
-        data: [
-          {
-            id: 44311273,
-            status: 'ready',
-            label: diskLabel,
-            created: '2020-08-21T17:26:14',
-            updated: '2020-08-21T17:26:30',
-            filesystem: 'ext4',
-            size: 81408,
-          },
-          {
-            id: 44311274,
-            status: 'ready',
-            label: '512 MB Swap Image',
-            created: '2020-08-21T17:26:14',
-            updated: '2020-08-21T17:26:31',
-            filesystem: 'swap',
-            size: 512,
-          },
-        ],
-        page: 1,
-        pages: 1,
-      }).as('getDisks');
+      mockGetLinodeDisks(linode.id, mockDisks).as('getDisks');
       cy.visitWithLogin('/images');
       cy.get('[data-qa-header]')
         .should('be.visible')

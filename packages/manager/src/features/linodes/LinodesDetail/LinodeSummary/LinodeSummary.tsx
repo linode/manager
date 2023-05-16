@@ -16,7 +16,7 @@ import {
   STATS_NOT_READY_MESSAGE,
   useLinodeStats,
   useLinodeStatsByDate,
-} from 'src/queries/linodes';
+} from 'src/queries/linodes/stats';
 import { useProfile } from 'src/queries/profile';
 import { setUpCharts } from 'src/utilities/charts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

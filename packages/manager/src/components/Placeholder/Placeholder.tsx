@@ -66,6 +66,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: `${theme.spacing(10)} 0`,
     },
   },
+  rootWithShowTransferDisplay: {
+    padding: `${theme.spacing(4)} 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: `${theme.spacing(10)} 0 ${theme.spacing(4)}`,
+    },
+  },
   copy: {
     textAlign: 'center',
     gridArea: 'copy',
@@ -150,28 +156,32 @@ export interface ExtendedButtonProps extends ButtonProps {
 }
 
 export interface Props {
-  icon?: React.ComponentType<any>;
-  children?: string | React.ReactNode;
-  title: string;
   buttonProps?: ExtendedButtonProps[];
+  children?: string | React.ReactNode;
   className?: string;
+  dataQAPlaceholder?: string | boolean;
+  descriptionMaxWidth?: number;
+  icon?: React.ComponentType<any>;
   isEntity?: boolean;
-  renderAsSecondary?: boolean;
-  subtitle?: string;
   linksSection?: JSX.Element;
+  renderAsSecondary?: boolean;
   showTransferDisplay?: boolean;
+  subtitle?: string;
+  title: string;
 }
 
 const Placeholder: React.FC<Props> = (props) => {
   const {
-    isEntity,
-    title,
-    icon: Icon,
     buttonProps,
-    renderAsSecondary,
-    subtitle,
+    dataQAPlaceholder,
+    descriptionMaxWidth,
+    icon: Icon,
+    isEntity,
     linksSection,
+    renderAsSecondary,
     showTransferDisplay,
+    subtitle,
+    title,
   } = props;
 
   const classes = useStyles();
@@ -186,7 +196,9 @@ const Placeholder: React.FC<Props> = (props) => {
           [classes.root]: true,
           [classes.containerAdjustment]:
             showTransferDisplay && linksSection === undefined,
+          [classes.rootWithShowTransferDisplay]: showTransferDisplay,
         })}
+        data-qa-placeholder-container={dataQAPlaceholder || true}
       >
         <div
           className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}
@@ -206,7 +218,14 @@ const Placeholder: React.FC<Props> = (props) => {
           </Typography>
         ) : null}
 
-        <div className={classes.copy}>
+        <div
+          className={classes.copy}
+          style={{
+            maxWidth: descriptionMaxWidth
+              ? descriptionMaxWidth
+              : classes.copy['maxWidth'],
+          }}
+        >
           {typeof props.children === 'string' ? (
             <Typography variant="subtitle1">{props.children}</Typography>
           ) : (

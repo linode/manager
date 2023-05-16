@@ -1,70 +1,39 @@
-import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { compose } from 'recompose';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import PowerDialogOrDrawer, {
-  Action as BootAction,
-} from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { DialogType } from 'src/features/linodes/types';
-import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import useLinodeActions from 'src/hooks/useLinodeActions';
-import { useProfile } from 'src/queries/profile';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { parseQueryParams } from 'src/utilities/queryParams';
-import DeleteDialog from '../../LinodesLanding/DeleteDialog';
-import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
-import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
-  LinodeDetailContext,
-  withLinodeDetailContext,
-} from '../linodeDetailContext';
-import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
-import RescueDialog from '../LinodeRescue';
+  PowerActionsDialog,
+  Action,
+} from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { parseQueryParams } from 'src/utilities/queryParams';
+import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
+import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
+import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
+import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
-import MutationNotification from './MutationNotification';
+import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
-import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 import LandingHeader from 'src/components/LandingHeader';
 import { sendEvent } from 'src/utilities/ga';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { APIError } from '@linode/api-v4/lib/types';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ACCESS_LEVELS } from 'src/constants';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-
-interface Props {
-  numVolumes: number;
-  username: string;
-  linodeConfigs: Config[];
-}
+import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
+import { useProfile, useGrants } from 'src/queries/profile';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
 
 interface TagDrawerProps {
   tags: string[];
   open: boolean;
 }
 
-interface PowerDialogProps {
-  open: boolean;
-  linodeLabel: string;
-  linodeID: number;
-  bootAction?: BootAction;
-  linodeConfigs?: Config[];
-}
-
-interface DialogProps {
-  open: boolean;
-  linodeLabel?: string;
-  linodeID: number;
-}
-
-type CombinedProps = Props & LinodeDetailContext & LinodeContext;
-
-const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
+const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect
@@ -79,142 +48,39 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const { data: notifications } = useNotificationsQuery();
+  const { data: linode } = useLinodeQuery(matchedLinodeId);
 
-  const notificationContext = React.useContext(_notificationContext);
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
+    matchedLinodeId
+  );
 
-  const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
-
-  const [powerDialog, setPowerDialog] = React.useState<PowerDialogProps>({
-    open: false,
-    linodeID: 0,
-    linodeLabel: '',
-  });
-
-  const [deleteDialog, setDeleteDialog] = React.useState<DialogProps>({
-    open: false,
-    linodeID: 0,
-    linodeLabel: '',
-  });
-
-  const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: queryParams.resize === 'true',
-    linodeID: matchedLinodeId,
-  });
-
-  const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: queryParams.migrate === 'true',
-    linodeID: matchedLinodeId,
-  });
-
-  const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: queryParams.rescue === 'true',
-    linodeID: matchedLinodeId,
-  });
-
-  const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: queryParams.rebuild === 'true',
-    linodeID: matchedLinodeId,
-  });
-
-  const [backupsDialog, setBackupsDialog] = React.useState<DialogProps>({
-    open: false,
-    linodeID: 0,
-  });
-
-  const [
-    upgradeVolumesDialog,
-    setUpgradeVolumesDialog,
-  ] = React.useState<DialogProps>({
-    open: queryParams.upgrade === 'true',
-    linodeID: matchedLinodeId,
-  });
+  const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
+  const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(
+    queryParams.delete === 'true'
+  );
+  const [rebuildDialogOpen, setRebuildDialogOpen] = React.useState(
+    queryParams.rebuild === 'true'
+  );
+  const [rescueDialogOpen, setRescueDialogOpen] = React.useState(
+    queryParams.rescue === 'true'
+  );
+  const [resizeDialogOpen, setResizeDialogOpen] = React.useState(
+    queryParams.resize === 'true'
+  );
+  const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
+    queryParams.migrate === 'true'
+  );
+  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
+    false
+  );
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: [],
   });
 
-  const { updateLinode, deleteLinode } = useLinodeActions();
   const history = useHistory();
-
-  const openPowerActionDialog = (
-    bootAction: BootAction,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => {
-    setPowerDialog({
-      open: true,
-      bootAction,
-      linodeConfigs,
-      linodeID,
-      linodeLabel,
-    });
-  };
-
-  const openDialog = (
-    dialogType: DialogType,
-    linodeID: number,
-    linodeLabel?: string
-  ) => {
-    switch (dialogType) {
-      case 'delete':
-        setDeleteDialog((deleteDialog) => ({
-          ...deleteDialog,
-          open: true,
-          linodeLabel,
-          linodeID,
-        }));
-        break;
-      case 'migrate':
-        setMigrateDialog((migrateDialog) => ({
-          ...migrateDialog,
-          open: true,
-          linodeID,
-        }));
-        history.replace({ search: 'migrate=true' });
-        break;
-      case 'resize':
-        setResizeDialog((resizeDialog) => ({
-          ...resizeDialog,
-          open: true,
-          linodeID,
-        }));
-        history.replace({ search: 'resize=true' });
-        break;
-      case 'rescue':
-        setRescueDialog((rescueDialog) => ({
-          ...rescueDialog,
-          open: true,
-          linodeID,
-        }));
-        history.replace({ search: 'rescue=true' });
-        break;
-      case 'rebuild':
-        setRebuildDialog((rebuildDialog) => ({
-          ...rebuildDialog,
-          open: true,
-          linodeID,
-        }));
-        history.replace({ search: 'rebuild=true' });
-        break;
-      case 'enable_backups':
-        setBackupsDialog((backupsDialog) => ({
-          ...backupsDialog,
-          open: true,
-          linodeID,
-        }));
-        break;
-      case 'upgrade_volumes':
-        setUpgradeVolumesDialog((upgradeVolumesDialog) => ({
-          ...upgradeVolumesDialog,
-          open: true,
-        }));
-        history.replace({ search: 'upgrade=true' });
-        break;
-    }
-  };
 
   const closeDialogs = () => {
     // If the user is on a Linode detail tab with the modal open and they then close it,
@@ -229,17 +95,13 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       history.replace({ search: undefined });
     }
 
-    setPowerDialog((powerDialog) => ({ ...powerDialog, open: false }));
-    setDeleteDialog((deleteDialog) => ({ ...deleteDialog, open: false }));
-    setResizeDialog((resizeDialog) => ({ ...resizeDialog, open: false }));
-    setMigrateDialog((migrateDialog) => ({ ...migrateDialog, open: false }));
-    setRescueDialog((rescueDialog) => ({ ...rescueDialog, open: false }));
-    setRebuildDialog((rebuildDialog) => ({ ...rebuildDialog, open: false }));
-    setBackupsDialog((backupsDialog) => ({ ...backupsDialog, open: false }));
-    setUpgradeVolumesDialog((upgradeVolumesDialog) => ({
-      ...upgradeVolumesDialog,
-      open: false,
-    }));
+    setPowerDialogOpen(false);
+    setDeleteDialogOpen(false);
+    setResizeDialogOpen(false);
+    setMigrateDialogOpen(false);
+    setRescueDialogOpen(false);
+    setRebuildDialogOpen(false);
+    setEnableBackupsDialogOpen(false);
   };
 
   const closeTagDrawer = () => {
@@ -253,45 +115,29 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const updateTags = (linodeId: number, tags: string[]) => {
-    return updateLinode({ linodeId, tags }).then((_) => {
+  const updateTags = (tags: string[]) => {
+    return updateLinode({ tags }).then((_) => {
       setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags }));
     });
   };
-
-  const { data: profile } = useProfile();
-  const { data: volumesData } = useLinodeVolumesQuery(matchedLinodeId);
-
-  const volumesForLinode = volumesData?.data ?? [];
-  const numAttachedVolumes = volumesData?.results ?? 0;
-
-  const handleDeleteLinode = (linodeId: number) => {
-    history.push('/linodes');
-    return deleteLinode(linodeId);
-  };
-
-  const upgradeableVolumeIds =
-    notifications
-      ?.filter(
-        (notification) =>
-          notification.type === 'volume_migration_scheduled' &&
-          volumesForLinode.some(
-            (volume: Volume) => volume.id === notification?.entity?.id
-          )
-      )
-      // Non null assertion because we assume that these kinds of notifications will always have an entity attached.
-      .map((notification) => notification.entity!.id) ?? [];
 
   const {
     editableLabelError,
     setEditableLabelError,
     resetEditableLabel,
   } = useEditableLabelState();
-  const disabled = linode._permissions === ACCESS_LEVELS.readOnly;
 
-  const updateLinodeLabel = async (linodeId: number, label: string) => {
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const disabled =
+    Boolean(profile?.restricted) &&
+    grants?.linode.find((grant) => grant.id === matchedLinodeId)
+      ?.permissions === 'read_only';
+
+  const updateLinodeLabel = async (label: string) => {
     try {
-      await updateLinode({ linodeId, label });
+      await updateLinode({ label });
     } catch (updateError) {
       const errors: APIError[] = getAPIErrorOrDefault(
         updateError,
@@ -304,8 +150,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   };
 
   const handleLinodeLabelUpdate = (label: string) => {
-    const linodeId = linode.id;
-    return updateLinodeLabel(linodeId, label)
+    return updateLinodeLabel(label)
       .then(() => {
         resetEditableLabel();
       })
@@ -317,20 +162,54 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       });
   };
 
+  const onOpenPowerDialog = (action: Action) => {
+    setPowerDialogOpen(true);
+    setPowerAction(action);
+  };
+
+  const onOpenDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const onOpenResizeDialog = () => {
+    setResizeDialogOpen(true);
+  };
+
+  const onOpenRebuildDialog = () => {
+    setRebuildDialogOpen(true);
+  };
+
+  const onOpenRescueDialog = () => {
+    setRescueDialogOpen(true);
+  };
+
+  const onOpenMigrateDialog = () => {
+    setMigrateDialogOpen(true);
+  };
+
+  const handlers = {
+    onOpenPowerDialog,
+    onOpenDeleteDialog,
+    onOpenResizeDialog,
+    onOpenRebuildDialog,
+    onOpenRescueDialog,
+    onOpenMigrateDialog,
+  };
+
   return (
     <>
-      <HostMaintenance linodeStatus={linodeStatus} />
-      <MutationNotification disks={linodeDisks} />
+      <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
+      <MutationNotification linodeId={matchedLinodeId} />
       <Notifications />
       <LandingHeader
         title="Create"
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         breadcrumbProps={{
-          pathname: `/linodes/${linode.label}`,
+          pathname: `/linodes/${linode?.label}`,
           onEditHandlers: !disabled
             ? {
-                editableTextTitle: linode.label,
+                editableTextTitle: linode?.label ?? '',
                 onEdit: handleLinodeLabelUpdate,
                 onCancel: resetEditableLabel,
                 errorText: editableLabelError,
@@ -346,84 +225,55 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         }}
       />
       <LinodeEntityDetail
-        id={linode.id}
-        linode={linode}
-        numVolumes={numAttachedVolumes}
-        username={profile?.username}
-        linodeConfigs={linodeConfigs}
-        backups={linode.backups}
+        id={matchedLinodeId}
         openTagDrawer={openTagDrawer}
-        openDialog={openDialog}
-        openPowerActionDialog={openPowerActionDialog}
-        openNotificationMenu={notificationContext.openMenu}
+        handlers={handlers}
       />
-      <PowerDialogOrDrawer
-        isOpen={powerDialog.open}
-        action={powerDialog.bootAction}
-        linodeID={powerDialog.linodeID}
-        linodeLabel={powerDialog.linodeLabel}
-        close={closeDialogs}
-        linodeConfigs={powerDialog.linodeConfigs}
-      />
-      <DeleteDialog
-        open={deleteDialog.open}
+      <PowerActionsDialog
+        isOpen={powerDialogOpen}
+        action={powerAction ?? 'Reboot'}
+        linodeId={matchedLinodeId}
         onClose={closeDialogs}
-        linodeID={deleteDialog.linodeID}
-        linodeLabel={deleteDialog.linodeLabel}
-        handleDelete={handleDeleteLinode}
+      />
+      <DeleteLinodeDialog
+        open={deleteDialogOpen}
+        onClose={closeDialogs}
+        linodeId={matchedLinodeId}
       />
       <LinodeResize
-        open={resizeDialog.open}
+        open={resizeDialogOpen}
         onClose={closeDialogs}
-        linodeId={resizeDialog.linodeID}
+        linodeId={matchedLinodeId}
       />
       <LinodeRebuildDialog
-        open={rebuildDialog.open}
+        open={rebuildDialogOpen}
         onClose={closeDialogs}
-        linodeId={rebuildDialog.linodeID}
+        linodeId={matchedLinodeId}
       />
       <RescueDialog
-        open={rescueDialog.open}
+        open={rescueDialogOpen}
         onClose={closeDialogs}
-        linodeId={rescueDialog.linodeID}
+        linodeId={matchedLinodeId}
       />
       <MigrateLinode
-        open={migrateDialog.open}
+        open={migrateDialogOpen}
         onClose={closeDialogs}
-        linodeID={migrateDialog.linodeID}
+        linodeId={matchedLinodeId}
       />
       <TagDrawer
-        entityLabel={linode.label}
+        entityLabel={linode?.label ?? ''}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        updateTags={(tags) => updateTags(linode.id, tags)}
+        updateTags={updateTags}
         onClose={closeTagDrawer}
       />
-      <EnableBackupDialog
-        linodeId={backupsDialog.linodeID}
-        open={backupsDialog.open}
-        onClose={closeDialogs}
-      />
-      <UpgradeVolumesDialog
-        open={upgradeVolumesDialog.open}
-        linode={linode}
-        upgradeableVolumeIds={upgradeableVolumeIds}
+      <EnableBackupsDialog
+        linodeId={matchedLinodeId}
+        open={enableBackupsDialogOpen}
         onClose={closeDialogs}
       />
     </>
   );
 };
 
-interface LinodeContext {
-  linodeStatus: LinodeStatus;
-  linodeDisks: Disk[];
-}
-
-export default compose<CombinedProps, {}>(
-  withLinodeDetailContext<LinodeContext>(({ linode }) => ({
-    linode,
-    linodeStatus: linode.status,
-    linodeDisks: linode._disks,
-    configs: linode._configs,
-  }))
-)(LinodeDetailHeader);
+export default LinodeDetailHeader;
