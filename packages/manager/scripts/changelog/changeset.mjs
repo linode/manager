@@ -55,16 +55,16 @@ async function generateChangeset() {
     },
   ]);
 
+  const prLink = `https://github.com/linode/manager/pull/${pullRequestId}`;
+  const changesetFile = `${CHANGESET_DIRECTORY}/pr-${pullRequestId}-${type
+    .toLowerCase()
+    .replace(/\s/g, '-')}-${Date.now()}.md`;
+  const changesetContent = `---\n"@linode/manager": ${type}\n---\n\n${description} ([#${pullRequestId}](${prLink}))\n`;
+
   /**
    * Create the changeset file.
    */
   try {
-    const prLink = `https://github.com/linode/manager/pull/${pullRequestId}`;
-    const changesetFile = `${CHANGESET_DIRECTORY}/pr-${pullRequestId}-${type
-      .toLowerCase()
-      .replace(/\s/g, '-')}-${Date.now()}.md`;
-    const changesetContent = `---\n"@linode/manager": ${type}\n---\n\n${description} ([#${pullRequestId}](${prLink}))\n`;
-
     await writeFileAsync(changesetFile, changesetContent, {
       encoding: 'utf-8',
     });
