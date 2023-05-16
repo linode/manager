@@ -1,27 +1,33 @@
+import { getPullRequestId } from './utils/getPullRequestId.mjs';
 import { Octokit } from '@octokit/rest';
-import { CHANGESET_DIRECTORY } from './utils/constants.mjs';
+import { OWNER, REPO } from './utils/constants.mjs';
 
-// Initialize Octokit using a personal access token or GitHub App installation token
-const octokit = new Octokit();
+const octokit = new Octokit({
+  log: console,
+});
 
-async function checkChangeset(owner, repo, prNumber) {
-  const changesetFilePath = CHANGESET_DIRECTORY;
-
+export const findChangesetInPr = async ({ owner, repo }) => {
   try {
-    // Check if the changeset file exists
-    const { data: file } = await octokit.repos.getContent({
+    const pullRequestId = await getPullRequestId();
+    const { data: PrData } = await octokit.rest.pulls.get({
       owner,
       repo,
-      path: changesetFilePath,
-      ref: 'develop', // Or the branch you want to check against
+      pull_number: pullRequestId,
+      mediaType: {
+        format: 'diff',
+      },
     });
 
-    // Changeset file exists
-    console.warn(`PR #${prNumber} has a changeset (${file}).`);
-  } catch (error) {
-    // Changeset file doesn't exist
-    console.warn(`PR #${prNumber} does not have a changeset.`);
-  }
-}
+    const changesetCommitted = PrData.includes(`pr-${pullRequestId}`);
 
-checkChangeset('abailly-akamai', '@linode/manager', '9104');
+    if (changesetCommitted) {
+      console.warn(`PR #${pullRequestId} has a changeset.`);
+    } else {
+      console.warn(`PR #${pullRequestId} does not have a changeset.`);
+    }
+  } catch (error) {
+    console.warn(`An error occurred trying to check for a changeset: ${error}`);
+  }
+};
+
+findChangesetInPr({ owner: OWNER, repo: REPO });
