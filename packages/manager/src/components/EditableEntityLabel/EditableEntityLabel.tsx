@@ -2,7 +2,8 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import EntityIcon, { Variant } from 'src/components/EntityIcon/EntityIcon';
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
 import EditableInput from './EditableInput';
 
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   text: string;
   onEdit: (s: string) => Promise<any>;
-  iconVariant?: Variant;
+  iconVariant?: EntityVariants;
   loading: boolean;
   subText?: string;
   status?: string;

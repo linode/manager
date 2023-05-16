@@ -8,7 +8,7 @@ import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import EntityIcon from 'src/components/EntityIcon';
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import MenuItem from 'src/components/MenuItem';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { PowerActionsDialog, Action } from '../../PowerActionsDialogOrDrawer';
