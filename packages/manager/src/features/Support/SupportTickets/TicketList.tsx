@@ -11,7 +11,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import TicketRow from './TicketRow';
+import { TicketRow } from './TicketRow';
 import { useSupportTicketsQuery } from 'src/queries/support';
 import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
