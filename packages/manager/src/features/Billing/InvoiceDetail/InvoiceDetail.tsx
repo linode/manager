@@ -8,7 +8,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import * as React from 'react';
-import { CSVLink } from 'react-csv';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { useParams } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
@@ -18,7 +18,7 @@ import { Currency } from 'src/components/Currency';
 import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from 'src/components/IconButton';
 import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
@@ -140,21 +140,14 @@ export const InvoiceDetail = () => {
             >
               {account && invoice && items && (
                 <>
-                  {/* Hidden CSVLink component controlled by a ref.
-                  This is done so we can use Button styles.  */}
-                  <CSVLink
-                    ref={csvRef}
+                  <DownloadCSV
+                    csvRef={csvRef}
+                    data={items}
                     filename={`invoice-${invoice.date}.csv`}
                     headers={csvHeaders}
-                    data={items}
-                  />
-                  <Button
-                    buttonType="secondary"
                     onClick={() => csvRef.current.link.click()}
                     sx={{ ...sxDownloadButton, marginRight: '8px' }}
-                  >
-                    Download CSV
-                  </Button>
+                  />
                   <Button
                     buttonType="secondary"
                     onClick={() => printInvoicePDF(account, invoice, items)}
