@@ -8,7 +8,7 @@ import { BOT, OWNER, REPO } from './utils/constants.mjs';
 const octokit = new Octokit({
   // Uncomment to debug
   log: console,
-  auth: process.env.GH_TOKEN,
+  auth: process.env.GITHUB_TOKEN,
 });
 
 export const findChangesetInPr = async ({ owner, repo }) => {

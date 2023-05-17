@@ -1,7 +1,6 @@
 name: Changeset Bot
 env:
-  BOT_TOKEN: ${{ secrets.CHANGESET_BOT }}
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on:
   pull_request:
@@ -12,6 +11,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  issues: write
 
 jobs:
   changeset-check:
