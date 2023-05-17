@@ -1,19 +1,19 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import { DateTime, Duration } from 'luxon';
+import { Duration } from 'luxon';
 import * as React from 'react';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDuration } from 'src/utilities/formatDuration';
-import { LinodeBackupActionMenu } from './LinodeBackupActionMenu';
+import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 
 interface Props {
   backup: LinodeBackup;
   disabled: boolean;
-  handleRestore: () => void;
-  handleDeploy: () => void;
+  handleRestore: (backup: LinodeBackup) => void;
+  handleDeploy: (backup: LinodeBackup) => void;
 }
 
 const typeMap = {
@@ -41,8 +41,12 @@ const statusIconMap: Record<LinodeBackup['status'], Status> = {
   userAborted: 'error',
 };
 
-const BackupTableRow = (props: Props) => {
-  const { backup, disabled, handleRestore, handleDeploy } = props;
+const BackupTableRow: React.FC<Props> = (props) => {
+  const { backup, disabled, handleRestore } = props;
+
+  const onDeploy = () => {
+    props.handleDeploy(props.backup);
+  };
 
   return (
     <TableRow key={backup.id} data-qa-backup>
@@ -67,9 +71,7 @@ const BackupTableRow = (props: Props) => {
       <TableCell parentColumn="Duration">
         {formatDuration(
           Duration.fromMillis(
-            (backup.finished
-              ? parseAPIDate(backup.finished).toMillis()
-              : DateTime.now().toMillis()) -
+            parseAPIDate(backup.finished).toMillis() -
               parseAPIDate(backup.created).toMillis()
           )
         )}
@@ -89,7 +91,7 @@ const BackupTableRow = (props: Props) => {
           backup={backup}
           disabled={disabled}
           onRestore={handleRestore}
-          onDeploy={handleDeploy}
+          onDeploy={onDeploy}
         />
       </TableCell>
     </TableRow>

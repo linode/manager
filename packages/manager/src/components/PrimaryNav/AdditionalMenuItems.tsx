@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { NavItem, PrimaryLink } from './NavItem';
+import { compose } from 'recompose';
+import NavItem, { PrimaryLink } from './NavItem';
 
 import Help from 'src/assets/icons/help.svg';
 
@@ -11,7 +12,9 @@ interface Props {
   isCollapsed?: boolean;
 }
 
-export const AdditionalMenuItems = React.memo((props: Props) => {
+type CombinedProps = Props;
+
+const AdditionalMenuItems: React.FC<CombinedProps> = (props) => {
   const { isCollapsed } = props;
   const links: PrimaryLink[] = [
     {
@@ -36,4 +39,6 @@ export const AdditionalMenuItems = React.memo((props: Props) => {
       })}
     </React.Fragment>
   );
-});
+};
+
+export default compose<CombinedProps, Props>(React.memo)(AdditionalMenuItems);

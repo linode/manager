@@ -5,7 +5,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { Toggle } from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'header' | 'toggleLabel' | 'toggleLabelText';

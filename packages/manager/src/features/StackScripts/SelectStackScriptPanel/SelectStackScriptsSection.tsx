@@ -3,13 +3,13 @@ import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
-import { TableRow } from 'src/components/TableRow';
+import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import TableRow from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 import { truncate } from 'src/utilities/truncate';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 import { useProfile } from 'src/queries/profile';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 
 const useStyles = makeStyles(() => ({
   loadingWrapper: {

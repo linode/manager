@@ -2,8 +2,8 @@
 import { createDomain, deleteAllTestDomains } from 'support/api/domains';
 import { randomIp, randomLabel, randomDomainName } from 'support/util/random';
 import { fbtClick, getClick } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
 import { authenticate } from 'support/api/authentication';
-import { interceptCreateDomainRecord } from 'support/intercepts/domains';
 
 const createRecords = () => [
   {
@@ -98,7 +98,9 @@ describe('Creates Domains record with Form', () => {
     return it(rec.name, () => {
       createDomain().then((domain) => {
         // intercept create api record request
-        interceptCreateDomainRecord().as('apiCreateRecord');
+        cy.intercept('POST', apiMatcher('domains/*/record*')).as(
+          'apiCreateRecord'
+        );
         const url = `/domains/${domain.id}`;
         cy.visitWithLogin(url);
         cy.url().should('contain', url);

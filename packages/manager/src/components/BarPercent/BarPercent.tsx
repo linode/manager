@@ -3,28 +3,18 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 import LinearProgress from 'src/components/core/LinearProgress';
 
-export interface BarPercentProps {
-  /** Additional css class to pass to the component */
-  className?: string;
-  /** Applies styles to show that the value is being retrieved. */
-  isFetchingValue?: boolean;
-  /** The maximum allowed value and should not be equal to min. */
+interface Props {
   max: number;
-  /** Decreases the height of the bar. */
-  narrow?: boolean;
-  /** Applies a `border-radius` to the bar. */
-  rounded?: boolean;
-  sx?: SxProps;
-  /** The value of the progress indicator for the determinate and buffer variants. */
   value: number;
-  /** The value for the buffer variant. */
+  className?: string;
   valueBuffer?: number;
+  isFetchingValue?: boolean;
+  rounded?: boolean;
+  narrow?: boolean;
+  sx?: SxProps;
 }
 
-/**
- * Determinate indicator that displays how long a process will take.
- */
-export const BarPercent = (props: BarPercentProps) => {
+export const BarPercent = (props: Props) => {
   const {
     max,
     value,
@@ -69,7 +59,7 @@ const StyledDiv = styled('div')({
 
 const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
-})<Partial<BarPercentProps>>(({ theme, ...props }) => ({
+})<Partial<Props>>(({ theme, ...props }) => ({
   backgroundColor: theme.color.grey2,
   padding: props.narrow ? 8 : 12,
   width: '100%',

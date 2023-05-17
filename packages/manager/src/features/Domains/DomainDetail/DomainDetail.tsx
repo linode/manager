@@ -4,7 +4,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import ErrorState from 'src/components/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import LandingHeader from 'src/components/LandingHeader';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -13,7 +13,6 @@ import Typography from 'src/components/core/Typography';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import DomainRecords from '../DomainRecords';
 import DeleteDomain from '../DeleteDomain';
-import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
@@ -136,12 +135,6 @@ export const DomainDetail = () => {
             errorText: updateError,
           },
         }}
-        extraActions={
-          <DownloadDNSZoneFileButton
-            domainId={domain.id}
-            domainLabel={domain.domain}
-          />
-        }
       />
       {location.state && location.state.recordError && (
         <Notice

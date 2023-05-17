@@ -19,6 +19,7 @@ const styles = (theme: Theme) =>
     },
     emptyState: {
       color: theme.palette.text.primary,
+      textAlign: 'center',
     },
     table: {
       backgroundColor: theme.bg.bgPaper,

@@ -26,7 +26,7 @@ import {
   getObjectURL,
   ObjectStorageObjectURLOptions,
   ObjectStorageObjectURL,
-} from '@linode/api-v4';
+} from '@linode/api-v4/lib/object-storage';
 import { queryKey as accountSettingsQueryKey } from './accountSettings';
 
 export interface BucketError {

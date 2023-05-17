@@ -11,7 +11,7 @@ import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import RenderGuard from 'src/components/RenderGuard';
 import { makeStyles } from 'tss-react/mui';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from '../Notice';
 
 const useStyles = makeStyles()(() => ({
   itemCount: {

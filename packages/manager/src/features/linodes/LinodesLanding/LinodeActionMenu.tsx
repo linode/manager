@@ -1,11 +1,18 @@
-import { LinodeBackups, LinodeType } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  getLinodeConfigs,
+  LinodeBackups,
+} from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useSpecificTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
@@ -17,15 +24,25 @@ import {
   sendMigrationNavigationEvent,
 } from 'src/utilities/ga';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { LinodeHandlers } from './LinodesLanding';
 
-export interface Props extends LinodeHandlers {
+export interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeRegion: string;
-  linodeType?: LinodeType;
+  linodeType?: ExtendedType;
   linodeBackups: LinodeBackups;
   linodeStatus: string;
+  openDialog: (
+    type: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => void;
+  openPowerActionDialog: (
+    bootAction: BootAction,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => void;
   inListView?: boolean;
 }
 
@@ -59,10 +76,13 @@ export const buildQueryStringForLinodeClone = (
 export const LinodeActionMenu: React.FC<Props> = (props) => {
   const {
     linodeId,
+    linodeLabel,
     linodeRegion,
     linodeStatus,
     linodeType,
+    openPowerActionDialog,
     inListView,
+    openDialog,
   } = props;
 
   const theme = useTheme<Theme>();
@@ -78,14 +98,43 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   const { data: grants } = useGrants();
 
   const readOnly = getPermissionsForLinode(grants, linodeId) === 'read_only';
+
+  const [configs, setConfigs] = React.useState<Config[]>([]);
+  const [configsError, setConfigsError] = React.useState<
+    APIError[] | undefined
+  >(undefined);
+  const [
+    hasMadeConfigsRequest,
+    setHasMadeConfigsRequest,
+  ] = React.useState<boolean>(false);
+
   const toggleOpenActionMenu = () => {
+    if (!isBareMetalInstance) {
+      // Bare metal Linodes don't have configs that can be retrieved
+      getLinodeConfigs(props.linodeId)
+        .then((configs) => {
+          setConfigs(configs.data);
+          setConfigsError(undefined);
+          setHasMadeConfigsRequest(true);
+        })
+        .catch((err) => {
+          setConfigsError(err);
+          setHasMadeConfigsRequest(true);
+        });
+    }
+
     sendLinodeActionEvent();
   };
 
   const handlePowerAction = () => {
     const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
     sendLinodeActionMenuItemEvent(`${action} Linode`);
-    props.onOpenPowerDialog(action);
+    openPowerActionDialog(
+      `${action}` as BootAction,
+      linodeId,
+      linodeLabel,
+      linodeStatus === 'running' ? configs : []
+    );
   };
 
   const hasHostMaintenance = linodeStatus === 'stopped';
@@ -118,11 +167,19 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
     inListView || matchesSmDown
       ? {
           title: 'Reboot',
-          disabled: linodeStatus !== 'running' || matchesSmDown || readOnly,
-          tooltip: readOnly ? noPermissionTooltipText : undefined,
+          disabled:
+            linodeStatus !== 'running' ||
+            (!hasMadeConfigsRequest && matchesSmDown) ||
+            readOnly ||
+            Boolean(configsError?.[0]?.reason),
+          tooltip: readOnly
+            ? noPermissionTooltipText
+            : configsError
+            ? 'Could not load configs for this Linode.'
+            : undefined,
           onClick: () => {
             sendLinodeActionMenuItemEvent('Reboot Linode');
-            props.onOpenPowerDialog('Reboot');
+            openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
           },
           ...readOnlyProps,
         }
@@ -162,7 +219,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       : {
           title: 'Resize',
           onClick: () => {
-            props.onOpenResizeDialog();
+            openDialog('resize', linodeId);
           },
           ...maintenanceProps,
           ...readOnlyProps,
@@ -171,7 +228,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       title: 'Rebuild',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
-        props.onOpenRebuildDialog();
+        openDialog('rebuild', linodeId);
       },
       ...maintenanceProps,
       ...readOnlyProps,
@@ -180,7 +237,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       title: 'Rescue',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
-        props.onOpenRescueDialog();
+        openDialog('rescue', linodeId);
       },
       ...maintenanceProps,
       ...readOnlyProps,
@@ -192,7 +249,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
           onClick: () => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
-            props.onOpenMigrateDialog();
+            openDialog('migrate', linodeId);
           },
           ...readOnlyProps,
         },
@@ -200,7 +257,8 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       title: 'Delete',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Delete Linode');
-        props.onOpenDeleteDialog();
+
+        openDialog('delete', linodeId, linodeLabel);
       },
       ...readOnlyProps,
     },
