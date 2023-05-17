@@ -9,9 +9,12 @@ on:
       - opened
       - synchronize
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   changeset-check:
-    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
