@@ -19,7 +19,7 @@ import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
-import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -59,7 +59,7 @@ interface Props {
   count: number;
   display: 'grid' | 'list';
   component: React.ComponentType<RenderLinodesProps>;
-  data: (ExtendedLinode & LinodeWithMaintenanceAndDisplayStatus)[];
+  data: LinodeWithMaintenance[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;

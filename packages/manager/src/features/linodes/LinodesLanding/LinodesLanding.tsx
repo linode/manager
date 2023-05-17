@@ -24,7 +24,6 @@ import {
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups';
 import { DialogType } from 'src/features/linodes/types';
-import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import { MapState } from 'src/store/types';
@@ -48,6 +47,7 @@ import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 interface State {
   powerDialogOpen: boolean;
@@ -83,7 +83,7 @@ type RouteProps = RouteComponentProps<Params>;
 export interface Props {
   LandingHeader?: React.ReactElement;
   someLinodesHaveScheduledMaintenance: boolean;
-  linodesData: ExtendedLinode[];
+  linodesData: LinodeWithMaintenance[];
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
 }
