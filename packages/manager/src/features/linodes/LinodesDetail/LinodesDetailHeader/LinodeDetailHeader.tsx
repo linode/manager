@@ -10,7 +10,6 @@ import {
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useProfile } from 'src/queries/profile';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
@@ -61,7 +60,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
+  const { linode, linodeStatus, linodeDisks } = props;
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -132,9 +131,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   };
 
   const { data: profile } = useProfile();
-  const { data: volumesData } = useLinodeVolumesQuery(matchedLinodeId);
-
-  const numAttachedVolumes = volumesData?.results ?? 0;
 
   const {
     editableLabelError,
@@ -240,9 +236,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <LinodeEntityDetail
         id={linode.id}
         linode={linode}
-        numVolumes={numAttachedVolumes}
         username={profile?.username}
-        linodeConfigs={linodeConfigs}
         backups={linode.backups}
         openTagDrawer={openTagDrawer}
         handlers={handlers}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import GridView from 'src/assets/icons/grid-view.svg';
 import Hidden from 'src/components/core/Hidden';
-import { IconButton } from 'src/components/IconButton';
+import IconButton from 'src/components/IconButton';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableHead } from 'src/components/TableHead';
