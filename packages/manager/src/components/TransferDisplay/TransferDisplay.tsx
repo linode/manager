@@ -1,16 +1,16 @@
 import OpenInNew from '@mui/icons-material/OpenInNew';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
+import Typography from 'src/components/core/Typography';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: '100%',
     margin: 'auto',
@@ -58,8 +58,8 @@ export interface Props {
   spacingTop?: number;
 }
 
-export const TransferDisplay = ({ spacingTop }: Props) => {
-  const classes = useStyles();
+export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
+  const { classes } = useStyles();
 
   const [modalOpen, setModalOpen] = React.useState(false);
   const { data, isLoading, isError } = useAccountTransfer();
@@ -106,7 +106,7 @@ export const TransferDisplay = ({ spacingTop }: Props) => {
       />
     </>
   );
-};
+});
 
 export const getDaysRemaining = () =>
   Math.floor(
@@ -116,8 +116,6 @@ export const getDaysRemaining = () =>
       .diffNow('days')
       .toObject().days ?? 0
   );
-
-export default React.memo(TransferDisplay);
 
 // =============================================================================
 // Dialog
@@ -132,7 +130,7 @@ interface DialogProps {
 
 export const TransferDialog = React.memo((props: DialogProps) => {
   const { isOpen, onClose, poolUsagePct, quota, used } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const daysRemainingInMonth = getDaysRemaining();
 
   return (

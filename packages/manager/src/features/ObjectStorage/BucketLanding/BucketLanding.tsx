@@ -10,7 +10,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
-import TransferDisplay from 'src/components/TransferDisplay';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import Typography from 'src/components/core/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';

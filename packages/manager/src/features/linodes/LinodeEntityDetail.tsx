@@ -30,7 +30,7 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import EntityHeader from 'src/components/EntityHeader';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,

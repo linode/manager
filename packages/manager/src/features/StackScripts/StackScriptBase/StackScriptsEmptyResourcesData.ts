@@ -36,7 +36,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   ],
   moreInfo: {
     to: 'https://www.linode.com/docs/products/tools/stackscripts/ ',
-    text: 'View additional Object Storage documentation',
+    text: 'View additional StackScripts documentation',
   },
   title: 'Getting Started Guides',
 };
