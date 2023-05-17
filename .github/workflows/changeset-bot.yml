@@ -1,8 +1,6 @@
 name: Changeset Bot
 
-on:
-  pull_request_target:
-    types: [opened, reopened, synchronize]
+on: pull_request_target
 
 permissions: write-all
 
