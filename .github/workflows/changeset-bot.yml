@@ -1,6 +1,7 @@
 name: Changeset Bot
 env:
-  GITHUB_TOKEN: ${{ secrets.CHANGESET_BOT }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CHANGESET_BOT: ${{ secrets.CHANGESET_BOT }}
 
 on:
   pull_request:
@@ -28,7 +29,8 @@ jobs:
 
       - name: Run Changeset Checker
         env:
-          GITHUB_TOKEN: ${{ secrets.CHANGESET_BOT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGESET_BOT: ${{ secrets.CHANGESET_BOT }}
         run: |
           yarn add -W @octokit/rest
           node packages/manager/scripts/changelog/changeset-bot.mjs
