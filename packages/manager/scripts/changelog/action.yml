@@ -15,4 +15,4 @@ inputs:
     required: true
 runs:
   using: 'node16'
-  main: 'changeset-bot.mjs'
+  main: 'compiles/index.mjs'
