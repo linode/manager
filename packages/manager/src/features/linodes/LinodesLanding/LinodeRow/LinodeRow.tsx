@@ -99,7 +99,7 @@ export const LinodeRow = (props: Props) => {
       data-qa-linode={label}
       ariaLabel={label}
     >
-      <TableCell>
+      <TableCell noWrap>
         <Link to={`/linodes/${id}`} tabIndex={0}>
           {label}
         </Link>
