@@ -66,6 +66,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: `${theme.spacing(10)} 0`,
     },
   },
+  rootWithShowTransferDisplay: {
+    padding: `${theme.spacing(4)} 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: `${theme.spacing(10)} 0 ${theme.spacing(4)}`,
+    },
+  },
   copy: {
     textAlign: 'center',
     gridArea: 'copy',
@@ -155,6 +161,7 @@ export interface Props {
   title: string;
   buttonProps?: ExtendedButtonProps[];
   className?: string;
+  descriptionMaxWidth?: number;
   isEntity?: boolean;
   renderAsSecondary?: boolean;
   subtitle?: string;
@@ -168,6 +175,7 @@ const Placeholder: React.FC<Props> = (props) => {
     title,
     icon: Icon,
     buttonProps,
+    descriptionMaxWidth,
     renderAsSecondary,
     subtitle,
     linksSection,
@@ -186,6 +194,7 @@ const Placeholder: React.FC<Props> = (props) => {
           [classes.root]: true,
           [classes.containerAdjustment]:
             showTransferDisplay && linksSection === undefined,
+          [classes.rootWithShowTransferDisplay]: showTransferDisplay,
         })}
       >
         <div
@@ -206,7 +215,14 @@ const Placeholder: React.FC<Props> = (props) => {
           </Typography>
         ) : null}
 
-        <div className={classes.copy}>
+        <div
+          className={classes.copy}
+          style={{
+            maxWidth: descriptionMaxWidth
+              ? descriptionMaxWidth
+              : classes.copy['maxWidth'],
+          }}
+        >
           {typeof props.children === 'string' ? (
             <Typography variant="subtitle1">{props.children}</Typography>
           ) : (

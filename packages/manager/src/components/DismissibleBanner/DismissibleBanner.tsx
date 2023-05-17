@@ -3,7 +3,8 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
-import Notice, { NoticeProps } from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
+import type { NoticeProps } from 'src/components/Notice/Notice';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
@@ -84,6 +85,11 @@ const StyledNotice = styled(Notice)(({ theme }) => ({
   marginBottom: theme.spacing(),
   padding: theme.spacing(2),
   background: theme.bg.bgPaper,
+  '&&': {
+    p: {
+      lineHeight: '1.25rem',
+    },
+  },
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({

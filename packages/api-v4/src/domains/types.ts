@@ -25,6 +25,10 @@ export interface ImportZonePayload {
   remote_nameserver: string;
 }
 
+export type ZoneFile = {
+  zone_file: string[];
+};
+
 export type DomainStatus = 'active' | 'disabled' | 'edit_mode' | 'has_errors';
 
 export type DomainType = 'master' | 'slave';

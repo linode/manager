@@ -1,5 +1,5 @@
 import { useHistory, useLocation } from 'react-router-dom';
-import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 export interface PaginationProps {

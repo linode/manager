@@ -21,7 +21,7 @@ import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';

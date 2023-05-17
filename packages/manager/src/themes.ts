@@ -382,15 +382,6 @@ const darkThemeOptions: ThemeOptions = {
         },
       },
     },
-    MuiIconButton: {
-      styleOverrides: {
-        root: {
-          '&:hover': {
-            color: primaryColors.light,
-          },
-        },
-      },
-    },
     MuiInput: {
       styleOverrides: {
         input: {

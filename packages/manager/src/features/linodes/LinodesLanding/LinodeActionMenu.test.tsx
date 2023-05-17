@@ -17,8 +17,12 @@ const props: Props = {
   linodeLabel: 'test-linode',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
-  openDialog: jest.fn(),
-  openPowerActionDialog: jest.fn(),
+  onOpenPowerDialog: jest.fn(),
+  onOpenDeleteDialog: jest.fn(),
+  onOpenResizeDialog: jest.fn(),
+  onOpenRebuildDialog: jest.fn(),
+  onOpenRescueDialog: jest.fn(),
+  onOpenMigrateDialog: jest.fn(),
 };
 
 describe('LinodeActionMenu', () => {
