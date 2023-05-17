@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - React Query - Linodes - Details Header #9099
 - MUI v5 Migration - `Components > IconButton` #9102
 - MUI v5 Migration - `Components > EntityHeader` #9109
+- MUI v5 Migration - `Components > TransferDisplay` #9107
 
 
 ## [2023-05-15] - v1.93.0
