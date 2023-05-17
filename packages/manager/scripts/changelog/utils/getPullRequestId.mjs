@@ -14,7 +14,11 @@ export const getPullRequestId = async () => {
       .trim();
     const prNumberMatch = prListOutput.match(/^\s*(\d+)/);
 
-    return prNumberMatch ? parseInt(prNumberMatch[1], 10) : NaN;
+    if (prNumberMatch) {
+      return parseInt(prNumberMatch[1], 10);
+    } else {
+      throw new Error('Pull request number not found.');
+    }
   } catch (error) {
     logger.error({
       message:

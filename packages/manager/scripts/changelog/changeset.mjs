@@ -82,7 +82,7 @@ async function generateChangeset() {
 
   try {
     const addCmd = `git add ${changesetFile}`;
-    const commitCmd = `git commit -m "Add changeset"`;
+    const commitCmd = `git commit -m "Added changeset: ${description}"`;
     execSync(addCmd);
     execSync(commitCmd);
 
