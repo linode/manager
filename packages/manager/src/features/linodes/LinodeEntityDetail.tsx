@@ -33,7 +33,6 @@ import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import EntityHeader from 'src/components/EntityHeader';
-import { WithRecentEvent } from './LinodesLanding/withRecentEvent';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
@@ -51,6 +50,7 @@ import Table from '@mui/material/Table';
 import { TableCell } from 'src/components/TableCell';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -63,8 +63,9 @@ interface LinodeEntityDetailProps {
   isSummaryView?: boolean;
 }
 
-export type CombinedProps = LinodeEntityDetailProps &
-  WithRecentEvent & { handlers: LinodeHandlers };
+export type CombinedProps = LinodeEntityDetailProps & {
+  handlers: LinodeHandlers;
+};
 
 const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const {
@@ -75,9 +76,10 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     isSummaryView,
     openTagDrawer,
     openNotificationMenu,
-    recentEvent,
     handlers,
   } = props;
+
+  const recentEvent = useRecentEventForLinode(linode.id);
 
   const { data: images } = useAllImagesQuery({}, {});
   const imagesItemsById = listToItemsByID(images ?? []);
