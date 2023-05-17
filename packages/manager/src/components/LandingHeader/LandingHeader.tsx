@@ -69,6 +69,7 @@ export const LandingHeader = ({
       data-qa-entity-header
       justifyContent="space-between"
       alignItems="center"
+      sx={{ width: '100%' }}
     >
       <Grid>
         <Breadcrumb
