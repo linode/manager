@@ -26,7 +26,7 @@ export const findChangesetInPr = async () => {
     const changesetCommitted = PrData.includes(`pr-${pr_number}`);
 
     try {
-      const { data: comments } = await octokit.issues.listComments({
+      const { data: comments } = await octokit.rest.issues.listComments({
         owner,
         repo,
         issue_number: pr_number,
@@ -41,14 +41,14 @@ export const findChangesetInPr = async () => {
         : `:warning: **No Changeset Found**\n\nPR #${pr_number} does not have a changeset.\nNot every PR needs one, but if this PR is a user-facing change, or is relevant to an 'Added', 'Fixed', 'Changed', 'Removed' or 'Tech Stories' type, please consider adding one.`;
 
       if (changesetBotComment) {
-        await octokit.issues.updateComment({
+        await octokit.rest.issues.updateComment({
           owner,
           repo,
           comment_id: changesetBotComment.id,
           body: comment,
         });
       } else {
-        await octokit.issues.createComment({
+        await octokit.rest.issues.createComment({
           owner,
           repo,
           issue_number: pr_number,
