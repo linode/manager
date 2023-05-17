@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-05-15] - v1.93.1
+
+### Fixed:
+- Initialize linode before referencing #9133
+
 ## [2023-05-15] - v1.93.0
 
 ### Added:
