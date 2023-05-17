@@ -19,7 +19,7 @@ import MultiValueRemove from './components/MultiValueRemove';
 import NoOptionsMessage from './components/NoOptionsMessage';
 import Option from './components/Option';
 import Control from './components/SelectControl';
-import Placeholder from './components/SelectPlaceholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { reactSelectStyles, useStyles } from './Select.styles';
 import { Theme, useTheme } from '@mui/material';
 
