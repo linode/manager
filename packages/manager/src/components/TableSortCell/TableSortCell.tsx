@@ -1,16 +1,14 @@
+import classNames from 'classnames';
 import * as React from 'react';
 import SortUp from 'src/assets/icons/sort-up.svg';
 import Sort from 'src/assets/icons/unsorted.svg';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import {
-  default as TableCell,
-  TableCellProps as _TableCellProps,
-} from '@mui/material/TableCell';
+import TableCell, { TableCellProps } from 'src/components/core/TableCell';
+import TableSortLabel from 'src/components/core/TableSortLabel';
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
       marginLeft: 4,
@@ -45,7 +43,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export interface TableSortCellProps extends _TableCellProps {
+export interface Props extends TableCellProps {
   active: boolean;
   isLoading?: boolean;
   label: string;
@@ -54,8 +52,10 @@ export interface TableSortCellProps extends _TableCellProps {
   noWrap?: boolean;
 }
 
-export const TableSortCell = (props: TableSortCellProps) => {
-  const { classes, cx } = useStyles();
+type CombinedProps = Props;
+
+export const TableSortCell: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
 
   const {
     children,
@@ -77,7 +77,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
 
   return (
     <TableCell
-      className={cx(props.className, {
+      className={classNames(props.className, {
         [classes.root]: true,
         [classes.noWrap]: noWrap,
       })}
@@ -101,3 +101,5 @@ export const TableSortCell = (props: TableSortCellProps) => {
     </TableCell>
   );
 };
+
+export default TableSortCell;

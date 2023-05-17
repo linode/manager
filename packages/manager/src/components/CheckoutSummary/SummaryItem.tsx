@@ -1,15 +1,27 @@
-import { styled } from '@mui/material/styles';
 import React from 'react';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from '../core/Typography';
 import Grid from '../Grid';
 import { SummaryItem as Props } from './CheckoutSummary';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  item: {
+    paddingTop: '0 !important',
+    paddingBottom: '0 !important',
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(),
+  },
+}));
+
 export const SummaryItem = ({ title, details }: Props) => {
+  const classes = useStyles();
+
   return (
-    <StyledGrid item>
+    <Grid item className={classes.item}>
       {title ? (
         <>
-          <Typography sx={{ fontWeight: 'bold' }} component="span">
+          <Typography style={{ fontWeight: 'bold' }} component="span">
             {title}
           </Typography>{' '}
         </>
@@ -17,13 +29,6 @@ export const SummaryItem = ({ title, details }: Props) => {
       <Typography component="span" data-qa-details={details}>
         {details}
       </Typography>
-    </StyledGrid>
+    </Grid>
   );
 };
-
-const StyledGrid = styled(Grid)(({ theme }) => ({
-  paddingTop: '0 !important',
-  paddingBottom: '0 !important',
-  marginTop: `${theme.spacing()} !important`,
-  marginBottom: `${theme.spacing()} !important`,
-}));

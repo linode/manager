@@ -59,7 +59,7 @@ const baseOptions = [
   { label: 'Show 100', value: PAGE_SIZES[3] },
 ];
 
-export const PaginationFooter = (props: Props) => {
+const PaginationFooter = (props: Props) => {
   const classes = useStyles();
   const {
     count,
@@ -130,6 +130,8 @@ export const PaginationFooter = (props: Props) => {
     </Grid>
   );
 };
+
+export default PaginationFooter;
 
 /**
  * Return the minimum page size needed to display a given number of items (`value`).

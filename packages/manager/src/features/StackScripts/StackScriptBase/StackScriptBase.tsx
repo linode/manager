@@ -1,38 +1,38 @@
-import * as React from 'react';
+import { Image } from '@linode/api-v4/lib/images';
+import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
+import classNames from 'classnames';
+import { pathOr } from 'ramda';
+import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Waypoint } from 'react-waypoint';
+import { compose } from 'recompose';
+import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
+import Button from 'src/components/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
+import Typography from 'src/components/core/Typography';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import ErrorState from 'src/components/ErrorState';
+import Notice from 'src/components/Notice';
+import Placeholder from 'src/components/Placeholder';
+import Table from 'src/components/Table';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
+import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
+import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getDisplayName } from 'src/utilities/getDisplayName';
+import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
+import { getQueryParam } from 'src/utilities/queryParams';
+import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
   generateCatchAllFilter,
   generateSpecificFilter,
 } from '../stackScriptUtils';
-import Button from 'src/components/Button';
-import classNames from 'classnames';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { compose } from 'recompose';
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import ErrorState from 'src/components/ErrorState';
-import { Image } from '@linode/api-v4/lib/images';
-import { pathOr } from 'ramda';
-import { Notice } from 'src/components/Notice/Notice';
-import Placeholder from 'src/components/Placeholder';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
-import StackScriptTableHead from '../Partials/StackScriptTableHead';
-import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
 import { StackScriptsRequest } from '../types';
-import { Table } from 'src/components/Table';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getDisplayName } from 'src/utilities/getDisplayName';
-import { getQueryParam } from 'src/utilities/queryParams';
-import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
-import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
-import { Waypoint } from 'react-waypoint';
-import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
-import {
-  withProfile,
-  WithProfileProps,
-} from 'src/containers/profile.container';
 import withStyles, { StyleProps } from './StackScriptBase.styles';
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -493,9 +493,44 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   You don&rsquo;t have any StackScripts to select from.
                 </Placeholder>
               ) : (
-                <StackScriptsEmptyLandingState
-                  goToCreateStackScript={this.goToCreateStackScript}
-                />
+                <Placeholder
+                  icon={StackScriptsIcon}
+                  renderAsSecondary
+                  isEntity
+                  title="StackScripts"
+                  buttonProps={[
+                    {
+                      children: 'Create StackScript',
+                      onClick: () => this.goToCreateStackScript(),
+                    },
+                  ]}
+                  className={classes.stackscriptPlaceholder}
+                >
+                  <Typography variant="subtitle1">
+                    Automate Deployment with StackScripts!
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <a
+                      href="https://linode.com/docs/platform/stackscripts-new-manager/"
+                      target="_blank"
+                      aria-describedby="external-site"
+                      rel="noopener noreferrer"
+                      className="h-u"
+                    >
+                      Learn more about getting started
+                    </a>
+                    &nbsp;or&nbsp;
+                    <a
+                      href="https://www.linode.com/docs/"
+                      target="_blank"
+                      aria-describedby="external-site"
+                      rel="noopener noreferrer"
+                      className="h-u"
+                    >
+                      visit our guides and tutorials.
+                    </a>
+                  </Typography>
+                </Placeholder>
               )}
             </div>
           ) : (

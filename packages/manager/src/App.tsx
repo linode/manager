@@ -42,7 +42,6 @@ import { firewallEventsHandler } from './queries/firewalls';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { ADOBE_ANALYTICS_URL } from './constants';
-import { linodeEventsHandler } from './queries/linodes/events';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -91,19 +90,11 @@ export class App extends React.Component<CombinedProps, State> {
     }
 
     /**
-     * Send pageviews
+     * Send pageviews unless blocklisted.
      */
     this.props.history.listen(({ pathname }) => {
-      // Send Google Analytics page view events
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
-      }
-
-      // Send Adobe Analytics page view events
-      if ((window as any)._satellite) {
-        (window as any)._satellite.track('page view', {
-          url: pathname,
-        });
       }
     });
 
@@ -176,15 +167,6 @@ export class App extends React.Component<CombinedProps, State> {
           event.action.startsWith('oauth_client') && !event._initial
       )
       .subscribe(oauthClientsEventHandler);
-
-    events$
-      .filter(
-        ({ event }) =>
-          (event.action.startsWith('linode') ||
-            event.action.startsWith('backups')) &&
-          !event._initial
-      )
-      .subscribe(linodeEventsHandler);
 
     /*
      * We want to listen for migration events side-wide

@@ -1,60 +1,44 @@
 import * as React from 'react';
-import Button from 'src/components/Button';
 import { CSVLink } from 'react-csv';
-import { SxProps } from '@mui/system';
-import type { ButtonType } from 'src/components/Button/Button';
-
-interface DownloadCSVProps {
-  buttonType?: ButtonType;
-  children?: React.ReactNode;
-  className?: string;
-  csvRef?: React.RefObject<any>;
-  data: unknown[];
-  filename: string;
-  headers: { label: string; key: string }[];
-  onClick: () => void;
-  sx?: SxProps;
-  text?: string;
-}
+import { compose } from 'recompose';
 
 /**
- * Hidden CSVLink component controlled by a ref. This is done
- * so we can use Button styles, and in other areas like
- * "MaintainanceTable" to lazy load potentially large sets
- * of events on mount.
- *
- * These aren't all the props provided by react-csv.
- * @see https://github.com/react-csv/react-csv
+ * these aren't all the props provided by react-csv
+ * check out the docs for all props: https://github.com/react-csv/react-csv
  */
-export const DownloadCSV = ({
-  buttonType = 'secondary',
-  className,
-  csvRef,
-  data,
-  filename,
-  headers,
-  onClick,
-  sx,
-  text = 'Download CSV',
-}: DownloadCSVProps) => {
+interface Props {
+  data: any[];
+  headers: { label: string; key: string }[];
+  filename: string;
+  className?: string;
+}
+
+type CombinedProps = Props;
+
+const DownloadCSV: React.FC<CombinedProps> = (props) => {
+  const { className, headers, filename, data, children } = props;
   return (
-    <>
-      <CSVLink
-        aria-hidden="true"
-        className={className}
-        data={cleanCSVData(data)}
-        filename={filename}
-        headers={headers}
-        ref={csvRef}
-        tabIndex={-1}
-      />
-      <Button buttonType={buttonType} onClick={onClick} sx={sx}>
-        {text}
-      </Button>
-    </>
+    <CSVLink
+      className={className}
+      headers={headers}
+      filename={filename}
+      data={cleanCSVData(data)}
+    >
+      {children}
+    </CSVLink>
   );
 };
 
+/**
+ * prevents CSV injections. Without this logic, a user
+ * could, for example, add a tag of =cmd|' /C calc'!A0
+ * then open the CSV up in Microsoft Excel and it would
+ * automatically open the calculator.
+ *
+ * For now, we're just going to strip "=", "+", and "-"
+ * signs, at the recommendation of hackerone discussions.
+ * See M3-3022 for more info.
+ */
 export const cleanCSVData = (data: any): any => {
   /** safety check because typeof null === 'object' */
   if (data === null) {
@@ -92,3 +76,5 @@ export const cleanCSVData = (data: any): any => {
 
   return data;
 };
+
+export default compose<CombinedProps, Props>(React.memo)(DownloadCSV);

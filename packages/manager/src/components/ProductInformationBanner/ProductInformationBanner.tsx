@@ -1,6 +1,6 @@
 import * as React from 'react';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import type { NoticeProps } from 'src/components/Notice/Notice';
+import { NoticeProps } from 'src/components/Notice';
 import { reportException } from 'src/exceptionReporting';
 import { ProductInformationBannerLocation } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';

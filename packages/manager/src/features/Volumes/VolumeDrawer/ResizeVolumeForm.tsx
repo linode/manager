@@ -2,7 +2,7 @@ import { ResizeVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
 import Form from 'src/components/core/Form';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {

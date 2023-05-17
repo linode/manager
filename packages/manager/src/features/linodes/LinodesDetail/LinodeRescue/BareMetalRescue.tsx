@@ -7,23 +7,19 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import RescueDescription from './RescueDescription';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Props {
-  linodeId: number | undefined;
+  linodeID: number;
+  linodeLabel: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const BareMetalRescue = (props: Props) => {
-  const { isOpen, onClose, linodeId } = props;
+export const BareMetalRescue: React.FC<Props> = (props) => {
+  const { isOpen, onClose, linodeID, linodeLabel } = props;
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const { enqueueSnackbar } = useSnackbar();
-  const { data: linode } = useLinodeQuery(
-    linodeId ?? -1,
-    linodeId !== undefined && isOpen
-  );
 
   React.useEffect(() => {
     if (isOpen) {
@@ -35,7 +31,7 @@ export const BareMetalRescue = (props: Props) => {
   const handleSubmit = () => {
     setError(undefined);
     setLoading(true);
-    rescueMetalLinode(linodeId ?? -1)
+    rescueMetalLinode(linodeID)
       .then(() => {
         setLoading(false);
         enqueueSnackbar('Linode rescue started.', {
@@ -65,13 +61,15 @@ export const BareMetalRescue = (props: Props) => {
 
   return (
     <ConfirmationDialog
-      title={`Rescue Linode ${linode?.label ?? ''}`}
+      title={`Rescue Linode ${linodeLabel}`}
       open={isOpen}
       onClose={onClose}
       actions={actions}
       error={error}
     >
-      {linodeId ? <RescueDescription linodeId={linodeId} isBareMetal /> : null}
+      <RescueDescription linodeId={linodeID} isBareMetal />
     </ConfirmationDialog>
   );
 };
+
+export default BareMetalRescue;

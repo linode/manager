@@ -13,13 +13,12 @@ import Button from 'src/components/Button';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import AccessibleGraphData from './AccessibleGraphData';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { setUpCharts } from 'src/utilities/charts';
 import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
@@ -47,12 +46,6 @@ export interface Props {
   rowHeaders?: Array<string>;
   legendRows?: Array<any>;
   unit?: string;
-  /**
-   * `accessibleDataTable` is responsible to both rendering the accessible graph data table and an associated unit.
-   */
-  accessibleDataTable?: {
-    unit: string;
-  };
   nativeLegend?: boolean; // Display chart.js native legend
   formatData?: (value: number) => number | null;
   formatTooltip?: (value: number) => string;
@@ -112,7 +105,6 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     nativeLegend,
     tabIndex,
     unit,
-    accessibleDataTable,
   } = props;
 
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -292,12 +284,15 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   return (
     // Allow `tabIndex` on `<div>` because it represents an interactive element.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-
-    // Note on markup and styling: the legend is rendered first for accessibility reasons.
-    // Screen readers read from top to bottom, so the legend should be read before the data tables, esp considering their size
-    // and the fact that the legend can filter them.
-    // Meanwhile the CSS uses column-reverse to visually retain the original order
-    <div className={classes.wrapper} tabIndex={tabIndex ?? 0}>
+    <div
+      className={classes.wrapper}
+      tabIndex={tabIndex ?? 0}
+      role="graphics-document"
+      aria-label={ariaLabel || 'Stats and metrics'}
+    >
+      <div className={classes.canvasContainer}>
+        <canvas height={chartHeight || 300} ref={inputEl} />
+      </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table
@@ -394,22 +389,6 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
             </TableBody>
           </Table>
         </div>
-      )}
-      <div className={classes.canvasContainer}>
-        <canvas
-          height={chartHeight || 300}
-          ref={inputEl}
-          role="img"
-          aria-label={ariaLabel || 'Stats and metrics'}
-        />
-      </div>
-      {accessibleDataTable?.unit && (
-        <AccessibleGraphData
-          chartInstance={chartInstance.current}
-          ariaLabel={ariaLabel}
-          hiddenDatasets={hiddenDatasets}
-          accessibleUnit={accessibleDataTable.unit}
-        />
       )}
     </div>
   );

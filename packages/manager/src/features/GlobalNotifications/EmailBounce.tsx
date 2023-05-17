@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { useAccount, useMutateAccount } from 'src/queries/account';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';

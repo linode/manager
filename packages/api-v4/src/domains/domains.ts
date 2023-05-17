@@ -18,7 +18,6 @@ import {
   Domain,
   ImportZonePayload,
   UpdateDomainPayload,
-  ZoneFile,
 } from './types';
 
 /**
@@ -99,15 +98,4 @@ export const importZone = (data: ImportZonePayload) =>
     setData(data, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
     setMethod('POST')
-  );
-
-/**
- * Download DNS Zone file.
- *
- ** @param domainId { number } The ID of the Domain to download DNS zone file.
- */
-export const getDNSZoneFile = (domainId: number) =>
-  Request<ZoneFile>(
-    setURL(`${API_ROOT}/domains/${domainId}/zone-file`),
-    setMethod('GET')
   );

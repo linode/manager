@@ -13,7 +13,6 @@ import thunk from 'redux-thunk';
 import { FlagSet } from 'src/featureFlags';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';
-import { setupInterceptors } from 'src/request';
 import {
   storeFactory,
   ApplicationState,
@@ -56,13 +55,6 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const storeToPass = customStore
     ? baseStore(customStore)
     : storeFactory(queryClient);
-
-  // we have to call setupInterceptors so that our API error normalization works as expected
-  // I'm sorry that it makes us pass it the "ApplicationStore"
-  setupInterceptors(
-    configureStore<ApplicationState>([thunk])(defaultState)
-  );
-
   return (
     <Provider store={storeToPass}>
       <QueryClientProvider client={passedQueryClient || queryClient}>

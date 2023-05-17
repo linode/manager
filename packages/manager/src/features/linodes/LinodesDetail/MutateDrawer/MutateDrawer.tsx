@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 import ListItem from 'src/components/core/ListItem';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 
 interface MutateInfo {
   vcpus: number | null;

@@ -22,7 +22,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
-  type: string | null;
+  type: null | string;
   status: LinodeStatus;
   updated: string;
   hypervisor: Hypervisor;
@@ -101,7 +101,6 @@ export interface LinodeBackup {
   finished: string;
   configs: string[];
   disks: LinodeBackupDisk[];
-  available: boolean;
 }
 
 export type LinodeBackupType = 'auto' | 'snapshot';

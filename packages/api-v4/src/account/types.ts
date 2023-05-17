@@ -128,6 +128,10 @@ export interface PaymentResponse extends Payment {
   warnings?: APIWarning[];
 }
 
+export interface PaypalResponse {
+  warnings?: APIWarning[];
+}
+
 export type GrantLevel = null | 'read_only' | 'read_write';
 
 export interface Grant {
@@ -378,6 +382,17 @@ export interface OAuthClientRequest {
   label: string;
   redirect_uri: string;
   public?: boolean;
+}
+
+export interface Paypal {
+  cancel_url: string;
+  redirect_url: string;
+  usd: string;
+}
+
+export interface ExecutePayload {
+  payer_id: string;
+  payment_id: string;
 }
 
 export interface SaveCreditCardData {
