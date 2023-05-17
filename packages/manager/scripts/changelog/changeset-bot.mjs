@@ -13,7 +13,7 @@ export const findChangesetInPr = async () => {
     const repo = core.getInput('repo', { required: true });
     const pr_number = core.getInput('pr_number', { required: true });
     const token = core.getInput('token', { required: true });
-    const octokit = new github.getOctokit(token);
+    const octokit = new github.getOctokit(token, { log: console });
 
     const { data: PrData } = await octokit.rest.pulls.get({
       owner,
