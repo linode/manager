@@ -2,6 +2,7 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useDeleteLinodeMutation,
   useLinodeQuery,
@@ -35,6 +36,8 @@ export const DeleteLinodeDialog = (props: Props) => {
   const onDelete = async () => {
     await mutateAsync();
     onClose();
+    resetEventsPolling();
+
     if (onSuccess) {
       onSuccess();
     }

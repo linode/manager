@@ -33,7 +33,6 @@ import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import EntityHeader from 'src/components/EntityHeader';
-import { WithRecentEvent } from './LinodesLanding/withRecentEvent';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
@@ -49,6 +48,10 @@ import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
 import { TableCell } from 'src/components/TableCell';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -56,15 +59,13 @@ interface LinodeEntityDetailProps {
   linode: Linode;
   username?: string;
   backups: LinodeBackups;
-  linodeConfigs: Config[];
-  numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
-  openNotificationMenu?: () => void;
   isSummaryView?: boolean;
 }
 
-export type CombinedProps = LinodeEntityDetailProps &
-  WithRecentEvent & { handlers: LinodeHandlers };
+export type CombinedProps = LinodeEntityDetailProps & {
+  handlers: LinodeHandlers;
+};
 
 const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const {
@@ -72,20 +73,25 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     linode,
     username,
     backups,
-    linodeConfigs,
     isSummaryView,
-    numVolumes,
     openTagDrawer,
-    openNotificationMenu,
-    recentEvent,
     handlers,
   } = props;
+
+  const notificationContext = React.useContext(_notificationContext);
+
+  const recentEvent = useRecentEventForLinode(linode.id);
 
   const { data: images } = useAllImagesQuery({}, {});
   const imagesItemsById = listToItemsByID(images ?? []);
 
   const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
+
+  const { data: configs } = useAllLinodeConfigsQuery(linode.id);
+  const { data: volumes } = useLinodeVolumesQuery(linode.id);
+
+  const numberOfVolumes = volumes?.results ?? 0;
 
   const extendedLinode = useExtendedLinode(linode.id);
 
@@ -107,10 +113,12 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
 
   let progress;
   let transitionText;
+
   if (recentEvent && isEventWithSecondaryLinodeStatus(recentEvent, linode.id)) {
     progress = getProgressOrDefault(recentEvent);
     transitionText = _transitionText(linode.status, linode.id, recentEvent);
   }
+
   const trimmedIPv6 = linode.ipv6?.replace('/128', '') || null;
 
   return (
@@ -126,10 +134,10 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
           isSummaryView={isSummaryView}
-          linodeConfigs={linodeConfigs}
+          linodeConfigs={configs ?? []}
           type={linodeType}
           image={linode.image ?? 'Unknown Image'}
-          openNotificationMenu={openNotificationMenu || (() => null)}
+          openNotificationMenu={notificationContext.openMenu}
           progress={progress}
           transitionText={transitionText}
           handlers={handlers}
@@ -138,7 +146,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
       body={
         <Body
           linodeLabel={linode.label}
-          numVolumes={numVolumes}
+          numVolumes={numberOfVolumes}
           numCPUs={linode.specs.vcpus}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
