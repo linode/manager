@@ -112,10 +112,12 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
 
   let progress;
   let transitionText;
+
   if (recentEvent && isEventWithSecondaryLinodeStatus(recentEvent, linode.id)) {
     progress = getProgressOrDefault(recentEvent);
     transitionText = _transitionText(linode.status, linode.id, recentEvent);
   }
+
   const trimmedIPv6 = linode.ipv6?.replace('/128', '') || null;
 
   return (

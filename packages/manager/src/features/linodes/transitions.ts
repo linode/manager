@@ -31,6 +31,7 @@ const transitionActionMap: Partial<Record<EventAction, string>> = {
   disk_resize: 'Disk Resizing',
   disk_imagize: 'Capturing Image',
   disk_duplicate: 'Disk Duplicating',
+  linode_rebuild: 'Rebuilding',
 };
 
 export const linodeInTransition = (
@@ -112,6 +113,7 @@ const eventsWithSecondaryStatus: EventAction[] = [
   'linode_migrate',
   'linode_migrate_datacenter',
   'linode_mutate',
+  'linode_rebuild',
 ];
 
 export const isEventWithSecondaryLinodeStatus = (
