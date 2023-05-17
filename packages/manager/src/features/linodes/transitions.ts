@@ -96,7 +96,7 @@ export const linodesInTransition = (events: Event[]) => {
 // but its status is still briefly in transition, so give it a progress of 100.
 export const getProgressOrDefault = (
   event?: ExtendedEvent,
-  defaultProgress = 100
+  defaultProgress = 0
 ) => event?.percent_complete ?? defaultProgress;
 
 // Linodes have a literal "status" given by the API (linode.status). There are
