@@ -12981,7 +12981,7 @@ const findChangesetInPr = async () => {
         format: 'diff',
       },
     });
-    const changesetCommitted = PrData.includes(`pr-${pullRequestId}`);
+    const changesetCommitted = PrData.includes(`pr-${pr_number}`);
 
     try {
       const { data: comments } = await octokit.issues.listComments({
