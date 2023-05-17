@@ -15,4 +15,4 @@ inputs:
     required: true
 runs:
   using: 'node16'
-  main: 'scripts/changelog/changeset-bot.mjs'
+  main: 'changeset-bot.mjs'
