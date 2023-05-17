@@ -145,13 +145,11 @@ const StyledIconWrapper = styled('div')<Pick<PlaceholderProps, 'isEntity'>>(
 );
 
 const StyledButtonWrapper = styled('div')(({ theme }) => ({
-  button: {
-    gridArea: 'button',
-    display: 'flex',
-    gap: theme.spacing(2),
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-    },
+  gridArea: 'button',
+  display: 'flex',
+  gap: theme.spacing(2),
+  [theme.breakpoints.down('xs')]: {
+    flexDirection: 'column',
   },
 }));
 
