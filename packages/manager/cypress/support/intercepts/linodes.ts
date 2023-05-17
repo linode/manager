@@ -2,7 +2,7 @@
  * @file Cypress intercepts and mocks for Cloud Manager Linode operations.
  */
 
-import type { Disk, Linode, Volume } from '@linode/api-v4/types';
+import type { Linode, Volume } from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
@@ -94,24 +94,5 @@ export const interceptRebootLinodeIntoRescueMode = (
   return cy.intercept(
     'POST',
     apiMatcher(`linode/instances/${linodeId}/rescue`)
-  );
-};
-
-/**
- * Intercepts GET request to retrieve a Linode's Disks and mocks response.
- *
- * @param linodeId - ID of Linode for intercepted request.
- * @param disks - Array of Disks with which to mock response.
- *
- * @returns Cypress chainable.
- */
-export const mockGetLinodeDisks = (
-  linodeId: number,
-  disks: Disk[]
-): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'GET',
-    apiMatcher(`linode/instances/${linodeId}/disks*`),
-    paginateResponse(disks)
   );
 };

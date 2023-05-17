@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Link from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Box from 'src/components/core/Box';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';

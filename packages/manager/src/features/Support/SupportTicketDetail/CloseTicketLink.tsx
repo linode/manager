@@ -6,7 +6,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import scrollTo from 'src/utilities/scrollTo';
 

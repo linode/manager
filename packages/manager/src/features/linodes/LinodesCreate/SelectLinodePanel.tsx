@@ -6,9 +6,9 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import Paginate from 'src/components/Paginate';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import PaginationFooter from 'src/components/PaginationFooter';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 

@@ -1,15 +1,19 @@
+import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import {
-  TableProps as _TableProps,
-  default as _Table,
-} from '@mui/material/Table';
+import Table, { TableProps } from 'src/components/core/Table';
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     overflowX: 'auto',
     overflowY: 'hidden',
+    '& tbody': {
+      transition: theme.transitions.create(['opacity']),
+    },
+    '& tbody.sorting': {
+      opacity: 0.5,
+    },
     '& thead': {
       '& th': {
         backgroundColor: theme.bg.tableHeader,
@@ -37,7 +41,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export interface TableProps extends _TableProps {
+export interface Props extends TableProps {
   className?: string;
   noOverflow?: boolean;
   tableClass?: string;
@@ -49,8 +53,10 @@ export interface TableProps extends _TableProps {
   rowCount?: number;
 }
 
-export const Table = (props: TableProps) => {
-  const { classes, cx } = useStyles();
+type CombinedProps = Props;
+
+export const WrappedTable: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
 
   const {
     className,
@@ -66,7 +72,8 @@ export const Table = (props: TableProps) => {
 
   return (
     <div
-      className={cx(
+      className={classNames(
+        'tableWrapper',
         {
           [classes.root]: !noOverflow,
           [classes.noBorder]: noBorder,
@@ -78,7 +85,7 @@ export const Table = (props: TableProps) => {
         marginBottom: spacingBottom !== undefined ? spacingBottom : 0,
       }}
     >
-      <_Table
+      <Table
         className={tableClass}
         {...rest}
         aria-colcount={colCount}
@@ -86,7 +93,9 @@ export const Table = (props: TableProps) => {
         role="table"
       >
         {props.children}
-      </_Table>
+      </Table>
     </div>
   );
 };
+
+export default WrappedTable;

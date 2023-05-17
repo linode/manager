@@ -1,6 +1,8 @@
 import {
   CreditCardSchema,
+  ExecutePaypalPaymentSchema,
   PaymentSchema,
+  StagePaypalPaymentSchema,
   PaymentMethodSchema,
 } from '@linode/validation/lib/account.schema';
 import { API_ROOT } from '../constants';
@@ -14,9 +16,12 @@ import Request, {
 import { Filter, Params, ResourcePage } from '../types';
 import {
   ClientToken,
+  ExecutePayload,
   Payment,
   PaymentMethod,
   PaymentResponse,
+  Paypal,
+  PaypalResponse,
   SaveCreditCardData,
   MakePaymentData,
   PaymentMethodPayload,
@@ -80,6 +85,50 @@ export const makePayment = (data: MakePaymentData) => {
     setData(data, PaymentSchema)
   );
 };
+
+interface StagePaypalData {
+  checkout_token: string;
+  payment_id: string;
+}
+
+/**
+ * stagePaypalPayment
+ *
+ * Begins the process of making a payment through Paypal.
+ *
+ * @param data { object }
+ * @param data.cancel_url The URL to have PayPal redirect to when Payment is canceled.
+ * @param data.redirect_url The URL to have PayPal redirect to when Payment is approved.
+ * @param data.usd { string } The dollar amount of the payment
+ *
+ * @returns a payment ID, used for submitting the payment to Paypal.
+ *
+ */
+export const stagePaypalPayment = (data: Paypal) =>
+  Request<StagePaypalData>(
+    setURL(`${API_ROOT}/account/payments/paypal`),
+    setMethod('POST'),
+    setData(data, StagePaypalPaymentSchema)
+  );
+
+/**
+ * executePaypalPayment
+ *
+ * Executes a payment through Paypal that has been started with the
+ * stagePaypalPayment method above. Paypal will capture the designated
+ * funds and credit your Linode account.
+ *
+ * @param data { object }
+ * @param data.payment_id The ID returned by stagePaypalPayment
+ * @param data.payer_id The PayerID returned by PayPal during the transaction authorization process.
+ *
+ */
+export const executePaypalPayment = (data: ExecutePayload) =>
+  Request<PaypalResponse>(
+    setURL(`${API_ROOT}/account/payments/paypal/execute`),
+    setMethod('POST'),
+    setData(data, ExecutePaypalPaymentSchema)
+  );
 
 /**
  * saveCreditCard

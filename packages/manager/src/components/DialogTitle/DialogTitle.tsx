@@ -1,68 +1,65 @@
-import * as React from 'react';
-import _DialogTitle from '@mui/material/DialogTitle';
-import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
-import IconButton from 'src/components/IconButton/IconButton';
-import { SxProps } from '@mui/system';
+import * as React from 'react';
+import DialogTitle from 'src/components/core/DialogTitle';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
-interface DialogTitleProps {
-  className?: string;
-  id?: string;
-  onClose?: () => void;
-  sx?: SxProps;
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  button: {
+    border: 'none',
+    backgroundColor: 'inherit',
+    paddingRight: 0,
+    paddingLeft: 0,
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.primary.main,
+    },
+  },
+}));
+interface Props {
   title: string;
+  className?: string;
+  onClose?: () => void;
 }
 
-const DialogTitle = (props: DialogTitleProps) => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const { className, onClose, title, id, sx } = props;
+// Accessibility Feature:
+// Focus on modal title on component mount
+
+const _DialogTitle: React.FC<Props> = (props) => {
+  const dialogTitle = React.useRef<HTMLDivElement>(null);
+  const { className, onClose, title } = props;
+  const classes = useStyles();
 
   React.useEffect(() => {
-    if (ref.current === null) {
-      return;
+    if (dialogTitle.current !== null) {
+      dialogTitle.current.focus();
     }
-
-    ref.current.focus();
   }, []);
 
   return (
-    <_DialogTitle
-      className={className}
+    <DialogTitle
       data-qa-dialog-title={title}
-      id={id}
-      ref={ref}
-      sx={sx}
       title={title}
+      tabIndex={0}
+      className={className}
+      ref={dialogTitle}
     >
-      <Box
-        data-qa-drawer-title={title}
-        data-qa-dialog-title={title}
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'space-between',
-          position: 'relative',
-          width: '100%',
-        }}
-      >
+      <div className={classes.root}>
         {title}
-        {onClose != null && (
-          <IconButton
-            aria-label="Close"
-            data-qa-close-drawer
-            onClick={onClose}
-            size="large"
-            sx={{
-              position: 'absolute',
-              right: '-12px',
-            }}
-          >
+        {onClose ? (
+          <button className={classes.button} onClick={onClose}>
             <Close />
-          </IconButton>
-        )}
-      </Box>
-    </_DialogTitle>
+          </button>
+        ) : null}
+      </div>
+    </DialogTitle>
   );
 };
 
-export { DialogTitle };
+export default _DialogTitle;

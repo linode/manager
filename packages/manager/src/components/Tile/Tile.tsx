@@ -4,7 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles<void, 'icon' | 'buttonTitle'>()(
   (theme: Theme, _params, classes) => ({

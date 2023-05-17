@@ -27,7 +27,6 @@ export const RecycleNodeDialog = (props: Props) => {
   const onSubmit = () => {
     mutateAsync().then(() => {
       enqueueSnackbar('Node queued for recycling.', { variant: 'success' });
-      onClose();
     });
   };
 

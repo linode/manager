@@ -16,7 +16,7 @@ import ConfigSelect from './ConfigSelect';
 import { modes } from './modes';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
