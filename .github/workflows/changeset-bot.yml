@@ -14,12 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CHANGESET_BOT }}
       - name: Run Changeset Checker
         uses: ./packages/manager/scripts/changelog
         with:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           pr_number: ${{ github.event.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CHANGESET_BOT }}
         
