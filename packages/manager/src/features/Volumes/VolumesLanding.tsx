@@ -8,7 +8,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Loading from 'src/components/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

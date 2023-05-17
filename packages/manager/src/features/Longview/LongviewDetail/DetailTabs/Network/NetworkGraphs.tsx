@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { withTheme, WithTheme } from '@mui/styles';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import Placeholder from 'src/components/Placeholder';
 import {

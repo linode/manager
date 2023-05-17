@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Hidden from 'src/components/core/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
 import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';

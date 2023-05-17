@@ -6,7 +6,7 @@ import * as React from 'react';
 import BucketDetailsDrawer from './BucketDetailsDrawer';
 import BucketTable from './BucketTable';
 import CancelNotice from '../CancelNotice';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
