@@ -27,6 +27,9 @@ jobs:
           node-version: "18.14"
 
       - name: Run Changeset Checker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           yarn add -W @octokit/rest
           node packages/manager/scripts/changelog/changeset-bot.mjs
+        
