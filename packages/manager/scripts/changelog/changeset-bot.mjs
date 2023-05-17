@@ -67,15 +67,13 @@ export const findChangesetInPr = async () => {
         });
       }
     } catch (error) {
-      console.error(`Error posting/updating comments: ${error}`);
+      console.warn(`Error posting/updating comments: ${error}`);
       // Not blocking the PR if the bot fails to comment for now.
       // core.setFailed(`Error posting/updating comments: ${error}`);
     }
   } catch (error) {
     // Not blocking the PR if the bot fails to comment for now.
-    console.error(
-      `An error occurred trying to check for a changeset: ${error}`
-    );
+    console.warn(`An error occurred trying to check for a changeset: ${error}`);
     // core.setFailed(
     //   `An error occurred trying to check for a changeset: ${error}`
     // );
