@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 

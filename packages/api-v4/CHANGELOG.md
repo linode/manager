@@ -1,14 +1,3 @@
-
-## [2023-05-15] - v0.92.0
-
-### Added:
-- Ability download DNS zone file #9075
-- React Query - Linodes - Landing #9062
-- Added `available` to the `LinodeBackup` type #9079
-
-### Fixed:
-- Removed deprecated PayPal endpoints #9058
-
 ## [2023-05-01] - v0.91.0
 
 ### Added:

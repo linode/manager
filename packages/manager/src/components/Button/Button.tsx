@@ -7,10 +7,8 @@ import { SxProps } from '@mui/system';
 import { isPropValid } from '../../utilities/isPropValid';
 import { rotate360 } from '../../styles/keyframes';
 
-export type ButtonType = 'primary' | 'secondary' | 'outlined';
-
 export interface Props extends ButtonProps {
-  buttonType?: ButtonType;
+  buttonType?: 'primary' | 'secondary' | 'outlined';
   className?: string;
   sx?: SxProps;
   compactX?: boolean;

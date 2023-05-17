@@ -73,7 +73,6 @@ export default defineConfig({
   requestTimeout: 30000,
   responseTimeout: 80000,
   retries: 2,
-  experimentalMemoryManagement: true,
   e2e: {
     experimentalRunAllSpecs: true,
     baseUrl: 'http://localhost:3000',

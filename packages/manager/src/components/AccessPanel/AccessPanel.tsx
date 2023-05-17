@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { makeStyles } from 'tss-react/mui';
 import Divider from '../core/Divider';

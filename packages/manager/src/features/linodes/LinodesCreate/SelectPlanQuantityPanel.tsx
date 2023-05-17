@@ -7,23 +7,22 @@ import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
-import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 
 type ClassNames =
   | 'root'
@@ -379,7 +378,9 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
         render: () => {
           return (
             <>
-              <PremiumPlansAvailabilityNotice />
+              <Notice warning>
+                This plan is only available in the Washington, DC region.
+              </Notice>
               <Typography data-qa-gpu className={classes.copy}>
                 Premium CPU instances guarantee a minimum processor model, AMD
                 Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high

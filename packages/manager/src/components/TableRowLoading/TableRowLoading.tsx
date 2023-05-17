@@ -2,8 +2,8 @@ import * as React from 'react';
 import Hidden, { HiddenProps } from '../core/Hidden';
 import Skeleton from '../core/Skeleton';
 import { makeStyles } from '@mui/styles';
-import { TableCell } from '../TableCell/TableCell';
-import { TableRow } from '../TableRow/TableRow';
+import TableCell from '../TableCell/TableCell';
+import TableRow from '../TableRow/TableRow';
 
 const useStyles = makeStyles(() => ({
   root: {

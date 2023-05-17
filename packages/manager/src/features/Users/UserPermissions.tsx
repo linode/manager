@@ -22,7 +22,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 import { Toggle } from 'src/components/Toggle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

@@ -7,8 +7,8 @@ import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableRow from 'src/components/TableRow/TableRow';
 import { openStackScriptDialog as openStackScriptDialogAction } from 'src/store/stackScriptDialog';
 import { ClassNames, styles } from '../StackScriptRowHelpers';
 

@@ -4,7 +4,6 @@ import { searchableItems } from 'src/__data__/searchableItems';
 import * as RefinedSearch from './refinedSearch';
 import { QueryJSON } from './refinedSearch';
 import { SearchableItem } from './search.interfaces';
-import { COMPRESSED_IPV6_REGEX } from './refinedSearch';
 
 const {
   areAllTrue,
@@ -298,48 +297,25 @@ describe('testItem', () => {
 
 describe('isSimpleQuery', () => {
   it('returns true if there are no specified search fields', () => {
-    let query = '-hello world';
-    let parsedQuery = searchString.parse(query).getParsedQuery();
-    expect(isSimpleQuery(query, parsedQuery)).toBe(true);
+    let parsedQuery = searchString.parse('-hello world').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(true);
 
-    query = '-hello world';
-    parsedQuery = searchString.parse(query).getParsedQuery();
-    expect(isSimpleQuery(query, parsedQuery)).toBe(true);
+    parsedQuery = searchString.parse('hello world').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(true);
 
-    query = 'hello -world';
-    parsedQuery = searchString.parse(query).getParsedQuery();
-    expect(isSimpleQuery(query, parsedQuery)).toBe(true);
+    parsedQuery = searchString.parse('hello -world').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(true);
   });
 
   it('returns false if there are specified search fields', () => {
-    let query = 'label:hello';
-    let parsedQuery = searchString.parse(query).getParsedQuery();
-    expect(isSimpleQuery(query, parsedQuery)).toBe(false);
+    let parsedQuery = searchString.parse('label:hello').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(false);
 
-    query = 'tags:hello,world';
-    parsedQuery = searchString.parse(query).getParsedQuery();
-    expect(isSimpleQuery(query, parsedQuery)).toBe(false);
+    parsedQuery = searchString.parse('tags:hello,world').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(false);
 
-    query = '-label:hello';
-    parsedQuery = searchString.parse(query).getParsedQuery();
-    expect(isSimpleQuery(query, parsedQuery)).toBe(false);
-  });
-
-  it('returns true if we match a shouldSkipFieldSearch rule', () => {
-    const query = '2001:db8:3c4d:15::1a2f:1a2b';
-    const parsedQuery = searchString.parse(query).getParsedQuery();
-    expect(isSimpleQuery(query, parsedQuery)).toBe(true);
-  });
-});
-
-describe('IPv6 regex', () => {
-  it('matches compressed IPv6 addresses', () => {
-    expect(
-      '2001:db8:3c4d:15::1a2f:1a2b'.match(COMPRESSED_IPV6_REGEX)
-    ).toBeTruthy();
-    expect('2001:db8::'.match(COMPRESSED_IPV6_REGEX)).toBeTruthy();
-    expect('2001:db8::1234:5678'.match(COMPRESSED_IPV6_REGEX)).toBeTruthy();
-    expect('::1234:5678'.match(COMPRESSED_IPV6_REGEX)).toBeTruthy();
+    parsedQuery = searchString.parse('-label:hello').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(false);
   });
 });
 

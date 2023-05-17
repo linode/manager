@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import { makeStyles } from '@mui/styles';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
 import Box from 'src/components/core/Box';
