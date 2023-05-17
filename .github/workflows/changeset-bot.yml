@@ -1,6 +1,7 @@
 name: Changeset Bot
 env:
   BOT_TOKEN: ${{ secrets.CHANGESET_BOT }}
+  GH_TOKEN: ${{ github.token }}
 
 on:
   pull_request:
