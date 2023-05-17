@@ -27,10 +27,10 @@ import { LinodeHandlers } from '../LinodesLanding';
 import { useTypeQuery } from 'src/queries/types';
 import { useStyles } from './LinodeRow.style';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
-import { useNotificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 
 type Props = Linode & { handlers: LinodeHandlers };
 
@@ -38,7 +38,7 @@ export const LinodeRow = (props: Props) => {
   const classes = useStyles();
   const { backups, id, ipv4, label, region, status, type, handlers } = props;
 
-  const { openMenu } = useNotificationContext();
+  const notificationContext = React.useContext(_notificationContext);
 
   const { data: notifications } = useNotificationsQuery();
 
@@ -112,7 +112,10 @@ export const LinodeRow = (props: Props) => {
           loading ? (
             <>
               <StatusIcon status={iconStatus} />
-              <button className={classes.statusLink} onClick={() => openMenu()}>
+              <button
+                className={classes.statusLink}
+                onClick={notificationContext.openMenu}
+              >
                 <ProgressDisplay
                   className={classes.progressDisplay}
                   progress={getProgressOrDefault(recentEvent)}

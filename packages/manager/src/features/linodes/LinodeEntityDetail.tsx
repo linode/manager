@@ -51,6 +51,7 @@ import { TableCell } from 'src/components/TableCell';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -59,7 +60,6 @@ interface LinodeEntityDetailProps {
   username?: string;
   backups: LinodeBackups;
   openTagDrawer: (tags: string[]) => void;
-  openNotificationMenu?: () => void;
   isSummaryView?: boolean;
 }
 
@@ -75,9 +75,10 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     backups,
     isSummaryView,
     openTagDrawer,
-    openNotificationMenu,
     handlers,
   } = props;
+
+  const notificationContext = React.useContext(_notificationContext);
 
   const recentEvent = useRecentEventForLinode(linode.id);
 
@@ -136,7 +137,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           linodeConfigs={configs ?? []}
           type={linodeType}
           image={linode.image ?? 'Unknown Image'}
-          openNotificationMenu={openNotificationMenu || (() => null)}
+          openNotificationMenu={notificationContext.openMenu}
           progress={progress}
           transitionText={transitionText}
           handlers={handlers}
