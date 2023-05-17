@@ -1,23 +1,24 @@
-import * as dotenv from 'dotenv';
-dotenv.config({ path: '.env' });
+import core from '@actions/core';
+import github from '@actions/github';
 
-import { getPullRequestId } from './utils/getPullRequestId.mjs';
-import { Octokit } from '@octokit/rest';
-import { BOT, OWNER, REPO } from './utils/constants.mjs';
+import { BOT } from './utils/constants.mjs';
 
-const octokit = new Octokit({
-  // Uncomment to debug
-  log: console,
-  auth: process.env.CHANGESET_BOT,
-});
-
-export const findChangesetInPr = async ({ owner, repo }) => {
+export const findChangesetInPr = async () => {
   try {
-    const pullRequestId = await getPullRequestId();
+    /**
+     * We need to fetch all the inputs that were provided to our action
+     * and store them in variables for us to use.
+     **/
+    const owner = core.getInput('owner', { required: true });
+    const repo = core.getInput('repo', { required: true });
+    const pr_number = core.getInput('pr_number', { required: true });
+    const token = core.getInput('token', { required: true });
+    const octokit = new github.getOctokit(token);
+
     const { data: PrData } = await octokit.rest.pulls.get({
       owner,
       repo,
-      pull_number: pullRequestId,
+      pull_number: pr_number,
       mediaType: {
         format: 'diff',
       },
@@ -28,7 +29,7 @@ export const findChangesetInPr = async ({ owner, repo }) => {
       const { data: comments } = await octokit.issues.listComments({
         owner,
         repo,
-        issue_number: pullRequestId,
+        issue_number: pr_number,
       });
 
       const changesetBotComment = comments.find(
@@ -37,7 +38,7 @@ export const findChangesetInPr = async ({ owner, repo }) => {
       );
       const comment = changesetCommitted
         ? `:heavy_check_mark: **Changeset Found!**\n\nThis incredibly attractive PR is getting closer to being released.`
-        : `:warning: **No Changeset Found**\n\nPR #${pullRequestId} does not have a changeset.\nNot every PR needs one, but if this PR is a user-facing change, or is relevant to an 'Added', 'Fixed', 'Changed', 'Removed' or 'Tech Stories' type, please consider adding one.`;
+        : `:warning: **No Changeset Found**\n\nPR #${pr_number} does not have a changeset.\nNot every PR needs one, but if this PR is a user-facing change, or is relevant to an 'Added', 'Fixed', 'Changed', 'Removed' or 'Tech Stories' type, please consider adding one.`;
 
       if (changesetBotComment) {
         await octokit.issues.updateComment({
@@ -50,7 +51,7 @@ export const findChangesetInPr = async ({ owner, repo }) => {
         await octokit.issues.createComment({
           owner,
           repo,
-          issue_number: pullRequestId,
+          issue_number: pr_number,
           body: comment,
         });
       }
@@ -62,4 +63,4 @@ export const findChangesetInPr = async ({ owner, repo }) => {
   }
 };
 
-findChangesetInPr({ owner: OWNER, repo: REPO });
+findChangesetInPr();

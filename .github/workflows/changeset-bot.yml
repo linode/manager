@@ -1,37 +1,21 @@
 name: Changeset Bot
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  CHANGESET_BOT: ${{ secrets.CHANGESET_BOT }}
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-
-permissions:
-  contents: read
-  pull-requests: write
-  issues: write
+    types: [opened, reopened, synchronize]
 
 jobs:
-  changeset-check:
+  changeset-bot:
     runs-on: ubuntu-latest
+    name: Changeset Bot
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.14"
-
+      - uses: actions/checkout@v3
       - name: Run Changeset Checker
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CHANGESET_BOT: ${{ secrets.CHANGESET_BOT }}
-        run: |
-          yarn add -W @octokit/rest
-          node packages/manager/scripts/changelog/changeset-bot.mjs
+        uses: ./packages/manager/scripts/changelog/changeset
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          pr_number: ${{ github.event.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         
