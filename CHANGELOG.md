@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-05-15] - v1.93.1
 
 ### Fixed:
-- Initialize linode before referencing
+- Initialize linode before referencing #9133
 
 ## [2023-05-15] - v1.93.0
 
