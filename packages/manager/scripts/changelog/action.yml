@@ -14,5 +14,5 @@ inputs:
     description: 'The token to use to access the GitHub API'
     required: true
 runs:
-  using: 'node18'
+  using: 'node16'
   main: 'packages/manager/scripts/changelog/changeset-bot.mjs'
