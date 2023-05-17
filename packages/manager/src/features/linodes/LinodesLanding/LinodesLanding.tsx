@@ -1,50 +1,68 @@
+import { Config } from '@linode/api-v4/lib/linodes/types';
+import { APIError } from '@linode/api-v4/lib/types';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import Box from 'src/components/core/Box';
-import ErrorState from 'src/components/ErrorState';
-import Hidden from 'src/components/core/Hidden';
-import LandingHeader from 'src/components/LandingHeader';
-import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';
-import MaintenanceBanner from 'src/components/MaintenanceBanner';
-import TransferDisplay from 'src/components/TransferDisplay';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import { BackupsCTA } from 'src/features/Backups';
+import { QueryClient } from 'react-query';
+import { connect, MapDispatchToProps } from 'react-redux';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
-import { LinodeRow } from './LinodeRow/LinodeRow';
-import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
-import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
-import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
-import {
-  MIN_PAGE_SIZE,
-  PaginationFooter,
-} from 'src/components/PaginationFooter/PaginationFooter';
-import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
-import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { useHistory } from 'react-router-dom';
-import {
-  useAllLinodesQuery,
-  useLinodesQuery,
-} from 'src/queries/linodes/linodes';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import Tooltip from 'src/components/core/Tooltip';
-import { IconButton } from 'src/components/IconButton';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import Paginate from 'src/components/Paginate';
-import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import Typography from 'src/components/core/Typography';
-import { Linode } from '@linode/api-v4';
+import ErrorState from 'src/components/ErrorState';
+import Grid from '@mui/material/Unstable_Grid2';
+import LandingHeader from 'src/components/LandingHeader';
+import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import TransferDisplay from 'src/components/TransferDisplay';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
+import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
+import { BackupsCTA } from 'src/features/Backups';
+import { DialogType } from 'src/features/linodes/types';
+import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
+import { ApplicationState } from 'src/store';
+import { deleteLinode } from 'src/store/linodes/linode.requests';
+import { MapState } from 'src/store/types';
+import {
+  sendGroupByTagEnabledEvent,
+  sendLinodesViewEvent,
+} from 'src/utilities/ga';
+import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
+import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
+import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
+import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
+import { linodesInTransition as _linodesInTransition } from '../transitions';
+import CardView from './CardView';
+import DisplayGroupedLinodes from './DisplayGroupedLinodes';
+import DisplayLinodes from './DisplayLinodes';
+import styled, { StyleProps } from './LinodesLanding.styles';
+import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
+import ListView from './ListView';
+import { ExtendedStatus, statusToPriority } from './utils';
+import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
+import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';
+import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
+import { DeleteLinodeDialog } from './DeleteLinodeDialog';
+
+interface State {
+  powerDialogOpen: boolean;
+  powerDialogAction?: Action;
+  enableBackupsDialogOpen: boolean;
+  selectedLinodeConfigs?: Config[];
+  selectedLinodeID?: number;
+  selectedLinodeLabel?: string;
+  deleteDialogOpen: boolean;
+  rebuildDialogOpen: boolean;
+  rescueDialogOpen: boolean;
+  groupByTag: boolean;
+  linodeResizeOpen: boolean;
+  linodeMigrateOpen: boolean;
+}
 
 export interface LinodeHandlers {
   onOpenPowerDialog: (action: Action) => void;
@@ -55,439 +73,417 @@ export interface LinodeHandlers {
   onOpenMigrateDialog: () => void;
 }
 
-const preferenceKey = 'linodes';
+interface Params {
+  view?: string;
+  groupByTag?: 'true' | 'false';
+}
 
-export const LinodesLanding = () => {
-  const history = useHistory();
+type RouteProps = RouteComponentProps<Params>;
 
-  const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
-  const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [rebuildDialogOpen, setRebuildDialogOpen] = React.useState(false);
-  const [rescueDialogOpen, setRescueDialogOpen] = React.useState(false);
-  const [linodeResizeOpen, setResizeDialogOpen] = React.useState(false);
-  const [linodeMigrateOpen, setMigrateDialogOpen] = React.useState(false);
+export interface Props {
+  LandingHeader?: React.ReactElement;
+  someLinodesHaveScheduledMaintenance: boolean;
+  linodesData: ExtendedLinode[];
+  linodesRequestError?: APIError[];
+  linodesRequestLoading: boolean;
+}
 
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<
-    number | undefined
-  >();
+type CombinedProps = Props &
+  StateProps &
+  DispatchProps &
+  RouteProps &
+  StyleProps &
+  WithSnackbarProps &
+  WithProfileProps;
 
-  const pagination = usePagination(1, preferenceKey);
-
-  const { data: preferences } = usePreferences();
-  const { mutateAsync: updatePreferences } = useMutatePreferences();
-
-  const groupByTag = preferences?.linodes_group_by_tag;
-
-  const groupByTagsOrder = useOrder(
-    {
-      orderBy: 'label',
-      order: 'desc',
-    },
-    `${preferenceKey}-group-by-tags-order`
-  );
-
-  const { order, orderBy, handleOrderChange } = useOrder(
-    {
-      orderBy: 'label',
-      order: 'desc',
-    },
-    `${preferenceKey}-order`
-  );
-
-  const filter = {
-    ['+order_by']: orderBy,
-    ['+order']: order,
+export class ListLinodes extends React.Component<CombinedProps, State> {
+  state: State = {
+    enableBackupsDialogOpen: false,
+    powerDialogOpen: false,
+    deleteDialogOpen: false,
+    rebuildDialogOpen: false,
+    rescueDialogOpen: false,
+    groupByTag: false,
+    linodeResizeOpen: false,
+    linodeMigrateOpen: false,
   };
 
-  const { data, isLoading, error } = useLinodesQuery(
-    {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    },
-    filter,
-    !groupByTag
-  );
+  /**
+   * when you change the linode view, instantly update the query params
+   */
+  changeViewInstant = (style: 'grid' | 'list') => {
+    const { history, location } = this.props;
 
-  const { data: linodes } = useAllLinodesQuery({}, {}, groupByTag);
+    const query = new URLSearchParams(location.search);
 
-  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+    query.set('view', style);
 
-  const onOpenPowerDialog = (linodeId: number, action: Action) => {
-    setPowerDialogOpen(true);
-    setPowerAction(action);
-    setSelectedLinodeId(linodeId);
+    history.push(`?${query.toString()}`);
   };
 
-  const onOpenDeleteDialog = (linodeId: number) => {
-    setDeleteDialogOpen(true);
-    setSelectedLinodeId(linodeId);
+  updatePageUrl = (page: number) => {
+    this.props.history.push(`?page=${page}`);
   };
 
-  const onOpenResizeDialog = (linodeId: number) => {
-    setResizeDialogOpen(true);
-    setSelectedLinodeId(linodeId);
+  /**
+   * when you change the linode view, send an event to google analytics, debounced.
+   */
+  changeViewDelayed = (style: 'grid' | 'list') => {
+    sendLinodesViewEvent(eventCategory, style);
   };
 
-  const onOpenRebuildDialog = (linodeId: number) => {
-    setRebuildDialogOpen(true);
-    setSelectedLinodeId(linodeId);
+  openPowerDialog = (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => {
+    this.setState({
+      powerDialogOpen: true,
+      powerDialogAction: bootAction,
+      selectedLinodeConfigs: linodeConfigs,
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel,
+    });
   };
 
-  const onOpenRescueDialog = (linodeId: number) => {
-    setRescueDialogOpen(true);
-    setSelectedLinodeId(linodeId);
+  openDialog = (type: DialogType, linodeID: number, linodeLabel?: string) => {
+    switch (type) {
+      case 'delete':
+        this.setState({
+          deleteDialogOpen: true,
+        });
+        break;
+      case 'resize':
+        this.setState({
+          linodeResizeOpen: true,
+        });
+        break;
+      case 'migrate':
+        this.setState({
+          linodeMigrateOpen: true,
+        });
+        break;
+      case 'rebuild':
+        this.setState({
+          rebuildDialogOpen: true,
+        });
+        break;
+      case 'rescue':
+        this.setState({
+          rescueDialogOpen: true,
+        });
+        break;
+      case 'enable_backups':
+        this.setState({
+          enableBackupsDialogOpen: true,
+        });
+        break;
+    }
+    this.setState({
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel,
+    });
   };
 
-  const onOpenMigrateDialog = (linodeId: number) => {
-    setMigrateDialogOpen(true);
-    setSelectedLinodeId(linodeId);
+  closeDialogs = () => {
+    this.setState({
+      powerDialogOpen: false,
+      deleteDialogOpen: false,
+      rebuildDialogOpen: false,
+      rescueDialogOpen: false,
+      linodeResizeOpen: false,
+      linodeMigrateOpen: false,
+      enableBackupsDialogOpen: false,
+    });
   };
 
-  if (error) {
-    return <ErrorState errorText={error?.[0].reason} />;
-  }
+  render() {
+    const {
+      linodesRequestError,
+      linodesRequestLoading,
+      linodesCount,
+      linodesData,
+      classes,
+      linodesInTransition,
+    } = this.props;
 
-  if (isLoading) {
-    return <CircleProgress />;
-  }
+    const params = new URLSearchParams(this.props.location.search);
 
-  if (data?.results === 0) {
-    return <LinodesLandingEmptyState />;
-  }
+    const view =
+      params.has('view') && ['grid', 'list'].includes(params.get('view')!)
+        ? (params.get('view') as 'grid' | 'list')
+        : undefined;
 
-  if (groupByTag) {
+    const componentProps = {
+      count: linodesCount,
+      someLinodesHaveMaintenance: this.props
+        .someLinodesHaveScheduledMaintenance,
+      openPowerActionDialog: this.openPowerDialog,
+      openDialog: this.openDialog,
+    };
+
+    if (linodesRequestError) {
+      let errorText: string | JSX.Element =
+        linodesRequestError?.[0]?.reason ?? 'Error loading Linodes';
+
+      if (
+        typeof errorText === 'string' &&
+        errorText.toLowerCase() === 'this linode has been suspended'
+      ) {
+        errorText = (
+          <React.Fragment>
+            One or more of your Linodes is suspended. Please{' '}
+            <Link to="/support/tickets">open a support ticket </Link>
+            if you have questions.
+          </React.Fragment>
+        );
+      }
+
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText={errorText} />
+        </React.Fragment>
+      );
+    }
+
+    if (linodesRequestLoading) {
+      return <CircleProgress />;
+    }
+
+    if (this.props.linodesCount === 0) {
+      return <LinodesLandingEmptyState />;
+    }
+
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Linodes" />
-        <MaintenanceBanner />
-        <BackupsCTA />
-        <LandingHeader
-          title="Linodes"
-          entity="Linode"
-          onButtonClick={() => history.push('/linodes/create')}
-          docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-        />
-        <OrderBy
-          preferenceKey={'linodes-landing'}
-          data={linodes ?? []}
-          order="asc"
-        >
-          {({ data, handleOrderChange, order, orderBy }) => {
-            const orderedGroupedLinodes = sortGroups(groupByTags(data));
-            return (
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableSortCell
-                      active={orderBy === 'label'}
-                      direction={order}
-                      label="label"
-                      handleClick={handleOrderChange}
-                      data-qa-sort-label={order}
-                    >
-                      Label
-                    </TableSortCell>
-                    <TableSortCell
-                      active={groupByTagsOrder.orderBy === 'status'}
-                      direction={groupByTagsOrder.order}
-                      label="status"
-                      handleClick={groupByTagsOrder.handleOrderChange}
-                      data-qa-sort-label={order}
-                    >
-                      Status
-                    </TableSortCell>
-                    <Hidden smDown>
-                      <TableCell>Plan</TableCell>
-                      <TableCell>IP Address</TableCell>
-                    </Hidden>
-                    <Hidden lgDown>
-                      <TableSortCell
-                        active={orderBy === 'region'}
-                        direction={order}
-                        label="region"
-                        handleClick={handleOrderChange}
-                      >
-                        Region
-                      </TableSortCell>
-                      <TableCell>Last Backup</TableCell>
-                    </Hidden>
-                    <TableCell>
-                      <Tooltip
-                        placement="top-end"
-                        title={groupByTag ? 'Ungroup by tag' : 'Group by tag'}
-                      >
-                        <IconButton
-                          aria-label={`Toggle group by tag`}
-                          aria-describedby={'groupByDescription'}
-                          onClick={() =>
-                            updatePreferences({
-                              linodes_group_by_tag: !preferences?.linodes_group_by_tag,
-                            })
-                          }
-                          disableRipple
-                          sx={{
-                            padding: 0,
-                            color: '#d2d3d4',
-                            '&:focus': {
-                              outline: '1px dotted #999',
-                            },
-                          }}
-                          size="large"
-                        >
-                          <GroupByTag />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                {orderedGroupedLinodes.length === 0 ? (
-                  <TableBody>
-                    <TableRowEmptyState colSpan={12} />
-                  </TableBody>
-                ) : null}
-                {orderedGroupedLinodes.map(([tag, linodes]) => {
-                  return (
-                    <React.Fragment key={tag}>
-                      <Paginate
-                        data={linodes}
-                        pageSize={infinitePageSize}
-                        pageSizeSetter={setInfinitePageSize}
-                      >
-                        {({
-                          data: paginatedData,
-                          handlePageChange,
-                          handlePageSizeChange,
-                          page,
-                          pageSize,
-                          count,
-                        }) => {
-                          return (
-                            <TableBody data-qa-tag-header={tag}>
-                              <TableRow>
-                                <TableCell colSpan={7}>
-                                  <Typography variant="h2" component="h3">
-                                    {tag}
-                                  </Typography>
-                                </TableCell>
-                              </TableRow>
-                              {paginatedData.map((linode: Linode) => (
-                                <LinodeRow
-                                  key={linode.id}
-                                  {...linode}
-                                  handlers={{
-                                    onOpenDeleteDialog: () =>
-                                      onOpenDeleteDialog(linode.id),
-                                    onOpenMigrateDialog: () =>
-                                      onOpenMigrateDialog(linode.id),
-                                    onOpenPowerDialog: (action: Action) =>
-                                      onOpenPowerDialog(linode.id, action),
-                                    onOpenRebuildDialog: () =>
-                                      onOpenRebuildDialog(linode.id),
-                                    onOpenRescueDialog: () =>
-                                      onOpenRescueDialog(linode.id),
-                                    onOpenResizeDialog: () =>
-                                      onOpenResizeDialog(linode.id),
-                                  }}
-                                />
-                              ))}
-                              {count > MIN_PAGE_SIZE && (
-                                <TableRow>
-                                  <TableCell colSpan={7}>
-                                    <PaginationFooter
-                                      count={count}
-                                      handlePageChange={handlePageChange}
-                                      handleSizeChange={handlePageSizeChange}
-                                      pageSize={pageSize}
-                                      page={page}
-                                      eventCategory={'linodes landing'}
-                                      // Disabling showAll as it is impacting page performance.
-                                      showAll={false}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                              )}
-                            </TableBody>
-                          );
-                        }}
-                      </Paginate>
-                    </React.Fragment>
-                  );
-                })}
-              </Table>
-            );
-          }}
-        </OrderBy>
-        <Box display="flex" justifyContent="flex-end" marginTop={1}>
-          <LinodesLandingCSVDownload />
-        </Box>
-        <TransferDisplay />
-        <PowerActionsDialog
-          isOpen={powerDialogOpen}
-          linodeId={selectedLinodeId}
-          onClose={() => setPowerDialogOpen(false)}
-          action={powerAction}
-        />
-        <DeleteLinodeDialog
-          open={deleteDialogOpen}
-          onClose={() => setDeleteDialogOpen(false)}
-          linodeId={selectedLinodeId}
-        />
         <LinodeResize
-          open={linodeResizeOpen}
-          onClose={() => setResizeDialogOpen(false)}
-          linodeId={selectedLinodeId}
+          open={this.state.linodeResizeOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID}
         />
         <MigrateLinode
-          open={linodeMigrateOpen}
-          onClose={() => setMigrateDialogOpen(false)}
-          linodeId={selectedLinodeId}
+          open={this.state.linodeMigrateOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID ?? -1}
         />
         <LinodeRebuildDialog
-          open={rebuildDialogOpen}
-          onClose={() => setRebuildDialogOpen(false)}
-          linodeId={selectedLinodeId}
+          open={this.state.rebuildDialogOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID ?? -1}
         />
         <RescueDialog
-          open={rescueDialogOpen}
-          onClose={() => setRescueDialogOpen(false)}
-          linodeId={selectedLinodeId}
+          open={this.state.rescueDialogOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID ?? -1}
         />
+        <EnableBackupsDialog
+          open={this.state.enableBackupsDialogOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID ?? -1}
+        />
+        {this.props.someLinodesHaveScheduledMaintenance && (
+          <MaintenanceBanner />
+        )}
+        <DocumentTitleSegment segment="Linodes" />
+        <PreferenceToggle<boolean>
+          localStorageKey="GROUP_LINODES"
+          preferenceOptions={[false, true]}
+          preferenceKey="linodes_group_by_tag"
+          toggleCallbackFnDebounced={sendGroupByAnalytic}
+        >
+          {({
+            preference: linodesAreGrouped,
+            togglePreference: toggleGroupLinodes,
+          }: ToggleProps<boolean>) => {
+            return (
+              <PreferenceToggle<'grid' | 'list'>
+                preferenceKey="linodes_view_style"
+                localStorageKey="LINODE_VIEW"
+                preferenceOptions={['list', 'grid']}
+                toggleCallbackFnDebounced={this.changeViewDelayed}
+                toggleCallbackFn={this.changeViewInstant}
+                /**
+                 * we want the URL query param to take priority here, but if it's
+                 * undefined, just use the user preference
+                 */
+                value={view}
+              >
+                {({
+                  preference: linodeViewPreference,
+                  togglePreference: toggleLinodeView,
+                }: ToggleProps<'list' | 'grid'>) => {
+                  return (
+                    <React.Fragment>
+                      <React.Fragment>
+                        <BackupsCTA />
+                        {this.props.LandingHeader ? (
+                          this.props.LandingHeader
+                        ) : (
+                          <div>
+                            <LandingHeader
+                              title="Linodes"
+                              entity="Linode"
+                              onButtonClick={() =>
+                                this.props.history.push('/linodes/create')
+                              }
+                              docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                            />
+                          </div>
+                        )}
+                      </React.Fragment>
+
+                      <OrderBy
+                        preferenceKey={'linodes-landing'}
+                        data={(linodesData ?? []).map((linode) => {
+                          // Determine the priority of this Linode's status.
+                          // We have to check for "Maintenance" and "Busy" since these are
+                          // not actual Linode statuses (we derive them client-side).
+                          let _status: ExtendedStatus = linode.status;
+                          if (linode.maintenance) {
+                            _status = 'maintenance';
+                          } else if (linodesInTransition.has(linode.id)) {
+                            _status = 'busy';
+                          }
+
+                          return {
+                            ...linode,
+                            displayStatus: linode.maintenance
+                              ? 'maintenance'
+                              : linode.status,
+                            _statusPriority: statusToPriority(_status),
+                          };
+                        })}
+                        // If there are Linodes with scheduled maintenance, default to
+                        // sorting by status priority so they are more visible.
+                        order="asc"
+                        orderBy={
+                          this.props.someLinodesHaveScheduledMaintenance
+                            ? '_statusPriority'
+                            : 'label'
+                        }
+                      >
+                        {({ data, handleOrderChange, order, orderBy }) => {
+                          const finalProps = {
+                            ...componentProps,
+                            data,
+                            handleOrderChange,
+                            order,
+                            orderBy,
+                          };
+
+                          return linodesAreGrouped ? (
+                            <DisplayGroupedLinodes
+                              {...finalProps}
+                              display={linodeViewPreference}
+                              toggleLinodeView={toggleLinodeView}
+                              toggleGroupLinodes={toggleGroupLinodes}
+                              linodesAreGrouped={true}
+                              linodeViewPreference={linodeViewPreference}
+                              component={
+                                linodeViewPreference === 'grid'
+                                  ? CardView
+                                  : ListView
+                              }
+                            />
+                          ) : (
+                            <DisplayLinodes
+                              {...finalProps}
+                              display={linodeViewPreference}
+                              toggleLinodeView={toggleLinodeView}
+                              toggleGroupLinodes={toggleGroupLinodes}
+                              updatePageUrl={this.updatePageUrl}
+                              linodesAreGrouped={false}
+                              linodeViewPreference={linodeViewPreference}
+                              component={
+                                linodeViewPreference === 'grid'
+                                  ? CardView
+                                  : ListView
+                              }
+                            />
+                          );
+                        }}
+                      </OrderBy>
+                      <Grid
+                        container
+                        className={classes.CSVwrapper}
+                        justifyContent="flex-end"
+                      >
+                        <Grid className={classes.CSVlinkContainer}>
+                          <LinodesLandingCSVDownload />
+                        </Grid>
+                      </Grid>
+                    </React.Fragment>
+                  );
+                }}
+              </PreferenceToggle>
+            );
+          }}
+        </PreferenceToggle>
+        <TransferDisplay />
+
+        {!!this.state.selectedLinodeID && !!this.state.selectedLinodeLabel && (
+          <React.Fragment>
+            <PowerActionsDialog
+              isOpen={this.state.powerDialogOpen}
+              action={this.state.powerDialogAction ?? 'Power On'}
+              linodeId={this.state.selectedLinodeID}
+              onClose={this.closeDialogs}
+            />
+            <DeleteLinodeDialog
+              open={this.state.deleteDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID}
+            />
+          </React.Fragment>
+        )}
       </React.Fragment>
     );
   }
+}
 
-  return (
-    <React.Fragment>
-      <DocumentTitleSegment segment="Linodes" />
-      <MaintenanceBanner />
-      <BackupsCTA />
-      <LandingHeader
-        title="Linodes"
-        entity="Linode"
-        onButtonClick={() => history.push('/linodes/create')}
-        docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-      />
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              label="label"
-              handleClick={handleOrderChange}
-              data-qa-sort-label={order}
-            >
-              Label
-            </TableSortCell>
-            <TableCell>Status</TableCell>
-            <Hidden smDown>
-              <TableCell>Plan</TableCell>
-              <TableCell>IP Address</TableCell>
-            </Hidden>
-            <Hidden lgDown>
-              <TableSortCell
-                active={orderBy === 'region'}
-                direction={order}
-                label="region"
-                handleClick={handleOrderChange}
-              >
-                Region
-              </TableSortCell>
-              <TableCell>Last Backup</TableCell>
-            </Hidden>
-            <TableCell>
-              <Tooltip
-                placement="top-end"
-                title={groupByTag ? 'Ungroup by tag' : 'Group by tag'}
-              >
-                <IconButton
-                  aria-label={`Toggle group by tag`}
-                  aria-describedby={'groupByDescription'}
-                  onClick={() =>
-                    updatePreferences({
-                      linodes_group_by_tag: !preferences?.linodes_group_by_tag,
-                    })
-                  }
-                  disableRipple
-                  sx={{
-                    padding: 0,
-                    color: '#d2d3d4',
-                    '&:focus': {
-                      outline: '1px dotted #999',
-                    },
-                  }}
-                  size="large"
-                >
-                  <GroupByTag />
-                </IconButton>
-              </Tooltip>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.data.map((linode) => (
-            <LinodeRow
-              key={linode.id}
-              {...linode}
-              handlers={{
-                onOpenDeleteDialog: () => onOpenDeleteDialog(linode.id),
-                onOpenMigrateDialog: () => onOpenMigrateDialog(linode.id),
-                onOpenPowerDialog: (action: Action) =>
-                  onOpenPowerDialog(linode.id, action),
-                onOpenRebuildDialog: () => onOpenRebuildDialog(linode.id),
-                onOpenRescueDialog: () => onOpenRescueDialog(linode.id),
-                onOpenResizeDialog: () => onOpenResizeDialog(linode.id),
-              }}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={data?.results ?? 0}
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-        eventCategory="Linodes Table"
-      />
-      <Box display="flex" justifyContent="flex-end" marginTop={1}>
-        <LinodesLandingCSVDownload />
-      </Box>
-      <TransferDisplay />
-      <PowerActionsDialog
-        isOpen={powerDialogOpen}
-        linodeId={selectedLinodeId}
-        onClose={() => setPowerDialogOpen(false)}
-        action={powerAction}
-      />
-      <DeleteLinodeDialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        linodeId={selectedLinodeId}
-      />
-      <LinodeResize
-        open={linodeResizeOpen}
-        onClose={() => setResizeDialogOpen(false)}
-        linodeId={selectedLinodeId}
-      />
-      <MigrateLinode
-        open={linodeMigrateOpen}
-        onClose={() => setMigrateDialogOpen(false)}
-        linodeId={selectedLinodeId}
-      />
-      <LinodeRebuildDialog
-        open={rebuildDialogOpen}
-        onClose={() => setRebuildDialogOpen(false)}
-        linodeId={selectedLinodeId}
-      />
-      <RescueDialog
-        open={rescueDialogOpen}
-        onClose={() => setRescueDialogOpen(false)}
-        linodeId={selectedLinodeId}
-      />
-    </React.Fragment>
-  );
+const eventCategory = 'linodes landing';
+
+const sendGroupByAnalytic = (value: boolean) => {
+  sendGroupByTagEnabledEvent(eventCategory, value);
 };
 
-export default LinodesLanding;
+interface StateProps {
+  linodesCount: number;
+  linodesInTransition: Set<number>;
+}
+
+const mapStateToProps: MapState<StateProps, Props> = (state) => {
+  return {
+    linodesCount: state.__resources.linodes.results,
+    linodesInTransition: _linodesInTransition(state.events.events),
+  };
+};
+
+interface DispatchProps {
+  deleteLinode: (
+    linodeId: number,
+    queryClient: QueryClient
+  ) => Promise<Record<string, never>>;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
+) => ({
+  deleteLinode: (linodeId: number, queryClient: QueryClient) =>
+    dispatch(deleteLinode({ linodeId, queryClient })),
+});
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
+export const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  withSnackbar,
+  connected,
+  styled,
+  withFeatureFlagConsumer,
+  withProfile
+);
+
+export default enhanced(ListLinodes);
