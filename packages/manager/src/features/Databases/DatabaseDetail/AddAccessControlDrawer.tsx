@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import {

@@ -8,7 +8,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { addPaymentMethod } from '@linode/api-v4/lib';
 import { useSnackbar } from 'notistack';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { CreditCardSchema } from '@linode/validation';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';

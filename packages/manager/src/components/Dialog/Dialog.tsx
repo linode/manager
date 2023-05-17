@@ -1,11 +1,12 @@
 import * as React from 'react';
 import _Dialog, { DialogProps as _DialogProps } from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
-import { Notice } from 'src/components/Notice/Notice';
-import DialogContent from 'src/components/core/DialogContent';
-import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
+import Button from 'src/components/Button';
+import Close from '@mui/icons-material/Close';
+import Notice from 'src/components/Notice';
+import Typography from 'src/components/core/Typography';
 import { isPropValid } from 'src/utilities/isPropValid';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface DialogProps extends _DialogProps {
@@ -17,7 +18,6 @@ export interface DialogProps extends _DialogProps {
 }
 
 const Dialog = (props: DialogProps) => {
-  const theme = useTheme();
   const {
     children,
     className,
@@ -52,21 +52,30 @@ const Dialog = (props: DialogProps) => {
           alignItems: 'center',
         }}
       >
-        <DialogTitle
-          title={title}
-          onClose={() => onClose && onClose({}, 'backdropClick')}
-          id={titleID}
-        />
+        <StyledDialogHeader>
+          <Typography
+            variant="h2"
+            id={titleID}
+            data-qa-drawer-title={title}
+            data-qa-dialog-title={title}
+          >
+            {title}
+          </Typography>
+
+          <StyledButton
+            buttonType="secondary"
+            onClick={onClose as (e: any) => void}
+            data-qa-close-drawer
+            aria-label="Close"
+          >
+            <Close />
+          </StyledButton>
+        </StyledDialogHeader>
         {titleBottomBorder && <StyledHr />}
-        <DialogContent
-          className={className}
-          sx={{
-            paddingBottom: theme.spacing(3),
-          }}
-        >
+        <Box className={className}>
           {error && <Notice text={error} error />}
           {children}
-        </DialogContent>
+        </Box>
       </Box>
     </StyledDialog>
   );
@@ -78,7 +87,7 @@ const StyledDialog = styled(_Dialog, {
   '& .MuiDialog-paper': {
     height: props.fullHeight ? '100vh' : undefined,
     maxHeight: '100%',
-    padding: 0,
+    padding: `${theme.spacing(4)}`,
   },
   '& .MuiDialogActions-root': {
     display: 'flex',
@@ -97,5 +106,25 @@ const StyledHr = styled('hr')({
   margin: '-2em 8px 0px 8px',
   width: '100%',
 });
+
+const StyledButton = styled(Button)(() => ({
+  minHeight: 'auto',
+  minWidth: 'auto',
+  position: 'absolute',
+  right: '-16px',
+}));
+
+const StyledDialogHeader = styled(Box)(({ theme }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.bg.bgPaper,
+  display: 'flex',
+  justifyContent: 'space-between',
+  paddingBottom: theme.spacing(2),
+  marginRight: theme.spacing(7),
+  position: 'sticky',
+  top: 0,
+  width: '100%',
+  zIndex: 2,
+}));
 
 export { Dialog };

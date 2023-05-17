@@ -60,8 +60,6 @@ const NodePool: React.FC<Props> = (props) => {
       alignItems="center"
       justifyContent="space-between"
       spacing={2}
-      data-qa-node-pool-section
-      data-qa-node-pool-id={poolId}
     >
       <Grid>
         <Typography variant="h2">{typeLabel}</Typography>

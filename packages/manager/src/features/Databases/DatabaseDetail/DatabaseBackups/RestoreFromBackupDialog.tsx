@@ -8,7 +8,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import { DialogProps } from 'src/components/Dialog/Dialog';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { usePreferences } from 'src/queries/preferences';

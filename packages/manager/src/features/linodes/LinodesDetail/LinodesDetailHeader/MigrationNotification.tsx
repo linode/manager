@@ -9,7 +9,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { useDialog } from 'src/hooks/useDialog';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';

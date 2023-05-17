@@ -5,12 +5,12 @@ import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SelectableTableRow from 'src/components/SelectableTableRow';
-import { TableCell } from 'src/components/TableCell';
+import TableCell from 'src/components/TableCell/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import { useSpecificTypes } from 'src/queries/types';
 import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { useLinodesByIdQuery } from 'src/queries/linodes';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRegionsQuery } from 'src/queries/regions';
 import { extendType } from 'src/utilities/extendType';
@@ -22,13 +22,19 @@ interface Props {
   handleToggle: (linode: Entity) => void;
 }
 
-export const LinodeTransferTable = (props: Props) => {
+export const LinodeTransferTable: React.FC<Props> = (props) => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
   const [searchText, setSearchText] = React.useState('');
 
   const pagination = usePagination();
 
-  const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery(
+  const {
+    data,
+    isError,
+    isLoading,
+    error,
+    dataUpdatedAt,
+  } = useLinodesByIdQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -36,8 +42,7 @@ export const LinodeTransferTable = (props: Props) => {
     generateLinodeXFilter(searchText)
   );
 
-  const linodesCurrentPage = data?.data ?? [];
-
+  const linodesCurrentPage = Object.values(data?.linodes ?? {});
   const hasSelectedAll =
     linodesCurrentPage.every((thisLinode) =>
       Boolean(selectedLinodes[thisLinode.id])

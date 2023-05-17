@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { createStyles, withStyles, WithStyles, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { selectStyles } from 'src/features/TopMenu/SearchBar';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';

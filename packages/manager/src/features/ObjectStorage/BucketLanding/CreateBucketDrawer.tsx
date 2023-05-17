@@ -8,7 +8,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import ClusterSelect from './ClusterSelect';
@@ -54,7 +54,6 @@ export const CreateBucketDrawer = (props: Props) => {
     error,
     reset,
   } = useCreateBucketMutation();
-
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
@@ -122,7 +121,6 @@ export const CreateBucketDrawer = (props: Props) => {
             data-qa-permissions-notice
           />
         )}
-        {Boolean(errorMap.none) && <Notice error text={errorMap.none} />}
         <TextField
           data-qa-cluster-label
           label="Label"
@@ -136,7 +134,7 @@ export const CreateBucketDrawer = (props: Props) => {
         />
         <ClusterSelect
           data-qa-cluster-select
-          error={errorMap.cluster}
+          error={formik.touched.cluster ? errorMap.cluster : undefined}
           onBlur={formik.handleBlur}
           onChange={(value) => formik.setFieldValue('cluster', value)}
           selectedCluster={formik.values.cluster}
@@ -155,12 +153,7 @@ export const CreateBucketDrawer = (props: Props) => {
           <Button buttonType="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={isLoading}
-            data-testid="create-bucket-button"
-          >
+          <Button buttonType="primary" type="submit" loading={isLoading}>
             Create Bucket
           </Button>
         </ActionsPanel>

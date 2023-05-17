@@ -5,7 +5,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 

@@ -8,7 +8,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { MBpsIntraDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useSpecificTypes } from 'src/queries/types';

@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';

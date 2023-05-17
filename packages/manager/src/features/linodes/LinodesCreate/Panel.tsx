@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 
 interface Props {
   error?: string;

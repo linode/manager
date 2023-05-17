@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
@@ -71,17 +71,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeId: number | undefined;
+  linodeID: number;
   open: boolean;
   onClose: () => void;
 }
 
 const MigrateLinode = React.memo((props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeID, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const linode = useExtendedLinode(linodeId ?? -1);
+  const linode = useExtendedLinode(linodeID);
   const typesQuery = useSpecificTypes(linode?.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
 
@@ -172,7 +172,7 @@ const MigrateLinode = React.memo((props: Props) => {
 
     setLoading(true);
 
-    return scheduleOrQueueMigration(linodeId ?? -1, {
+    return scheduleOrQueueMigration(linodeID, {
       region: selectedRegion,
     })
       .then(() => {
@@ -216,7 +216,7 @@ const MigrateLinode = React.memo((props: Props) => {
   const disabledText = getDisabledReason(
     linode._events,
     linode.status,
-    linodeId ?? -1
+    linodeID
   );
 
   /** how long will this take to migrate when the migration starts */
@@ -247,7 +247,7 @@ const MigrateLinode = React.memo((props: Props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
-        linodeId={linodeId}
+        linodeId={linodeID}
         setConfirmed={setConfirmed}
         hasConfirmed={hasConfirmed}
         error={acceptError}
