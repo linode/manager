@@ -55,7 +55,7 @@ export const findChangesetInPr = async ({ owner, repo }) => {
         });
       }
     } catch (error) {
-      console.warn(`Error retrieving comments: ${error}`);
+      console.warn(`Error posting/updating comments: ${error}`);
     }
   } catch (error) {
     console.warn(`An error occurred trying to check for a changeset: ${error}`);
