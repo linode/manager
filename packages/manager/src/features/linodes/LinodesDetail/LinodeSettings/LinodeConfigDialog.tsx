@@ -31,7 +31,7 @@ import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';

@@ -1,13 +1,13 @@
+import classNames from 'classnames';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import {
-  default as _TableRow,
-  TableRowProps as _TableRowProps,
-} from '@mui/material/TableRow';
+import _TableRow, { TableRowProps } from 'src/components/core/TableRow';
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     borderLeft: `1px solid ${theme.borderColors.borderTable}`,
     borderRight: `1px solid ${theme.borderColors.borderTable}`,
@@ -113,7 +113,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export interface TableRowProps extends _TableRowProps {
+type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
+
+export interface Props {
   className?: string;
   ariaLabel?: string;
   disabled?: boolean;
@@ -121,12 +123,15 @@ export interface TableRowProps extends _TableRowProps {
   forceIndex?: boolean;
   highlight?: boolean;
   htmlFor?: string;
+  onClick?: onClickFn;
   onKeyUp?: any;
   selected?: boolean;
 }
 
-export const TableRow = React.memo((props: TableRowProps) => {
-  const { classes, cx } = useStyles();
+export type CombinedProps = Props & TableRowProps & RouteComponentProps<{}>;
+
+export const TableRow: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
 
   const {
     className,
@@ -136,13 +141,17 @@ export const TableRow = React.memo((props: TableRowProps) => {
     forceIndex,
     highlight,
     selected,
+    // Defining `staticContext` here to prevent `...rest` from containing it
+    // since it leads to a console warning
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    staticContext,
     ...rest
   } = props;
 
   return (
     <_TableRow
       aria-label={ariaLabel ?? `View Details`}
-      className={cx(className, {
+      className={classNames(className, {
         [classes.root]: true,
         [classes.selected]: selected,
         [classes.withForcedIndex]: forceIndex,
@@ -163,4 +172,11 @@ export const TableRow = React.memo((props: TableRowProps) => {
       )}
     </_TableRow>
   );
-});
+};
+
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  React.memo
+)(TableRow);
+
+export default enhanced;

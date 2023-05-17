@@ -6,20 +6,20 @@ import { useFirewallsQuery } from 'src/queries/firewalls';
 import CreateFirewallDrawer from './CreateFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import FirewallDialog, { Mode } from './FirewallDialog';
-import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
+import FirewallEmptyState from './FirewallEmptyState';
 import FirewallRow from './FirewallRow';
 import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
 import ErrorState from 'src/components/ErrorState/ErrorState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { Table } from 'src/components/Table';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
+import Table from 'src/components/Table/Table';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/TableRow/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { TableCell } from 'src/components/TableCell';
-import { TableBody } from 'src/components/TableBody';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableBody from 'src/components/core/TableBody';
 import Hidden from 'src/components/core/Hidden';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import PaginationFooter from 'src/components/PaginationFooter';
 
 const preferenceKey = 'firewalls';
 
@@ -113,7 +113,7 @@ const FirewallLanding = () => {
   if (data?.results === 0) {
     return (
       <>
-        <FirewallLandingEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
+        <FirewallEmptyState openAddFirewallDrawer={onOpenCreateDrawer} />
         <CreateFirewallDrawer
           open={isCreateFirewallDrawerOpen}
           onClose={() => setIsCreateFirewallDrawerOpen(false)}

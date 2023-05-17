@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAccount } from 'src/queries/account';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
@@ -45,11 +45,11 @@ interface Props {
   setConfirmed: (value: boolean) => void;
   error?: string;
   migrationTimeInMins: number;
-  linodeId: number | undefined;
+  linodeId: number;
   metadataWarning?: string;
 }
 
-const CautionNotice = (props: Props) => {
+const CautionNotice: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { data: account } = useAccount();
 
@@ -60,14 +60,9 @@ const CautionNotice = (props: Props) => {
   // the React Query store in a paginated shape. We want to keep data in a paginated shape
   // because the event handler automatically updates stored paginated data.
   // We can safely do this because linodes can't have more than 64 volumes.
-  const { data: volumesData } = useLinodeVolumesQuery(
-    props.linodeId ?? -1,
-    {
-      page_size: API_MAX_PAGE_SIZE,
-    },
-    {},
-    props.linodeId !== undefined
-  );
+  const { data: volumesData } = useLinodeVolumesQuery(props.linodeId, {
+    page_size: API_MAX_PAGE_SIZE,
+  });
 
   const amountOfAttachedVolumes = volumesData?.results ?? 0;
 

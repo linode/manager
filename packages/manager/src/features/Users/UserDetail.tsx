@@ -12,7 +12,7 @@ import {
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import ErrorState from 'src/components/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import { queryKey } from 'src/queries/account';

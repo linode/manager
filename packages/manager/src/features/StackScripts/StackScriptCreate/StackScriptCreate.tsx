@@ -20,7 +20,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';

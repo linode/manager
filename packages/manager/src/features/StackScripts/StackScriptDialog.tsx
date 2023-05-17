@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import _StackScript from 'src/components/StackScript';
 import { ApplicationState } from 'src/store';
 import { closeStackScriptDialog } from 'src/store/stackScriptDialog';

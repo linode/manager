@@ -10,7 +10,6 @@ import { ui } from 'support/ui';
 import { interceptOnce } from 'support/ui/common';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomItem, randomLabel, randomPhrase } from 'support/util/random';
-import { mockGetImage } from 'support/intercepts/images';
 
 /*
  * Amount of time to wait for toast notification after uploading image, in ms.
@@ -73,6 +72,27 @@ const eventIntercept = (
       })
     )
   ).as('getEvent');
+};
+
+/**
+ * Intercepts the response for an image GET request.
+ *
+ * Responds with an image with the given label, ID, and status.
+ *
+ * @param label - Response image label.
+ * @param id - Response image ID. Expected to be prefixed with a string (e.g. 'private/12345').
+ * @param status - Image status.
+ */
+const imageIntercept = (label: string, id: string, status: ImageStatus) => {
+  cy.intercept('GET', apiMatcher(`images/${id}*`), (req) => {
+    req.reply(
+      imageFactory.build({
+        label,
+        id,
+        status,
+      })
+    );
+  }).as('getImage');
 };
 
 /**
@@ -236,7 +256,7 @@ describe('machine image', () => {
     cy.wait('@imageUpload').then((xhr) => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
-      mockGetImage(label, imageId, 'available').as('getImage');
+      imageIntercept(label, imageId, 'available');
       eventIntercept(label, imageId, status);
       ui.toast.assertMessage(uploadMessage);
       cy.wait('@getImage');

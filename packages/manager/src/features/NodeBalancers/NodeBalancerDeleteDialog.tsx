@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import { useNodebalancerDeleteMutation } from 'src/queries/nodebalancers';
 

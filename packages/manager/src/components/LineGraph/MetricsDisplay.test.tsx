@@ -44,7 +44,7 @@ describe('CPUMetrics', () => {
   );
 
   it('renders a table', () => {
-    expect(wrapper.find('Table')).toHaveLength(1);
+    expect(wrapper.find('WrappedTable')).toHaveLength(1);
   });
 
   it('renders Max, Avg, and Last table headers', () => {

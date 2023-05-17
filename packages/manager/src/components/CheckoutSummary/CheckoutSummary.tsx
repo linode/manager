@@ -1,8 +1,8 @@
-import { styled, Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import Paper from '../core/Paper';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles, useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 import Typography from '../core/Typography';
 import Grid from '../Grid';
@@ -22,53 +22,59 @@ export interface SummaryItem {
   hourly?: number;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  paper: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+  },
+  heading: {
+    marginBottom: theme.spacing(3),
+  },
+  summary: {
+    [theme.breakpoints.up('md')]: {
+      '& > div': {
+        borderRight: 'solid 1px #9DA4A6',
+        '&:last-child': {
+          borderRight: 'none',
+        },
+      },
+    },
+  },
+}));
+
 export const CheckoutSummary = (props: Props) => {
+  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { heading, agreement, displaySections, children } = props;
 
   return (
-    <StyledPaper data-qa-summary>
-      <StyledHeading variant="h2" data-qa-order-summary>
+    <Paper data-qa-summary className={classes.paper}>
+      <Typography
+        variant="h2"
+        data-qa-order-summary
+        className={classes.heading}
+      >
         {heading}
-      </StyledHeading>
+      </Typography>
       {displaySections.length === 0 ? (
-        <StyledHeading variant="body1">
+        <Typography variant="body1" className={classes.heading}>
           Please configure your Linode.
-        </StyledHeading>
+        </Typography>
       ) : null}
-      <StyledSummary
+      <Grid
         container
         spacing={3}
         direction={matchesSmDown ? 'column' : 'row'}
+        className={classes.summary}
       >
         {displaySections.map((item) => (
           <SummaryItem key={`${item.title}-${item.details}`} {...item} />
         ))}
-      </StyledSummary>
+      </Grid>
       {children}
       {agreement ? agreement : null}
-    </StyledPaper>
+    </Paper>
   );
 };
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(3),
-  marginBottom: theme.spacing(3),
-}));
-
-const StyledHeading = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-}));
-
-const StyledSummary = styled(Grid)(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    '& > div': {
-      borderRight: 'solid 1px #9DA4A6',
-      '&:last-child': {
-        borderRight: 'none',
-      },
-    },
-  },
-}));

@@ -11,27 +11,15 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
+import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
+import { aggregateBackups } from 'src/features/linodes/LinodesDetail/LinodeBackup';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   withProfile,
   WithProfileProps,
 } from 'src/containers/profile.container';
-
-export const aggregateBackups = (
-  backups: LinodeBackupsResponse
-): LinodeBackup[] => {
-  const manualSnapshot =
-    backups?.snapshot.in_progress?.status === 'needsPostProcessing'
-      ? backups?.snapshot.in_progress
-      : backups?.snapshot.current;
-  return (
-    backups &&
-    [...backups.automatic!, manualSnapshot!].filter((b) => Boolean(b))
-  );
-};
 
 export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;

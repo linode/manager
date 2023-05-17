@@ -3,8 +3,8 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ExtendedLinode } from './types';
 

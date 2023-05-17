@@ -32,6 +32,19 @@ export const updateOAuthClientSchema = object({
   redirect_uri: string(),
 });
 
+export const StagePaypalPaymentSchema = object({
+  cancel_url: string().required(
+    'You must provide a URL to redirect on cancel.'
+  ),
+  redirect_url: string().required('You must provide a redirect URL.'),
+  usd: string().required('USD payment amount is required.'),
+});
+
+export const ExecutePaypalPaymentSchema = object({
+  payer_id: string().required('You must provide a payer ID.'),
+  payment_id: string().required('You must provide a payment ID (from Paypal).'),
+});
+
 export const PaymentSchema = object({
   usd: string().required('USD payment amount is required.'),
 });
