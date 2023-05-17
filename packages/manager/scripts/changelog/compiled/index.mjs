@@ -12920,44 +12920,11 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-
-// EXPORTS
-__nccwpck_require__.d(__webpack_exports__, {
-  "I": () => (/* binding */ findChangesetInPr)
-});
-
-// EXTERNAL MODULE: ../../node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(4840);
-// EXTERNAL MODULE: ../../node_modules/@actions/github/lib/github.js
-var github = __nccwpck_require__(1207);
-// EXTERNAL MODULE: external "path"
-var external_path_ = __nccwpck_require__(1017);
-// EXTERNAL MODULE: external "url"
-var external_url_ = __nccwpck_require__(7310);
-;// CONCATENATED MODULE: ./scripts/changelog/utils/constants.mjs
-
-
-
-const constants_filename = (0,external_url_.fileURLToPath)(import.meta.url);
-const constants_dirname = external_path_.dirname(constants_filename);
-
-const BOT = 'linode-gh-bot';
-const CHANGELOG_PATH = __nccwpck_require__.ab + "CHANGELOG.md";
-const CHANGESET_DIRECTORY = __nccwpck_require__.ab + ".changeset";
-const CHANGESET_TYPES = (/* unused pure expression or super */ null && ([
-  'Added',
-  'Fixed',
-  'Changed',
-  'Removed',
-  'Tech Stories',
-]));
-const OWNER = 'linode';
-const PACKAGE_JSON_PATH = __nccwpck_require__.ab + "package.json";
-const REPO = 'manager';
-
-;// CONCATENATED MODULE: ./scripts/changelog/changeset-bot.mjs
-
-
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "I": () => (/* binding */ findChangesetInPr)
+/* harmony export */ });
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4840);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(1207);
 
 
 
@@ -12967,12 +12934,15 @@ const findChangesetInPr = async () => {
      * We need to fetch all the inputs that were provided to our action
      * and store them in variables for us to use.
      **/
-    const owner = core.getInput('owner', { required: true });
-    const repo = core.getInput('repo', { required: true });
-    const pr_number = core.getInput('pr_number', { required: true });
-    const token = core.getInput('token', { required: true });
-    const octokit = new github.getOctokit(token);
+    const owner = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('owner', { required: true });
+    const repo = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('repo', { required: true });
+    const pr_number = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('pr_number', { required: true });
+    const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token', { required: true });
+    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token, { log: console });
 
+    /**
+     * We need to fetch the PR data from GitHub so we can check if the PR has a changeset.
+     */
     const { data: PrData } = await octokit.rest.pulls.get({
       owner,
       repo,
@@ -12981,8 +12951,15 @@ const findChangesetInPr = async () => {
         format: 'diff',
       },
     });
+
+    /**
+     * Check if the PR contains a reference to a changeset
+     */
     const changesetCommitted = PrData.includes(`pr-${pr_number}`);
 
+    /**
+     * Fetch the comments from GitHub and check if the bot has already commented on the PR.
+     */
     try {
       const { data: comments } = await octokit.rest.issues.listComments({
         owner,
@@ -12990,14 +12967,17 @@ const findChangesetInPr = async () => {
         issue_number: pr_number,
       });
 
-      const changesetBotComment = comments.find(
-        (comment) =>
-          comment.user.login === BOT && comment.body.includes('Changeset Found')
+      const changesetBotComment = comments.find((comment) =>
+        comment.body.includes('Changeset Found')
       );
       const comment = changesetCommitted
-        ? `:heavy_check_mark: **Changeset Found!**\n\nThis incredibly attractive PR is getting closer to being released.`
+        ? `:heavy_check_mark: **Changeset Found!**\n\nCarry on!`
         : `:warning: **No Changeset Found**\n\nPR #${pr_number} does not have a changeset.\nNot every PR needs one, but if this PR is a user-facing change, or is relevant to an 'Added', 'Fixed', 'Changed', 'Removed' or 'Tech Stories' type, please consider adding one.`;
 
+      /**
+       * If the bot has already commented on the PR, we need to update the comment with the new message,
+       * else we need to create a new comment.
+       */
       if (changesetBotComment) {
         await octokit.rest.issues.updateComment({
           owner,
@@ -13014,10 +12994,12 @@ const findChangesetInPr = async () => {
         });
       }
     } catch (error) {
-      console.warn(`Error posting/updating comments: ${error}`);
+      _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Error posting/updating comments: ${error}`);
     }
   } catch (error) {
-    console.warn(`An error occurred trying to check for a changeset: ${error}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(
+      `An error occurred trying to check for a changeset: ${error}`
+    );
   }
 };
 

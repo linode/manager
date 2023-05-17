@@ -1,4 +1,4 @@
-name: 'PR Metadata Action'
+name: 'PR Changeset Action'
 description: 'Adds pull request file changes as a comment to a newly opened PR'
 inputs:
   owner:
