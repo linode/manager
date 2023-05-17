@@ -10,7 +10,7 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { queryKey } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEntityTransferCancelEvent } from 'src/utilities/ga';

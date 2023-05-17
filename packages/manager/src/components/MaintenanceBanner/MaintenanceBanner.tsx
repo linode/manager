@@ -5,10 +5,11 @@ import { compose } from 'recompose';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import isPast from 'src/utilities/isPast';
+import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 
 type ClassNames = 'root' | 'dateTime';
 
@@ -38,6 +39,11 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
+  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+    {},
+    { status: { '+or': ['pending, started'] } }
+  );
+
   const { type, maintenanceEnd, maintenanceStart } = props;
   const {
     data: profile,
@@ -75,6 +81,10 @@ const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
    * return null
    */
   if (maintenanceStart === null) {
+    return null;
+  }
+
+  if (!accountMaintenanceData || accountMaintenanceData?.length === 0) {
     return null;
   }
 

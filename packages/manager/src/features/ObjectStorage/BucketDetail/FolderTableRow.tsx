@@ -5,8 +5,8 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { FolderActionMenu } from './FolderActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({

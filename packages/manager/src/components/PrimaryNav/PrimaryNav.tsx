@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import Account from 'src/assets/icons/account.svg';
@@ -19,7 +19,6 @@ import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import Divider from 'src/components/core/Divider';
-import Grid from '@mui/material/Unstable_Grid2';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
@@ -69,9 +68,9 @@ export interface Props {
   isCollapsed: boolean;
 }
 
-export const PrimaryNav: React.FC<Props> = (props) => {
+export const PrimaryNav = (props: Props) => {
   const { closeMenu, isCollapsed } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const flags = useFlags();
   const location = useLocation();
@@ -260,7 +259,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     >
       <Grid>
         <div
-          className={classNames(classes.logoItemAkamai, {
+          className={cx(classes.logoItemAkamai, {
             [classes.logoItemAkamaiCollapsed]: isCollapsed,
           })}
         >
@@ -269,13 +268,13 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             onClick={closeMenu}
             aria-label="Akamai - Dashboard"
             title="Akamai - Dashboard"
-            className={classNames({
+            className={cx({
               [classes.logoContainer]: isCollapsed,
             })}
           >
             <AkamaiLogo
               width={128}
-              className={classNames(
+              className={cx(
                 {
                   [classes.logoAkamaiCollapsed]: isCollapsed,
                 },
@@ -286,7 +285,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         </div>
       </Grid>
       <div
-        className={classNames({
+        className={cx({
           ['fade-in-table']: true,
           [classes.fadeContainer]: true,
         })}
@@ -351,8 +350,8 @@ interface PrimaryLinkProps extends PrimaryLink {
   };
 }
 
-const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
-  const classes = useStyles();
+const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
+  const { classes, cx } = useStyles();
 
   const {
     isBeta,
@@ -384,7 +383,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
       }}
       {...prefetchProps}
       {...attr}
-      className={classNames({
+      className={cx({
         [classes.listItem]: true,
         [classes.active]: isActiveLink,
       })}
@@ -397,7 +396,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
         </div>
       )}
       <p
-        className={classNames({
+        className={cx({
           [classes.linkItem]: true,
           primaryNavLink: true,
           hiddenWhenCollapsed: isCollapsed,
@@ -418,20 +417,20 @@ interface PrefetchPrimaryLinkProps {
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink: React.FC<
-  PrimaryLinkProps & PrefetchPrimaryLinkProps
-> = React.memo((props) => {
-  const { makeRequest, cancelRequest } = usePrefetch(
-    props.prefetchRequestFn,
-    props.prefetchRequestCondition
-  );
+export const PrefetchPrimaryLink = React.memo(
+  (props: PrimaryLinkProps & PrefetchPrimaryLinkProps) => {
+    const { makeRequest, cancelRequest } = usePrefetch(
+      props.prefetchRequestFn,
+      props.prefetchRequestCondition
+    );
 
-  const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-    onMouseEnter: makeRequest,
-    onFocus: makeRequest,
-    onMouseLeave: cancelRequest,
-    onBlur: cancelRequest,
-  };
+    const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
+      onMouseEnter: makeRequest,
+      onFocus: makeRequest,
+      onMouseLeave: cancelRequest,
+      onBlur: cancelRequest,
+    };
 
-  return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
-});
+    return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
+  }
+);

@@ -16,7 +16,7 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getErrorMap } from 'src/utilities/errorUtils';

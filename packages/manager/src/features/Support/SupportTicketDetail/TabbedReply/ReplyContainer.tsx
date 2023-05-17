@@ -11,7 +11,7 @@ import Accordion from 'src/components/Accordion';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
