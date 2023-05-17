@@ -7,8 +7,8 @@ import { BOT, OWNER, REPO } from './utils/constants.mjs';
 
 const octokit = new Octokit({
   // Uncomment to debug
-  // log: console,
-  auth: process.env.CHANGESET_BOT,
+  log: console,
+  auth: process.env.GH_TOKEN,
 });
 
 export const findChangesetInPr = async ({ owner, repo }) => {
@@ -22,8 +22,8 @@ export const findChangesetInPr = async ({ owner, repo }) => {
         format: 'diff',
       },
     });
-
     const changesetCommitted = PrData.includes(`pr-${pullRequestId}`);
+
     try {
       const { data: comments } = await octokit.issues.listComments({
         owner,
