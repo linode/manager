@@ -8,7 +8,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
-import NodeBalancerSummary from './NodeBalancerSummary/NodeBalancerSummary';
+import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import LandingHeader from 'src/components/LandingHeader';
 import {
