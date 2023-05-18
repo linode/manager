@@ -32,7 +32,7 @@ export interface Props {
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
 }
 
-export const AccessSelect = (props: Props) => {
+export const AccessSelect = React.memo((props: Props) => {
   const classes = useStyles();
 
   const { getAccess, updateAccess, name, variant } = props;
@@ -242,7 +242,7 @@ export const AccessSelect = (props: Props) => {
       </ConfirmationDialog>
     </>
   );
-};
+});
 
 const copy: Record<
   'bucket' | 'object',
