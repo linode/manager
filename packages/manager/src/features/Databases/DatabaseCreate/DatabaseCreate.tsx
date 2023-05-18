@@ -41,7 +41,7 @@ import Radio from 'src/components/Radio';
 import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
-import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
+import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import SelectPlanPanel, {
   PlanSelectionType,
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
