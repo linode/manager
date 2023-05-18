@@ -4,7 +4,6 @@ import {
   InvoiceItem,
   Payment,
   PaymentResponse,
-  PaypalResponse,
   Invoice,
 } from '@linode/api-v4/lib/account';
 
@@ -68,7 +67,3 @@ export const creditPaymentResponseFactory = Factory.Sync.makeFactory<PaymentResp
     warnings: warningFactory.buildList(1),
   }
 );
-
-export const paypalResponseFactory = Factory.Sync.makeFactory<PaypalResponse>({
-  warnings: warningFactory.buildList(1),
-});

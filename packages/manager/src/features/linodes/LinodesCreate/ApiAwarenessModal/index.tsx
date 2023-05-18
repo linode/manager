@@ -8,7 +8,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Tabs from 'src/components/core/ReachTabs';

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Hidden from 'src/components/core/Hidden';
-import IconButton from 'src/components/core/IconButton';
+import IconButton from 'src/components/IconButton';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableHead from 'src/components/core/TableHead';
+import { TableHead } from 'src/components/TableHead';
 import Tooltip from 'src/components/core/Tooltip';
 import { OrderByProps } from 'src/components/OrderBy';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
 import { Entity, HeaderCell } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({

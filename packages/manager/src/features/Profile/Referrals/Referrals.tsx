@@ -2,7 +2,7 @@ import * as React from 'react';
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
-import CopyableTextField from 'src/components/CopyableTextField';
+import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
@@ -11,7 +11,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

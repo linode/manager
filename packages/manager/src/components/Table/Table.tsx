@@ -1,19 +1,15 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Table, { TableProps } from 'src/components/core/Table';
+import {
+  TableProps as _TableProps,
+  default as _Table,
+} from '@mui/material/Table';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     overflowX: 'auto',
     overflowY: 'hidden',
-    '& tbody': {
-      transition: theme.transitions.create(['opacity']),
-    },
-    '& tbody.sorting': {
-      opacity: 0.5,
-    },
     '& thead': {
       '& th': {
         backgroundColor: theme.bg.tableHeader,
@@ -41,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props extends TableProps {
+export interface TableProps extends _TableProps {
   className?: string;
   noOverflow?: boolean;
   tableClass?: string;
@@ -53,10 +49,8 @@ export interface Props extends TableProps {
   rowCount?: number;
 }
 
-type CombinedProps = Props;
-
-export const WrappedTable: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const Table = (props: TableProps) => {
+  const { classes, cx } = useStyles();
 
   const {
     className,
@@ -72,8 +66,7 @@ export const WrappedTable: React.FC<CombinedProps> = (props) => {
 
   return (
     <div
-      className={classNames(
-        'tableWrapper',
+      className={cx(
         {
           [classes.root]: !noOverflow,
           [classes.noBorder]: noBorder,
@@ -85,7 +78,7 @@ export const WrappedTable: React.FC<CombinedProps> = (props) => {
         marginBottom: spacingBottom !== undefined ? spacingBottom : 0,
       }}
     >
-      <Table
+      <_Table
         className={tableClass}
         {...rest}
         aria-colcount={colCount}
@@ -93,9 +86,7 @@ export const WrappedTable: React.FC<CombinedProps> = (props) => {
         role="table"
       >
         {props.children}
-      </Table>
+      </_Table>
     </div>
   );
 };
-
-export default WrappedTable;

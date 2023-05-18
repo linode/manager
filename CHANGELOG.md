@@ -4,6 +4,56 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-05-18] - v1.93.1
+
+### Fixed:
+- Initialize linode before referencing #9133
+- Revert linode landing changes #9136
+
+## [2023-05-15] - v1.93.0
+
+### Added:
+- Resource links to empty state Volumes landing page #9065
+- Resource links to empty state Firewalls landing page #9078
+- Resource links to empty state StackScripts landing page #9091
+- Resource links to empty state Domains landing page #9092
+- Ability download DNS zone file #9075
+- New flag to deliver DC availability notice for premium plans #9066
+- Accessible graph data for LineGraphs #9045
+
+### Changed:
+- Banner text size and spacing to improve readability #9064
+- Updated ClusterControl description #9081
+- Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
+
+### Fixed:
+- Ability to search Linodes by IPv6 #9073
+- Surface general errors in the Object Storage Bucket Create Drawer #9067
+- Large file size for invoices due to uncompressed JPG logo #9069
+- Phone Verification error does not reset #9059
+- Show error for PayPal payments #9058
+- Send Adobe Analytics page views #9108
+
+### Tech Stories:
+- MUI v5 Migration - `Components > CheckoutSummary` #9100
+- MUI v5 Migration - `Components > CopyableTextField` #9018
+- MUI v5 Migration - `Components > DialogTitle` #9050
+- MUI v5 Migration - `Components > DownloadCSV` #9084
+- MUI v5 Migration - `Components > Notice` #9094
+- MUI v5 Migration - `Components > PrimaryNav` #9090
+- MUI v5 Migration - `Components > ShowMoreExpansion` #9096
+- MUI v5 Migration - `Components > Table` #9082
+- MUI v5 Migration - `Components > TableBody` #9082
+- MUI v5 Migration - `Components > TableCell` #9082
+- MUI v5 Migration - `Components > TableHead` #9082
+- MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > TableSortCell` #9082
+- React Query - Linodes - Prepare for React Query for Linodes #9049
+- React Query - Linodes - Landing #9062
+- React Query - Linodes - Detail - Backups #9079
+- Add Adobe Analytics custom event tracking #9004
+
+
 ## [2023-05-01] - v1.92.0
 
 ### Added:
