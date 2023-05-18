@@ -21,7 +21,7 @@ interface Props {
   clusterId: string;
 }
 
-export const BucketAccess: React.FC<Props> = (props) => {
+export const BucketAccess = React.memo((props: Props) => {
   const classes = useStyles();
 
   const { bucketName, clusterId } = props;
@@ -44,6 +44,4 @@ export const BucketAccess: React.FC<Props> = (props) => {
       />
     </Paper>
   );
-};
-
-export default React.memo(BucketAccess);
+});
