@@ -10,7 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import SelectIP from './ConfigNodeIPSelect';
+import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
 import { NodeBalancerConfigNodeFields } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -174,7 +174,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
       <Grid xs={12} sx={{ padding: 0 }}>
         <Grid key={idx} container data-qa-node spacing={2}>
           <Grid xs={12} sm={3} lg={forEdit ? 2 : 4}>
-            <SelectIP
+            <ConfigNodeIPSelect
               textfieldProps={{
                 dataAttrs: {
                   'data-qa-backend-ip-address': true,
