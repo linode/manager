@@ -1,6 +1,5 @@
 import { event } from 'react-ga';
 import { GA_ID, ADOBE_ANALYTICS_URL } from 'src/constants';
-import { reportException } from 'src/exceptionReporting';
 
 interface AnalyticsEvent {
   category: string;
@@ -15,17 +14,12 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
   }
 
   // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
-  try {
+  if ((window as any)._satellite) {
     (window as any)._satellite.track('custom event', {
       category: eventPayload.category,
       action: eventPayload.action,
       label: eventPayload.label,
       value: eventPayload.value,
-    });
-  } catch (error) {
-    reportException(error, {
-      message:
-        'An error occurred when tracking a custom event. Adobe Launch script not loaded correctly; no analytics will be sent.',
     });
   }
 
