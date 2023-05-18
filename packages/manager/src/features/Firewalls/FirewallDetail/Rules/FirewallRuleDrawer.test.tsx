@@ -5,9 +5,8 @@ import * as React from 'react';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import RuleDrawer, {
+import {
   classifyIPs,
-  CombinedProps,
   deriveTypeFromValuesAndIPs,
   formValueToIPs,
   getInitialIPs,
@@ -16,9 +15,11 @@ import RuleDrawer, {
   IP_ERROR_MESSAGE,
   validateForm,
   validateIPs,
-} from './FirewallRuleDrawer';
+} from './FirewallRuleDrawer.utils';
+import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
 import { FirewallRuleError, PORT_PRESETS } from './shared';
+import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
 
 const mockOnClose = jest.fn();
 const mockOnSubmit = jest.fn();
@@ -27,7 +28,7 @@ const baseItems = [PORT_PRESETS['22'], PORT_PRESETS['443']];
 
 jest.mock('src/components/EnhancedSelect/Select');
 
-const props: CombinedProps = {
+const props: FirewallRuleDrawerProps = {
   category: 'inbound',
   mode: 'create',
   isOpen: true,
@@ -38,20 +39,24 @@ const props: CombinedProps = {
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
     const { getByText } = renderWithTheme(
-      <RuleDrawer {...props} mode="create" category="inbound" />
+      <FirewallRuleDrawer {...props} mode="create" category="inbound" />
     );
     getByText('Add an Inbound Rule');
   });
 
   it('disables the port input when the ICMP protocol is selected', () => {
-    renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
+    renderWithTheme(
+      <FirewallRuleDrawer {...props} mode="create" category="inbound" />
+    );
     expect(screen.getByLabelText('Ports')).not.toBeDisabled();
     userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
     expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
 
   it('disables the port input when the IPENCAP protocol is selected', () => {
-    renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
+    renderWithTheme(
+      <FirewallRuleDrawer {...props} mode="create" category="inbound" />
+    );
     expect(screen.getByLabelText('Ports')).not.toBeDisabled();
     userEvent.selectOptions(
       screen.getByPlaceholderText(/protocol/i),
@@ -94,40 +99,61 @@ describe('utilities', () => {
 
   describe('validateForm', () => {
     it('validates protocol', () => {
-      expect(validateForm()).toHaveProperty(
+      expect(validateForm({})).toHaveProperty(
         'protocol',
         'Protocol is required.'
       );
     });
     it('validates ports', () => {
-      expect(validateForm('ICMP', '80')).toHaveProperty(
+      expect(validateForm({ protocol: 'ICMP', ports: '80' })).toHaveProperty(
         'ports',
         'Ports are not allowed for ICMP protocols.'
       );
-      expect(validateForm('IPENCAP', '443')).toHaveProperty(
-        'ports',
-        'Ports are not allowed for IPENCAP protocols.'
-      );
-      expect(validateForm('TCP', 'invalid-port')).toHaveProperty('ports');
+      expect(
+        validateForm({ protocol: 'IPENCAP', ports: '443' })
+      ).toHaveProperty('ports', 'Ports are not allowed for IPENCAP protocols.');
+      expect(
+        validateForm({ protocol: 'TCP', ports: 'invalid-port' })
+      ).toHaveProperty('ports');
     });
     it('validates custom ports', () => {
-      expect(validateForm('TCP', '1')).toEqual({});
-      expect(validateForm('TCP', '1,2,3,4,5')).toEqual({});
-      expect(validateForm('TCP', '1, 2, 3, 4, 5')).toEqual({});
-      expect(validateForm('TCP', '1-20')).toEqual({});
-      expect(validateForm('TCP', 'abc')).toHaveProperty(
+      const rest = {
+        label: 'Firewalllabel',
+        addresses: 'All IPv4',
+      };
+      expect(validateForm({ protocol: 'TCP', ports: '1', ...rest })).toEqual(
+        {}
+      );
+      expect(
+        validateForm({ protocol: 'TCP', ports: '1,2,3,4,5', ...rest })
+      ).toEqual({});
+      expect(
+        validateForm({ protocol: 'TCP', ports: '1, 2, 3, 4, 5', ...rest })
+      ).toEqual({});
+      expect(validateForm({ protocol: 'TCP', ports: '1-20', ...rest })).toEqual(
+        {}
+      );
+      expect(
+        validateForm({ protocol: 'TCP', ports: 'abc', ...rest })
+      ).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       );
-      expect(validateForm('TCP', '1--20')).toHaveProperty(
+      expect(
+        validateForm({ protocol: 'TCP', ports: '1--20', ...rest })
+      ).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       );
-      expect(validateForm('TCP', '1-2,3-4')).toHaveProperty(
+      expect(
+        validateForm({ protocol: 'TCP', ports: '1-2,3-4', ...rest })
+      ).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       );
-      expect(validateForm('TCP', '-20')).toHaveProperty(
+      expect(
+        validateForm({ protocol: 'TCP', ports: '-20', ...rest })
+      ).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       );
@@ -176,11 +202,21 @@ describe('utilities', () => {
         },
       ];
       expectedResults.forEach(({ value, result }) => {
-        expect(validateForm('TCP', '80', value)).toEqual(result);
+        const rest = {
+          protocol: 'TCP',
+          ports: '80',
+          addresses: 'All IPv4',
+        };
+        expect(validateForm({ label: value, ...rest })).toEqual(result);
       });
     });
-    it('accepts a valid form', () => {
-      expect(validateForm('TCP', '22')).toEqual({});
+    it('handles required fields', () => {
+      expect(validateForm({})).toEqual({
+        addresses: 'Sources is a required field.',
+        label: 'Label is required.',
+        ports: 'Ports is a required field.',
+        protocol: 'Protocol is required.',
+      });
     });
   });
 
