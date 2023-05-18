@@ -6,7 +6,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import {

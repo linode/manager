@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import LandingLoading from 'src/components/LandingLoading';
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';

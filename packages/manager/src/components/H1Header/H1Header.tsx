@@ -1,30 +1,21 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { SxProps } from '@mui/system';
 import Typography from 'src/components/core/Typography';
 
-interface Props {
-  title: string;
+interface H1HeaderProps {
   className?: string;
   dataQaEl?: string;
   renderAsSecondary?: boolean;
+  sx?: SxProps;
+  title: string;
 }
-
-const useStyles = makeStyles({
-  root: {
-    '&:focus': {
-      outline: 'none',
-    },
-  },
-});
-
 // Accessibility Feature:
 // The role of this component is to implement focus to the main content when navigating the application
 // Since it is a one page APP, we need to help users focus on the main content when switching views
 // It should serve as the only source for all H1s
-const H1Header: React.FC<Props> = (props) => {
+export const H1Header = (props: H1HeaderProps) => {
   const h1Header = React.useRef<HTMLDivElement>(null);
-  const { className, title, dataQaEl, renderAsSecondary } = props;
-  const classes = useStyles();
+  const { className, dataQaEl, renderAsSecondary, sx, title } = props;
 
   // React.useEffect(() => {
   //   if (h1Header.current !== null) {
@@ -34,17 +25,20 @@ const H1Header: React.FC<Props> = (props) => {
 
   return (
     <Typography
-      variant="h1"
+      className={className}
       component={renderAsSecondary ? 'h2' : 'h1'}
-      className={`${classes.root} ${className}`}
-      // If we're rendering as an h2, we want to remove the autofocus functionality
-      ref={renderAsSecondary ? null : h1Header}
-      tabIndex={0}
       data-qa-header={dataQaEl ? dataQaEl : ''}
+      ref={renderAsSecondary ? null : h1Header} // If we're rendering as an h2, we want to remove the autofocus functionality
+      tabIndex={0}
+      sx={{
+        '&:focus': {
+          outline: 'none',
+        },
+        ...sx,
+      }}
+      variant="h1"
     >
       {title}
     </Typography>
   );
 };
-
-export default H1Header;

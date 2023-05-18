@@ -6,7 +6,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Link from 'src/components/Link';
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 const useStyles = makeStyles((theme: Theme) => ({
   placeholderAdjustment: {
