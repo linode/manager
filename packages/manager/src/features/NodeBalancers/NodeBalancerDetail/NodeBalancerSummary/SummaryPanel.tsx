@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const SummaryPanel = () => {
+export const SummaryPanel = () => {
   const classes = useStyles();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
@@ -141,5 +141,3 @@ const SummaryPanel = () => {
     </div>
   );
 };
-
-export default SummaryPanel;
