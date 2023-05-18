@@ -15,7 +15,7 @@ import { useProfile } from './queries/profile';
  * and this is a good side-effect usage of useEffect().
  */
 
-export const IdentifyUser: React.FC<{}> = () => {
+export const IdentifyUser = () => {
   const { data: account, error: accountError } = useAccount();
   const { data: profile } = useProfile();
 
@@ -86,6 +86,14 @@ export const IdentifyUser: React.FC<{}> = () => {
            */
 
           .catch(() => setFeatureFlagsLoaded());
+      } else {
+        // We "setFeatureFlagsLoaded" here because if the API is
+        // in maintenance mode, we can't fetch the user's username.
+        // Therefore, the `if` above won't "setFeatureFlagsLoaded".
+
+        // If we're being honest, featureFlagsLoading shouldn't be tracked by Redux
+        // and this code should go away eventually.
+        setFeatureFlagsLoaded();
       }
     }
   }, [client, userID, username, account, accountError]);
