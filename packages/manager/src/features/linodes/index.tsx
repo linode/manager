@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
-import { useExtendedLinodes } from 'src/hooks/useExtendedLinode';
-import useLinodes from 'src/hooks/useLinodes';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
 
-const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
+const LinodesLanding = React.lazy(
+  () => import('./LinodesLanding/LinodesLanding')
+);
 const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
 const LinodesCreate = React.lazy(
   () => import('./LinodesCreate/LinodeCreateContainer')
@@ -36,13 +38,16 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
     {},
     { status: { '+or': ['pending, started'] } }
   );
-  const { linodes } = useLinodes();
-  const extendedLinodes = useExtendedLinodes();
+
+  const { data: linodes, isLoading, error } = useAllLinodesQuery();
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(
-    (thisAccountMaintenance) => {
-      return linodes.itemsById[thisAccountMaintenance.entity.id];
-    }
+    (thisAccountMaintenance) => thisAccountMaintenance.entity.type === 'linode'
+  );
+
+  const linodesData = addMaintenanceToLinodes(
+    accountMaintenanceData ?? [],
+    linodes ?? []
   );
 
   return (
@@ -50,9 +55,9 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
       someLinodesHaveScheduledMaintenance={Boolean(
         someLinodesHaveScheduledMaintenance
       )}
-      linodesData={extendedLinodes}
-      linodesRequestLoading={linodes.loading}
-      linodesRequestError={linodes.error.read}
+      linodesData={linodesData}
+      linodesRequestLoading={isLoading}
+      linodesRequestError={error ?? undefined}
     />
   );
 });

@@ -1,13 +1,13 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import _TableRow, { TableRowProps } from 'src/components/core/TableRow';
+import {
+  default as _TableRow,
+  TableRowProps as _TableRowProps,
+} from '@mui/material/TableRow';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     borderLeft: `1px solid ${theme.borderColors.borderTable}`,
     borderRight: `1px solid ${theme.borderColors.borderTable}`,
@@ -113,9 +113,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
-
-export interface Props {
+export interface TableRowProps extends _TableRowProps {
   className?: string;
   ariaLabel?: string;
   disabled?: boolean;
@@ -123,15 +121,12 @@ export interface Props {
   forceIndex?: boolean;
   highlight?: boolean;
   htmlFor?: string;
-  onClick?: onClickFn;
   onKeyUp?: any;
   selected?: boolean;
 }
 
-export type CombinedProps = Props & TableRowProps & RouteComponentProps<{}>;
-
-export const TableRow: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const TableRow = React.memo((props: TableRowProps) => {
+  const { classes, cx } = useStyles();
 
   const {
     className,
@@ -141,17 +136,13 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
     forceIndex,
     highlight,
     selected,
-    // Defining `staticContext` here to prevent `...rest` from containing it
-    // since it leads to a console warning
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    staticContext,
     ...rest
   } = props;
 
   return (
     <_TableRow
       aria-label={ariaLabel ?? `View Details`}
-      className={classNames(className, {
+      className={cx(className, {
         [classes.root]: true,
         [classes.selected]: selected,
         [classes.withForcedIndex]: forceIndex,
@@ -172,11 +163,4 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
       )}
     </_TableRow>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  React.memo
-)(TableRow);
-
-export default enhanced;
+});

@@ -10,14 +10,15 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { reportException } from 'src/exceptionReporting';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
-  OnApproveBraintreeData,
   BraintreePayPalButtons,
   CreateBillingAgreementActions,
   FUNDING,
   OnApproveBraintreeActions,
+  OnApproveBraintreeData,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import { QueryClient, useQueryClient } from 'react-query';
+import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 const useStyles = makeStyles()(() => ({
   disabled: {
@@ -30,11 +31,12 @@ interface Props {
   setProcessing: (processing: boolean) => void;
   onClose: () => void;
   renderError: (errorMsg: string) => JSX.Element;
+  setMessage: (message: PaymentMessage) => void;
   disabled: boolean;
 }
 
 export const PayPalChip = (props: Props) => {
-  const { onClose, disabled, setProcessing, renderError } = props;
+  const { onClose, disabled, setProcessing, renderError, setMessage } = props;
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
   const { classes, cx } = useStyles();
@@ -145,6 +147,10 @@ export const PayPalChip = (props: Props) => {
       'A PayPal error occurred preventing a user from adding PayPal as a payment method.',
       { error }
     );
+    setMessage({
+      text: 'Unable to open PayPal.',
+      variant: 'error',
+    });
   };
 
   if (clientTokenError) {

@@ -1,17 +1,10 @@
 import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import formatDate from 'src/utilities/formatDate';
-import LinodeRow from './LinodeRow';
 import { RenderLinodesProps } from './DisplayLinodes';
-import { useProfile } from 'src/queries/profile';
+import { LinodeRow } from './LinodeRow/LinodeRow';
 
 export const ListView: React.FC<RenderLinodesProps> = (props) => {
   const { data, openDialog, openPowerActionDialog } = props;
-
-  const { data: profile } = useProfile();
-
-  const notificationContext = React.useContext(_notificationContext);
 
   // This won't happen in the normal Linodes Landing context (a custom empty
   // state is shown higher up in the tree). This is specifically for the case of
@@ -29,29 +22,35 @@ export const ListView: React.FC<RenderLinodesProps> = (props) => {
           backups={linode.backups}
           id={linode.id}
           ipv4={linode.ipv4}
-          maintenanceStartTime={
-            linode.maintenance?.when
-              ? formatDate(linode.maintenance.when, {
-                  timezone: profile?.timezone,
-                })
-              : ''
-          }
           ipv6={linode.ipv6 || ''}
           label={linode.label}
           region={linode.region}
           status={linode.status}
-          displayStatus={linode.displayStatus || ''}
           tags={linode.tags}
-          mostRecentBackup={linode.backups.last_successful}
-          disk={linode.specs.disk}
-          vcpus={linode.specs.vcpus}
-          memory={linode.specs.memory}
-          type={linode._type ?? undefined}
+          type={linode.type}
           image={linode.image}
           key={`linode-row-${idx}`}
-          openDialog={openDialog}
-          openNotificationMenu={notificationContext.openMenu}
-          openPowerActionDialog={openPowerActionDialog}
+          alerts={linode.alerts}
+          created={linode.created}
+          group={linode.group}
+          updated={linode.updated}
+          hypervisor={linode.hypervisor}
+          specs={linode.specs}
+          watchdog_enabled={linode.watchdog_enabled}
+          handlers={{
+            onOpenDeleteDialog: () =>
+              openDialog('delete', linode.id, linode.label),
+            onOpenMigrateDialog: () =>
+              openDialog('migrate', linode.id, linode.label),
+            onOpenRebuildDialog: () =>
+              openDialog('rebuild', linode.id, linode.label),
+            onOpenRescueDialog: () =>
+              openDialog('rescue', linode.id, linode.label),
+            onOpenResizeDialog: () =>
+              openDialog('resize', linode.id, linode.label),
+            onOpenPowerDialog: (action) =>
+              openPowerActionDialog(action, linode.id, linode.label, []),
+          }}
         />
       ))}
     </>

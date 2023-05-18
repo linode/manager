@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import Divider from 'src/components/core/Divider';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import AppInfo from '../../linodes/LinodesCreate/AppInfo';
@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   username: {
     color: theme.color.grey1,
   },
-  optionalFieldWrapper: {},
   header: {
     display: 'flex',
     alignItems: 'center',
@@ -252,18 +251,18 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
       {/* Optional Fields */}
       {optionalUDFs.length !== 0 && (
         <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
-          <Typography variant="body1" className={classes.advDescription}>
-            These fields are additional configuration options and are not
-            required for creation.
-          </Typography>
-          <div
-            className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
-          >
-            {optionalUDFs.map((field: UserDefinedField) => {
-              const error = getError(field, errors);
-              return renderField(udf_data, handleChange, field, error);
-            })}
-          </div>
+          <>
+            <Typography variant="body1" className={classes.advDescription}>
+              These fields are additional configuration options and are not
+              required for creation.
+            </Typography>
+            <div>
+              {optionalUDFs.map((field: UserDefinedField) => {
+                const error = getError(field, errors);
+                return renderField(udf_data, handleChange, field, error);
+              })}
+            </div>
+          </>
         </ShowMoreExpansion>
       )}
     </Paper>

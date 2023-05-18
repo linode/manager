@@ -70,7 +70,7 @@ describe('linode backups', () => {
         getClick('[data-qa-confirm="true"]');
       }
       cy.wait('@enableBackups').its('response.statusCode').should('eq', 200);
-      ui.toast.assertMessage('A snapshot is being taken');
+      ui.toast.assertMessage('Starting to capture snapshot');
       deleteLinodeById(linode.id);
     });
   });

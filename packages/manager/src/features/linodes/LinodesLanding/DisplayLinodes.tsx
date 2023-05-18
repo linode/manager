@@ -1,25 +1,25 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
-import TableBody from 'src/components/core/TableBody';
+import { TableBody } from 'src/components/TableBody';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate, { PaginationProps } from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import TableWrapper from './TableWrapper';
-import IconButton from 'src/components/core/IconButton';
+import IconButton from 'src/components/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
-import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -59,7 +59,7 @@ interface Props {
   count: number;
   display: 'grid' | 'list';
   component: React.ComponentType<RenderLinodesProps>;
-  data: (ExtendedLinode & LinodeWithMaintenanceAndDisplayStatus)[];
+  data: LinodeWithMaintenance[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;

@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => {
       display: 'flex',
       alignItems: 'center',
       gridColumn: 'span 1',
-      height: theme.spacing(4.25),
+      height: theme.spacing(4.75),
       maxWidth: theme.spacing(20),
       paddingLeft: theme.spacing(),
       justifyContent: 'space-between',
@@ -70,8 +70,8 @@ const appsLinkData = [
   },
   {
     to:
-      '/linodes/create?type=One-Click&appID=869129&utm_source=marketplace&utm_medium=website&utm_campaign=aaPanel',
-    text: 'aaPanel',
+      '/linodes/create?type=One-Click&appID=912262&utm_source=marketplace&utm_medium=website&utm_campaign=Harbor',
+    text: 'Harbor',
   },
   {
     to:
@@ -80,18 +80,18 @@ const appsLinkData = [
   },
   {
     to:
-      '/linodes/create?type=One-Click&appID=691621&utm_source=marketplace&utm_medium=website&utm_campaign=Cloudron',
-    text: 'Cloudron',
+      '/linodes/create?type=One-Click&appID=1068726&utm_source=marketplace&utm_medium=website&utm_campaign=Postgres_Cluster',
+    text: 'Postgres Cluster',
   },
   {
     to:
-      '/linodes/create?type=One-Click&appID=593835&utm_source=marketplace&utm_medium=website&utm_campaign=Plesk',
-    text: 'Plesk',
+      '/linodes/create?type=One-Click&appID=985364&utm_source=marketplace&utm_medium=website&utm_campaign=Prometheus_Grafana',
+    text: 'Prometheus & Grafana',
   },
   {
     to:
-      '/linodes/create?type=One-Click&appID=985372&utm_source=marketplace&utm_medium=website&utm_campaign=Joomla',
-    text: 'Joomla',
+      '/linodes/create?type=One-Click&appID=1017300&utm_source=marketplace&utm_medium=website&utm_campaign=Kali',
+    text: 'Kali',
   },
 ];
 

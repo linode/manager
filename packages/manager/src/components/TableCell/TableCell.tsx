@@ -1,10 +1,12 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import TableCell, { TableCellProps } from 'src/components/core/TableCell';
+import {
+  default as _TableCell,
+  TableCellProps as _TableCellProps,
+} from '@mui/material/TableCell';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     borderTop: 'none',
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
@@ -65,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props extends TableCellProps {
+export interface TableCellProps extends _TableCellProps {
   noWrap?: boolean;
   sortable?: boolean;
   className?: string;
@@ -80,10 +82,8 @@ export interface Props extends TableCellProps {
   center?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const TableCell = (props: TableCellProps) => {
+  const { classes, cx } = useStyles();
 
   const {
     className,
@@ -98,17 +98,20 @@ export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
   } = props;
 
   return (
-    <TableCell
-      className={classNames(className, {
-        [classes.root]: true,
-        [classes.noWrap]: noWrap,
-        [classes.sortable]: sortable,
-        [classes.compact]: compact,
-        [classes.actionCell]: actionCell,
-        [classes.center]: center,
-        // hide the cell at small breakpoints if it's empty with no parent column
-        emptyCell: !parentColumn && !props.children,
-      })}
+    <_TableCell
+      className={cx(
+        {
+          [classes.root]: true,
+          [classes.noWrap]: noWrap,
+          [classes.sortable]: sortable,
+          [classes.compact]: compact,
+          [classes.actionCell]: actionCell,
+          [classes.center]: center,
+          // hide the cell at small breakpoints if it's empty with no parent column
+          emptyCell: !parentColumn && !props.children,
+        },
+        className
+      )}
       {...rest}
     >
       {statusCell ? (
@@ -116,8 +119,6 @@ export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
       ) : (
         props.children
       )}
-    </TableCell>
+    </_TableCell>
   );
 };
-
-export default WrappedTableCell;

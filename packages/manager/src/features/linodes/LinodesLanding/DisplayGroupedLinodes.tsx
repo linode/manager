@@ -3,21 +3,22 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
-import IconButton from 'src/components/core/IconButton';
+import IconButton from 'src/components/IconButton';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter, {
+import {
   MIN_PAGE_SIZE,
-} from 'src/components/PaginationFooter';
-import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
-import TableRow from 'src/components/TableRow';
+  PaginationFooter,
+  getMinimumPageSizeForNumberOfItems,
+} from 'src/components/PaginationFooter/PaginationFooter';
+import { TableRow } from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
