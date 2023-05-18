@@ -40,14 +40,16 @@ import PromiseLoader, {
 } from 'src/components/PromiseLoader/PromiseLoader';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
+import { NodeBalancerConfigPanel } from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
-import { NodeBalancerConfigNodeFields } from '../types';
+import type {
+  NodeBalancerConfigNodeFields,
+  NodeBalancerConfigFieldsWithStatus,
+} from '../types';
 import {
   clampNumericString,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFieldsWithStatus,
   nodeForRequest,
   parseAddress,
   parseAddresses,
