@@ -17,7 +17,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import NodeBalancerConfigNode from './NodeBalancerConfigNode';
+import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
 
 type ClassNames = 'passiveChecks' | 'actionsPanel';
