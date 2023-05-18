@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Link from 'src/components/Link';
 import TextField from 'src/components/TextField';
@@ -58,15 +57,14 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
         </>
       ) : null}
       {!hideInstructions ? (
-        <StyledTypography data-testid="instructions-to-enable-or-disable">
+        <Typography
+          marginTop={1}
+          data-testid="instructions-to-enable-or-disable"
+        >
           To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm
           section of <Link to="/profile/settings">My Settings</Link>.
-        </StyledTypography>
+        </Typography>
       ) : null}
     </>
   );
 };
-
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(),
-}));
