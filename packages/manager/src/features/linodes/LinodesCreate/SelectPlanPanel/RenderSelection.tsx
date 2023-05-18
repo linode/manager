@@ -15,7 +15,7 @@ import { ApplicationState } from 'src/store';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { PlanSelectionType } from '../SelectPlanPanel';
-import { useSelectPlanPanelStyles } from './selectPlanPanelStyles';
+import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
 
 interface Props {
   header?: string;

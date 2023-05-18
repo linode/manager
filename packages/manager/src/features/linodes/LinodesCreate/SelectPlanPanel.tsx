@@ -20,7 +20,7 @@ import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { ExtendedType } from 'src/utilities/extendType';
 import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
 import { RenderSelection } from './SelectPlanPanel/RenderSelection';
-import { useSelectPlanPanelStyles } from './SelectPlanPanel/selectPlanPanelStyles';
+import { useSelectPlanPanelStyles } from './SelectPlanPanel/Styles/selectPlanPanelStyles';
 import { gpuPlanText } from './utilities';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 

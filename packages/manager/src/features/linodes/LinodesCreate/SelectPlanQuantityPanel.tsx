@@ -1,30 +1,26 @@
-import classNames from 'classnames';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
-import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
-import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
+import { RenderSelectionLKE } from './SelectPlanPanel/RenderSelectionLKE';
 
 type ClassNames =
   | 'root'
@@ -114,113 +110,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
-  renderSelection = (type: ExtendedType, idx: number) => {
-    const {
-      selectedID,
-      disabled,
-      classes,
-      onAdd,
-      updatePlanCount,
-      getTypeCount,
-    } = this.props;
-
-    const count = getTypeCount(type.id);
-
-    // We don't want network information for LKE so we remove the last two elements.
-    const subHeadings = type.subHeadings.slice(0, -2);
-
-    const renderVariant = () => (
-      <Grid xs={12}>
-        <div className={classes.enhancedInputOuter}>
-          <EnhancedNumberInput
-            value={count}
-            setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
-          />
-          {onAdd && (
-            <Button
-              buttonType="primary"
-              onClick={() => onAdd(type.id, count)}
-              disabled={count < 1}
-              className={classes.enhancedInputButton}
-            >
-              Add
-            </Button>
-          )}
-        </div>
-      </Grid>
-    );
-
-    return (
-      <React.Fragment key={`tabbed-panel-${idx}`}>
-        {/* Displays Table Row for larger screens */}
-        <Hidden mdDown>
-          <TableRow
-            data-qa-plan-row={type.formattedLabel}
-            key={type.id}
-            className={classNames({
-              [classes.disabledRow]: disabled,
-            })}
-          >
-            <TableCell data-qa-plan-name>
-              <div className={classes.headingCellContainer}>
-                {type.heading}{' '}
-              </div>
-            </TableCell>
-            <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
-            <TableCell data-qa-hourly>{`$` + type.price.hourly}</TableCell>
-            <TableCell center data-qa-ram>
-              {convertMegabytesTo(type.memory, true)}
-            </TableCell>
-            <TableCell center data-qa-cpu>
-              {type.vcpus}
-            </TableCell>
-            <TableCell center data-qa-storage>
-              {convertMegabytesTo(type.disk, true)}
-            </TableCell>
-            <TableCell>
-              <div className={classes.enhancedInputOuter}>
-                <EnhancedNumberInput
-                  inputLabel={`edit-quantity-${type.id}`}
-                  value={count}
-                  setValue={(newCount: number) =>
-                    updatePlanCount(type.id, newCount)
-                  }
-                  disabled={
-                    // When on the add pool flow, we only want the current input to be active,
-                    // unless we've just landed on the form or all the inputs are empty.
-                    !onAdd && Boolean(selectedID) && type.id !== selectedID
-                  }
-                />
-                {onAdd && (
-                  <Button
-                    buttonType="primary"
-                    onClick={() => onAdd(type.id, count)}
-                    disabled={count < 1}
-                    className={classes.enhancedInputButton}
-                  >
-                    Add
-                  </Button>
-                )}
-              </div>
-            </TableCell>
-          </TableRow>
-        </Hidden>
-        {/* Displays SelectionCard for small screens */}
-        <Hidden mdUp>
-          <SelectionCard
-            key={type.id}
-            checked={type.id === String(selectedID)}
-            onClick={this.onSelect(type.id)}
-            heading={type.heading}
-            subheadings={subHeadings}
-            disabled={disabled}
-            renderVariant={renderVariant}
-          />
-        </Hidden>
-      </React.Fragment>
-    );
-  };
-
   renderPlanContainer = (plans: ExtendedType[]) => {
     const tableHeader = (
       <TableHead>
@@ -246,13 +135,39 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
 
     return (
       <Grid container spacing={2}>
-        <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
+        <Hidden mdUp>
+          {plans.map((plan, id) => (
+            <RenderSelectionLKE
+              disabled={this.props.disabled}
+              getTypeCount={this.props.getTypeCount}
+              idx={id}
+              key={id}
+              onAdd={this.props.onAdd}
+              onSelect={this.props.onSelect}
+              selectedID={this.props.selectedID}
+              type={plan}
+              updatePlanCount={this.props.updatePlanCount}
+            />
+          ))}
+        </Hidden>
         <Hidden mdDown>
           <Grid xs={12} lg={12}>
             <Table aria-label="List of Linode Plans" spacingBottom={16}>
               {tableHeader}
               <TableBody role="grid">
-                {plans.map(this.renderSelection)}
+                {plans.map((plan, id) => (
+                  <RenderSelectionLKE
+                    disabled={this.props.disabled}
+                    getTypeCount={this.props.getTypeCount}
+                    idx={id}
+                    key={id}
+                    onAdd={this.props.onAdd}
+                    onSelect={this.props.onSelect}
+                    selectedID={this.props.selectedID}
+                    type={plan}
+                    updatePlanCount={this.props.updatePlanCount}
+                  />
+                ))}
               </TableBody>
             </Table>
           </Grid>
