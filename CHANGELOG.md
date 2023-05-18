@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 - Initialize linode before referencing #9133
+- Revert linode landing changes #9136
 
 ## [2023-05-15] - v1.93.0
 
