@@ -51,16 +51,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+interface EventsLandingProps {
   filter?: Filter;
   entityId?: number;
   errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
 }
 
-type CombinedProps = Props & StateProps & WithSnackbarProps;
+type CombinedProps = EventsLandingProps & StateProps & WithSnackbarProps;
 
-export const EventsLanding: React.FC<CombinedProps> = (props) => {
+export const EventsLanding = (props: CombinedProps) => {
+  const {
+    entitiesLoading,
+    errorMessage,
+    entityId,
+    emptyMessage,
+    filter,
+  } = props;
+
   const classes = useStyles();
 
   const {
@@ -70,14 +78,13 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useEventsInfiniteQuery(props.filter);
+  } = useEventsInfiniteQuery(filter);
 
   const events = eventsData?.pages.reduce(
     (events, page) => [...events, ...page.data],
     []
   );
 
-  const { entitiesLoading, errorMessage, entityId, emptyMessage } = props;
   const loading = isLoading || isFetchingNextPage || entitiesLoading;
 
   return (
@@ -202,6 +209,9 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(connected, withSnackbar);
+const enhanced = compose<CombinedProps, EventsLandingProps>(
+  connected,
+  withSnackbar
+);
 
 export default enhanced(EventsLanding);
