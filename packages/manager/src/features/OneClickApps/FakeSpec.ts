@@ -311,7 +311,7 @@ export const oneClickApps: OCA[] = [
     name: 'ClusterControl',
     alt_name: 'Database monitoring',
     alt_description:
-      'SQL and NoSQL database interface and monitoring for MySQL, MongoDB, PostgreSQL, and more.',
+      'SQL and NoSQL database interface and monitoring for MySQL, PostgreSQL, and more.',
     categories: ['Databases'],
     description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
     summary:
