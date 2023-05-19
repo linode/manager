@@ -22,7 +22,7 @@ import {
   useParams,
 } from 'react-router-dom';
 
-const NodeBalancerDetail = () => {
+export const NodeBalancerDetail = () => {
   const history = useHistory();
   const location = useLocation();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -132,5 +132,3 @@ const NodeBalancerDetail = () => {
     </React.Fragment>
   );
 };
-
-export default NodeBalancerDetail;

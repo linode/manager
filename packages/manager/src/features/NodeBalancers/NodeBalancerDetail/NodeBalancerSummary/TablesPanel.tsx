@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
@@ -19,64 +18,12 @@ import {
 } from 'src/queries/nodebalancers';
 import { useParams } from 'react-router-dom';
 import { Theme, useTheme } from '@mui/material/styles';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    padding: theme.spacing(2),
-  },
-  chart: {
-    position: 'relative',
-    width: '100%',
-    paddingLeft: theme.spacing(1),
-  },
-  bottomLegend: {
-    margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
-    padding: 10,
-    color: '#777',
-    backgroundColor: theme.bg.offWhite,
-    border: `1px solid ${theme.color.border3}`,
-    fontSize: 14,
-  },
-  graphControls: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.up('md')]: {
-      margin: `${theme.spacing(2)} 0`,
-    },
-  },
-  title: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-  panel: {
-    padding: theme.spacing(2),
-    marginTop: theme.spacing(2),
-  },
-  emptyText: {
-    textAlign: 'center',
-    marginTop: theme.spacing(),
-  },
-}));
-
-const Loading = () => (
-  <div
-    style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: 300,
-    }}
-  >
-    <CircleProgress mini />
-  </div>
-);
+import { styled } from '@mui/material/styles';
 
 const STATS_NOT_READY_TITLE =
   'Stats for this NodeBalancer are not available yet';
 
-const TablesPanel = () => {
-  const classes = useStyles();
+export const TablesPanel = () => {
   const theme = useTheme<Theme>();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
@@ -107,14 +54,14 @@ const TablesPanel = () => {
           errorText={
             <>
               <div>
-                <Typography variant="h2" className={classes.emptyText}>
+                <StyledEmptyText variant="h2">
                   {STATS_NOT_READY_TITLE}
-                </Typography>
+                </StyledEmptyText>
               </div>
               <div>
-                <Typography variant="body1" className={classes.emptyText}>
+                <StyledEmptyText variant="body1">
                   Connection stats will be available shortly
-                </Typography>
+                </StyledEmptyText>
               </div>
             </>
           }
@@ -134,7 +81,7 @@ const TablesPanel = () => {
 
     return (
       <React.Fragment>
-        <div className={classes.chart}>
+        <StyledChart>
           <LineGraph
             ariaLabel="Connections Graph"
             timezone={timezone}
@@ -149,8 +96,8 @@ const TablesPanel = () => {
               },
             ]}
           />
-        </div>
-        <div className={classes.bottomLegend}>
+        </StyledChart>
+        <StyledBottomLegend>
           <MetricsDisplay
             rows={[
               {
@@ -161,7 +108,7 @@ const TablesPanel = () => {
               },
             ]}
           />
-        </div>
+        </StyledBottomLegend>
       </React.Fragment>
     );
   };
@@ -178,14 +125,14 @@ const TablesPanel = () => {
           errorText={
             <>
               <div>
-                <Typography variant="h2" className={classes.emptyText}>
+                <StyledEmptyText variant="h2">
                   {STATS_NOT_READY_TITLE}
-                </Typography>
+                </StyledEmptyText>
               </div>
               <div>
-                <Typography variant="body1" className={classes.emptyText}>
+                <StyledEmptyText variant="body1">
                   Traffic stats will be available shortly
-                </Typography>
+                </StyledEmptyText>
               </div>
             </>
           }
@@ -203,7 +150,7 @@ const TablesPanel = () => {
 
     return (
       <React.Fragment>
-        <div className={classes.chart}>
+        <StyledChart>
           <LineGraph
             ariaLabel="Traffic Graph"
             timezone={timezone}
@@ -224,8 +171,8 @@ const TablesPanel = () => {
               },
             ]}
           />
-        </div>
-        <div className={classes.bottomLegend}>
+        </StyledChart>
+        <StyledBottomLegend>
           <MetricsDisplay
             rows={[
               {
@@ -242,32 +189,96 @@ const TablesPanel = () => {
               },
             ]}
           />
-        </div>
+        </StyledBottomLegend>
       </React.Fragment>
     );
   };
 
   return (
     <React.Fragment>
-      <div className={classes.graphControls}>
-        <Typography className={classes.title} variant="h2">
-          Graphs
-        </Typography>
-      </div>
-      <Paper className={classes.panel}>
-        <Typography variant="h3" className={classes.header}>
+      <StyledgGraphControls>
+        <StyledTitle variant="h2">Graphs</StyledTitle>
+      </StyledgGraphControls>
+      <StyledPanel>
+        <StyledHeader variant="h3">
           Connections (CXN/s, 5 min avg.)
-        </Typography>
+        </StyledHeader>
         {renderConnectionsChart()}
-      </Paper>
-      <Paper className={classes.panel}>
-        <Typography variant="h3" className={classes.header}>
-          Traffic (bits/s, 5 min avg.)
-        </Typography>
+      </StyledPanel>
+      <StyledPanel>
+        <StyledHeader variant="h3">Traffic (bits/s, 5 min avg.)</StyledHeader>
         {renderTrafficChart()}
-      </Paper>
+      </StyledPanel>
     </React.Fragment>
   );
 };
 
-export default TablesPanel;
+const StyledHeader = styled(Typography, {
+  label: 'StyledHeader',
+})(({ theme }) => ({
+  padding: theme.spacing(2),
+}));
+
+const StyledTitle = styled(Typography, {
+  label: 'StyledTitle',
+})(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: theme.spacing(),
+  },
+}));
+
+const StyledChart = styled('div', {
+  label: 'StyledChart',
+})(({ theme }) => ({
+  position: 'relative',
+  width: '100%',
+  paddingLeft: theme.spacing(1),
+}));
+
+const StyledBottomLegend = styled('div', {
+  label: 'StyledBottomLegend',
+})(({ theme }) => ({
+  margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
+  padding: 10,
+  color: '#777',
+  backgroundColor: theme.bg.offWhite,
+  border: `1px solid ${theme.color.border3}`,
+  fontSize: 14,
+}));
+
+const StyledgGraphControls = styled(Typography, {
+  label: 'StyledgGraphControls',
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  [theme.breakpoints.up('md')]: {
+    margin: `${theme.spacing(2)} 0`,
+  },
+}));
+
+const StyledPanel = styled(Paper, {
+  label: 'StyledPanel',
+})(({ theme }) => ({
+  padding: theme.spacing(2),
+  marginTop: theme.spacing(2),
+}));
+
+const StyledEmptyText = styled(Typography, {
+  label: 'StyledEmptyText',
+})(({ theme }) => ({
+  textAlign: 'center',
+  marginTop: theme.spacing(),
+}));
+
+const Loading = () => (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: 300,
+    }}
+  >
+    <CircleProgress mini />
+  </div>
+);

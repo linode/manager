@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import TablesPanel from './TablesPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { styled } from '@mui/material/styles';
 import { SummaryPanel } from './SummaryPanel';
+import { TablesPanel } from './TablesPanel';
 import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
 import { useParams } from 'react-router-dom';
 
