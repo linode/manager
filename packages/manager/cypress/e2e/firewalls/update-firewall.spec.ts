@@ -1,6 +1,5 @@
 import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
-import { regions } from 'support/constants/regions';
 import { authenticate } from 'support/api/authentication';
 import { containsClick, getClick } from 'support/helpers';
 import { Linode, Firewall, FirewallRuleType } from '@linode/api-v4/types';
@@ -9,6 +8,7 @@ import { interceptCreateFirewall } from 'support/intercepts/firewalls';
 import { randomItem, randomString, randomLabel } from 'support/util/random';
 import { fbtVisible, fbtClick } from 'support/helpers';
 import { ui } from 'support/ui';
+import { chooseRegion } from 'support/util/regions';
 
 const portPresetMap = {
   '22': 'SSH',
@@ -146,11 +146,11 @@ describe('update firewall', () => {
    * - Confirms that a firewall can be enabled and disabled, and their status is reflected on the landing page.
    */
   it("updates a firewall's linodes and rules", () => {
-    const regionId = randomItem(regions);
+    const region = chooseRegion();
 
     const linodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: regionId,
+      region: region.id,
       root_pass: randomString(16),
     });
 

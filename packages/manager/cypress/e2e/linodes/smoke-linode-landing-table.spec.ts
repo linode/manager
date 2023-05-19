@@ -1,38 +1,25 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Linode } from '@linode/api-v4/types';
 import { createLinode } from 'support/api/linodes';
-import {
-  containsVisible,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
+import { fbtVisible, getClick, getVisible } from 'support/helpers';
 import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { routes } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
-import { regions, regionsMap } from 'support/constants/regions';
+import { chooseRegion } from 'support/util/regions';
 
 const mockLinodes = new Array(5).fill(null).map(
   (item: null, index: number): Linode => {
     return linodeFactory.build({
       label: `Linode ${index}`,
-      region: regions[index],
+      region: chooseRegion().id,
     });
   }
 );
 
 const mockLinodesData = makeResourcePage(mockLinodes);
-
-const sortByRegion = (a: Linode, b: Linode) => {
-  return a.region.localeCompare(b.region);
-};
-
-const sortByLabel = (a: Linode, b: Linode) => {
-  return a.label.localeCompare(b.label);
-};
 
 const linodeLabel = (number) => {
   return mockLinodes[number - 1].label;
@@ -144,48 +131,6 @@ describe('linode landing checks', () => {
     getVisible('h1[data-qa-header="Linodes"]');
     getVisible('button[title="Docs"][data-qa-icon-text-link="Docs"]');
     fbtVisible('Create Linode');
-  });
-
-  // Skipping because the sorting is now done by the API
-  it.skip('checks label and region sorting behavior for linode table', () => {
-    const linodesByLabel = [...mockLinodes.sort(sortByLabel)];
-    const linodesByRegion = [...mockLinodes.sort(sortByRegion)];
-    const linodesLastIndex = mockLinodes.length - 1;
-
-    const firstLinodeLabel = linodesByLabel[0].label;
-    const lastLinodeLabel = linodesByLabel[linodesLastIndex].label;
-
-    const firstRegionLabel = regionsMap[linodesByRegion[0].region];
-    const lastRegionLabel =
-      regionsMap[linodesByRegion[linodesLastIndex].region];
-
-    const checkFirstRow = (label: string) => {
-      getVisible('tr[data-qa-loading="true"]')
-        .first()
-        .within(() => {
-          containsVisible(label);
-        });
-    };
-    const checkLastRow = (label: string) => {
-      getVisible('tr[data-qa-loading="true"]')
-        .last()
-        .within(() => {
-          containsVisible(label);
-        });
-    };
-
-    checkFirstRow(firstLinodeLabel);
-    checkLastRow(lastLinodeLabel);
-    getClick('[aria-label="Sort by label"]');
-    checkFirstRow(lastLinodeLabel);
-    checkLastRow(firstLinodeLabel);
-
-    getClick('[aria-label="Sort by region"]');
-    checkFirstRow(firstRegionLabel);
-    checkLastRow(lastRegionLabel);
-    getClick('[aria-label="Sort by region"]');
-    checkFirstRow(lastRegionLabel);
-    checkLastRow(firstRegionLabel);
   });
 
   it('checks the create menu dropdown items', () => {

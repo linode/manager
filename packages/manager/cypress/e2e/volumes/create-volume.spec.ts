@@ -2,15 +2,10 @@ import type { Linode } from '@linode/api-v4/types';
 import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
-import { regions, regionsMap } from 'support/constants/regions';
 import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
 import { interceptCreateVolume } from 'support/intercepts/volumes';
-import {
-  randomNumber,
-  randomItem,
-  randomString,
-  randomLabel,
-} from 'support/util/random';
+import { randomNumber, randomString, randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -27,12 +22,12 @@ describe('volume create flow', () => {
    * - Confirms that tags exist on volume.
    */
   it('creates an unattached volume', () => {
-    const regionId = randomItem(regions);
+    const region = chooseRegion();
     const volume = {
       label: randomLabel(),
       size: `${randomNumber(10, 250)}`,
-      region: regionId,
-      regionLabel: regionsMap[regionId],
+      region: region.id,
+      regionLabel: region.name,
     };
 
     interceptCreateVolume().as('createVolume');
@@ -69,19 +64,19 @@ describe('volume create flow', () => {
    * - Confirms that volume is listed correctly on Linode 'Storage' details page.
    */
   it('creates an attached volume', () => {
-    const regionId = randomItem(regions);
+    const region = chooseRegion();
 
     const linodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: regionId,
+      region: region.id,
       root_pass: randomString(16),
     });
 
     const volume = {
       label: randomLabel(),
       size: `${randomNumber(10, 250)}`,
-      region: regionId,
-      regionLabel: regionsMap[regionId],
+      region: region.id,
+      regionLabel: region.name,
     };
 
     cy.defer(createLinode(linodeRequest)).then((linode) => {

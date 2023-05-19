@@ -2,7 +2,6 @@
  * @file DBaaS integration tests for update operations.
  */
 
-import { regionsMap } from 'support/constants/regions';
 import {
   randomLabel,
   randomNumber,
@@ -23,10 +22,7 @@ import {
   databaseClusterConfiguration,
   databaseConfigurations,
 } from 'support/constants/databases';
-
-// @TODO Consider moving this to 'support/constants' or similar.
-// const databaseTypes = ['mysql', 'postgresql', 'mongodb'];
-const databaseTypes = ['mysql', 'postgresql'];
+import { getRegionById } from 'support/util/regions';
 
 /**
  * Updates a database cluster's label.
@@ -183,7 +179,9 @@ describe('Update database clusters', () => {
           cy.wait('@getDatabase');
 
           cy.get('[data-qa-cluster-config]').within(() => {
-            cy.findByText(regionsMap[database.region]).should('be.visible');
+            cy.findByText(getRegionById(database.region).name).should(
+              'be.visible'
+            );
           });
 
           cy.get('[data-qa-connection-details]').within(() => {

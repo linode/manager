@@ -1,11 +1,11 @@
 import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
-import { regions } from 'support/constants/regions';
 import { authenticate } from 'support/api/authentication';
 import { containsClick, getClick } from 'support/helpers';
 import { interceptCreateFirewall } from 'support/intercepts/firewalls';
-import { randomItem, randomString, randomLabel } from 'support/util/random';
+import { randomString, randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
+import { chooseRegion } from 'support/util/regions';
 
 authenticate();
 describe('create firewall', () => {
@@ -52,11 +52,11 @@ describe('create firewall', () => {
    * - Confirms that firewall is assigned to the linode.
    */
   it('creates a firewall assigned to a linode', () => {
-    const regionId = randomItem(regions);
+    const region = chooseRegion();
 
     const linodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: regionId,
+      region: region.id,
       root_pass: randomString(16),
     });
 
