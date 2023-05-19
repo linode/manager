@@ -4,13 +4,13 @@ import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomString } from 'support/util/random';
 import { mockGetImages } from 'support/intercepts/images';
+import { chooseRegion } from 'support/util/regions';
 
 const mockImage = createMockImage().data[0];
 const imageLabel = mockImage.label;
 const linodeId = 99999999;
 const rootpass = randomString(32);
-const region = 'us-west';
-const regionSelect = 'Fremont, CA';
+const region = chooseRegion();
 const imageId = mockImage.id;
 const type = 'g6-nanode-1';
 const mockLinodeList = createMockLinodeList({
@@ -48,7 +48,7 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
-  containsClick(regionSelect);
+  containsClick(region.name);
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
   cy.get('[id="root-password"]').type(rootpass);
@@ -58,7 +58,7 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
   cy.wait('@mockLinodeResponse');
 
   fbtVisible(mockLinode.label);
-  fbtVisible(regionSelect);
+  fbtVisible(region.name);
   fbtVisible(linodeId);
 };
 

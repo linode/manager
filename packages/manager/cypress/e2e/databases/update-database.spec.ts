@@ -22,7 +22,6 @@ import {
   databaseClusterConfiguration,
   databaseConfigurations,
 } from 'support/constants/databases';
-import { getRegionById } from 'support/util/regions';
 
 /**
  * Updates a database cluster's label.
@@ -141,7 +140,7 @@ const resetRootPassword = () => {
 describe('Update database clusters', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
-      describe(`updates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
+      describe(`updates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         /*
          * - Tests active database update UI flows using mocked data.
          * - Confirms that users can change database label.
@@ -159,7 +158,7 @@ describe('Update database clusters', () => {
             id: randomNumber(1, 1000),
             type: configuration.linodeType,
             label: initialLabel,
-            region: configuration.region,
+            region: configuration.region.id,
             engine: configuration.dbType,
             status: 'active',
             allow_list: [allowedIp],
@@ -179,9 +178,7 @@ describe('Update database clusters', () => {
           cy.wait('@getDatabase');
 
           cy.get('[data-qa-cluster-config]').within(() => {
-            cy.findByText(getRegionById(database.region).name).should(
-              'be.visible'
-            );
+            cy.findByText(configuration.region.name).should('be.visible');
           });
 
           cy.get('[data-qa-connection-details]').within(() => {
@@ -265,7 +262,7 @@ describe('Update database clusters', () => {
             id: randomNumber(1, 1000),
             type: configuration.linodeType,
             label: initialLabel,
-            region: configuration.region,
+            region: configuration.region.id,
             engine: configuration.dbType,
             status: 'provisioning',
             allow_list: [allowedIp],
