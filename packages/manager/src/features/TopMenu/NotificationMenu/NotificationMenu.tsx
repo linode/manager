@@ -3,7 +3,6 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
-import Button from 'src/components/Button';
 import MenuItem from 'src/components/MenuItem';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
@@ -22,34 +21,11 @@ import usePrevious from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMarkEventsAsSeen } from 'src/queries/events';
 import { ThunkDispatch } from 'src/store/types';
-import { isPropValid } from 'src/utilities/isPropValid';
-import TopMenuIcon, { StyledTopMenuIconWrapper } from '../TopMenuIcon';
-
-const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
-  label: 'NotificationIconWrapper',
-  shouldForwardProp: (prop) => isPropValid(['isMenuOpen'], prop),
-})<{
-  isMenuOpen: boolean;
-}>(({ ...props }) => ({
-  color: props.isMenuOpen ? '#606469' : '#c9c7c7',
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  margin: 0,
-  padding: 0,
-  minWidth: 'unset',
-  ...(theme.name === 'light'
-    ? {
-        '&:hover': {
-          backgroundColor: 'unset',
-        },
-      }
-    : {
-        '&:hover:not([aria-expanded="true"])': {
-          backgroundColor: 'unset',
-        },
-      }),
-}));
+import TopMenuIcon from '../TopMenuIcon';
+import {
+  NotificationIconWrapper,
+  StyledButton,
+} from './NotificationMenu.styles';
 
 const NotificationIconBadge = styled('div')(({ theme }) => ({
   alignItems: 'center',
