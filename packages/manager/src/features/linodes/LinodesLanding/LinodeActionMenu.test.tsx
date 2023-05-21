@@ -82,6 +82,7 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should disable the reboot action if the Linode is not running', () => {
+      // TODO: Should check for "read_only" permissions too
       renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
       expect(screen.queryByText('Reboot')).toHaveAttribute(
         'aria-disabled',
