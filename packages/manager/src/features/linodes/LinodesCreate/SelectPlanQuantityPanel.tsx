@@ -177,6 +177,9 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
             className={classNames({
               [classes.disabledRow]: disabled,
             })}
+            style={{
+              background: 'red !important',
+            }}
           >
             <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>
@@ -189,7 +192,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
             <TableCell center data-qa-cpu>
-              {type.vcpus}
+              {type.vcpus} KEKLOL
             </TableCell>
             <TableCell center data-qa-storage>
               {convertMegabytesTo(type.disk, true)}

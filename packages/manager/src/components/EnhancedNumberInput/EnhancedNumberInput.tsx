@@ -1,80 +1,64 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import Minus from 'src/assets/icons/LKEminusSign.svg';
 import Plus from 'src/assets/icons/LKEplusSign.svg';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import TextField from 'src/components/TextField';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    '& $button': {
-      width: 35,
-      height: 34,
-      minWidth: 30,
-      border: 'none',
-      '&:hover': {
-        backgroundColor: 'rgba(224, 224, 224, 0.69) !important',
-      },
-    },
-    '& $input': {
-      padding: '0 8px',
-    },
-    '& $textField': {
-      width: 53,
-      minWidth: 40,
-      height: 34,
-      minHeight: 30,
-    },
-    '& $plusIcon': {
-      width: 14,
-    },
-    '& $minusIcon': {
-      width: 12,
-    },
-  },
-  button: {
-    width: 40,
-    height: 40,
-    minWidth: 40,
-  },
-  textField: {
-    margin: '0 5px',
-    height: 40,
-    minHeight: 40,
-    width: 60,
-    minWidth: 50,
-    flexDirection: 'row',
-  },
-  input: {
-    textAlign: 'right',
-    '-moz-appearance': 'textfield',
-    '&::-webkit-inner-spin-button': {
-      '-webkit-appearance': 'none',
-      margin: 0,
-    },
-    '&::-webkit-outer-spin-button': {
-      '-webkit-appearance': 'none',
-      margin: 0,
-    },
-  },
-  plusIcon: {
-    width: 17,
-  },
-  minusIcon: {
-    width: 14,
-  },
-  inputGroup: {
-    display: 'flex',
-    position: 'relative',
-    '& button': {
-      borderRadius: 0,
-      minHeight: 'fit-content',
-    },
-  },
-}));
+// const useStyles = makeStyles<
+//   void,
+//   'button' | 'input' | 'textField' | 'plusIcon' | 'minusIcon'
+// >()((_theme, _params, classes) => ({
+//   root: {
+//     [`& .${classes.button}`]: {
+//       width: 35,
+//       height: 34,
+//       minWidth: 30,
+//       border: 'none',
+//       '&:hover': {
+//         backgroundColor: 'rgba(224, 224, 224, 0.69) !important',
+//       },
+//     },
+//     [`& .${classes.input}`]: {
+//       padding: '0 8px',
+//     },
+//     [`& .${classes.textField}`]: {
+//       width: 53,
+//       minWidth: 40,
+//       height: 34,
+//       minHeight: 30,
+//     },
+//     [`& .${classes.plusIcon}`]: {
+//       width: 14,
+//     },
+//     [`& .${classes.minusIcon}`]: {
+//       width: 12,
+//     },
+//   },
+//   inputGroup: {
+//     display: 'flex',
+//     position: 'relative',
+//     '& button': {
+//       borderRadius: 0,
+//       minHeight: 'fit-content',
+//     },
+//   },
+// }));
 
-interface Props {
+const inputOverrides = {
+  textAlign: 'right',
+  '-moz-appearance': 'textfield',
+  '&::-webkit-inner-spin-button': {
+    '-webkit-appearance': 'none',
+    margin: 0,
+  },
+  '&::-webkit-outer-spin-button': {
+    '-webkit-appearance': 'none',
+    margin: 0,
+  },
+};
+
+interface EnhancedNumberInputProps {
   inputLabel?: string;
   value: number;
   setValue: (value: number) => void;
@@ -83,7 +67,7 @@ interface Props {
   min?: number;
 }
 
-export const EnhancedNumberInput: React.FC<Props> = (props) => {
+export const EnhancedNumberInput = (props: EnhancedNumberInputProps) => {
   const { inputLabel, setValue, disabled } = props;
 
   const max = props.max ?? 100;
@@ -116,23 +100,26 @@ export const EnhancedNumberInput: React.FC<Props> = (props) => {
   };
 
   // TODO add error prop for error handling
-  const classes = useStyles();
+
   return (
-    <div className={`${classes.root} ${classes.inputGroup}`}>
+    <EnhancedNumberInputRoot>
       <Button
         buttonType="outlined"
-        className={classes.button}
         compactX
         disabled={disabled || value === min}
         onClick={decrementValue}
         name="Subtract 1"
         aria-label="Subtract 1"
         data-testid={'decrement-button'}
+        sx={{
+          height: 40,
+          minWidth: 40,
+          width: 40,
+        }}
       >
-        <Minus className={classes.minusIcon} />
+        <MinusIcon />
       </Button>
       <TextField
-        className={classes.textField}
         type="number"
         label={inputLabel ? inputLabel : 'Edit Quantity'}
         aria-live="polite"
@@ -140,30 +127,52 @@ export const EnhancedNumberInput: React.FC<Props> = (props) => {
         hideLabel
         value={value}
         onChange={onChange}
-        inputProps={{
-          className: classNames({
-            [classes.input]: true,
-          }),
-        }}
         min={min}
         max={max}
         disabled={disabled}
         data-testid={'quantity-input'}
+        sx={{
+          flexDirection: 'row',
+          height: 40,
+          margin: '0 5px',
+          minHeight: 40,
+          minWidth: 50,
+          width: 60,
+          '.MuiInputBase-input': inputOverrides,
+        }}
       />
       <Button
         buttonType="outlined"
-        className={classes.button}
         compactX
         disabled={disabled || value === max}
         onClick={incrementValue}
         name="Add 1"
         aria-label="Add 1"
         data-testid={'increment-button'}
+        sx={{
+          height: 40,
+          minWidth: 40,
+          width: 40,
+        }}
       >
-        <Plus className={classes.plusIcon} />
+        <PlusIcon />
       </Button>
-    </div>
+    </EnhancedNumberInputRoot>
   );
 };
+
+const EnhancedNumberInputRoot = styled('div', {
+  label: 'EnhancedNumberInput',
+})({
+  // Add className={`${classes.root} ${classes.inputGroup}`}
+});
+
+const MinusIcon = styled(Minus)({
+  width: 14,
+});
+
+const PlusIcon = styled(Plus)({
+  width: 17,
+});
 
 export default React.memo(EnhancedNumberInput);
