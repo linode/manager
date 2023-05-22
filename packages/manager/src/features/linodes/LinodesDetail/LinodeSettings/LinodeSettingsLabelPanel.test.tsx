@@ -23,10 +23,32 @@ describe('LinodeSettingsLabelPanel', () => {
     expect(getByText('Linode Label')).toBeVisible();
 
     const input = getByLabelText('Label');
+    const button = getByText('Save').closest('button');
 
     await waitFor(() => {
       // Verify the input contains the Linode's label when it loads it
       expect(input).toHaveAttribute('value', 'my-linode-1');
     });
+
+    // Verify that the save button is disabled (because the label is unmodified)
+    expect(button).toBeDisabled();
+  });
+
+  it('should disable the input if the `isReadOnly` prop is true', async () => {
+    server.use(
+      rest.get('*/linode/instances/1', (req, res, ctx) => {
+        return res(
+          ctx.json(linodeFactory.build({ id: 1, label: 'my-linode-1' }))
+        );
+      })
+    );
+
+    const { getByLabelText } = renderWithTheme(
+      <LinodeSettingsLabelPanel linodeId={1} isReadOnly />
+    );
+
+    const input = getByLabelText('Label');
+
+    expect(input).toBeDisabled();
   });
 });
