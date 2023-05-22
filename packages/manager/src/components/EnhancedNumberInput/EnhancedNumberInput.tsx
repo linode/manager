@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import TextField from 'src/components/TextField';
 import Box from '@mui/material/Box';
 
-const sxInput = {
+const sxTextFieldBase = {
   padding: '0 8px',
   textAlign: 'right',
   '-moz-appearance': 'textfield',
@@ -51,92 +51,94 @@ interface EnhancedNumberInputProps {
   min?: number;
 }
 
-export const EnhancedNumberInput = (props: EnhancedNumberInputProps) => {
-  const { inputLabel, setValue, disabled } = props;
+export const EnhancedNumberInput = React.memo(
+  (props: EnhancedNumberInputProps) => {
+    const { inputLabel, setValue, disabled } = props;
 
-  const max = props.max ?? 100;
-  const min = props.min ?? 0;
+    const max = props.max ?? 100;
+    const min = props.min ?? 0;
 
-  let value = props.value;
-  if (value > max) {
-    value = max;
-  } else if (value < min) {
-    value = min;
-  }
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const parsedValue = +e.target.value;
-    if (parsedValue >= min && parsedValue <= max) {
-      setValue(+e.target.value);
+    let value = props.value;
+    if (value > max) {
+      value = max;
+    } else if (value < min) {
+      value = min;
     }
-  };
 
-  const incrementValue = () => {
-    if (value < max) {
-      setValue(value + 1);
-    }
-  };
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const parsedValue = +e.target.value;
+      if (parsedValue >= min && parsedValue <= max) {
+        setValue(+e.target.value);
+      }
+    };
 
-  const decrementValue = () => {
-    if (value > min) {
-      setValue(value - 1);
-    }
-  };
+    const incrementValue = () => {
+      if (value < max) {
+        setValue(value + 1);
+      }
+    };
 
-  // TODO add error prop for error handling
+    const decrementValue = () => {
+      if (value > min) {
+        setValue(value - 1);
+      }
+    };
 
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        position: 'relative',
-      }}
-    >
-      <Button
-        buttonType="outlined"
-        compactX
-        disabled={disabled || value === min}
-        onClick={decrementValue}
-        name="Subtract 1"
-        aria-label="Subtract 1"
-        data-testid={'decrement-button'}
-        sx={sxButton}
-      >
-        <MinusIcon />
-      </Button>
-      <TextField
-        type="number"
-        label={inputLabel ? inputLabel : 'Edit Quantity'}
-        aria-live="polite"
-        name="Quantity"
-        hideLabel
-        value={value}
-        onChange={onChange}
-        min={min}
-        max={max}
-        disabled={disabled}
-        data-testid={'quantity-input'}
+    // TODO add error prop for error handling
+
+    return (
+      <Box
         sx={{
-          ...sxTextField,
-          '.MuiInputBase-root': sxTextField,
-          '.MuiInputBase-input': sxInput,
+          display: 'flex',
+          position: 'relative',
         }}
-      />
-      <Button
-        buttonType="outlined"
-        compactX
-        disabled={disabled || value === max}
-        onClick={incrementValue}
-        name="Add 1"
-        aria-label="Add 1"
-        data-testid={'increment-button'}
-        sx={sxButton}
       >
-        <PlusIcon />
-      </Button>
-    </Box>
-  );
-};
+        <Button
+          buttonType="outlined"
+          compactX
+          disabled={disabled || value === min}
+          onClick={decrementValue}
+          name="Subtract 1"
+          aria-label="Subtract 1"
+          data-testid={'decrement-button'}
+          sx={sxButton}
+        >
+          <MinusIcon />
+        </Button>
+        <TextField
+          type="number"
+          label={inputLabel ? inputLabel : 'Edit Quantity'}
+          aria-live="polite"
+          name="Quantity"
+          hideLabel
+          value={value}
+          onChange={onChange}
+          min={min}
+          max={max}
+          disabled={disabled}
+          data-testid={'quantity-input'}
+          sx={{
+            ...sxTextField,
+            '.MuiInputBase-root': sxTextField,
+            '.MuiInputBase-input': sxTextFieldBase,
+          }}
+        />
+        <Button
+          buttonType="outlined"
+          compactX
+          disabled={disabled || value === max}
+          onClick={incrementValue}
+          name="Add 1"
+          aria-label="Add 1"
+          data-testid={'increment-button'}
+          sx={sxButton}
+        >
+          <PlusIcon />
+        </Button>
+      </Box>
+    );
+  }
+);
 
 const MinusIcon = styled(Minus)({
   width: 12,
@@ -145,5 +147,3 @@ const MinusIcon = styled(Minus)({
 const PlusIcon = styled(Plus)({
   width: 14,
 });
-
-export default React.memo(EnhancedNumberInput);
