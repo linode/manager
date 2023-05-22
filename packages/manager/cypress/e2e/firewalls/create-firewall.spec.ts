@@ -18,6 +18,7 @@ describe('create firewall', () => {
   it('creates a firewall without a linode', () => {
     const firewall = {
       label: randomLabel(),
+      region: chooseRegion().id,
     };
 
     interceptCreateFirewall().as('createFirewall');

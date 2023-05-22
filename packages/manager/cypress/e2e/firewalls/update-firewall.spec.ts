@@ -269,6 +269,7 @@ describe('update firewall', () => {
   it("updates a firewall's status", () => {
     const firewall = {
       label: randomLabel(),
+      region: chooseRegion().id,
     };
 
     interceptCreateFirewall().as('createFirewall');

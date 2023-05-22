@@ -128,6 +128,7 @@ describe('volume create flow', () => {
     const linodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
       root_pass: randomString(16),
+      region: chooseRegion().id,
     });
 
     cy.defer(createLinode(linodeRequest)).then((linode: Linode) => {

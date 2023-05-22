@@ -15,15 +15,15 @@ const imageId = mockImage.id;
 const type = 'g6-nanode-1';
 const mockLinodeList = createMockLinodeList({
   id: linodeId,
-  label: `${imageLabel}-${region}`,
-  region,
+  label: `${imageLabel}-${region.id}`,
+  region: region.id,
   type,
 });
 
 const mockLinode = mockLinodeList.data[0];
 
 const createLinodeWithImageMock = (preselectedImage: boolean) => {
-  mockGetImages(createMockImage().data).as('mockImage');
+  mockGetImages(createMockImage({ region: region.id }).data).as('mockImage');
 
   cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
     req.reply({
