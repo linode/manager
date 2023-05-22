@@ -63,7 +63,7 @@ const ErrorStateRoot = styled(Grid)<Partial<ErrorStateProps>>(
     marginLeft: 0,
     padding: props.compact
       ? theme.spacing(5)
-      : !!props.cozy
+      : props.cozy
       ? theme.spacing(1)
       : theme.spacing(10),
     width: '100%',
