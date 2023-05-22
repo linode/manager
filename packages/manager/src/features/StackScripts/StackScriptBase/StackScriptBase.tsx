@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { compose } from 'recompose';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Image } from '@linode/api-v4/lib/images';
 import { pathOr } from 'ramda';
 import { Notice } from 'src/components/Notice/Notice';

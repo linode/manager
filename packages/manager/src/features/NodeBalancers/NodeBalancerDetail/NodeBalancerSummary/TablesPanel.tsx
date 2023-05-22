@@ -3,7 +3,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import getUserTimezone from 'src/utilities/getUserTimezone';

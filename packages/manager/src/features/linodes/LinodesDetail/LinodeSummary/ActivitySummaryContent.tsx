@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import ActivityRow from './ActivityRow';
 

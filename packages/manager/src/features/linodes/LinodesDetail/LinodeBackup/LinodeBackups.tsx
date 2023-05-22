@@ -6,7 +6,7 @@ import Paper from 'src/components/core/Paper';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import LinodePermissionsError from '../LinodePermissionsError';

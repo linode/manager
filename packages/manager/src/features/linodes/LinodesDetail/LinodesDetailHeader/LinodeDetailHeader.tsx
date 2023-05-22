@@ -28,7 +28,7 @@ import {
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
 import { CircleProgress } from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 interface TagDrawerProps {
   tags: string[];

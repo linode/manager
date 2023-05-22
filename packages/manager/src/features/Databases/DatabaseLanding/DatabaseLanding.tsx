@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Hidden from 'src/components/core/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
