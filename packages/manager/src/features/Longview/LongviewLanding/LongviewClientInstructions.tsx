@@ -3,7 +3,7 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import EditableEntityLabel from 'src/components/EditableEntityLabel';
+import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import Grid from 'src/components/Grid';
 import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
