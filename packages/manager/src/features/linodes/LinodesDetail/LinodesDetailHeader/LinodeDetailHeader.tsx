@@ -27,6 +27,8 @@ import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
+import { CircleProgress } from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState';
 
 interface TagDrawerProps {
   tags: string[];
@@ -48,7 +50,7 @@ const LinodeDetailHeader = () => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const { data: linode } = useLinodeQuery(matchedLinodeId);
+  const { data: linode, isLoading, error } = useLinodeQuery(matchedLinodeId);
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     matchedLinodeId
@@ -196,6 +198,18 @@ const LinodeDetailHeader = () => {
     onOpenMigrateDialog,
   };
 
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error?.[0]?.reason} />;
+  }
+
+  if (!linode) {
+    return null;
+  }
+
   return (
     <>
       <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
@@ -226,6 +240,7 @@ const LinodeDetailHeader = () => {
       />
       <LinodeEntityDetail
         id={matchedLinodeId}
+        linode={linode}
         openTagDrawer={openTagDrawer}
         handlers={handlers}
       />
