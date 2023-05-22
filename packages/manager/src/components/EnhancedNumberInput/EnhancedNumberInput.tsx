@@ -4,48 +4,10 @@ import Plus from 'src/assets/icons/LKEplusSign.svg';
 import Button from 'src/components/Button';
 import { styled } from '@mui/material/styles';
 import TextField from 'src/components/TextField';
+import Box from '@mui/material/Box';
 
-// const useStyles = makeStyles<
-//   void,
-//   'button' | 'input' | 'textField' | 'plusIcon' | 'minusIcon'
-// >()((_theme, _params, classes) => ({
-//   root: {
-//     [`& .${classes.button}`]: {
-//       width: 35,
-//       height: 34,
-//       minWidth: 30,
-//       border: 'none',
-//       '&:hover': {
-//         backgroundColor: 'rgba(224, 224, 224, 0.69) !important',
-//       },
-//     },
-//     [`& .${classes.input}`]: {
-//       padding: '0 8px',
-//     },
-//     [`& .${classes.textField}`]: {
-//       width: 53,
-//       minWidth: 40,
-//       height: 34,
-//       minHeight: 30,
-//     },
-//     [`& .${classes.plusIcon}`]: {
-//       width: 14,
-//     },
-//     [`& .${classes.minusIcon}`]: {
-//       width: 12,
-//     },
-//   },
-//   inputGroup: {
-//     display: 'flex',
-//     position: 'relative',
-//     '& button': {
-//       borderRadius: 0,
-//       minHeight: 'fit-content',
-//     },
-//   },
-// }));
-
-const inputOverrides = {
+const sxInput = {
+  padding: '0 8px',
   textAlign: 'right',
   '-moz-appearance': 'textfield',
   '&::-webkit-inner-spin-button': {
@@ -55,6 +17,28 @@ const inputOverrides = {
   '&::-webkit-outer-spin-button': {
     '-webkit-appearance': 'none',
     margin: 0,
+  },
+};
+
+const sxTextField = {
+  flexDirection: 'row',
+  height: 34,
+  margin: '0 5px',
+  minHeight: 30,
+  minWidth: 40,
+  width: 53,
+};
+
+const sxButton = {
+  borderRadius: 0,
+  height: 34,
+  minHeight: 'fit-content',
+  minWidth: 30,
+  width: 35,
+  border: 'none',
+  '&:hover': {
+    backgroundColor: 'rgba(224, 224, 224, 0.69)',
+    border: 'none',
   },
 };
 
@@ -102,7 +86,12 @@ export const EnhancedNumberInput = (props: EnhancedNumberInputProps) => {
   // TODO add error prop for error handling
 
   return (
-    <EnhancedNumberInputRoot>
+    <Box
+      sx={{
+        display: 'flex',
+        position: 'relative',
+      }}
+    >
       <Button
         buttonType="outlined"
         compactX
@@ -111,11 +100,7 @@ export const EnhancedNumberInput = (props: EnhancedNumberInputProps) => {
         name="Subtract 1"
         aria-label="Subtract 1"
         data-testid={'decrement-button'}
-        sx={{
-          height: 40,
-          minWidth: 40,
-          width: 40,
-        }}
+        sx={sxButton}
       >
         <MinusIcon />
       </Button>
@@ -132,13 +117,9 @@ export const EnhancedNumberInput = (props: EnhancedNumberInputProps) => {
         disabled={disabled}
         data-testid={'quantity-input'}
         sx={{
-          flexDirection: 'row',
-          height: 40,
-          margin: '0 5px',
-          minHeight: 40,
-          minWidth: 50,
-          width: 60,
-          '.MuiInputBase-input': inputOverrides,
+          ...sxTextField,
+          '.MuiInputBase-root': sxTextField,
+          '.MuiInputBase-input': sxInput,
         }}
       />
       <Button
@@ -149,30 +130,20 @@ export const EnhancedNumberInput = (props: EnhancedNumberInputProps) => {
         name="Add 1"
         aria-label="Add 1"
         data-testid={'increment-button'}
-        sx={{
-          height: 40,
-          minWidth: 40,
-          width: 40,
-        }}
+        sx={sxButton}
       >
         <PlusIcon />
       </Button>
-    </EnhancedNumberInputRoot>
+    </Box>
   );
 };
 
-const EnhancedNumberInputRoot = styled('div', {
-  label: 'EnhancedNumberInput',
-})({
-  // Add className={`${classes.root} ${classes.inputGroup}`}
-});
-
 const MinusIcon = styled(Minus)({
-  width: 14,
+  width: 12,
 });
 
 const PlusIcon = styled(Plus)({
-  width: 17,
+  width: 14,
 });
 
 export default React.memo(EnhancedNumberInput);
