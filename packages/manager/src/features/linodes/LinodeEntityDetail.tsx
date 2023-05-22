@@ -37,8 +37,6 @@ import {
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
-import { GrantLevel } from '@linode/api-v4/lib/account';
-import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { useProfile } from 'src/queries/profile';
@@ -50,6 +48,7 @@ import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -79,14 +78,12 @@ const LinodeEntityDetail = (props: Props) => {
 
   const numberOfVolumes = volumes?.results ?? 0;
 
-  const extendedLinode = useExtendedLinode(linode.id);
-
   const { data: regions } = useRegionsQuery();
 
   const imageVendor =
     images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
-  const linodePlan = type?.label ?? linode.type;
+  const linodePlan = type ? formatStorageUnits(type.label) : linode.type;
 
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
@@ -110,7 +107,6 @@ const LinodeEntityDetail = (props: Props) => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
-          linodePermissions={extendedLinode?._permissions}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={linode.backups}
           isSummaryView={isSummaryView}
@@ -162,7 +158,6 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
-  linodePermissions?: GrantLevel;
   linodeRegionDisplay: string;
   backups: LinodeBackups;
   type: LinodeType | null;
