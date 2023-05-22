@@ -3,15 +3,8 @@ import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { isEmpty, pathOr } from 'ramda';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
 import { Notice } from 'src/components/Notice/Notice';
-import Hidden from 'src/components/core/Hidden';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import Typography from 'src/components/core/Typography';
@@ -19,7 +12,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { ExtendedType } from 'src/utilities/extendType';
 import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
-import { RenderSelection } from './SelectPlanPanel/RenderSelection';
+import { RenderPlanContainer } from './SelectPlanPanel/RenderPlanContainer';
 import { useSelectPlanPanelStyles } from './SelectPlanPanel/Styles/selectPlanPanelStyles';
 import { gpuPlanText } from './utilities';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
@@ -85,127 +78,6 @@ export const SelectPlanPanel = (props: Props) => {
     return arrayToList(withCapability ?? []);
   };
 
-  const renderPlanContainer = (plans: PlanSelectionType[]) => {
-    // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
-    const shouldShowTransfer =
-      showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
-
-    // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
-    const shouldShowNetwork =
-      showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
-
-    return (
-      <Grid container spacing={2}>
-        <Hidden lgUp={isCreate} mdUp={!isCreate}>
-          {plans.map((plan, id) => (
-            <RenderSelection
-              currentPlanHeading={currentPlanHeading}
-              disabled={disabled}
-              disabledClasses={props.disabledClasses}
-              idx={id}
-              isCreate={isCreate}
-              key={id}
-              linodeID={linodeID}
-              onSelect={props.onSelect}
-              selectedDiskSize={props.selectedDiskSize}
-              selectedID={selectedID}
-              showTransfer={showTransfer}
-              type={plan}
-            />
-          ))}
-        </Hidden>
-        <Hidden lgDown={isCreate} mdDown={!isCreate}>
-          <Grid xs={12}>
-            <Table
-              aria-label="List of Linode Plans"
-              className={classes.table}
-              spacingBottom={16}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.headerCell} />
-                  <TableCell className={classes.headerCell} data-qa-plan-header>
-                    Plan
-                  </TableCell>
-                  <TableCell
-                    className={classes.headerCell}
-                    data-qa-monthly-header
-                  >
-                    Monthly
-                  </TableCell>
-                  <TableCell
-                    className={classes.headerCell}
-                    data-qa-hourly-header
-                  >
-                    Hourly
-                  </TableCell>
-                  <TableCell
-                    className={classes.headerCell}
-                    data-qa-ram-header
-                    center
-                  >
-                    RAM
-                  </TableCell>
-                  <TableCell
-                    className={classes.headerCell}
-                    data-qa-cpu-header
-                    center
-                  >
-                    CPUs
-                  </TableCell>
-                  <TableCell
-                    className={classes.headerCell}
-                    data-qa-storage-header
-                    center
-                  >
-                    Storage
-                  </TableCell>
-                  {shouldShowTransfer ? (
-                    <TableCell
-                      className={classes.headerCell}
-                      data-qa-transfer-header
-                      center
-                    >
-                      Transfer
-                    </TableCell>
-                  ) : null}
-                  {shouldShowNetwork ? (
-                    <TableCell
-                      className={classes.headerCell}
-                      data-qa-network-header
-                      noWrap
-                      center
-                    >
-                      Network In / Out
-                    </TableCell>
-                  ) : null}
-                </TableRow>
-              </TableHead>
-              <TableBody role="radiogroup">
-                {plans.map((plan, id) => (
-                  <RenderSelection
-                    currentPlanHeading={currentPlanHeading}
-                    disabled={disabled}
-                    disabledClasses={props.disabledClasses}
-                    idx={id}
-                    isCreate={isCreate}
-                    key={id}
-                    linodeID={linodeID}
-                    onSelect={props.onSelect}
-                    selectedDiskSize={props.selectedDiskSize}
-                    selectedID={selectedID}
-                    showTransfer={showTransfer}
-                    type={plan}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </Grid>
-        </Hidden>
-      </Grid>
-    );
-  };
-
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const tabs: Tab[] = [];
     const {
@@ -232,7 +104,18 @@ export const SelectPlanPanel = (props: Props) => {
                 Pro Dedicated CPU instances are for very demanding workloads.
                 They only have AMD 2nd generation processors or newer.
               </Typography>
-              {renderPlanContainer(prodedicated)}
+              <RenderPlanContainer
+                isCreate={isCreate}
+                plans={prodedicated}
+                showTransfer={showTransfer}
+                selectedDiskSize={props.selectedDiskSize}
+                currentPlanHeading={currentPlanHeading}
+                disabledClasses={props.disabledClasses}
+                disabled={disabled}
+                selectedID={selectedID}
+                linodeID={linodeID}
+                onSelect={props.onSelect}
+              />
             </>
           );
         },
@@ -250,7 +133,18 @@ export const SelectPlanPanel = (props: Props) => {
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
-              {renderPlanContainer(dedicated)}
+              <RenderPlanContainer
+                isCreate={isCreate}
+                plans={dedicated}
+                showTransfer={showTransfer}
+                selectedDiskSize={props.selectedDiskSize}
+                currentPlanHeading={currentPlanHeading}
+                disabledClasses={props.disabledClasses}
+                disabled={disabled}
+                selectedID={selectedID}
+                linodeID={linodeID}
+                onSelect={props.onSelect}
+              />
             </>
           );
         },
@@ -268,7 +162,18 @@ export const SelectPlanPanel = (props: Props) => {
                 Shared CPU instances are good for medium-duty workloads and are
                 a good mix of performance, resources, and price.
               </Typography>
-              {renderPlanContainer(shared)}
+              <RenderPlanContainer
+                isCreate={isCreate}
+                plans={shared}
+                showTransfer={showTransfer}
+                selectedDiskSize={props.selectedDiskSize}
+                currentPlanHeading={currentPlanHeading}
+                disabledClasses={props.disabledClasses}
+                disabled={disabled}
+                selectedID={selectedID}
+                linodeID={linodeID}
+                onSelect={props.onSelect}
+              />
             </>
           );
         },
@@ -287,7 +192,18 @@ export const SelectPlanPanel = (props: Props) => {
                 good for memory hungry use cases like caching and in-memory
                 databases. All High Memory plans use dedicated CPU cores.
               </Typography>
-              {renderPlanContainer(highmem)}
+              <RenderPlanContainer
+                isCreate={isCreate}
+                plans={highmem}
+                showTransfer={showTransfer}
+                selectedDiskSize={props.selectedDiskSize}
+                currentPlanHeading={currentPlanHeading}
+                disabledClasses={props.disabledClasses}
+                disabled={disabled}
+                selectedID={selectedID}
+                linodeID={linodeID}
+                onSelect={props.onSelect}
+              />
             </>
           );
         },
@@ -316,7 +232,18 @@ export const SelectPlanPanel = (props: Props) => {
                 applications such as machine learning, AI, and video
                 transcoding.
               </Typography>
-              {renderPlanContainer(gpu)}
+              <RenderPlanContainer
+                isCreate={isCreate}
+                plans={gpu}
+                showTransfer={showTransfer}
+                selectedDiskSize={props.selectedDiskSize}
+                currentPlanHeading={currentPlanHeading}
+                disabledClasses={props.disabledClasses}
+                disabled={disabled}
+                selectedID={selectedID}
+                linodeID={linodeID}
+                onSelect={props.onSelect}
+              />
             </>
           );
         },
@@ -351,7 +278,18 @@ export const SelectPlanPanel = (props: Props) => {
                 physical machine. Some services, including backups, VLANs, and
                 disk management, are not available with these plans.
               </Typography>
-              {renderPlanContainer(metal)}
+              <RenderPlanContainer
+                isCreate={isCreate}
+                plans={metal}
+                showTransfer={showTransfer}
+                selectedDiskSize={props.selectedDiskSize}
+                currentPlanHeading={currentPlanHeading}
+                disabledClasses={props.disabledClasses}
+                disabled={disabled}
+                selectedID={selectedID}
+                linodeID={linodeID}
+                onSelect={props.onSelect}
+              />
             </>
           );
         },
@@ -371,7 +309,18 @@ export const SelectPlanPanel = (props: Props) => {
                 Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
                 performance for more demanding workloads.
               </Typography>
-              {renderPlanContainer(premium)}
+              <RenderPlanContainer
+                isCreate={isCreate}
+                plans={premium}
+                showTransfer={showTransfer}
+                selectedDiskSize={props.selectedDiskSize}
+                currentPlanHeading={currentPlanHeading}
+                disabledClasses={props.disabledClasses}
+                disabled={disabled}
+                selectedID={selectedID}
+                linodeID={linodeID}
+                onSelect={props.onSelect}
+              />
             </>
           );
         },
