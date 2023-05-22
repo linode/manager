@@ -1,10 +1,7 @@
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -21,72 +18,7 @@ import { ExtendedType } from 'src/utilities/extendType';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
 import { RenderSelectionLKE } from './SelectPlanPanel/RenderSelectionLKE';
-
-type ClassNames =
-  | 'root'
-  | 'copy'
-  | 'disabledRow'
-  | 'chip'
-  | 'headingCellContainer'
-  | 'currentPlanChipCell'
-  | 'radioCell'
-  | 'enhancedInputOuter'
-  | 'enhancedInputButton';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: 0,
-      paddingTop: theme.spacing(3),
-    },
-    copy: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(3),
-    },
-    disabledRow: {
-      backgroundColor: theme.bg.tableHeader,
-      cursor: 'not-allowed',
-    },
-    headingCellContainer: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    chip: {
-      backgroundColor: theme.color.green,
-      color: '#fff',
-      textTransform: 'uppercase',
-      marginLeft: theme.spacing(2),
-    },
-    currentPlanChipCell: {
-      width: '13%',
-    },
-    radioCell: {
-      width: '5%',
-      height: 55,
-    },
-    enhancedInputOuter: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      [theme.breakpoints.down('md')]: {
-        justifyContent: 'flex-start',
-      },
-      alignItems: 'center',
-    },
-    enhancedInputButton: {
-      marginLeft: 10,
-      minWidth: 85,
-      paddingTop: 7,
-      paddingBottom: 7,
-      [theme.breakpoints.down('md')]: {
-        minWidth: 80,
-        paddingTop: 12,
-        paddingBottom: 12,
-        '& span': {
-          color: '#fff !important',
-        },
-      },
-    },
-  });
+import { useSelectPlanQuantityStyles } from './SelectPlanPanel/Styles/selectPlanQuantityStyles';
 
 interface Props {
   types: ExtendedType[];
@@ -105,12 +37,25 @@ interface Props {
   resetValues: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const SelectPlanQuantityPanel = ({
+  copy,
+  disabled,
+  error,
+  header,
+  onAdd,
+  updatePlanCount,
+  types,
+  resetValues,
+  currentPlanHeading,
+  getTypeCount,
+  onSelect: handleOnSelect,
+  selectedID,
+}: Props) => {
+  const { classes } = useSelectPlanQuantityStyles();
 
-export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
-  onSelect = (id: string) => () => this.props.onSelect(id);
+  const onSelect = (id: string) => () => handleOnSelect(id);
 
-  renderPlanContainer = (plans: ExtendedType[]) => {
+  const renderPlanContainer = (plans: ExtendedType[]) => {
     const tableHeader = (
       <TableHead>
         <TableRow>
@@ -138,15 +83,15 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
         <Hidden mdUp>
           {plans.map((plan, id) => (
             <RenderSelectionLKE
-              disabled={this.props.disabled}
-              getTypeCount={this.props.getTypeCount}
+              disabled={disabled}
+              getTypeCount={getTypeCount}
               idx={id}
               key={id}
-              onAdd={this.props.onAdd}
-              onSelect={this.props.onSelect}
-              selectedID={this.props.selectedID}
+              onAdd={onAdd}
+              onSelect={onSelect}
+              selectedID={selectedID}
               type={plan}
-              updatePlanCount={this.props.updatePlanCount}
+              updatePlanCount={updatePlanCount}
             />
           ))}
         </Hidden>
@@ -157,15 +102,15 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
               <TableBody role="grid">
                 {plans.map((plan, id) => (
                   <RenderSelectionLKE
-                    disabled={this.props.disabled}
-                    getTypeCount={this.props.getTypeCount}
+                    disabled={disabled}
+                    getTypeCount={getTypeCount}
                     idx={id}
                     key={id}
-                    onAdd={this.props.onAdd}
-                    onSelect={this.props.onSelect}
-                    selectedID={this.props.selectedID}
+                    onAdd={onAdd}
+                    onSelect={onSelect}
+                    selectedID={selectedID}
                     type={plan}
-                    updatePlanCount={this.props.updatePlanCount}
+                    updatePlanCount={updatePlanCount}
                   />
                 ))}
               </TableBody>
@@ -176,8 +121,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
     );
   };
 
-  createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes, types, onAdd } = this.props;
+  const createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const tabs: Tab[] = [];
     const {
       nanode,
@@ -203,7 +147,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
                   consistent performance is important.
                 </Typography>
               )}
-              {this.renderPlanContainer(dedicated)}
+              {renderPlanContainer(dedicated)}
             </>
           );
         },
@@ -221,7 +165,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
                 Shared CPU instances are good for medium-duty workloads and are
                 a good mix of performance, resources, and price.
               </Typography>
-              {this.renderPlanContainer(shared)}
+              {renderPlanContainer(shared)}
             </>
           );
         },
@@ -242,7 +186,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
                   databases. All High Memory plans use dedicated CPU cores.
                 </Typography>
               )}
-              {this.renderPlanContainer(highmem)}
+              {renderPlanContainer(highmem)}
             </>
           );
         },
@@ -265,7 +209,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
                   transcoding.
                 </Typography>
               )}
-              {this.renderPlanContainer(gpu)}
+              {renderPlanContainer(gpu)}
             </>
           );
         },
@@ -285,7 +229,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
                 Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
                 performance for more demanding workloads.
               </Typography>
-              {this.renderPlanContainer(premium)}
+              {renderPlanContainer(premium)}
             </>
           );
         },
@@ -297,47 +241,32 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
     return [tabs, tabOrder];
   };
 
-  render() {
-    const {
-      classes,
-      copy,
-      error,
-      header,
-      types,
-      resetValues,
-      currentPlanHeading,
-      selectedID,
-    } = this.props;
+  const [tabs, tabOrder] = createTabs();
 
-    const [tabs, tabOrder] = this.createTabs();
+  // Determine initial plan category tab based on current plan selection
+  // (if there is one).
+  const _selectedTypeClass: LinodeTypeClass =
+    types.find(
+      (type) => type.id === selectedID || type.heading === currentPlanHeading
+    )?.class ?? 'dedicated';
 
-    // Determine initial plan category tab based on current plan selection
-    // (if there is one).
-    const _selectedTypeClass: LinodeTypeClass =
-      types.find(
-        (type) => type.id === selectedID || type.heading === currentPlanHeading
-      )?.class ?? 'dedicated';
+  // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
+  const selectedTypeClass: LinodeTypeClass =
+    _selectedTypeClass === 'nanode' ? 'standard' : _selectedTypeClass;
 
-    // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
-    const selectedTypeClass: LinodeTypeClass =
-      _selectedTypeClass === 'nanode' ? 'standard' : _selectedTypeClass;
+  const initialTab = tabOrder.indexOf(selectedTypeClass);
 
-    const initialTab = tabOrder.indexOf(selectedTypeClass);
+  return (
+    <TabbedPanel
+      rootClass={`${classes.root} tabbedPanel`}
+      error={error}
+      header={header || ' '}
+      copy={copy}
+      tabs={tabs}
+      initTab={initialTab >= 0 ? initialTab : 0}
+      handleTabChange={() => resetValues()}
+    />
+  );
+};
 
-    return (
-      <TabbedPanel
-        rootClass={`${classes.root} tabbedPanel`}
-        error={error}
-        header={header || ' '}
-        copy={copy}
-        tabs={tabs}
-        initTab={initialTab >= 0 ? initialTab : 0}
-        handleTabChange={() => resetValues()}
-      />
-    );
-  }
-}
-
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(styled)(SelectPlanQuantityPanel);
+export default SelectPlanQuantityPanel;
