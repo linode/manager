@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-05-22] - v1.93.3
 
 ### Fixed:
-- LISH Console via SSH containing `None` as the username
+- LISH Console via SSH containing `None` as the username #9148
 
 ## [2023-05-22] - v1.93.2
 
