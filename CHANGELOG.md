@@ -7,8 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-05-22] - v1.93.3
 
 ### Fixed:
-- LISH Console via SSH containing `None` as the username #9148
+- LISH Console via SSH containing `none` as the username #9148
 - Ability to add a Linode to a Firewall when the Firewall contains a large number of Linodes #9151
+- Inability of restricted users with NodeBalancer creation permissions to add NodeBalancers #9150
 
 ## [2023-05-22] - v1.93.2
 
