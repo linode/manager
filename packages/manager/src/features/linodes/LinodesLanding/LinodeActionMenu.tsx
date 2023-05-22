@@ -118,7 +118,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
     inListView || matchesSmDown
       ? {
           title: 'Reboot',
-          disabled: linodeStatus !== 'running' || matchesSmDown || readOnly,
+          disabled: linodeStatus !== 'running' || readOnly,
           tooltip: readOnly ? noPermissionTooltipText : undefined,
           onClick: () => {
             sendLinodeActionMenuItemEvent('Reboot Linode');

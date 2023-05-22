@@ -52,19 +52,18 @@ export const LinodeBackups = () => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-
-  const doesNotHavePermission =
-    Boolean(profile?.restricted) &&
-    grants?.linode.find(
-      (grant) => grant.id === linode?.id && grant.permissions !== 'read_write'
-    ) !== undefined;
-
   const { data: linode } = useLinodeQuery(id);
   const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
   const { data: backups, error, isLoading } = useLinodeBackupsQuery(
     id,
     Boolean(linode?.backups.enabled)
   );
+
+  const doesNotHavePermission =
+    Boolean(profile?.restricted) &&
+    grants?.linode.find(
+      (grant) => grant.id === linode?.id && grant.permissions !== 'read_write'
+    ) !== undefined;
 
   const [isRestoreDrawerOpen, setIsRestoreDrawerOpen] = React.useState(false);
 
