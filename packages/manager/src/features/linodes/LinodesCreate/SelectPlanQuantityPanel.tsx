@@ -1,40 +1,33 @@
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
-import { RenderSelectionLKE } from './SelectPlanPanel/RenderSelectionLKE';
+import { RenderPlanContainer } from './SelectPlanPanel/RenderPlanContainerLKE';
 import { useSelectPlanQuantityStyles } from './SelectPlanPanel/Styles/selectPlanQuantityStyles';
 
 interface Props {
-  types: ExtendedType[];
-  getTypeCount: (planId: string) => number;
-  error?: string;
-  onSelect: (key: string) => void;
-  selectedID?: string;
+  addPool?: (pool?: CreateNodePoolData) => void;
+  copy?: string;
   currentPlanHeading?: string;
   disabled?: boolean;
+  error?: string;
+  getTypeCount: (planId: string) => number;
   header?: string;
-  copy?: string;
-  onAdd?: (key: string, value: number) => void;
-  addPool?: (pool?: CreateNodePoolData) => void;
-  updatePlanCount: (planId: string, newCount: number) => void;
   isSubmitting?: boolean;
+  onAdd?: (key: string, value: number) => void;
+  onSelect: (key: string) => void;
   resetValues: () => void;
+  selectedID?: string;
+  types: ExtendedType[];
+  updatePlanCount: (planId: string, newCount: number) => void;
 }
 
 export const SelectPlanQuantityPanel = ({
@@ -48,78 +41,10 @@ export const SelectPlanQuantityPanel = ({
   resetValues,
   currentPlanHeading,
   getTypeCount,
-  onSelect: handleOnSelect,
+  onSelect,
   selectedID,
 }: Props) => {
   const { classes } = useSelectPlanQuantityStyles();
-
-  const onSelect = (id: string) => () => handleOnSelect(id);
-
-  const renderPlanContainer = (plans: ExtendedType[]) => {
-    const tableHeader = (
-      <TableHead>
-        <TableRow>
-          <TableCell data-qa-plan-header>Plan</TableCell>
-          <TableCell data-qa-monthly-header>Monthly</TableCell>
-          <TableCell data-qa-hourly-header>Hourly</TableCell>
-          <TableCell center data-qa-ram-header>
-            RAM
-          </TableCell>
-          <TableCell center data-qa-cpu-header>
-            CPUs
-          </TableCell>
-          <TableCell center data-qa-storage-header>
-            Storage
-          </TableCell>
-          <TableCell>
-            <p className="visually-hidden">Quantity</p>
-          </TableCell>
-        </TableRow>
-      </TableHead>
-    );
-
-    return (
-      <Grid container spacing={2}>
-        <Hidden mdUp>
-          {plans.map((plan, id) => (
-            <RenderSelectionLKE
-              disabled={disabled}
-              getTypeCount={getTypeCount}
-              idx={id}
-              key={id}
-              onAdd={onAdd}
-              onSelect={onSelect}
-              selectedID={selectedID}
-              type={plan}
-              updatePlanCount={updatePlanCount}
-            />
-          ))}
-        </Hidden>
-        <Hidden mdDown>
-          <Grid xs={12} lg={12}>
-            <Table aria-label="List of Linode Plans" spacingBottom={16}>
-              {tableHeader}
-              <TableBody role="grid">
-                {plans.map((plan, id) => (
-                  <RenderSelectionLKE
-                    disabled={disabled}
-                    getTypeCount={getTypeCount}
-                    idx={id}
-                    key={id}
-                    onAdd={onAdd}
-                    onSelect={onSelect}
-                    selectedID={selectedID}
-                    type={plan}
-                    updatePlanCount={updatePlanCount}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </Grid>
-        </Hidden>
-      </Grid>
-    );
-  };
 
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const tabs: Tab[] = [];
@@ -147,7 +72,15 @@ export const SelectPlanQuantityPanel = ({
                   consistent performance is important.
                 </Typography>
               )}
-              {renderPlanContainer(dedicated)}
+              <RenderPlanContainer
+                disabled={disabled}
+                getTypeCount={getTypeCount}
+                onAdd={onAdd}
+                onSelect={onSelect}
+                plans={dedicated}
+                selectedID={selectedID}
+                updatePlanCount={updatePlanCount}
+              />
             </>
           );
         },
@@ -165,7 +98,15 @@ export const SelectPlanQuantityPanel = ({
                 Shared CPU instances are good for medium-duty workloads and are
                 a good mix of performance, resources, and price.
               </Typography>
-              {renderPlanContainer(shared)}
+              <RenderPlanContainer
+                disabled={disabled}
+                getTypeCount={getTypeCount}
+                onAdd={onAdd}
+                onSelect={onSelect}
+                plans={shared}
+                selectedID={selectedID}
+                updatePlanCount={updatePlanCount}
+              />
             </>
           );
         },
@@ -186,7 +127,15 @@ export const SelectPlanQuantityPanel = ({
                   databases. All High Memory plans use dedicated CPU cores.
                 </Typography>
               )}
-              {renderPlanContainer(highmem)}
+              <RenderPlanContainer
+                disabled={disabled}
+                getTypeCount={getTypeCount}
+                onAdd={onAdd}
+                onSelect={onSelect}
+                plans={highmem}
+                selectedID={selectedID}
+                updatePlanCount={updatePlanCount}
+              />
             </>
           );
         },
@@ -209,7 +158,15 @@ export const SelectPlanQuantityPanel = ({
                   transcoding.
                 </Typography>
               )}
-              {renderPlanContainer(gpu)}
+              <RenderPlanContainer
+                disabled={disabled}
+                getTypeCount={getTypeCount}
+                onAdd={onAdd}
+                onSelect={onSelect}
+                plans={gpu}
+                selectedID={selectedID}
+                updatePlanCount={updatePlanCount}
+              />
             </>
           );
         },
@@ -229,7 +186,15 @@ export const SelectPlanQuantityPanel = ({
                 Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
                 performance for more demanding workloads.
               </Typography>
-              {renderPlanContainer(premium)}
+              <RenderPlanContainer
+                disabled={disabled}
+                getTypeCount={getTypeCount}
+                onAdd={onAdd}
+                onSelect={onSelect}
+                plans={premium}
+                selectedID={selectedID}
+                updatePlanCount={updatePlanCount}
+              />
             </>
           );
         },
@@ -258,13 +223,13 @@ export const SelectPlanQuantityPanel = ({
 
   return (
     <TabbedPanel
-      rootClass={`${classes.root} tabbedPanel`}
-      error={error}
-      header={header || ' '}
       copy={copy}
-      tabs={tabs}
-      initTab={initialTab >= 0 ? initialTab : 0}
+      error={error}
       handleTabChange={() => resetValues()}
+      header={header || ' '}
+      initTab={initialTab >= 0 ? initialTab : 0}
+      rootClass={`${classes.root} tabbedPanel`}
+      tabs={tabs}
     />
   );
 };
