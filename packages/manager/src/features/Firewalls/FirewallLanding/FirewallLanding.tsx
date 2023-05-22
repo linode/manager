@@ -10,7 +10,7 @@ import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
 import FirewallRow from './FirewallRow';
 import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
-import ErrorState from 'src/components/ErrorState/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { Table } from 'src/components/Table';
 import { TableHead } from 'src/components/TableHead';
