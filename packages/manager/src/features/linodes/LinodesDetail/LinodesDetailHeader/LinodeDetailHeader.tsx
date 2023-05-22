@@ -9,7 +9,6 @@ import {
   Action,
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import { useProfile } from 'src/queries/profile';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
@@ -130,8 +129,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const { data: profile } = useProfile();
-
   const {
     editableLabelError,
     setEditableLabelError,
@@ -236,7 +233,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <LinodeEntityDetail
         id={linode.id}
         linode={linode}
-        username={profile?.username}
         backups={linode.backups}
         openTagDrawer={openTagDrawer}
         handlers={handlers}
