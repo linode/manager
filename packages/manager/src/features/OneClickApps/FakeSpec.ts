@@ -2099,28 +2099,6 @@ export const oneClickApps: OCA[] = [
       end: '873d0c',
     },
   },
-  //{
-  //  name: 'UniFi Network Application',
-  //  alt_name: 'Networking control panel',
-  //  alt_description: 'Interface for UniFi networking devices and software.',
-  //  categories: ['Control Panels'],
-  //  description: `UniFi Network Application is a versatile control panel that simplifies network management across regions, customizes access to wifi networks, and more. Manage and apply updates to UniFi networking devices to ensure your networks are performant and secure.`,
-  //  summary: `Multi-use networking control panel`,
-  //  related_guides: [
-  //    {
-  //     title:
-  //      'Deploy the UniFi Network Application through the Linode Marketplace',
-  //      href:
-  //        'https://www.linode.com/docs/products/tools/marketplace/guides/unifi-network-application/',
-  //    },
-  //  ],
-  //  website: 'https://www.ui.com/',
-  //  logo_url: 'unifi.svg',
-  //  colors: {
-  //    start: '1681FC',
-  //    end: '63666A',
-  //  },
-  //},
   {
     name: 'Uptime Kuma',
     alt_name: 'Infrastructure monitoring',

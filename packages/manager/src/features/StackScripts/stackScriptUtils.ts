@@ -116,7 +116,6 @@ export const baseApps = {
   '1037036': 'Budibase',
   '1037037': 'HashiCorp Nomad',
   '1037038': 'HashiCorp Vault',
-   // '1051711': 'UniFi Network Application',
   '1051714': 'Microweber',
   '1096122': 'Mastodon',
   '1102900': 'Apache Airflow',
