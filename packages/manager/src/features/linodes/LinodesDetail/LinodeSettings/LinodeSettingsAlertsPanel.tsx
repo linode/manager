@@ -2,6 +2,7 @@ import { Linode } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import Accordion from 'src/components/Accordion/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { Notice } from 'src/components/Notice/Notice';
@@ -11,8 +12,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import AlertSection from './AlertSection';
-import Accordion from 'src/components/Accordion/Accordion';
+import { AlertSection } from './AlertSection';
 
 interface Props {
   linodeId: number;
