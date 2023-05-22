@@ -21,7 +21,6 @@ import TagCell from 'src/components/TagCell';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useTypeQuery } from 'src/queries/types';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -48,6 +47,7 @@ import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -697,7 +697,7 @@ interface FooterProps {
   openTagDrawer: (tags: string[]) => void;
 }
 
-export const Footer: React.FC<FooterProps> = React.memo((props) => {
+export const Footer = React.memo((props: FooterProps) => {
   const theme = useTheme();
 
   const { data: profile } = useProfile();
@@ -711,12 +711,13 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
     openTagDrawer,
   } = props;
 
-  const { updateLinode } = useLinodeActions();
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
+
   const { enqueueSnackbar } = useSnackbar();
 
   const updateTags = React.useCallback(
     (tags: string[]) => {
-      return updateLinode({ linodeId, tags }).catch((e) =>
+      return updateLinode({ tags }).catch((e) =>
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error updating tags')[0].reason,
           {
@@ -725,7 +726,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
         )
       );
     },
-    [linodeId, updateLinode, enqueueSnackbar]
+    [updateLinode, enqueueSnackbar]
   );
 
   const sxListItemMdBp = {
