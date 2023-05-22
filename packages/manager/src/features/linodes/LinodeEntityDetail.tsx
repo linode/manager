@@ -1,5 +1,5 @@
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
-import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -22,8 +22,7 @@ import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMe
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import { useSpecificTypes } from 'src/queries/types';
-import { listToItemsByID } from 'src/queries/base';
+import { useTypeQuery } from 'src/queries/types';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -38,7 +37,6 @@ import {
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useTheme } from '@mui/material/styles';
@@ -57,36 +55,24 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
   id: number;
   linode: Linode;
-  username?: string;
-  backups: LinodeBackups;
   openTagDrawer: (tags: string[]) => void;
   isSummaryView?: boolean;
 }
 
-export type CombinedProps = LinodeEntityDetailProps & {
+export type Props = LinodeEntityDetailProps & {
   handlers: LinodeHandlers;
 };
 
-const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
-  const {
-    variant,
-    linode,
-    username,
-    backups,
-    isSummaryView,
-    openTagDrawer,
-    handlers,
-  } = props;
+const LinodeEntityDetail = (props: Props) => {
+  const { variant, linode, isSummaryView, openTagDrawer, handlers } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
   const recentEvent = useRecentEventForLinode(linode.id);
 
   const { data: images } = useAllImagesQuery({}, {});
-  const imagesItemsById = listToItemsByID(images ?? []);
 
-  const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
-  const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
+  const { data: type } = useTypeQuery(linode.type ?? '', Boolean(linode.type));
 
   const { data: configs } = useAllLinodeConfigsQuery(linode.id);
   const { data: volumes } = useLinodeVolumesQuery(linode.id);
@@ -97,16 +83,10 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const imageSlug = linode.image;
-
   const imageVendor =
-    imageSlug && imagesItemsById[imageSlug]
-      ? imagesItemsById[imageSlug].vendor
-      : null;
+    images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
-  const linodeType = Boolean(linode.type) ? type ?? null : null;
-
-  const linodePlan = linodeType?.formattedLabel ?? null;
+  const linodePlan = type?.label ?? linode.type;
 
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
@@ -132,10 +112,10 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           linodeStatus={linode.status}
           linodePermissions={extendedLinode?._permissions}
           linodeRegionDisplay={linodeRegionDisplay}
-          backups={backups}
+          backups={linode.backups}
           isSummaryView={isSummaryView}
           linodeConfigs={configs ?? []}
-          type={linodeType}
+          type={type ?? null}
           image={linode.image ?? 'Unknown Image'}
           openNotificationMenu={notificationContext.openMenu}
           progress={progress}
@@ -154,7 +134,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           ipv4={linode.ipv4}
           ipv6={trimmedIPv6}
           linodeId={linode.id}
-          username={username ? username : 'none'}
         />
       }
       footer={
@@ -186,7 +165,7 @@ export interface HeaderProps {
   linodePermissions?: GrantLevel;
   linodeRegionDisplay: string;
   backups: LinodeBackups;
-  type: ExtendedType | null;
+  type: LinodeType | null;
   image: string;
   linodeConfigs: Config[];
   isSummaryView?: boolean;
@@ -262,9 +241,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header: React.FC<HeaderProps & { handlers: LinodeHandlers }> = (
-  props
-) => {
+const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
   const classes = useHeaderStyles();
   const theme = useTheme();
 
@@ -414,7 +391,6 @@ export interface BodyProps {
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   linodeId: number;
-  username: string;
   linodeLabel: string;
   numVolumes: number;
 }
@@ -452,7 +428,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Body: React.FC<BodyProps> = React.memo((props) => {
+export const Body = React.memo((props: BodyProps) => {
   const classes = useBodyStyles();
   const {
     numCPUs,
@@ -461,11 +437,15 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
     region,
     ipv4,
     ipv6,
-    username,
     linodeLabel,
     linodeId,
     numVolumes,
   } = props;
+
+  const { data: profile } = useProfile();
+
+  const username = profile?.username ?? 'none';
+
   const theme = useTheme();
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
