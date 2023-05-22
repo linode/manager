@@ -29,40 +29,30 @@ const tableCells = [
   },
 ];
 
-// const kubernetesTableCells = [
-//   { cellName: 'Plan', testId: 'plan', center: false, noWrap: false },
-//   { cellName: 'Monthly', testId: 'monthly', center: false, noWrap: false },
-//   { cellName: 'Hourly', testId: 'hourly', center: false, noWrap: false },
-//   { cellName: 'RAM', testId: 'ram', center: true, noWrap: false },
-//   { cellName: 'CPUs', testId: 'cpu', center: true, noWrap: false },
-//   { cellName: 'Storage', testId: 'storage', center: true, noWrap: false },
-//   { cellName: 'Quantity', testId: 'quantity', center: false, noWrap: false },
-// ];
-
 interface Props {
-  isCreate?: boolean;
-  plans: PlanSelectionType[];
-  showTransfer?: boolean;
-  selectedDiskSize?: number;
   currentPlanHeading?: string;
-  disabledClasses?: LinodeTypeClass[];
   disabled?: boolean;
-  onSelect: (key: string) => void;
-  selectedID?: string;
+  disabledClasses?: LinodeTypeClass[];
+  isCreate?: boolean;
   linodeID?: number | undefined;
+  onSelect: (key: string) => void;
+  plans: PlanSelectionType[];
+  selectedDiskSize?: number;
+  selectedID?: string;
+  showTransfer?: boolean;
 }
 
 export const RenderPlanContainer = ({
-  isCreate,
-  plans,
-  showTransfer,
-  selectedDiskSize,
   currentPlanHeading,
-  disabledClasses,
   disabled,
-  selectedID,
+  disabledClasses,
+  isCreate,
   linodeID,
   onSelect,
+  plans,
+  selectedDiskSize,
+  selectedID,
+  showTransfer,
 }: Props) => {
   const { classes } = useSelectPlanPanelStyles();
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
@@ -112,11 +102,11 @@ export const RenderPlanContainer = ({
                   }
                   return (
                     <TableCell
+                      center={center}
                       className={classes.headerCell}
                       data-qa={attributeValue}
-                      center={center}
-                      noWrap={noWrap}
                       key={testId}
+                      noWrap={noWrap}
                     >
                       {cellName}
                     </TableCell>
