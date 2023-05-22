@@ -3,7 +3,7 @@ import * as React from 'react';
 import ErrorState from 'src/components/ErrorState';
 import Hidden from 'src/components/core/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
-import TransferDisplay from 'src/components/TransferDisplay';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';

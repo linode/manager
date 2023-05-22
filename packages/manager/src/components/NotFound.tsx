@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 interface Props {
   className?: string;
