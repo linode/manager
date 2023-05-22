@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-05-22] - v1.93.3
+
+### Fixed:
+- LISH Console via SSH containing `None` as the username
+
 ## [2023-05-22] - v1.93.2
 
 ### Fixed:

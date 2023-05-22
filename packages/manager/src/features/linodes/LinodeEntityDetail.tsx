@@ -57,7 +57,6 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
   id: number;
   linode: Linode;
-  username?: string;
   backups: LinodeBackups;
   openTagDrawer: (tags: string[]) => void;
   isSummaryView?: boolean;
@@ -71,7 +70,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const {
     variant,
     linode,
-    username,
     backups,
     isSummaryView,
     openTagDrawer,
@@ -154,7 +152,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           ipv4={linode.ipv4}
           ipv6={trimmedIPv6}
           linodeId={linode.id}
-          username={username ? username : 'none'}
         />
       }
       footer={
@@ -414,7 +411,6 @@ export interface BodyProps {
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   linodeId: number;
-  username: string;
   linodeLabel: string;
   numVolumes: number;
 }
@@ -461,11 +457,15 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
     region,
     ipv4,
     ipv6,
-    username,
     linodeLabel,
     linodeId,
     numVolumes,
   } = props;
+
+  const { data: profile } = useProfile();
+
+  const username = profile?.username ?? 'none';
+
   const theme = useTheme();
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
