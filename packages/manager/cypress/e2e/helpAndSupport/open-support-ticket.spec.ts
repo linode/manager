@@ -56,7 +56,7 @@ describe('help & support', () => {
         }
       ).as('attachmentPost');
       // stub incoming response
-      cy.intercept(apiMatcher(`support/tickets/${ticketId}/replies`), {
+      cy.intercept(apiMatcher(`support/tickets/${ticketId}/replies*`), {
         data: [],
         page: 1,
         pages: 1,

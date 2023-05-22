@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import EntityHeader from './EntityHeader';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import Button from '../Button';
 import Link from '../Link';
 import Box from 'src/components/core/Box';

@@ -30,13 +30,12 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import EntityHeader from 'src/components/EntityHeader';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
-import { GrantLevel } from '@linode/api-v4/lib/account';
 import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { useProfile } from 'src/queries/profile';
@@ -45,70 +44,64 @@ import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import Table from '@mui/material/Table';
 import { TableCell } from 'src/components/TableCell';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
-import useEvents from 'src/hooks/useEvents';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { useNotificationContext } from '../NotificationCenter/NotificationContext';
+import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
   id: number;
+  linode: Linode;
   openTagDrawer: (tags: string[]) => void;
-  openNotificationMenu?: () => void;
   isSummaryView?: boolean;
 }
 
-export type Props = LinodeEntityDetailProps & { handlers: LinodeHandlers };
+export type Props = LinodeEntityDetailProps & {
+  handlers: LinodeHandlers;
+};
 
 const LinodeEntityDetail = (props: Props) => {
-  const { id, variant, isSummaryView, openTagDrawer, handlers } = props;
+  const { variant, linode, isSummaryView, openTagDrawer, handlers } = props;
 
-  const { data: linode } = useLinodeQuery(id);
+  const notificationContext = React.useContext(_notificationContext);
 
-  const { data: volumesData } = useLinodeVolumesQuery(id);
+  const recentEvent = useRecentEventForLinode(linode.id);
 
   const { data: images } = useAllImagesQuery({}, {});
 
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(linode.type ?? '', Boolean(linode.type));
 
-  const { openMenu } = useNotificationContext();
+  const { data: volumes } = useLinodeVolumesQuery(linode.id);
+
+  const numberOfVolumes = volumes?.results ?? 0;
 
   const { data: regions } = useRegionsQuery();
-  const { events } = useEvents();
 
-  if (!linode) {
-    return <CircleProgress />;
-  }
+  const imageVendor =
+    images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
-  const numberOfVolumes = volumesData?.results ?? 0;
-
-  const image = images?.find((image) => image.id === linode.image) ?? null;
-
-  const recentEvent = events.find(
-    (e) => e.entity?.type === 'linode' && e.entity.id === linode.id
-  );
+  const linodePlan = type ? formatStorageUnits(type.label) : linode.type;
 
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
 
   let progress;
   let transitionText;
+
   if (recentEvent && isEventWithSecondaryLinodeStatus(recentEvent, linode.id)) {
     progress = getProgressOrDefault(recentEvent);
     transitionText = _transitionText(linode.status, linode.id, recentEvent);
   }
-  const trimmedIPv6 = linode?.ipv6?.replace('/128', '') || null;
+
+  const trimmedIPv6 = linode.ipv6?.replace('/128', '') || null;
 
   return (
     <EntityDetail
       header={
         <Header
           variant={variant}
-          imageVendor={image?.vendor ?? null}
+          imageVendor={imageVendor}
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
@@ -117,7 +110,7 @@ const LinodeEntityDetail = (props: Props) => {
           isSummaryView={isSummaryView}
           type={type ?? null}
           image={linode.image ?? 'Unknown Image'}
-          openNotificationMenu={() => openMenu()}
+          openNotificationMenu={notificationContext.openMenu}
           progress={progress}
           transitionText={transitionText}
           handlers={handlers}
@@ -138,9 +131,7 @@ const LinodeEntityDetail = (props: Props) => {
       }
       footer={
         <Footer
-          linodePlan={
-            type?.label ? formatStorageUnits(type.label) : linode.type
-          }
+          linodePlan={linodePlan}
           linodeRegionDisplay={linodeRegionDisplay}
           linodeId={linode.id}
           linodeCreated={linode.created}
@@ -164,7 +155,6 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
-  linodePermissions?: GrantLevel;
   linodeRegionDisplay: string;
   backups: LinodeBackups;
   type: LinodeType | null;
@@ -242,9 +232,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header: React.FC<HeaderProps & { handlers: LinodeHandlers }> = (
-  props
-) => {
+const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
   const classes = useHeaderStyles();
   const theme = useTheme();
 
@@ -444,7 +432,11 @@ export const Body = React.memo((props: BodyProps) => {
     linodeId,
     numVolumes,
   } = props;
+
   const { data: profile } = useProfile();
+
+  const username = profile?.username ?? 'none';
+
   const theme = useTheme();
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
@@ -525,11 +517,7 @@ export const Body = React.memo((props: BodyProps) => {
             { heading: 'SSH Access', text: sshLink(ipv4[0]) },
             {
               heading: 'LISH Console via SSH',
-              text: lishLink(
-                profile?.username ?? 'unknown',
-                region,
-                linodeLabel
-              ),
+              text: lishLink(username, region, linodeLabel),
             },
           ]}
           gridProps={{ md: 7 }}
@@ -709,7 +697,7 @@ interface FooterProps {
   openTagDrawer: (tags: string[]) => void;
 }
 
-export const Footer: React.FC<FooterProps> = React.memo((props) => {
+export const Footer = React.memo((props: FooterProps) => {
   const theme = useTheme();
 
   const { data: profile } = useProfile();
@@ -723,9 +711,9 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
     openTagDrawer,
   } = props;
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const updateTags = React.useCallback(
     (tags: string[]) => {
