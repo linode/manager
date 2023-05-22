@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import AccessSelect, { Props } from './AccessSelect';
+import { AccessSelect, Props } from './AccessSelect';
 
 jest.mock('src/components/EnhancedSelect/Select');
 
