@@ -101,7 +101,8 @@ const NodeBalancerCreate = () => {
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
-  const disabled = Boolean(profile?.restricted) && !grants?.global.add_domains;
+  const disabled =
+    Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
 
   const addNodeBalancer = () => {
     if (disabled) {
