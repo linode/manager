@@ -32,7 +32,7 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      label: linode?.label,
+      label: linode?.label ?? '',
     },
     async onSubmit({ label }) {
       await updateLinode({ label });
