@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 - LISH Console via SSH containing `None` as the username #9148
-- Limited user cannot create NodeBalancer #9150
+Inability of restricted users with NodeBalancer creation permissions to add NodeBalancers #9150
 
 ## [2023-05-22] - v1.93.2
 
