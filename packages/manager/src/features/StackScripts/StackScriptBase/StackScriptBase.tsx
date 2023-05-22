@@ -14,7 +14,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Image } from '@linode/api-v4/lib/images';
 import { pathOr } from 'ramda';
 import { Notice } from 'src/components/Notice/Notice';
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';

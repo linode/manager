@@ -31,6 +31,7 @@ const transitionActionMap: Partial<Record<EventAction, string>> = {
   disk_resize: 'Disk Resizing',
   disk_imagize: 'Capturing Image',
   disk_duplicate: 'Disk Duplicating',
+  linode_rebuild: 'Rebuilding',
 };
 
 export const linodeInTransition = (
@@ -95,7 +96,7 @@ export const linodesInTransition = (events: Event[]) => {
 // but its status is still briefly in transition, so give it a progress of 100.
 export const getProgressOrDefault = (
   event?: ExtendedEvent,
-  defaultProgress = 100
+  defaultProgress = 0
 ) => event?.percent_complete ?? defaultProgress;
 
 // Linodes have a literal "status" given by the API (linode.status). There are
@@ -112,6 +113,7 @@ const eventsWithSecondaryStatus: EventAction[] = [
   'linode_migrate',
   'linode_migrate_datacenter',
   'linode_mutate',
+  'linode_rebuild',
 ];
 
 export const isEventWithSecondaryLinodeStatus = (

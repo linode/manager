@@ -12,7 +12,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import TransferDisplay from 'src/components/TransferDisplay';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';

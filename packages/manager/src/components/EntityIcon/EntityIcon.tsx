@@ -47,6 +47,7 @@ interface Props {
   status?: string;
   loading?: boolean;
   size?: number;
+  style?: React.CSSProperties;
   className?: any;
   marginTop?: number;
   stopAnimation?: boolean;
@@ -86,6 +87,7 @@ const EntityIcon: React.FC<CombinedProps> = (props) => {
     size,
     className,
     marginTop,
+    style,
     ...rest
   } = props;
 
@@ -121,7 +123,7 @@ const EntityIcon: React.FC<CombinedProps> = (props) => {
   return (
     <div
       className={`${classes.root} ${className}`}
-      style={{ top: marginTop }}
+      style={{ top: marginTop, ...style }}
       data-qa-icon={variant}
       data-qa-entity-status={status || 'undefined'}
       data-qa-is-loading={loading || 'false'}
