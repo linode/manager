@@ -101,7 +101,6 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
                   openTagDrawer(linode.label, linode.id, tags)
                 }
                 linode={linode}
-                backups={linode.backups}
               />
             </Grid>
           </React.Fragment>
