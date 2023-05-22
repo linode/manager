@@ -25,10 +25,10 @@ const variantList = [
   { displayName: 'StackScript', name: 'stackscript' },
   { displayName: 'Image', name: 'image' },
   { displayName: 'Domain', name: 'domain' },
-  { displayName: 'Kubernetes', name: 'kube' },
-  { displayName: 'Object Storage', name: 'bucket' },
+  { displayName: 'Kubernetes', name: 'kubernetes' },
+  { displayName: 'Object Storage', name: 'storage' },
   { displayName: 'Longview', name: 'longview' },
-  { displayName: 'Marketplace', name: 'oca' },
+  { displayName: 'Marketplace', name: 'marketplace' },
 ];
 
 const sxGridItem = {
