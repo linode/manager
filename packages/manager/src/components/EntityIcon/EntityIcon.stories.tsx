@@ -48,7 +48,7 @@ export const Default: Story = {
   render: (args) => (
     <Grid container spacing={2}>
       <Grid xs="auto" sx={{ ...sxGridItem, marginBottom: '20px' }}>
-        <EntityIcon variant={args.variant as EntityVariants} />
+        <EntityIcon {...args} />
       </Grid>
       <Grid container spacing={2}>
         <Grid xs={12}>
