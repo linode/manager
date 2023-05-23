@@ -5,15 +5,15 @@ import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import TypeToConfirm from 'src/components/TypeToConfirm';
-import Typography from 'src/components/core/Typography';
 import { DialogProps } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+import Typography from 'src/components/core/Typography';
+import { useRestoreFromBackupMutation } from 'src/queries/databases';
+import { usePreferences } from 'src/queries/preferences';
+import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-import { usePreferences } from 'src/queries/preferences';
-import { useRestoreFromBackupMutation } from 'src/queries/databases';
-import { useProfile } from 'src/queries/profile';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
