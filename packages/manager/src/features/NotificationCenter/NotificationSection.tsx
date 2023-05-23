@@ -6,7 +6,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExtendedAccordion from 'src/components/ExtendedAccordion';
 import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
@@ -26,8 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
-    marginBottom: 6,
-    paddingBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(1.5),
   },
   content: {
     width: '100%',
@@ -187,7 +186,6 @@ interface BodyProps {
 }
 
 const ContentBody: React.FC<BodyProps> = React.memo((props) => {
-  const theme = useTheme();
   const classes = useStyles();
 
   const { header, content, count, emptyMessage, loading } = props;
@@ -211,10 +209,6 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
         <Box
           className={classes.notificationItem}
           key={`notification-row-${thisItem.id}`}
-          sx={{
-            marginTop: theme.spacing(1),
-            marginBottom: theme.spacing(1),
-          }}
         >
           {thisItem.body}
         </Box>
