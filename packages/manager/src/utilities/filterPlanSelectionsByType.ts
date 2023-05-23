@@ -1,6 +1,6 @@
 import type { LinodeTypeClass } from '@linode/api-v4';
 
-type FilteredPlansTypes<T> = Record<LinodeTypeClass, T[]>;
+export type FilteredPlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
 /**
  * getPlanSelectionsByPlanType is common util funtion used to provide filtered plans by
@@ -54,5 +54,21 @@ export const getPlanSelectionsByPlanType = <
     }
   }
 
-  return filteredPlansByType;
+  const updatedPlans = {
+    prodedicated: filteredPlansByType.prodedicated,
+    dedicated: filteredPlansByType.dedicated,
+    shared: [...filteredPlansByType.nanode, ...filteredPlansByType.standard],
+    highmem: filteredPlansByType.highmem,
+    gpu: filteredPlansByType.gpu,
+    metal: filteredPlansByType.metal,
+    premium: filteredPlansByType.premium,
+  };
+
+  Object.keys(updatedPlans).forEach((key) => {
+    if (updatedPlans[key].length === 0) {
+      delete updatedPlans[key];
+    }
+  });
+
+  return updatedPlans;
 };
