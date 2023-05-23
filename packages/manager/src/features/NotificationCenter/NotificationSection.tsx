@@ -198,7 +198,7 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
 
 const StyledRootContainer = styled('div', {
   label: 'StyledRootContainer',
-})(({ theme }) => ({
+})(() => ({
   alignItems: 'flex-start',
   display: 'flex',
   flexWrap: 'nowrap',
@@ -209,10 +209,10 @@ const StyledHeader = styled('div', {
   label: 'StyledHeader',
 })(({ theme }) => ({
   alignItems: 'center',
-  borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
+  borderBottom: `solid 1px ${theme.borderColors.borderTable}`,
   display: 'flex',
   justifyContent: 'space-between',
-  paddingBottom: theme.spacing(),
+  padding: `0 20px ${theme.spacing()}`,
 }));
 
 const StyledLoadingContainer = styled('div', {
@@ -226,7 +226,6 @@ const StyledNotificationItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   fontSize: '0.875rem',
   justifyContent: 'space-between',
-  marginTop: theme.spacing(),
   width: '100%',
   '& p': {
     color: theme.textColors.headlineStatic,

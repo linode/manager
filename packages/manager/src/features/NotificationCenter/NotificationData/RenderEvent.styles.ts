@@ -8,20 +8,16 @@ export const RenderEventStyledBox = styled(Box, {
   label: 'StyledBox',
 })(({ theme }) => ({
   color: theme.textColors.tableHeader,
+  paddingLeft: '20px',
+  paddingRight: '20px',
   '&:hover': {
     backgroundColor: theme.bg.app,
-    // Extends the hover state to the edges of the drawer
-    marginLeft: -20,
-    marginRight: -20,
-    paddingLeft: 20,
-    paddingRight: 20,
-    width: 'calc(100% + 40px)',
   },
   gap: 16,
   paddingBottom: 12,
   paddingTop: 12,
   width: '100%',
-  borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
+  borderBottom: `solid 1px ${theme.borderColors.borderTable}`,
   '&:last-child': {
     borderBottom: 'none',
   },
