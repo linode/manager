@@ -1,53 +1,29 @@
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import classNames from 'classnames';
 import ExtendedAccordion from 'src/components/ExtendedAccordion';
+import Hidden from 'src/components/core/Hidden';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Typography from 'src/components/core/Typography';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { Link } from 'react-router-dom';
+import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { makeStyles } from 'tss-react/mui';
 import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
+import { styled } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+const useStyles = makeStyles()((theme: Theme) => ({
+  inverted: {
+    transform: 'rotate(180deg)',
   },
   notificationSpacing: {
     marginBottom: theme.spacing(2),
   },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
-    paddingBottom: theme.spacing(),
-  },
-  content: {
-    width: '100%',
-  },
-  loading: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  notificationItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: '0.875rem',
-    width: '100%',
-    marginTop: theme.spacing(),
-    '& p': {
-      color: theme.textColors.headlineStatic,
-      lineHeight: '1.25rem',
-    },
+  menuItemLink: {
+    ...menuLinkStyle(theme.textColors.linkActiveLight),
   },
   showMore: {
-    ...theme.applyLinkStyles,
     fontSize: 14,
     fontWeight: 'bold',
     paddingTop: theme.spacing(),
@@ -57,20 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'none',
     },
   },
-  caret: {
-    color: theme.palette.primary.main,
-    marginRight: -4,
-  },
-  inverted: {
-    transform: 'rotate(180deg)',
-  },
-  emptyMessage: {
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(2.5),
-  },
-  menuItemLink: {
-    ...menuLinkStyle(theme.textColors.linkActiveLight),
-  },
 }));
 
 export interface NotificationItem {
@@ -79,7 +41,7 @@ export interface NotificationItem {
   countInTotal: boolean;
 }
 
-interface Props {
+interface NotificationSectionProps {
   header: string;
   count?: number;
   showMoreText?: string;
@@ -89,10 +51,8 @@ interface Props {
   emptyMessage?: string;
 }
 
-export type CombinedProps = Props;
-
-export const NotificationSection: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const NotificationSection = (props: NotificationSectionProps) => {
+  const { classes } = useStyles();
 
   const {
     content,
@@ -127,14 +87,13 @@ export const NotificationSection: React.FC<Props> = (props) => {
       {isActualNotificationContainer && content.length === 0 ? null : (
         <>
           <Hidden smDown>
-            <div
+            <StyledRootContainer
               className={classNames({
-                [classes.root]: true,
                 [classes.notificationSpacing]: isActualNotificationContainer,
               })}
             >
-              <div className={classes.content}>
-                <div className={classes.header}>
+              <Box sx={{ width: '100%' }}>
+                <StyledHeader>
                   <Typography variant="h3">{header}</Typography>
                   {showMoreTarget && (
                     <strong>
@@ -147,7 +106,7 @@ export const NotificationSection: React.FC<Props> = (props) => {
                       </Link>
                     </strong>
                   )}
-                </div>
+                </StyledHeader>
                 <ContentBody
                   loading={_loading}
                   count={_count}
@@ -155,8 +114,8 @@ export const NotificationSection: React.FC<Props> = (props) => {
                   header={header}
                   emptyMessage={emptyMessage}
                 />
-              </div>
-            </div>
+              </Box>
+            </StyledRootContainer>
           </Hidden>
 
           <Hidden smUp>
@@ -187,7 +146,7 @@ interface BodyProps {
 }
 
 const ContentBody: React.FC<BodyProps> = React.memo((props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { header, content, count, emptyMessage, loading } = props;
 
@@ -195,9 +154,9 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
 
   if (loading) {
     return (
-      <div className={classes.loading}>
+      <StyledLoadingContainer>
         <CircleProgress mini />
-      </div>
+      </StyledLoadingContainer>
     );
   }
 
@@ -207,39 +166,81 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
     // eslint-disable-next-line
     <>
       {_content.map((thisItem) => (
-        <Box
-          className={classes.notificationItem}
-          key={`notification-row-${thisItem.id}`}
-        >
+        <StyledNotificationItem key={`notification-row-${thisItem.id}`}>
           {thisItem.body}
-        </Box>
+        </StyledNotificationItem>
       ))}
       {content.length > count ? (
         <Box display="flex" justifyContent="flex-end">
-          <button
-            className={classes.showMore}
+          <LinkStyledButton
             onClick={() => setShowAll(!showAll)}
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
           >
             {showAll ? 'Collapse' : `${content.length - count} more`}
-            <KeyboardArrowDown
+            <StyledCaret
               className={classNames({
-                [classes.caret]: true,
                 [classes.inverted]: showAll,
               })}
             />
-          </button>
+          </LinkStyledButton>
         </Box>
       ) : null}
     </>
   ) : header === 'Events' ? (
-    <Typography className={classes.emptyMessage} variant="body1">
+    <StyledEmptyMessage variant="body1">
       {emptyMessage
         ? emptyMessage
         : `You have no ${header.toLocaleLowerCase()}.`}
-    </Typography>
+    </StyledEmptyMessage>
   ) : null;
 });
 
-export default React.memo(NotificationSection);
+const StyledRootContainer = styled('div', {
+  label: 'StyledRootContainer',
+})(({ theme }) => ({
+  alignItems: 'flex-start',
+  display: 'flex',
+  flexWrap: 'nowrap',
+  justifyContent: 'flex-start',
+  marginBottom: theme.spacing(2),
+}));
+
+const StyledHeader = styled('div', {
+  label: 'StyledHeader',
+})(({ theme }) => ({
+  alignItems: 'center',
+  borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
+  display: 'flex',
+  justifyContent: 'space-between',
+  paddingBottom: theme.spacing(),
+}));
+
+const StyledLoadingContainer = styled('div', {
+  label: 'StyledLoadingContainer',
+})(() => ({
+  display: 'flex',
+  justifyContent: 'center',
+}));
+
+const StyledNotificationItem = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  fontSize: '0.875rem',
+  justifyContent: 'space-between',
+  marginTop: theme.spacing(),
+  width: '100%',
+  '& p': {
+    color: theme.textColors.headlineStatic,
+    lineHeight: '1.25rem',
+  },
+}));
+
+const StyledCaret = styled(KeyboardArrowDown)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  marginLeft: theme.spacing(),
+}));
+
+const StyledEmptyMessage = styled(Typography)(({ theme }) => ({
+  marginTop: theme.spacing(),
+  marginBottom: theme.spacing(2.5),
+}));
