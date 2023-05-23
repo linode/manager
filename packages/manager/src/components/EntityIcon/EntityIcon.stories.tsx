@@ -41,9 +41,6 @@ const sxGridItem = {
 };
 
 export const Default: Story = {
-  args: {
-    variant: 'linode',
-  },
   render: (args) => (
     <Grid container spacing={2}>
       <Grid xs="auto" sx={{ ...sxGridItem, marginBottom: '20px' }}>
