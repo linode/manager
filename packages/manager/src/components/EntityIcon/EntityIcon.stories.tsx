@@ -8,8 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 const meta: Meta<typeof EntityIcon> = {
   title: 'Components/EntityIcon',
   component: EntityIcon,
-  argTypes: {},
-  args: {},
+  args: {variant: 'linode'},
 };
 
 export default meta;
