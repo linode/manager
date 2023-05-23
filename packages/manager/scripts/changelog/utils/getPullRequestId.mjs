@@ -8,7 +8,11 @@ import { logger } from './logger.mjs';
  */
 export const getPullRequestId = async () => {
   try {
-    const branchName = execSync('git branch --show-current').toString().trim();
+    const branchName =
+      process.env.GITHUB_HEAD_REF ||
+      process.env.GITHUB_REF ||
+      // for a local run (not in GitHub Actions)
+      execSync('git branch --show-current').toString().trim();
     const prListOutput = execSync(`gh pr list --head ${branchName}`)
       .toString()
       .trim();
