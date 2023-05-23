@@ -203,7 +203,6 @@ const StyledRootContainer = styled('div', {
   display: 'flex',
   flexWrap: 'nowrap',
   justifyContent: 'flex-start',
-  marginBottom: theme.spacing(2),
 }));
 
 const StyledHeader = styled('div', {

@@ -22,6 +22,9 @@ export const RenderEventStyledBox = styled(Box, {
   paddingTop: 12,
   width: '100%',
   borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
+  '&:last-child': {
+    borderBottom: 'none',
+  },
 }));
 
 export const RenderEventGravatar = styled(GravatarByUsername, {
