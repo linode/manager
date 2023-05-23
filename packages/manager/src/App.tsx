@@ -94,11 +94,16 @@ export class App extends React.Component<CombinedProps, State> {
           const adobeScriptTags = document.querySelectorAll(
             'script[src^="https://assets.adobedtm.com/"]'
           );
-          // Log an error; if the promise resolved, three Adobe scripts should be present in the DOM.
-          if (data.status !== 'ready' || adobeScriptTags.length !== 3) {
+
+          // Log an error; if the promise resolved, the _satellite object and 3 Adobe scripts should be present in the DOM.
+          if (
+            data.status !== 'ready' ||
+            !(window as any)._satellite ||
+            adobeScriptTags.length !== 3
+          ) {
             adobeScriptTags.forEach((script) => script.remove());
             reportException(
-              'Not all Adobe Launch scripts and extensions were not loaded correctly; analytics cannot be sent.'
+              'Adobe Analytics error: Not all Adobe Launch scripts and extensions were loaded correctly; analytics cannot be sent.'
             );
           }
         })
