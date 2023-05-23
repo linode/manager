@@ -21,7 +21,8 @@ import {
   useSupportTicketQuery,
 } from 'src/queries/support';
 import { useProfile } from 'src/queries/profile';
-import EntityIcon, { Variant } from 'src/components/EntityIcon';
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import { Waypoint } from 'react-waypoint';
 import Stack from '@mui/material/Stack';
 import { Notice } from 'src/components/Notice/Notice';
@@ -108,7 +109,7 @@ const SupportTicketDetail = () => {
     return (
       <Notice success spacingTop={12}>
         <Stack direction="row" spacing={1} alignItems="center">
-          <EntityIcon size={20} variant={entity.type as Variant} />
+          <EntityIcon size={20} variant={entity.type as EntityVariants} />
           <Typography>
             This ticket is associated with your {capitalize(entity.type)}{' '}
             {target ? <Link to={target}>{entity.label}</Link> : entity.label}
