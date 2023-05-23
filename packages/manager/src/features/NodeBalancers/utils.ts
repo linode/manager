@@ -1,16 +1,14 @@
-import { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
 import { clamp, compose, filter, isNil, toString } from 'ramda';
-import {
+import { defaultNumeric } from 'src/utilities/defaultNumeric';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import type { APIError } from '@linode/api-v4';
+import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
+import type {
   ExtendedNodeBalancerConfigNode,
   NodeBalancerConfigNodeFields,
   NodeBalancerConfigFields,
+  NodeBalancerConfigFieldsWithStatus,
 } from './types';
-import { defaultNumeric } from 'src/utilities/defaultNumeric';
-
-export interface NodeBalancerConfigFieldsWithStatus
-  extends NodeBalancerConfigFields {
-  modifyStatus?: 'new';
-}
 
 export const clampNumericString = (low: number, hi: number) =>
   compose(toString, clamp(low, hi), (value: number) =>
@@ -161,3 +159,34 @@ export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
 export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {
   return config.check === 'http_body' && config.check_body;
 };
+
+// We don't want to end up with nodes[3].ip_address as errorMap.none
+const filteredErrors = (errors: APIError[]) =>
+  errors
+    ? errors.filter(
+        (thisError) =>
+          !thisError.field || !thisError.field.match(/nodes\[[0-9+]\]/)
+      )
+    : [];
+
+export const setErrorMap = (errors: APIError[]) =>
+  getErrorMap(
+    [
+      'algorithm',
+      'check_attempts',
+      'check_body',
+      'check_interval',
+      'check_path',
+      'check_timeout',
+      'check',
+      'configs',
+      'port',
+      'protocol',
+      'proxy_protocol',
+      'ssl_cert',
+      'ssl_key',
+      'stickiness',
+      'nodes',
+    ],
+    filteredErrors(errors)
+  );

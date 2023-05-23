@@ -17,7 +17,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
-import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
+import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
 const preferenceKey = 'nodebalancers';
@@ -77,7 +77,7 @@ export const NodeBalancersLanding = () => {
   }
 
   if (data?.results === 0) {
-    return <NodeBalancersLandingEmptyState />;
+    return <NodeBalancerLandingEmptyState />;
   }
 
   return (
