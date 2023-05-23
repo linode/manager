@@ -1,17 +1,13 @@
 import { Link } from '@reach/router';
-import classNames from 'classnames';
 import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
-type ClassNames = 'root' | 'selected';
-
-const styles = (theme: any) =>
-  createStyles({
-    root: {
-      ...theme.overrides.MuiTab.root,
-    },
-    selected: {},
-  });
+const useStyles = makeStyles()((theme: any) => ({
+  root: {
+    ...theme.overrides.MuiTab.root,
+  },
+  selected: {},
+}));
 
 interface Props {
   to: string;
@@ -20,7 +16,27 @@ interface Props {
   ref?: any;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const TabLink = (props: Props) => {
+  const { title, to } = props;
+
+  const { classes, cx } = useStyles();
+
+  const pathName = document.location.pathname;
+
+  return (
+    <Link
+      to={to}
+      className={cx({
+        [classes.root]: true,
+        [classes.selected]: pathName === to,
+      })}
+      aria-selected={pathName === to}
+      data-qa-tab={title}
+    >
+      {title}
+    </Link>
+  );
+};
 
 export const convertForAria = (str: string) => {
   return str
@@ -28,28 +44,3 @@ export const convertForAria = (str: string) => {
     .toLowerCase()
     .replace(/([^A-Z0-9]+)(.)/gi, (match, p1, p2) => p2.toUpperCase());
 };
-
-class TabLink extends React.Component<CombinedProps> {
-  render() {
-    const { classes, title, to } = this.props;
-    const pathName = document.location.pathname;
-
-    return (
-      <Link
-        to={to}
-        className={classNames({
-          [classes.root]: true,
-          [classes.selected]: pathName === to,
-        })}
-        aria-selected={pathName === to}
-        data-qa-tab={title}
-      >
-        {title}
-      </Link>
-    );
-  }
-}
-
-const styled = withStyles(styles);
-
-export default styled(TabLink);

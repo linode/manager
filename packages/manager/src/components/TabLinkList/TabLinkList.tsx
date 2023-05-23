@@ -13,7 +13,7 @@ interface Props {
   noLink?: boolean; // @todo: remove this prop if we use NavTab widely.
 }
 
-export const TabLinkList: React.FC<Props> = ({ tabs, noLink }) => {
+export const TabLinkList = ({ tabs, noLink }: Props) => {
   return (
     <TabList>
       {tabs.map((tab, _index) => {
@@ -35,5 +35,3 @@ export const TabLinkList: React.FC<Props> = ({ tabs, noLink }) => {
     </TabList>
   );
 };
-
-export default TabLinkList;

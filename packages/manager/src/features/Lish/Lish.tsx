@@ -7,7 +7,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import SafeTabPanel from 'src/components/SafeTabPanel';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { Tab } from 'src/components/TabLinkList/TabLinkList';
 import {
   useLinodeLishTokenQuery,
