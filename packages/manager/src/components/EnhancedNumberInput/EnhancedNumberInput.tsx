@@ -29,25 +29,18 @@ const sxTextField = {
   width: 53,
 };
 
-const sxButton = {
-  borderRadius: 0,
-  height: 34,
-  minHeight: 'fit-content',
-  minWidth: 30,
-  width: 35,
-  border: 'none',
-  '&:hover': {
-    backgroundColor: 'rgba(224, 224, 224, 0.69)',
-    border: 'none',
-  },
-};
-
 interface EnhancedNumberInputProps {
+  /** The label of the input. This prop does not cause any visual UI changes */
   inputLabel?: string;
+  /** Allows you to control the numeric value of the input from outside the component */
   value: number;
+  /** The function to update the numeric value */
   setValue: (value: number) => void;
+  /** Disables the input and the +/- buttons */
   disabled?: boolean;
+  /** The max number allowed in the input. The +/- buttons will disable accordingly */
   max?: number;
+  /** The min number allowed in the input. The +/- buttons will disable accordingly */
   min?: number;
 }
 
@@ -93,7 +86,7 @@ export const EnhancedNumberInput = React.memo(
           position: 'relative',
         }}
       >
-        <Button
+        <StyledButton
           buttonType="outlined"
           compactX
           disabled={disabled || value === min}
@@ -101,10 +94,10 @@ export const EnhancedNumberInput = React.memo(
           name="Subtract 1"
           aria-label="Subtract 1"
           data-testid={'decrement-button'}
-          sx={sxButton}
+          disableFocusRipple
         >
           <MinusIcon />
-        </Button>
+        </StyledButton>
         <TextField
           type="number"
           label={inputLabel ? inputLabel : 'Edit Quantity'}
@@ -123,7 +116,7 @@ export const EnhancedNumberInput = React.memo(
             '.MuiInputBase-input': sxTextFieldBase,
           }}
         />
-        <Button
+        <StyledButton
           buttonType="outlined"
           compactX
           disabled={disabled || value === max}
@@ -131,14 +124,34 @@ export const EnhancedNumberInput = React.memo(
           name="Add 1"
           aria-label="Add 1"
           data-testid={'increment-button'}
-          sx={sxButton}
+          disableFocusRipple
         >
           <PlusIcon />
-        </Button>
+        </StyledButton>
       </Box>
     );
   }
 );
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: 0,
+  height: 34,
+  minHeight: 'fit-content',
+  minWidth: 30,
+  width: 35,
+  border: 'none',
+  '&:hover': {
+    backgroundColor: 'rgba(224, 224, 224, 0.69)',
+    border: 'none',
+  },
+  '&.MuiButtonBase-root.Mui-disabled': {
+    border: 'none',
+
+    '& svg g': {
+      stroke: theme.color.disabledText,
+    },
+  },
+}));
 
 const MinusIcon = styled(Minus)({
   width: 12,
