@@ -1,4 +1,4 @@
-import Tag, { Props as _TagProps } from './Tag';
+import Tag, { TagProps } from './Tag';
 /* tslint:disable */
-export interface TagProps extends _TagProps {}
+export type { TagProps };
 export default Tag;
