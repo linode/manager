@@ -5,7 +5,7 @@ import {
   TokenRequest,
   VolumeStatus,
 } from '@linode/api-v4';
-import { MockedRequest, RequestHandler, rest } from 'msw';
+import { MockedRequest, RequestHandler, defaultContext, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import {
@@ -82,7 +82,6 @@ import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { ResponseComposition } from 'msw/lib/types/response';
-import { ContextType } from 'react';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -114,7 +113,7 @@ type Route =
         | ((
             req: MockedRequest,
             res: ResponseComposition,
-            ctx: ContextType<any>
+            ctx: typeof defaultContext
           ) => {} | any[]);
     }
   | {
@@ -128,7 +127,7 @@ type Route =
         | ((
             req: MockedRequest,
             res: ResponseComposition,
-            ctx: ContextType<any>
+            ctx: typeof defaultContext
           ) => any);
     };
 
@@ -167,21 +166,19 @@ const routes: Route[] = [
     url: '*/account/entity-transfers',
     method: 'get',
     paginate: true,
-    response: () => {
-      const transfers1 = entityTransferFactory.buildList(10);
-      const transfers2 = entityTransferFactory.buildList(10, {
+    response: [
+      ...entityTransferFactory.buildList(10),
+      ...entityTransferFactory.buildList(10, {
         token: 'TEST123',
-      });
-      const transfers3 = entityTransferFactory.buildList(10, {
+      }),
+      ...entityTransferFactory.buildList(10, {
         token: '987TEST',
-      });
-      const transfer4 = entityTransferFactory.build({
+      }),
+      entityTransferFactory.build({
         is_sender: true,
         status: 'pending',
-      });
-
-      return transfers1.concat(transfers2, transfers3, transfer4);
-    },
+      }),
+    ],
   },
 ];
 
