@@ -72,9 +72,6 @@
     "prettier": "~2.2.1",
     "tsup": "^6.7.0"
   },
-  "resolutions": {
-    "handlebars": "^4.4.3"
-  },
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
