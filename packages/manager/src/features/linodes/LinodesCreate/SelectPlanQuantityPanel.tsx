@@ -192,7 +192,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
             <TableCell center data-qa-cpu>
-              {type.vcpus} KEKLOL
+              {type.vcpus}
             </TableCell>
             <TableCell center data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
