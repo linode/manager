@@ -12,6 +12,7 @@ import type {
   SecurityQuestionsData,
   SecurityQuestionsPayload,
   Token,
+  OAuthClient,
 } from '@linode/api-v4/types';
 
 /**
@@ -244,5 +245,73 @@ export const mockRevokePersonalAccessToken = (
     'DELETE',
     apiMatcher(`profile/tokens/${id}`),
     makeResponse({})
+  );
+};
+
+/**
+ * Intercepts GET request to fetch oauth apps and mocks response.
+ *
+ * @param oauthApps - oauth apps with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetOAuthApps = (
+  oauthApps: OAuthClient[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/oauth-clients*'),
+    paginateResponse(oauthApps)
+  );
+};
+
+/**
+ * Intercepts DELETE request to delete an oauth app.
+ *
+ * @param oauthApp - An oauth app with which to reset.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteOAuthApps = (appId: string): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`account/oauth-clients/${appId}`),
+    makeResponse({})
+  );
+};
+
+/**
+ * Intercepts PUT request to update an oauth and mocks response.
+ *
+ * @param oauthApp - An OAuth App with which to update.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateOAuthApps = (
+  appId: string,
+  oauthApp: OAuthClient
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`account/oauth-clients/${appId}`),
+    oauthApp
+  );
+};
+
+/**
+ * Intercepts POST request to fetch oauth apps and mocks response.
+ *
+ * @param oauthApp - An OAuth App with which to reset.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockResetOAuthApps = (
+  appId: string,
+  oauthApp: OAuthClient
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/oauth-clients/${appId}/reset-secret`),
+    oauthApp
   );
 };

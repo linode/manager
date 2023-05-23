@@ -5,7 +5,7 @@ import {
 } from '@linode/validation/lib/profile.schema';
 import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from '../constants';
-import { Grants } from '../account';
+import { Grants, OAuthClient } from '../account';
 import Request, {
   setData,
   setMethod,
@@ -199,3 +199,29 @@ export const verifyPhoneNumberCode = (data: VerifyVerificationCodePayload) => {
     setData(data, VerifyPhoneNumberCodeSchema)
   );
 };
+
+/**
+ * getOAuthApps
+ *
+ * Retrieves an array of oauth apps for the current user.
+ */
+export const getOAuthApps = (params?: Params, filters?: Filter) => {
+  return Request<ResourcePage<OAuthClient>>(
+    setURL(`${API_ROOT}/account/oauth-clients`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
+  );
+};
+
+/**
+ * Deletes an oauth app from Linode's Profile Clients. The Domain will be removed from Linode's nameservers shortly after this
+ * operation completes. This also deletes all associated Domain Records.
+ *
+ * @param oauthAppId { string } The ID of the oauth app to delete.
+ */
+export const deleteOAuthApp = (oauthAppId: string) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/account/oauth-clients/${oauthAppId}`),
+    setMethod('DELETE')
+  );
