@@ -1,34 +1,27 @@
 import * as React from 'react';
 import Link from 'src/components/Link';
-import TextField from 'src/components/TextField';
+import TextField, { Props } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 
-export interface TypeToConfirmProps {
+export interface TypeToConfirmProps extends Omit<Props, 'onChange'> {
   confirmationText?: JSX.Element | string;
-  onChange: (str: string) => void;
-  label: string;
-  hideLabel?: boolean;
   textFieldStyle?: React.CSSProperties;
   typographyStyle?: React.CSSProperties;
   visible?: boolean | undefined;
   title?: string;
   hideInstructions?: boolean;
-  // This is a string index signature.
-  // This means that all properties in 'Props' are assignable to any
-  [propName: string]: any;
+  onChange: (value: string) => void;
 }
 
 export const TypeToConfirm = (props: TypeToConfirmProps) => {
   const {
     confirmationText,
-    onChange,
-    label,
-    hideLabel,
     textFieldStyle,
     typographyStyle,
     title,
     visible,
     hideInstructions,
+    onChange,
     ...rest
   } = props;
 
@@ -48,18 +41,16 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           <Typography variant="h2">{title}</Typography>
           <Typography style={typographyStyle}>{confirmationText}</Typography>
           <TextField
-            label={label}
-            hideLabel={hideLabel}
-            onChange={(e) => onChange(e.target.value)}
             style={textFieldStyle}
+            onChange={(e) => onChange(e.target.value)}
             {...rest}
           />
         </>
       ) : null}
       {!hideInstructions ? (
         <Typography
-          marginTop={1}
           data-testid="instructions-to-enable-or-disable"
+          sx={{ marginTop: 1 }}
         >
           To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm
           section of <Link to="/profile/settings">My Settings</Link>.
