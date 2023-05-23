@@ -32,7 +32,9 @@ const store = storeFactory(queryClient);
 setupInterceptors(store);
 
 const Lish = React.lazy(() => import('src/features/Lish'));
-const Cancel = React.lazy(() => import('src/features/CancelLanding'));
+const CancelLanding = React.lazy(
+  () => import('src/features/CancelLanding/CancelLanding')
+);
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );
@@ -79,7 +81,7 @@ const ContextWrapper = () => (
             {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
             <Route exact path="/nullauth" component={NullAuth} />
             <Route exact path="/logout" component={Logout} />
-            <Route exact path="/cancel" component={Cancel} />
+            <Route exact path="/cancel" component={CancelLanding} />
             <AuthenticationWrapper>
               <Switch>
                 <Route path="/linodes/:linodeId/lish/:type" component={Lish} />

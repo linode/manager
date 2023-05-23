@@ -38,6 +38,7 @@ interface EntityIconProps {
   status?: string;
   loading?: boolean;
   size?: number;
+  style?: React.CSSProperties;
   className?: any;
   marginTop?: number;
   stopAnimation?: boolean;
@@ -73,6 +74,7 @@ export const EntityIcon = (props: EntityIconProps) => {
     size,
     className,
     marginTop,
+    style,
     ...rest
   } = props;
 
@@ -112,7 +114,7 @@ export const EntityIcon = (props: EntityIconProps) => {
       data-qa-entity-status={status || 'undefined'}
       data-qa-icon={variant}
       data-qa-is-loading={loading || 'false'}
-      style={{ top: marginTop }}
+      style={{ top: marginTop, ...style }}
       {...rest}
     >
       <Icon height={iconSize} width={iconSize} />
