@@ -33,6 +33,7 @@ import { ExtendedType } from 'src/utilities/extendType';
 import { ApplicationState } from 'src/store';
 import { useRegionsQuery } from 'src/queries/regions';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
+import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -109,7 +110,6 @@ export interface PlanSelectionType extends BaseType {
   transfer?: ExtendedType['transfer'];
   network_out?: ExtendedType['network_out'];
 }
-
 interface Props {
   types: PlanSelectionType[];
   error?: string;
@@ -129,30 +129,6 @@ interface Props {
   showTransfer?: boolean;
   docsLink?: JSX.Element;
 }
-
-const getNanodes = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => /nanode/.test(t.class));
-
-const getStandard = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => /standard/.test(t.class));
-
-const getHighMem = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => /highmem/.test(t.class));
-
-const getProDedicated = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => /prodedicated/.test(t.class));
-
-const getDedicated = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => /^dedicated/.test(t.class));
-
-const getGPU = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => /gpu/.test(t.class));
-
-const getMetal = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => t.class === 'metal');
-
-const getPremium = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => t.class === 'premium');
 
 export const SelectPlanPanel = (props: Props) => {
   const {
@@ -417,20 +393,22 @@ export const SelectPlanPanel = (props: Props) => {
 
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const tabs: Tab[] = [];
-    const nanodes = getNanodes(types);
-    const standards = getStandard(types);
-    const highmem = getHighMem(types);
-    const proDedicated = getProDedicated(types);
-    const dedicated = getDedicated(types);
-    const gpu = getGPU(types);
-    const metal = getMetal(types);
-    const premium = getPremium(types);
+    const {
+      nanode,
+      standard,
+      highmem,
+      prodedicated,
+      dedicated,
+      gpu,
+      metal,
+      premium,
+    } = getPlanSelectionsByPlanType(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
-    const shared = [...nanodes, ...standards];
+    const shared = [...nanode, ...standard];
 
-    if (!isEmpty(proDedicated)) {
+    if (!isEmpty(prodedicated)) {
       tabs.push({
         render: () => {
           return (
@@ -439,7 +417,7 @@ export const SelectPlanPanel = (props: Props) => {
                 Pro Dedicated CPU instances are for very demanding workloads.
                 They only have AMD 2nd generation processors or newer.
               </Typography>
-              {renderPlanContainer(proDedicated)}
+              {renderPlanContainer(prodedicated)}
             </>
           );
         },
