@@ -1,7 +1,10 @@
-import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import {
+  matchPath,
+  useHistory,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import DismissibleBanner from 'src/components/DismissibleBanner';
@@ -11,8 +14,10 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
-import { ExtendedType } from 'src/utilities/extendType';
-import { withLinodeDetailContext } from './linodeDetailContext';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useTypeQuery } from 'src/queries/types';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
@@ -22,7 +27,7 @@ const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
 const LinodeConfigurations = React.lazy(
   () => import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel')
 );
-const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
+const LinodeBackup = React.lazy(() => import('./LinodeBackup/LinodeBackups'));
 const LinodeActivity = React.lazy(
   () => import('./LinodeActivity/LinodeActivity')
 );
@@ -30,22 +35,17 @@ const LinodeSettings = React.lazy(
   () => import('./LinodeSettings/LinodeSettings')
 );
 
-type CombinedProps = ContextProps &
-  RouteComponentProps<{
-    linodeId: string;
-  }>;
+const LinodesDetailNavigation = () => {
+  const { linodeId } = useParams<{ linodeId: string }>();
+  const id = Number(linodeId);
+  const { data: linode, error } = useLinodeQuery(id);
+  const { url } = useRouteMatch();
+  const history = useHistory();
 
-const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
-  const {
-    linodeId,
-    linodeLabel,
-    linodeType,
-    linodeCreated,
-    match: { url },
-  } = props;
+  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
 
   // Bare metal Linodes have a very different detail view
-  const isBareMetalInstance = linodeType?.class === 'metal';
+  const isBareMetalInstance = type?.class === 'metal';
 
   const tabs = [
     {
@@ -93,22 +93,32 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   };
 
   const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+    history.push(tabs[index].routeName);
   };
 
   let idx = 0;
 
+  if (error) {
+    return <ErrorState errorText={error?.[0].reason} />;
+  }
+
+  if (!linode) {
+    return <CircleProgress />;
+  }
+
   return (
     <>
       <DocumentTitleSegment
-        segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
+        segment={`${linode?.label} - ${
+          tabs[getIndex()]?.title ?? 'Detail View'
+        }`}
       />
-      <SMTPRestrictionText supportLink={{ label: linodeLabel, id: linodeId }}>
+      <SMTPRestrictionText supportLink={{ label: linode?.label, id }}>
         {({ text }) =>
           text !== null ? (
             <DismissibleBanner
               warning
-              preferenceKey={`smtp-restriction-notice-${linodeLabel}`}
+              preferenceKey={`smtp-restriction-notice-${linode?.label}`}
               spacingTop={32}
             >
               <Grid xs={12}>{text}</Grid>
@@ -119,20 +129,17 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
       <div style={{ marginTop: 8 }}>
         <Tabs index={getIndex()} onChange={navToURL}>
           <TabLinkList tabs={tabs} />
-
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
                 <LinodeSummary
                   isBareMetalInstance={isBareMetalInstance}
-                  linodeCreated={linodeCreated}
+                  linodeCreated={linode?.created}
                 />
               </SafeTabPanel>
-
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />
               </SafeTabPanel>
-
               {isBareMetalInstance ? null : (
                 <>
                   <SafeTabPanel index={idx++}>
@@ -147,11 +154,9 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
                   </SafeTabPanel>
                 </>
               )}
-
               <SafeTabPanel index={idx++}>
                 <LinodeActivity />
               </SafeTabPanel>
-
               <SafeTabPanel index={idx++}>
                 <LinodeSettings isBareMetalInstance={isBareMetalInstance} />
               </SafeTabPanel>
@@ -163,27 +168,4 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface ContextProps {
-  linodeId: number;
-  linodeConfigs: Config[];
-  linodeLabel: string;
-  linodeRegion: string;
-  linodeCreated: string;
-  linodeType?: ExtendedType | null | undefined;
-  readOnly: boolean;
-}
-
-const enhanced = compose<CombinedProps, {}>(
-  withRouter,
-  withLinodeDetailContext<ContextProps>(({ linode }) => ({
-    linodeId: linode.id,
-    linodeConfigs: linode._configs,
-    linodeLabel: linode.label,
-    linodeRegion: linode.region,
-    linodeType: linode._type,
-    linodeCreated: linode.created,
-    readOnly: linode._permissions === 'read_only',
-  }))
-);
-
-export default enhanced(LinodesDetailNavigation);
+export default LinodesDetailNavigation;

@@ -7,7 +7,7 @@ import { createStyles, makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LineGraph from 'src/components/LineGraph';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
@@ -16,7 +16,7 @@ import {
   STATS_NOT_READY_MESSAGE,
   useLinodeStats,
   useLinodeStatsByDate,
-} from 'src/queries/linodes';
+} from 'src/queries/linodes/stats';
 import { useProfile } from 'src/queries/profile';
 import { setUpCharts } from 'src/utilities/charts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

@@ -9,7 +9,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 import ExternalLink from 'src/components/ExternalLink';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { capitalize } from 'src/utilities/capitalize';
@@ -32,9 +32,7 @@ export interface Props {
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
 }
 
-type CombinedProps = Props;
-
-const AccessSelect: React.FC<CombinedProps> = (props) => {
+export const AccessSelect = React.memo((props: Props) => {
   const classes = useStyles();
 
   const { getAccess, updateAccess, name, variant } = props;
@@ -244,9 +242,7 @@ const AccessSelect: React.FC<CombinedProps> = (props) => {
       </ConfirmationDialog>
     </>
   );
-};
-
-export default React.memo(AccessSelect);
+});
 
 const copy: Record<
   'bucket' | 'object',

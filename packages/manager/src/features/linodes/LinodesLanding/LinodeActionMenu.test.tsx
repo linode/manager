@@ -17,8 +17,12 @@ const props: Props = {
   linodeLabel: 'test-linode',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
-  openDialog: jest.fn(),
-  openPowerActionDialog: jest.fn(),
+  onOpenPowerDialog: jest.fn(),
+  onOpenDeleteDialog: jest.fn(),
+  onOpenResizeDialog: jest.fn(),
+  onOpenRebuildDialog: jest.fn(),
+  onOpenRescueDialog: jest.fn(),
+  onOpenMigrateDialog: jest.fn(),
 };
 
 describe('LinodeActionMenu', () => {
@@ -72,10 +76,18 @@ describe('LinodeActionMenu', () => {
       );
     });
 
-    it.skip('should disable the reboot action if the Linode is not running', () => {
-      // @todo update ActionMenu mock to fix this test once CMR action menu is gone
+    it('should allow a reboot if the Linode is running', () => {
+      renderWithTheme(<LinodeActionMenu {...props} />);
+      expect(screen.queryByText('Reboot')).not.toHaveAttribute('aria-disabled');
+    });
+
+    it('should disable the reboot action if the Linode is not running', () => {
+      // TODO: Should check for "read_only" permissions too
       renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
-      expect(screen.queryByText('Reboot')).toBeDisabled();
+      expect(screen.queryByText('Reboot')).toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
     });
   });
 

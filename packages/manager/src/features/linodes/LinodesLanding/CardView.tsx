@@ -1,16 +1,13 @@
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useProfile } from 'src/queries/profile';
-import { getVolumesForLinode, useAllVolumesQuery } from 'src/queries/volumes';
 import { RenderLinodesProps } from './DisplayLinodes';
+import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
@@ -31,15 +28,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CardView: React.FC<RenderLinodesProps> = (props) => {
+const CardView = (props: RenderLinodesProps) => {
   const classes = useStyles();
-  const notificationContext = React.useContext(_notificationContext);
 
-  const { updateLinode } = useLinodeActions();
   const { data: profile } = useProfile();
-
-  // When someone uses card view, sadly, this is the best way for us to populate volume counts.
-  const { data: volumes, isLoading } = useAllVolumesQuery();
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -47,6 +39,10 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
     label: '',
     entityID: 0,
   });
+
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
+    tagDrawer.entityID
+  );
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -61,8 +57,8 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
     });
   };
 
-  const updateTags = (linodeId: number, tags: string[]) => {
-    return updateLinode({ linodeId, tags }).then((_) => {
+  const updateTags = (tags: string[]) => {
+    return updateLinode({ tags }).then((_) => {
       setTagDrawer({ ...tagDrawer, tags });
     });
   };
@@ -73,10 +69,6 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
     return null;
   }
 
-  if (isLoading) {
-    return <CircleProgress />;
-  }
-
   if (data.length === 0) {
     return (
       <Typography style={{ textAlign: 'center' }}>
@@ -84,9 +76,6 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
       </Typography>
     );
   }
-
-  const getVolumesByLinode = (linodeId: number) =>
-    volumes ? getVolumesForLinode(volumes, linodeId).length : 0;
 
   return (
     <React.Fragment>
@@ -96,18 +85,25 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
             <Grid xs={12} className={`${classes.summaryOuter} py0`}>
               <LinodeEntityDetail
                 id={linode.id}
-                linode={linode}
+                handlers={{
+                  onOpenDeleteDialog: () =>
+                    openDialog('delete', linode.id, linode.label),
+                  onOpenMigrateDialog: () =>
+                    openDialog('migrate', linode.id, linode.label),
+                  onOpenRebuildDialog: () =>
+                    openDialog('rebuild', linode.id, linode.label),
+                  onOpenRescueDialog: () =>
+                    openDialog('rescue', linode.id, linode.label),
+                  onOpenResizeDialog: () =>
+                    openDialog('resize', linode.id, linode.label),
+                  onOpenPowerDialog: (action) =>
+                    openPowerActionDialog(action, linode.id, linode.label, []),
+                }}
                 isSummaryView
-                numVolumes={getVolumesByLinode(linode.id)}
-                username={profile?.username}
-                linodeConfigs={linode._configs}
-                backups={linode.backups}
                 openTagDrawer={(tags) =>
                   openTagDrawer(linode.label, linode.id, tags)
                 }
-                openDialog={openDialog}
-                openPowerActionDialog={openPowerActionDialog}
-                openNotificationMenu={notificationContext.openMenu}
+                linode={linode}
               />
             </Grid>
           </React.Fragment>
@@ -117,7 +113,7 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        updateTags={(tags) => updateTags(tagDrawer.entityID, tags)}
+        updateTags={updateTags}
         onClose={closeTagDrawer}
       />
     </React.Fragment>

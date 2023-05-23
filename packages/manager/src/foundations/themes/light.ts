@@ -753,6 +753,9 @@ export const lightTheme: ThemeOptions = {
           marginRight: 0,
         },
       },
+      defaultProps: {
+        size: 'large',
+      },
     },
     MuiInput: {
       styleOverrides: {

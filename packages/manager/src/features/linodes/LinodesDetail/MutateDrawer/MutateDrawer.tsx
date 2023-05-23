@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 import ListItem from 'src/components/core/ListItem';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 
 interface MutateInfo {
   vcpus: number | null;
@@ -36,7 +36,7 @@ interface Props {
   currentTypeInfo: MutateInfo;
   linodeId: number;
   loading: boolean;
-  error: string;
+  error: string | undefined;
   estimatedTimeToUpgradeInMins: number;
   isMovingFromSharedToDedicated: boolean;
 }

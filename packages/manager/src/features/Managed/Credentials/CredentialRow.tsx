@@ -3,8 +3,8 @@ import * as React from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import ActionMenu from './CredentialActionMenu';
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -15,7 +15,7 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -101,7 +101,8 @@ const NodeBalancerCreate = () => {
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
-  const disabled = Boolean(profile?.restricted) && !grants?.global.add_domains;
+  const disabled =
+    Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
 
   const addNodeBalancer = () => {
     if (disabled) {

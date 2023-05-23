@@ -311,9 +311,9 @@ export const oneClickApps: OCA[] = [
     name: 'ClusterControl',
     alt_name: 'Database monitoring',
     alt_description:
-      'SQL and NoSQL database interface and monitoring for MySQL, MongoDB, PostgreSQL, and more.',
+      'SQL and NoSQL database interface and monitoring for MySQL, PostgreSQL, and more.',
     categories: ['Databases'],
-    description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, MongoDB, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
+    description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
     summary:
       'All-in-one database deployment, management, and monitoring system.',
     related_guides: [
@@ -2097,28 +2097,6 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: 'b95b26',
       end: '873d0c',
-    },
-  },
-  {
-    name: 'UniFi Network Application',
-    alt_name: 'Networking control panel',
-    alt_description: 'Interface for UniFi networking devices and software.',
-    categories: ['Control Panels'],
-    description: `UniFi Network Application is a versatile control panel that simplifies network management across regions, customizes access to wifi networks, and more. Manage and apply updates to UniFi networking devices to ensure your networks are performant and secure.`,
-    summary: `Multi-use networking control panel`,
-    related_guides: [
-      {
-        title:
-          'Deploy the UniFi Network Application through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/unifi-network-application/',
-      },
-    ],
-    website: 'https://www.ui.com/',
-    logo_url: 'unifi.svg',
-    colors: {
-      start: '1681FC',
-      end: '63666A',
     },
   },
   {
