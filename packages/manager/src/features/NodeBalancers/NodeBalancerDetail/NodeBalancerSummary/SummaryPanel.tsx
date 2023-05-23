@@ -1,7 +1,6 @@
 import * as React from 'react';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import Paper from 'src/components/core/Paper';
-import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import Typography from 'src/components/core/Typography';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { Link, useParams } from 'react-router-dom';
@@ -133,19 +132,32 @@ const StyledSummarySectionWrapper = styled('div', {
 const StyledSummarySection = styled(Paper, {
   label: 'StyledSummarySection',
 })(({ theme }) => ({
-  ...summaryPanelStyles(theme).summarySection,
+  padding: theme.spacing(2.5),
+  marginBottom: theme.spacing(2),
+  minHeight: '160px',
+  height: '93%',
 }));
 
 const StyledTitle = styled(Typography, {
   label: 'StyledTitle',
 })(({ theme }) => ({
-  ...summaryPanelStyles(theme).title,
+  marginBottom: theme.spacing(2),
 }));
 
 const StyledSection = styled('div', {
   label: 'StyledSection',
 })(({ theme }) => ({
-  ...summaryPanelStyles(theme).section,
+  marginBottom: theme.spacing(1),
+  ...theme.typography.body1,
+  '& .dif': {
+    position: 'relative',
+    width: 'auto',
+    '& .chip': {
+      position: 'absolute',
+      top: '-4px',
+      right: -10,
+    },
+  },
 }));
 
 const StyledIPGrouping = styled('div', {
