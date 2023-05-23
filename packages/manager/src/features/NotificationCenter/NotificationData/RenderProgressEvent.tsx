@@ -13,7 +13,6 @@ import {
   eventLabelGenerator,
   eventMessageGenerator,
 } from 'src/eventMessageGenerator_CMR';
-
 import {
   RenderEventGravatar,
   RenderEventStyledBox,

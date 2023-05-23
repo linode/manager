@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
-    paddingBottom: theme.spacing(1.5),
+    paddingBottom: theme.spacing(),
   },
   content: {
     width: '100%',
@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     fontSize: '0.875rem',
     width: '100%',
+    marginTop: theme.spacing(),
     '& p': {
       color: theme.textColors.headlineStatic,
       lineHeight: '1.25rem',
