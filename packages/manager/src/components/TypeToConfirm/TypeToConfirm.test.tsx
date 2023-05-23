@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import TypeToConfirm from './TypeToConfirm';
+import { TypeToConfirm } from './TypeToConfirm';
 
 const props = { onClick: jest.fn() };
 

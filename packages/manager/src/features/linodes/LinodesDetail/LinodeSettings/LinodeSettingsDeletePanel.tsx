@@ -9,7 +9,7 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {

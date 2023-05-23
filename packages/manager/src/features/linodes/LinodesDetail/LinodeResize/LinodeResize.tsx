@@ -17,7 +17,7 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
-import TypeToConfirm from 'src/components/TypeToConfirm';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import {
   withProfile,
   WithProfileProps,
