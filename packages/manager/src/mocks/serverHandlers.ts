@@ -5,7 +5,7 @@ import {
   TokenRequest,
   VolumeStatus,
 } from '@linode/api-v4';
-import { RequestHandler, rest } from 'msw';
+import { MockedRequest, RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import {
@@ -81,6 +81,8 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 import { accountUserFactory } from 'src/factories/accountUsers';
+import { ResponseComposition } from 'msw/lib/types/response';
+import { ContextType } from 'react';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -95,42 +97,151 @@ export const makeResourcePage = <T>(
   data: e,
 });
 
-const statusPage = [
-  rest.get('*/api/v2/incidents*', (req, res, ctx) => {
-    const response = incidentResponseFactory.build();
-    return res(ctx.json(response));
-  }),
-  rest.get('*/api/v2/scheduled-maintenances*', (req, res, ctx) => {
-    const response = maintenanceResponseFactory.build();
-    return res(ctx.json(response));
-  }),
-];
-
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const entityTransfers = [
-  rest.get('*/account/entity-transfers', (req, res, ctx) => {
-    const transfers1 = entityTransferFactory.buildList(10);
-    const transfers2 = entityTransferFactory.buildList(10, {
-      token: 'TEST123',
-    });
-    const transfers3 = entityTransferFactory.buildList(10, {
-      token: '987TEST',
-    });
-    const transfer4 = entityTransferFactory.build({
-      is_sender: true,
-      status: 'pending',
-    });
+type Route =
+  | {
+      url: string;
+      method: 'get' | 'put' | 'post' | 'delete';
+      paginate: true;
+      filterable?: boolean;
+      slow?: boolean;
+      response:
+        | {}
+        | any[]
+        | ((
+            req: MockedRequest,
+            res: ResponseComposition,
+            ctx: ContextType<any>
+          ) => {} | any[]);
+    }
+  | {
+      url: string;
+      method: 'get' | 'put' | 'post' | 'delete';
+      paginate?: false;
+      filterable?: boolean;
+      slow?: boolean;
+      response:
+        | {}
+        | ((
+            req: MockedRequest,
+            res: ResponseComposition,
+            ctx: ContextType<any>
+          ) => any);
+    };
 
-    const combinedTransfers = transfers1.concat(
-      transfers2,
-      transfers3,
-      transfer4
-    );
-    return res(ctx.json(makeResourcePage(combinedTransfers)));
-  }),
+const routes: Route[] = [
+  {
+    url: '*/api/v2/incidents*',
+    method: 'get',
+    response: incidentResponseFactory.build(),
+  },
+  {
+    url: '*/api/v2/scheduled-maintenances*',
+    method: 'get',
+    response: maintenanceResponseFactory.build(),
+  },
+  {
+    url: '*/nodebalancers',
+    method: 'get',
+    filterable: true,
+    paginate: true,
+    slow: true,
+    response: nodeBalancerFactory.buildList(200),
+  },
+  {
+    url: '*/nodebalancers/:id',
+    method: 'get',
+    response: (req) => nodeBalancerFactory.build({ id: req.params.id }),
+  },
+  {
+    url: '*/account/maintenance',
+    method: 'get',
+    paginate: true,
+    filterable: true,
+    response: accountMaintenanceFactory.buildList(300),
+  },
+  {
+    url: '*/account/entity-transfers',
+    method: 'get',
+    paginate: true,
+    response: () => {
+      const transfers1 = entityTransferFactory.buildList(10);
+      const transfers2 = entityTransferFactory.buildList(10, {
+        token: 'TEST123',
+      });
+      const transfers3 = entityTransferFactory.buildList(10, {
+        token: '987TEST',
+      });
+      const transfer4 = entityTransferFactory.build({
+        is_sender: true,
+        status: 'pending',
+      });
+
+      return transfers1.concat(transfers2, transfers3, transfer4);
+    },
+  },
+];
+
+const generatedHandlers = routes.map((route) =>
+  rest[route.method](route.url, async (req, res, ctx) => {
+    let response = route.response;
+
+    if (typeof route.response === 'function') {
+      response = route.response(req, res, ctx);
+    }
+
+    if (route.slow) {
+      await sleep(1500);
+    }
+
+    if (route?.paginate) {
+      if (!Array.isArray(response)) {
+        throw new Error('must pass an array or a functon that return an array');
+      }
+
+      const page = Number(req.url.searchParams.get('page') || 1);
+      const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+
+      const headers = JSON.parse(req.headers.get('x-filter') || '{}');
+
+      if (route.filterable && req.headers.get('x-filter')) {
+        response.sort((a, b) => {
+          const statusA = a[headers['+order_by']];
+          const statusB = b[headers['+order_by']];
+
+          if (statusA < statusB) {
+            return -1;
+          }
+          if (statusA > statusB) {
+            return 1;
+          }
+          return 0;
+        });
+
+        if (headers['+order'] == 'desc') {
+          response.reverse();
+        }
+      }
+
+      response = {
+        data: response.slice(
+          (page - 1) * pageSize,
+          (page - 1) * pageSize + pageSize
+        ),
+        page,
+        pages: Math.ceil(response.length / pageSize),
+        results: response.length,
+      };
+    }
+
+    return res(ctx.json(response));
+  })
+);
+
+const entityTransfers = [
   rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
     const transfer = entityTransferFactory.build();
     return res(ctx.json(transfer));
@@ -276,6 +387,7 @@ const dedicatedTypes = dedicatedTypeFactory.buildList(7);
 const proDedicatedType = proDedicatedTypeFactory.build();
 
 export const handlers = [
+  ...generatedHandlers,
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
       restricted: false,
@@ -1213,7 +1325,6 @@ export const handlers = [
     return res(ctx.json({}));
   }),
   ...entityTransfers,
-  ...statusPage,
   ...databases,
 ];
 
