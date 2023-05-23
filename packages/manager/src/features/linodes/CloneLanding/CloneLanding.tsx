@@ -293,10 +293,6 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
-      {/* The header *basically* duplicated from LinodeDetailHeader. Why don't we use that component instead?...
-      ...Because we don't want the Nav tabs and we want <LinodeControls /> with a custom <Breadcrumb />.
-      @todo: DRY this up a bit?
-      */}
       <MutationNotification linodeId={props.linodeId} />
       <Notifications />
       <LinodesDetailHeader />
