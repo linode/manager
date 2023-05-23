@@ -396,10 +396,15 @@ export const sendObjectStorageDocsEvent = (action: string) => {
   });
 };
 
-export const sendMarketplaceSearchEvent = (appCategory?: string) => {
+type TypeOfSearch = 'Search Field' | 'Category Dropdown';
+
+export const sendMarketplaceSearchEvent = (
+  typeOfSearch: TypeOfSearch,
+  appCategory?: string
+) => {
   sendEvent({
     category: 'Marketplace Create Flow',
-    action: 'Category Dropdown',
-    label: appCategory,
+    action: `Click: ${typeOfSearch}`,
+    label: appCategory ?? 'Apps Search',
   });
 };
