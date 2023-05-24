@@ -9,14 +9,14 @@ const useStyles = makeStyles()((theme: any) => ({
   selected: {},
 }));
 
-interface Props {
+interface TabLinkProps {
   to: string;
   title: string;
   selected?: boolean;
   ref?: any;
 }
 
-export const TabLink = (props: Props) => {
+export const TabLink = (props: TabLinkProps) => {
   const { title, to } = props;
 
   const { classes, cx } = useStyles();
