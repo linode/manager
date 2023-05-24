@@ -24,7 +24,7 @@ export const loadScript = (
     // constructing the script URL passed to this hook.
     if (!src) {
       options?.setStatus?.('idle');
-      return;
+      return resolve({ status: 'idle' });
     }
     // Fetch existing script element by src
     // It may have been added by another intance of this hook
@@ -85,7 +85,9 @@ export const useScript = (
 
   useEffect(() => {
     (async () => {
-      await loadScript(src, { setStatus, location });
+      try {
+        await loadScript(src, { setStatus, location });
+      } catch (e) {} // Handle errors where useScript is called.
     })();
   }, [src]);
 

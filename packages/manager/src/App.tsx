@@ -94,14 +94,12 @@ export class App extends React.Component<CombinedProps, State> {
           const adobeScriptTags = document.querySelectorAll(
             'script[src^="https://assets.adobedtm.com/"]'
           );
-
           // Log an error; if the promise resolved, the _satellite object and 3 Adobe scripts should be present in the DOM.
           if (
             data.status !== 'ready' ||
             !(window as any)._satellite ||
             adobeScriptTags.length !== NUM_ADOBE_SCRIPTS
           ) {
-            adobeScriptTags.forEach((script) => script.remove());
             reportException(
               'Adobe Analytics error: Not all Adobe Launch scripts and extensions were loaded correctly; analytics cannot be sent.'
             );
