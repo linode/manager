@@ -71,7 +71,6 @@ describe('Payment Info Panel', () => {
     expect(queryByText('Add Payment Method')).toBeNull();
   });
 
-  // @TODO: Restore `PaymentInformation.test.tsx` tests. See M3-5768 for more information.
   it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', () => {
     const { getByTestId } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
