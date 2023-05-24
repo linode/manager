@@ -29,7 +29,7 @@ const tableCells = [
   },
 ];
 
-interface Props {
+export interface Props {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
