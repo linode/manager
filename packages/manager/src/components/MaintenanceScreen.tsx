@@ -23,9 +23,7 @@ export const MaintenanceScreen = () => {
         }}
         errorText={
           <Stack alignItems="center" spacing={2}>
-            <Typography variant="h2">
-              We are undergoing scheduled maintenance.
-            </Typography>
+            <Typography variant="h2">We are undergoing maintenance.</Typography>
             <Typography>
               Visit{' '}
               <Link to="https://status.linode.com/">
