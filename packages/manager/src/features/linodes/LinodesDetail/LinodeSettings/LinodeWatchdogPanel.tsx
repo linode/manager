@@ -1,65 +1,29 @@
-import { GrantLevel } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { Toggle } from 'src/components/Toggle';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
-  LinodeActionsProps,
-  withLinodeActions,
-} from 'src/store/linodes/linode.containers';
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
+import { Box, CircularProgress, Stack } from '@mui/material';
 
 interface Props {
   linodeId: number;
-  currentStatus: boolean;
+  isReadOnly?: boolean;
 }
 
-type CombinedProps = Props &
-  ContextProps &
-  LinodeActionsProps &
-  RouteComponentProps<{}>;
+export const LinodeWatchdogPanel = ({ linodeId, isReadOnly }: Props) => {
+  const { data: linode } = useLinodeQuery(linodeId);
 
-export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
   const {
-    linodeId,
-    linodeActions: { updateLinode },
-    permissions,
-  } = props;
-
-  const disabled = permissions === 'read_only';
-
-  const [currentStatus, setCurrentStatus] = React.useState<boolean>(
-    props.currentStatus
-  );
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<string | undefined>(undefined);
-  const [errors, setErrors] = React.useState<string | undefined>(undefined);
-
-  const toggleWatchdog = (
-    e: React.ChangeEvent<HTMLElement>,
-    value: boolean
-  ) => {
-    setSubmitting(true);
-    setSuccess(undefined);
-    setErrors(undefined);
-
-    updateLinode({ linodeId, watchdog_enabled: value })
-      .then((response) => {
-        setSubmitting(false);
-        setSuccess(`Watchdog successfully ${value ? 'enabled' : 'disabled.'}`);
-        setCurrentStatus(response.watchdog_enabled);
-      })
-      .catch(() => {
-        setSubmitting(false);
-        setErrors(`Unable to ${!value ? 'disable' : 'enable'} Watchdog.`);
-      });
-  };
+    mutateAsync: updateLinode,
+    isLoading,
+    error,
+  } = useLinodeUpdateMutation(linodeId);
 
   return (
     <Accordion
@@ -68,31 +32,34 @@ export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
       data-qa-watchdog-panel
     >
       <Grid container alignItems="center" spacing={2}>
-        {(success || errors) && (
+        {Boolean(error) && (
           <Grid xs={12}>
-            <Notice
-              success={Boolean(success)}
-              error={Boolean(errors)}
-              text={success || errors}
-            />
+            <Notice error text={error?.[0].reason} />
           </Grid>
         )}
         <Grid xs={12} md={2}>
           <FormControlLabel
             control={
               <Toggle
-                onChange={toggleWatchdog}
-                checked={currentStatus}
-                data-qa-watchdog-toggle={currentStatus}
+                onChange={(e, checked) =>
+                  updateLinode({ watchdog_enabled: checked })
+                }
+                checked={linode?.watchdog_enabled ?? false}
+                data-qa-watchdog-toggle={linode?.watchdog_enabled ?? false}
               />
             }
-            label={currentStatus ? 'Enabled' : 'Disabled'}
+            label={
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Box>{linode?.watchdog_enabled ? 'Enabled' : 'Disabled'}</Box>
+                <Box>{isLoading && <CircularProgress size={16} />}</Box>
+              </Stack>
+            }
             aria-label={
-              currentStatus
+              linode?.watchdog_enabled
                 ? 'Shutdown Watchdog is enabled'
                 : 'Shutdown Watchdog is disabled'
             }
-            disabled={submitting || disabled}
+            disabled={isReadOnly}
           />
         </Grid>
         <Grid xs={12} md={10} lg={8} xl={6}>
@@ -108,20 +75,3 @@ export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
     </Accordion>
   );
 };
-
-const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
-
-interface ContextProps {
-  permissions: GrantLevel;
-}
-
-const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  permissions: linode._permissions,
-}));
-
-export default recompose<CombinedProps, Props>(
-  errorBoundary,
-  withRouter,
-  withLinodeActions,
-  linodeContext
-)(LinodeWatchdogPanel) as React.ComponentType<Props>;

@@ -1,34 +1,22 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Link from 'src/components/Link';
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  placeholderAdjustment: {
-    padding: `${theme.spacing(2)} 0 0 0`,
-    [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing(10)} 0 0 0`,
-    },
-  },
-}));
-
-const NodeBalancerLandingEmptyState = () => {
+export const NodeBalancerLandingEmptyState = () => {
   const history = useHistory();
-  const classes = useStyles();
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="NodeBalancers" />
-      <Placeholder
+      <StyledPlaceholder
         title="NodeBalancers"
         isEntity
         icon={NodeBalancer}
-        className={classes.placeholderAdjustment}
         buttonProps={[
           {
             onClick: () => history.push('/nodebalancers/create'),
@@ -46,9 +34,15 @@ const NodeBalancerLandingEmptyState = () => {
             visit our guides and tutorials.
           </Link>
         </Typography>
-      </Placeholder>
+      </StyledPlaceholder>
     </React.Fragment>
   );
 };
 
-export default React.memo(NodeBalancerLandingEmptyState);
+const StyledPlaceholder = styled(Placeholder, {
+  label: 'StyledPlaceholder',
+})(({ theme }) => ({
+  // this important rules can be removed when Placeholder is refactored
+  // and we can just use sx={{ paddingBottom: 0 }} on placeholder
+  padding: `${theme.spacing(2)} 0 0 0 !important`,
+}));

@@ -6,7 +6,7 @@ import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import EditableEntityLabel from 'src/components/EditableEntityLabel';
+import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import { DispatchProps } from 'src/containers/longview.container';

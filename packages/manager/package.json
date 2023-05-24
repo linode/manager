@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.93.0",
+  "version": "1.93.3",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -13,6 +13,8 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@linode/api-v4": "*",

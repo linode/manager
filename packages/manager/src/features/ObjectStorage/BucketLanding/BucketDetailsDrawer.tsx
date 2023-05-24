@@ -17,7 +17,7 @@ import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
-import AccessSelect from '../BucketDetail/AccessSelect';
+import { AccessSelect } from '../BucketDetail/AccessSelect';
 import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles(() => ({

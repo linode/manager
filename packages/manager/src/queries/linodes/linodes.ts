@@ -25,6 +25,7 @@ import {
   linodeBoot,
   linodeReboot,
   linodeShutdown,
+  changeLinodePassword,
 } from '@linode/api-v4/lib/linodes';
 
 export const queryKey = 'linodes';
@@ -156,6 +157,20 @@ export const useRebootLinodeMutation = (id: number) => {
 export const useShutdownLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => linodeShutdown(id), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
+
+export const useLinodeChangePasswordMutation = (id: number) =>
+  useMutation<{}, APIError[], { root_pass: string }>(({ root_pass }) =>
+    changeLinodePassword(id, root_pass)
+  );
+
+export const useLinodeDeleteMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteLinode(id), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
     },

@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import TypeToConfirm from 'src/components/TypeToConfirm';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Notice } from 'src/components/Notice/Notice';
 import { titlecase } from 'src/features/linodes/presentation';
 import { capitalize } from 'src/utilities/capitalize';

@@ -1,7 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { reportException } from 'src/exceptionReporting';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 

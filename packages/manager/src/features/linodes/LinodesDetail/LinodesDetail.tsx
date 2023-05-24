@@ -15,7 +15,7 @@ import {
   LinodeDetailContextProvider,
 } from './linodeDetailContext';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { CircleProgress } from 'src/components/CircleProgress';
 
 const LinodesDetailHeader = React.lazy(

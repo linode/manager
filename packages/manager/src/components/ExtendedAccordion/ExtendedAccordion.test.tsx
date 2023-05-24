@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Provider } from 'react-redux';
 import ExtendedAccordion from './ExtendedAccordion';
 import { storeFactory } from 'src/store';

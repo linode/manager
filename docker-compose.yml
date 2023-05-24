@@ -1,30 +1,50 @@
 ---
 version: '3.4'
 
+# Environment variables that will be exposed to every Cypress runner.
 x-e2e-env:
   &default-env
+
+  # CI build information for Cypress Dashboard.
   BUILD_ID: "${GIT_BRANCH}-${BUILD_NUMBER}"
-  BUILD_URL: ${BUILD_URL}
   BUILD_NUMBER: ${BUILD_NUMBER}
+  BUILD_URL: ${BUILD_URL}
+
+  # Exposing `COMMIT_INFO_*` environment variables to Cypress allows us to
+  # manually specify git commit information. This is required because Cypress
+  # cannot retrieve the information automatically from within the container due
+  # to file ownership differences.
+  #
+  # See also:
+  # - https://github.com/cypress-io/commit-info
+  # - https://github.blog/2022-04-18-highlights-from-git-2-36/#stricter-repository-ownership-checks
+  COMMIT_INFO_AUTHOR: ${COMMIT_INFO_AUTHOR}
   COMMIT_INFO_BRANCH: ${CHANGE_BRANCH}
-  COMMIT_INFO_SHA: ${GIT_COMMIT}
+  COMMIT_INFO_EMAIL: ${COMMIT_INFO_EMAIL}
+  COMMIT_INFO_MESSAGE: ${COMMIT_INFO_MESSAGE}
   COMMIT_INFO_REMOTE: ${GIT_URL}
-  JENKINS_HOME: ${JENKINS_HOME}
-  JENKINS_VERSION: ${JENKINS_VERSION}
-  HUDSON_URL: ${HUDSON_URL}
-  HUDSON_HOME: ${HUDSON_HOME}
+  COMMIT_INFO_SHA: ${GIT_COMMIT}
+
+  # Cypress environment variables for run environment and CI configuration.
   CYPRESS_BASE_URL: http://web:3000
-  CYPRESS_RECORD: ${CYPRESS_RECORD}
-  CYPRESS_RECORD_KEY: ${CYPRESS_RECORD_KEY}
   CYPRESS_PULL_REQUEST_ID: ${CHANGE_ID}
   CYPRESS_PULL_REQUEST_URL: ${CHANGE_URL}
+  CYPRESS_RECORD: ${CYPRESS_RECORD}
+  CYPRESS_RECORD_KEY: ${CYPRESS_RECORD_KEY}
+
+  # Cloud Manager build environment.
   HOME: /home/node
   REACT_APP_API_ROOT: ${REACT_APP_API_ROOT}
   REACT_APP_CLIENT_ID: ${REACT_APP_CLIENT_ID}
+  REACT_APP_DISABLE_NEW_RELIC: ${REACT_APP_DISABLE_NEW_RELIC}
   REACT_APP_LAUNCH_DARKLY_ID: ${REACT_APP_LAUNCH_DARKLY_ID}
   REACT_APP_LOGIN_ROOT: ${REACT_APP_LOGIN_ROOT}
 
+  # Miscellaneous Jenkins vars.
+  HUDSON_HOME: ${HUDSON_HOME}
+  HUDSON_URL: ${HUDSON_URL}
 
+# Volumes that will be exposed to every Cypress runner.
 x-e2e-volumes:
   &default-volumes
   - ./.git:/home/node/app/.git
@@ -34,8 +54,23 @@ x-e2e-volumes:
   - ./package.json:/home/node/app/package.json
   - ./node_modules:/home/node/app/node_modules
 
-services:
+# Base Docker Compose service config for each Cypress runner.
+# This can be extended/overridden on a per-runner basis for e.g.container name
+# and OAuth token.
+x-e2e-runners:
+  &default-runner
+  build:
+    context: .
+    dockerfile: ./packages/manager/Dockerfile
+    target: e2e
+  depends_on:
+    web:
+      condition: service_healthy
+  env_file: ./packages/manager/.env
+  volumes: *default-volumes
 
+services:
+  # Serves a local instance of Cloud Manager for Cypress to use for its tests.
   web:
     build:
       context: .
@@ -54,80 +89,31 @@ services:
       timeout: 10s
       retries: 10
 
-  # Use this service to run E2E tests via Docker locally.
-  # Later, this should be renamed to better clarify this distinction.
-  # (Perhaps it should be removed entirely?)
-  e2e:
-    build:
-      context: .
-      dockerfile: ./packages/manager/Dockerfile
-      target: e2e
-    depends_on:
-      web:
-        condition: service_healthy
-    environment:
-      <<: *default-env
-      MANAGER_OAUTH: ${MANAGER_OAUTH_1}
-    env_file: ./packages/manager/.env
-    entrypoint: yarn cy:ci
-    volumes: *default-volumes
-
+  # Cypress runners.
   e2e-1:
-    build:
-      context: .
-      dockerfile: ./packages/manager/Dockerfile
-      target: e2e
+    <<: *default-runner
     container_name: cloud-e2e-1
-    depends_on:
-      web:
-        condition: service_healthy
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH_1}
-    env_file: ./packages/manager/.env
-    volumes: *default-volumes
 
   e2e-2:
-    build:
-      context: .
-      dockerfile: ./packages/manager/Dockerfile
-      target: e2e
+    <<: *default-runner
     container_name: cloud-e2e-2
-    depends_on:
-      web:
-        condition: service_healthy
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH_2}
-    env_file: ./packages/manager/.env
-    volumes: *default-volumes
 
   e2e-3:
-    build:
-      context: .
-      dockerfile: ./packages/manager/Dockerfile
-      target: e2e
+    <<: *default-runner
     container_name: cloud-e2e-3
-    depends_on:
-      web:
-        condition: service_healthy
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH_3}
-    env_file: ./packages/manager/.env
-    volumes: *default-volumes
 
   e2e-4:
-    build:
-      context: .
-      dockerfile: ./packages/manager/Dockerfile
-      target: e2e
+    <<: *default-runner
     container_name: cloud-e2e-4
-    depends_on:
-      web:
-        condition: service_healthy
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH_4}
-    env_file: ./packages/manager/.env
-    volumes: *default-volumes

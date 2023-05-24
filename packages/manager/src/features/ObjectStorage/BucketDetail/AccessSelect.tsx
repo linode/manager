@@ -32,9 +32,7 @@ export interface Props {
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
 }
 
-type CombinedProps = Props;
-
-const AccessSelect: React.FC<CombinedProps> = (props) => {
+export const AccessSelect = React.memo((props: Props) => {
   const classes = useStyles();
 
   const { getAccess, updateAccess, name, variant } = props;
@@ -244,9 +242,7 @@ const AccessSelect: React.FC<CombinedProps> = (props) => {
       </ConfirmationDialog>
     </>
   );
-};
-
-export default React.memo(AccessSelect);
+});
 
 const copy: Record<
   'bucket' | 'object',

@@ -8,7 +8,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

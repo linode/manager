@@ -1,28 +1,13 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import SummaryPanel from './SummaryPanel';
-import TablesPanel from './TablesPanel';
-import { useParams } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { styled } from '@mui/material/styles';
+import { SummaryPanel } from './SummaryPanel';
+import { TablesPanel } from './TablesPanel';
 import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
-import { Theme } from '@mui/material/styles';
+import { useParams } from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  main: {
-    [theme.breakpoints.up('md')]: {
-      order: 1,
-    },
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      order: 2,
-    },
-  },
-}));
-
-const NodeBalancerSummary = () => {
-  const classes = useStyles();
+export const NodeBalancerSummary = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
@@ -31,15 +16,29 @@ const NodeBalancerSummary = () => {
     <div>
       <DocumentTitleSegment segment={`${nodebalancer?.label} - Summary`} />
       <Grid container spacing={2}>
-        <Grid xs={12} md={8} lg={9} className={classes.main}>
+        <StyledMainGridItem xs={12} md={8} lg={9}>
           <TablesPanel />
-        </Grid>
-        <Grid xs={12} md={4} lg={3} className={classes.sidebar}>
+        </StyledMainGridItem>
+        <StyledSidebarGridItem xs={12} md={4} lg={3}>
           <SummaryPanel />
-        </Grid>
+        </StyledSidebarGridItem>
       </Grid>
     </div>
   );
 };
 
-export default NodeBalancerSummary;
+const StyledMainGridItem = styled(Grid, {
+  label: 'StyledMainGridItem',
+})(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    order: 1,
+  },
+}));
+
+const StyledSidebarGridItem = styled(Grid, {
+  label: 'StyledSidebarGridItem',
+})(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    order: 2,
+  },
+}));
