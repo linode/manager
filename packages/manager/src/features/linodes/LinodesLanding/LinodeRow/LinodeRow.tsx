@@ -25,12 +25,12 @@ import { SxProps } from '@mui/system';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { LinodeHandlers } from '../LinodesLanding';
 import { useTypeQuery } from 'src/queries/types';
-import useEvents from 'src/hooks/useEvents';
 import { useStyles } from './LinodeRow.style';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
-import { useNotificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 
 type Props = Linode & { handlers: LinodeHandlers };
 
@@ -38,7 +38,7 @@ export const LinodeRow = (props: Props) => {
   const classes = useStyles();
   const { backups, id, ipv4, label, region, status, type, handlers } = props;
 
-  const { openMenu } = useNotificationContext();
+  const notificationContext = React.useContext(_notificationContext);
 
   const { data: notifications } = useNotificationsQuery();
 
@@ -59,11 +59,7 @@ export const LinodeRow = (props: Props) => {
 
   const { data: linodeType } = useTypeQuery(type ?? '', type !== null);
 
-  const { events } = useEvents();
-
-  const recentEvent = events.find(
-    (e) => e.entity?.id === id && e.entity.type === 'linode'
-  );
+  const recentEvent = useRecentEventForLinode(id);
 
   const isBareMetalInstance = linodeType?.class === 'metal';
 
@@ -100,7 +96,7 @@ export const LinodeRow = (props: Props) => {
       data-qa-linode={label}
       ariaLabel={label}
     >
-      <TableCell>
+      <TableCell noWrap>
         <Link to={`/linodes/${id}`} tabIndex={0}>
           {label}
         </Link>
@@ -116,7 +112,10 @@ export const LinodeRow = (props: Props) => {
           loading ? (
             <>
               <StatusIcon status={iconStatus} />
-              <button className={classes.statusLink} onClick={() => openMenu()}>
+              <button
+                className={classes.statusLink}
+                onClick={notificationContext.openMenu}
+              >
                 <ProgressDisplay
                   className={classes.progressDisplay}
                   progress={getProgressOrDefault(recentEvent)}
@@ -145,7 +144,7 @@ export const LinodeRow = (props: Props) => {
       </TableCell>
       <Hidden smDown>
         <TableCell noWrap>
-          {linodeType?.label ? formatStorageUnits(linodeType.label) : type}
+          {linodeType ? formatStorageUnits(linodeType.label) : type}
         </TableCell>
         <TableCell data-qa-ips className={classes.ipCellWrapper}>
           <IPAddress ips={ipv4} />

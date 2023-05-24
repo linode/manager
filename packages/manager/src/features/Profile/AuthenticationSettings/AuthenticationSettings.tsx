@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useProfile } from 'src/queries/profile';
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import ResetPassword from './ResetPassword';

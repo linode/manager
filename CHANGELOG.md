@@ -25,6 +25,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - MUI v5 Migration - `Components > EntityHeader` #9109
 - MUI v5 Migration - `Components > TransferDisplay` #9107
 
+## [2023-05-22] - v1.93.3
+
+### Fixed:
+- LISH Console via SSH containing `none` as the username #9148
+- Ability to add a Linode to a Firewall when the Firewall contains a large number of Linodes #9151
+- Inability of restricted users with NodeBalancer creation permissions to add NodeBalancers #9150
+- Bucket Access unnecessarily refreshing #9140
+
+## [2023-05-22] - v1.93.2
+
+### Fixed:
+- Issue where linode "Reboot" button was disabled #9143
+
+## [2023-05-18] - v1.93.1
+
+### Fixed:
+- Initialize linode before referencing #9133
+- Revert linode landing changes #9136
 
 ## [2023-05-15] - v1.93.0
 
