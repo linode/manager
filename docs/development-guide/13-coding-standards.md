@@ -46,7 +46,7 @@ Function: handleLabelChange
 The styles for Cloud Manager are located in three places:
 
 - `packages/manager/src/index.css` contains global styles, utility styles, and accessibility related styles.
-- `packages/manager/src/foundations/themes/themes.ts` and `packages/manager/src/themes/index.ts` contain code for modifying the default [Material UI](https://mui.com) styles and theme specific styles.
+- `packages/manager/src/foundations/themes/index.ts` contain code for modifying the default [Material UI](https://mui.com) styles and theme specific styles.
   - Light mode styles are located in `/foundations/themes/light.ts` and dark mode styles are located in `/foundations/themes/dark.ts`.
   - The breakpoints can be modified at `/foundations/breakpoints/index.ts`.
 - Component-specific styles may be defined either at the end of the component file or in a dedicated file, named `ComponentName.styles.tsx`. Refer to the guidelines outlined in the "Styles" section of [Component Structure](02-component-structure.md#styles).

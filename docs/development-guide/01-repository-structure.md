@@ -158,5 +158,5 @@ The /src directory has several subdirectories:
 
 1. Find where the styles are defined for the component you want to modify
    a. They are likely defined in the feature component's file, e.g. `src/features/<MyFeature>/<SomeComponent>.tsx`.
-2. Avoid making changes in `src/index.css`, `src/foundations/themes.ts`, and `src/themes/index.ts` unless you are intentionally making a global styling change.
+2. Avoid making changes in `src/index.css`, `src/foundations/themes/index.ts`, and unless you are intentionally making a global styling change.
 3. Avoid making changes in `src/components/<ComponentName>` unless you are intentionally making a global styling change, or if the change cannot be made in the feature component file and the change can be controlled through props or composition.
