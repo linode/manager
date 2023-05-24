@@ -5,7 +5,7 @@ import { isNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 type PreferenceValue = boolean | string | number;
 
-export interface ToggleProps<T> {
+export interface PreferenceToggleProps<T> {
   preference: T;
   togglePreference: () => T;
 }

@@ -16,7 +16,6 @@ import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
-import type { ToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import {
   withProfile,
   WithProfileProps,
@@ -49,6 +48,7 @@ import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 interface State {
   powerDialogOpen: boolean;
@@ -297,7 +297,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           {({
             preference: linodesAreGrouped,
             togglePreference: toggleGroupLinodes,
-          }: ToggleProps<boolean>) => {
+          }: PreferenceToggleProps<boolean>) => {
             return (
               <PreferenceToggle<'grid' | 'list'>
                 preferenceKey="linodes_view_style"
@@ -314,7 +314,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 {({
                   preference: linodeViewPreference,
                   togglePreference: toggleLinodeView,
-                }: ToggleProps<'list' | 'grid'>) => {
+                }: PreferenceToggleProps<'list' | 'grid'>) => {
                   return (
                     <React.Fragment>
                       <React.Fragment>

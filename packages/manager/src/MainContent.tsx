@@ -11,7 +11,6 @@ import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
-import type { ToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
@@ -35,6 +34,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appFrame: {
@@ -263,7 +263,7 @@ const MainContent = (props: CombinedProps) => {
         {({
           preference: desktopMenuIsOpen,
           togglePreference: desktopMenuToggle,
-        }: ToggleProps<boolean>) => (
+        }: PreferenceToggleProps<boolean>) => (
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
               <>
