@@ -1,17 +1,18 @@
-import core from '@actions/core';
 import github from '@actions/github';
 
 const runChangesetBot = async () => {
+  const { OWNER, REPO, PR_NUMBER, TOKEN } = process.env;
+
   try {
     /**
      * We need to fetch all the inputs that were provided to our action
      * and store them in variables for us to use.
      **/
     const inputs = {
-      owner: core.getInput('owner', { required: true }),
-      repo: core.getInput('repo', { required: true }),
-      pull_number: core.getInput('pr_number', { required: true }),
-      token: core.getInput('token', { required: true }),
+      owner: OWNER,
+      repo: REPO,
+      pull_number: PR_NUMBER,
+      token: TOKEN,
     };
     const octokit = new github.getOctokit(inputs.token);
 
