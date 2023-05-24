@@ -12,10 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # imitation of a build process
-      - name: Build
-        run: /bin/bash ./build.sh
-
       - name: Save PR number
         run: |
           mkdir -p ./pr
