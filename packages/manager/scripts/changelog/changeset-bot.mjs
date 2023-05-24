@@ -1,3 +1,12 @@
+/**
+ *
+ * THIS SCRIPT IS NOT IN USE AT THE MOMENT
+ * It needs to be ported to a github workflow (as opposed to being called from the workflow)
+ * as we can't securely use a checkout action on forked pull requests.
+ * see https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+ *
+ */
+
 import core from '@actions/core';
 import github from '@actions/github';
 
