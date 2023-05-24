@@ -41,7 +41,7 @@ import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
-import { ADOBE_ANALYTICS_URL } from './constants';
+import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { linodeEventsHandler } from './queries/linodes/events';
 import { supportTicketEventHandler } from './queries/support';
 import { reportException } from './exceptionReporting';
@@ -99,7 +99,7 @@ export class App extends React.Component<CombinedProps, State> {
           if (
             data.status !== 'ready' ||
             !(window as any)._satellite ||
-            adobeScriptTags.length !== 3
+            adobeScriptTags.length !== NUM_ADOBE_SCRIPTS
           ) {
             adobeScriptTags.forEach((script) => script.remove());
             reportException(
