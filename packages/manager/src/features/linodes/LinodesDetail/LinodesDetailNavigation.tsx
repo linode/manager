@@ -17,7 +17,7 @@ import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { CircleProgress } from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
@@ -158,7 +158,7 @@ const LinodesDetailNavigation = () => {
                 <LinodeActivity />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeSettings isBareMetalInstance={isBareMetalInstance} />
+                <LinodeSettings />
               </SafeTabPanel>
             </TabPanels>
           </React.Suspense>

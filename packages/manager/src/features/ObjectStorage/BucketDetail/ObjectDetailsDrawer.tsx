@@ -13,7 +13,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import formatDate from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
-import AccessSelect from './AccessSelect';
+import { AccessSelect } from './AccessSelect';
 import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles(() => ({

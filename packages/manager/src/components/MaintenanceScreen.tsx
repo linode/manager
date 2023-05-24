@@ -5,7 +5,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Box from 'src/components/core/Box';
 import Logo from 'src/assets/logo/akamai-logo.svg';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import BuildIcon from '@mui/icons-material/Build';
 
 const useStyles = makeStyles((theme: Theme) => ({

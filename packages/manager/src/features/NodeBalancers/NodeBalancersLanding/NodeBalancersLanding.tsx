@@ -6,7 +6,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -17,7 +17,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
-import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
+import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
 const preferenceKey = 'nodebalancers';
@@ -77,7 +77,7 @@ export const NodeBalancersLanding = () => {
   }
 
   if (data?.results === 0) {
-    return <NodeBalancersLandingEmptyState />;
+    return <NodeBalancerLandingEmptyState />;
   }
 
   return (
