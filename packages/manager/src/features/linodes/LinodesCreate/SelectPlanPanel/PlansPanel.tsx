@@ -5,10 +5,9 @@ import { pathOr } from 'ramda';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
-import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
+import { getPlanSelectionsByPlanType, planTabInfoContent } from './utils';
 import { RenderPlanContainer } from './RenderPlanContainer';
 import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
-import { plansTabContent } from './planTabsContent';
 import { PlanInformation } from './PlanInformation';
 
 export interface PlanSelectionType extends BaseType {
@@ -88,7 +87,7 @@ export const PlansPanel = (props: Props) => {
           </>
         );
       },
-      title: plansTabContent[plan === 'standard' ? 'shared' : plan]?.title,
+      title: planTabInfoContent[plan === 'standard' ? 'shared' : plan]?.title,
     };
   });
 

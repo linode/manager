@@ -1,4 +1,79 @@
-export const plansTabContent = {
+import type { LinodeTypeClass } from '@linode/api-v4';
+
+export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
+
+/**
+ * getPlanSelectionsByPlanType is common util funtion used to provide filtered plans by
+ * type to Linode, Databse and LKE plan tables.
+ */
+
+export const getPlanSelectionsByPlanType = <
+  T extends { class: LinodeTypeClass }
+>(
+  types: T[]
+) => {
+  const plansByType: PlansTypes<T> = {
+    nanode: [],
+    standard: [],
+    highmem: [],
+    prodedicated: [],
+    dedicated: [],
+    gpu: [],
+    metal: [],
+    premium: [],
+  };
+
+  for (const type of types) {
+    switch (type.class) {
+      case 'nanode':
+        plansByType.nanode.push(type);
+        break;
+      case 'standard':
+        plansByType.standard.push(type);
+        break;
+      case 'highmem':
+        plansByType.highmem.push(type);
+        break;
+      case 'prodedicated':
+        plansByType.prodedicated.push(type);
+        break;
+      case 'dedicated':
+        plansByType.dedicated.push(type);
+        break;
+      case 'gpu':
+        plansByType.gpu.push(type);
+        break;
+      case 'metal':
+        plansByType.metal.push(type);
+        break;
+      case 'premium':
+        plansByType.premium.push(type);
+        break;
+      default:
+        break;
+    }
+  }
+
+  const updatedPlans = {
+    prodedicated: plansByType.prodedicated,
+    dedicated: plansByType.dedicated,
+    shared: [...plansByType.nanode, ...plansByType.standard],
+    highmem: plansByType.highmem,
+    gpu: plansByType.gpu,
+    metal: plansByType.metal,
+    premium: plansByType.premium,
+  };
+
+  Object.keys(updatedPlans).forEach((key) => {
+    if (updatedPlans[key].length === 0) {
+      delete updatedPlans[key];
+    }
+  });
+
+  return updatedPlans;
+};
+
+export const planTabInfoContent = {
   prodedicated: {
     typography:
       'Pro Dedicated CPU instances are for very demanding workloads. They only have AMD 2nd generation processors or newer.',

@@ -3,10 +3,9 @@ import * as React from 'react';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
-import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
+import { getPlanSelectionsByPlanType, planTabInfoContent } from './utils';
 import { RenderPlanContainer } from './RenderPlanContainerLKE';
 import { PlanInformation } from './PlanInformation';
-import { plansTabContent } from './planTabsContent';
 import { useSelectPlanQuantityStyles } from './Styles/selectPlanQuantityStyles';
 // import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 
@@ -67,7 +66,7 @@ export const KubernetesPlansPanel = ({
           </>
         );
       },
-      title: plansTabContent[plan === 'standard' ? 'shared' : plan]?.title,
+      title: planTabInfoContent[plan === 'standard' ? 'shared' : plan]?.title,
     };
   });
 

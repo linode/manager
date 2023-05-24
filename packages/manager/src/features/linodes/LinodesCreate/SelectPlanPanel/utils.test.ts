@@ -1,4 +1,4 @@
-import { getPlanSelectionsByPlanType } from './filterPlanSelectionsByType';
+import { getPlanSelectionsByPlanType } from './utils';
 import { typeFactory } from 'src/factories/types';
 
 const standard = typeFactory.build({ id: 'g6-standard-1' });

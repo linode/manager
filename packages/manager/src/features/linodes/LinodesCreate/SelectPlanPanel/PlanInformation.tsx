@@ -3,7 +3,7 @@ import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { Notice } from 'src/components/Notice/Notice';
 import Typography from 'src/components/core/Typography';
 import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
-import { plansTabContent } from './planTabsContent';
+import { planTabInfoContent } from './utils';
 import { GPUNotice } from './GPUNotice';
 import { MetalNotice } from './MetalNotice';
 
@@ -36,13 +36,13 @@ export const PlanInformation = ({ disabledClasses, planType }: Props) => {
       ) : null}
       {planType !== 'gpu' &&
       planType !== 'metal' &&
-      plansTabContent[planType]?.notice ? (
+      planTabInfoContent[planType]?.notice ? (
         <Notice warning dataTestId={`${planType}-notice`}>
-          {plansTabContent[planType].notice}
+          {planTabInfoContent[planType].notice}
         </Notice>
       ) : null}
       <Typography data-qa-prodedi className={classes.copy}>
-        {plansTabContent[planType]?.typography}
+        {planTabInfoContent[planType]?.typography}
       </Typography>
     </>
   );
