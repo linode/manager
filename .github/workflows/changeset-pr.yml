@@ -1,4 +1,4 @@
-name: Changeset Bot
+name: Changeset Bot Receive PR
 
 on:
   pull_request:
@@ -11,8 +11,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      # imitation of a build process
+      - name: Build
+        run: /bin/bash ./build.sh
+
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+      - uses: actions/upload-artifact@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          name: pr
+          path: pr/
+
       - name: Run Changeset Checker
         uses: ./packages/manager/scripts/changelog
         with:
