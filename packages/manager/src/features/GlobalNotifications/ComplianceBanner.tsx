@@ -1,3 +1,4 @@
+import { styled } from '@mui/system';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import DismissibleBanner from 'src/components/DismissibleBanner';
@@ -19,22 +20,16 @@ const ComplianceBanner = () => {
     return null;
   }
 
-  const actionButton = (
-    <Button
-      buttonType="primary"
-      style={{ marginLeft: 12, minWidth: 150 }}
-      onClick={() => context.open()}
-    >
-      Review Update
-    </Button>
-  );
-
   return (
     <DismissibleBanner
       important
       warning
       preferenceKey="gdpr-compliance"
-      actionButton={actionButton}
+      actionButton={
+        <StyledActionButton buttonType="primary" onClick={() => context.open()}>
+          Review Update
+        </StyledActionButton>
+      }
     >
       <Box
         display="flex"
@@ -52,5 +47,10 @@ const ComplianceBanner = () => {
     </DismissibleBanner>
   );
 };
+
+const StyledActionButton = styled(Button)(({}) => ({
+  marginLeft: 12,
+  minWidth: 150,
+}));
 
 export default ComplianceBanner;
