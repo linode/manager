@@ -1,101 +1,54 @@
-import { Event } from '@linode/api-v4/lib/account/types';
-import classNames from 'classnames';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
+import classNames from 'classnames';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import { GravatarByUsername } from 'src/components/GravatarByUsername';
-import { parseAPIDate } from 'src/utilities/date';
+import Typography from 'src/components/core/Typography';
 import useEventInfo from './useEventInfo';
+import { Event } from '@linode/api-v4/lib/account/types';
+import { parseAPIDate } from 'src/utilities/date';
+import {
+  RenderEventGravatar,
+  RenderEventStyledBox,
+  useRenderEventStyles,
+} from './RenderEvent.styles';
 import { useApplicationStore } from 'src/store';
 
-export const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingTop: 12,
-    paddingBottom: 12,
-    width: '100%',
-    gap: 16,
-  },
-  icon: {
-    height: 40,
-    minWidth: 40,
-  },
-  event: {
-    color: theme.textColors.tableHeader,
-    '&:hover': {
-      backgroundColor: theme.bg.app,
-      // Extends the hover state to the edges of the drawer
-      marginLeft: -20,
-      marginRight: -20,
-      paddingLeft: 20,
-      paddingRight: 20,
-      width: 'calc(100% + 40px)',
-    },
-  },
-  eventMessage: {
-    marginTop: 2,
-  },
-  unseenEvent: {
-    color: theme.textColors.headlineStatic,
-    textDecoration: 'none',
-  },
-}));
-
-interface Props {
+interface RenderEventProps {
   event: Event;
   onClose: () => void;
 }
 
-export const RenderEvent: React.FC<Props> = (props) => {
+export const RenderEvent = React.memo((props: RenderEventProps) => {
   const store = useApplicationStore();
-  const classes = useStyles();
-
+  const { classes } = useRenderEventStyles();
   const { event } = props;
   const { message } = useEventInfo(event, store);
+
+  const unseenEventClass = classNames({ [classes.unseenEvent]: !event.seen });
 
   if (message === null) {
     return null;
   }
 
   const eventMessage = (
-    <div
-      className={classNames({
-        [classes.unseenEvent]: !event.seen,
-      })}
-    >
+    <div className={unseenEventClass}>
       <HighlightedMarkdown textOrMarkdown={message} />
     </div>
   );
 
   return (
     <>
-      <Box
-        className={classNames({
-          [classes.root]: true,
-          [classes.event]: true,
-        })}
-        display="flex"
-        data-test-id={event.action}
-      >
-        <GravatarByUsername
-          username={event.username}
-          className={classes.icon}
-        />
-        <div className={classes.eventMessage}>
+      <RenderEventStyledBox display="flex" data-test-id={event.action}>
+        <RenderEventGravatar username={event.username} />
+        <Box sx={{ marginTop: '-2px' }}>
           {eventMessage}
-          <Typography
-            className={classNames({ [classes.unseenEvent]: !event.seen })}
-          >
+          <Typography className={unseenEventClass}>
             {parseAPIDate(event.created).toRelative()}
           </Typography>
-        </div>
-      </Box>
+        </Box>
+      </RenderEventStyledBox>
       <Divider />
     </>
   );
-};
-
-export default React.memo(RenderEvent);
+});
