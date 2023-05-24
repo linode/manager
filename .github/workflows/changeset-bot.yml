@@ -1,4 +1,4 @@
-name: Changeset Bot Receive PR
+name: Changeset Bot
 
 on:
   pull_request:

@@ -2,7 +2,7 @@ name: Changeset Bot Comment
 
 on:
   workflow_run:
-    workflows: ["Changeset Bot Receive PR"]
+    workflows: ["Changeset Bot"]
     types:
       - completed
     branches-ignore:
