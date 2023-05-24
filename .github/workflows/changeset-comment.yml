@@ -5,6 +5,8 @@ on:
     workflows: ["Changeset Bot Receive PR"]
     types:
       - completed
+    branches:
+      - develop
 
 jobs:
   upload:
