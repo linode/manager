@@ -11,12 +11,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+      - uses: actions/upload-artifact@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run Changeset Checker
-        uses: ./packages/manager/scripts/changelog
-        with:
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          pr_number: ${{ github.event.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          name: pr
+          path: pr/
