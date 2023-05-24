@@ -12,6 +12,6 @@ describe('getPlanSelectionsByPlanType', () => {
   });
   it('should filter empty plan types', () => {
     const actual = getPlanSelectionsByPlanType([standard, metal]);
-    expect(actual).toEqual({ standard: [standard], metal: [metal] });
+    expect(actual).toEqual({ shared: [standard], metal: [metal] });
   });
 });

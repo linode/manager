@@ -2,6 +2,8 @@ import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { TableCell } from 'src/components/TableCell';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -56,19 +58,23 @@ export const RenderPlanContainer = ({
       <Hidden mdDown>
         <Grid xs={12} lg={12}>
           <Table aria-label="List of Linode Plans" spacingBottom={16}>
-            {tableCells.map(({ cellName, testId, center, noWrap }) => {
-              const attributeValue = `${testId}-header`;
-              return (
-                <TableCell
-                  data-qa={attributeValue}
-                  center={center}
-                  noWrap={noWrap}
-                  key={testId}
-                >
-                  {cellName}
-                </TableCell>
-              );
-            })}
+            <TableHead>
+              <TableRow>
+                {tableCells.map(({ cellName, testId, center, noWrap }) => {
+                  const attributeValue = `${testId}-header`;
+                  return (
+                    <TableCell
+                      data-qa={attributeValue}
+                      center={center}
+                      noWrap={noWrap}
+                      key={testId}
+                    >
+                      {cellName}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableHead>
             <TableBody role="grid">
               {plans.map((plan, id) => (
                 <RenderSelectionLKE
