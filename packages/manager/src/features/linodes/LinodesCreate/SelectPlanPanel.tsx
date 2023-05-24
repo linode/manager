@@ -2,17 +2,15 @@ import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { pathOr } from 'ramda';
-import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
-import Typography from 'src/components/core/Typography';
 import { ExtendedType } from 'src/utilities/extendType';
 import { getPlanSelectionsByPlanType } from 'src/utilities/filterPlanSelectionsByType';
 import { RenderPlanContainer } from './SelectPlanPanel/RenderPlanContainer';
 import { useSelectPlanPanelStyles } from './SelectPlanPanel/Styles/selectPlanPanelStyles';
-import { plansTabContent } from './SelectPlanPanel/generateTabs';
-import { GPUNotice } from './SelectPlanPanel/GPUNotice';
-import { MetalNotice } from './SelectPlanPanel/MetalNotice';
+import { plansTabContent } from './SelectPlanPanel/planTabsContent';
+import { PlanInformation } from './SelectPlanPanel/PlanInformation';
+
 export interface PlanSelectionType extends BaseType {
   formattedLabel: ExtendedType['formattedLabel'];
   class: ExtendedType['class'];
@@ -60,35 +58,21 @@ export const SelectPlanPanel = (props: Props) => {
 
   const { classes } = useSelectPlanPanelStyles();
 
-  const getDisabledClass = (thisClass: string) => {
-    const disabledClasses = (props.disabledClasses as string[]) ?? []; // Not a big fan of the casting here but it works
-    return disabledClasses.includes(thisClass);
-  };
-
   const plans = getPlanSelectionsByPlanType(types);
+
   const tabOrder: LinodeTypeClass[] = Object.keys(plans).map((plan) =>
     plan === 'shared' ? 'standard' : (plan as LinodeTypeClass)
   );
 
-  const tabs = Object.keys(plans).map((plan) => {
+  const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
       render: () => {
         return (
           <>
-            {plan === 'gpu' ? (
-              <GPUNotice hasDisabledClass={getDisabledClass('gpu')} />
-            ) : null}
-            {plan === 'metal' ? (
-              <MetalNotice hasDisabledClass={getDisabledClass('metal')} />
-            ) : null}
-            {plan !== 'gpu' &&
-            plan !== 'metal' &&
-            plansTabContent[plan]?.notice ? (
-              <Notice warning>{plansTabContent[plan].notice}</Notice>
-            ) : null}
-            <Typography data-qa-prodedi className={classes.copy}>
-              {plansTabContent[plan].typography}
-            </Typography>
+            <PlanInformation
+              disabledClasses={props.disabledClasses}
+              planType={plan}
+            />
             <RenderPlanContainer
               isCreate={isCreate}
               plans={plans[plan]}
