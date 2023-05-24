@@ -15,7 +15,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import type { ToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import {
   withProfile,
   WithProfileProps,

@@ -10,7 +10,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import type { ToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
