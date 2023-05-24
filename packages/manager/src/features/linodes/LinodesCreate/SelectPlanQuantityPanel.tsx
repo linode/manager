@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
-import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
+import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import SelectionCard from 'src/components/SelectionCard';
@@ -177,6 +177,9 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
             className={classNames({
               [classes.disabledRow]: disabled,
             })}
+            style={{
+              background: 'red !important',
+            }}
           >
             <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>
