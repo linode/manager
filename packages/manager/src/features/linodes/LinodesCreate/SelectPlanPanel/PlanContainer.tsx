@@ -8,9 +8,9 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
+import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanSelectionType } from '../SelectPlanPanel';
-import { RenderSelection } from './RenderSelection';
+import { RenderSelection } from './PlanSelection';
 
 const tableCells = [
   { cellName: '', testId: '', center: false, noWrap: false },

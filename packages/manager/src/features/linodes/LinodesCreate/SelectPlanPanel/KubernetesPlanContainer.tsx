@@ -7,7 +7,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableCell } from 'src/components/TableCell';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
-import { RenderSelectionLKE } from './RenderSelectionLKE';
+import { RenderSelectionLKE } from './KubernetesPlanSelection';
 
 const tableCells = [
   { cellName: 'Plan', testId: 'plan', center: false, noWrap: false },

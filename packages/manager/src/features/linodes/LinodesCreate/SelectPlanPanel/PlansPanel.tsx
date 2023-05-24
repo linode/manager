@@ -6,8 +6,8 @@ import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
 import { getPlanSelectionsByPlanType, planTabInfoContent } from './utils';
-import { RenderPlanContainer } from './RenderPlanContainer';
-import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
+import { RenderPlanContainer } from './PlanContainer';
+import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
 
 export interface PlanSelectionType extends BaseType {

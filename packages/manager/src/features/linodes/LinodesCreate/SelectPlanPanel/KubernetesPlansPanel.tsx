@@ -4,9 +4,9 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { getPlanSelectionsByPlanType, planTabInfoContent } from './utils';
-import { RenderPlanContainer } from './RenderPlanContainerLKE';
+import { RenderPlanContainer } from './KubernetesPlanContainer';
 import { PlanInformation } from './PlanInformation';
-import { useSelectPlanQuantityStyles } from './Styles/selectPlanQuantityStyles';
+import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
 // import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 
 interface Props {

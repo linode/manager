@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanQuantityStyles } from './Styles/selectPlanQuantityStyles';
+import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
 
 interface Props {
   disabled?: boolean;

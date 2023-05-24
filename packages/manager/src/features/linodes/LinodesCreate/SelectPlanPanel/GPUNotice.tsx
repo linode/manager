@@ -3,7 +3,7 @@ import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
-import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
+import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 
 interface Props {
   hasDisabledClass: boolean;

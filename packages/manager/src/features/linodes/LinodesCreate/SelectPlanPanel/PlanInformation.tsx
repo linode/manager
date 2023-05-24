@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { Notice } from 'src/components/Notice/Notice';
 import Typography from 'src/components/core/Typography';
-import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
+import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { planTabInfoContent } from './utils';
 import { GPUNotice } from './GPUNotice';
 import { MetalNotice } from './MetalNotice';
