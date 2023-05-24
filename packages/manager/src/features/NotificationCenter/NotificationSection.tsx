@@ -19,6 +19,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   notificationSpacing: {
     marginBottom: theme.spacing(2),
+    '& > div:not(:first-child)': {
+      padding: '0 20px',
+      margin: `${theme.spacing()} 0`,
+    },
   },
   menuItemLink: {
     ...menuLinkStyle(theme.textColors.linkActiveLight),
@@ -145,7 +149,7 @@ interface BodyProps {
   loading: boolean;
 }
 
-const ContentBody: React.FC<BodyProps> = React.memo((props) => {
+const ContentBody = React.memo((props: BodyProps) => {
   const { classes } = useStyles();
 
   const { header, content, count, emptyMessage, loading } = props;
@@ -166,7 +170,10 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
     // eslint-disable-next-line
     <>
       {_content.map((thisItem) => (
-        <StyledNotificationItem key={`notification-row-${thisItem.id}`}>
+        <StyledNotificationItem
+          key={`notification-row-${thisItem.id}`}
+          {...props}
+        >
           {thisItem.body}
         </StyledNotificationItem>
       ))}
@@ -222,11 +229,15 @@ const StyledLoadingContainer = styled('div', {
   justifyContent: 'center',
 }));
 
-const StyledNotificationItem = styled(Box)(({ theme }) => ({
+const StyledNotificationItem = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'content',
+  label: 'StyledNotificationItem',
+})<NotificationSectionProps>(({ theme, ...props }) => ({
   display: 'flex',
   fontSize: '0.875rem',
   justifyContent: 'space-between',
   width: '100%',
+  padding: props.header === 'Notifications' ? `${theme.spacing(1.5)} 20px` : 0,
   '& p': {
     color: theme.textColors.headlineStatic,
     lineHeight: '1.25rem',
