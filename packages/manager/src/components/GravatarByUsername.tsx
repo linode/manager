@@ -6,14 +6,6 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 import { styled } from '@mui/material/styles';
 import { useAccountUser } from 'src/queries/accountUsers';
 
-const StyledAvatar = styled(Avatar, {
-  label: 'StyledGravatarByUsername',
-})(() => ({
-  height: 28,
-  width: 28,
-  borderRadius: '50%',
-}));
-
 interface Props {
   username: string | null;
   className?: string;
@@ -34,3 +26,11 @@ export const GravatarByUsername = (props: Props) => {
     </StyledAvatar>
   );
 };
+
+const StyledAvatar = styled(Avatar, {
+  label: 'StyledGravatarByUsername',
+})(() => ({
+  height: 28,
+  width: 28,
+  borderRadius: '50%',
+}));
