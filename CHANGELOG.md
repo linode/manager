@@ -23,40 +23,70 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - React Query - Linodes - Details Header #9099
 - MUI v5 Migration - `Components > IconButton` #9102
 - MUI v5 Migration - `Components > EntityHeader` #9109
+- MUI v5 Migration - `Components > TransferDisplay` #9107
+
+## [2023-05-22] - v1.93.3
+
+### Fixed:
+- LISH Console via SSH containing `none` as the username #9148
+- Ability to add a Linode to a Firewall when the Firewall contains a large number of Linodes #9151
+- Inability of restricted users with NodeBalancer creation permissions to add NodeBalancers #9150
+- Bucket Access unnecessarily refreshing #9140
+
+## [2023-05-22] - v1.93.2
+
+### Fixed:
+- Issue where linode "Reboot" button was disabled #9143
+
+## [2023-05-18] - v1.93.1
+
+### Fixed:
+- Initialize linode before referencing #9133
+- Revert linode landing changes #9136
 
 ## [2023-05-15] - v1.93.0
 
 ### Added:
-
 - Resource links to empty state Volumes landing page #9065
 - Resource links to empty state Firewalls landing page #9078
 - Resource links to empty state StackScripts landing page #9091
 - Resource links to empty state Domains landing page #9092
 - Ability download DNS zone file #9075
+- New flag to deliver DC availability notice for premium plans #9066
+- Accessible graph data for LineGraphs #9045
 
 ### Changed:
-
-- Removed MongoDB reference from ClusterControl description #9081
+- Banner text size and spacing to improve readability #9064
+- Updated ClusterControl description #9081
 - Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
 
 ### Fixed:
-
 - Ability to search Linodes by IPv6 #9073
+- Surface general errors in the Object Storage Bucket Create Drawer #9067
+- Large file size for invoices due to uncompressed JPG logo #9069
+- Phone Verification error does not reset #9059
+- Show error for PayPal payments #9058
+- Send Adobe Analytics page views #9108
 
 ### Tech Stories:
-
-- Enable Cypress `experimentalMemoryManagement` #9076
-- MUI v5 Migration - `Components > Table` #9082
-- MUI v5 Migration - `Components > TableCell` #9082
-- MUI v5 Migration - `Components > TableHead` #9082
-- MUI v5 Migration - `Components > TableBody` #9082
-- MUI v5 Migration - `Components > TableSortCell` #9082
-- MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > CheckoutSummary` #9100
+- MUI v5 Migration - `Components > CopyableTextField` #9018
+- MUI v5 Migration - `Components > DialogTitle` #9050
 - MUI v5 Migration - `Components > DownloadCSV` #9084
 - MUI v5 Migration - `Components > Notice` #9094
-- MUI v5 Migration - `Components > CheckoutSummary` #9100
 - MUI v5 Migration - `Components > PrimaryNav` #9090
-- React Query for Linodes Landing #9062
+- MUI v5 Migration - `Components > ShowMoreExpansion` #9096
+- MUI v5 Migration - `Components > Table` #9082
+- MUI v5 Migration - `Components > TableBody` #9082
+- MUI v5 Migration - `Components > TableCell` #9082
+- MUI v5 Migration - `Components > TableHead` #9082
+- MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > TableSortCell` #9082
+- React Query - Linodes - Prepare for React Query for Linodes #9049
+- React Query - Linodes - Landing #9062
+- React Query - Linodes - Detail - Backups #9079
+- Add Adobe Analytics custom event tracking #9004
+
 
 ## [2023-05-01] - v1.92.0
 
