@@ -3,7 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
 import EntityIcon from 'src/components/EntityIcon';
-import Tag from 'src/components/Tag';
+import { Tag } from 'src/components/Tag/Tag';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
 export interface SearchSuggestionT {

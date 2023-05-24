@@ -1,42 +1,11 @@
 import Close from '@mui/icons-material/Close';
-import { Theme, styled } from '@mui/material/styles';
-import classNames from 'classnames';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import { truncateEnd } from 'src/utilities/truncate';
-import { makeStyles } from 'tss-react/mui';
 
 type Variants = 'blue' | 'lightBlue';
-
-const useStyles = makeStyles<void>()((theme: Theme, _params) => ({
-  label: {
-    maxWidth: 350,
-  },
-  blue: {
-    backgroundColor: theme.palette.primary.main,
-    '& > span': {
-      color: 'white',
-    },
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
-    },
-  },
-  lightBlue: {
-    backgroundColor: theme.color.tagButton,
-    '& > span': {
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
-      },
-      '&:focus': {
-        backgroundColor: theme.color.tagButton,
-        color: theme.color.black,
-      },
-    },
-  },
-}));
 
 export interface TagProps extends ChipProps {
   label: string;
@@ -47,23 +16,10 @@ export interface TagProps extends ChipProps {
   maxLength?: number;
 }
 
-type CombinedProps = RouteComponentProps<{}> & TagProps;
+export const Tag = (props: TagProps) => {
+  const { className, label, maxLength, ...chipProps } = props;
 
-export const Tag = (props: CombinedProps) => {
-  const { classes } = useStyles();
-
-  const {
-    className,
-    colorVariant,
-    history,
-    label,
-    maxLength,
-    // Defining `staticContext` here to prevent `...rest` from containing it
-    // since it leads to a console warning
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    staticContext,
-    ...chipProps
-  } = props;
+  const history = useHistory();
 
   const handleClick = (e: React.MouseEvent<any>) => {
     e.preventDefault();
@@ -79,11 +35,9 @@ export const Tag = (props: CombinedProps) => {
 
   return (
     <StyledChip
-      {...chipProps}
+      {...props}
       label={_label}
-      className={classNames(className, {
-        [classes[colorVariant]]: true,
-      })}
+      className={className}
       deleteIcon={
         chipProps.onDelete ? (
           <StyledDeleteButton
@@ -95,25 +49,23 @@ export const Tag = (props: CombinedProps) => {
           </StyledDeleteButton>
         ) : undefined
       }
-      classes={{
-        label: classes.label,
-        deletable: classes[colorVariant!],
-      }}
       onClick={handleClick}
       data-qa-tag={label}
       component="div"
       clickable
       role="button"
       aria-label={`Search for Tag "${label}"`}
-      colorVariant={colorVariant}
     />
   );
 };
 
 const StyledChip = styled(Chip)<TagProps>(({ theme, ...props }) => ({
   height: 30,
-  paddingLeft: 0,
-  paddingRight: 0,
+  fontSize: '0.875rem',
+  '& .MuiChip-label': {
+    maxWidth: 350,
+    padding: '7px 10px',
+  },
   // Overrides MUI chip default styles so these appear as separate elements.
   '&:hover': {
     backgroundColor: theme.color.tagButton,
@@ -132,15 +84,38 @@ const StyledChip = styled(Chip)<TagProps>(({ theme, ...props }) => ({
     borderRadius: 3,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
-    borderRight: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
+    borderRight: !props.onDelete
+      ? 0
+      : `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
     color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
-    fontSize: '0.875rem',
     padding: '7px 10px',
   },
   ...(!props.onDelete && {
     '& > span': {
       borderRadius: '3px !important',
       borderRight: '0 !important',
+    },
+  }),
+  ...(props.colorVariant === 'blue' && {
+    backgroundColor: theme.palette.primary.main,
+    '& > span': {
+      color: 'white',
+    },
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.primary.main,
+    },
+  }),
+  ...(props.colorVariant === 'lightBlue' && {
+    backgroundColor: theme.color.tagButton,
+    '& > span': {
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white',
+      },
+      '&:focus': {
+        backgroundColor: theme.color.tagButton,
+        color: theme.color.black,
+      },
     },
   }),
 }));
@@ -174,7 +149,3 @@ const StyledDeleteButton = styled('button', { label: 'StyledDeleteButton' })(
     },
   })
 );
-
-const enhanced = compose<CombinedProps, TagProps>(withRouter)(Tag);
-
-export default enhanced;
