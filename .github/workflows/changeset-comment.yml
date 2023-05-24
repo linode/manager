@@ -1,9 +1,8 @@
-# Does it work?
 name: Changeset Bot Comment
 
 on:
   workflow_run:
-    workflows: ["Changeset Bot"]
+    workflows: [Changeset Bot]
     types:
       - completed
     branches-ignore:
