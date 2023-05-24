@@ -1,60 +1,33 @@
 import * as React from 'react';
-import { LinodeDetailContextConsumer } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
-import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
-import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
-import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
-import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
-import LinodeWatchdogPanel from './LinodeWatchdogPanel';
+import { LinodeSettingsAlertsPanel } from './LinodeSettingsAlertsPanel';
+import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
+import { LinodeSettingsPasswordPanel } from './LinodeSettingsPasswordPanel';
+import { useParams } from 'react-router-dom';
+import { useGrants } from 'src/queries/profile';
+import { LinodeWatchdogPanel } from './LinodeWatchdogPanel';
+import { LinodeSettingsDeletePanel } from './LinodeSettingsDeletePanel';
 
-interface Props {
-  isBareMetalInstance: boolean;
-}
+const LinodeSettings = () => {
+  const { linodeId } = useParams<{ linodeId: string }>();
+  const id = Number(linodeId);
 
-type CombinedProps = Props;
+  const { data: grants } = useGrants();
 
-const LinodeSettings: React.FC<CombinedProps> = (props) => {
-  const { isBareMetalInstance } = props;
+  const isReadOnly =
+    grants !== undefined &&
+    grants?.linode.find((grant) => grant.id === id)?.permissions ===
+      'read_only';
 
   return (
-    <LinodeDetailContextConsumer>
-      {({ linode }) => {
-        if (!linode) {
-          return null;
-        }
-
-        const permissionsError =
-          linode._permissions === 'read_only' ? (
-            <LinodePermissionsError />
-          ) : null;
-
-        return (
-          <>
-            {permissionsError}
-            <LinodeSettingsLabelPanel />
-            <LinodeSettingsPasswordPanel
-              isBareMetalInstance={isBareMetalInstance}
-              linodeId={linode.id}
-              linodeStatus={linode.status}
-            />
-            <LinodeSettingsAlertsPanel
-              isBareMetalInstance={isBareMetalInstance}
-              linodeId={linode.id}
-              linodeLabel={linode.label}
-              linodeAlerts={linode.alerts}
-            />
-            <LinodeWatchdogPanel
-              linodeId={linode.id}
-              currentStatus={linode.watchdog_enabled}
-            />
-            <LinodeSettingsDeletePanel
-              linodeId={linode.id}
-              linodeLabel={linode.label}
-            />
-          </>
-        );
-      }}
-    </LinodeDetailContextConsumer>
+    <>
+      {isReadOnly && <LinodePermissionsError />}
+      <LinodeSettingsLabelPanel linodeId={id} isReadOnly={isReadOnly} />
+      <LinodeSettingsPasswordPanel linodeId={id} isReadOnly={isReadOnly} />
+      <LinodeSettingsAlertsPanel linodeId={id} isReadOnly={isReadOnly} />
+      <LinodeWatchdogPanel linodeId={id} isReadOnly={isReadOnly} />
+      <LinodeSettingsDeletePanel linodeId={id} isReadOnly={isReadOnly} />
+    </>
   );
 };
 

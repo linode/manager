@@ -22,11 +22,12 @@ import { APIError } from '@linode/api-v4/lib/types';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
-import { useProfile, useGrants } from 'src/queries/profile';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 interface TagDrawerProps {
   tags: string[];
@@ -48,7 +49,7 @@ const LinodeDetailHeader = () => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const { data: linode } = useLinodeQuery(matchedLinodeId);
+  const { data: linode, isLoading, error } = useLinodeQuery(matchedLinodeId);
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     matchedLinodeId
@@ -127,14 +128,6 @@ const LinodeDetailHeader = () => {
     resetEditableLabel,
   } = useEditableLabelState();
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const disabled =
-    Boolean(profile?.restricted) &&
-    grants?.linode.find((grant) => grant.id === matchedLinodeId)
-      ?.permissions === 'read_only';
-
   const updateLinodeLabel = async (label: string) => {
     try {
       await updateLinode({ label });
@@ -196,6 +189,18 @@ const LinodeDetailHeader = () => {
     onOpenMigrateDialog,
   };
 
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error?.[0]?.reason} />;
+  }
+
+  if (!linode) {
+    return null;
+  }
+
   return (
     <>
       <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
@@ -207,14 +212,12 @@ const LinodeDetailHeader = () => {
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         breadcrumbProps={{
           pathname: `/linodes/${linode?.label}`,
-          onEditHandlers: !disabled
-            ? {
-                editableTextTitle: linode?.label ?? '',
-                onEdit: handleLinodeLabelUpdate,
-                onCancel: resetEditableLabel,
-                errorText: editableLabelError,
-              }
-            : undefined,
+          onEditHandlers: {
+            editableTextTitle: linode?.label ?? '',
+            onEdit: handleLinodeLabelUpdate,
+            onCancel: resetEditableLabel,
+            errorText: editableLabelError,
+          },
         }}
         onDocsClick={() => {
           sendEvent({
@@ -226,6 +229,7 @@ const LinodeDetailHeader = () => {
       />
       <LinodeEntityDetail
         id={matchedLinodeId}
+        linode={linode}
         openTagDrawer={openTagDrawer}
         handlers={handlers}
       />
