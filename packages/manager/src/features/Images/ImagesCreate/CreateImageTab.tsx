@@ -12,11 +12,11 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
+import { LinodeSelect } from 'src/components/LinodeSelect/LinodeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import useFlags from 'src/hooks/useFlags';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -245,7 +245,19 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         <Notice error text={generalError} data-qa-notice />
       ) : null}
       {notice ? <Notice success text={notice} data-qa-notice /> : null}
+
       <LinodeSelect
+        value={selectedLinode?.id || null}
+        errorText={linodeError}
+        disabled={!canCreateImage}
+        handleChange={(linode) => handleLinodeChange(linode)}
+        optionsFilter={(linode) =>
+          availableLinodesToImagize?.includes(linode.id) ?? true
+        }
+        required
+      />
+
+      {/* <LinodeSelect
         selectedLinode={selectedLinode?.id || null}
         linodeError={linodeError}
         disabled={!canCreateImage}
@@ -264,7 +276,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         ]}
         isClearable={false}
         required
-      />
+      /> */}
 
       <Box
         display="flex"

@@ -53,7 +53,7 @@ export const useAllLinodesQuery = (
   );
 };
 
-export const useInfiniteLinodesQuery = (filter: Filter) =>
+export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
   useInfiniteQuery<ResourcePage<Linode>, APIError[]>(
     [queryKey, 'infinite', filter],
     ({ pageParam }) => getLinodes({ page: pageParam, page_size: 25 }, filter),

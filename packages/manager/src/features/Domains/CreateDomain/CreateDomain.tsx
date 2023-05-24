@@ -3,7 +3,6 @@ import {
   Domain,
   DomainType,
 } from '@linode/api-v4/lib/domains';
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
@@ -27,7 +26,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { LinodeSelect } from 'src/components/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -45,6 +44,7 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { generateDefaultDomainRecords } from '../domainUtils';
 import LandingHeader from 'src/components/LandingHeader';
+import { Linode } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -278,12 +278,6 @@ export const CreateDomain = () => {
       });
   };
 
-  const updateSelectedLinode = (linode: Linode) =>
-    setSelectedDefaultLinode(linode);
-
-  const updateInsertDefaultRecords = (value: Item<DefaultRecordsType>) =>
-    setDefaultRecordsSetting(value);
-
   const updateType = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: 'master' | 'slave'
@@ -397,7 +391,7 @@ export const CreateDomain = () => {
                 <Select
                   isClearable={false}
                   onChange={(value: Item<DefaultRecordsType>) =>
-                    updateInsertDefaultRecords(value)
+                    setDefaultRecordsSetting(value)
                   }
                   value={defaultRecordsSetting}
                   label="Insert Default Records"
@@ -429,11 +423,11 @@ export const CreateDomain = () => {
               defaultRecordsSetting.value === 'linode' && (
                 <React.Fragment>
                   <LinodeSelect
-                    linodeError={errorMap.defaultLinode}
-                    handleChange={updateSelectedLinode}
-                    selectedLinode={
-                      selectedDefaultLinode ? selectedDefaultLinode.id : null
+                    errorText={errorMap.defaultLinode}
+                    handleChange={(value) =>
+                      setSelectedDefaultLinode(value ?? undefined)
                     }
+                    value={selectedDefaultLinode?.id ?? null}
                     disabled={disabled}
                   />
                   {!errorMap.defaultLinode && (

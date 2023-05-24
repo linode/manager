@@ -4,7 +4,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
-import LinodeMultiSelect from 'src/components/LinodeMultiSelect/LinodeMultiSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -17,6 +16,7 @@ import {
   useFirewallQuery,
 } from 'src/queries/firewalls';
 import { useTheme } from '@mui/material/styles';
+import { LinodeSelect } from 'src/components/LinodeSelect/LinodeSelect';
 
 interface Props {
   open: boolean;
@@ -33,7 +33,10 @@ export const AddDeviceDrawer = (props: Props) => {
   const isRestrictedUser = Boolean(profile?.restricted);
 
   const { data: firewall } = useFirewallQuery(Number(id));
-  const { data: currentDevices } = useAllFirewallDevicesQuery(Number(id));
+  const {
+    data: currentDevices,
+    isLoading: currentDevicesLoading,
+  } = useAllFirewallDevicesQuery(Number(id));
 
   const currentLinodeIds =
     currentDevices
@@ -47,16 +50,18 @@ export const AddDeviceDrawer = (props: Props) => {
   } = useAddFirewallDeviceMutation(Number(id));
   const theme = useTheme();
 
-  const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
+  const [selectedLinodeIds, setSelectedLinodeIds] = React.useState<number[]>(
+    []
+  );
 
   const handleSubmit = async () => {
     await Promise.all(
-      selectedLinodes.map((thisLinode) =>
+      selectedLinodeIds.map((thisLinode) =>
         addDevice({ type: 'linode', id: thisLinode })
       )
     );
     onClose();
-    setSelectedLinodes([]);
+    setSelectedLinodeIds([]);
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
@@ -121,14 +126,30 @@ export const AddDeviceDrawer = (props: Props) => {
         }}
       >
         {errorMessage ? errorNotice(errorMessage) : null}
-        <LinodeMultiSelect
+        <LinodeSelect
+          multiple
+          handleChange={(linodes) =>
+            setSelectedLinodeIds(linodes.map((linode) => linode.id))
+          }
+          value={selectedLinodeIds}
+          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
+            linodeSelectGuidance ? linodeSelectGuidance : ''
+          }`}
+          optionsFilter={(linode) =>
+            ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
+          }
+          noOptionsMessage="No Linodes available to add"
+          disabled={currentDevicesLoading}
+          loading={currentDevicesLoading}
+        />
+        {/* <LinodeMultiSelect
           onChange={(selected) => setSelectedLinodes(selected)}
           value={selectedLinodes}
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
             linodeSelectGuidance ? linodeSelectGuidance : ''
           }`}
           filteredLinodes={[...currentLinodeIds, ...readOnlyLinodeIds]}
-        />
+        /> */}
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
             Cancel
@@ -136,7 +157,7 @@ export const AddDeviceDrawer = (props: Props) => {
           <Button
             buttonType="primary"
             onClick={handleSubmit}
-            disabled={selectedLinodes.length === 0}
+            disabled={selectedLinodeIds.length === 0}
             loading={isLoading}
             data-qa-submit
           >
