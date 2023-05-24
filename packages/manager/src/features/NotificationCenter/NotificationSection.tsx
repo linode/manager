@@ -178,11 +178,16 @@ const ContentBody = React.memo((props: BodyProps) => {
         </StyledNotificationItem>
       ))}
       {content.length > count ? (
-        <Box display="flex" justifyContent="flex-end">
+        <StyledLToggleContainer display="flex" justifyContent="flex-end">
           <LinkStyledButton
             onClick={() => setShowAll(!showAll)}
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
+            sx={{
+              fontWeight: 'bold',
+              color: 'primary.main',
+              textDecoration: 'none !important',
+            }}
           >
             {showAll ? 'Collapse' : `${content.length - count} more`}
             <StyledCaret
@@ -191,7 +196,7 @@ const ContentBody = React.memo((props: BodyProps) => {
               })}
             />
           </LinkStyledButton>
-        </Box>
+        </StyledLToggleContainer>
       ) : null}
     </>
   ) : header === 'Events' ? (
@@ -229,6 +234,12 @@ const StyledLoadingContainer = styled('div', {
   justifyContent: 'center',
 }));
 
+const StyledLToggleContainer = styled(Box, {
+  label: 'StyledLToggleButton',
+})(({ theme }) => ({
+  padding: `0 16px ${theme.spacing()}`,
+}));
+
 const StyledNotificationItem = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'content',
   label: 'StyledNotificationItem',
@@ -252,4 +263,5 @@ const StyledCaret = styled(KeyboardArrowDown)(({ theme }) => ({
 const StyledEmptyMessage = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(),
   marginBottom: theme.spacing(2.5),
+  padding: `0 20px`,
 }));
