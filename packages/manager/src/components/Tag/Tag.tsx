@@ -90,12 +90,6 @@ const StyledChip = styled(Chip)<TagProps>(({ theme, ...props }) => ({
     color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
     padding: '7px 10px',
   },
-  ...(!props.onDelete && {
-    '& > span': {
-      borderRadius: '3px !important',
-      borderRight: '0 !important',
-    },
-  }),
   ...(props.colorVariant === 'blue' && {
     backgroundColor: theme.palette.primary.main,
     '& > span': {
@@ -137,8 +131,8 @@ const StyledDeleteButton = styled('button', { label: 'StyledDeleteButton' })(
       width: 15,
     },
     '&:hover': {
-      backgroundColor: `${theme.palette.primary.main} !important`,
-      color: 'white !important',
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
       '& svg': {
         color: 'white',
       },
