@@ -1,18 +1,18 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from '@mui/material/Popover';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 
 interface ShowMoreProps<T> {
+  ariaItemType: string;
+  chipProps?: ChipProps;
   items: T[];
   render: (items: T[]) => any;
-  chipProps?: ChipProps;
-  ariaItemType: string;
 }
 
 export const ShowMore = <T extends unknown>(props: ShowMoreProps<T>) => {
   const { render, items, chipProps, ariaItemType } = props;
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,35 +28,31 @@ export const ShowMore = <T extends unknown>(props: ShowMoreProps<T>) => {
   return (
     <React.Fragment>
       <StyledChip
-        className={classNames(
-          {
-            active: anchorEl,
-          },
-          'chip'
-        )}
-        label={`+${items.length}`}
-        aria-label={`+${items.length} ${ariaItemType}`}
-        onClick={handleClick}
         {...chipProps}
-        data-qa-show-more-chip
-        component={'button' as 'div'}
+        aria-label={`+${items.length} ${ariaItemType}`}
         clickable
+        component={'button'}
+        data-qa-show-more-chip
+        label={`+${items.length}`}
+        onClick={handleClick}
+        sx={
+          anchorEl
+            ? {
+                backgroundColor: theme.palette.primary.main,
+                color: 'white',
+              }
+            : null
+        }
       />
 
       <StyledPopover
-        role="dialog"
-        aria-label={`${items.length} additional ${ariaItemType}`}
         anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
+        anchorOrigin={{ vertical: 28, horizontal: 'left' }}
+        aria-label={`${items.length} additional ${ariaItemType}`}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: 28,
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
+        open={Boolean(anchorEl)}
+        role="dialog"
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
         {render(items)}
       </StyledPopover>
@@ -65,15 +61,14 @@ export const ShowMore = <T extends unknown>(props: ShowMoreProps<T>) => {
 };
 
 const StyledChip = styled(Chip)(({ theme }) => ({
-  // backgroundColor: theme.bg.lightBlue1,
-  backgroundColor: 'red !important',
+  backgroundColor: theme.bg.lightBlue1,
   fontWeight: 500,
   lineHeight: 1,
   marginLeft: theme.spacing(0.5),
   paddingLeft: 2,
   paddingRight: 2,
   position: 'relative',
-  '&:hover, &.active': {
+  '&:hover': {
     backgroundColor: theme.palette.primary.main,
     color: 'white',
   },
