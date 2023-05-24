@@ -24,11 +24,3 @@ jobs:
         with:
           name: pr
           path: pr/
-
-      - name: Run Changeset Checker
-        uses: ./packages/manager/scripts/changelog
-        with:
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          pr_number: ${{ github.event.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
