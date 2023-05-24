@@ -238,7 +238,10 @@ const MainContent = (props: CombinedProps) => {
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
-  if (props.globalErrors.api_maintenance_mode) {
+  if (
+    props.globalErrors.api_maintenance_mode ||
+    import.meta.env.REACT_APP_MAINTENANCE_MODE
+  ) {
     return <MaintenanceScreen />;
   }
 
