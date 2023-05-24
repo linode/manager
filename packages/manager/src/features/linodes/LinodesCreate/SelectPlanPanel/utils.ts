@@ -4,7 +4,7 @@ export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
 /**
  * getPlanSelectionsByPlanType is common util funtion used to provide filtered plans by
- * type to Linode, Databse and LKE plan tables.
+ * type to Linode, Database and LKE plan tables.
  */
 
 export const getPlanSelectionsByPlanType = <
