@@ -7,9 +7,10 @@ import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
 
 interface Props {
   hasDisabledClass: boolean;
+  dataTestId?: string;
 }
 
-export const GPUNotice = ({ hasDisabledClass }: Props) => {
+export const GPUNotice = ({ hasDisabledClass, dataTestId }: Props) => {
   const { classes } = useSelectPlanPanelStyles();
   const { data: regions } = useRegionsQuery();
 
@@ -41,5 +42,9 @@ export const GPUNotice = ({ hasDisabledClass }: Props) => {
       with information on getting started.
     </div>
   );
-  return <Notice warning>{programInfo}</Notice>;
+  return (
+    <Notice warning dataTestId={dataTestId}>
+      {programInfo}
+    </Notice>
+  );
 };

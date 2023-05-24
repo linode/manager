@@ -23,18 +23,26 @@ export const PlanInformation = ({ disabledClasses, planType }: Props) => {
   return (
     <>
       {planType === 'gpu' ? (
-        <GPUNotice hasDisabledClass={getDisabledClass('gpu')} />
+        <GPUNotice
+          hasDisabledClass={getDisabledClass('gpu')}
+          dataTestId={'gpu-notice'}
+        />
       ) : null}
       {planType === 'metal' ? (
-        <MetalNotice hasDisabledClass={getDisabledClass('metal')} />
+        <MetalNotice
+          hasDisabledClass={getDisabledClass('metal')}
+          dataTestId={'metal-notice'}
+        />
       ) : null}
       {planType !== 'gpu' &&
       planType !== 'metal' &&
       plansTabContent[planType]?.notice ? (
-        <Notice warning>{plansTabContent[planType].notice}</Notice>
+        <Notice warning dataTestId={`${planType}-notice`}>
+          {plansTabContent[planType].notice}
+        </Notice>
       ) : null}
       <Typography data-qa-prodedi className={classes.copy}>
-        {plansTabContent[planType].typography}
+        {plansTabContent[planType]?.typography}
       </Typography>
     </>
   );

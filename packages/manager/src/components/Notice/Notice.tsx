@@ -127,6 +127,7 @@ export interface NoticeProps extends Grid2Props {
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   dismissibleButton?: JSX.Element;
+  dataTestId?: string;
 }
 
 export const Notice = (props: NoticeProps) => {
@@ -149,6 +150,7 @@ export const Notice = (props: NoticeProps) => {
     spacingBottom,
     spacingLeft,
     dismissibleButton,
+    dataTestId,
     sx,
   } = props;
 
@@ -232,7 +234,9 @@ export const Notice = (props: NoticeProps) => {
             <Warning className={classes.icon} data-qa-warning-img />
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}
-      <div className={classes.inner}>{innerText || _children}</div>
+      <div className={classes.inner} data-testid={dataTestId}>
+        {innerText || _children}
+      </div>
       {dismissibleButton}
     </Grid>
   );

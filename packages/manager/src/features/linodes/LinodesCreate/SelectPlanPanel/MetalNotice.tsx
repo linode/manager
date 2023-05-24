@@ -8,6 +8,7 @@ import { useSelectPlanPanelStyles } from './Styles/selectPlanPanelStyles';
 
 interface Props {
   hasDisabledClass: boolean;
+  dataTestId?: string;
 }
 
 export const MetalNotice = ({ hasDisabledClass }: Props) => {
@@ -35,5 +36,9 @@ export const MetalNotice = ({ hasDisabledClass }: Props) => {
   ) : (
     <Typography></Typography>
   );
-  return <Notice warning>{programInfo}</Notice>;
+  return (
+    <Notice warning dataTestId="metal-notice">
+      {programInfo}
+    </Notice>
+  );
 };
