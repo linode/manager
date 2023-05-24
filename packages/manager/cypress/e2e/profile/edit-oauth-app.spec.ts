@@ -46,7 +46,19 @@ describe('Edit OAuth Apps', () => {
           .should('be.enabled')
           .click();
       });
+    // The drawer is no longer rendered or visible
+    ui.drawer.find().should('not.exist');
     cy.findByText(privateOauthApp.label).should('be.visible');
+
+    // Nothing will happen when clicking the 'X' button.
+    cy.findByText(privateOauthApp.label)
+      .closest('tr')
+      .within(() => {
+        fbtVisible('Edit');
+        fbtClick('Edit');
+      });
+    ui.drawer.findByTitle('Create OAuth App').should('be.visible');
+    ui.drawerCloseButton.find().click();
 
     // Confirm edition.
     cy.findByText(privateOauthApp.label)
@@ -82,6 +94,8 @@ describe('Edit OAuth Apps', () => {
           .should('be.enabled')
           .click();
       });
+    // The drawer is no longer rendered or visible
+    ui.drawer.find().should('not.exist');
     cy.wait('@getUpdatedOAuthApps');
     cy.wait('@updateOAuthApp');
     cy.findByText(privateOauthApp.label).should('not.exist');

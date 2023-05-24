@@ -5,7 +5,6 @@ import {
   interceptGetProfile,
   mockGetOAuthApps,
   mockResetOAuthApps,
-  mockUpdateOAuthApps,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomSecret } from 'support/util/random';
@@ -47,6 +46,8 @@ describe('Reset OAuth Apps', () => {
           .should('be.enabled')
           .click();
       });
+    // The dialog is no longer rendered or visible
+    ui.dialog.find().should('not.exist');
     cy.findByText(privateOauthApp.label).should('be.visible');
 
     // Confirm resetting.
@@ -79,6 +80,8 @@ describe('Reset OAuth Apps', () => {
           .should('be.enabled')
           .click();
       });
+    // The dialog is no longer rendered or visible
+    ui.dialog.find().should('not.exist');
     cy.findByText(privateOauthApp.label).should('be.visible');
   });
 });

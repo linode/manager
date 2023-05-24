@@ -46,6 +46,8 @@ describe('Delete OAuth Apps', () => {
           .should('be.enabled')
           .click();
       });
+    // The diaglog is no longer rendered or visible
+    ui.dialog.find().should('not.exist');
     cy.findByText(privateOauthApp.label).should('be.visible');
 
     // Confirm deletion.
@@ -67,6 +69,8 @@ describe('Delete OAuth Apps', () => {
           .should('be.enabled')
           .click();
       });
+    // The diaglog is no longer rendered or visible
+    ui.dialog.find().should('not.exist');
     cy.wait('@deleteOAuthApp');
     cy.wait('@getDeletedOAuthApps');
     cy.findByText(privateOauthApp.label).should('not.exist');

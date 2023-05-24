@@ -237,7 +237,7 @@ export const randomUuid = (): string => {
 export const randomSecret = (length: number = 64): string => {
   const hexNumber = '0123456789abcdef';
 
-  const characterSelection = [hexNumber].join('').split('');
+  const characterSelection = hexNumber.split('');
 
   let output = '';
   for (let i = 0; i < length; i++) {

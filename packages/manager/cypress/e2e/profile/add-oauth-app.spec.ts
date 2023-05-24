@@ -1,9 +1,14 @@
 import { fbltClick } from 'support/helpers';
 import { oauthClientFactory } from '@src/factories';
 import 'cypress-file-upload';
-import { interceptGetProfile } from 'support/intercepts/profile';
+import {
+  interceptGetProfile,
+  mockCreateOAuthApp,
+  mockGetOAuthApps,
+} from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
+import { OAuthClient } from '@linode/api-v4/types';
 
 /**
  * Creates an OAuth App with the given parameters.
@@ -11,11 +16,9 @@ import { randomLabel } from 'support/util/random';
  * This assumes that the user has already navigated to the profile/clients
  * page.
  *
- * @param label - Label for the oauth app.
- * @param url - Callback URL for the oauth app.
- * @param isPublic - Access for the oauth app.
+ * @param oauthClient - OAuth app to mock.
  */
-const createOAuthApp = (label: string, url: string, isPublic: boolean) => {
+const createOAuthApp = (oauthApp: OAuthClient) => {
   ui.button
     .findByTitle('Add an OAuth App')
     .should('be.visible')
@@ -27,8 +30,8 @@ const createOAuthApp = (label: string, url: string, isPublic: boolean) => {
     .findByTitle('Create OAuth App')
     .should('be.visible')
     .within(() => {
-      fbltClick('Label').clear().type(label);
-      fbltClick('Callback URL').clear().type(url);
+      fbltClick('Label').clear().type(oauthApp.label);
+      fbltClick('Callback URL').clear().type(oauthApp.redirect_uri);
       ui.buttonGroup
         .findButtonByTitle('Cancel')
         .should('be.visible')
@@ -36,7 +39,28 @@ const createOAuthApp = (label: string, url: string, isPublic: boolean) => {
         .click();
     });
 
-  cy.findByText(label).should('not.exist');
+  // The drawer is no longer rendered or visible
+  ui.drawer.find().should('not.exist');
+  cy.findByText(oauthApp.label).should('not.exist');
+
+  // Nothing will happen when clicking the 'X' button.
+  ui.button
+    .findByTitle('Add an OAuth App')
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
+  ui.drawer
+    .findByTitle('Create OAuth App')
+    .should('be.visible')
+    .within(() => {
+      fbltClick('Label').clear().type(oauthApp.label);
+      fbltClick('Callback URL').clear().type(oauthApp.redirect_uri);
+    });
+  ui.drawerCloseButton.find().click();
+
+  // The drawer is no longer rendered or visible
+  ui.drawer.find().should('not.exist');
+  cy.findByText(oauthApp.label).should('not.exist');
 
   // Add an oauth app
   ui.button
@@ -61,17 +85,19 @@ const createOAuthApp = (label: string, url: string, isPublic: boolean) => {
       cy.findByText('Redirect URI is required.');
 
       // Fill out and submit OAuth App create form.
-      fbltClick('Label').clear().type(label);
-      fbltClick('Callback URL').clear().type(url);
+      fbltClick('Label').clear().type(oauthApp.label);
+      fbltClick('Callback URL').clear().type(oauthApp.redirect_uri);
       // Check the 'public' checkbox
-      if (isPublic) {
+      if (oauthApp.public) {
         cy.get('[data-qa-checked]').should('be.visible').click();
       }
+      mockCreateOAuthApp(oauthApp).as('createOauthApp');
       ui.button
         .findByTitle('Create')
         .should('be.visible')
         .should('be.enabled')
         .click();
+      cy.wait('@createOauthApp');
     });
 
   ui.dialog
@@ -85,15 +111,9 @@ const createOAuthApp = (label: string, url: string, isPublic: boolean) => {
         .click();
     });
 
-  // Confirms that the oauth app is listed on landing page with expected configuration.
-  const accessLevel = isPublic ? 'Public' : 'Private';
-  cy.findByText(label)
-    .closest('tr')
-    .within(() => {
-      cy.findByText(label).should('be.visible');
-      cy.findByText(accessLevel).should('be.visible');
-      cy.findByText(url).should('be.visible');
-    });
+  // The drawer/diaglog is no longer rendered or visible
+  ui.drawer.find().should('not.exist');
+  ui.dialog.find().should('not.exist');
 };
 
 describe('Add OAuth Apps', () => {
@@ -107,26 +127,39 @@ describe('Add OAuth Apps', () => {
     const oauthApps = oauthClientFactory.buildList(2);
     const privateOauthApp = oauthApps[0];
     privateOauthApp.label = randomLabel(5);
-    const publicOauApp = oauthApps[1];
-    publicOauApp.label = randomLabel(5);
-    publicOauApp.public = true;
+    const publicOauthApp = oauthApps[1];
+    publicOauthApp.label = randomLabel(5);
+    publicOauthApp.public = true;
 
     interceptGetProfile().as('getProfile');
     cy.visitWithLogin('/profile/clients');
     cy.wait('@getProfile');
 
     // Create a private access OAuth App
-    createOAuthApp(
-      privateOauthApp.label,
-      privateOauthApp.redirect_uri,
-      privateOauthApp.public
-    );
+    createOAuthApp(privateOauthApp);
 
     // Create a public access OAuth App
-    createOAuthApp(
-      publicOauApp.label,
-      publicOauApp.redirect_uri,
-      publicOauApp.public
-    );
+    createOAuthApp(publicOauthApp);
+
+    // Confirms that the oauth app is listed on landing page with expected configuration.
+    interceptGetProfile().as('getProfile');
+    mockGetOAuthApps(oauthApps).as('getOAuthApps');
+    cy.visitWithLogin('/profile/clients');
+    cy.wait('@getProfile');
+    cy.wait('@getOAuthApps');
+    cy.findByText(privateOauthApp.label)
+      .closest('tr')
+      .within(() => {
+        cy.findByText(privateOauthApp.label).should('be.visible');
+        cy.findByText('Private').should('be.visible');
+        cy.findByText(privateOauthApp.redirect_uri).should('be.visible');
+      });
+    cy.findByText(publicOauthApp.label)
+      .closest('tr')
+      .within(() => {
+        cy.findByText(publicOauthApp.label).should('be.visible');
+        cy.findByText('Public').should('be.visible');
+        cy.findByText(publicOauthApp.redirect_uri).should('be.visible');
+      });
   });
 });

@@ -249,6 +249,19 @@ export const mockRevokePersonalAccessToken = (
 };
 
 /**
+ * Intercepts POST request to create an oauth app and mocks response.
+ *
+ * @param oauthApp - oauth app with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateOAuthApp = (
+  oauthApp: OAuthClient
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('account/oauth-clients*'), oauthApp);
+};
+
+/**
  * Intercepts GET request to fetch oauth apps and mocks response.
  *
  * @param oauthApps - oauth apps with which to respond.
