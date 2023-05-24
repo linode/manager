@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import EntityIcon, { Variant } from 'src/components/EntityIcon/EntityIcon';
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
 import EditableInput from './EditableInput';
 
 interface EditableEntityLabelProps {
-  iconVariant?: Variant;
+  iconVariant?: EntityVariants;
   loading: boolean;
   onEdit: (s: string) => Promise<any>;
   status?: string;

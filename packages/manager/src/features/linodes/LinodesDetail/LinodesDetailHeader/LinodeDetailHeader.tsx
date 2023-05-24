@@ -22,7 +22,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
-import { useProfile, useGrants } from 'src/queries/profile';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
@@ -129,14 +128,6 @@ const LinodeDetailHeader = () => {
     resetEditableLabel,
   } = useEditableLabelState();
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const disabled =
-    Boolean(profile?.restricted) &&
-    grants?.linode.find((grant) => grant.id === matchedLinodeId)
-      ?.permissions === 'read_only';
-
   const updateLinodeLabel = async (label: string) => {
     try {
       await updateLinode({ label });
@@ -221,14 +212,12 @@ const LinodeDetailHeader = () => {
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         breadcrumbProps={{
           pathname: `/linodes/${linode?.label}`,
-          onEditHandlers: !disabled
-            ? {
-                editableTextTitle: linode?.label ?? '',
-                onEdit: handleLinodeLabelUpdate,
-                onCancel: resetEditableLabel,
-                errorText: editableLabelError,
-              }
-            : undefined,
+          onEditHandlers: {
+            editableTextTitle: linode?.label ?? '',
+            onEdit: handleLinodeLabelUpdate,
+            onCancel: resetEditableLabel,
+            errorText: editableLabelError,
+          },
         }}
         onDocsClick={() => {
           sendEvent({

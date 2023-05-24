@@ -48,6 +48,7 @@ const DialogTitle = (props: DialogTitleProps) => {
         {title}
         {onClose != null && (
           <IconButton
+            color="primary"
             aria-label="Close"
             data-qa-close-drawer
             onClick={onClose}
