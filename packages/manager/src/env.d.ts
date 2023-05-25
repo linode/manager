@@ -32,7 +32,7 @@ interface ImportMetaEnv {
   REACT_APP_APP_ROOT?: string;
   REACT_APP_ENABLE_DEV_TOOLS?: boolean;
   REACT_APP_DISABLE_NEW_RELIC?: boolean;
-  REACT_APP_MAINTENANCE_MODE?: boolean;
+  REACT_APP_ENABLE_MAINTENANCE_MODE?: string;
 }
 
 interface ImportMeta {

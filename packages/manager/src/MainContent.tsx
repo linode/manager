@@ -34,6 +34,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import { ENABLE_MAINTENANCE_MODE } from './constants';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appFrame: {
@@ -238,10 +239,7 @@ const MainContent = (props: CombinedProps) => {
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
-  if (
-    props.globalErrors.api_maintenance_mode ||
-    import.meta.env.REACT_APP_MAINTENANCE_MODE
-  ) {
+  if (props.globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
 
