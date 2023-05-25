@@ -1,115 +1,106 @@
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
-import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TextFieldProps } from 'src/components/core/TextField';
 import { H1Header } from 'src/components/H1Header/H1Header';
+import ClickAwayListener from 'src/components/core/ClickAwayListener';
+import { TextFieldProps } from 'src/components/core/TextField';
+import { fadeIn } from 'src/styles/keyframes';
+import { makeStyles } from 'tss-react/mui';
 import TextField from '../TextField';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
+const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
+  (theme: Theme, _params, classes) => ({
+    root: {
+      display: 'inline-block',
+      border: '1px solid transparent',
+      color: theme.textColors.tableStatic,
+      fontSize: '1.125rem !important',
+      lineHeight: 1,
+      padding: '5px 8px',
+      textDecoration: 'inherit',
+      transition: theme.transitions.create(['opacity']),
+      wordBreak: 'break-all',
     },
-    to: {
-      opacity: 1,
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      position: 'relative',
     },
-  },
-  root: {
-    display: 'inline-block',
-    border: '1px solid transparent',
-    color: theme.textColors.tableStatic,
-    fontSize: '1.125rem',
-    lineHeight: 1,
-    padding: '5px 8px',
-    textDecoration: 'inherit',
-    transition: theme.transitions.create(['opacity']),
-    wordBreak: 'break-all',
-  },
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    position: 'relative',
-  },
-  initial: {
-    border: '1px solid transparent',
-    '&:hover, &:focus': {
-      '& $editIcon': {
-        opacity: 1,
-      },
-      '& $icon': {
-        color: theme.color.grey1,
-        '&:hover': {
-          color: theme.color.black,
+    initial: {
+      border: '1px solid transparent',
+      '&:hover, &:focus': {
+        [`& .${classes.editIcon}`]: {
+          opacity: 1,
+        },
+        [`& .${classes.icon}`]: {
+          color: theme.color.grey1,
+          '&:hover': {
+            color: theme.color.black,
+          },
         },
       },
     },
-  },
-  textField: {
-    opacity: 0,
-    animation: '$fadeIn .3s ease-in-out forwards',
-    margin: 0,
-  },
-  inputRoot: {
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
-    marginLeft: 7,
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 415,
-      width: '100%',
+    textField: {
+      animation: `${fadeIn} .3s ease-in-out forwards`,
+      margin: 0,
     },
-  },
-  input: {
-    fontFamily: theme.font.bold,
-    fontSize: '1.125rem',
-    padding: 0,
-    paddingLeft: 2,
-  },
-  button: {
-    background: 'transparent !important',
-    marginTop: 2,
-    marginLeft: 0,
-    minWidth: 'auto',
-    paddingRight: 6,
-    paddingLeft: 6,
-    '&:first-of-type': {
-      marginLeft: theme.spacing(2),
-      [theme.breakpoints.down('md')]: {
+    inputRoot: {
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      marginLeft: 7,
+      [theme.breakpoints.up('md')]: {
+        maxWidth: 415,
+        width: '100%',
+      },
+    },
+    input: {
+      fontFamily: theme.font.bold,
+      fontSize: '1.125rem',
+      padding: 0,
+      paddingLeft: 2,
+    },
+    button: {
+      background: 'transparent !important',
+      marginTop: 2,
+      marginLeft: 0,
+      minWidth: 'auto',
+      paddingRight: 6,
+      paddingLeft: 6,
+      '&:first-of-type': {
         marginLeft: theme.spacing(2),
+        [theme.breakpoints.down('md')]: {
+          marginLeft: theme.spacing(2),
+        },
       },
     },
-  },
-  icon: {
-    color: theme.palette.text.primary,
-    fontSize: '1.25rem',
-    minHeight: 34,
-    '&:hover, &:focus': {
-      color: theme.palette.primary.light,
-    },
-  },
-  editIcon: {
-    [theme.breakpoints.up('sm')]: {
-      opacity: 0,
-      '&:focus': {
-        opacity: 1,
+    icon: {
+      color: theme.palette.text.primary,
+      fontSize: '1.25rem',
+      minHeight: 34,
+      '&:hover, &:focus': {
+        color: theme.palette.primary.light,
       },
     },
-  },
-  headline: {
-    ...theme.typography.h1,
-  },
-  underlineOnHover: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline !important',
+    editIcon: {
+      [theme.breakpoints.up('sm')]: {
+        opacity: 0,
+        '&:focus': {
+          opacity: 1,
+        },
+      },
     },
-  },
-}));
+    underlineOnHover: {
+      '&:hover, &:focus': {
+        textDecoration: 'underline !important',
+      },
+    },
+  })
+);
 
 interface Props {
   onEdit: (text: string) => Promise<any>;
@@ -122,10 +113,8 @@ interface Props {
 
 type PassThroughProps = Props & TextFieldProps;
 
-type FinalProps = PassThroughProps;
-
-const EditableText: React.FC<FinalProps> = (props) => {
-  const classes = useStyles();
+export const EditableText = (props: PassThroughProps) => {
+  const { classes } = useStyles();
 
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
@@ -140,8 +129,8 @@ const EditableText: React.FC<FinalProps> = (props) => {
   } = props;
 
   React.useEffect(() => {
-    setText(props.text);
-  }, [props.text]);
+    setText(propText);
+  }, [propText]);
 
   React.useEffect(() => {
     onCancel();
@@ -163,9 +152,8 @@ const EditableText: React.FC<FinalProps> = (props) => {
      *
      * only exit editing mode if promise resolved
      */
-    if (text !== props.text) {
-      props
-        .onEdit(text)
+    if (text !== propText) {
+      onEdit(text)
         .then(() => {
           setIsEditing(false);
         })
@@ -255,5 +243,3 @@ const EditableText: React.FC<FinalProps> = (props) => {
     </ClickAwayListener>
   );
 };
-
-export default EditableText;
