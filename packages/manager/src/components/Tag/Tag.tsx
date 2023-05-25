@@ -59,12 +59,16 @@ export const Tag = (props: TagProps) => {
   );
 };
 
-const StyledChip = styled(Chip)<TagProps>(({ theme, ...props }) => ({
+const StyledChip = styled(Chip, {
+  shouldForwardProp: (prop) => prop !== 'colorVariant',
+})<TagProps>(({ theme, ...props }) => ({
   height: 30,
   fontSize: '0.875rem',
   '& .MuiChip-label': {
     maxWidth: 350,
     padding: '7px 10px',
+    borderRight: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
+    color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
   },
   // Overrides MUI chip default styles so these appear as separate elements.
   '&:hover': {
@@ -84,10 +88,6 @@ const StyledChip = styled(Chip)<TagProps>(({ theme, ...props }) => ({
     borderRadius: 3,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
-    borderRight: !props.onDelete
-      ? 0
-      : `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
-    color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
     padding: '7px 10px',
   },
   ...(props.colorVariant === 'blue' && {
