@@ -1,15 +1,6 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 
-import { reportException } from 'src/exceptionReporting';
-
-const CookieWarning: React.FC<{}> = () => {
-  React.useEffect(() => {
-    reportException(
-      'A user just tried to load Cloud Manager without cookies enabled'
-    );
-  }, []);
-
+export const CookieWarning = () => {
   return (
     <div
       style={{
@@ -36,5 +27,3 @@ const CookieWarning: React.FC<{}> = () => {
     </div>
   );
 };
-
-export default compose<{}, {}>(React.memo)(CookieWarning);

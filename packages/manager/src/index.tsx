@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom';
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
-import CookieWarning from 'src/components/CookieWarning';
+import { CookieWarning } from 'src/components/CookieWarning';
 import SnackBar from 'src/components/SnackBar';
 import SplashScreen from 'src/components/SplashScreen';
 import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
