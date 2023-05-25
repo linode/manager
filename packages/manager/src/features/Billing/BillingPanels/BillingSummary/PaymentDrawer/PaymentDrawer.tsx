@@ -230,10 +230,7 @@ export const PaymentDrawer = (props: Props) => {
           {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {isProcessing ? (
-            <LinearProgress
-              className={classes.progress}
-              variant="indeterminate"
-            />
+            <LinearProgress className={classes.progress} />
           ) : null}
           {accountLoading ? (
             <Typography data-testid="loading-account">Loading</Typography>

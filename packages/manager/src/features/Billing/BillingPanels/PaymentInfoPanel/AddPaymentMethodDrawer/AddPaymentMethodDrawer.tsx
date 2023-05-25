@@ -79,7 +79,6 @@ export const AddPaymentMethodDrawer = (props: Props) => {
     <Drawer title="Add Payment Method" open={open} onClose={onClose}>
       {isProcessing ? (
         <LinearProgress
-          variant="indeterminate"
           sx={{
             marginBottom: 2,
             width: '100%',
