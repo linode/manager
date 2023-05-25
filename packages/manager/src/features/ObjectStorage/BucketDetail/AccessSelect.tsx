@@ -4,7 +4,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import EnhancedSelect from 'src/components/EnhancedSelect';
@@ -16,7 +16,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { bucketACLOptions, objectACLOptions } from '../utilities';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   submitButton: { marginTop: theme.spacing(3) },
 }));
 
@@ -33,7 +33,7 @@ export interface Props {
 }
 
 export const AccessSelect = React.memo((props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { getAccess, updateAccess, name, variant } = props;
 

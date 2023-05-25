@@ -17,7 +17,7 @@ import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 import { DateTime } from 'luxon';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { MODE } from './AccessKeyLanding/types';
 import { Theme } from '@mui/material/styles';
 import {
@@ -30,14 +30,14 @@ const AccessKeyLanding = React.lazy(
   () => import('./AccessKeyLanding/AccessKeyLanding')
 );
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   promo: {
     marginBottom: theme.spacing(0.5),
   },
 }));
 
 export const ObjectStorageLanding = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const [mode, setMode] = React.useState<MODE>('creating');
   const { action, tab } = useParams<{
@@ -171,7 +171,7 @@ export const ObjectStorageLanding = () => {
 
 export default ObjectStorageLanding;
 
-const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
+const useBillingNoticeStyles = makeStyles()((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
   },
@@ -180,7 +180,7 @@ const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
 const NOTIFICATION_KEY = 'obj-billing-notification';
 
 export const BillingNotice = React.memo(() => {
-  const classes = useBillingNoticeStyles();
+  const { classes } = useBillingNoticeStyles();
   const history = useHistory();
 
   return (

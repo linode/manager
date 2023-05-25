@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -12,7 +12,7 @@ import { TableRow } from 'src/components/TableRow';
 import { readableBytes } from 'src/utilities/unitConversions';
 import ObjectActionMenu from './ObjectActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
       backgroundColor: theme.bg.lightBlue1,
@@ -52,7 +52,7 @@ const ObjectTableRow: React.FC<Props> = (props) => {
     manuallyCreated,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <TableRow

@@ -2,7 +2,7 @@ import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
 import { update } from 'ramda';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -12,10 +12,10 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Toggle } from 'src/components/Toggle';
-import AccessCell from './AccessCell';
+import { AccessCell } from './AccessCell';
 import { MODE } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   clusterCell: {
     width: '18%',
   },
@@ -104,7 +104,7 @@ interface TableProps {
 export const AccessTable: React.FC<TableProps> = React.memo((props) => {
   const { checked, mode, bucket_access, updateScopes } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (!bucket_access) {
     return null;

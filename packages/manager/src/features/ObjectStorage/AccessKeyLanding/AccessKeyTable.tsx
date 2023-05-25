@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -16,7 +16,7 @@ import { OpenAccessDrawer } from './types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   labelCell: {
     width: '35%',
   },
@@ -49,7 +49,7 @@ export const AccessKeyTable: React.FC<Props> = (props) => {
     error,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const renderContent = () => {
     if (isRestrictedUser) {

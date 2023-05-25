@@ -2,7 +2,7 @@ import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -14,7 +14,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 import BucketActionMenu from './BucketActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   bucketRow: {
     backgroundColor: theme.bg.white,
   },
@@ -54,7 +54,7 @@ interface BucketTableRowProps extends ObjectStorageBucket {
 export type CombinedProps = BucketTableRowProps;
 
 export const BucketTableRow: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const {
     label,
     cluster,

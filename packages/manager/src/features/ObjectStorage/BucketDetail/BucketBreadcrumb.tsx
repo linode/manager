@@ -1,13 +1,13 @@
 import FileCopy from '@mui/icons-material/FileCopy';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { prefixArrayToString } from '../utilities';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   '@keyframes popUp': {
     from: {
       opacity: 0,
@@ -79,7 +79,7 @@ interface Props {
 type CombinedProps = Props;
 
 const BucketBreadcrumb: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [copied, setCopied] = React.useState<boolean>(false);
 

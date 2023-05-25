@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { FolderActionMenu } from './FolderActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
       backgroundColor: theme.bg.lightBlue1,
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const FolderTableRow: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { folderName, displayName, manuallyCreated, handleClickDelete } = props;
 

@@ -13,7 +13,7 @@ import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import ClusterSelect from './ClusterSelect';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -24,7 +24,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   textWrapper: {
     marginBottom: theme.spacing(1.25),
   },
@@ -40,7 +40,7 @@ interface Props {
 }
 
 export const CreateBucketDrawer = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;

@@ -2,12 +2,12 @@ import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 import { OpenAccessDrawer } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
@@ -48,7 +48,7 @@ interface Props {
 type CombinedProps = Props;
 
 const AccessKeyMenu: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { openRevokeDialog, objectStorageKey, openDrawer } = props;
 
   const actions = [

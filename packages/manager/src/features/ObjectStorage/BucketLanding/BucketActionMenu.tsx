@@ -1,10 +1,10 @@
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -20,7 +20,7 @@ export interface Props {
 }
 
 export const BucketActionMenu: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const actions: Action[] = [
     {

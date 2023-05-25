@@ -6,7 +6,7 @@ import {
 import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
@@ -16,7 +16,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { AccessSelect } from './AccessSelect';
 import { useProfile } from 'src/queries/profile';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   copy: {
     marginLeft: '1em',
     padding: 0,
@@ -39,7 +39,7 @@ export interface Props {
 }
 
 const ObjectDetailsDrawer: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: profile } = useProfile();
 

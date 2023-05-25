@@ -5,12 +5,12 @@ import {
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { AccessSelect } from './AccessSelect';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
   },
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const BucketAccess = React.memo((props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { bucketName, clusterId } = props;
 

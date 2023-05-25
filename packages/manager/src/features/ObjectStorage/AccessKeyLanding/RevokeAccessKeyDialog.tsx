@@ -3,12 +3,12 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import CancelNotice from '../CancelNotice';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   cancelNotice: {
     marginTop: theme.spacing(1),
   },
@@ -37,7 +37,7 @@ export const RevokeAccessKeyDialog: React.FC<RevokeKeysDialogProps> = (
     errors,
   } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const actions = () => (
     <ActionsPanel>

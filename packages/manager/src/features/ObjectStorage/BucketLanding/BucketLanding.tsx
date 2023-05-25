@@ -18,7 +18,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Theme } from '@mui/material/styles';
 import { useProfile } from 'src/queries/profile';
@@ -35,7 +35,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(),
   },
@@ -72,7 +72,7 @@ export const BucketLanding = () => {
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const removeBucketConfirmationDialog = useOpenClose();
   const [bucketToRemove, setBucketToRemove] = React.useState<
