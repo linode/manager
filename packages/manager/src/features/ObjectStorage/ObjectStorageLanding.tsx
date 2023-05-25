@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import LandingHeader from 'src/components/LandingHeader';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
@@ -20,14 +19,17 @@ import { Link } from 'src/components/Link';
 import { makeStyles } from 'tss-react/mui';
 import { MODE } from './AccessKeyLanding/types';
 import { Theme } from '@mui/material/styles';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
-const AccessKeyLanding = React.lazy(
-  () => import('./AccessKeyLanding/AccessKeyLanding')
+const AccessKeyLanding = React.lazy(() =>
+  import('./AccessKeyLanding/AccessKeyLanding').then((module) => ({
+    default: module.AccessKeyLanding,
+  }))
 );
 
 const useStyles = makeStyles()((theme: Theme) => ({

@@ -1,54 +1,19 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 import { OpenAccessDrawer } from './types';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    ...theme.applyLinkStyles,
-    color: theme.textColors.linkActiveLight,
-    height: '100%',
-    minWidth: 'auto',
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: '#ffffff',
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit',
-      },
-    },
-  },
-}));
+import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
 
 interface Props {
-  // prop-drilled from parent
-  objectStorageKey: ObjectStorageKey;
-
-  // prop-drilled from grandparent:
-  // ObjectStorageKeys --> ObjectStorageKeyTable --> HERE
-  openRevokeDialog: (key: ObjectStorageKey) => void;
-  openDrawer: OpenAccessDrawer;
   label: string;
+  objectStorageKey: ObjectStorageKey;
+  openDrawer: OpenAccessDrawer;
+  openRevokeDialog: (key: ObjectStorageKey) => void;
 }
 
-type CombinedProps = Props;
-
-const AccessKeyMenu: React.FC<CombinedProps> = (props) => {
-  const { classes } = useStyles();
+export const AccessKeyMenu = (props: Props) => {
   const { openRevokeDialog, objectStorageKey, openDrawer } = props;
 
   const actions = [
@@ -73,7 +38,7 @@ const AccessKeyMenu: React.FC<CombinedProps> = (props) => {
   ];
 
   return (
-    <div className={classes.inlineActions}>
+    <StyledInlineActionsContainer>
       <Hidden mdDown>
         {actions.map((thisAction) => (
           <InlineAction
@@ -89,8 +54,14 @@ const AccessKeyMenu: React.FC<CombinedProps> = (props) => {
           ariaLabel={`Action menu for Object Storage Key ${props.label}`}
         />
       </Hidden>
-    </div>
+    </StyledInlineActionsContainer>
   );
 };
 
-export default AccessKeyMenu;
+const StyledInlineActionsContainer = styled('div', {
+  label: 'StyledInlineActionsContainer',
+})(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+}));

@@ -1,55 +1,38 @@
 import * as React from 'react';
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import AccessKeyMenu from './AccessKeyMenu';
-import { OpenAccessDrawer } from './types';
+import Typography from 'src/components/core/Typography';
+import { AccessKeyMenu } from './AccessKeyMenu';
 import { APIError } from '@linode/api-v4/lib/types';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { OpenAccessDrawer } from './types';
+import { styled } from '@mui/material/styles';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  labelCell: {
-    width: '35%',
-  },
-  copyIcon: {
-    marginLeft: theme.spacing(),
-    '& svg': {
-      top: 1,
-      width: 12,
-      height: 12,
-    },
-  },
-}));
-
-export interface Props {
+export interface AccessKeyTableProps {
   data: ObjectStorageKey[] | undefined;
-  isLoading: boolean;
   error: APIError[] | undefined | null;
+  isLoading: boolean;
   isRestrictedUser: boolean;
-  openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
   openDrawer: OpenAccessDrawer;
+  openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
 }
 
-export const AccessKeyTable: React.FC<Props> = (props) => {
+export const AccessKeyTable = (props: AccessKeyTableProps) => {
   const {
-    isRestrictedUser,
-    openRevokeDialog,
-    openDrawer,
     data,
-    isLoading,
     error,
+    isLoading,
+    isRestrictedUser,
+    openDrawer,
+    openRevokeDialog,
   } = props;
-
-  const { classes } = useStyles();
 
   const renderContent = () => {
     if (isRestrictedUser) {
@@ -87,18 +70,15 @@ export const AccessKeyTable: React.FC<Props> = (props) => {
         <TableCell parentColumn="Access Key">
           <Typography variant="body1" data-qa-key-created>
             {eachKey.access_key}
-            <CopyTooltip
-              text={eachKey.access_key}
-              className={classes.copyIcon}
-            />
+            <StyledCopyIcon text={eachKey.access_key} />
           </Typography>
         </TableCell>
         <TableCell>
           <AccessKeyMenu
-            objectStorageKey={eachKey}
-            openRevokeDialog={openRevokeDialog}
-            openDrawer={openDrawer}
             label={eachKey.label}
+            objectStorageKey={eachKey}
+            openDrawer={openDrawer}
+            openRevokeDialog={openRevokeDialog}
           />
         </TableCell>
       </TableRow>
@@ -108,18 +88,14 @@ export const AccessKeyTable: React.FC<Props> = (props) => {
   return (
     <Table
       aria-label="List of Object Storage Access Keys"
-      rowCount={data && data.length}
       colCount={2}
       data-testid="data-qa-access-key-table"
+      rowCount={data?.length}
     >
       <TableHead>
         <TableRow data-qa-table-head>
-          <TableCell className={classes.labelCell} data-qa-header-label>
-            Label
-          </TableCell>
-          <TableCell className={classes.labelCell} data-qa-header-key>
-            Access Key
-          </TableCell>
+          <StyledLabelCell data-qa-header-label>Label</StyledLabelCell>
+          <StyledLabelCell data-qa-header-key>Access Key</StyledLabelCell>
           {/* empty cell for kebab menu */}
           <TableCell />
         </TableRow>
@@ -129,4 +105,15 @@ export const AccessKeyTable: React.FC<Props> = (props) => {
   );
 };
 
-export default AccessKeyTable;
+const StyledCopyIcon = styled(CopyTooltip)(({ theme }) => ({
+  marginLeft: theme.spacing(),
+  '& svg': {
+    top: 1,
+    width: 12,
+    height: 12,
+  },
+}));
+
+const StyledLabelCell = styled(TableCell)(() => ({
+  width: '35%',
+}));
