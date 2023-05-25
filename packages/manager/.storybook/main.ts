@@ -19,18 +19,17 @@ const config: StorybookConfig = {
   },
   features: { storyStoreV7: true },
   typescript: {
-    reactDocgenTypescriptOptions: {
-      shouldExtractLiteralValuesFromEnum: true,
-      propFilter: (prop) => {
-        // Allow types to be infered from @mui packages
-        if (prop.parent?.fileName.includes('@mui')) {
-          return true;
-        }
-
-        // Default filter from https://github.com/joshwooding/vite-plugin-react-docgen-typescript/blob/main/src/utils/filter.ts
-        return !prop.parent?.fileName.includes('node_modules');
-      },
-    },
+    // reactDocgenTypescriptOptions: {
+    //   shouldExtractLiteralValuesFromEnum: true,
+    //   propFilter: (prop) => {
+    //     // Allow types to be infered from @mui packages
+    //     if (prop.parent?.fileName.includes('@mui')) {
+    //       return true;
+    //     }
+    //     // Default filter from https://github.com/joshwooding/vite-plugin-react-docgen-typescript/blob/main/src/utils/filter.ts
+    //     return !prop.parent?.fileName.includes('node_modules');
+    //   },
+    // },
   },
   docs: {
     autodocs: true,
