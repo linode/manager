@@ -20,15 +20,15 @@ const config: StorybookConfig = {
   features: { storyStoreV7: true },
   typescript: {
     reactDocgenTypescriptOptions: {
+      // makes union prop types like variant and size appear as select controls
       shouldExtractLiteralValuesFromEnum: true,
-      propFilter: (prop) => {
-        // Allow types to be infered from @mui packages
-        if (prop.parent?.fileName.includes('@mui')) {
-          return true;
-        }
-        // Default filter from https://github.com/joshwooding/vite-plugin-react-docgen-typescript/blob/main/src/utils/filter.ts
-        return !prop.parent?.fileName.includes('node_modules');
-      },
+      // makes string and boolean types that can be undefined appear as inputs and switches
+      shouldRemoveUndefinedFromOptional: true,
+      // Filter out third-party props from node_modules except @mui packages
+      propFilter: (prop) =>
+        prop.parent
+          ? !/node_modules\/(?!@mui)/.test(prop.parent.fileName)
+          : true,
     },
   },
   docs: {
