@@ -5,7 +5,7 @@ import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
-import LinearProgress from 'src/components/LinearProgress';
+import { LinearProgress } from 'src/components/LinearProgress';
 import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
 import { Notice } from 'src/components/Notice/Notice';
@@ -79,6 +79,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
     <Drawer title="Add Payment Method" open={open} onClose={onClose}>
       {isProcessing ? (
         <LinearProgress
+          variant="indeterminate"
           sx={{
             marginBottom: 2,
             width: '100%',

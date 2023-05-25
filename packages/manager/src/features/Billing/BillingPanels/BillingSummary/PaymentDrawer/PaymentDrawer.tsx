@@ -14,7 +14,7 @@ import Drawer from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import LinearProgress from 'src/components/LinearProgress';
+import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
@@ -230,7 +230,10 @@ export const PaymentDrawer = (props: Props) => {
           {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {isProcessing ? (
-            <LinearProgress className={classes.progress} />
+            <LinearProgress
+              className={classes.progress}
+              variant="indeterminate"
+            />
           ) : null}
           {accountLoading ? (
             <Typography data-testid="loading-account">Loading</Typography>
