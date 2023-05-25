@@ -20,6 +20,7 @@ const config: StorybookConfig = {
   features: { storyStoreV7: true },
   typescript: {
     reactDocgenTypescriptOptions: {
+      shouldExtractLiteralValuesFromEnum: true,
       propFilter: (prop) => {
         // Allow types to be infered from @mui packages
         if (prop.parent?.fileName.includes('@mui')) {
