@@ -19,6 +19,11 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const actionButton = (
+    <Button onClick={() => setDialogOpen(true)} buttonType="primary">
+      Upgrade Version
+    </Button>
+  );
 
   return (
     <>
@@ -26,6 +31,7 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
         <DismissibleBanner
           preferenceKey={`${clusterID}-${currentVersion}`}
           success
+          actionButton={actionButton}
         >
           <Grid
             container
@@ -37,11 +43,6 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
               <Typography>
                 A new version of Kubernetes is available ({nextVersion}).
               </Typography>
-            </Grid>
-            <Grid>
-              <Button onClick={() => setDialogOpen(true)} buttonType="primary">
-                Upgrade Version
-              </Button>
             </Grid>
           </Grid>
         </DismissibleBanner>
