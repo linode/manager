@@ -13,7 +13,13 @@ import {
 import { usePreferences } from 'src/queries/preferences';
 
 interface EntityInfo {
-  type: 'Linode' | 'Volume' | 'NodeBalancer' | 'Bucket';
+  type:
+    | 'Linode'
+    | 'Volume'
+    | 'NodeBalancer'
+    | 'Bucket'
+    | 'Cluster'
+    | 'Database';
   label: string | undefined;
 }
 
@@ -58,7 +64,12 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+      <Button
+        buttonType="secondary"
+        onClick={onClose}
+        data-qa-cancel
+        data-testid={'dialog-cancel'}
+      >
         Cancel
       </Button>
       <Button
@@ -67,6 +78,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         loading={loading}
         disabled={disabled}
         data-qa-confirm
+        data-testid={'dialog-confirm'}
       >
         {entity.type === 'Volume' && title.startsWith('Detach')
           ? 'Detach'
