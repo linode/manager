@@ -1,8 +1,9 @@
+import { styled } from '@mui/system';
 import * as React from 'react';
 import Button from 'src/components/Button';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';
@@ -20,7 +21,16 @@ const ComplianceBanner = () => {
   }
 
   return (
-    <DismissibleBanner important warning preferenceKey="gdpr-compliance">
+    <DismissibleBanner
+      important
+      warning
+      preferenceKey="gdpr-compliance"
+      actionButton={
+        <StyledActionButton buttonType="primary" onClick={() => context.open()}>
+          Review Update
+        </StyledActionButton>
+      }
+    >
       <Box
         display="flex"
         flexDirection="row"
@@ -30,19 +40,17 @@ const ComplianceBanner = () => {
         <Typography>
           Please review the compliance update for guidance regarding the EU
           Standard Contractual Clauses and its application to users located in
-          Europe as well as deployments in Linode’s London and Frankfurt data
-          centers
+          Europe as well as deployments in Linode&rsquo;s London and Frankfurt
+          data centers
         </Typography>
-        <Button
-          buttonType="primary"
-          style={{ marginLeft: 12, minWidth: 150 }}
-          onClick={() => context.open()}
-        >
-          Review Update
-        </Button>
       </Box>
     </DismissibleBanner>
   );
 };
+
+const StyledActionButton = styled(Button)(({}) => ({
+  marginLeft: 12,
+  minWidth: 150,
+}));
 
 export default ComplianceBanner;
