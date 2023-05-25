@@ -64,11 +64,14 @@ const StyledChip = styled(Chip, {
 })<TagProps>(({ theme, ...props }) => ({
   height: 30,
   fontSize: '0.875rem',
+  padding: 0,
   '& .MuiChip-label': {
+    borderBottomLeftRadius: '4px',
+    borderRight: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
+    borderTopLeftRadius: '4px',
+    color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
     maxWidth: 350,
     padding: '7px 10px',
-    borderRight: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
-    color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
   },
   // Overrides MUI chip default styles so these appear as separate elements.
   '&:hover': {
