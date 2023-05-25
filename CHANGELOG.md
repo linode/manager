@@ -4,66 +4,44 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2023-05-24] - v1.94.0
+## [2023-05-30] - v1.94.0
 
 ### Added:
 
-- Resource links to Object Storage empty state landing page ([#9098](https://github.com/linode/manager/pull/9098))
-- Resource links to Images empty state landing page ([#9095](https://github.com/linode/manager/pull/9095))
+- Resource links to Object Storage empty state landing page #9098
+- Resource links to Images empty state landing page #9095
 
 ### Fixed:
 
-- Required fields for Firewall rules drawer form ([#9127](https://github.com/linode/manager/pull/9127))
-- Cloud Manager maintenance mode ([#9130](https://github.com/linode/manager/pull/9130))
-- Error handling for loadScript and Adobe Analytics ([#9161](https://github.com/linode/manager/pull/9161))
+- Required fields for Firewall rules drawer form #9127
+- Cloud Manager maintenance mode #9130
+- Error handling for loadScript and Adobe Analytics #9161
 
 ### Removed:
 
-- Unifi Marketplace app ([#9145](https://github.com/linode/manager/pull/9145))
+- Unifi Marketplace app #9145
 
 ### Tech Stories:
 
-- Automate the changelog with changeset generation ([#9104](https://github.com/linode/manager/pull/9104))
-- Upgrade Cypress to v12.11 ([#9038](https://github.com/linode/manager/pull/9038))
-- React Query for Linode Details - General Details ([#9099](https://github.com/linode/manager/pull/9099))
-- React Query Linode Details - Network Tab ([#9097](https://github.com/linode/manager/pull/9097))
-- React Query for Linode Details Settings Tab ([#9121](https://github.com/linode/manager/pull/9121))
-- React Query for Support Tickets - Ticket Details ([#9105](https://github.com/linode/manager/pull/9105))
-- MUI v5 Migration - `Features > NotificationCenter` ([#9162](https://github.com/linode/manager/pull/9162))
-- MUI v5 Migration - `Features > NodeBalancers` ([#9139](https://github.com/linode/manager/pull/9139))
-- MUI v5 Migration - `Components > IconButton`
-- MUI v5 Migration - `Components > EntityIcon` ([#9125](https://github.com/linode/manager/pull/9125))
-- MUI v5 Migration - `Components > EntityHeader` ([#9109](https://github.com/linode/manager/pull/9109))
-- MUI v5 Migration - `Components > EntityDetail` ([#9123](https://github.com/linode/manager/pull/9123))
-- MUI v5 Migration - `Components > EditableEntityLabel` ([#9129](https://github.com/linode/manager/pull/9129))
-- MUI v5 Migration - `SRC > Features > CancelLanding` ([#9113](https://github.com/linode/manager/pull/9113))
-- MUI v5 Migration - `Components > TransferDisplay`
-  ([#9123](https://github.com/linode/manager/pull/9123))
-- MUI v5 Migration - `Components > TypeToConfirm` & `Components > TypeToConfirmDialog` ([#9124](https://github.com/linode/manager/pull/9124))
-- MUI v5 Migration - `Components > ErrorState` ([#9128](https://github.com/linode/manager/pull/9128))
-- MUI v5 Migration - `Components > Placeholder & Components > H1 Header` ([#9131](https://github.com/linode/manager/pull/9131))
-- MUI v5 Migration - `Components > EnhancedNumberInput` ([#9152](https://github.com/linode/manager/pull/9152))
-
-## [Unreleased]
-
-### Added:
-
-- Resource links to empty state Images landing page #9095
-- Resource links to empty state Object Storage landing page #9098
-
-### Changed:
-
-### Fixed:
-
-- Ability to search Linodes by IPv6 #9073
-
-### Tech Stories:
-
-- React Query - Linodes - Networking #9046
-- React Query - Linodes - Details Header #9099
-- MUI v5 Migration - `Components > IconButton` #9102
+- Automate the changelog with changeset generation #9104
+- Upgrade Cypress to v12.11 #9038
+- React Query for Linode Details - General Details #9099
+- React Query Linode Details - Network Tab #9097
+- React Query for Linode Details Settings Tab #9121
+- React Query for Support Tickets - Ticket Details #9105
+- MUI v5 Migration - `Components > EditableEntityLabel` #9129
+- MUI v5 Migration - `Components > EnhancedNumberInput` #9152
+- MUI v5 Migration - `Components > EntityDetail` #9123
 - MUI v5 Migration - `Components > EntityHeader` #9109
+- MUI v5 Migration - `Components > EntityIcon` #9125
+- MUI v5 Migration - `Components > ErrorState` #9128
+- MUI v5 Migration - `Components > IconButton` #9102
+- MUI v5 Migration - `Components > Placeholder & Components > H1 Header` #9131
 - MUI v5 Migration - `Components > TransferDisplay` #9107
+- MUI v5 Migration - `Components > TypeToConfirm` & `Components > TypeToConfirmDialog` #9124
+- MUI v5 Migration - `Features > CancelLanding` #9113
+- MUI v5 Migration - `Features > NodeBalancers` #9139
+- MUI v5 Migration - `Features > NotificationCenter` #9162
 
 ## [2023-05-22] - v1.93.3
 
