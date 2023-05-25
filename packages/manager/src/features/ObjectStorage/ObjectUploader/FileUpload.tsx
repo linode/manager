@@ -73,14 +73,19 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
           <Typography
             variant="body1"
             className={cx({
-              [classes.error]: props.error !== undefined,
+              [classes.error]: props.error !== '',
             })}
           >
             {props.displayName}
           </Typography>
         </StyledLeftWrapper>
         <StyledRightWrapper>
-          <StyledFileSizeTypography variant="body1">
+          <StyledFileSizeTypography
+            variant="body1"
+            className={cx({
+              [classes.error]: props.error !== '',
+            })}
+          >
             {readableBytes(props.sizeInBytes).formatted}
           </StyledFileSizeTypography>
           {props.percentCompleted === 100 ? (
@@ -93,7 +98,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
             <CautionIcon
               className={cx({
                 [classes.iconRight]: true,
-                [classes.error]: props.error !== undefined,
+                [classes.error]: props.error !== '',
               })}
               height={22}
               width={22}

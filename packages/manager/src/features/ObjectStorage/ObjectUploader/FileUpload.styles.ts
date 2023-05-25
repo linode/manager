@@ -47,11 +47,8 @@ export const StyledRightWrapper = styled('div', {
 
 export const StyledFileSizeTypography = styled(Typography, {
   label: 'StyledFileSizeTypography',
-})<Partial<FileUploadProps>>(({ theme, ...props }) => ({
+})(({ theme }) => ({
   marginRight: theme.spacing(),
-  ...(props.error && {
-    color: theme.palette.error.main,
-  }),
 }));
 
 export const StyledActionsContainer = styled('div', {
@@ -69,9 +66,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.name === 'light' ? '#cce2ff' : '#243142',
   },
   error: {
-    color: theme.palette.error.main,
+    color: theme.palette.error.dark,
     '& g': {
-      stroke: theme.palette.error.main,
+      stroke: theme.palette.error.dark,
     },
   },
   iconRight: {
