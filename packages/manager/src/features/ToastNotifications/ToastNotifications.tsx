@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import Link from 'src/components/Link';
-import SupportLink from 'src/components/SupportLink';
+import { SupportLink } from 'src/components/SupportLink';
 import { events$ } from 'src/events';
 import { sendEvent } from 'src/utilities/ga';
 
@@ -52,12 +52,9 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
       <>
         {formattedFailureMessage}&nbsp;
         {hasSupportLink ? (
-          <SupportLink
-            text="open a support ticket"
-            title={`Image Upload Failure`}
-          />
+          <SupportLink text="contact Support" title={failureMessage} />
         ) : null}
-        .{link ? link : null}
+        {link ? link : null}.
       </>
     );
 
@@ -86,10 +83,7 @@ export const getSecondaryLabel = (event: Event) =>
 //     <>
 //       {message}
 //       {hasSupportLink ? (
-//         <SupportLink
-//           text="open a support ticket"
-//           title={`Image Upload Failure`}
-//         />
+//         <SupportLink text="contact Support" title={`Image Upload Failure`} />
 //       ) : null}
 //       .
 //     </>
@@ -171,7 +165,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               successMessage: `Image ${label} is now available.`,
               failureMessage: isDeletion
                 ? undefined
-                : `There was a problem processing image ${label}: ${event.message}`,
+                : `There was a problem uploading image ${label}: ${event.message}`,
             });
           case 'image_delete':
             return toastSuccessAndFailure({
