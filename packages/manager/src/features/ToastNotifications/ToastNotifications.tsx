@@ -45,19 +45,16 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
     });
   } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
     const hasSupportLink = failureMessage?.includes('contact Support') ?? false;
-    formattedFailureMessage =
-      failureMessage?.replace(/ contact Support/i, '') ?? failureMessage;
-
     formattedFailureMessage = (
       <>
-        {formattedFailureMessage}
+        {failureMessage?.replace(/ contact Support/i, '') ?? failureMessage}
         {hasSupportLink ? (
           <>
             &nbsp;
             <SupportLink text="contact Support" title={failureMessage} />.
           </>
         ) : null}
-        {link ? link : null}
+        {link ? <>&nbsp;{link}</> : null}
       </>
     );
 
