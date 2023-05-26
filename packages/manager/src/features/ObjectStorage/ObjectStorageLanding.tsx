@@ -16,14 +16,14 @@ import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 import { DateTime } from 'luxon';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { makeStyles } from 'tss-react/mui';
 import { MODE } from './AccessKeyLanding/types';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
 const AccessKeyLanding = React.lazy(() =>
@@ -32,14 +32,7 @@ const AccessKeyLanding = React.lazy(() =>
   }))
 );
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  promo: {
-    marginBottom: theme.spacing(0.5),
-  },
-}));
-
 export const ObjectStorageLanding = () => {
-  const { classes } = useStyles();
   const history = useHistory();
   const [mode, setMode] = React.useState<MODE>('creating');
   const { action, tab } = useParams<{
@@ -107,10 +100,11 @@ export const ObjectStorageLanding = () => {
   const createButtonAction = () => {
     if (tab === 'access-keys') {
       setMode('creating');
+
       return createOrEditDrawer.open();
-    } else {
-      history.replace('/object-storage/buckets/create');
     }
+
+    history.replace('/object-storage/buckets/create');
   };
 
   return (
@@ -138,11 +132,10 @@ export const ObjectStorageLanding = () => {
         <TabLinkList tabs={tabs} />
 
         {objPromotionalOffers.map((promotionalOffer) => (
-          <PromotionalOfferCard
+          <StyledPromotionalOfferCard
             key={promotionalOffer.name}
             {...promotionalOffer}
             fullWidth
-            className={classes.promo}
           />
         ))}
         {shouldDisplayBillingNotice && <BillingNotice />}
@@ -171,18 +164,9 @@ export const ObjectStorageLanding = () => {
   );
 };
 
-export default ObjectStorageLanding;
-
-const useBillingNoticeStyles = makeStyles()((theme: Theme) => ({
-  button: {
-    ...theme.applyLinkStyles,
-  },
-}));
-
 const NOTIFICATION_KEY = 'obj-billing-notification';
 
 export const BillingNotice = React.memo(() => {
-  const { classes } = useBillingNoticeStyles();
   const history = useHistory();
 
   return (
@@ -199,13 +183,18 @@ export const BillingNotice = React.memo(() => {
         You are being billed for Object Storage but do not have any Buckets. You
         can cancel Object Storage in your{' '}
         <Link to="/account/settings">Account Settings</Link>, or{' '}
-        <button
-          className={classes.button}
+        <LinkStyledButton
           onClick={() => history.replace('/object-storage/buckets/create')}
         >
           create a Bucket.
-        </button>
+        </LinkStyledButton>
       </Typography>
     </DismissibleBanner>
   );
 });
+
+const StyledPromotionalOfferCard = styled(PromotionalOfferCard, {
+  label: 'StyledPromotionalOfferCard',
+})(({ theme }) => ({
+  marginBottom: theme.spacing(0.5),
+}));

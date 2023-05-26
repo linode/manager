@@ -30,7 +30,7 @@ import {
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
-import ObjectUploader from '../ObjectUploader';
+import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
 import {
   displayName,
   generateObjectUrl,
