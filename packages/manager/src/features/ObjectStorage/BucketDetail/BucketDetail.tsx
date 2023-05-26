@@ -266,11 +266,9 @@ export const BucketDetail = () => {
     }
 
     const copy = [...data.pages];
-
     const dataCopy = [...copy[copy.length - 1].data];
 
     dataCopy.push(object);
-
     copy[copy.length - 1].data = dataCopy;
 
     updateStore(copy);
@@ -282,7 +280,7 @@ export const BucketDetail = () => {
     }
 
     const folder: ObjectStorageObject = {
-      name: prefix + objectName + '/',
+      name: `${prefix + objectName}/`,
       etag: null,
       owner: null,
       last_modified: null,
@@ -304,11 +302,9 @@ export const BucketDetail = () => {
     }
 
     const copy = [...data.pages];
-
     const dataCopy = [...copy[copy.length - 1].data];
 
     dataCopy.push(folder);
-
     copy[copy.length - 1].data = dataCopy;
 
     updateStore(copy);
