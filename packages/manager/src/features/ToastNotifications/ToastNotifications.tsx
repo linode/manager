@@ -50,11 +50,14 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
 
     formattedFailureMessage = (
       <>
-        {formattedFailureMessage}&nbsp;
+        {formattedFailureMessage}
         {hasSupportLink ? (
-          <SupportLink text="contact Support" title={failureMessage} />
+          <>
+            &nbsp;
+            <SupportLink text="contact Support" title={failureMessage} />.
+          </>
         ) : null}
-        {link ? link : null}.
+        {link ? link : null}
       </>
     );
 
