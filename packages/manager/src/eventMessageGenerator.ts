@@ -164,7 +164,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}scheduled for creation.`,
     started: (e) =>
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}being created.`,
-    failed: (e) => `Error creating Image ${e?.secondary_entity?.label ?? ''}.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `Error creating Image ${e?.secondary_entity?.label ?? ''}.`,
+        'Learn more about image technical specifications',
+        'https://www.linode.com/docs/products/tools/images/#technical-specifications'
+      )}`,
     finished: (e) =>
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}has been created.`,
   },
@@ -275,14 +281,6 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: (e) => `Image ${e.entity?.label ?? ''} is being uploaded.`,
     failed: (e) =>
       `There was a problem uploading ${e.entity?.label ?? ''}: ${e?.message}.`,
-    // `${formatEventWithAppendedText(
-    //   e,
-    //   `There was a problem uploading ${e.entity?.label ?? ''}: ${
-    //     e?.message
-    //   }.`,
-    //   'Please open a support ticket',
-    //   '/support/ticket'
-    // )}`,
     finished: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
     notification: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
   },
