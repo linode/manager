@@ -123,6 +123,7 @@
     "@storybook/addon-docs": "~7.0.18",
     "@storybook/addon-viewport": "~7.0.18",
     "@storybook/addon-measure": "~7.0.18",
+    "@storybook/client-api": "~7.0.18",
     "@storybook/react": "~7.0.18",
     "@storybook/react-vite": "^7.0.18",
     "@storybook/theming": "~7.0.18",
