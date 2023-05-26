@@ -10,7 +10,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
-import FolderTableRow from './FolderTableRow';
+import { FolderTableRow } from './FolderTableRow';
 import ObjectTableRow from './ObjectTableRow';
 
 interface Props {
