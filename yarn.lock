@@ -2740,6 +2740,15 @@
     "@storybook/preview-api" "7.0.7"
     "@storybook/types" "7.0.7"
 
+"@storybook/addons@~7.0.18":
+  version "7.0.18"
+  resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-7.0.18.tgz#38dbbdb5281ce16ad0996bfc8a9e0bc5e7514460"
+  integrity sha512-+j9ItxWoVzarbllaV4WRaJpDM3P2aC5O6F3cPn4YkG/unb6HOs11WLAqFbzZnLYZNAFvWS8PYEAtqs1BxG66YQ==
+  dependencies:
+    "@storybook/manager-api" "7.0.18"
+    "@storybook/preview-api" "7.0.18"
+    "@storybook/types" "7.0.18"
+
 "@storybook/api@^7.0.0":
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/@storybook/api/-/api-7.0.7.tgz#ae2c3f435b025f0aac86da1033ad3f0cbceb6ef4"
