@@ -10,6 +10,8 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
+    '@storybook/addon-measure',
+    '@storybook/addon-actions',
     'storybook-dark-mode',
   ],
   staticDirs: ['../public'],
