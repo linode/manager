@@ -6,7 +6,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { Toggle } from 'src/components/Toggle';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
@@ -17,6 +17,7 @@ import FormControl from 'src/components/core/FormControl';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { Radio } from 'src/components/Radio/Radio';
 import { FormLabel } from '@mui/material';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -140,7 +141,7 @@ const ProfileSettings = () => {
           {({
             preference: istypeToConfirm,
             togglePreference: toggleTypeToConfirm,
-          }: ToggleProps<boolean>) => {
+          }: PreferenceToggleProps<boolean>) => {
             return (
               <Grid container alignItems="center">
                 <Grid xs={12}>

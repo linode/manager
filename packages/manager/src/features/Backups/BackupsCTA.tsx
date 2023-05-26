@@ -8,12 +8,13 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { handleOpen } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
 import { useProfile } from 'src/queries/profile';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -68,7 +69,7 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
       {({
         preference: isDismissed,
         togglePreference: dismissed,
-      }: ToggleProps<boolean>) => {
+      }: PreferenceToggleProps<boolean>) => {
         return isDismissed ? (
           // eslint-disable-next-line react/jsx-no-useless-fragment
           <React.Fragment />
