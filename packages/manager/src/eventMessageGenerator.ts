@@ -7,7 +7,6 @@ import {
   formatEventWithUsername,
   formatEventWithAppendedText,
 } from './features/Events/Event.helpers';
-// import React from 'react';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -868,13 +867,6 @@ export function applyLinking(event: Event, message: string) {
 
   let newMessage = message;
 
-  // if (newMessage.match(/Support/i)) {
-  //   newMessage = newMessage.replace(
-  //     /; please contact Support/,
-  //     ''
-  //     // `<a href="/support/tickets">open a support ticket</a>`
-  //   );
-  //
   if (event.entity && entityLinkTarget) {
     const label = event.entity.label;
     const nonTickedLabels = new RegExp(`(?<!\`)${label}`, 'g');
