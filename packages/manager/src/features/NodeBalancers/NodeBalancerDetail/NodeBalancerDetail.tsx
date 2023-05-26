@@ -5,10 +5,10 @@ import Tabs from 'src/components/core/ReachTabs';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
-import NodeBalancerSummary from './NodeBalancerSummary/NodeBalancerSummary';
+import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import LandingHeader from 'src/components/LandingHeader';
 import {
@@ -22,7 +22,7 @@ import {
   useParams,
 } from 'react-router-dom';
 
-const NodeBalancerDetail = () => {
+export const NodeBalancerDetail = () => {
   const history = useHistory();
   const location = useLocation();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -132,5 +132,3 @@ const NodeBalancerDetail = () => {
     </React.Fragment>
   );
 };
-
-export default NodeBalancerDetail;

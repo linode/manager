@@ -68,12 +68,9 @@
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "jest": "~26.4.2",
-    "lint-staged": "^13.2.0",
+    "lint-staged": "^13.2.2",
     "prettier": "~2.2.1",
     "tsup": "^6.7.0"
-  },
-  "resolutions": {
-    "handlebars": "^4.4.3"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

@@ -1,10 +1,11 @@
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
+import Typography from 'src/components/core/Typography';
 import {
   IncidentImpact,
   IncidentStatus,
@@ -16,12 +17,6 @@ import { truncateEnd } from 'src/utilities/truncate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(),
-    paddingLeft: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
     marginBottom: theme.spacing(),
   },
   button: {
@@ -101,7 +96,7 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
         expiry: DateTime.utc().plus({ days: 1 }).toISO(),
       }}
     >
-      <>
+      <Box display="flex" flexDirection="column">
         <Typography data-testid="status-banner" className={classes.header}>
           <Link to={href}>
             <strong data-testid="incident-status">
@@ -116,7 +111,7 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
           }}
           className={classes.text}
         />
-      </>
+      </Box>
     </DismissibleBanner>
   );
 });
