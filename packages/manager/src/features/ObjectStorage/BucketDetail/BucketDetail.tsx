@@ -37,7 +37,7 @@ import {
   isEmptyObjectForFolder,
   tableUpdateAction,
 } from '../utilities';
-import BucketBreadcrumb from './BucketBreadcrumb';
+import { BucketBreadcrumb } from './BucketBreadcrumb';
 import ObjectDetailDrawer from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
 import { deleteObject as _deleteObject } from '../requests';
