@@ -1,5 +1,4 @@
 import * as React from 'react';
-import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 import { AccessKeyDrawer } from './AccessKeyDrawer';
@@ -9,6 +8,7 @@ import { FormikBag } from 'formik';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { MODE, OpenAccessDrawer } from './types';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useErrors } from 'src/hooks/useErrors';
 import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';

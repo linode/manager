@@ -1,39 +1,38 @@
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import BucketDetailsDrawer from './BucketDetailsDrawer';
 import BucketTable from './BucketTable';
-import CancelNotice from '../CancelNotice';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
-import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import Typography from 'src/components/core/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { APIError } from '@linode/api-v4/lib/types';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
+import { CancelNotice } from '../CancelNotice';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { makeStyles } from 'tss-react/mui';
+import { Notice } from 'src/components/Notice/Notice';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Theme } from '@mui/material/styles';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
-
-import {
-  sendDeleteBucketEvent,
-  sendDeleteBucketFailedEvent,
-} from 'src/utilities/ga';
 import {
   BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import {
+  ObjectStorageBucket,
+  ObjectStorageCluster,
+} from '@linode/api-v4/lib/object-storage';
+import {
+  sendDeleteBucketEvent,
+  sendDeleteBucketFailedEvent,
+} from 'src/utilities/ga';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
