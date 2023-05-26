@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from 'src/components/Button';
 import classNames from 'classnames';
-import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
+import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import Hidden from 'src/components/core/Hidden';
 import SelectionCard from 'src/components/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
