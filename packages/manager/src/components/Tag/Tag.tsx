@@ -66,12 +66,14 @@ const StyledChip = styled(Chip, {
   fontSize: '0.875rem',
   padding: 0,
   '& .MuiChip-label': {
-    borderBottomLeftRadius: '4px',
-    borderRight: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
-    borderTopLeftRadius: '4px',
+    borderRadius: 4,
     color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
     maxWidth: 350,
     padding: '7px 10px',
+    '&:hover': {
+      borderTopRightRadius: props.onDelete && 0,
+      borderBottomRightRadius: props.onDelete && 0,
+    },
   },
   // Overrides MUI chip default styles so these appear as separate elements.
   '&:hover': {
@@ -123,6 +125,7 @@ const StyledDeleteButton = styled('button', { label: 'StyledDeleteButton' })(
     borderRadius: 0,
     borderTopRightRadius: 3,
     borderBottomRightRadius: 3,
+    borderLeft: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
     height: 30,
     margin: 0,
     minWidth: 30,
