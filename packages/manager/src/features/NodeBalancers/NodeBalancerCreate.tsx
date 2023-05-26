@@ -7,7 +7,7 @@ import Paper from 'src/components/core/Paper';
 import LandingHeader from 'src/components/LandingHeader';
 import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
+import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';

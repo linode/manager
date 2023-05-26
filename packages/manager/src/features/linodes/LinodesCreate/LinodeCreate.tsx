@@ -23,7 +23,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
+import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
@@ -697,7 +697,6 @@ export class LinodeCreate extends React.PureComponent<
               regions={regionsData!}
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
-              updateFor={[this.props.selectedRegionID, regionsData, errors]}
               disabled={userCannotCreateLinode}
               helperText={this.props.regionHelperText}
             />
