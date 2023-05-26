@@ -33,7 +33,6 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
     link,
   } = options;
   let formattedFailureMessage;
-  // console.log({ failureMessage });
 
   if (
     ['finished', 'notification'].includes(eventStatus) &&
@@ -70,25 +69,6 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
   event.secondary_entity?.label ?? '';
-// const getMessage = (event: Event) => {
-//   // console.log({ event });
-//   const hasSupportLink = event?.message?.includes('contact Support') ?? false;
-//   const message = event.message
-//     ? event.message
-//         .replace(/contact Support/i, '')
-//         .replace('cancelled', 'canceled')
-//     : null;
-//   // console.log({ message });
-//   return (
-//     <>
-//       {message}
-//       {hasSupportLink ? (
-//         <SupportLink text="contact Support" title={`Image Upload Failure`} />
-//       ) : null}
-//       .
-//     </>
-//   );
-// };
 
 class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
   subscription: Subscription;
@@ -100,7 +80,6 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
         const { enqueueSnackbar } = this.props;
         const label = getLabel(event);
         const secondaryLabel = getSecondaryLabel(event);
-        // const message = getMessage(event);
         switch (event.action) {
           case 'volume_attach':
             return toastSuccessAndFailure({
@@ -165,7 +144,10 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               successMessage: `Image ${label} is now available.`,
               failureMessage: isDeletion
                 ? undefined
-                : `There was a problem uploading image ${label}: ${event.message}`,
+                : `There was a problem uploading image ${label}: ${event.message?.replace(
+                    'cancelled',
+                    'canceled'
+                  )}`,
             });
           case 'image_delete':
             return toastSuccessAndFailure({
