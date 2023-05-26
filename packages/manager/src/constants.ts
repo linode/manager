@@ -73,6 +73,7 @@ export const GTM_ID = import.meta.env.REACT_APP_GTM_ID;
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
+export const NUM_ADOBE_SCRIPTS = 3;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
 
