@@ -1,3 +1,36 @@
+import * as React from 'react';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Box from 'src/components/core/Box';
+import Button from 'src/components/Button';
+import Hidden from 'src/components/core/Hidden';
+import ObjectDetailDrawer from './ObjectDetailsDrawer';
+import ObjectTableContent from './ObjectTableContent';
+import produce from 'immer';
+import { BucketBreadcrumb } from './BucketBreadcrumb';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { CreateFolderDrawer } from './CreateFolderDrawer';
+import { debounce } from 'throttle-debounce';
+import { deleteObject as _deleteObject } from '../requests';
+import { getQueryParam } from 'src/utilities/queryParams';
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
+import { sendDownloadObjectEvent } from 'src/utilities/ga';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { truncateMiddle } from 'src/utilities/truncate';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
+import { useSnackbar } from 'notistack';
+import { Waypoint } from 'react-waypoint';
+import {
+  displayName,
+  generateObjectUrl,
+  isEmptyObjectForFolder,
+  tableUpdateAction,
+} from '../utilities';
 import {
   getObjectList,
   getObjectURL,
@@ -5,97 +38,36 @@ import {
   ObjectStorageObject,
   ObjectStorageObjectListResponse,
 } from '@linode/api-v4/lib/object-storage';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { Waypoint } from 'react-waypoint';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import {
   prefixToQueryKey,
   queryKey,
   updateBucket,
   useObjectBucketDetailsInfiniteQuery,
 } from 'src/queries/objectStorage';
-import { sendDownloadObjectEvent } from 'src/utilities/ga';
-import { getQueryParam } from 'src/utilities/queryParams';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
 import {
-  displayName,
-  generateObjectUrl,
-  isEmptyObjectForFolder,
-  tableUpdateAction,
-} from '../utilities';
-import { BucketBreadcrumb } from './BucketBreadcrumb';
-import ObjectDetailDrawer from './ObjectDetailsDrawer';
-import ObjectTableContent from './ObjectTableContent';
-import { deleteObject as _deleteObject } from '../requests';
-import produce from 'immer';
-import { debounce } from 'throttle-debounce';
-import Box from 'src/components/core/Box';
-import { CreateFolderDrawer } from './CreateFolderDrawer';
-import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
-import { useQueryClient } from 'react-query';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  objectTable: {
-    marginTop: theme.spacing(2),
-  },
-  nameColumn: {
-    width: '50%',
-  },
-  sizeColumn: {
-    width: '10%',
-  },
-  footer: {
-    marginTop: theme.spacing(3),
-    textAlign: 'center',
-    color: theme.color.headline,
-  },
-  tryAgainText: {
-    ...theme.applyLinkStyles,
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-    cursor: 'pointer',
-  },
-  createFolderButton: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-}));
+  StyledCreateFolderButton,
+  StyledFooter,
+  StyledNameColumn,
+  StyledSizeColumn,
+  StyledTryAgainButton,
+} from './BucketDetail.styles';
 
 interface MatchParams {
   clusterId: ObjectStorageClusterID;
   bucketName: string;
 }
 
-export const BucketDetail: React.FC = () => {
-  const { classes } = useStyles();
+export const BucketDetail = () => {
   const match = useRouteMatch<MatchParams>(
     '/object-storage/buckets/:clusterId/:bucketName'
   );
   const location = useLocation();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-
   const bucketName = match?.params.bucketName || '';
   const clusterId = match?.params.clusterId || '';
   const prefix = getQueryParam(location.search, 'prefix');
-
   const queryClient = useQueryClient();
-
   const {
     data,
     error,
@@ -105,7 +77,6 @@ export const BucketDetail: React.FC = () => {
     isFetching,
     isFetchingNextPage,
   } = useObjectBucketDetailsInfiniteQuery(clusterId, bucketName, prefix);
-
   const [
     isCreateFolderDrawerOpen,
     setIsCreateFolderDrawerOpen,
@@ -372,19 +343,18 @@ export const BucketDetail: React.FC = () => {
         maybeAddObjectToTable={maybeAddObjectToTable}
       />
       <Box display="flex" justifyContent="flex-end" mt={1.5} mb={0.5}>
-        <Button
+        <StyledCreateFolderButton
           buttonType="outlined"
-          className={classes.createFolderButton}
           onClick={() => setIsCreateFolderDrawerOpen(true)}
         >
           Create Folder
-        </Button>
+        </StyledCreateFolderButton>
       </Box>
       <Table aria-label="List of Bucket Objects">
         <TableHead>
           <TableRow>
-            <TableCell className={classes.nameColumn}>Object</TableCell>
-            <TableCell className={classes.sizeColumn}>Size</TableCell>
+            <StyledNameColumn>Object</StyledNameColumn>
+            <StyledSizeColumn>Size</StyledSizeColumn>
             <Hidden mdDown>
               <TableCell>Last Modified</TableCell>
             </Hidden>
@@ -415,21 +385,18 @@ export const BucketDetail: React.FC = () => {
         </Waypoint>
       )}
       {error && (
-        <Typography variant="subtitle2" className={classes.footer}>
+        <StyledFooter variant="subtitle2">
           The next objects in the list failed to load.{' '}
-          <button
-            className={classes.tryAgainText}
-            onClick={() => fetchNextPage()}
-          >
+          <StyledTryAgainButton onClick={() => fetchNextPage()}>
             Click here to try again.
-          </button>
-        </Typography>
+          </StyledTryAgainButton>
+        </StyledFooter>
       )}
 
       {!hasNextPage && numOfDisplayedObjects >= 100 && (
-        <Typography variant="subtitle2" className={classes.footer}>
+        <StyledFooter variant="subtitle2">
           Showing all {numOfDisplayedObjects} items
-        </Typography>
+        </StyledFooter>
       )}
       <ConfirmationDialog
         open={deleteObjectDialogOpen}
@@ -489,5 +456,3 @@ export const BucketDetail: React.FC = () => {
     </>
   );
 };
-
-export default BucketDetail;
