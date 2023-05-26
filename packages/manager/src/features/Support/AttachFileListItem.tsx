@@ -6,7 +6,7 @@ import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import LinearProgress from 'src/components/LinearProgress';
+import { LinearProgress } from 'src/components/LinearProgress';
 import TextField from 'src/components/TextField';
 import { FileAttachment } from './index';
 
