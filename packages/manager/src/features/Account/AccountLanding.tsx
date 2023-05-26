@@ -8,7 +8,7 @@ import LandingHeader, {
 } from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useAccount } from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
 import AccountLogins from './AccountLogins';

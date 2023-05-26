@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import { convertForAria } from 'src/components/TabLink/TabLink';
+import { convertForAria } from 'src/utilities/stringUtils';
 
 export interface Props extends DrawerProps {
   title: string;
