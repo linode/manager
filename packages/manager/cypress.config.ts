@@ -78,7 +78,7 @@ export default defineConfig({
   e2e: {
     experimentalRunAllSpecs: true,
     baseUrl: 'http://localhost:3000',
-    specPattern: 'cypress/e2e/**/*.spec.{ts,tsx}',
+    specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
     setupNodeEvents(on, config) {
       // Display warning if running an unsupported version of Node JS.
       nodeVersionCheck();
