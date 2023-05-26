@@ -1,8 +1,8 @@
 import * as React from 'react';
-import AccessKeyDrawer from './AccessKeyDrawer';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
+import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormikBag } from 'formik';
