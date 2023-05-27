@@ -8,12 +8,6 @@ import { styled } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-export const StyledIconWrapper = styled(Grid, {
-  label: 'StyledIconWrapper',
-})(() => ({
-  margin: '2px 0',
-}));
-
 interface Props {
   displayName: string;
   folderName: string;
@@ -52,3 +46,9 @@ export const FolderTableRow = (props: Props) => {
     </TableRow>
   );
 };
+
+const StyledIconWrapper = styled(Grid, {
+  label: 'StyledIconWrapper',
+})(() => ({
+  margin: '2px 0',
+}));

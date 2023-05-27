@@ -3,7 +3,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
-import ObjectDetailDrawer from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
 import produce from 'immer';
 import { BucketBreadcrumb } from './BucketBreadcrumb';
@@ -13,6 +12,7 @@ import { debounce } from 'throttle-debounce';
 import { deleteObject as _deleteObject } from '../requests';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
 import { Table } from 'src/components/Table';
@@ -425,7 +425,7 @@ export const BucketDetail = () => {
       >
         Are you sure you want to delete this object?
       </ConfirmationDialog>
-      <ObjectDetailDrawer
+      <ObjectDetailsDrawer
         open={objectDetailDrawerOpen}
         onClose={closeObjectDetailsDrawer}
         bucketName={bucketName}
