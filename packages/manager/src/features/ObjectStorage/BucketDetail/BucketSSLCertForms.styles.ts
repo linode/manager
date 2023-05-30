@@ -3,7 +3,7 @@ import TextField from 'src/components/TextField';
 import { styled } from '@mui/material/styles';
 
 export const StyledWrapper = styled('div', {
-  label: 'StyledTextArea',
+  label: 'StyledWrapper',
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
@@ -17,7 +17,7 @@ export const StyledWrapper = styled('div', {
 export const StyledTextArea = styled(TextField, {
   label: 'StyledTextArea',
 })(() => ({
-  width: '100%',
+  minWidth: '100%',
 }));
 
 export const StyledCertWrapper = styled(Grid, {
