@@ -382,13 +382,45 @@ export const lightTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
+        option: {
+          fontSize: '0.9rem',
+          padding: '10px !important',
+          '&[aria-selected="true"]': {
+            color: primaryColors.main,
+          },
+          '&.Mui-focused': {
+            backgroundColor: `${primaryColors.main} !important`,
+            color: '#fff',
+          },
+          ':hover': {
+            backgroundColor: `${primaryColors.main} !important`,
+            color: '#fff',
+          },
+        },
         listbox: {
           backgroundColor: bg.white,
           border: `1px solid ${primaryColors.main}`,
+          marginTop: '-1px',
+          padding: '4px',
         },
         endAdornment: {
           top: 'unset',
           paddingRight: 8,
+          '.MuiAutocomplete-clearIndicator': {
+            visibility: 'visible !important',
+          },
+          '.MuiAutocomplete-popupIndicator': {
+            svg: {
+              fontSize: '28px',
+              opacity: 0.5,
+              ':hover': {
+                opacity: 1,
+              },
+            },
+          },
+          svg: {
+            color: '#aaa',
+          },
         },
         inputRoot: {
           paddingLeft: 8,
@@ -826,6 +858,9 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         input: {
           height: 'auto',
+          '&::placeholder': {
+            opacity: 1,
+          },
         },
       },
     },

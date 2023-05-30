@@ -1,5 +1,14 @@
 import { Filter, Linode } from '@linode/api-v4';
-import { Autocomplete } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import {
+  Autocomplete,
+  Box,
+  Popper,
+  PopperProps,
+  useTheme,
+} from '@mui/material';
 import React from 'react';
 import TextField from 'src/components/TextField';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
@@ -56,6 +65,8 @@ export const LinodeSelect = (props: LinodeSelectProps) => {
 
   const [inputValue, setInputValue] = React.useState('');
 
+  const theme = useTheme();
+
   const linodes = linodesData?.pages.flatMap((page) => page.data);
   const filteredLinodes = optionsFilter
     ? linodes?.filter(optionsFilter)
@@ -87,7 +98,6 @@ export const LinodeSelect = (props: LinodeSelectProps) => {
       onInputChange={(_, input) => {
         setInputValue(input);
       }}
-      open
       renderInput={(params) => (
         <TextField
           label="Linodes"
@@ -111,6 +121,55 @@ export const LinodeSelect = (props: LinodeSelectProps) => {
         },
       }}
       disableCloseOnSelect={multiple}
+      renderOption={(props, option, { selected }) => (
+        <li {...props}>
+          <Box
+            component={DoneIcon}
+            sx={{ width: 17, height: 17, mr: '5px', ml: '-2px' }}
+            style={{
+              visibility: selected ? 'visible' : 'hidden',
+            }}
+          />
+          <Box
+            sx={{
+              flexGrow: 1,
+              '& span': {
+                color: theme.palette.mode === 'light' ? '#586069' : '#8b949e',
+              },
+            }}
+          >
+            {option.label}
+          </Box>
+          {multiple && (
+            <Box
+              component={CloseIcon}
+              sx={{ opacity: 0.6, width: 18, height: 18 }}
+              style={{
+                visibility: selected ? 'visible' : 'hidden',
+              }}
+            />
+          )}
+        </li>
+      )}
+      PopperComponent={CustomPopper}
+      popupIcon={<KeyboardArrowDownIcon />}
+    />
+  );
+};
+
+const CustomPopper = (props: PopperProps) => {
+  return (
+    <Popper
+      {...props}
+      modifiers={[{ name: 'preventOverflow', enabled: false }]}
+      style={{
+        ...(props.style ?? {}),
+        ...(props.style?.width
+          ? typeof props.style.width == 'string'
+            ? { width: `calc(${props.style.width} + 2px)` }
+            : { width: props.style.width + 2 }
+          : {}),
+      }}
     />
   );
 };

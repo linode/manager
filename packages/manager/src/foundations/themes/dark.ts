@@ -222,6 +222,14 @@ export const darkTheme: ThemeOptions = {
         noOptions: {
           color: '#fff',
         },
+        tag: {
+          '.MuiChip-deleteIcon': {
+            color: customDarkModeOptions.color.grey6,
+            ':hover': {
+              color: '#fff',
+            },
+          },
+        },
       },
     },
     MuiButton: {
