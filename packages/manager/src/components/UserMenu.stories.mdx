@@ -3,8 +3,6 @@ import { profileFactory } from 'src/factories';
 import UserMenu from 'src/features/TopMenu/UserMenu/';
 import { useProfile } from 'src/queries/profile';
 
-export const mockProfile = profileFactory.build();
-
 <Meta title="Features/Navigation/User Menu" component={UserMenu} />
 
 # User Menu
@@ -18,7 +16,6 @@ export const mockProfile = profileFactory.build();
 - If, with the addition of new tabs, the dropdown becomes an unwieldy length consider making the **Account** section a 2 column layout.
 
 export const Template = () => {
-  const profileData = useProfile(mockProfile);
   return <UserMenu />;
 };
 
