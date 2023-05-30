@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Loading from 'src/components/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
 import AppPanelSection from 'src/features/linodes/LinodesCreate/AppPanelSection';

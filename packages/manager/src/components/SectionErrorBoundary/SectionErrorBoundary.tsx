@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 interface State {
   error?: Error;
