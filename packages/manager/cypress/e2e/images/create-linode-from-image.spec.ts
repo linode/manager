@@ -1,17 +1,14 @@
 import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
-import {
-  randomLabel,
-  randomNumber,
-  randomString,
-  randomItem,
-} from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { imageFactory, linodeFactory } from '@src/factories';
-import { regions, regionsMap } from 'support/constants/regions';
+import { chooseRegion } from 'support/util/regions';
+
+const region = chooseRegion();
 
 const mockLinode = linodeFactory.build({
-  region: randomItem(regions),
+  region: region.id,
 });
 
 const mockImage = imageFactory.build({
@@ -53,7 +50,7 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
-  containsClick(regionsMap[mockLinode.region]);
+  containsClick(region.name);
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
   cy.get('[id="root-password"]').type(randomString(32));
@@ -63,7 +60,7 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
   cy.wait('@mockLinodeResponse');
 
   fbtVisible(mockLinode.label);
-  fbtVisible(regionsMap[mockLinode.region]);
+  fbtVisible(region.name);
   fbtVisible(mockLinode.id);
 };
 

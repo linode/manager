@@ -13,13 +13,13 @@ import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { routes } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
-import { regions, regionsMap } from 'support/constants/regions';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
 const mockLinodes = new Array(5).fill(null).map(
-  (item: null, index: number): Linode => {
+  (_item: null, index: number): Linode => {
     return linodeFactory.build({
       label: `Linode ${index}`,
-      region: regions[index],
+      region: chooseRegion().id,
     });
   }
 );
@@ -154,9 +154,10 @@ describe('linode landing checks', () => {
     const firstLinodeLabel = linodesByLabel[0].label;
     const lastLinodeLabel = linodesByLabel[linodesLastIndex].label;
 
-    const firstRegionLabel = regionsMap[linodesByRegion[0].region];
-    const lastRegionLabel =
-      regionsMap[linodesByRegion[linodesLastIndex].region];
+    const firstRegionLabel = getRegionById(linodesByRegion[0].region).name;
+    const lastRegionLabel = getRegionById(
+      linodesByRegion[linodesLastIndex].region
+    ).name;
 
     const checkFirstRow = (label: string) => {
       getVisible('tr[data-qa-loading="true"]')

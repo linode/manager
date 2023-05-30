@@ -18,7 +18,7 @@ import {
 describe('Delete database clusters', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
-      describe(`Deletes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
+      describe(`Deletes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         /*
          * - Tests database deletion UI flow using mocked data.
          * - Confirms that database deletion flow can be completed.
@@ -30,7 +30,7 @@ describe('Delete database clusters', () => {
             id: randomNumber(1, 1000),
             type: configuration.linodeType,
             label: configuration.label,
-            region: configuration.region,
+            region: configuration.region.id,
             engine: configuration.dbType,
             status: 'active',
             allow_list: [allowedIp],
@@ -79,7 +79,7 @@ describe('Delete database clusters', () => {
             id: randomNumber(1, 1000),
             type: configuration.linodeType,
             label: configuration.label,
-            region: configuration.region,
+            region: configuration.region.id,
             engine: configuration.dbType,
             status: 'provisioning',
             allow_list: [],
