@@ -1,32 +1,30 @@
-import {
-  deleteSSLCert,
-  getSSLCert,
-  uploadSSLCert,
-} from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import { Notice } from 'src/components/Notice/Notice';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
+import { ObjectStorageBucketSSLRequest } from '@linode/api-v4/lib/object-storage';
+import {
+  useBucketSSLDeleteMutation,
+  useBucketSSLMutation,
+  useBucketSSLQuery,
+} from 'src/queries/objectStorage';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
-  },
-  button: {
-    ...theme.applyLinkStyles,
   },
   helperText: {
     paddingTop: theme.spacing(),
@@ -63,7 +61,7 @@ interface Props {
   clusterId: string;
 }
 
-export const BucketSSL: React.FC<Props> = (props) => {
+const BucketSSL = (props: Props) => {
   const { bucketName, clusterId } = props;
   const classes = useStyles();
 
@@ -88,69 +86,56 @@ export const BucketSSL: React.FC<Props> = (props) => {
   );
 };
 
-interface BodyProps {
-  bucketName: string;
-  clusterId: string;
-}
-
-export const SSLBody: React.FC<BodyProps> = (props) => {
+export const SSLBody = (props: Props) => {
   const { bucketName, clusterId } = props;
 
-  const request = useAPIRequest(
-    () => getSSLCert(clusterId, bucketName).then((response) => response.ssl),
-    false
-  );
+  const { data, isLoading, error } = useBucketSSLQuery(clusterId, bucketName);
 
-  const hasSSL = request.data;
+  const hasSSL = Boolean(data?.ssl);
 
-  if (request.loading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (request.error) {
-    return <ErrorState errorText="Error loading TLS cert data" />;
+  if (error) {
+    return <ErrorState errorText={error?.[0].reason} />;
   }
 
   if (hasSSL) {
-    return <RemoveCertForm {...props} update={request.update} />;
+    return <RemoveCertForm {...props} />;
   }
 
-  return <AddCertForm {...props} update={request.update} />;
+  return <AddCertForm {...props} />;
 };
 
-export interface FormProps extends BodyProps {
-  update: () => void;
-}
+const AddCertForm = (props: Props) => {
+  const { bucketName, clusterId } = props;
+  const { enqueueSnackbar } = useSnackbar();
+  const classes = useStyles();
 
-export const AddCertForm: React.FC<FormProps> = (props) => {
-  const { bucketName, clusterId, update } = props;
-  const [certificate, setCertificate] = React.useState('');
-  const [sslKey, setSSLKey] = React.useState('');
-  const [submitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<APIError[] | undefined>(undefined);
+  const { mutateAsync, isLoading, error } = useBucketSSLMutation(
+    clusterId,
+    bucketName
+  );
+
+  const formik = useFormik<ObjectStorageBucketSSLRequest>({
+    initialValues: {
+      certificate: '',
+      private_key: '',
+    },
+    async onSubmit(values) {
+      await mutateAsync(values);
+      enqueueSnackbar(
+        `Successfully added certificate to bucket ${bucketName}`,
+        { variant: 'success' }
+      );
+    },
+  });
 
   const errorMap = getErrorMap(['certificate', 'private_key'], error);
 
-  const classes = useStyles();
-
-  const onSubmit = () => {
-    setSubmitting(true);
-    setError(undefined);
-    uploadSSLCert(clusterId, bucketName, { certificate, private_key: sslKey })
-      .then((_) => {
-        setSubmitting(false);
-        update();
-        setCertificate('');
-        setSSLKey('');
-      })
-      .catch((error) => {
-        setSubmitting(false);
-        setError(error);
-      });
-  };
-
   return (
-    <>
+    <form onSubmit={formik.handleSubmit}>
       {errorMap.none && (
         <Notice error text={errorMap.none} spacingTop={8} spacingBottom={0} />
       )}
@@ -159,13 +144,12 @@ export const AddCertForm: React.FC<FormProps> = (props) => {
           <Grid xs={12} md={6} className={classes.certWrapper}>
             <TextField
               label="Certificate"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setCertificate(e.target.value)
-              }
-              value={certificate}
+              name="certificate"
+              onChange={formik.handleChange}
+              value={formik.values.certificate}
               multiline
               fullWidth={false}
-              rows="4"
+              rows="3"
               className={classes.textArea}
               data-testid="ssl-cert-input"
               errorText={errorMap.certificate}
@@ -174,14 +158,13 @@ export const AddCertForm: React.FC<FormProps> = (props) => {
           <Grid xs={12} md={6} className={classes.keyWrapper}>
             <TextField
               label="Private Key"
+              name="private_key"
               fullWidth
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSSLKey(e.target.value)
-              }
-              value={sslKey}
+              onChange={formik.handleChange}
+              value={formik.values.private_key}
               className={classes.textArea}
               multiline
-              rows="4"
+              rows="3"
               data-testid="ssl-cert-input"
               errorText={errorMap.private_key}
             />
@@ -189,60 +172,55 @@ export const AddCertForm: React.FC<FormProps> = (props) => {
         </div>
         <Grid>
           <ActionsPanel>
-            <Button
-              onClick={onSubmit}
-              loading={submitting}
-              buttonType="primary"
-            >
+            <Button loading={isLoading} buttonType="primary" type="submit">
               Upload Certificate
             </Button>
           </ActionsPanel>
         </Grid>
       </div>
-    </>
+    </form>
   );
 };
 
-export const RemoveCertForm: React.FC<FormProps> = (props) => {
-  const { bucketName, clusterId, update } = props;
+const RemoveCertForm = (props: Props) => {
+  const { bucketName, clusterId } = props;
   const [open, setOpen] = React.useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
-  const [submittingDialog, setSubmittingDialog] = React.useState(false);
-  const [dialogError, setDialogError] = React.useState<string | undefined>(
-    undefined
-  );
+  const {
+    mutateAsync: deleteSSLCert,
+    isLoading,
+    error,
+  } = useBucketSSLDeleteMutation(clusterId, bucketName);
 
-  const removeCertificate = () => {
-    setSubmittingDialog(true);
-    deleteSSLCert(clusterId, bucketName)
-      .then(() => {
-        setOpen(false);
-        setSubmittingDialog(false);
-        update();
-      })
-      .catch((error) => {
-        setDialogError(error[0].reason);
-        setSubmittingDialog(false);
-      });
+  const removeCertificate = async () => {
+    await deleteSSLCert();
+    setOpen(false);
+    enqueueSnackbar(
+      `Successfully removed certificate from bucket ${bucketName}`,
+      { variant: 'success' }
+    );
   };
-  const createActions = () => (
+
+  const actions = (
     <ActionsPanel>
       <Button
         buttonType="secondary"
         onClick={() => setOpen(false)}
-        disabled={submittingDialog}
+        disabled={isLoading}
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
         onClick={removeCertificate}
-        loading={submittingDialog}
+        loading={isLoading}
       >
         Remove certificate
       </Button>
     </ActionsPanel>
   );
+
   return (
     <>
       <Notice success spacingTop={8}>
@@ -253,11 +231,11 @@ export const RemoveCertForm: React.FC<FormProps> = (props) => {
         Remove Certificate
       </Button>
       <ConfirmationDialog
-        title={'Remove TLS certificate'}
+        title="Remove TLS certificate"
         open={open}
         onClose={() => setOpen(false)}
-        actions={createActions()}
-        error={dialogError}
+        actions={actions}
+        error={error?.[0].reason}
       >
         <Typography>
           Are you sure you want to remove all certificates from this Bucket?
