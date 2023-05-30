@@ -5,7 +5,7 @@ import { isNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 type PreferenceValue = boolean | string | number;
 
-export interface ToggleProps<T> {
+export interface PreferenceToggleProps<T> {
   preference: T;
   togglePreference: () => T;
 }
@@ -28,7 +28,7 @@ interface Props<T = PreferenceValue> {
   children: RenderChildren<T>;
 }
 
-const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
+export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
   const {
     value,
     preferenceKey,
@@ -206,5 +206,3 @@ const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
     ? children({ preference: currentlySetPreference, togglePreference })
     : null;
 };
-
-export default PreferenceToggle;

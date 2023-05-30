@@ -18,13 +18,14 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import DocsLink from 'src/components/DocsLink';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import TabLinkList, { Tab } from 'src/components/TabLinkList';
+import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import type { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
@@ -697,7 +698,6 @@ export class LinodeCreate extends React.PureComponent<
               regions={regionsData!}
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
-              updateFor={[this.props.selectedRegionID, regionsData, errors]}
               disabled={userCannotCreateLinode}
               helperText={this.props.regionHelperText}
             />

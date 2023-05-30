@@ -1,6 +1,6 @@
 import 'cypress-file-upload';
-import { EventStatus } from '@linode/api-v4/types';
-import { eventFactory } from '@src/factories';
+import { EventStatus, ImageStatus } from '@linode/api-v4/types';
+import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
@@ -9,16 +9,13 @@ import { ui } from 'support/ui';
 import { interceptOnce } from 'support/ui/common';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomPhrase } from 'support/util/random';
-import { mockGetImage } from 'support/intercepts/images';
+import {
+  mockGetImage,
+  mockGetCustomImages,
+  mockDeleteImage,
+  mockUpdateImage,
+} from 'support/intercepts/images';
 import { chooseRegion } from 'support/util/regions';
-
-/*
- * Amount of time to wait for toast notification after uploading image, in ms.
- *
- * We extend the timeout used when waiting for image uploading and processing
- * since this operation can take a couple minutes.
- */
-const imageUploadWaitTimeout = 120000;
 
 /**
  * Returns a numeric image ID from a string-based image ID.
@@ -138,85 +135,94 @@ const uploadImage = (label: string) => {
 
 describe('machine image', () => {
   /*
-   * - Uploads machine image.
-   * - Confirms that image uploads successfully.
-   * - Confirms that machine image is listed in landing page as expected.
-   * - Confirms that notifications appear that describe the image's success status.
+   * - Confirms update and delete UI flows using mock API data.
    * - Confirms that image label can be updated.
    * - Confirms that image description can be updated.
    * - Confirms that image can be deleted.
    */
-  it('uploads, updates, and deletes a machine image, end-to-end', () => {
+  it('updates and deletes a machine image', () => {
     const initialLabel = randomLabel();
     const updatedLabel = randomLabel();
     const updatedDescription = randomPhrase();
 
-    uploadImage(initialLabel);
-    cy.wait('@imageUpload').then((xhr) => {
-      const imageId = xhr.response?.body.image.id;
-
-      ui.toast.assertMessage(`Image ${initialLabel} is now available.`, {
-        timeout: imageUploadWaitTimeout,
-      });
-
-      cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
-        cy.findByText(initialLabel).should('be.visible');
-        cy.findByText('Ready').should('be.visible');
-
-        ui.actionMenu
-          .findByTitle(`Action menu for Image ${initialLabel}`)
-          .should('be.visible')
-          .click();
-      });
-
-      ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
-
-      ui.drawer
-        .findByTitle('Edit Image')
-        .should('be.visible')
-        .within(() => {
-          cy.findByLabelText('Label')
-            .should('be.visible')
-            .clear()
-            .type(updatedLabel);
-
-          cy.findByLabelText('Description')
-            .should('be.visible')
-            .clear()
-            .type(updatedDescription);
-
-          ui.buttonGroup
-            .findButtonByTitle('Save Changes')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
-        cy.findByText(updatedLabel).should('be.visible');
-        cy.findByText(initialLabel).should('not.exist');
-        ui.actionMenu
-          .findByTitle(`Action menu for Image ${updatedLabel}`)
-          .should('be.visible')
-          .click();
-      });
-
-      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
-
-      ui.dialog
-        .findByTitle(`Delete Image ${updatedLabel}`)
-        .should('be.visible')
-        .within(() => {
-          ui.buttonGroup
-            .findButtonByTitle('Delete Image')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      ui.toast.assertMessage('Image has been scheduled for deletion.');
-      cy.findByText(updatedLabel).should('not.exist');
+    const mockImage = imageFactory.build({
+      label: initialLabel,
     });
+
+    const mockImageUpdated = {
+      ...mockImage,
+      label: updatedLabel,
+      description: updatedDescription,
+    };
+
+    mockGetCustomImages([mockImage]).as('getImages');
+    cy.visitWithLogin('/images');
+    cy.wait('@getImages');
+
+    cy.get(`[data-qa-image-cell="${mockImage.id}"]`).within(() => {
+      cy.findByText(initialLabel).should('be.visible');
+      cy.findByText('Ready').should('be.visible');
+
+      ui.actionMenu
+        .findByTitle(`Action menu for Image ${initialLabel}`)
+        .should('be.visible')
+        .click();
+    });
+
+    ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+
+    mockUpdateImage(mockImage.id, mockImageUpdated).as('updateImage');
+    mockGetCustomImages([mockImageUpdated]).as('getImages');
+
+    ui.drawer
+      .findByTitle('Edit Image')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Label')
+          .should('be.visible')
+          .clear()
+          .type(updatedLabel);
+
+        cy.findByLabelText('Description')
+          .should('be.visible')
+          .clear()
+          .type(updatedDescription);
+
+        ui.buttonGroup
+          .findButtonByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@getImages', '@updateImage']);
+    cy.get(`[data-qa-image-cell="${mockImage.id}"]`).within(() => {
+      cy.findByText(updatedLabel).should('be.visible');
+      cy.findByText(initialLabel).should('not.exist');
+      ui.actionMenu
+        .findByTitle(`Action menu for Image ${updatedLabel}`)
+        .should('be.visible')
+        .click();
+    });
+
+    mockDeleteImage(mockImage.id).as('deleteImage');
+    mockGetCustomImages([]).as('getImages');
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    ui.dialog
+      .findByTitle(`Delete Image ${updatedLabel}`)
+      .should('be.visible')
+      .within(() => {
+        ui.buttonGroup
+          .findButtonByTitle('Delete Image')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@deleteImage', '@getImages']);
+    ui.toast.assertMessage('Image has been scheduled for deletion.');
+    cy.findByText(updatedLabel).should('not.exist');
   });
 
   /*

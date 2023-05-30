@@ -16,6 +16,7 @@ import {
   useRebootLinodeMutation,
   useShutdownLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import { resetEventsPolling } from 'src/eventsPolling';
 
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
@@ -129,6 +130,7 @@ export const PowerActionsDialog = (props: Props) => {
       const mutateAsync = mutationMap[action as 'Power Off'];
       await mutateAsync();
     }
+    resetEventsPolling();
     onClose();
   };
 

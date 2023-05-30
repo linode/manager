@@ -6,7 +6,7 @@ import {
   getEntityByIDFromStore,
 } from 'src/utilities/getEntityByIDFromStore';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
-import { Variant } from 'src/components/EntityIcon';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import { ApplicationStore } from 'src/store';
 
 /**
@@ -17,7 +17,7 @@ import { ApplicationStore } from 'src/store';
 export interface EventInfo {
   duration: string;
   message: string | null;
-  type: Variant;
+  type: EntityVariants;
   status?: string;
 }
 
@@ -26,7 +26,7 @@ export const useEventInfo = (
   store: ApplicationStore
 ): EventInfo => {
   const message = eventMessageGenerator(event);
-  const type = (event.entity?.type ?? 'linode') as Variant;
+  const type = (event.entity?.type ?? 'linode') as EntityVariants;
 
   const entity = getEntityByIDFromStore(
     type as EntityType,

@@ -27,7 +27,7 @@ import { Theme } from '@mui/material/styles';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -293,10 +293,6 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
-      {/* The header *basically* duplicated from LinodeDetailHeader. Why don't we use that component instead?...
-      ...Because we don't want the Nav tabs and we want <LinodeControls /> with a custom <Breadcrumb />.
-      @todo: DRY this up a bit?
-      */}
       <MutationNotification linodeId={props.linodeId} />
       <Notifications />
       <LinodesDetailHeader />
