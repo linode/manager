@@ -69,7 +69,7 @@ export const selectStyles = {
     border: 0,
   }),
   dropdownIndicator: () => ({ display: 'none' }),
-  placeholder: (base: any) => ({ ...base, color: 'blue' }),
+  placeholder: (base: any) => ({ ...base, fontSize: '0.875rem' }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 

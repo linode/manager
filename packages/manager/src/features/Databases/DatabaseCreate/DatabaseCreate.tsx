@@ -26,10 +26,10 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
+import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
@@ -486,7 +486,7 @@ const DatabaseCreate = () => {
             className={classes.engineSelect}
             errorText={errors.engine}
             options={engineOptions}
-            components={{ Option: RegionOption, SingleValue }}
+            components={{ Option: RegionOption, SingleValue: _SingleValue }}
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
               setFieldValue('engine', selected.value);
