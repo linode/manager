@@ -1,29 +1,23 @@
-import { Event } from '@linode/api-v4/lib/account/types';
-import classNames from 'classnames';
-import { Duration } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
+import useLinodes from 'src/hooks/useLinodes';
+import { Duration } from 'luxon';
+import { Event } from '@linode/api-v4/lib/account/types';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { useSpecificTypes } from 'src/queries/types';
 import {
   eventLabelGenerator,
   eventMessageGenerator,
 } from 'src/eventMessageGenerator_CMR';
-import { GravatarByUsername } from 'src/components/GravatarByUsername';
-import useLinodes from 'src/hooks/useLinodes';
-import { useSpecificTypes } from 'src/queries/types';
-import { useStyles as useEventStyles } from './RenderEvent';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  bar: {
-    marginTop: theme.spacing(),
-  },
-}));
+import {
+  RenderEventGravatar,
+  RenderEventStyledBox,
+  useRenderEventStyles,
+} from './RenderEvent.styles';
 
 interface Props {
   event: Event;
@@ -33,10 +27,8 @@ interface Props {
 export type CombinedProps = Props;
 
 export const RenderProgressEvent: React.FC<Props> = (props) => {
+  const { classes } = useRenderEventStyles();
   const { event } = props;
-  const eventClasses = useEventStyles();
-  const classes = useStyles();
-
   const { linodes } = useLinodes();
   const _linodes = Object.values(linodes.itemsById);
   const typesQuery = useSpecificTypes(
@@ -66,19 +58,9 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Box
-        className={classNames({
-          [eventClasses.root]: true,
-          [eventClasses.event]: true,
-        })}
-        display="flex"
-        data-test-id={event.action}
-      >
-        <GravatarByUsername
-          username={event.username}
-          className={eventClasses.icon}
-        />
-        <div className={eventClasses.eventMessage} data-test-id={event.action}>
+      <RenderEventStyledBox display="flex" data-test-id={event.action}>
+        <RenderEventGravatar username={event.username} />
+        <Box sx={{ marginTop: '-2px' }} data-test-id={event.action}>
           {eventMessage}
           <BarPercent
             className={classes.bar}
@@ -87,8 +69,8 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
             rounded
             narrow
           />
-        </div>
-      </Box>
+        </Box>
+      </RenderEventStyledBox>
       <Divider className={classes.bar} />
     </>
   );

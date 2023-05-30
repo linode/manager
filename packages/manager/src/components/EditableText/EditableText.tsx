@@ -8,7 +8,7 @@ import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
-import H1Header from 'src/components/H1Header';
+import { H1Header } from 'src/components/H1Header/H1Header';
 import TextField from '../TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({

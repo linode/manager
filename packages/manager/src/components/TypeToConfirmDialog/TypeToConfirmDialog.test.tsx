@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Typography from 'src/components/core/Typography';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import TypeToConfirmDialog from './TypeToConfirmDialog';
+import { TypeToConfirmDialog } from './TypeToConfirmDialog';
 
 const props = { onClick: jest.fn(), onClose: jest.fn() };
 

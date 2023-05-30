@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import H1Header from 'src/components/H1Header';
+import { H1Header } from 'src/components/H1Header/H1Header';
 import { CombinedProps, SupportSearchLanding } from './SupportSearchLanding';
 
 const classes = {

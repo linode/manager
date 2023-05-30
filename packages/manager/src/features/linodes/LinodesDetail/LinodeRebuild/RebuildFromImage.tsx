@@ -18,7 +18,8 @@ import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
-import TypeToConfirm from 'src/components/TypeToConfirm';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+
 import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import useFlags from 'src/hooks/useFlags';

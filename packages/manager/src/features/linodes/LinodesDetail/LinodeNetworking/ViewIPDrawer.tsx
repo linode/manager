@@ -2,23 +2,19 @@ import { IPAddress } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { useRegionsQuery } from 'src/queries/regions';
 
-type ClassNames = 'root' | 'section';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    section: {
-      marginBottom: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-  });
+const useStyles = makeStyles()((theme: Theme) => ({
+  section: {
+    marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
 
 interface Props {
   open: boolean;
@@ -26,10 +22,9 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const ViewIPDrawer: React.FC<CombinedProps> = (props) => {
-  const { classes, ip } = props;
+export const ViewIPDrawer = (props: Props) => {
+  const { classes } = useStyles();
+  const { ip } = props;
 
   const { data: regions } = useRegionsQuery();
 
@@ -108,7 +103,3 @@ const ViewIPDrawer: React.FC<CombinedProps> = (props) => {
     </Drawer>
   );
 };
-
-const styled = withStyles(styles);
-
-export default styled(ViewIPDrawer);

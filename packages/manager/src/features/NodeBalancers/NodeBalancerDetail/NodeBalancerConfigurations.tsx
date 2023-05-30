@@ -30,8 +30,7 @@ import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Box from '@mui/material/Box';
@@ -40,14 +39,16 @@ import PromiseLoader, {
 } from 'src/components/PromiseLoader/PromiseLoader';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
+import { NodeBalancerConfigPanel } from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
-import { NodeBalancerConfigNodeFields } from '../types';
+import type {
+  NodeBalancerConfigNodeFields,
+  NodeBalancerConfigFieldsWithStatus,
+} from '../types';
 import {
   clampNumericString,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFieldsWithStatus,
   nodeForRequest,
   parseAddress,
   parseAddresses,
@@ -59,29 +60,28 @@ import {
   WithQueryClientProps,
 } from 'src/containers/withQueryClient.container';
 
-type ClassNames = 'title' | 'port' | 'nbStatuses' | 'button';
+const StyledPortsSpan = styled('span', {
+  label: 'StyledPortsSpan',
+})(({ theme }) => ({
+  marginRight: theme.spacing(2),
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    title: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2),
-    },
-    port: {
-      marginRight: theme.spacing(2),
-    },
-    nbStatuses: {
-      display: 'block',
-      [theme.breakpoints.up('sm')]: {
-        display: 'inline',
-      },
-    },
-    button: {
-      [theme.breakpoints.down('lg')]: {
-        marginLeft: theme.spacing(),
-      },
-    },
-  });
+const StyledNBStatusesTypography = styled(Typography, {
+  label: 'StyledNBStatusesTypography',
+})(({ theme }) => ({
+  display: 'block',
+  [theme.breakpoints.up('sm')]: {
+    display: 'inline',
+  },
+}));
+
+const StyledConfigsButton = styled(Button, {
+  label: 'StyledConfigsButton',
+})(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: theme.spacing(),
+  },
+}));
 
 interface Props {
   nodeBalancerLabel: string;
@@ -120,11 +120,7 @@ interface State {
   };
 }
 
-type CombinedProps = Props &
-  RouteProps &
-  WithStyles<ClassNames> &
-  PreloadedProps &
-  WithQueryClientProps;
+type CombinedProps = Props & RouteProps & PreloadedProps & WithQueryClientProps;
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -969,7 +965,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
-    const { classes } = this.props;
 
     const lensTo = lensFrom(['configs', idx]);
 
@@ -1006,18 +1001,17 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configErrors[idx],
           panelMessages[idx],
           panelNodeMessages[idx],
-          classes,
         ]}
         defaultExpanded={isNewConfig || isExpanded}
         success={panelMessages[idx]}
         heading={
           <React.Fragment>
-            <span className={classes.port}>
+            <StyledPortsSpan>
               Port {config.port !== undefined ? config.port : ''}
-            </span>
-            <Typography className={classes.nbStatuses} component="span">
+            </StyledPortsSpan>
+            <StyledNBStatusesTypography>
               {formatNodesStatus(config.nodes)}
-            </Typography>
+            </StyledNBStatusesTypography>
           </React.Fragment>
         }
       >
@@ -1107,7 +1101,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, nodeBalancerLabel } = this.props;
+    const { nodeBalancerLabel } = this.props;
     const {
       configs,
       configErrors,
@@ -1128,16 +1122,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
         {!hasUnsavedConfig && (
           <Box sx={{ marginTop: '16px' }}>
-            <Button
+            <StyledConfigsButton
               buttonType="outlined"
-              className={classes.button}
               onClick={() => this.addNodeBalancerConfig()}
               data-qa-add-config
             >
               {configs.length === 0
                 ? 'Add a Configuration'
                 : 'Add Another Configuration'}
-            </Button>
+            </StyledConfigsButton>
           </Box>
         )}
 
@@ -1162,8 +1155,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
 const preloaded = PromiseLoader<CombinedProps>({
   configs: (props) => {
     const {
@@ -1176,7 +1167,6 @@ const preloaded = PromiseLoader<CombinedProps>({
 });
 
 const enhanced = composeC<CombinedProps, Props>(
-  styled,
   withRouter,
   preloaded,
   withQueryClient

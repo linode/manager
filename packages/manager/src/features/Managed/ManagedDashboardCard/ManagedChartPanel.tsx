@@ -4,7 +4,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles, WithTheme, withTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LineGraph from 'src/components/LineGraph';
 import TabbedPanel from 'src/components/TabbedPanel';
 import {

@@ -2,7 +2,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Hidden from 'src/components/core/Hidden';
-import IconButton from 'src/components/core/IconButton';
+import { IconButton } from 'src/components/IconButton';
 import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
 import clsx from 'clsx';

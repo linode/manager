@@ -5,9 +5,9 @@ import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useProfile } from 'src/queries/profile';
 import { RenderLinodesProps } from './DisplayLinodes';
+import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
@@ -28,10 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CardView: React.FC<RenderLinodesProps> = (props) => {
+const CardView = (props: RenderLinodesProps) => {
   const classes = useStyles();
 
-  const { updateLinode } = useLinodeActions();
   const { data: profile } = useProfile();
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
@@ -40,6 +39,10 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
     label: '',
     entityID: 0,
   });
+
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
+    tagDrawer.entityID
+  );
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -54,8 +57,8 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
     });
   };
 
-  const updateTags = (linodeId: number, tags: string[]) => {
-    return updateLinode({ linodeId, tags }).then((_) => {
+  const updateTags = (tags: string[]) => {
+    return updateLinode({ tags }).then((_) => {
       setTagDrawer({ ...tagDrawer, tags });
     });
   };
@@ -101,7 +104,6 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
                   openTagDrawer(linode.label, linode.id, tags)
                 }
                 linode={linode}
-                backups={linode.backups}
               />
             </Grid>
           </React.Fragment>
@@ -111,7 +113,7 @@ const CardView: React.FC<RenderLinodesProps> = (props) => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        updateTags={(tags) => updateTags(tagDrawer.entityID, tags)}
+        updateTags={updateTags}
         onClose={closeTagDrawer}
       />
     </React.Fragment>

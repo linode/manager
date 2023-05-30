@@ -8,7 +8,6 @@ import { SupportTicket } from '@linode/api-v4/lib/support';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
-import { ApplicationStore, useApplicationStore } from 'src/store';
 
 const useStyles = makeStyles(() => ({
   regarding: {
@@ -20,8 +19,8 @@ interface Props {
   ticket: SupportTicket;
 }
 
-const renderEntityLink = (ticket: SupportTicket, store: ApplicationStore) => {
-  const target = getLinkTargets(ticket.entity, store);
+const renderEntityLink = (ticket: SupportTicket) => {
+  const target = getLinkTargets(ticket.entity);
   return ticket.entity ? (
     target !== null ? (
       <Link to={target} className="secondaryLink">
@@ -38,8 +37,7 @@ const renderEntityLink = (ticket: SupportTicket, store: ApplicationStore) => {
   null;
 };
 
-const TicketRow: React.FC<Props> = ({ ticket }) => {
-  const store = useApplicationStore();
+export const TicketRow = ({ ticket }: Props) => {
   const classes = useStyles();
 
   return (
@@ -56,7 +54,7 @@ const TicketRow: React.FC<Props> = ({ ticket }) => {
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
       <TableCell data-qa-support-entity className={classes.regarding}>
-        {renderEntityLink(ticket, store)}
+        {renderEntityLink(ticket)}
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-support-date>
@@ -72,5 +70,3 @@ const TicketRow: React.FC<Props> = ({ ticket }) => {
     </TableRow>
   );
 };
-
-export default TicketRow;

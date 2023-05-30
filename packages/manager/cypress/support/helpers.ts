@@ -25,3 +25,11 @@ export const fbtVisible = (text) => {
 export const fbtClick = (text) => {
   return cy.findByText(text).click();
 };
+
+export const fbltVisible = (text) => {
+  return cy.findByLabelText(text).should(visible);
+};
+
+export const fbltClick = (text) => {
+  return cy.findByLabelText(text).click();
+};

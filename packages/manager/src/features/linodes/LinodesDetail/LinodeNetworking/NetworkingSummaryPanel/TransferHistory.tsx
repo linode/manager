@@ -1,14 +1,13 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import classNames from 'classnames';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LineGraph from 'src/components/LineGraph';
 import {
   convertNetworkToUnit,
@@ -26,7 +25,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
 import PendingIcon from 'src/assets/icons/pending.svg';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   arrowIconOuter: {
     ...theme.applyLinkStyles,
     display: 'flex',
@@ -60,7 +59,7 @@ interface Props {
 export const TransferHistory: React.FC<Props> = (props) => {
   const { linodeID, linodeCreated } = props;
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   // Needed to see the user's timezone.
   const { data: profile } = useProfile();
@@ -233,7 +232,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
             disabled={monthOffset === maxMonthOffset}
           >
             <ArrowBackIosIcon
-              className={classNames({
+              className={cx({
                 [classes.arrowIconInner]: true,
                 [classes.arrowIconDisabled]: monthOffset === maxMonthOffset,
               })}
@@ -251,7 +250,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
             disabled={monthOffset === minMonthOffset}
           >
             <ArrowBackIosIcon
-              className={classNames({
+              className={cx({
                 [classes.arrowIconInner]: true,
                 [classes.arrowIconForward]: true,
                 [classes.arrowIconDisabled]: monthOffset === minMonthOffset,
