@@ -1,7 +1,7 @@
 import { CypressPlugin } from './plugin';
 
-/*
- * Disable requests to Google's safe browsing API.
+/**
+ * Disables requests to Google's safe browsing API.
  *
  * We opt to disable these requests because they can be slow and have
  * contributed to test timeouts before.

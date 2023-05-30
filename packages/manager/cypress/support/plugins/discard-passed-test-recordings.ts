@@ -3,9 +3,9 @@ import { CypressPlugin } from './plugin';
 // Dependencies used in hooks have to use `require()` syntax.
 const fs = require('fs/promises'); // eslint-disable-line
 
-/*
+/**
  * Delete recordings for any specs that passed without requiring any
- * retries (ie only keep recordings for failed and flaky tests) during
+ * retries (i.e. only keep recordings for failed and flaky tests) during
  * runs in CI environments.
  *
  * This should save time by avoiding compressing and uploading recordings

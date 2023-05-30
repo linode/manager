@@ -22,6 +22,8 @@ const authenticateWithToken = (apiOauthToken: string) => {
 
 /**
  * Fetches Linode regions and stores data in Cypress `cloudManagerRegions` env.
+ *
+ * Throws an error if no OAuth token (used for regions API request) is defined.
  */
 export const fetchLinodeRegions: CypressPlugin = async (on, config) => {
   const oauthToken = config?.env?.['MANAGER_OAUTH'];
