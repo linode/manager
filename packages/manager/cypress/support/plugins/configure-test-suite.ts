@@ -1,5 +1,8 @@
 import { CypressPlugin } from './plugin';
 
+// The name of the environment variable to read when checking suite configuration.
+const envVarName = 'CY_TEST_SUITE';
+
 /**
  * Overrides the Cypress test suite according to `CY_SUITE` environment variable.
  *
@@ -9,7 +12,7 @@ import { CypressPlugin } from './plugin';
  */
 export const configureTestSuite: CypressPlugin = (_on, config) => {
   const suiteName = (() => {
-    switch (config.env['CY_SUITE']) {
+    switch (config.env[envVarName]) {
       case 'synthetic':
         return 'synthetic';
 
@@ -18,8 +21,8 @@ export const configureTestSuite: CypressPlugin = (_on, config) => {
 
       case 'core':
       default:
-        if (!!config.env['CY_SUITE'] && config.env['CY_SUITE'] !== 'core') {
-          const desiredSuite = config.env['CY_SUITE'];
+        if (!!config.env[envVarName] && config.env[envVarName] !== 'core') {
+          const desiredSuite = config.env[envVarName];
           console.warn(
             `Unknown test suite '${desiredSuite}'. Running 'core' test suite instead.`
           );
