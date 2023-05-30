@@ -1,12 +1,16 @@
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
+import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
-import { getPlanSelectionsByPlanType, planTabInfoContent } from './utils';
+import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
 import { RenderPlanContainer } from './KubernetesPlanContainer';
 import { PlanInformation } from './PlanInformation';
-import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
+import {
+  determineInitialPlanCategoryTab,
+  getPlanSelectionsByPlanType,
+  planTabInfoContent,
+} from './utils';
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
@@ -43,10 +47,6 @@ export const KubernetesPlansPanel = ({
 
   const plans = getPlanSelectionsByPlanType(types);
 
-  const tabOrder: LinodeTypeClass[] = Object.keys(plans).map((plan) =>
-    plan === 'shared' ? 'standard' : (plan as LinodeTypeClass)
-  );
-
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
       render: () => {
@@ -69,18 +69,11 @@ export const KubernetesPlansPanel = ({
     };
   });
 
-  // Determine initial plan category tab based on current plan selection
-  // (if there is one).
-  const _selectedTypeClass: LinodeTypeClass =
-    types.find(
-      (type) => type.id === selectedID || type.heading === currentPlanHeading
-    )?.class ?? 'dedicated';
-
-  // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
-  const selectedTypeClass: LinodeTypeClass =
-    _selectedTypeClass === 'nanode' ? 'standard' : _selectedTypeClass;
-
-  const initialTab = tabOrder.indexOf(selectedTypeClass);
+  const initialTab = determineInitialPlanCategoryTab(
+    types,
+    selectedID,
+    currentPlanHeading
+  );
 
   return (
     <TabbedPanel

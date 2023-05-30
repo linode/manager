@@ -1,4 +1,6 @@
 import type { LinodeTypeClass } from '@linode/api-v4';
+import { ExtendedType } from 'src/utilities/extendType';
+import { PlanSelectionType } from './PlansPanel';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
@@ -71,6 +73,33 @@ export const getPlanSelectionsByPlanType = <
   });
 
   return updatedPlans;
+};
+
+export const determineInitialPlanCategoryTab = <T>(
+  types: (ExtendedType | PlanSelectionType)[],
+  selectedID?: string,
+  currentPlanHeading?: string
+) => {
+  const plans = getPlanSelectionsByPlanType(types);
+
+  const tabOrder: LinodeTypeClass[] = Object.keys(plans).map((plan) =>
+    plan === 'shared' ? 'standard' : (plan as LinodeTypeClass)
+  );
+
+  // Determine initial plan category tab based on current plan selection
+  // (if there is one).
+  const _selectedTypeClass =
+    types.find(
+      (type) => type.id === selectedID || type.heading === currentPlanHeading
+    )?.class ?? 'dedicated';
+
+  // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
+  const selectedTypeClass =
+    _selectedTypeClass === 'nanode' ? 'standard' : _selectedTypeClass;
+
+  const initialTab = tabOrder.indexOf(selectedTypeClass);
+
+  return initialTab;
 };
 
 export const planTabInfoContent = {

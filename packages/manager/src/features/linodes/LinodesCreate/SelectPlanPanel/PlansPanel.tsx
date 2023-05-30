@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
 import { LDClient } from 'launchdarkly-js-client-sdk';
-import { pathOr } from 'ramda';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
-import { getPlanSelectionsByPlanType, planTabInfoContent } from './utils';
+import {
+  determineInitialPlanCategoryTab,
+  getPlanSelectionsByPlanType,
+  planTabInfoContent,
+} from './utils';
 import { RenderPlanContainer } from './PlanContainer';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
@@ -59,10 +62,6 @@ export const PlansPanel = (props: Props) => {
 
   const plans = getPlanSelectionsByPlanType(types);
 
-  const tabOrder: LinodeTypeClass[] = Object.keys(plans).map((plan) =>
-    plan === 'shared' ? 'standard' : (plan as LinodeTypeClass)
-  );
-
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
       render: () => {
@@ -91,22 +90,11 @@ export const PlansPanel = (props: Props) => {
     };
   });
 
-  // Determine initial plan category tab based on current plan selection
-  // (if there is one).
-  let selectedTypeClass: LinodeTypeClass = pathOr(
-    'dedicated', // Use `dedicated` by default
-    ['class'],
-    types.find(
-      (type) => type.id === selectedID || type.heading === currentPlanHeading
-    )
+  const initialTab = determineInitialPlanCategoryTab(
+    types,
+    selectedID,
+    currentPlanHeading
   );
-
-  // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
-  if (selectedTypeClass === 'nanode') {
-    selectedTypeClass = 'standard';
-  }
-
-  const initialTab = tabOrder.indexOf(selectedTypeClass);
 
   return (
     <TabbedPanel
