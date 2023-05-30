@@ -4,9 +4,10 @@ import { CypressPlugin } from './plugin';
 const envVarName = 'CY_TEST_SUITE';
 
 /**
- * Overrides the Cypress test suite according to `CY_SUITE` environment variable.
+ * Overrides the Cypress test suite according to `CY_TEST_SUITE` environment variable.
  *
- * If `CY_SUITE` is undefined, the 'core' test suite will be run by default.
+ * If `CY_TEST_SUITE` is undefined or invalid, the 'core' test suite will be run
+ * by default.
  *
  * @returns Cypress configuration object.
  */

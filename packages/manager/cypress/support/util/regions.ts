@@ -1,20 +1,6 @@
 import { randomItem } from 'support/util/random';
 import type { Region } from '@linode/api-v4';
 
-// /**
-//  * Describes a region shown in Cloud Manager when creating resources, etc.
-//  */
-// export interface CloudRegion {
-//   /// Region identifier, as used by Linode API v4.
-//   id: string;
-
-//   /// Region name, as displayed in Cloud Manager UI.
-//   name: string;
-
-//   /// Region group?.
-//   /// group: string;
-// }
-
 /**
  * Returns an object describing a Cloud Manager region if specified by the user.
  *
@@ -35,27 +21,6 @@ export const getOverrideRegion = (): Region | undefined => {
     return undefined;
   }
 };
-
-/**
- * Array of known regions available from within Cloud Manager.
- */
-// export const regions: CloudRegion[] = [
-//   { id: 'ap-northeast', name: 'Tokyo, JP' },
-//   { id: 'ap-south', name: 'Singapore, SG' },
-//   { id: 'ap-southeast', name: 'Sydney, AU' },
-//   { id: 'ap-west', name: 'Mumbai, IN' },
-//   { id: 'ca-central', name: 'Toronto, CA' },
-//   { id: 'eu-central', name: 'Frankfurt, DE' },
-//   { id: 'eu-west', name: 'London, UK' },
-//   { id: 'us-central', name: 'Dallas, TX' },
-//   { id: 'us-east', name: 'Newark, NJ' },
-//   { id: 'us-southeast', name: 'Atlanta, GA' },
-//   { id: 'us-west', name: 'Fremont, CA' },
-
-//   // If the user specified an override region, it should be included in this array
-//   // so that `getRegionById()` and similar helpers function as expected.
-//   ...(getOverrideRegion() ? [getOverrideRegion() as CloudRegion] : []),
-// ];
 
 /**
  * Linode regions available to the current Cloud Manager user.
