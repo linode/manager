@@ -6,6 +6,7 @@ import { disableGoogleSafeBrowsing } from './cypress/support/plugins/disable-goo
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
 import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config';
 import { nodeVersionCheck } from './cypress/support/plugins/node-version-check';
+import { regionOverrideCheck } from './cypress/support/plugins/region-override-check';
 import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
 
 /**
@@ -38,8 +39,9 @@ export default defineConfig({
     specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
     setupNodeEvents(on, config) {
       return setupPlugins(on, config, [
-        nodeVersionCheck,
         loadEnvironmentConfig,
+        nodeVersionCheck,
+        regionOverrideCheck,
         vitePreprocess,
         disableGoogleSafeBrowsing,
         discardPassedTestRecordings,
