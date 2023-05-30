@@ -180,10 +180,9 @@ These environment variables are used by Cypress to override the default configur
 ##### Region Environment Variables
 These environment variables are used by Cloud Manager's UI tests to override region selection behavior. This can be useful for testing Cloud Manager functionality against a specific region.
 
-| Environment Variable  | Description                                            | Example      | Default                               |
-|-----------------------|--------------------------------------------------------|--------------|---------------------------------------|
-| `CY_TEST_REGION_ID`   | ID of region to test (as used by Linode APIv4).        | `us-east`    | Unset; regions are selected at random |
-| `CY_TEST_REGION_NAME` | Name of region to test (as shown in Cloud Manager UI). | `Newark, NJ` | Unset; regions are selected at random |
+| Environment Variable | Description                                     | Example   | Default                               |
+|----------------------|-------------------------------------------------|-----------|---------------------------------------|
+| `CY_TEST_REGION`     | ID of region to test (as used by Linode APIv4). | `us-east` | Unset; regions are selected at random |
 
 ### Writing End-to-End Tests
 

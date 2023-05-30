@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { defineConfig } from 'cypress';
-
 import { setupPlugins } from './cypress/support/plugins';
 import { configureTestSuite } from './cypress/support/plugins/configure-test-suite';
 import { disableGoogleSafeBrowsing } from './cypress/support/plugins/disable-google-safe-browsing';
@@ -9,6 +8,8 @@ import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config
 import { nodeVersionCheck } from './cypress/support/plugins/node-version-check';
 import { regionOverrideCheck } from './cypress/support/plugins/region-override-check';
 import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
+import { oauthTokenCheck } from './cypress/support/plugins/oauth-token-check';
+import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 
 /**
  * Exports a Cypress configuration object.
@@ -48,11 +49,13 @@ export default defineConfig({
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         nodeVersionCheck,
+        oauthTokenCheck,
         regionOverrideCheck,
         configureTestSuite,
         vitePreprocess,
         disableGoogleSafeBrowsing,
         discardPassedTestRecordings,
+        fetchLinodeRegions,
       ]);
     },
   },
