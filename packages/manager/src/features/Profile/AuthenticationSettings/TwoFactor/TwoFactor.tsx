@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
@@ -17,7 +17,7 @@ import EnableTwoFactorForm from './EnableTwoFactorForm';
 import ScratchDialog from './ScratchCodeDialog';
 import { useQueryClient } from 'react-query';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -49,7 +49,7 @@ interface Props {
 }
 
 export const TwoFactor: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const needSecurityQuestionsCopy =
     'To use two-factor authentication you must set up your security questions listed below.';

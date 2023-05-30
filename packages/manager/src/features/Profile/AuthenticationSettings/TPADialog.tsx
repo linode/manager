@@ -3,13 +3,13 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 import { Provider } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   dialog: {
     '& .dialog-content': {
       paddingTop: 0,
@@ -31,7 +31,7 @@ export interface Props {
 type CombinedProps = Props;
 
 const TPADialog: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const flags = useFlags();
 
   const { currentProvider, newProvider, open, onClose } = props;

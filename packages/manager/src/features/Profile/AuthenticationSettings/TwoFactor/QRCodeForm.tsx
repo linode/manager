@@ -1,36 +1,30 @@
 import QRCode from 'qrcode.react';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import RenderGuard from 'src/components/RenderGuard';
 
-type ClassNames = 'root' | 'instructions' | 'qrcodeContainer';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    instructions: {
-      marginTop: theme.spacing(2),
-    },
-    qrcodeContainer: {
-      margin: `${theme.spacing(2)} 0`,
-      border: `5px solid #fff`,
-      display: 'inline-block',
-    },
-  });
+const useStyles = makeStyles()((theme: Theme) => ({
+  root: {},
+  instructions: {
+    marginTop: theme.spacing(2),
+  },
+  qrcodeContainer: {
+    margin: `${theme.spacing(2)} 0`,
+    border: `5px solid #fff`,
+    display: 'inline-block',
+  },
+}));
 
 interface Props {
   secret: string;
   secretLink: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const QRCodeForm: React.FC<CombinedProps> = (props) => {
-  const { classes, secret, secretLink } = props;
+export const QRCodeForm = (props: Props) => {
+  const { classes } = useStyles();
+  const { secret, secretLink } = props;
   return (
     <React.Fragment>
       <Typography variant="h3" data-qa-copy className={classes.instructions}>
@@ -56,7 +50,3 @@ const QRCodeForm: React.FC<CombinedProps> = (props) => {
     </React.Fragment>
   );
 };
-
-const styled = withStyles(styles);
-
-export default compose<any, any, any>(styled, RenderGuard)(QRCodeForm);

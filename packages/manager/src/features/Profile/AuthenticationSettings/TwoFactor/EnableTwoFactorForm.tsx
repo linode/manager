@@ -7,7 +7,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ConfirmToken from './ConfirmToken';
-import QRCodeForm from './QRCodeForm';
+import { QRCodeForm } from './QRCodeForm';
 
 interface Props {
   loading: boolean;
@@ -82,11 +82,7 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
       {loading ? (
         <CircleProgress />
       ) : (
-        <QRCodeForm
-          secret={secret}
-          secretLink={secretLink}
-          updateFor={[secret, secretLink]}
-        />
+        <QRCodeForm secret={secret} secretLink={secretLink} />
       )}
       <Divider spacingTop={44} spacingBottom={20} />
       <ConfirmToken

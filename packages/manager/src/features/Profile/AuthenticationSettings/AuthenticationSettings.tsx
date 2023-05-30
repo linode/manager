@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -17,7 +17,7 @@ import TwoFactor from './TwoFactor';
 import SecurityQuestions from './SecurityQuestions';
 import Link from 'src/components/Link';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
     padding: theme.spacing(3),
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const AuthenticationSettings: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const {
     data: profile,

@@ -29,7 +29,7 @@ import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 import { useStyles } from './styles';
 
 export const PhoneVerification = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: profile } = useProfile();
   const { enqueueSnackbar } = useSnackbar();

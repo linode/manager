@@ -1,5 +1,4 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
-import classNames from 'classnames';
 import * as React from 'react';
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
 import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
@@ -9,7 +8,7 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -19,7 +18,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import useFlags from 'src/hooks/useFlags';
 import TPADialog from './TPADialog';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
     padding: theme.spacing(3),
@@ -114,7 +113,7 @@ const linode = {
 };
 
 export const TPAProviders: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const flags = useFlags();
 
   // Get list of providers from LaunchDarkly
@@ -158,7 +157,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
               <Grid xs={12} sm={6} md={4} key={thisProvider.displayName}>
                 <Button
                   data-testid={`Button-${thisProvider.displayName}`}
-                  className={classNames({
+                  className={cx({
                     [classes.button]: true,
                     [classes.isButtonEnabled]: isProviderEnabled,
                   })}

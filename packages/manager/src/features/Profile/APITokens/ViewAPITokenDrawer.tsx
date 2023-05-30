@@ -8,10 +8,10 @@ import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { scopeStringToPermTuples, basePermNameMap } from './utils';
 import { Token } from '@linode/api-v4/lib/profile/types';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   permsTable: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(),
@@ -52,7 +52,7 @@ interface Props {
 }
 
 export const ViewAPITokenDrawer = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { open, onClose, token } = props;
 
   const permissions = scopeStringToPermTuples(token?.scopes ?? '');

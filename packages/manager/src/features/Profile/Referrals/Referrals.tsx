@@ -5,7 +5,7 @@ import Step3 from 'src/assets/referrals/step-3.svg';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -15,7 +15,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     maxWidth: 920,
   },
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Referrals: React.FC<{}> = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const {
     data: profile,
     isLoading: profileLoading,

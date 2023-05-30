@@ -1,7 +1,10 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 
-export const useStyles = makeStyles((theme: Theme) => ({
+// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
+//Unexpected value type of ConditionalExpression.
+// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
+export const useStyles = makeStyles()((theme: Theme) => ({
   codeSentMessage: {
     marginTop: theme.spacing(1.5),
   },

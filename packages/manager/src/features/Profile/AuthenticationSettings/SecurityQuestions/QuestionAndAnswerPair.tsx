@@ -3,7 +3,7 @@ import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import Box from 'src/components/core/Box';
 import { Question } from './Question';
 import { Answer } from './Answer';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Item } from 'src/components/EnhancedSelect';
 
@@ -17,7 +17,7 @@ interface Props {
   onEdit: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     flexBasis: 'flex-start',
@@ -56,7 +56,7 @@ export const QuestionAndAnswerPair = (props: Props) => {
     onEdit,
     ...rest
   } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Box className={classes.root}>

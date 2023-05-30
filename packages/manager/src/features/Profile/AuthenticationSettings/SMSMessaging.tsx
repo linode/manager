@@ -5,14 +5,14 @@ import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { useProfile } from 'src/queries/profile';
 import { useSnackbar } from 'notistack';
 import { useSMSOptOutMutation } from 'src/queries/profile';
 import { getFormattedNumber } from './PhoneVerification/helpers';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   notice: {
     borderLeft: `5px solid ${theme.color.green}`,
   },
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const SMSMessaging = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();

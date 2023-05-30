@@ -1,7 +1,7 @@
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -19,7 +19,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { FormLabel } from '@mui/material';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(2),
   },
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ProfileSettings = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [
     preferenceEditorOpen,

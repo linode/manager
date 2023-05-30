@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Notice } from 'src/components/Notice/Notice';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
@@ -16,7 +16,7 @@ interface Props {
   onClose: () => void;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   noticeText: {
     '& .noticeText': {
       color: 'inherit',
@@ -46,7 +46,7 @@ const renderActions = (
 );
 
 export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { title, value, objectStorageKey, open, onClose } = props;
 
   const modalConfirmationButtonText = objectStorageKey

@@ -5,7 +5,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -64,7 +64,7 @@ export const genExpiryTups = (): Expiry[] => {
   ];
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   permsTable: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(),
@@ -114,7 +114,7 @@ interface Props {
 
 export const CreateAPITokenDrawer = (props: Props) => {
   const expiryTups = genExpiryTups();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { open, onClose, showSecret } = props;
 
   const initialValues = {

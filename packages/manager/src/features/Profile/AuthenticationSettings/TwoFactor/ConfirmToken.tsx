@@ -2,14 +2,14 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   warning: {
     marginTop: theme.spacing(2),
     marginLeft: '0 !important',
@@ -29,7 +29,7 @@ interface Props {
 type CombinedProps = Props & RenderGuardProps;
 
 const ConfirmToken: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const {
     token,

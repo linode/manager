@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -24,7 +24,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { parseAPIDate } from 'src/utilities/date';
 import EditSSHKeyDrawer from './EditSSHKeyDrawer';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   sshKeysHeader: {
     margin: 0,
     width: '100%',
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const preferenceKey = 'ssh-keys';
 
 const SSHKeys = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);

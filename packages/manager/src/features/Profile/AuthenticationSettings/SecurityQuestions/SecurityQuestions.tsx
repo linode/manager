@@ -6,7 +6,7 @@ import {
 } from 'src/queries/securityQuestions';
 import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
@@ -16,7 +16,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { useSnackbar } from 'notistack';
 import { Link } from 'src/components/Link';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     lineHeight: '20px',
     marginTop: theme.spacing(),
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const SecurityQuestions = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
   const {

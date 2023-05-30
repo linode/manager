@@ -7,12 +7,12 @@ import Typography from 'src/components/core/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useSnackbar } from 'notistack';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { DateTime } from 'luxon';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
@@ -66,7 +66,7 @@ const renderTimeZonesList = (): Item<string>[] => {
 const timezoneList = renderTimeZonesList();
 
 export const TimezoneForm = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();

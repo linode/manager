@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
@@ -11,7 +11,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
   },
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const ResetPassword: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { username } = props;
 
   return (
