@@ -1,19 +1,26 @@
 import { CypressPlugin } from './plugin';
+import type { Region } from '@linode/api-v4';
 
+/**
+ * If applicable, checks whether the specified override test region is valid.
+ *
+ * If the specified region does not exist in the list of regions returned by the
+ * Linode API, an error is thrown. Otherwise, a message is logged to the console
+ * confirming that an override region is being used.
+ */
 export const regionOverrideCheck: CypressPlugin = (_on, config): void => {
-  // const overrideRegionId = config.env?.['CY_TEST_REGION'];
-  // const overrideRegionName = config.env?.['CY_TEST_REGION_NAME'];
-  // // If one environment variable is specified but not the other, warn that they
-  // // will be disregarded.
-  // if (
-  //   (!!overrideRegionId && !overrideRegionName) ||
-  //   (!overrideRegionId && !!overrideRegionName)
-  // ) {
-  //   console.warn(
-  //     'Either CY_TEST_REGION_ID or CY_TEST_REGION_NAME was specified, but not both.'
-  //   );
-  //   console.warn(
-  //     'CY_TEST_REGION_ID and CY_TEST_REGION_NAME must both be specified in order to override test region selection behavior.'
-  //   );
-  // }
+  const overrideRegionId = config.env?.['CY_TEST_REGION'];
+  const regions = (config.env['cloudManagerRegions'] || []) as Region[];
+
+  if (overrideRegionId) {
+    const foundRegion = regions.find((region) => region.id == overrideRegionId);
+    if (!foundRegion) {
+      throw new Error(
+        `Unable to find a region by ID '${overrideRegionId}'. Does the test account have access to this region?`
+      );
+    }
+    console.info(
+      `Running tests with region forced to '${foundRegion.id}' (${foundRegion.label}).`
+    );
+  }
 };

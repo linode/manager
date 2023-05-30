@@ -50,12 +50,12 @@ export default defineConfig({
         loadEnvironmentConfig,
         nodeVersionCheck,
         oauthTokenCheck,
-        regionOverrideCheck,
         configureTestSuite,
         vitePreprocess,
         disableGoogleSafeBrowsing,
         discardPassedTestRecordings,
         fetchLinodeRegions,
+        regionOverrideCheck,
       ]);
     },
   },
