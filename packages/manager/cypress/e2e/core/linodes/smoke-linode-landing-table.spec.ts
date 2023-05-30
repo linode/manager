@@ -154,10 +154,10 @@ describe('linode landing checks', () => {
     const firstLinodeLabel = linodesByLabel[0].label;
     const lastLinodeLabel = linodesByLabel[linodesLastIndex].label;
 
-    const firstRegionLabel = getRegionById(linodesByRegion[0].region).name;
+    const firstRegionLabel = getRegionById(linodesByRegion[0].region).label;
     const lastRegionLabel = getRegionById(
       linodesByRegion[linodesLastIndex].region
-    ).name;
+    ).label;
 
     const checkFirstRow = (label: string) => {
       getVisible('tr[data-qa-loading="true"]')

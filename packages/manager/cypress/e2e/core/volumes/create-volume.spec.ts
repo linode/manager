@@ -27,7 +27,7 @@ describe('volume create flow', () => {
       label: randomLabel(),
       size: `${randomNumber(10, 250)}`,
       region: region.id,
-      regionLabel: region.name,
+      regionLabel: region.label,
     };
 
     interceptCreateVolume().as('createVolume');
@@ -76,7 +76,7 @@ describe('volume create flow', () => {
       label: randomLabel(),
       size: `${randomNumber(10, 250)}`,
       region: region.id,
-      regionLabel: region.name,
+      regionLabel: region.label,
     };
 
     cy.defer(createLinode(linodeRequest)).then((linode) => {

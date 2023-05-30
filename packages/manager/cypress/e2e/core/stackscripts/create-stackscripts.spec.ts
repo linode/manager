@@ -1,11 +1,6 @@
 import { authenticate } from 'support/api/authentication';
 import { pollLinodeStatus, pollImageStatus } from 'support/util/polling';
-import {
-  randomLabel,
-  randomString,
-  randomPhrase,
-  randomItem,
-} from 'support/util/random';
+import { randomLabel, randomString, randomPhrase } from 'support/util/random';
 import {
   interceptCreateStackScript,
   interceptGetStackScripts,
@@ -231,7 +226,7 @@ describe('stackscripts', () => {
       .click();
 
     // Fill out Linode creation form, confirm UDF fields behave as expected.
-    fillOutLinodeForm(linodeLabel, linodeRegion.name);
+    fillOutLinodeForm(linodeLabel, linodeRegion.label);
 
     cy.findByLabelText('Example Password')
       .should('be.visible')
@@ -349,7 +344,7 @@ describe('stackscripts', () => {
         .click();
 
       interceptCreateLinode().as('createLinode');
-      fillOutLinodeForm(linodeLabel, chooseRegion().name);
+      fillOutLinodeForm(linodeLabel, chooseRegion().label);
       ui.button
         .findByTitle('Create Linode')
         .should('be.visible')

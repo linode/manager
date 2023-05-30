@@ -17,7 +17,7 @@ const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 const createNodeBalancerWithUI = (nodeBal) => {
-  const regionName = getRegionById(nodeBal.region).name;
+  const regionName = getRegionById(nodeBal.region).label;
   cy.visitWithLogin('/nodebalancers/create');
   getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
   containsClick('create a tag').type(entityTag);

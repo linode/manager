@@ -91,7 +91,7 @@ describe('LKE Cluster Creation', () => {
     cy.findByText('Region')
       .should('be.visible')
       .click()
-      .type(`${clusterRegion.name}{enter}`);
+      .type(`${clusterRegion.label}{enter}`);
 
     cy.findByLabelText('Kubernetes Version')
       .should('be.visible')

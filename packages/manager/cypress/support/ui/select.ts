@@ -1,4 +1,4 @@
-import { getRegionById, getRegionByName } from 'support/util/regions';
+import { getRegionById, getRegionByLabel } from 'support/util/regions';
 
 /**
  * UI helpers for Enhanced Select component.
@@ -53,7 +53,7 @@ export const regionSelect = {
    */
   findItemByRegionId: (regionId: string) => {
     const region = getRegionById(regionId);
-    return select.findItemByText(`${region.name} (${region.id})`);
+    return select.findItemByText(`${region.label} (${region.id})`);
   },
 
   /**
@@ -66,7 +66,7 @@ export const regionSelect = {
    * @returns Cypress chainable.
    */
   findItemByRegionName: (regionName: string) => {
-    const region = getRegionByName(regionName);
-    return select.findItemByText(`${region.name} (${region.id})`);
+    const region = getRegionByLabel(regionName);
+    return select.findItemByText(`${region.label} (${region.id})`);
   },
 };
