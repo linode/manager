@@ -5,7 +5,6 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
-import LinodeMultiSelect from 'src/components/LinodeMultiSelect/LinodeMultiSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -17,6 +16,7 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { useCreateFirewall } from 'src/queries/firewalls';
+import { LinodeSelect } from 'src/components/LinodeSelect/LinodeSelect';
 
 export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
   'Only Linodes you have permission to modify are shown.';
@@ -161,15 +161,19 @@ const CreateFirewallDrawer = (props: Props) => {
             autoFocus: true,
           }}
         />
-        <LinodeMultiSelect
+        <LinodeSelect
+          multiple
           disabled={userCannotAddFirewall}
           helperText={firewallHelperText}
           errorText={errors['devices.linodes']}
-          onChange={(selected: number[]) =>
-            setFieldValue('devices.linodes', selected)
+          handleChange={(selected) =>
+            setFieldValue(
+              'devices.linodes',
+              selected.map((linode) => linode.id)
+            )
           }
           value={values.devices?.linodes ?? []}
-          filteredLinodes={readOnlyLinodeIds}
+          optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
           onBlur={handleBlur}
         />
         <ActionsPanel>

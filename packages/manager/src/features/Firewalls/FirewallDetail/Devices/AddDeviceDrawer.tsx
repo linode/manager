@@ -142,14 +142,6 @@ export const AddDeviceDrawer = (props: Props) => {
           disabled={currentDevicesLoading}
           loading={currentDevicesLoading}
         />
-        {/* <LinodeMultiSelect
-          onChange={(selected) => setSelectedLinodes(selected)}
-          value={selectedLinodes}
-          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
-            linodeSelectGuidance ? linodeSelectGuidance : ''
-          }`}
-          filteredLinodes={[...currentLinodeIds, ...readOnlyLinodeIds]}
-        /> */}
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
             Cancel

@@ -224,7 +224,7 @@ export const darkTheme: ThemeOptions = {
         },
         tag: {
           '.MuiChip-deleteIcon': {
-            color: customDarkModeOptions.color.grey6,
+            color: customDarkModeOptions.color.grey1,
             ':hover': {
               color: '#fff',
             },
