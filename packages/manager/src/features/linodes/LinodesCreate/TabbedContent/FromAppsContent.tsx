@@ -249,7 +249,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
     const didUserSelectCategory = categoryItem !== null;
     let instancesInCategory: StackScript[] | undefined = [];
     if (didUserSelectCategory) {
-      sendMarketplaceSearchEvent(categoryItem.label);
+      sendMarketplaceSearchEvent('Category Dropdown', categoryItem.label);
       const appsInCategory = oneClickApps.filter((oca) =>
         oca.categories?.includes(categoryItem.value)
       );
@@ -296,6 +296,10 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       this.props.updateStackScript
     );
 
+    const handleSearchFieldClick = () => {
+      sendMarketplaceSearchEvent('Search Field');
+    };
+
     const logoUrl = appInstances?.find(
       (app) => app.id === selectedStackScriptID
     )?.logo_url;
@@ -324,6 +328,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
                   fullWidth
                   onSearch={this.onSearch}
                   label="Search marketplace"
+                  onClick={handleSearchFieldClick}
                   hideLabel
                   value={query}
                 />

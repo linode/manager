@@ -160,11 +160,12 @@ export const getIPv6Pools = (params?: Params) =>
  * View IPv6 range information.
  *
  */
-export const getIPv6Ranges = (params?: Params) =>
+export const getIPv6Ranges = (params?: Params, filter?: Filter) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**

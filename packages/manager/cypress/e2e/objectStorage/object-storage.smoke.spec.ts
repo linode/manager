@@ -35,7 +35,9 @@ describe('object storage smoke tests', () => {
     cy.visitWithLogin('/object-storage');
     cy.wait('@getBuckets');
 
-    ui.entityHeader.find().within(() => {
+    ui.landingPageEmptyStateResources.find().within(() => {
+      cy.findByText('Getting Started Guides').should('be.visible');
+      cy.findByText('Video Playlist').should('be.visible');
       cy.findByText('Create Bucket').should('be.visible').click();
     });
 
@@ -183,6 +185,6 @@ describe('object storage smoke tests', () => {
       });
 
     cy.wait('@deleteBucket');
-    cy.findByText('Need help getting started?').should('be.visible');
+    cy.findByText('S3-compatible storage solution').should('be.visible');
   });
 });

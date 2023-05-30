@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { buildQueryStringForLinodeClone } from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

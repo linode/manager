@@ -114,10 +114,7 @@ describe('object storage end-to-end tests', () => {
     cy.visitWithLogin('/object-storage');
     cy.wait('@getBuckets');
 
-    // Click "Create Bucket", fill out bucket creation form in drawer.
-    ui.entityHeader.find().within(() => {
-      cy.findByText('Create Bucket').should('be.visible').click();
-    });
+    ui.button.findByTitle('Create Bucket').should('be.visible').click();
 
     ui.drawer
       .findByTitle('Create Bucket')

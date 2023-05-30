@@ -1,6 +1,5 @@
 import { SupportReply, SupportTicket } from '@linode/api-v4';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
@@ -79,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props {
+interface Props {
   reply?: SupportReply;
   ticket?: SupportTicket;
   open?: boolean;
@@ -87,8 +86,6 @@ export interface Props {
   parentTicket?: number;
   ticketUpdated?: string;
 }
-
-type CombinedProps = Props;
 
 interface Data {
   gravatar_id: string;
@@ -102,7 +99,7 @@ interface Data {
   updated: string;
 }
 
-export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
+export const ExpandableTicketPanel = React.memo((props: Props) => {
   const classes = useStyles();
 
   const { parentTicket, ticket, open, reply, ticketUpdated } = props;
@@ -196,6 +193,4 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
       </Grid>
     </Grid>
   );
-};
-
-export default compose<CombinedProps, Props>(React.memo)(ExpandableTicketPanel);
+});

@@ -140,5 +140,3 @@ export const AlertSection = (props: Props) => {
     </>
   );
 };
-
-export default AlertSection;

@@ -1,59 +1,37 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import { lensPath, set } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 import Accordion from 'src/components/Accordion';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
-  LinodeActionsProps,
-  withLinodeActions,
-} from 'src/store/linodes/linode.containers';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+  useLinodeDeleteMutation,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 
 interface Props {
   linodeId: number;
-  linodeLabel: string;
+  isReadOnly?: boolean;
 }
 
-type CombinedProps = Props &
-  ContextProps &
-  LinodeActionsProps &
-  RouteComponentProps<{}>;
-
-export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
+export const LinodeSettingsDeletePanel = ({ linodeId, isReadOnly }: Props) => {
+  const { data: linode } = useLinodeQuery(linodeId);
   const {
-    linodeId,
-    linodeLabel,
-    linodeActions: { deleteLinode },
-    readOnly,
-  } = props;
+    mutateAsync: deleteLinode,
+    isLoading,
+    error,
+  } = useLinodeDeleteMutation(linodeId);
 
-  const queryClient = useQueryClient();
+  const history = useHistory();
 
   const [open, setOpen] = React.useState<boolean>(false);
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const _deleteLinode = () => {
-    setSubmitting(true);
-
-    deleteLinode({ linodeId, queryClient })
-      .then(() => {
-        resetEventsPolling();
-        props.history.push('/linodes');
-      })
-      .catch((error: APIError[]) => {
-        setErrors(set(lensPath(['errors']), error));
-        scrollErrorIntoView();
-      });
+  const onDelete = async () => {
+    await deleteLinode();
+    resetEventsPolling();
+    history.push('/linodes');
   };
 
   return (
@@ -61,7 +39,7 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
       <Accordion heading="Delete Linode" defaultExpanded>
         <Button
           buttonType="primary"
-          disabled={readOnly}
+          disabled={isReadOnly}
           onClick={() => setOpen(true)}
           style={{ marginBottom: 8 }}
           data-qa-delete-linode
@@ -73,13 +51,13 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
         </Typography>
       </Accordion>
       <TypeToConfirmDialog
-        title={`Delete ${linodeLabel}?`}
-        entity={{ type: 'Linode', label: linodeLabel }}
+        title={`Delete ${linode?.label}?`}
+        entity={{ type: 'Linode', label: linode?.label }}
         open={open}
-        loading={submitting}
-        errors={errors}
+        loading={isLoading}
+        errors={error}
         onClose={() => setOpen(false)}
-        onClick={_deleteLinode}
+        onClick={onDelete}
       >
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>
@@ -91,24 +69,3 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
     </React.Fragment>
   );
 };
-
-const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
-
-interface ContextProps {
-  readOnly: boolean;
-}
-
-const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  readOnly: linode._permissions === 'read_only',
-}));
-
-const enhanced = compose<CombinedProps, Props>(
-  errorBoundary,
-  linodeContext,
-  withRouter,
-  withLinodeActions
-);
-
-export default enhanced(
-  LinodeSettingsDeletePanel
-) as React.ComponentType<Props>;

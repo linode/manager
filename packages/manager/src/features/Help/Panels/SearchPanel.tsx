@@ -3,7 +3,7 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import H1Header from 'src/components/H1Header';
+import { H1Header } from 'src/components/H1Header/H1Header';
 import AlgoliaSearchBar from './AlgoliaSearchBar';
 
 type ClassNames = 'root' | 'bgIcon' | 'searchHeading';

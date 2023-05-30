@@ -3,7 +3,7 @@ import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import LinodePermissionsError from '../LinodePermissionsError';
 import { EnableBackupsDialog } from './EnableBackupsDialog';
 

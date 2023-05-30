@@ -5,7 +5,7 @@ import { VncScreen, VncScreenHandle } from 'react-vnc';
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 import { makeStyles } from '@mui/styles';
 import { CircleProgress } from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 const useStyles = makeStyles(() => ({
   container: {

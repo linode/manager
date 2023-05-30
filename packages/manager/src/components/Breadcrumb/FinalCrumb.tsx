@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
-import H1Header from 'src/components/H1Header';
+import { H1Header } from 'src/components/H1Header/H1Header';
 import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({

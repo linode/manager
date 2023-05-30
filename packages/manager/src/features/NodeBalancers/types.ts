@@ -4,6 +4,10 @@ import {
 } from '@linode/api-v4/lib/nodebalancers/types';
 import { APIError } from '@linode/api-v4/lib/types';
 
+export interface NodeBalancerConfigFieldsWithStatus
+  extends NodeBalancerConfigFields {
+  modifyStatus?: 'new';
+}
 export interface ExtendedNodeBalancerConfigNode {
   id: number;
   label: string;
@@ -51,4 +55,68 @@ export interface NodeBalancerConfigNodeFields {
   modifyStatus?: 'new' | 'delete' | 'update';
   errors?: APIError[];
   status?: 'UP' | 'DOWN' | 'unknown';
+}
+
+export interface NodeBalancerConfigPanelProps {
+  nodeBalancerRegion?: string;
+  errors?: APIError[];
+  nodeMessage?: string;
+  configIdx?: number;
+
+  forEdit?: boolean;
+  submitting?: boolean;
+  onSave?: () => void;
+  onDelete?: any;
+
+  algorithm: 'roundrobin' | 'leastconn' | 'source';
+  onAlgorithmChange: (v: string) => void;
+
+  checkPassive: boolean;
+  onCheckPassiveChange: (v: boolean) => void;
+
+  checkBody: string;
+  onCheckBodyChange: (v: string) => void;
+
+  checkPath: string;
+  onCheckPathChange: (v: string) => void;
+
+  port: number;
+  onPortChange: (v: string | number) => void;
+
+  protocol: 'http' | 'https' | 'tcp';
+  onProtocolChange: (v: string) => void;
+
+  proxyProtocol: NodeBalancerProxyProtocol;
+  onProxyProtocolChange: (v: string) => void;
+
+  healthCheckType: 'none' | 'connection' | 'http' | 'http_body';
+  onHealthCheckTypeChange: (v: string) => void;
+
+  healthCheckAttempts: number;
+  onHealthCheckAttemptsChange: (v: string | number) => void;
+
+  healthCheckInterval: number;
+  onHealthCheckIntervalChange: (v: string | number) => void;
+
+  healthCheckTimeout: number;
+  onHealthCheckTimeoutChange: (v: string | number) => void;
+
+  sessionStickiness: 'none' | 'table' | 'http_cookie';
+  onSessionStickinessChange: (v: string) => void;
+
+  sslCertificate: string;
+  onSslCertificateChange: (v: string) => void;
+
+  privateKey: string;
+  onPrivateKeyChange: (v: string) => void;
+
+  nodes: NodeBalancerConfigNodeFields[];
+  disabled?: boolean;
+  addNode: (nodeIdx?: number) => void;
+  removeNode: (nodeIdx: number) => void;
+  onNodeLabelChange: (nodeIdx: number, value: string) => void;
+  onNodeAddressChange: (nodeIdx: number, value: string) => void;
+  onNodePortChange: (nodeIdx: number, value: string) => void;
+  onNodeWeightChange: (nodeIdx: number, value: string) => void;
+  onNodeModeChange?: (nodeIdx: number, value: string) => void;
 }

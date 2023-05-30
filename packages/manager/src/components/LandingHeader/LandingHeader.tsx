@@ -5,7 +5,7 @@ import {
   BreadcrumbProps,
 } from 'src/components/Breadcrumb/Breadcrumb';
 import DocsLink from '../DocsLink';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme, styled } from '@mui/material/styles';
 
 export interface Props {
@@ -24,6 +24,7 @@ export interface Props {
   onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onDocsClick?: () => void;
   removeCrumbX?: number;
+  shouldHideDocsAndCreateButtons?: boolean;
   title?: string | JSX.Element;
 }
 
@@ -47,6 +48,7 @@ export const LandingHeader = ({
   onButtonKeyPress,
   onDocsClick,
   removeCrumbX,
+  shouldHideDocsAndCreateButtons,
   title,
 }: Props) => {
   const theme = useTheme();
@@ -67,8 +69,9 @@ export const LandingHeader = ({
       data-qa-entity-header
       justifyContent="space-between"
       alignItems="center"
+      sx={{ width: '100%' }}
     >
-      <Grid item>
+      <Grid>
         <Breadcrumb
           data-qa-title
           labelTitle={labelTitle}
@@ -79,36 +82,38 @@ export const LandingHeader = ({
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item>
-        <Grid alignItems="center" container item justifyContent="flex-end">
-          {docsLink ? (
-            <DocsLink
-              href={docsLink}
-              label={docsLabel}
-              analyticsLabel={docsAnalyticsLabel}
-              onClick={onDocsClick}
-            />
-          ) : null}
-          {renderActions && (
-            <Actions>
-              {extraActions}
-              {onButtonClick ? (
-                <Button
-                  buttonType="primary"
-                  disabled={disabledCreateButton}
-                  loading={loading}
-                  onClick={onButtonClick}
-                  sx={sxButton}
-                  onKeyPress={onButtonKeyPress}
-                  {...buttonDataAttrs}
-                >
-                  {createButtonText ?? `Create ${entity}`}
-                </Button>
-              ) : null}
-            </Actions>
-          )}
+      {!shouldHideDocsAndCreateButtons && (
+        <Grid>
+          <Grid alignItems="center" container justifyContent="flex-end">
+            {docsLink ? (
+              <DocsLink
+                href={docsLink}
+                label={docsLabel}
+                analyticsLabel={docsAnalyticsLabel}
+                onClick={onDocsClick}
+              />
+            ) : null}
+            {renderActions && (
+              <Actions>
+                {extraActions}
+                {onButtonClick ? (
+                  <Button
+                    buttonType="primary"
+                    disabled={disabledCreateButton}
+                    loading={loading}
+                    onClick={onButtonClick}
+                    sx={sxButton}
+                    onKeyPress={onButtonKeyPress}
+                    {...buttonDataAttrs}
+                  >
+                    {createButtonText ?? `Create ${entity}`}
+                  </Button>
+                ) : null}
+              </Actions>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 };
