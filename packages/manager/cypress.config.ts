@@ -2,6 +2,7 @@
 import { defineConfig } from 'cypress';
 
 import { setupPlugins } from './cypress/support/plugins';
+import { configureTestSuite } from './cypress/support/plugins/configure-test-suite';
 import { disableGoogleSafeBrowsing } from './cypress/support/plugins/disable-google-safe-browsing';
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
 import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config';
@@ -35,13 +36,20 @@ export default defineConfig({
   experimentalMemoryManagement: true,
   e2e: {
     experimentalRunAllSpecs: true,
+
+    // This can be overridden using `CYPRESS_BASE_URL`.
     baseUrl: 'http://localhost:3000',
+
+    // This is overridden when `CY_SUITE` is defined.
+    // See `cypress/support/plugins/configure-test-suite.ts`.
     specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
+
     setupNodeEvents(on, config) {
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         nodeVersionCheck,
         regionOverrideCheck,
+        configureTestSuite,
         vitePreprocess,
         disableGoogleSafeBrowsing,
         discardPassedTestRecordings,
