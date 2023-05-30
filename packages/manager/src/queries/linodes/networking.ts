@@ -144,7 +144,7 @@ export const useAllDetailedIPv6RangesQuery = (
 ) => {
   const { data: ranges } = useAllIPv6RangesQuery(params, filter, enabled);
   return useQuery<IPRangeInformation[], APIError[]>(
-    [queryKey, 'ipv6', 'ranges', 'details', params, filter],
+    [queryKey, 'ipv6', 'ranges', 'details', ranges, params, filter],
     async () => {
       return await Promise.all(
         (ranges ?? []).map((range) => getIPv6RangeInfo(range.range))
