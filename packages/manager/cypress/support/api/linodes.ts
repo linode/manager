@@ -8,6 +8,7 @@ import { entityTag } from 'support/constants/cypress';
 import { getLinodes, Linode, deleteLinode } from '@linode/api-v4';
 import { depaginate } from 'support/util/paginate';
 import { randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
   return makeResourcePage(
@@ -22,7 +23,7 @@ const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
   tags: [entityTag],
   private_ip: true,
   image: 'linode/debian10',
-  region: 'us-east',
+  region: chooseRegion().id,
   booted: true,
   backups_enabled: false,
   authorized_users: [],
