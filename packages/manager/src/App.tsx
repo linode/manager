@@ -41,8 +41,10 @@ import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
-import { ADOBE_ANALYTICS_URL } from './constants';
+import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { linodeEventsHandler } from './queries/linodes/events';
+import { supportTicketEventHandler } from './queries/support';
+import { reportException } from './exceptionReporting';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -87,7 +89,25 @@ export class App extends React.Component<CombinedProps, State> {
 
     // Load Adobe Analytics Launch Script
     if (!!ADOBE_ANALYTICS_URL) {
-      loadScript(ADOBE_ANALYTICS_URL, { location: 'head' });
+      loadScript(ADOBE_ANALYTICS_URL, { location: 'head' })
+        .then((data) => {
+          const adobeScriptTags = document.querySelectorAll(
+            'script[src^="https://assets.adobedtm.com/"]'
+          );
+          // Log an error; if the promise resolved, the _satellite object and 3 Adobe scripts should be present in the DOM.
+          if (
+            data.status !== 'ready' ||
+            !(window as any)._satellite ||
+            adobeScriptTags.length !== NUM_ADOBE_SCRIPTS
+          ) {
+            reportException(
+              'Adobe Analytics error: Not all Adobe Launch scripts and extensions were loaded correctly; analytics cannot be sent.'
+            );
+          }
+        })
+        .catch(() => {
+          // Do nothing; a user may have analytics script requests blocked.
+        });
     }
 
     /**
@@ -185,6 +205,12 @@ export class App extends React.Component<CombinedProps, State> {
           !event._initial
       )
       .subscribe(linodeEventsHandler);
+
+    events$
+      .filter(
+        ({ event }) => event.action.startsWith('ticket') && !event._initial
+      )
+      .subscribe(supportTicketEventHandler);
 
     /*
      * We want to listen for migration events side-wide
@@ -285,8 +311,6 @@ export class App extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Linode Manager" />
         {this.props.featureFlagsLoading ? null : (
           <MainContent
-            history={this.props.history}
-            location={this.props.location}
             appIsLoading={this.props.appIsLoading}
             isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
           />

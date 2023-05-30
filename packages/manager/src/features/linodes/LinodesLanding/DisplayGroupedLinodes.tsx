@@ -3,7 +3,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
-import IconButton from 'src/components/IconButton';
+import { IconButton } from 'src/components/IconButton';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
