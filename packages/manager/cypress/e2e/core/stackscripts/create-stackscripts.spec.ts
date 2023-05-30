@@ -82,7 +82,7 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
 
   cy.findByText('Select a Region').should('be.visible').click();
 
-  ui.regionSelect.findItemByRegionName(regionName).click();
+  ui.regionSelect.findItemByRegionLabel(regionName).click();
 
   cy.findByText('Linode Label')
     .should('be.visible')

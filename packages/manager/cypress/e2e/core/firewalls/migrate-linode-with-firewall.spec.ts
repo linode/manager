@@ -163,7 +163,7 @@ describe('Migrate Linode With Firewall', () => {
     cy.findByText(`North America: Dallas, TX`).should('be.visible');
     containsClick(selectRegionString);
 
-    ui.regionSelect.findItemByRegionName('Singapore, SG').click();
+    ui.regionSelect.findItemByRegionLabel('Singapore, SG').click();
 
     fbtClick('Enter Migration Queue');
     cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
@@ -250,7 +250,7 @@ describe('Migrate Linode With Firewall', () => {
       getClick('[data-qa-checked="false"]');
       fbtClick(selectRegionString);
 
-      ui.regionSelect.findItemByRegionName('Toronto, CA').click();
+      ui.regionSelect.findItemByRegionLabel('Toronto, CA').click();
       validateMigration();
     });
   });

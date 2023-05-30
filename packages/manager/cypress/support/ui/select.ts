@@ -57,16 +57,16 @@ export const regionSelect = {
   },
 
   /**
-   * Finds a Region Select menu item using the name of a region.
+   * Finds a Region Select menu item using a region's label.
    *
    * This assumes that the Region Select menu is already open.
    *
-   * @param regionName - Region name.
+   * @param regionLabel - Region label.
    *
    * @returns Cypress chainable.
    */
-  findItemByRegionName: (regionName: string) => {
-    const region = getRegionByLabel(regionName);
+  findItemByRegionLabel: (regionLabel: string) => {
+    const region = getRegionByLabel(regionLabel);
     return select.findItemByText(`${region.label} (${region.id})`);
   },
 };
