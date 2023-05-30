@@ -1,60 +1,29 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import Hidden from 'src/components/core/Hidden';
+import Typography from 'src/components/core/Typography';
+import { BucketActionMenu } from './BucketActionMenu';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import { readableBytes } from 'src/utilities/unitConversions';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
-import { readableBytes } from 'src/utilities/unitConversions';
-import BucketActionMenu from './BucketActionMenu';
+import {
+  StyledBucketLabelLink,
+  StyledBucketNameWrapper,
+  StyledBucketObjectsCell,
+  StyledBucketRegionCell,
+  StyledBucketRow,
+  StyledBucketSizeCell,
+} from './BucketTableRow.styles';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  bucketRow: {
-    backgroundColor: theme.bg.white,
-  },
-  bucketNameWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    wordBreak: 'break-all',
-  },
-  link: {
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-  },
-  bucketLabel: {
-    color: theme.textColors.linkActiveLight,
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-    },
-  },
-  bucketRegion: {
-    width: '20%',
-  },
-  bucketSize: {
-    width: '15%',
-  },
-  bucketObjects: {
-    width: '10%',
-  },
-}));
-
-interface BucketTableRowProps extends ObjectStorageBucket {
+export interface BucketTableRowProps extends ObjectStorageBucket {
   onRemove: () => void;
   onDetails: () => void;
 }
 
-export type CombinedProps = BucketTableRowProps;
-
-export const BucketTableRow: React.FC<CombinedProps> = (props) => {
-  const { classes } = useStyles();
+export const BucketTableRow = (props: BucketTableRowProps) => {
   const {
     label,
     cluster,
@@ -73,54 +42,48 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
   const region = regions?.find((r) => r.id === actualCluster?.region);
 
   return (
-    <TableRow
-      key={label}
-      data-qa-bucket-cell={label}
-      className={classes.bucketRow}
-      ariaLabel={label}
-    >
+    <StyledBucketRow key={label} data-qa-bucket-cell={label} ariaLabel={label}>
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center" spacing={2}>
           <Grid>
-            <div className={classes.bucketNameWrapper}>
+            <StyledBucketNameWrapper>
               <Typography variant="body1" component="h3" data-qa-label>
-                <Link
-                  className={classes.bucketLabel}
+                <StyledBucketLabelLink
                   to={`/object-storage/buckets/${cluster}/${label}`}
                 >
                   {label}{' '}
-                </Link>
+                </StyledBucketLabelLink>
               </Typography>
-            </div>
+            </StyledBucketNameWrapper>
 
             {hostname}
           </Grid>
         </Grid>
       </TableCell>
       <Hidden smDown>
-        <TableCell className={classes.bucketRegion}>
+        <StyledBucketRegionCell>
           <Typography variant="body1" data-qa-region>
             {region?.label ?? cluster}
           </Typography>
-        </TableCell>
+        </StyledBucketRegionCell>
       </Hidden>
       <Hidden lgDown>
         <TableCell>
           <DateTimeDisplay value={created} data-qa-created />
         </TableCell>
       </Hidden>
-      <TableCell className={classes.bucketSize} noWrap>
+      <StyledBucketSizeCell noWrap>
         <Typography variant="body1" data-qa-size>
           {readableBytes(size).formatted}
         </Typography>
-      </TableCell>
+      </StyledBucketSizeCell>
 
       <Hidden smDown>
-        <TableCell className={classes.bucketObjects}>
+        <StyledBucketObjectsCell>
           <Typography variant="body1" data-qa-size>
             {objects}
           </Typography>
-        </TableCell>
+        </StyledBucketObjectsCell>
       </Hidden>
 
       <TableCell>
@@ -132,8 +95,6 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
           data-qa-action-menu
         />
       </TableCell>
-    </TableRow>
+    </StyledBucketRow>
   );
 };
-
-export default BucketTableRow;

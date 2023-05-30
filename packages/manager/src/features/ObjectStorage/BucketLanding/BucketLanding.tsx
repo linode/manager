@@ -1,12 +1,12 @@
 import * as React from 'react';
-import BucketDetailsDrawer from './BucketDetailsDrawer';
-import BucketTable from './BucketTable';
 import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Typography from 'src/components/core/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { APIError } from '@linode/api-v4/lib/types';
+import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
+import { BucketTable } from './BucketTable';
 import { CancelNotice } from '../CancelNotice';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -37,18 +37,6 @@ import {
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(),
-  },
-  empty: {
-    '& svg': {
-      marginTop: theme.spacing(1.5),
-      transform: 'scale(0.8)',
-    },
-  },
-  placeholderAdjustment: {
-    padding: `${theme.spacing(2)} 0 0 0`,
-    [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing(10)} 0 0 0`,
-    },
   },
 }));
 
@@ -278,14 +266,12 @@ const RenderEmpty = () => {
   return <BucketLandingEmptyState />;
 };
 
-export default BucketLanding;
-
 interface UnavailableClustersDisplayProps {
   unavailableClusters: ObjectStorageCluster[];
 }
 
-const UnavailableClustersDisplay: React.FC<UnavailableClustersDisplayProps> = React.memo(
-  ({ unavailableClusters }) => {
+const UnavailableClustersDisplay = React.memo(
+  ({ unavailableClusters }: UnavailableClustersDisplayProps) => {
     const { data: regions } = useRegionsQuery();
 
     const regionsAffected = unavailableClusters.map(
@@ -302,7 +288,7 @@ interface BannerProps {
   regionsAffected: string[];
 }
 
-const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
+const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (

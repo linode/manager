@@ -25,7 +25,11 @@ import {
 } from 'src/queries/objectStorage';
 import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
 
-const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
+const BucketLanding = React.lazy(() =>
+  import('./BucketLanding/BucketLanding').then((module) => ({
+    default: module.BucketLanding,
+  }))
+);
 const AccessKeyLanding = React.lazy(() =>
   import('./AccessKeyLanding/AccessKeyLanding').then((module) => ({
     default: module.AccessKeyLanding,
