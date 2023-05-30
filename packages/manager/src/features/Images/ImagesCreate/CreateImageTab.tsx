@@ -115,10 +115,13 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         .map((thisGrant) => thisGrant.id) ?? []
     : null;
 
-  const fetchLinodeDisksOnLinodeChange = (selectedLinode: number) => {
+  React.useEffect(() => {
+    if (!selectedLinode) {
+      return;
+    }
     setSelectedDisk('');
 
-    getLinodeDisks(selectedLinode)
+    getLinodeDisks(selectedLinode.id)
       .then((response) => {
         const filteredDisks = response.data.filter(
           (disk) => disk.filesystem !== 'swap'
@@ -136,19 +139,14 @@ export const CreateImageTab: React.FC<Props> = (props) => {
           },
         ]);
       });
-  };
-
-  const changeSelectedLinode = (linode: Linode) => {
-    fetchLinodeDisksOnLinodeChange(linode.id);
-    setSelectedLinode(linode);
-  };
+  }, [selectedLinode]);
 
   const handleLinodeChange = (linode: Linode | null) => {
     if (linode !== null) {
       // Clear any errors
       setErrors(undefined);
-      changeSelectedLinode(linode);
     }
+    setSelectedLinode(linode ?? undefined);
   };
 
   const handleDiskChange = (diskID: string | null) => {
@@ -256,27 +254,6 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         }
         required
       />
-
-      {/* <LinodeSelect
-        selectedLinode={selectedLinode?.id || null}
-        linodeError={linodeError}
-        disabled={!canCreateImage}
-        handleChange={(linode) => handleLinodeChange(linode)}
-        filterCondition={(linode) =>
-          availableLinodesToImagize
-            ? availableLinodesToImagize.includes(linode.id)
-            : true
-        }
-        updateFor={[
-          selectedLinode,
-          linodeError,
-          classes,
-          canCreateImage,
-          availableLinodesToImagize,
-        ]}
-        isClearable={false}
-        required
-      /> */}
 
       <Box
         display="flex"
