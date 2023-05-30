@@ -16,20 +16,6 @@ import {
   updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
 
-const StyledCopyTooltip = styled(CopyTooltip, {
-  label: 'StyledCopyTooltip',
-})(() => ({
-  marginLeft: '1em',
-  padding: 0,
-}));
-
-const StyledLinkContainer = styled('div', {
-  label: 'StyledCopyTooltip',
-})(() => ({
-  marginLeft: '1em',
-  padding: 0,
-}));
-
 export interface ObjectDetailsDrawerProps {
   bucketName: string;
   clusterId: string;
@@ -107,3 +93,17 @@ export const ObjectDetailsDrawer = React.memo(
     );
   }
 );
+
+const StyledCopyTooltip = styled(CopyTooltip, {
+  label: 'StyledCopyTooltip',
+})(() => ({
+  marginLeft: '1em',
+  padding: 0,
+}));
+
+const StyledLinkContainer = styled('div', {
+  label: 'StyledCopyTooltip',
+})(() => ({
+  marginLeft: '1em',
+  padding: 0,
+}));
