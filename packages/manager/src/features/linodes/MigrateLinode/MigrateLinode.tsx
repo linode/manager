@@ -1,6 +1,4 @@
 import { Event } from '@linode/api-v4/lib/account';
-import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
-import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
@@ -15,20 +13,15 @@ import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
-import { displayType } from 'src/features/linodes/presentation';
-import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { listToItemsByID } from 'src/queries/base';
-import { useAllImagesQuery } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
-import { useSpecificTypes } from 'src/queries/types';
-import { extendType } from 'src/utilities/extendType';
+import { useTypeQuery } from 'src/queries/types';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
@@ -36,6 +29,14 @@ import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
+import {
+  useLinodeMigrateMutation,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import useEvents from 'src/hooks/useEvents';
+import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
+import { useImageQuery } from 'src/queries/images';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -76,17 +77,40 @@ interface Props {
   onClose: () => void;
 }
 
-const MigrateLinode = React.memo((props: Props) => {
+export const MigrateLinode = React.memo((props: Props) => {
   const { linodeId, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const linode = useExtendedLinode(linodeId ?? -1);
-  const typesQuery = useSpecificTypes(linode?.type ? [linode.type] : []);
-  const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && open
+  );
 
-  const { data: imagesData } = useAllImagesQuery({}, {}, open);
-  const images = listToItemsByID(imagesData ?? []);
+  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+
+  const { data: image } = useImageQuery(
+    linode?.image ?? '',
+    linode !== undefined && open
+  );
+
+  const { data: disks } = useAllLinodeDisksQuery(
+    linodeId ?? -1,
+    linodeId !== undefined && open
+  );
+
+  const { events } = useEvents();
+
+  const eventsForLinode = linodeId
+    ? events.filter((event) => isEventRelevantToLinode(event, linodeId))
+    : [];
+
+  const {
+    mutateAsync: migrateLinode,
+    isLoading,
+    error,
+    reset,
+  } = useLinodeMigrateMutation(linodeId ?? -1);
 
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements(open);
@@ -97,12 +121,8 @@ const MigrateLinode = React.memo((props: Props) => {
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
   );
-  const [regionError, setRegionError] = React.useState<string>('');
-  const [acceptError, setAcceptError] = React.useState<string>('');
-  const [APIError, setAPIError] = React.useState<string>('');
 
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
-  const [isLoading, setLoading] = React.useState<boolean>(false);
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
   );
@@ -114,13 +134,14 @@ const MigrateLinode = React.memo((props: Props) => {
   );
 
   React.useEffect(() => {
-    scrollErrorIntoView();
-  }, [regionError, APIError, acceptError]);
+    if (error) {
+      scrollErrorIntoView();
+    }
+  }, [error]);
 
   React.useEffect(() => {
     if (open) {
-      setAPIError('');
-      setRegionError('');
+      reset();
       setConfirmed(false);
       handleSelectRegion(null);
     }
@@ -153,75 +174,55 @@ const MigrateLinode = React.memo((props: Props) => {
   const region = linode.region;
 
   const handleMigrate = () => {
-    setRegionError('');
-    setAcceptError('');
-    setAPIError('');
-
-    /** region is an optional param so enforce it client-side */
-    if (!selectedRegion) {
-      setRegionError('Please select a region.');
-    }
-
-    if (!hasConfirmed) {
-      setAcceptError('Please accept the conditions of this migration.');
-    }
+    reset();
 
     if (!selectedRegion || !hasConfirmed) {
       return;
     }
 
-    setLoading(true);
-
-    return scheduleOrQueueMigration(linodeId ?? -1, {
+    return migrateLinode({
       region: selectedRegion,
-    })
-      .then(() => {
-        resetEventsPolling();
-        setLoading(false);
-        sendMigrationInitiatedEvent(
-          region,
-          selectedRegion,
-          +formatDate(new Date().toISOString(), {
-            timezone: profile?.timezone,
-            format: 'H',
-          })
-        );
-        enqueueSnackbar(
-          'Your Linode has entered the migration queue and will begin migration shortly.',
-          { variant: 'success' }
-        );
-        if (hasSignedAgreement) {
-          updateAccountAgreements({
-            eu_model: true,
-            privacy_policy: true,
-          }).catch(reportAgreementSigningError);
-        }
-        onClose();
-      })
-      .catch((e: APIErrorType[]) => {
-        setLoading(false);
-        setAPIError(e[0].reason);
-      });
+    }).then(() => {
+      resetEventsPolling();
+      sendMigrationInitiatedEvent(
+        region,
+        selectedRegion,
+        +formatDate(new Date().toISOString(), {
+          timezone: profile?.timezone,
+          format: 'H',
+        })
+      );
+      enqueueSnackbar(
+        'Your Linode has entered the migration queue and will begin migration shortly.',
+        { variant: 'success' }
+      );
+      if (hasSignedAgreement) {
+        updateAccountAgreements({
+          eu_model: true,
+          privacy_policy: true,
+        }).catch(reportAgreementSigningError);
+      }
+      onClose();
+    });
   };
 
   const newLabel = getLinodeDescription(
-    displayType(linode.type, type ? [type] : []),
+    type?.label ?? linode.type ?? 'Unknown Type',
     linode.specs.memory,
     linode.specs.disk,
     linode.specs.vcpus,
-    linode.image ?? null,
-    images
+    image?.label ?? linode.image ?? 'Unknown Image'
   );
 
   const disabledText = getDisabledReason(
-    linode._events,
+    eventsForLinode,
     linode.status,
     linodeId ?? -1
   );
 
   /** how long will this take to migrate when the migration starts */
   const migrationTimeInMinutes = Math.ceil(
-    addUsedDiskSpace(linode._disks) / MBpsInterDC / 60
+    addUsedDiskSpace(disks ?? []) / MBpsInterDC / 60
   );
 
   return (
@@ -233,8 +234,7 @@ const MigrateLinode = React.memo((props: Props) => {
       fullHeight
       maxWidth="md"
     >
-      {APIError && <Notice error text={APIError} />}
-
+      {error && <Notice error text={error?.[0].reason} />}
       <Typography className={classes.details} variant="h2">
         {newLabel}
       </Typography>
@@ -250,7 +250,6 @@ const MigrateLinode = React.memo((props: Props) => {
         linodeId={linodeId}
         setConfirmed={setConfirmed}
         hasConfirmed={hasConfirmed}
-        error={acceptError}
         migrationTimeInMins={migrationTimeInMinutes}
         metadataWarning={metadataMigrateWarning}
       />
@@ -292,8 +291,6 @@ const MigrateLinode = React.memo((props: Props) => {
     </Dialog>
   );
 });
-
-export { MigrateLinode };
 
 const getDisabledReason = (
   events: Event[],

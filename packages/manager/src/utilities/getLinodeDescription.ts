@@ -1,22 +1,18 @@
-import { Image } from '@linode/api-v4/lib/images';
 import { typeLabelLong } from 'src/features/linodes/presentation';
-import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 
 export const getLinodeDescription = (
   typeLabel: string,
   memory: number,
   disk: number,
   vcpus: number,
-  imageId: string | null,
-  images: Record<string, Image>
+  imageLabel: string
 ) => {
-  const imageDesc = safeGetImageLabel(images, imageId);
   const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
 
   // Check if we return an empty string for imageDesc if the slug is nonexistent
-  if (imageDesc === '') {
+  if (!imageLabel) {
     return `${typeDesc}`;
   } else {
-    return `${imageDesc}, ${typeDesc}`;
+    return `${imageLabel}, ${typeDesc}`;
   }
 };

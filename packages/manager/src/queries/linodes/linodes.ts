@@ -26,6 +26,7 @@ import {
   linodeReboot,
   linodeShutdown,
   changeLinodePassword,
+  scheduleOrQueueMigration,
 } from '@linode/api-v4/lib/linodes';
 
 export const queryKey = 'linodes';
@@ -175,4 +176,16 @@ export const useLinodeDeleteMutation = (id: number) => {
       queryClient.invalidateQueries([queryKey]);
     },
   });
+};
+
+export const useLinodeMigrateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { region: string } | undefined>(
+    (data) => scheduleOrQueueMigration(id, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
 };

@@ -15,7 +15,6 @@ import { REFRESH_INTERVAL } from 'src/constants';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import { listToItemsByID } from 'src/queries/base';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
@@ -163,9 +162,11 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   );
   const types = extendTypesQueryResult(typesQuery);
 
-  const searchableLinodes = linodes.map((linode) =>
-    formatLinode(linode, types, listToItemsByID(_publicImages ?? []))
-  );
+  const searchableLinodes = linodes.map((linode) => {
+    const image = _publicImages?.find((image) => image.id === linode.image);
+    const imageLabel = image?.label ?? linode.image ?? 'Unknown Image';
+    return formatLinode(linode, types, imageLabel);
+  });
 
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);

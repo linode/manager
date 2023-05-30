@@ -29,7 +29,6 @@ import SearchSuggestion from './SearchSuggestion';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
-import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -119,7 +118,6 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     { is_public: true },
     shouldMakeRequests
   );
-  const publicImages = _publicImages ?? [];
 
   const { data: regions } = useRegionsQuery();
 
@@ -138,9 +136,11 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
   const types = extendTypesQueryResult(typesQuery);
 
-  const searchableLinodes = linodes.map((linode) =>
-    formatLinode(linode, types, listToItemsByID(publicImages))
-  );
+  const searchableLinodes = linodes.map((linode) => {
+    const image = _publicImages?.find((image) => image.id === linode.image);
+    const imageLabel = image?.label ?? linode.image ?? 'Unknown Image';
+    return formatLinode(linode, types, imageLabel);
+  });
 
   const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
 
