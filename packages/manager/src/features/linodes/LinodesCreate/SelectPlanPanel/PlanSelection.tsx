@@ -18,18 +18,18 @@ import { PlanSelectionType } from '../SelectPlanPanel';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 
 interface Props {
-  header?: string;
-  isCreate?: boolean;
-  type: PlanSelectionType;
-  idx: number;
-  selectedDiskSize?: number;
   currentPlanHeading?: string;
-  showTransfer?: boolean;
-  disabledClasses?: LinodeTypeClass[];
   disabled?: boolean;
-  onSelect: (key: string) => void;
-  selectedID?: string;
+  disabledClasses?: LinodeTypeClass[];
+  header?: string;
+  idx: number;
+  isCreate?: boolean;
   linodeID?: number | undefined;
+  onSelect: (key: string) => void;
+  selectedDiskSize?: number;
+  selectedID?: string;
+  showTransfer?: boolean;
+  type: PlanSelectionType;
 }
 
 const getDisabledClass = (

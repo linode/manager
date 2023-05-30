@@ -14,48 +14,48 @@ import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
 
 export interface PlanSelectionType extends BaseType {
-  formattedLabel: ExtendedType['formattedLabel'];
   class: ExtendedType['class'];
+  formattedLabel: ExtendedType['formattedLabel'];
   heading: ExtendedType['heading'];
-  subHeadings: ExtendedType['subHeadings'];
-  price: ExtendedType['price'];
-  transfer?: ExtendedType['transfer'];
   network_out?: ExtendedType['network_out'];
+  price: ExtendedType['price'];
+  subHeadings: ExtendedType['subHeadings'];
+  transfer?: ExtendedType['transfer'];
 }
 interface Props {
-  types: PlanSelectionType[];
-  error?: string;
-  onSelect: (key: string) => void;
-  selectedID?: string;
-  linodeID?: number | undefined;
-  selectedDiskSize?: number;
+  className?: string;
+  copy?: string;
   currentPlanHeading?: string;
   disabled?: boolean;
-  header?: string;
-  copy?: string;
   disabledClasses?: LinodeTypeClass[];
-  tabbedPanelInnerClass?: string;
-  ldClient?: LDClient;
-  isCreate?: boolean;
-  className?: string;
-  showTransfer?: boolean;
   docsLink?: JSX.Element;
+  error?: string;
+  header?: string;
+  isCreate?: boolean;
+  ldClient?: LDClient;
+  linodeID?: number | undefined;
+  onSelect: (key: string) => void;
+  selectedDiskSize?: number;
+  selectedID?: string;
+  showTransfer?: boolean;
+  tabbedPanelInnerClass?: string;
+  types: PlanSelectionType[];
 }
 
 export const PlansPanel = (props: Props) => {
   const {
-    selectedID,
-    currentPlanHeading,
-    disabled,
-    isCreate,
-    header,
-    linodeID,
-    showTransfer,
-    types,
     className,
     copy,
-    error,
+    currentPlanHeading,
+    disabled,
     docsLink,
+    error,
+    header,
+    isCreate,
+    linodeID,
+    selectedID,
+    showTransfer,
+    types,
   } = props;
 
   const { classes } = useSelectPlanPanelStyles();

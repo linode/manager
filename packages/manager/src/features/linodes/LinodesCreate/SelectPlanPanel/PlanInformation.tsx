@@ -19,7 +19,7 @@ export const PlanInformation = ({ disabledClasses, planType }: Props) => {
     const inactiveClasses = (disabledClasses as string[]) ?? []; // Not a big fan of the casting here but it works
     return inactiveClasses.includes(thisClass);
   };
-  debugger;
+
   return (
     <>
       {planType === 'gpu' ? (
