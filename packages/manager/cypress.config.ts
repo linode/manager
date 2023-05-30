@@ -14,16 +14,23 @@ import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
  * {@link https://docs.cypress.io/guides/references/configuration#Options | Cypress configuration documentation}
  */
 export default defineConfig({
-  chromeWebSecurity: false,
-  defaultCommandTimeout: 80000,
-  pageLoadTimeout: 60000,
   trashAssetsBeforeRuns: false,
+  projectId: '5rhsif',
+
+  // Browser configuration.
+  chromeWebSecurity: false,
   viewportWidth: 1440,
   viewportHeight: 900,
-  projectId: '5rhsif',
+
+  // Timeouts.
   requestTimeout: 30000,
   responseTimeout: 80000,
-  retries: 2,
+  defaultCommandTimeout: 80000,
+  pageLoadTimeout: 60000,
+
+  // Only retry test when running via CI.
+  retries: process.env['CI'] ? 2 : 0,
+
   experimentalMemoryManagement: true,
   e2e: {
     experimentalRunAllSpecs: true,
