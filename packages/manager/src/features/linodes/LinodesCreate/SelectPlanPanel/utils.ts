@@ -119,7 +119,6 @@ export const planTabInfoContent = {
   premium: {
     typography:
       'Premium CPU instances guarantee a minimum processor model, AMD Epyc\u2122 7713 or higher, to ensure consistent high performance for more demanding workloads.',
-    notice: 'This plan is only available in the Washington, DC region.',
     title: 'Premium',
     key: 'premium',
     dataId: 'data-qa-premium',

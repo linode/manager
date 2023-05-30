@@ -7,7 +7,6 @@ import { getPlanSelectionsByPlanType, planTabInfoContent } from './utils';
 import { RenderPlanContainer } from './KubernetesPlanContainer';
 import { PlanInformation } from './PlanInformation';
 import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
-// import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
