@@ -833,7 +833,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Illa Builder',
     alt_name: 'Low-code development platform',
-    alt_description: 'Retool open-source alternative, with low-code UI components .',
+    alt_description:
+      'Retool open-source alternative, with low-code UI components .',
     categories: ['Security'],
     description:
       'Illa Builder is a Retool open-source alternative, with low-code UI components for self-hosting the developement of internal tools.',
@@ -1564,7 +1565,7 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
-    name: 'Owncloud',
+    name: 'ownCloud',
     alt_name: 'Collabrative file sharing',
     alt_description: 'Self-hosted file sharing and collaboration platform.',
     categories: ['Productivity'],
@@ -1573,7 +1574,7 @@ export const oneClickApps: OCA[] = [
       'DropBox and oneDrive alternative that lets you remain in control of your files.',
     related_guides: [
       {
-        title: 'Deploy Owncloud through the Linode Marketplace',
+        title: 'Deploy ownCloud through the Linode Marketplace',
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/owncloud/',
       },
@@ -2017,11 +2018,13 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Seatable',
-    alt_name: 'Spreadsheet style interface with the power of a relational database.',
+    alt_name:
+      'Spreadsheet style interface with the power of a relational database.',
     alt_description: 'A safe home for all your data.',
     categories: ['Productivity'],
     description: `Self-hosted database for a variety of management projects.`,
-    summary: 'Collaborative web interface for data backed project and process management.',
+    summary:
+      'Collaborative web interface for data backed project and process management.',
     related_guides: [
       {
         title: 'Deploy Seatable through the Linode Marketplace',
