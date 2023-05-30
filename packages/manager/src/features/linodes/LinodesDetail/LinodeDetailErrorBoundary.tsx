@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { reportException } from 'src/exceptionReporting';
 
 interface State {

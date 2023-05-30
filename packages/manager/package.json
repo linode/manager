@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.93.3",
+  "version": "1.94.0",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -13,6 +13,8 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@linode/api-v4": "*",
@@ -105,7 +107,9 @@
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "release": "./scripts/release_changelog.sh",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "changeset": "node scripts/changelog/changeset.mjs",
+    "generate-changelog": "node scripts/changelog/generate-changelog.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
@@ -172,6 +176,7 @@
     "axe-core": "^3.5.1",
     "browserslist": "^4.16.5",
     "chai-string": "^1.5.0",
+    "chalk": "^5.2.0",
     "core-js": "^2.6.5",
     "cypress": "^12.11.0",
     "cypress-axe": "^1.0.0",

@@ -3,12 +3,10 @@ import { useDispatch } from 'react-redux';
 import {
   Redirect,
   Route,
-  RouteComponentProps,
   Switch,
-  withRouter,
+  useParams,
+  useRouteMatch,
 } from 'react-router-dom';
-import { compose } from 'recompose';
-import NotFound from 'src/components/NotFound';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import {
@@ -16,34 +14,43 @@ import {
   linodeDetailContextFactory as createLinodeDetailContext,
   LinodeDetailContextProvider,
 } from './linodeDetailContext';
-import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { CircleProgress } from 'src/components/CircleProgress';
 
-const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
+const LinodesDetailHeader = React.lazy(
+  () => import('./LinodesDetailHeader/LinodeDetailHeader')
+);
 const LinodesDetailNavigation = React.lazy(
   () => import('./LinodesDetailNavigation')
 );
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 
-interface Props {
-  linodeId: string;
-}
+const LinodeDetail = () => {
+  const { url, path } = useRouteMatch();
+  const { linodeId } = useParams<{ linodeId: string }>();
 
-type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
-
-const LinodeDetail: React.FC<CombinedProps> = (props) => {
-  const {
-    linodeId,
-    match: { path, url },
-  } = props;
+  const id = Number(linodeId);
 
   const dispatch = useDispatch();
-  const linode = useExtendedLinode(+linodeId);
+  const { data: linode, isLoading, error } = useLinodeQuery(id);
 
-  if (!linode) {
-    return <NotFound />;
+  // We can remove this when we remove the context below
+  const extendedLinode = useExtendedLinode(id);
+
+  if (error) {
+    return <ErrorState errorText={error?.[0].reason} />;
   }
 
-  const ctx: LinodeDetailContext = createLinodeDetailContext(linode, dispatch);
+  if (isLoading || !linode || !extendedLinode) {
+    return <CircleProgress />;
+  }
+
+  // We will delete this as soon as we react query all consumers of this context
+  const ctx: LinodeDetailContext = createLinodeDetailContext(
+    extendedLinode,
+    dispatch
+  );
 
   return (
     <LinodeDetailContextProvider value={ctx}>
@@ -87,9 +94,4 @@ const LinodeDetail: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  LinodeDetailErrorBoundary
-);
-
-export default enhanced(LinodeDetail);
+export default LinodeDetail;

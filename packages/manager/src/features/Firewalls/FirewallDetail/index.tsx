@@ -3,7 +3,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NotFound from 'src/components/NotFound';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';

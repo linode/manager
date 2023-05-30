@@ -10,13 +10,12 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import TransferDisplay from 'src/components/TransferDisplay';
 import {
   withProfile,
   WithProfileProps,
@@ -48,6 +47,7 @@ import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 
 interface State {
   powerDialogOpen: boolean;

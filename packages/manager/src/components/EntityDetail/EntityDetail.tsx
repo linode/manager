@@ -7,8 +7,7 @@
  */
 
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
 export interface EntityDetailProps {
@@ -17,50 +16,40 @@ export interface EntityDetailProps {
   footer: JSX.Element;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  header: {},
-  body: {
-    paddingRight: theme.spacing(),
-    paddingBottom: theme.spacing(),
-    backgroundColor: theme.bg.bgPaper,
-    borderTop: `1px solid ${theme.borderColors.borderTable}`,
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-  },
-  footer: {
-    backgroundColor: theme.bg.bgPaper,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: `7px 16px !important`, // This will be taken care of during refactor
-  },
-  footerBorder: {
-    borderTop: `1px solid ${theme.borderColors.borderTable}`,
-  },
-}));
-
-export const EntityDetail: React.FC<EntityDetailProps> = (props) => {
+export const EntityDetail = (props: EntityDetailProps) => {
   const { header, body, footer } = props;
-  const classes = useStyles();
 
   return (
     <>
       {header}
-
-      {body !== undefined && (
-        <Grid xs={12} className={classes.body}>
-          {body}
-        </Grid>
-      )}
-      <Grid
-        xs={12}
-        className={`${classes.footer} ${
-          body === undefined && classes.footerBorder
-        }`}
-      >
+      {body !== undefined && <GridBody xs={12}>{body}</GridBody>}
+      <GridFooter xs={12} body={body}>
         {footer}
-      </Grid>
+      </GridFooter>
     </>
   );
 };
+
+const GridBody = styled(Grid)(({ theme }) => ({
+  backgroundColor: theme.bg.bgPaper,
+  borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+  borderTop: `1px solid ${theme.borderColors.borderTable}`,
+  paddingBottom: theme.spacing(),
+  paddingRight: theme.spacing(),
+}));
+
+const GridFooter = styled(Grid)<Partial<EntityDetailProps>>(
+  ({ theme, ...props }) => ({
+    alignItems: 'center',
+    backgroundColor: theme.bg.bgPaper,
+    borderTop:
+      props.body === undefined
+        ? `1px solid ${theme.borderColors.borderTable}`
+        : undefined,
+    display: 'flex',
+    flexDirection: 'row',
+    padding: `7px 16px`,
+  })
+);
 
 export default EntityDetail;

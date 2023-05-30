@@ -1,7 +1,7 @@
 import * as React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import Placeholder from 'src/components/Placeholder';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import PointerIcon from 'src/assets/icons/pointer.svg';
 import Typography from 'src/components/core/Typography';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
@@ -101,6 +101,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
   return (
     <Placeholder
       buttonProps={buttonProps}
+      dataQAPlaceholder="resources-section"
       descriptionMaxWidth={descriptionMaxWidth}
       icon={icon}
       isEntity
