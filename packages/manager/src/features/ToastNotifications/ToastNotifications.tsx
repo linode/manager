@@ -18,7 +18,6 @@ interface ToastOptions {
   persistFailureMessage?: boolean;
   successMessage?: string;
   failureMessage?: string;
-  includesLink?: boolean;
   link?: JSX.Element;
 }
 
@@ -116,6 +115,10 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               persistFailureMessage: true,
               successMessage: `Image ${secondaryLabel} created successfully.`,
               failureMessage: `Error creating Image ${secondaryLabel}.`,
+              link: formatLink(
+                'Learn more about image technical specifications.',
+                'https://www.linode.com/docs/products/tools/images/#technical-specifications'
+              ),
             });
           case 'disk_resize':
             return toastSuccessAndFailure({
@@ -124,7 +127,6 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               persistFailureMessage: true,
               successMessage: `Disk ${secondaryLabel} resized successfully.`,
               failureMessage: `Disk resize failed.`,
-              includesLink: true,
               link: formatLink(
                 'Learn more about resizing restrictions.',
                 'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/',
@@ -276,7 +278,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
 
 export default withSnackbar(ToastNotifications);
 
-const formatLink = (text: string, link: string, handleClick: any) => {
+const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
     <Link to={link} onClick={() => handleClick}>
       {text}
