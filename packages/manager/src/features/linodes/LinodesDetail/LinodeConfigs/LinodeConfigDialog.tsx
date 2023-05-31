@@ -47,8 +47,10 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
-import KernelSelect from './KernelSelect';
+import InterfaceSelect, {
+  ExtendedInterface,
+} from '../LinodeSettings/InterfaceSelect';
+import KernelSelect from '../LinodeSettings/KernelSelect';
 import { useQueryClient } from 'react-query';
 import {
   useAllLinodeKernelsQuery,

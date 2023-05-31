@@ -6,7 +6,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { ConfigActionMenu } from '../LinodeSettings/LinodeConfigActionMenu';
+import { ConfigActionMenu } from './LinodeConfigActionMenu';
 import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 

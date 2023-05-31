@@ -12,7 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { LinodeConfigDialog } from '../LinodeSettings/LinodeConfigDialog';
+import { LinodeConfigDialog } from './LinodeConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
