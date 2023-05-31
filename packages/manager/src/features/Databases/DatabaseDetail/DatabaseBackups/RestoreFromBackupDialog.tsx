@@ -24,7 +24,8 @@ interface Props extends Omit<DialogProps, 'title'> {
 }
 
 export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
-  const { database, backup, onClose, open, ...rest } = props;
+  // const { database, backup, onClose, open, ...rest } = props;
+  const { database, backup, onClose, open } = props;
 
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -121,12 +122,12 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
       title={`Restore from Backup ${formatDate(backup.created, {
         timezone: profile?.timezone,
       })}`}
-      entity={{ type: 'Database', label: 'Database Label' }}
+      entity={{ type: 'Database', label: database.label }}
       open={open}
       onClose={onClose}
       onClick={() => handleRestoreDatabase}
       loading={isLoading}
-      {...rest}
+      // {...rest}
     >
       {error ? (
         <Notice
