@@ -385,7 +385,7 @@ export class SelectPlanQuantityPanel extends React.Component<CombinedProps> {
               <PremiumPlansAvailabilityNotice />
               <Typography data-qa-gpu className={classes.copy}>
                 Premium CPU instances guarantee a minimum processor model, AMD
-                Epyc<sup>TM</sup> 7713 or higher, to ensure consistent high
+                Epyc&trade; 7713 or higher, to ensure consistent high
                 performance for more demanding workloads.
               </Typography>
               {this.renderPlanContainer(premium)}
