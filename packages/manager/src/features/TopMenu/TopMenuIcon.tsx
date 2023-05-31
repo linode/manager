@@ -7,7 +7,7 @@ interface Props {
   children: JSX.Element;
 }
 
-export const StyledTopMenuIconWrapper = styled('div')(({ theme }) => ({
+export const StyledTopMenuSvgWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   backgroundColor: 'inherit',
