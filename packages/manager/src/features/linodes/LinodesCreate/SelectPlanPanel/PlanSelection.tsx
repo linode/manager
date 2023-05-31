@@ -72,10 +72,6 @@ export const RenderSelection = ({
     return linodeID;
   });
 
-  if (planTooSmall) {
-    tooltip = `This plan is too small for the selected image.`;
-  }
-
   const rowAriaLabel =
     type && type.formattedLabel && isSamePlan
       ? `${type.formattedLabel} this is your current plan`

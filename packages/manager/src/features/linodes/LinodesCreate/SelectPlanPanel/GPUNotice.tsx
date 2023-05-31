@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
+import { getRegionsWithCapability } from './utils';
 
 interface Props {
   hasDisabledClass: boolean;
@@ -14,17 +13,11 @@ export const GPUNotice = ({ hasDisabledClass, dataTestId }: Props) => {
   const { classes } = useSelectPlanPanelStyles();
   const { data: regions } = useRegionsQuery();
 
-  const getRegionsWithCapability = (capability: Capabilities) => {
-    const withCapability = regions
-      ?.filter((thisRegion) => thisRegion.capabilities.includes(capability))
-      .map((thisRegion) => thisRegion.label);
-    return arrayToList(withCapability ?? []);
-  };
-
   const programInfo = hasDisabledClass ? (
     <>
       GPU instances are not available in the selected region. Currently these
-      plans are only available in {getRegionsWithCapability('GPU Linodes')}.
+      plans are only available in{' '}
+      {getRegionsWithCapability('GPU Linodes', regions ?? [])}.
     </>
   ) : (
     <div className={classes.gpuGuideLink}>

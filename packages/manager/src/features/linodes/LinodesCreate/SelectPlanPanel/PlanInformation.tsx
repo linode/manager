@@ -31,7 +31,7 @@ export const PlanInformation = ({ disabledClasses, planType }: Props) => {
       {planType === 'metal' ? (
         <MetalNotice
           hasDisabledClass={getDisabledClass('metal')}
-          dataTestId={'metal-notice'}
+          dataTestId="metal-notice"
         />
       ) : null}
       {planType === 'premium' ? <PremiumPlansAvailabilityNotice /> : null}

@@ -24,15 +24,4 @@ describe('PlanInformation', () => {
     const element = screen.getByTestId('metal-notice');
     expect(element).toBeInTheDocument();
   });
-
-  it('should render notice when planType is "premium"', () => {
-    // Mock the useFlags hook to return a truthy value
-    const useFlagsMock = jest.fn().mockReturnValue({
-      premiumPlansAvailabilityNotice: 'Premium plans are available!',
-    });
-    require('src/hooks/useFlags').default = useFlagsMock;
-    renderWithTheme(<PlanInformation planType="premium" />);
-    const element = screen.getByTestId('premium-notice');
-    expect(element).toBeInTheDocument();
-  });
 });

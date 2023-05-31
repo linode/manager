@@ -1,5 +1,8 @@
 import type { LinodeTypeClass } from '@linode/api-v4';
+import { Capabilities } from '@linode/api-v4/lib/regions/types';
+import { Region } from '@linode/api-v4/lib/regions';
 import { ExtendedType } from 'src/utilities/extendType';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { PlanSelectionType } from './PlansPanel';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
@@ -100,6 +103,18 @@ export const determineInitialPlanCategoryTab = <T>(
   const initialTab = tabOrder.indexOf(selectedTypeClass);
 
   return initialTab;
+};
+
+export const getRegionsWithCapability = (
+  capability: Capabilities,
+  regions: Region[]
+) => {
+  const withCapability = regions
+    ?.filter((thisRegion: Region) =>
+      thisRegion.capabilities.includes(capability)
+    )
+    .map((thisRegion: Region) => thisRegion.label);
+  return arrayToList(withCapability ?? []);
 };
 
 export const planTabInfoContent = {
