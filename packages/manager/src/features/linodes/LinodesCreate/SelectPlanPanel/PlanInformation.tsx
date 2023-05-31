@@ -15,9 +15,8 @@ interface Props {
 export const PlanInformation = ({ disabledClasses, planType }: Props) => {
   const { classes } = useSelectPlanPanelStyles();
 
-  const getDisabledClass = (thisClass: string) => {
-    const inactiveClasses = (disabledClasses as string[]) ?? []; // Not a big fan of the casting here but it works
-    return inactiveClasses.includes(thisClass);
+  const getDisabledClass = (thisClass: LinodeTypeClass) => {
+    return Boolean(disabledClasses?.includes(thisClass));
   };
 
   return (
