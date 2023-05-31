@@ -146,10 +146,9 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               successMessage: `Image ${label} is now available.`,
               failureMessage: isDeletion
                 ? undefined
-                : `There was a problem uploading image ${label}: ${event.message?.replace(
-                    'cancelled',
-                    'canceled'
-                  )}`,
+                : `There was a problem uploading image ${label}: ${event.message
+                    ?.replace('cancelled', 'canceled')
+                    .replace(/(\d+)/g, '$1 MB')}`,
             });
           case 'image_delete':
             return toastSuccessAndFailure({

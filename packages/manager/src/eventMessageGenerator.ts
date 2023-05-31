@@ -279,7 +279,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: (e) => `Image ${e.entity?.label ?? ''} scheduled for upload.`,
     started: (e) => `Image ${e.entity?.label ?? ''} is being uploaded.`,
     failed: (e) =>
-      `There was a problem uploading ${e.entity?.label ?? ''}: ${e?.message}.`,
+      `There was a problem uploading ${
+        e.entity?.label ?? ''
+      }: ${e?.message?.replace(/(\d+)/g, '$1 MB')}.`,
     finished: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
     notification: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
   },
