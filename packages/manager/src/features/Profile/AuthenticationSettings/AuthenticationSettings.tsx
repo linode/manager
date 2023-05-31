@@ -13,7 +13,7 @@ import ResetPassword from './ResetPassword';
 import { SMSMessaging } from './SMSMessaging';
 import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
-import TwoFactor from './TwoFactor';
+import { TwoFactor } from './TwoFactor/TwoFactor';
 import SecurityQuestions from './SecurityQuestions';
 import Link from 'src/components/Link';
 

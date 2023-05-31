@@ -1,10 +1,17 @@
 import { styled } from '@mui/material/styles';
 import { TableSortCell } from './TableSortCell';
 
-export const StyledTableSortCell = styled(TableSortCell)(({ theme }) => ({
-  width: '40%',
+interface Props {
+  mobileWidth?: string;
+  width?: string;
+}
+
+export const StyledTableSortCell = styled(TableSortCell, {
+  label: 'StyledTableSortCell',
+})<Props>(({ theme, ...props }) => ({
+  width: props.width || '40%',
   [theme.breakpoints.down('lg')]: {
-    width: '25%',
+    width: props.mobileWidth || '25%',
   },
   '&:hover': {
     cursor: 'pointer',
