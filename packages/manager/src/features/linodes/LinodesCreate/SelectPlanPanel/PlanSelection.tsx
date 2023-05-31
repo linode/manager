@@ -53,8 +53,10 @@ export const RenderSelection = ({
   type,
 }: Props) => {
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
-  let tooltip;
   const planTooSmall = diskSize > type.disk;
+  const tooltip = planTooSmall
+    ? 'This plan is too small for the selected image.'
+    : undefined;
   const isSamePlan = type.heading === currentPlanHeading;
   const isGPU = type.class === 'gpu';
   const isDisabledClass = getDisabledClass(type.class, disabledClasses ?? []);
