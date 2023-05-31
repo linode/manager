@@ -5,6 +5,7 @@ import { resolve } from 'path';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const vitePreprocessor = require('cypress-vite');
 import * as dotenv from 'dotenv';
+import * as fs from 'fs';
 
 /**
  * Returns a configuration object containing environment variables.
