@@ -6,7 +6,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NotFound from 'src/components/NotFound';
 import SafeTabPanel from 'src/components/SafeTabPanel';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useProfile, useGrants } from 'src/queries/profile';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

@@ -12,7 +12,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';

@@ -4,7 +4,7 @@ import CautionIcon from 'src/assets/icons/caution.svg';
 import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
 import UploadPending from 'src/assets/icons/uploadPending.svg';
 import Button from 'src/components/Button';
-import LinearProgress from 'src/components/core/LinearProgress';
+import { LinearProgress } from 'src/components/LinearProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';

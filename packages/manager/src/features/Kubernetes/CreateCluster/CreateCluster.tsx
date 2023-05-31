@@ -17,7 +17,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
-import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import TextField from 'src/components/TextField';
 import {
   reportAgreementSigningError,
@@ -276,7 +276,7 @@ export const CreateCluster = () => {
                 regions={filteredRegions}
                 selectedID={selectedID}
                 textFieldProps={{
-                  helperText: regionHelperText(),
+                  helperText: <RegionHelperText />,
                   helperTextPosition: 'top',
                 }}
               />

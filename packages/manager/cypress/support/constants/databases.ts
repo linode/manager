@@ -1,13 +1,14 @@
 import { ClusterSize, Engine } from '@linode/api-v4/types';
 import { randomLabel } from 'support/util/random';
+import type { CloudRegion } from 'support/util/regions';
+import { chooseRegion } from 'support/util/regions';
 
 interface databaseClusterConfiguration {
   label: string;
   linodeType: string;
   clusterSize: ClusterSize;
   dbType: Engine;
-  region: string;
-  regionTypeahead: string;
+  region: CloudRegion;
   engine: string;
   version: string;
 }
@@ -19,8 +20,7 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
     linodeType: 'g6-nanode-1',
     clusterSize: 1,
     dbType: 'mysql',
-    region: 'us-east',
-    regionTypeahead: 'Newark',
+    region: chooseRegion(),
     engine: 'MySQL',
     version: '8',
   },
@@ -29,8 +29,7 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
     linodeType: 'g6-dedicated-16',
     clusterSize: 3,
     dbType: 'mysql',
-    region: 'us-southeast',
-    regionTypeahead: 'Atlanta',
+    region: chooseRegion(),
     engine: 'MySQL',
     version: '5',
   },
@@ -49,8 +48,7 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
     linodeType: 'g6-nanode-1',
     clusterSize: 3,
     dbType: 'postgresql',
-    region: 'us-east',
-    regionTypeahead: 'Newark',
+    region: chooseRegion(),
     engine: 'PostgreSQL',
     version: '13',
   },

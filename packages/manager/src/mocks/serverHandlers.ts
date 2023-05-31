@@ -568,6 +568,18 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({ ssl: false }));
+  }),
+  rest.post('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({ ssl: true }));
+  }),
+  rest.delete('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
   rest.get('*/object-storage/buckets/*/*/object-list', (req, res, ctx) => {
     const pageSize = Number(req.url.searchParams.get('page_size') || 100);
     const marker = req.url.searchParams.get('marker');
@@ -647,6 +659,7 @@ export const handlers = [
       ctx.json(makeResourcePage(objectStorageKeyFactory.buildList(3)))
     );
   }),
+
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(10);
     return res(ctx.json(makeResourcePage(domains)));

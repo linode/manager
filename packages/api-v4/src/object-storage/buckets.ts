@@ -146,7 +146,7 @@ export const getSSLCert = (clusterId: string, bucketName: string) =>
  * for removing certs without altering the bucket.
  */
 export const deleteSSLCert = (clusterId: string, bucketName: string) =>
-  Request<ObjectStorageBucketSSLResponse>(
+  Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
   );

@@ -10,7 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
@@ -34,6 +34,8 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import { ENABLE_MAINTENANCE_MODE } from './constants';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appFrame: {
@@ -238,7 +240,7 @@ const MainContent = (props: CombinedProps) => {
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
-  if (props.globalErrors.api_maintenance_mode) {
+  if (props.globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
 
@@ -262,7 +264,7 @@ const MainContent = (props: CombinedProps) => {
         {({
           preference: desktopMenuIsOpen,
           togglePreference: desktopMenuToggle,
-        }: ToggleProps<boolean>) => (
+        }: PreferenceToggleProps<boolean>) => (
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
               <>

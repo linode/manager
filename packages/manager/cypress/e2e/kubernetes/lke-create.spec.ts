@@ -5,7 +5,7 @@
 import { KubernetesCluster } from '@linode/api-v4';
 import { LkePlanDescription } from 'support/api/lke';
 import { lkeClusterPlans } from 'support/constants/lke';
-import { regionsFriendly } from 'support/constants/regions';
+import { chooseRegion } from 'support/util/regions';
 import { interceptCreateCluster } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomItem } from 'support/util/random';
@@ -64,7 +64,7 @@ describe('LKE Cluster Creation', () => {
    */
   it('can create an LKE cluster', () => {
     const clusterLabel = randomLabel();
-    const clusterRegion = randomItem(regionsFriendly);
+    const clusterRegion = chooseRegion();
     const clusterVersion = '1.25';
     const clusterPlans = new Array(2)
       .fill(null)
@@ -91,7 +91,7 @@ describe('LKE Cluster Creation', () => {
     cy.findByText('Region')
       .should('be.visible')
       .click()
-      .type(`${clusterRegion}{enter}`);
+      .type(`${clusterRegion.name}{enter}`);
 
     cy.findByLabelText('Kubernetes Version')
       .should('be.visible')

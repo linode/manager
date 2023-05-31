@@ -2,6 +2,7 @@ import { kubernetesClusterFactory } from '@src/factories';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { mockCreateCluster } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
+import { chooseRegion } from 'support/util/regions';
 
 /**
  * Performs a click operation on Cypress subject a given number of times.
@@ -67,7 +68,7 @@ describe('LKE Create Cluster', () => {
     cy.findByLabelText('Region')
       .should('be.visible')
       .focus()
-      .type('Dallas{enter}');
+      .type(`${chooseRegion().name}{enter}`);
     cy.get('[id="kubernetes-version"]').type('{enter}');
     cy.findByText('Shared CPU').should('be.visible').click();
 

@@ -1,13 +1,12 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
+import Typography from 'src/components/core/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 
@@ -19,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TaxCollectionBanner: React.FC<{}> = () => {
+const TaxCollectionBanner = () => {
   const classes = useStyles();
   const history = useHistory();
   const flags = useFlags();
@@ -62,33 +61,32 @@ const TaxCollectionBanner: React.FC<{}> = () => {
   const isUserInTaxableRegion =
     bannerRegions.length > 0 && bannerRegions.includes(account.state);
 
+  const actionButton = bannerHasAction ? (
+    <Button
+      buttonType="primary"
+      className={classes.button}
+      onClick={() => history.push('/account/billing/edit')}
+    >
+      Update Tax ID
+    </Button>
+  ) : undefined;
+
   return (isEntireCountryTaxable || isUserInTaxableRegion) &&
     !isBannerDateWithinFiveWeeksPrior ? (
-    <DismissibleBanner warning important preferenceKey="tax-collection-banner">
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Typography>
-          Starting {bannerDateString}, tax may be applied to your Linode
-          services. For more information, please see the{' '}
-          <Link to="https://www.linode.com/docs/platform/billing-and-support/tax-information/">
-            Tax Information Guide
-          </Link>
-          .
-        </Typography>
-        {bannerHasAction ? (
-          <Button
-            buttonType="primary"
-            className={classes.button}
-            onClick={() => history.push('/account/billing/edit')}
-          >
-            Update Tax ID
-          </Button>
-        ) : null}
-      </Box>
+    <DismissibleBanner
+      warning
+      important
+      preferenceKey="tax-collection-banner"
+      actionButton={actionButton}
+    >
+      <Typography>
+        Starting {bannerDateString}, tax may be applied to your Linode services.
+        For more information, please see the{' '}
+        <Link to="https://www.linode.com/docs/platform/billing-and-support/tax-information/">
+          Tax Information Guide
+        </Link>
+        .
+      </Typography>
     </DismissibleBanner>
   ) : null;
 };

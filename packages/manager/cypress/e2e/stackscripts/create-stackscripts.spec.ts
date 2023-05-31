@@ -1,4 +1,3 @@
-import { regions, regionsFriendly } from 'support/constants/regions';
 import { authenticate } from 'support/api/authentication';
 import { pollLinodeStatus, pollImageStatus } from 'support/util/polling';
 import {
@@ -16,6 +15,7 @@ import { ui } from 'support/ui';
 import { createLinodeRequestFactory } from 'src/factories';
 import { createLinode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { createImage } from '@linode/api-v4/lib/images';
+import { chooseRegion } from 'support/util/regions';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -80,14 +80,14 @@ const fillOutStackscriptForm = (
  * function does not attempt to submit the filled out form.
  *
  * @param label - Linode label.
- * @param region - Linode region name.
+ * @param regionName - Linode region name.
  */
-const fillOutLinodeForm = (label: string, region: string) => {
+const fillOutLinodeForm = (label: string, regionName: string) => {
   const password = randomString(32);
 
   cy.findByText('Select a Region').should('be.visible').click();
 
-  ui.regionSelect.findItemByRegionName(region).click();
+  ui.regionSelect.findItemByRegionName(regionName).click();
 
   cy.findByText('Linode Label')
     .should('be.visible')
@@ -112,7 +112,7 @@ const createLinodeAndImage = async () => {
   const linode = await createLinode(
     createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: randomItem(regions),
+      region: chooseRegion().id,
       root_pass: randomString(32),
     })
   );
@@ -149,7 +149,7 @@ describe('stackscripts', () => {
     const stackscriptImageTag = 'alpine3.17';
 
     const linodeLabel = randomLabel();
-    const linodeRegion = randomItem(regionsFriendly);
+    const linodeRegion = chooseRegion();
 
     interceptCreateStackScript().as('createStackScript');
     interceptGetStackScripts().as('getStackScripts');
@@ -231,7 +231,7 @@ describe('stackscripts', () => {
       .click();
 
     // Fill out Linode creation form, confirm UDF fields behave as expected.
-    fillOutLinodeForm(linodeLabel, linodeRegion);
+    fillOutLinodeForm(linodeLabel, linodeRegion.name);
 
     cy.findByLabelText('Example Password')
       .should('be.visible')
@@ -349,7 +349,7 @@ describe('stackscripts', () => {
         .click();
 
       interceptCreateLinode().as('createLinode');
-      fillOutLinodeForm(linodeLabel, randomItem(regionsFriendly));
+      fillOutLinodeForm(linodeLabel, chooseRegion().name);
       ui.button
         .findByTitle('Create Linode')
         .should('be.visible')

@@ -69,7 +69,7 @@ export const interface MyComponentProps {
 }
 const MyComponent = (props: MyComponentProps) { ... }
 ```
-
+- When it comes to components located in the `src/features/` directory, you can use the name `Props` for their types or interfaces, unless exporting is necessary. In such cases, name the type or interface after the component name.
 #### Function Component Definition
 
 - Prefer function components over class components.
