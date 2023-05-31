@@ -26,7 +26,7 @@ export const DocsContainer = ({ children, context }) => {
   const isDark = useDarkMode();
 
   React.useEffect(() => {
-    worker.start();
+    worker?.start();
   }, []);
 
   return (
