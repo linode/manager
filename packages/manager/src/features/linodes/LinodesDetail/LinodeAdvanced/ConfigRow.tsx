@@ -38,7 +38,7 @@ interface Props {
   onDelete: () => void;
 }
 
-export const ConfigRow = (props: Props) => {
+export const ConfigRow = React.memo((props: Props) => {
   const { config, linodeId, onBoot, onEdit, onDelete, readOnly } = props;
 
   const { data: kernel } = useLinodeKernelQuery(config.kernel);
@@ -135,9 +135,7 @@ export const ConfigRow = (props: Props) => {
       </TableCell>
     </TableRow>
   );
-};
-
-export default React.memo(ConfigRow);
+});
 
 export const getInterfaceLabel = (configInterface: Interface): string => {
   if (configInterface.purpose === 'public') {
