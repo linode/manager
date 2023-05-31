@@ -7,6 +7,7 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { IconButton } from 'src/components/IconButton';
 import Tag from 'src/components/Tag';
+import { isPropValid } from 'src/utilities/isPropValid';
 import AddTag from './AddTag';
 
 interface TagCellProps {
@@ -136,7 +137,9 @@ const StyledCircleDiv = styled('div')({
   zIndex: 2,
 });
 
-const StyledTagListDiv = styled('div')<{
+const StyledTagListDiv = styled('div', {
+  shouldForwardProp: (prop) => isPropValid(['hasOverflow'], prop),
+})<{
   hasOverflow: boolean;
 }>(({ ...props }) => ({
   display: 'flex',
@@ -152,7 +155,9 @@ const StyledTagListDiv = styled('div')<{
   }),
 }));
 
-const StyledTag = styled(Tag)<{
+const StyledTag = styled(Tag, {
+  shouldForwardProp: (prop) => isPropValid(['loading'], prop),
+})<{
   loading: boolean;
 }>(({ ...props }) => ({
   ...(props.loading && {
