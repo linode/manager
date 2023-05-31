@@ -120,8 +120,15 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
       onClose={onClose}
       onClick={onDeleteCluster}
       loading={isLoading}
-      error={error}
+      // error={error}
     >
+      {error ? (
+        <Notice
+          error
+          // text={getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0].reason}
+          text={error}
+        />
+      ) : null}
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting your entire database will delete

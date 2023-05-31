@@ -19,7 +19,10 @@ interface EntityInfo {
     | 'NodeBalancer'
     | 'Bucket'
     | 'Cluster'
-    | 'Database';
+    | 'Database'
+    // | 'Object Storage';
+    | 'Username'
+    | 'Account';
   label: string | undefined;
 }
 

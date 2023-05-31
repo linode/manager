@@ -2,20 +2,25 @@ import { cancelAccount } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import Typography from 'src/components/core/Typography';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import TextField from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
+// import ActionsPanel from 'src/components/ActionsPanel';
+// import Button from 'src/components/Button';
+// import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+// import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 interface Props {
   open: boolean;
   closeDialog: () => void;
+  // onClose: () => void;
+  // onSubmit: () => void;
+  // isCanceling: boolean;
+  // disabled: boolean;
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -24,7 +29,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const CloseAccountDialog = ({ closeDialog, open }: Props) => {
+const CloseAccountDialog = ({
+  closeDialog,
+  open,
+}: // onClose,
+// onSubmit,
+// isCanceling,
+// disabled,
+Props) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
     false
   );
@@ -98,20 +110,70 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   }
 
   return (
-    <ConfirmationDialog
-      open={open}
+    // <ConfirmationDialog
+    //   open={open}
+    //   title="Are you sure you want to close your Linode account?"
+    //   onClose={closeDialog}
+    //   error={errors ? errors[0].reason : ''}
+    //   actions={
+    //     <Actions
+    //       onClose={closeDialog}
+    //       isCanceling={isClosingAccount}
+    //       onSubmit={handleCancelAccount}
+    //       disabled={!canSubmit}
+    //     />
+    //   }
+    // >
+
+    //   <Notice warning>
+    //     <Typography style={{ fontSize: '0.875rem' }}>
+    //       <strong>Warning:</strong> Please note this is an extremely destructive
+    //       action. Closing your account means that all services including
+    //       Linodes, Volumes, DNS Records, etc will be lost and may not be able to
+    //       be restored.
+    //     </Typography>
+    //   </Notice>
+
+    //   <TypeToConfirm
+    //     label={`Please enter your username (${profile.username}) to confirm.`}
+    //     onChange={(input) => setUsername(input)}
+    //     inputRef={inputRef}
+    //     aria-label="username field"
+    //     value={inputtedUsername}
+    //     visible
+    //     hideInstructions
+    //     placeholder="Username"
+    //   />
+
+    //   <Typography className={classes.dontgo}>
+    //     We&rsquo;d hate to see you go. Please let us know what we could be doing
+    //     better in the comments section below. After your account is closed,
+    //     you&rsquo;ll be directed to a quick survey so we can better gauge your
+    //     feedback.
+    //   </Typography>
+    //   <TextField
+    //     label="Comments"
+    //     multiline
+    //     onChange={(e) => setComments(e.target.value)}
+    //     optional
+    //     placeholder="Provide Feedback"
+    //     rows={1}
+    //     value={comments}
+    //     aria-label="Optional comments field"
+    //   />
+    // </ConfirmationDialog>
+
+    <TypeToConfirmDialog
       title="Are you sure you want to close your Linode account?"
+      entity={{ type: 'Account', label: profile.username }}
+      open={open}
       onClose={closeDialog}
-      error={errors ? errors[0].reason : ''}
-      actions={
-        <Actions
-          onClose={closeDialog}
-          isCanceling={isClosingAccount}
-          onSubmit={handleCancelAccount}
-          disabled={!canSubmit}
-        />
-      }
+      onClick={handleCancelAccount}
+      loading={isClosingAccount}
+      inputRef={inputRef}
+      disabled={!canSubmit}
     >
+      {errors ? <Notice error text={errors ? errors[0].reason : ''} /> : null}
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Please note this is an extremely destructive
@@ -120,16 +182,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
           be restored.
         </Typography>
       </Notice>
-      <TypeToConfirm
-        label={`Please enter your username (${profile.username}) to confirm.`}
-        onChange={(input) => setUsername(input)}
-        inputRef={inputRef}
-        aria-label="username field"
-        value={inputtedUsername}
-        visible
-        hideInstructions
-        placeholder="Username"
-      />
+
       <Typography className={classes.dontgo}>
         We&rsquo;d hate to see you go. Please let us know what we could be doing
         better in the comments section below. After your account is closed,
@@ -146,38 +199,38 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         value={comments}
         aria-label="Optional comments field"
       />
-    </ConfirmationDialog>
+    </TypeToConfirmDialog>
   );
 };
 
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  isCanceling: boolean;
-  disabled: boolean;
-}
+// interface ActionsProps {
+//   onClose: () => void;
+//   onSubmit: () => void;
+//   isCanceling: boolean;
+//   disabled: boolean;
+// }
 
-const Actions = ({
-  disabled,
-  isCanceling,
-  onClose,
-  onSubmit,
-}: ActionsProps) => {
-  return (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onSubmit}
-        disabled={disabled}
-        loading={isCanceling}
-      >
-        Close Account
-      </Button>
-    </ActionsPanel>
-  );
-};
+// const Actions = ({
+//   disabled,
+//   isCanceling,
+//   onClose,
+//   onSubmit,
+// }: ActionsProps) => {
+//   return (
+//     <ActionsPanel>
+//       <Button buttonType="secondary" onClick={onClose}>
+//         Cancel
+//       </Button>
+//       <Button
+//         buttonType="primary"
+//         onClick={onSubmit}
+//         disabled={disabled}
+//         loading={isCanceling}
+//       >
+//         Close Account
+//       </Button>
+//     </ActionsPanel>
+//   );
+// };
 
 export default React.memo(CloseAccountDialog);

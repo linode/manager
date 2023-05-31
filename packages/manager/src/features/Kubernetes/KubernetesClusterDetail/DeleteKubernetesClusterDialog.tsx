@@ -121,8 +121,10 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       onClose={onClose}
       onClick={onDelete}
       loading={isDeleting}
-      error={error?.[0].reason}
+      // error={error?.[0].reason}
     >
+      {error ? <Notice error text={error?.[0].reason} /> : null}
+
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong>
