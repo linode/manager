@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import { defineConfig } from 'cypress';
 import { resolve } from 'path';
+// switch to import syntax when esModuleInterop": true
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const vitePreprocessor = require('cypress-vite');
 import * as dotenv from 'dotenv';
-
-// Dependencies used in hooks have to use `require()` syntax.
-const vitePreprocessor = require('cypress-vite'); // eslint-disable-line
-const fs = require('fs'); // eslint-disable-line
 
 /**
  * Returns a configuration object containing environment variables.
