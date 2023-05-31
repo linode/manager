@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useEventNotifications } from './NotificationData/useEventNotifications';
-import NotificationSection from './NotificationSection';
 import { notificationContext as _notificationContext } from './NotificationContext';
+import { useEventNotifications } from './NotificationData/useEventNotifications';
+import { NotificationSection } from './NotificationSection';
 
 const NUM_EVENTS_DISPLAY = 20;
 

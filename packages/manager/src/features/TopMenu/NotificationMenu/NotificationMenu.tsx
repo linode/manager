@@ -164,8 +164,7 @@ export const NotificationMenu = () => {
             >
               <Paper
                 sx={{
-                  padding: '20px',
-                  paddingTop: theme.spacing(2),
+                  padding: `${theme.spacing(2)} 0 0 0`,
                   paddingBottom: 0,
                 }}
               >

@@ -8,6 +8,7 @@ import {
   NodeBalancer,
 } from '@linode/api-v4';
 import { depaginate } from 'support/util/paginate';
+import { chooseRegion } from 'support/util/regions';
 
 export const makeNodeBalCreateReq = (nodeBal) => {
   const nodeBalData = nodeBal
@@ -16,7 +17,7 @@ export const makeNodeBalCreateReq = (nodeBal) => {
         client_conn_throttle: 0,
         label: randomLabel(),
         tags: [entityTag],
-        region: 'us-east',
+        region: chooseRegion().id,
         configs: [],
       };
 

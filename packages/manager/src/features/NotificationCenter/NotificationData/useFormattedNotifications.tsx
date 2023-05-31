@@ -1,29 +1,28 @@
+import * as React from 'react';
+import RenderNotification from './RenderNotification';
+import Typography from 'src/components/core/Typography';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import { checkIfMaintenanceNotification } from './notificationUtils';
+import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
+import { DateTime } from 'luxon';
+import { formatDate } from 'src/utilities/formatDate';
+import { Link } from 'src/components/Link';
+import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { notificationContext as _notificationContext } from '../NotificationContext';
+import { NotificationItem } from '../NotificationSection';
+import { path } from 'ramda';
+import { Profile } from '@linode/api-v4';
+import { Region } from '@linode/api-v4/lib/regions';
+import { reportException } from 'src/exceptionReporting';
+import { styled } from '@mui/material/styles';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import {
   Notification,
   NotificationSeverity,
   NotificationType,
 } from '@linode/api-v4/lib/account';
-import { Region } from '@linode/api-v4/lib/regions';
-import { DateTime } from 'luxon';
-import { path } from 'ramda';
-import * as React from 'react';
-import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme, styled } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import { Link } from 'src/components/Link';
-import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { reportException } from 'src/exceptionReporting';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import { useRegionsQuery } from 'src/queries/regions';
-import { formatDate } from 'src/utilities/formatDate';
-import { notificationContext as _notificationContext } from '../NotificationContext';
-import { NotificationItem } from '../NotificationSection';
-import { checkIfMaintenanceNotification } from './notificationUtils';
-import RenderNotification from './RenderNotification';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { Profile } from '@linode/api-v4';
-import { useProfile } from 'src/queries/profile';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
@@ -381,15 +380,7 @@ export const adjustSeverity = ({
   return severity;
 };
 
-const useComplianceNotificationStyles = makeStyles((theme: Theme) => ({
-  reviewUpdateButton: {
-    ...theme.applyLinkStyles,
-    minHeight: 0,
-  },
-}));
-
 const ComplianceNotification: React.FC<{}> = () => {
-  const classes = useComplianceNotificationStyles();
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
   return (
@@ -397,12 +388,12 @@ const ComplianceNotification: React.FC<{}> = () => {
       Please review the compliance update for guidance regarding the EU Standard
       Contractual Clauses and its application to users located in Europe as well
       as deployments in Linode’s London and Frankfurt data centers
-      <Button
-        className={classes.reviewUpdateButton}
+      <LinkStyledButton
         onClick={() => complianceModelContext.open()}
+        sx={{ minHeight: 0 }}
       >
         Review compliance update.
-      </Button>
+      </LinkStyledButton>
     </Typography>
   );
 };
