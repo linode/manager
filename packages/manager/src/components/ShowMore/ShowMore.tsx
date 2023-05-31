@@ -10,7 +10,7 @@ interface ShowMoreProps<T> {
   render: (items: T[]) => any;
 }
 
-export const ShowMore = <T extends unknown>(props: ShowMoreProps<T>) => {
+export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
   const { render, items, chipProps, ariaItemType } = props;
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
