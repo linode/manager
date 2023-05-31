@@ -5,6 +5,7 @@ import { authenticate } from 'support/api/authentication';
 import { interceptDeleteVolume } from 'support/intercepts/volumes';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
+import { chooseRegion } from 'support/util/regions';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -25,6 +26,7 @@ describe('volume delete flow', () => {
   it('deletes a volume', () => {
     const volumeRequest = volumeRequestPayloadFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
