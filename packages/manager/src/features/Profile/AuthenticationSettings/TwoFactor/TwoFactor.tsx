@@ -13,16 +13,19 @@ import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
 import { TwoFactorToggle } from './TwoFactorToggle';
 import { useQueryClient } from 'react-query';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
-import { StyledRootContainer, StyledCopy, useStyles } from './TwoFactor.styles';
+import {
+  StyledCTAWrapper,
+  StyledCopy,
+  StyledRootContainer,
+} from './TwoFactor.styles';
 
-interface Props {
-  username?: string;
-  twoFactor?: boolean;
+export interface TwoFactorProps {
   disabled?: boolean;
+  twoFactor?: boolean;
+  username?: string;
 }
 
-export const TwoFactor: React.FC<Props> = (props) => {
-  const { classes } = useStyles();
+export const TwoFactor = (props: TwoFactorProps) => {
   const needSecurityQuestionsCopy =
     'To use two-factor authentication you must set up your security questions listed below.';
   const { disabled, twoFactor, username } = props;
@@ -159,7 +162,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <div className={disabled ? classes.disabled : undefined}>
+      <StyledRootContainer {...props}>
         <Typography variant="h3" data-qa-title>
           Two-Factor Authentication (2FA)
         </Typography>
@@ -199,7 +202,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
           />
         )}
         {twoFactorEnabled && (
-          <StyledRootContainer>
+          <StyledCTAWrapper>
             <LinkStyledButton onClick={toggleHidden} data-qa-hide-show-code>
               {showQRCode
                 ? 'Hide QR Code'
@@ -207,7 +210,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
                 ? 'Reset two-factor authentication'
                 : 'Show QR Code'}
             </LinkStyledButton>
-          </StyledRootContainer>
+          </StyledCTAWrapper>
         )}
         {twoFactorEnabled &&
           showQRCode &&
@@ -223,7 +226,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
               toggleDialog={toggleScratchDialog}
             />
           )}
-      </div>
+      </StyledRootContainer>
       <ScratchDialog
         open={scratchDialogOpen}
         closeDialog={toggleScratchDialog}

@@ -15,7 +15,11 @@ const AuthenticationSettings = React.lazy(() =>
     default: module.AuthenticationSettings,
   }))
 );
-const APITokens = React.lazy(() => import('./APITokens/APITokens'));
+const APITokens = React.lazy(() =>
+  import('./APITokens/APITokens').then((module) => ({
+    default: module.APITokens,
+  }))
+);
 
 const Profile = (props: RouteComponentProps) => {
   const {
