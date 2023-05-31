@@ -847,7 +847,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://github.com/illacloud/illa-builder',
-    logo_url: 'illa.svg',
+    logo_url: 'illabuilder.svg',
     colors: {
       start: '654AEC',
       end: 'FF58BE',
