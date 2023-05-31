@@ -11,20 +11,6 @@ import { useProfile } from 'src/queries/profile';
 import { useSMSOptOutMutation } from 'src/queries/profile';
 import { useSnackbar } from 'notistack';
 
-const StyledButton = styled(Button, {
-  label: 'StyledButton',
-})(({ theme }) => ({
-  marginTop: theme.spacing(),
-  width: '150px',
-}));
-
-const StyledCopy = styled(Typography, {
-  label: 'StyledCopy',
-})(() => ({
-  maxWidth: 960,
-  lineHeight: '20px',
-}));
-
 export const SMSMessaging = () => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
@@ -133,3 +119,17 @@ export const SMSMessaging = () => {
     </>
   );
 };
+
+const StyledButton = styled(Button, {
+  label: 'StyledButton',
+})(({ theme }) => ({
+  marginTop: theme.spacing(),
+  width: '150px',
+}));
+
+const StyledCopy = styled(Typography, {
+  label: 'StyledCopy',
+})(() => ({
+  maxWidth: 960,
+  lineHeight: '20px',
+}));
