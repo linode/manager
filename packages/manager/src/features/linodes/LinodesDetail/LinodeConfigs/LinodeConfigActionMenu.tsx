@@ -2,11 +2,12 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { makeStyles, useTheme } from '@mui/styles';
+import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { useHistory } from 'react-router-dom';
+import Box from 'src/components/core/Box';
 
 interface Props {
   onEdit: () => void;
@@ -18,19 +19,9 @@ interface Props {
   label: string;
 }
 
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-}));
-
 export const ConfigActionMenu = (props: Props) => {
   const { readOnly, linodeId, config, onEdit, onBoot, onDelete } = props;
   const history = useHistory();
-
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -41,15 +32,11 @@ export const ConfigActionMenu = (props: Props) => {
   const actions: Action[] = [
     {
       title: 'Boot',
-      onClick: () => {
-        onBoot();
-      },
+      onClick: onBoot,
     },
     {
       title: 'Edit',
-      onClick: () => {
-        onEdit();
-      },
+      onClick: onEdit,
     },
     {
       title: 'Clone',
@@ -62,9 +49,7 @@ export const ConfigActionMenu = (props: Props) => {
     },
     {
       title: 'Delete',
-      onClick: () => {
-        onDelete();
-      },
+      onClick: onDelete,
       disabled: readOnly,
       tooltip,
     },
@@ -74,7 +59,7 @@ export const ConfigActionMenu = (props: Props) => {
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
-    <div className={classes.root}>
+    <Box display="flex" justifyContent="flex-end" alignItems="center">
       {!matchesSmDown &&
         inlineActions.map((action) => {
           return (
@@ -91,6 +76,6 @@ export const ConfigActionMenu = (props: Props) => {
         actionsList={menuActions}
         ariaLabel={`Action menu for Linode Config ${props.label}`}
       />
-    </div>
+    </Box>
   );
 };
