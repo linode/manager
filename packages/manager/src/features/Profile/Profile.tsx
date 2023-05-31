@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
 const Settings = React.lazy(() => import('./Settings'));
@@ -10,8 +10,10 @@ const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients/OAuthClients'));
 const LishSettings = React.lazy(() => import('./LishSettings'));
 const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
-const AuthenticationSettings = React.lazy(
-  () => import('./AuthenticationSettings')
+const AuthenticationSettings = React.lazy(() =>
+  import('./AuthenticationSettings/AuthenticationSettings').then((module) => ({
+    default: module.AuthenticationSettings,
+  }))
 );
 const APITokens = React.lazy(() => import('./APITokens/APITokens'));
 
