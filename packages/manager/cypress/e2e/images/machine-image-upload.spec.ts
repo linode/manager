@@ -4,18 +4,18 @@ import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
-import { regions } from 'support/constants/regions';
 import { fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { interceptOnce } from 'support/ui/common';
 import { apiMatcher } from 'support/util/intercepts';
-import { randomItem, randomLabel, randomPhrase } from 'support/util/random';
+import { randomLabel, randomPhrase } from 'support/util/random';
 import {
   mockGetImage,
   mockGetCustomImages,
   mockDeleteImage,
   mockUpdateImage,
 } from 'support/intercepts/images';
+import { chooseRegion } from 'support/util/regions';
 
 /**
  * Returns a numeric image ID from a string-based image ID.
@@ -113,14 +113,14 @@ const assertProcessing = (label: string, id: string) => {
  * @param label - Label to apply to uploaded image.
  */
 const uploadImage = (label: string) => {
-  const regionId = randomItem(regions);
+  const region = chooseRegion();
   const upload = 'testImage.gz';
   cy.visitWithLogin('/images/create/upload');
   getClick('[id="label"][data-testid="textfield-input"]').type(label);
   getClick('[id="description"]').type('This is a machine image upload test');
   fbtClick('Select a Region');
 
-  ui.regionSelect.findItemByRegionId(regionId).click();
+  ui.regionSelect.findItemByRegionId(region.id).click();
 
   // Pass `null` to `cy.fixture()` to ensure file is encoded as a Cypress buffer object.
   cy.fixture(upload, null).then((fileContent) => {

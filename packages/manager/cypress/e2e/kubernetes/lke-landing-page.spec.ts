@@ -5,7 +5,7 @@ import {
   mockGetKubeconfig,
 } from 'support/intercepts/lke';
 import { kubernetesClusterFactory, nodePoolFactory } from 'src/factories';
-import { regionsMap } from 'support/constants/regions';
+import { getRegionById } from 'support/util/regions';
 import { readDownload } from 'support/util/downloads';
 import { ui } from 'support/ui';
 
@@ -29,7 +29,9 @@ describe('LKE landing page', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText(regionsMap[cluster.region]).should('be.visible');
+          cy.findByText(getRegionById(cluster.region).name).should(
+            'be.visible'
+          );
           cy.findByText(cluster.k8s_version).should('be.visible');
 
           ui.button
