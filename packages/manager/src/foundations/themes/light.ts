@@ -1020,7 +1020,6 @@ export const lightTheme: ThemeOptions = {
           '& $checked': {
             color: primaryColors.main,
           },
-          // color: primaryColors.main,
           color: '#ccc',
           padding: '10px 10px',
           transition: theme.transitions.create(['color']),
