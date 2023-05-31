@@ -26,6 +26,11 @@ import {
   getObjectURL,
   ObjectStorageObjectURLOptions,
   ObjectStorageObjectURL,
+  getSSLCert,
+  ObjectStorageBucketSSLResponse,
+  uploadSSLCert,
+  ObjectStorageBucketSSLRequest,
+  deleteSSLCert,
 } from '@linode/api-v4';
 import { queryKey as accountSettingsQueryKey } from './accountSettings';
 
@@ -138,7 +143,7 @@ export const useObjectBucketDetailsInfiniteQuery = (
   prefix: string
 ) =>
   useInfiniteQuery<ObjectStorageObjectListResponse, APIError[]>(
-    [queryKey, cluster, bucket, ...prefixToQueryKey(prefix)],
+    [queryKey, cluster, bucket, 'objects', ...prefixToQueryKey(prefix)],
     ({ pageParam }) =>
       getObjectList(cluster, bucket, { marker: pageParam, delimiter, prefix }),
     {
@@ -249,3 +254,38 @@ export const useCreateObjectUrlMutation = (
   >(({ name, method, options }) =>
     getObjectURL(clusterId, bucketName, name, method, options)
   );
+
+export const useBucketSSLQuery = (cluster: string, bucket: string) =>
+  useQuery([queryKey, cluster, bucket, 'ssl'], () =>
+    getSSLCert(cluster, bucket)
+  );
+
+export const useBucketSSLMutation = (cluster: string, bucket: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ObjectStorageBucketSSLResponse,
+    APIError[],
+    ObjectStorageBucketSSLRequest
+  >((data) => uploadSSLCert(cluster, bucket, data), {
+    onSuccess(data) {
+      queryClient.setQueryData<ObjectStorageBucketSSLResponse>(
+        [queryKey, cluster, bucket, 'ssl'],
+        data
+      );
+    },
+  });
+};
+
+export const useBucketSSLDeleteMutation = (cluster: string, bucket: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[]>(() => deleteSSLCert(cluster, bucket), {
+    onSuccess() {
+      queryClient.setQueryData<ObjectStorageBucketSSLResponse>(
+        [queryKey, cluster, bucket, 'ssl'],
+        { ssl: false }
+      );
+    },
+  });
+};

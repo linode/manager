@@ -226,7 +226,7 @@ export const BucketDetail: React.FC = () => {
       pages: ObjectStorageObjectListResponse[];
       pageParams: string[];
     }>(
-      [queryKey, clusterId, bucketName, ...prefixToQueryKey(prefix)],
+      [queryKey, clusterId, bucketName, 'objects', ...prefixToQueryKey(prefix)],
       (data) => ({
         pages,
         pageParams: data?.pageParams || [],
