@@ -6419,11 +6419,12 @@ cypress-real-events@^1.7.0:
   resolved "https://registry.yarnpkg.com/cypress-real-events/-/cypress-real-events-1.7.6.tgz#6f17e0b2ceea1d6dc60f6737d8f84cc517bbbb4c"
   integrity sha512-yP6GnRrbm6HK5q4DH6Nnupz37nOfZu/xn1xFYqsE2o4G73giPWQOdu6375QYpwfU1cvHNCgyD2bQ2hPH9D7NMw==
 
-cypress-vite@^1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/cypress-vite/-/cypress-vite-1.3.2.tgz#7e7e94b36d2f01701258a4664c8385f9a947a545"
-  integrity sha512-PYQd4Y8vCVY+dHZyfrFQ1zPPLOpFFFyKcEeolQ/1UvrB2MELNsz9lj3LfqIpNc+tqO9pemt9nGmSspZS+4LNeQ==
+cypress-vite@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/cypress-vite/-/cypress-vite-1.4.0.tgz#4d2889d62c11aed7188b1082af16210240aac2e6"
+  integrity sha512-BHmOku8q6nRtDGPiBcE7zcAZs56/OsiX5SFoldHEMSQ+I6nnPUU2tcrRNeRsCArONQAvwTu2Da7R/rFGA/DSEg==
   dependencies:
+    chokidar "^3.5.3"
     debug "^4.3.4"
 
 cypress@^12.11.0:
