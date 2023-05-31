@@ -23,7 +23,7 @@ import {
   StyledPermissionsCell,
   StyledPermsTable,
   StyledSelectCell,
-} from './CreateAPITokenDrawer.styles';
+} from './APITokenDrawer.styles';
 import {
   Permission,
   permTuplesToScopeString,
