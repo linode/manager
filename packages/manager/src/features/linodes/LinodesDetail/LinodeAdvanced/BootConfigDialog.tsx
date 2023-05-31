@@ -27,6 +27,7 @@ export const BootConfigDialog = (props: Props) => {
     enqueueSnackbar(`Successfully booted config ${config?.label}`, {
       variant: 'success',
     });
+    onClose();
   };
 
   const actions = (

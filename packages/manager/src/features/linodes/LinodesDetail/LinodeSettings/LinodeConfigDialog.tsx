@@ -1,4 +1,5 @@
 import {
+  Config,
   Interface,
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
@@ -50,7 +51,6 @@ import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
 import KernelSelect from './KernelSelect';
 import { useQueryClient } from 'react-query';
 import {
-  useAllLinodeConfigsQuery,
   useAllLinodeKernelsQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
@@ -116,7 +116,7 @@ interface EditableFields {
 
 interface Props {
   open: boolean;
-  linodeConfigId?: number;
+  config: Config | undefined;
   onClose: () => void;
   linodeId: number;
   isReadOnly: boolean;
@@ -214,7 +214,7 @@ const deviceCounterDefault = 1;
 const finnixDiskID = 25669;
 
 export const LinodeConfigDialog = (props: Props) => {
-  const { open, onClose, linodeConfigId, isReadOnly, linodeId } = props;
+  const { open, onClose, config, isReadOnly, linodeId } = props;
 
   const { data: linode } = useLinodeQuery(linodeId);
 
@@ -230,19 +230,12 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { data: disks } = useAllLinodeDisksQuery(linodeId);
 
-  const { data: configs } = useAllLinodeConfigsQuery(
-    linodeId,
-    open && linodeConfigId !== undefined
-  );
-
-  const config = configs?.find((config) => config.id === linodeConfigId);
-
   const initrdFromConfig = config?.initrd ? String(config.initrd) : '';
 
   const { mutateAsync: createConfig } = useLinodeConfigCreateMutation(linodeId);
   const { mutateAsync: updateConfig } = useLinodeConfigUpdateMutation(
     linodeId,
-    linodeConfigId ?? -1
+    config?.id ?? -1
   );
 
   const classes = useStyles();
@@ -392,7 +385,7 @@ export const LinodeConfigDialog = (props: Props) => {
     };
 
     /** Editing */
-    if (linodeConfigId) {
+    if (config) {
       return updateConfig(configData).then(handleSuccess).catch(handleError);
     }
 
@@ -587,7 +580,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
   return (
     <Dialog
-      title={`${linodeConfigId ? 'Edit' : 'Add'} Configuration`}
+      title={`${config ? 'Edit' : 'Add'} Configuration`}
       open={open}
       onClose={onClose}
       fullHeight
@@ -1027,7 +1020,7 @@ export const LinodeConfigDialog = (props: Props) => {
           disabled={isReadOnly}
           loading={formik.isSubmitting}
         >
-          {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
+          {config ? 'Save Changes' : 'Add Configuration'}
         </Button>
       </StyledActionPanel>
     </Dialog>

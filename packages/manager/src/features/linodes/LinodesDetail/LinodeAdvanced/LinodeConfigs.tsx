@@ -195,7 +195,7 @@ const LinodeConfigs = () => {
       </OrderBy>
       <LinodeConfigDialog
         linodeId={id}
-        linodeConfigId={selectedConfigId}
+        config={selectedConfig}
         isReadOnly={isReadOnly}
         onClose={() => setIsLinodeConfigDialogOpen(false)}
         open={isLinodeConfigDialogOpen}
