@@ -2,7 +2,6 @@ import {
   Config,
   Disk,
   Interface,
-  Kernel,
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -62,6 +61,10 @@ import {
 import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
 import KernelSelect from './KernelSelect';
 import { useQueryClient } from 'react-query';
+import {
+  useAllLinodeKernelsQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -118,15 +121,10 @@ interface EditableFields {
 }
 
 interface Props {
-  linodeHypervisor: 'kvm' | 'xen';
-  linodeRegion: string;
-  maxMemory: number;
   open: boolean;
   linodeConfigId?: number;
   onClose: () => void;
-  kernels: Kernel[];
-  kernelError: APIError[] | null;
-  kernelsLoading: boolean;
+  linodeId: number;
 }
 
 type CombinedProps = LinodeContextProps & Props & StateProps;
@@ -228,12 +226,22 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     onClose,
     config,
     initrdFromConfig,
-    kernels,
     linodeConfigId,
-    linodeRegion,
-    maxMemory,
     readOnly,
+    linodeId,
   } = props;
+
+  const { data: linode } = useLinodeQuery(linodeId);
+
+  const {
+    data: kernels,
+    isLoading: kernelsLoading,
+    error: kernelsError,
+  } = useAllLinodeKernelsQuery(
+    {},
+    { [linode?.hypervisor ?? 'kvm']: true },
+    open && linode !== undefined
+  );
 
   const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];
@@ -252,7 +260,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const capabilities = account?.capabilities ?? [];
   const regionHasVLANS = regions.some(
     (thisRegion) =>
-      thisRegion.id === linodeRegion &&
+      thisRegion.id === linode?.region &&
       thisRegion.capabilities.includes('Vlans')
   );
   const showVlans = capabilities.includes('Vlans') && regionHasVLANS;
@@ -456,8 +464,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     }
   }, [open, config, initrdFromConfig, resetForm]);
 
-  const isLoading = props.kernelsLoading;
-
   const generalError = formik.status?.generalError;
 
   // We need the API to allow us to filter on `linode_id`
@@ -474,7 +480,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const { data: volumesData } = useAllVolumesQuery(
     {},
-    { region: linodeRegion },
+    { region: linode?.region },
     open
   );
 
@@ -588,7 +594,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       fullWidth
     >
       <Grid container direction="row">
-        <DialogContent loading={isLoading} errors={props.kernelError}>
+        <DialogContent loading={kernelsLoading} errors={kernelsError}>
           <React.Fragment>
             {generalError && (
               <Grid>
@@ -618,7 +624,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 value={values.comments}
                 onChange={formik.handleChange}
                 multiline={true}
-                rows={3}
+                rows={1.5}
                 errorText={formik.errors.comments}
                 errorGroup="linode-config-dialog"
                 disabled={readOnly}
@@ -764,9 +770,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   label="Memory Limit Allotment (in MB)"
                   value={values.memory_limit}
                   min={0}
-                  max={maxMemory}
+                  max={linode?.specs.memory}
                   onChange={formik.handleChange}
-                  helperText={`Max: ${maxMemory} MB`}
+                  helperText={`Max: ${linode?.specs.memory} MB`}
                   errorText={formik.errors.memory_limit}
                   disabled={readOnly}
                 />
@@ -896,7 +902,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                       key={`eth${idx}-interface`}
                       slotNumber={idx}
                       readOnly={readOnly}
-                      region={linodeRegion}
+                      region={linode?.region}
                       labelError={formik.errors[`interfaces[${idx}].label`]}
                       ipamError={
                         formik.errors[`interfaces[${idx}].ipam_address`]

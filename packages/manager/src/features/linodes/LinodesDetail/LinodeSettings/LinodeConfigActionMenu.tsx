@@ -1,17 +1,17 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import { splitAt } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
-  onEdit: (config: Config) => void;
-  onDelete: (id: number, label: string) => void;
-  onBoot: (configId: number, label: string) => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onBoot: () => void;
   config: Config;
   linodeId: number;
   readOnly?: boolean;
@@ -26,49 +26,29 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-const ConfigActionMenu: React.FC<CombinedProps> = (props) => {
-  const { readOnly, history, linodeId, config } = props;
+export const ConfigActionMenu = (props: Props) => {
+  const { readOnly, linodeId, config, onEdit, onBoot, onDelete } = props;
+  const history = useHistory();
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleEdit = React.useCallback(() => {
-    const { onEdit } = props;
-    onEdit(config);
-  }, [config, props]);
-
-  const handleBoot = React.useCallback(() => {
-    const { onBoot } = props;
-    const { id, label } = config;
-    onBoot(id, label);
-  }, [config, props]);
-
   const tooltip = readOnly
     ? "You don't have permission to perform this action"
     : undefined;
-
-  const handleDelete = () => {
-    const {
-      config: { id, label },
-      onDelete,
-    } = props;
-    onDelete(id, label);
-  };
 
   const actions: Action[] = [
     {
       title: 'Boot',
       onClick: () => {
-        handleBoot();
+        onBoot();
       },
     },
     {
       title: 'Edit',
       onClick: () => {
-        handleEdit();
+        onEdit();
       },
     },
     {
@@ -83,7 +63,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = (props) => {
     {
       title: 'Delete',
       onClick: () => {
-        handleDelete();
+        onDelete();
       },
       disabled: readOnly,
       tooltip,
@@ -114,5 +94,3 @@ const ConfigActionMenu: React.FC<CombinedProps> = (props) => {
     </div>
   );
 };
-
-export default withRouter(ConfigActionMenu);

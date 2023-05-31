@@ -1,13 +1,14 @@
-import { Config, Disk, Interface } from '@linode/api-v4/lib/linodes';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
+import { Config, Interface } from '@linode/api-v4/lib/linodes';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
+import { ConfigActionMenu } from '../LinodeSettings/LinodeConfigActionMenu';
+import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actionInner: {
@@ -31,31 +32,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   config: Config;
   linodeId: number;
-  linodeMemory: number;
   readOnly: boolean;
-  linodeDisks: Disk[];
-  linodeKernel: string;
+  onBoot: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-interface Handlers {
-  onBoot: (configId: number, label: string) => void;
-  onEdit: (config: Config) => void;
-  onDelete: (id: number, label: string) => void;
-}
+export const ConfigRow = (props: Props) => {
+  const { config, linodeId, onBoot, onEdit, onDelete, readOnly } = props;
 
-export type CombinedProps = Props & Handlers;
+  const { data: kernel } = useLinodeKernelQuery(config.kernel);
 
-export const ConfigRow: React.FC<CombinedProps> = (props) => {
-  const {
-    config,
-    linodeId,
-    linodeDisks,
-    linodeKernel,
-    onBoot,
-    onEdit,
-    onDelete,
-    readOnly,
-  } = props;
+  const { data: disks } = useAllLinodeDisksQuery(linodeId);
 
   const { data: volumes } = useLinodeVolumesQuery(linodeId, {
     // This is not great, but lets us get all of the volumes for a Linode while keeping the store paginated.
@@ -65,6 +53,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const interfaces = config?.interfaces ?? [];
+
   const validDevices = React.useMemo(
     () =>
       Object.keys(config.devices)
@@ -73,7 +62,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
           let label: string | null = null;
           if (device?.disk_id) {
             label =
-              linodeDisks.find(
+              disks?.find(
                 (thisDisk) =>
                   thisDisk.id === config.devices[thisDevice]?.disk_id
               )?.label ?? `disk-${device.disk_id}`;
@@ -95,7 +84,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
           );
         })
         .filter(Boolean),
-    [volumes, linodeDisks, classes.interfaceListItem, config.devices]
+    [volumes, disks, classes.interfaceListItem, config.devices]
   );
 
   const deviceLabels = React.useMemo(
@@ -127,14 +116,14 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
   return (
     <TableRow key={config.id} data-qa-config={config.label}>
       <TableCell>
-        {config.label} – {linodeKernel}
+        {config.label} – {kernel?.label ?? config.kernel}
       </TableCell>
       <TableCell>{deviceLabels}</TableCell>
       <TableCell>
-        {!isEmpty(interfaces) ? InterfaceList : defaultInterfaceLabel}
+        {interfaces.length > 0 ? InterfaceList : defaultInterfaceLabel}
       </TableCell>
       <TableCell className={classes.actionInner}>
-        <LinodeConfigActionMenu
+        <ConfigActionMenu
           config={config}
           linodeId={linodeId}
           onBoot={onBoot}
