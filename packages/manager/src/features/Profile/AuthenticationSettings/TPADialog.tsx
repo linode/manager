@@ -3,62 +3,52 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 import { Provider } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles()(() => ({
-  dialog: {
-    '& .dialog-content': {
-      paddingTop: 0,
-      paddingBottom: 0,
-    },
-  },
-  copy: {
-    lineHeight: '1.25rem',
+const StyledConfirmationDialog = styled(ConfirmationDialog, {
+  label: 'StyledConfirmationDialog',
+})(() => ({
+  '& .dialog-content': {
+    paddingTop: 0,
+    paddingBottom: 0,
   },
 }));
 
-export interface Props {
+export interface TPADialogProps {
   currentProvider: Provider;
   newProvider: TPAProvider;
-  open: boolean;
   onClose: () => void;
+  open: boolean;
 }
 
-type CombinedProps = Props;
-
-const TPADialog: React.FC<CombinedProps> = (props) => {
-  const { classes } = useStyles();
+export const TPADialog = (props: TPADialogProps) => {
   const flags = useFlags();
-
   const { currentProvider, newProvider, open, onClose } = props;
-
   // Get list of providers from LaunchDarkly
   const providers = flags.tpaProviders ?? [];
-
   const displayName =
     providers.find((thisProvider) => thisProvider.name === newProvider)
       ?.displayName ?? 'Linode';
 
   return (
-    <ConfirmationDialog
-      className={classes.dialog}
+    <StyledConfirmationDialog
       title={`Change login method to ${displayName}?`}
       actions={() => renderActions(onClose, newProvider)}
       open={open}
       onClose={onClose}
     >
-      <Typography className={classes.copy} variant="body1">
+      <Typography variant="body1" sx={{ lineHeight: '1.25rem' }}>
         This will disable your login via{' '}
         {currentProvider.displayName === 'Linode'
           ? 'username and password'
           : currentProvider.displayName}
         .
       </Typography>
-    </ConfirmationDialog>
+    </StyledConfirmationDialog>
   );
 };
 
@@ -98,5 +88,3 @@ const renderActions = (onClose: () => void, provider: TPAProvider) => {
     </ActionsPanel>
   );
 };
-
-export default React.memo(TPADialog);

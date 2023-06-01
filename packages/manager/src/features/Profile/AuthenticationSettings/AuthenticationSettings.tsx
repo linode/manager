@@ -2,7 +2,6 @@ import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Link from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
-import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import Typography from 'src/components/core/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -13,6 +12,7 @@ import { ResetPassword } from './ResetPassword';
 import { SecurityQuestions } from './SecurityQuestions/SecurityQuestions';
 import { SMSMessaging } from './SMSMessaging';
 import { styled } from '@mui/material/styles';
+import { TPAProviders } from './TPAProviders';
 import { TwoFactor } from './TwoFactor/TwoFactor';
 import { useProfile } from 'src/queries/profile';
 
