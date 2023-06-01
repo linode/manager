@@ -1,17 +1,22 @@
 import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
 import classNames from 'classnames';
 import UserIcon from 'src/assets/icons/account.svg';
-import { makeStyles } from '@mui/styles';
 import { getGravatarUrl } from 'src/utilities/gravatar';
-import Avatar from '@mui/material/Avatar';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles({
-  avatar: {
-    height: 28,
-    width: 28,
-    borderRadius: '50%',
-  },
-});
+interface Props {
+  height?: number;
+  width?: number;
+}
+
+const StyledAvatar = styled(Avatar, {
+  label: 'StyledAvatar',
+})<Partial<Props>>(({ height, width }) => ({
+  height: height || 28,
+  width: width || 28,
+  borderRadius: '50%',
+}));
 
 interface Props {
   email: string;
@@ -20,17 +25,15 @@ interface Props {
 
 export const GravatarByEmail = (props: Props) => {
   const { email, className } = props;
-  const classes = useStyles();
-
   const url = getGravatarUrl(email);
 
   return (
-    <Avatar
-      className={classNames(classes.avatar, className)}
+    <StyledAvatar
+      className={classNames(className)}
       src={url}
       alt={`Avatar for user ${email}`}
     >
       <UserIcon />
-    </Avatar>
+    </StyledAvatar>
   );
 };

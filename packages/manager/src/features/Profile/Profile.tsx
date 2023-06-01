@@ -9,7 +9,11 @@ const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients/OAuthClients'));
 const LishSettings = React.lazy(() => import('./LishSettings'));
-const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
+const DisplaySettings = React.lazy(() =>
+  import('./DisplaySettings/DisplaySettings').then((module) => ({
+    default: module.DisplaySettings,
+  }))
+);
 const AuthenticationSettings = React.lazy(() =>
   import('./AuthenticationSettings/AuthenticationSettings').then((module) => ({
     default: module.AuthenticationSettings,
