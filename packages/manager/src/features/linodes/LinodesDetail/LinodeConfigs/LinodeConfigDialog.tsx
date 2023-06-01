@@ -18,7 +18,7 @@ import FormGroup from 'src/components/core/FormGroup';
 import FormHelperText from 'src/components/core/FormHelperText';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
@@ -62,7 +62,7 @@ import {
   useLinodeConfigUpdateMutation,
 } from 'src/queries/linodes/configs';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     marginTop: theme.spacing(),
     marginLeft: 1,
@@ -240,7 +240,7 @@ export const LinodeConfigDialog = (props: Props) => {
     config?.id ?? -1
   );
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const regions = useRegionsQuery().data ?? [];
 
   const queryClient = useQueryClient();

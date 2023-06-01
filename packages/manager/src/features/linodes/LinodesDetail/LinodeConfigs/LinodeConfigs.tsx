@@ -15,13 +15,13 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
 import { BootConfigDialog } from './BootConfigDialog';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   tableCell: {
     borderRight: `1px solid ${theme.palette.divider}`,
     fontWeight: 'bold',
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const LinodeConfigs = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { linodeId } = useParams<{ linodeId: string }>();
 

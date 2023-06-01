@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Config, Interface } from '@linode/api-v4/lib/linodes';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -10,7 +10,7 @@ import { ConfigActionMenu } from './LinodeConfigActionMenu';
 import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   actionInner: {
     padding: '0 !important',
     '&.MuiTableCell-root': {
@@ -51,7 +51,7 @@ export const ConfigRow = React.memo((props: Props) => {
     page_size: API_MAX_PAGE_SIZE,
   });
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const interfaces = config?.interfaces ?? [];
 
   const validDevices = React.useMemo(
