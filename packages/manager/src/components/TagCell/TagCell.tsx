@@ -7,8 +7,8 @@ import classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Tag from 'src/components/Tag';
 import { IconButton } from 'src/components/IconButton';
+import { Tag } from 'src/components/Tag/Tag';
 import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
