@@ -1,31 +1,12 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { useQueryClient } from 'react-query';
+import { styled } from '@mui/material/styles';
+import { isPropValid } from 'src/utilities/isPropValid';
 
-const useStyles = makeStyles((_: Theme) => ({
-  root: {
-    width: '100%',
-    padding: '0px',
-  },
-  hasFixedMenu: {
-    '& .react-select__menu': {
-      margin: '2px 0 0 0',
-    },
-  },
-  inDetailsContext: {
-    width: '415px',
-    flexBasis: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-}));
-
-interface Props {
+interface AddTagProps {
   label?: string;
   tags: string[];
   onClose?: () => void;
@@ -34,11 +15,8 @@ interface Props {
   inDetailsContext?: boolean;
 }
 
-export type CombinedProps = Props;
-
-export const AddTag: React.FC<Props> = (props) => {
-  const classes = useStyles();
-  const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
+const AddTag = (props: AddTagProps) => {
+  const { addTag, label, onClose, tags, fixedMenu } = props;
 
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -74,14 +52,9 @@ export const AddTag: React.FC<Props> = (props) => {
   const loading = accountTagsLoading || isLoading;
 
   return (
-    <Select
+    <StyledSelect
       small
       escapeClearsValue
-      className={classNames({
-        [classes.root]: true,
-        [classes.hasFixedMenu]: fixedMenu,
-        [classes.inDetailsContext]: inDetailsContext,
-      })}
       onChange={handleAddTag}
       options={tagOptions}
       creatable
@@ -98,4 +71,26 @@ export const AddTag: React.FC<Props> = (props) => {
   );
 };
 
-export default AddTag;
+export { AddTag };
+
+const StyledSelect = styled(Select, {
+  shouldForwardProp: (prop) =>
+    isPropValid(['fixedMenu', 'inDetailsContext'], prop),
+})<{
+  fixedMenu?: boolean;
+  inDetailsContext?: boolean;
+}>(({ ...props }) => ({
+  width: '100%',
+  padding: '0px',
+  ...(props.fixedMenu && {
+    '& .react-select__menu': {
+      margin: '2px 0 0 0',
+    },
+  }),
+  ...(props.inDetailsContext && {
+    width: '415px',
+    flexBasis: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+  }),
+}));

@@ -8,7 +8,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { IconButton } from 'src/components/IconButton';
 import Tag from 'src/components/Tag';
 import { isPropValid } from 'src/utilities/isPropValid';
-import AddTag from './AddTag';
+import { AddTag } from './AddTag';
 
 interface TagCellProps {
   tags: string[];
