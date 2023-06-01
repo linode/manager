@@ -31,15 +31,10 @@ export const DeleteConfigDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel-delete>
+      <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
-      <Button
-        buttonType="primary"
-        onClick={onDelete}
-        loading={isLoading}
-        data-qa-confirm-delete
-      >
+      <Button buttonType="primary" onClick={onDelete} loading={isLoading}>
         Delete
       </Button>
     </ActionsPanel>

@@ -136,7 +136,6 @@ const LinodeConfigs = () => {
                           label={'label'}
                           direction={order}
                           handleClick={handleOrderChange}
-                          data-qa-config-label-header
                           className={classes.labelColumn}
                         >
                           <strong>Config</strong>

@@ -32,15 +32,10 @@ export const BootConfigDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button onClick={onClose} buttonType="secondary" data-qa-cancel-delete>
+      <Button onClick={onClose} buttonType="secondary">
         Cancel
       </Button>
-      <Button
-        buttonType="primary"
-        loading={isLoading}
-        onClick={onBoot}
-        data-qa-confirm-reboot
-      >
+      <Button buttonType="primary" loading={isLoading} onClick={onBoot}>
         Boot
       </Button>
     </ActionsPanel>
