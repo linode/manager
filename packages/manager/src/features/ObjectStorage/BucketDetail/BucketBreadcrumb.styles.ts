@@ -65,7 +65,7 @@ export const StyledCopied = styled(Typography, {
   position: 'absolute',
   boxShadow: `0 0 5px ${theme.color.boxShadow}`,
   transition: 'opacity .5s ease-in-out',
-  animation: '$popUp 200ms ease-in-out forwards',
+  animation: 'popUp 200ms ease-in-out forwards',
   '@keyframes popUp': {
     from: {
       opacity: 0,
