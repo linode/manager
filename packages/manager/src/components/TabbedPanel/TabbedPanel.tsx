@@ -116,9 +116,18 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledTabList = styled(TabList)(({ theme }) => ({
-  '&[data-reach-tab-list]': {
+  'div &[data-reach-tab-list]': {
+    boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
     marginTop: 22,
-    marginBottom: `${theme.spacing(3)} !important`,
+    marginBottom: theme.spacing(3),
+    '&button': {
+      '&:focus': {
+        backgroundColor: theme.bg.tableHeader,
+      },
+      '&:hover': {
+        backgroundColor: `red !important`,
+      },
+    },
   },
 }));
 
