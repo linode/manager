@@ -15,23 +15,23 @@ const StyledAvatar = styled(Avatar, {
 })<Partial<Props>>(({ height, width }) => ({
   height: height || 28,
   width: width || 28,
-  borderRadius: '50%',
 }));
 
 interface Props {
-  email: string;
   className?: string;
+  email: string;
 }
 
 export const GravatarByEmail = (props: Props) => {
-  const { email, className } = props;
+  const { className, email, height, width } = props;
   const url = getGravatarUrl(email);
 
   return (
     <StyledAvatar
+      alt={`Avatar for user ${email}`}
       className={classNames(className)}
       src={url}
-      alt={`Avatar for user ${email}`}
+      sx={{ height, width }}
     >
       <UserIcon />
     </StyledAvatar>

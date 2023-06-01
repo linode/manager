@@ -67,7 +67,7 @@ export const DisplaySettings = () => {
       <Box
         display="flex"
         sx={{
-          gap: 16,
+          gap: 2,
           marginTop: theme.spacing(),
           marginBottom: theme.spacing(4),
         }}
