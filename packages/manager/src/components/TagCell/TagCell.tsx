@@ -6,7 +6,7 @@ import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { IconButton } from 'src/components/IconButton';
-import Tag from 'src/components/Tag';
+import { Tag } from 'src/components/Tag/Tag';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { AddTag } from './AddTag';
 

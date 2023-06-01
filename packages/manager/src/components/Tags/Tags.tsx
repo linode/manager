@@ -1,7 +1,7 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import ShowMore from 'src/components/ShowMore';
-import Tag from 'src/components/Tag';
+import { Tag } from 'src/components/Tag/Tag';
 
 export interface TagsProps {
   tags: string[];

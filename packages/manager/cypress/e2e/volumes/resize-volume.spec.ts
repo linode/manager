@@ -4,6 +4,7 @@ import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptResizeVolume } from 'support/intercepts/volumes';
 import { randomNumber, randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -25,6 +26,7 @@ describe('volume resize flow', () => {
 
     const volumeRequest = volumeRequestPayloadFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
       size: oldSize,
     });
 
