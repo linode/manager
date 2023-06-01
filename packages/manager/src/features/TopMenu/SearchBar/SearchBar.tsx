@@ -69,13 +69,17 @@ export const selectStyles = {
     border: 0,
   }),
   dropdownIndicator: () => ({ display: 'none' }),
-  placeholder: (base: any) => ({ ...base, fontSize: '0.875rem' }),
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: '0.875rem',
+    color: base?.palette?.text?.primary,
+  }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
 const searchDeps: ReduxEntity[] = ['linodes'];
 
-export const SearchBar: React.FC<CombinedProps> = (props) => {
+export const SearchBar = (props: CombinedProps) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
   const [searchText, setSearchText] = React.useState<string>('');
