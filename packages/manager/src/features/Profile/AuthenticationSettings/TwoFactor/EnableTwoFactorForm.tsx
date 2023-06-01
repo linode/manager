@@ -1,9 +1,9 @@
 import * as React from 'react';
-import ConfirmToken from './ConfirmToken';
 import Divider from 'src/components/core/Divider';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { ConfirmToken } from './ConfirmToken';
 import { confirmTwoFactor } from '@linode/api-v4/lib/profile';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { Notice } from 'src/components/Notice/Notice';
@@ -91,7 +91,6 @@ export const EnableTwoFactorForm = (props: Props) => {
         handleChange={handleTokenInputChange}
         onCancel={props.onCancel}
         onSubmit={onSubmit}
-        updateFor={[token, tokenError, submitting]}
       />
     </React.Fragment>
   );

@@ -1,23 +1,13 @@
-import { TPAProvider } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import useFlags from 'src/hooks/useFlags';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { LOGIN_ROOT } from 'src/constants';
 import { Provider } from 'src/featureFlags';
-import useFlags from 'src/hooks/useFlags';
 import { styled } from '@mui/material/styles';
-
-const StyledConfirmationDialog = styled(ConfirmationDialog, {
-  label: 'StyledConfirmationDialog',
-})(() => ({
-  '& .dialog-content': {
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
-}));
-
+import { TPAProvider } from '@linode/api-v4/lib/profile';
 export interface TPADialogProps {
   currentProvider: Provider;
   newProvider: TPAProvider;
@@ -88,3 +78,12 @@ const renderActions = (onClose: () => void, provider: TPAProvider) => {
     </ActionsPanel>
   );
 };
+
+const StyledConfirmationDialog = styled(ConfirmationDialog, {
+  label: 'StyledConfirmationDialog',
+})(() => ({
+  '& .dialog-content': {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+}));
