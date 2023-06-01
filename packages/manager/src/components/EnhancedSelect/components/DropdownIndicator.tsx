@@ -2,7 +2,7 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material/styles';
 
 export const DropdownIndicator = styled(KeyboardArrowDown)(() => ({
-  color: '#aaa',
+  color: '#aaa !important',
   width: 28,
   height: 28,
   opacity: 0.5,
