@@ -8,7 +8,11 @@ const SSHKeys = React.lazy(() => import('./SSHKeys'));
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients/OAuthClients'));
-const LishSettings = React.lazy(() => import('./LishSettings'));
+const LishSettings = React.lazy(() =>
+  import('./LishSettings/LishSettings').then((module) => ({
+    default: module.LishSettings,
+  }))
+);
 const DisplaySettings = React.lazy(() =>
   import('./DisplaySettings/DisplaySettings').then((module) => ({
     default: module.DisplaySettings,
