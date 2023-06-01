@@ -21,7 +21,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import LandingHeader from 'src/components/LandingHeader';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
-import Radio from 'src/components/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import TextField from 'src/components/TextField';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
