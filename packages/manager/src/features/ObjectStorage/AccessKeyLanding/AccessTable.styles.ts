@@ -1,8 +1,8 @@
-import { makeStyles } from 'tss-react/mui';
 import { styled } from '@mui/material/styles';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
-import { Theme } from '@mui/material/styles';
+import { TableRow } from 'src/components/TableRow';
+import type { MODE } from './types';
 
 export const StyledTableRoot = styled(Table, {
   label: 'StyledTableRoot',
@@ -23,16 +23,19 @@ export const StyledBucketCell = styled(TableCell, {
   width: '28%',
 }));
 
+export const StyledRadioRow = styled(TableRow, {
+  label: 'StyledRadioRow',
+})<{ disabled: boolean; mode?: MODE }>(({ theme, disabled, mode }) => ({
+  ...(disabled &&
+    mode !== 'viewing' && {
+      backgroundColor: theme.bg.tableHeader,
+      cursor: 'not-allowed',
+      opacity: 0.4,
+    }),
+}));
+
 export const StyledRadioCell = styled(TableCell, {
   label: 'StyledRadioCell',
 })(() => ({
   width: '18%',
-}));
-
-export const useStyles = makeStyles()((theme: Theme) => ({
-  disabledRow: {
-    backgroundColor: theme.bg.tableHeader,
-    cursor: 'not-allowed',
-    opacity: 0.4,
-  },
 }));

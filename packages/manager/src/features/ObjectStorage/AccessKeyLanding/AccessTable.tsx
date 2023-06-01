@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { AccessCell } from './AccessCell';
 import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
-import { MODE } from './types';
 import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -12,9 +11,10 @@ import {
   StyledBucketCell,
   StyledClusterCell,
   StyledRadioCell,
+  StyledRadioRow,
   StyledTableRoot,
-  useStyles,
 } from './AccessTable.styles';
+import type { MODE } from './types';
 
 export const getUpdatedScopes = (
   oldScopes: Scope[],
@@ -47,8 +47,6 @@ interface TableProps {
 
 export const AccessTable = React.memo((props: TableProps) => {
   const { checked, mode, bucket_access, updateScopes } = props;
-
-  const { classes } = useStyles();
 
   if (!bucket_access) {
     return null;
@@ -91,10 +89,7 @@ export const AccessTable = React.memo((props: TableProps) => {
       </TableHead>
       <TableBody>
         {mode === 'creating' && (
-          <TableRow
-            data-qa-row="Select All"
-            className={disabled ? classes.disabledRow : undefined}
-          >
+          <StyledRadioRow data-qa-row="Select All" disabled={disabled}>
             <TableCell parentColumn="Cluster" padding="checkbox" colSpan={2}>
               <strong>Select All</strong>
             </TableCell>
@@ -140,17 +135,16 @@ export const AccessTable = React.memo((props: TableProps) => {
                 }}
               />
             </TableCell>
-          </TableRow>
+          </StyledRadioRow>
         )}
         {bucket_access.map((thisScope) => {
           const scopeName = `${thisScope.cluster}-${thisScope.bucket_name}`;
           return (
-            <TableRow
+            <StyledRadioRow
               key={scopeName}
               data-testid={scopeName}
-              className={
-                disabled && mode !== 'viewing' ? classes.disabledRow : undefined
-              }
+              disabled={disabled}
+              mode={mode}
             >
               <StyledClusterCell padding="checkbox">
                 {thisScope.cluster}
@@ -203,7 +197,7 @@ export const AccessTable = React.memo((props: TableProps) => {
                   }
                 />
               </StyledRadioCell>
-            </TableRow>
+            </StyledRadioRow>
           );
         })}
       </TableBody>
