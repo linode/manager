@@ -1,3 +1,4 @@
+import { Linode } from '@linode/api-v4';
 import {
   CreateDomainPayload,
   Domain,
@@ -6,28 +7,29 @@ import {
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
-import Grid from '@mui/material/Unstable_Grid2';
-import Paper from 'src/components/core/Paper';
-import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import LandingHeader from 'src/components/LandingHeader';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
+import Paper from 'src/components/core/Paper';
+import RadioGroup from 'src/components/core/RadioGroup';
 import { reportException } from 'src/exceptionReporting';
-import { LinodeSelect } from 'src/components/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
+import { LinodeSelectNew } from 'src/features/linodes/LinodeSelect/LinodeSelect.new';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -43,8 +45,6 @@ import {
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { generateDefaultDomainRecords } from '../domainUtils';
-import LandingHeader from 'src/components/LandingHeader';
-import { Linode } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -422,7 +422,7 @@ export const CreateDomain = () => {
             {isCreatingPrimaryDomain &&
               defaultRecordsSetting.value === 'linode' && (
                 <React.Fragment>
-                  <LinodeSelect
+                  <LinodeSelectNew
                     errorText={errorMap.defaultLinode}
                     handleChange={(value) =>
                       setSelectedDefaultLinode(value ?? undefined)

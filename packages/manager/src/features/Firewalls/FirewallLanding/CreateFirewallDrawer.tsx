@@ -7,16 +7,16 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
+import { LinodeSelectNew } from 'src/features/linodes/LinodeSelect/LinodeSelect.new';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile';
-import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { useCreateFirewall } from 'src/queries/firewalls';
-import { LinodeSelect } from 'src/components/LinodeSelect/LinodeSelect';
+import { getEntityIdsByPermission } from 'src/utilities/grants';
 
 export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
   'Only Linodes you have permission to modify are shown.';
@@ -161,7 +161,7 @@ const CreateFirewallDrawer = (props: Props) => {
             autoFocus: true,
           }}
         />
-        <LinodeSelect
+        <LinodeSelectNew
           multiple
           disabled={userCannotAddFirewall}
           helperText={firewallHelperText}

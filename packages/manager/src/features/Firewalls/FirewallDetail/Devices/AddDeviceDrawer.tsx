@@ -1,22 +1,22 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useParams } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { getEntityIdsByPermission } from 'src/utilities/grants';
-import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
-import { useParams } from 'react-router-dom';
+import { LinodeSelectNew } from 'src/features/linodes/LinodeSelect/LinodeSelect.new';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
   useFirewallQuery,
 } from 'src/queries/firewalls';
-import { useTheme } from '@mui/material/styles';
-import { LinodeSelect } from 'src/components/LinodeSelect/LinodeSelect';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
 
 interface Props {
   open: boolean;
@@ -126,7 +126,7 @@ export const AddDeviceDrawer = (props: Props) => {
         }}
       >
         {errorMessage ? errorNotice(errorMessage) : null}
-        <LinodeSelect
+        <LinodeSelectNew
           multiple
           handleChange={(linodes) =>
             setSelectedLinodeIds(linodes.map((linode) => linode.id))

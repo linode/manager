@@ -12,11 +12,11 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
-import { LinodeSelect } from 'src/components/LinodeSelect/LinodeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
+import { LinodeSelectNew } from 'src/features/linodes/LinodeSelect/LinodeSelect.new';
 import useFlags from 'src/hooks/useFlags';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -244,7 +244,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       ) : null}
       {notice ? <Notice success text={notice} data-qa-notice /> : null}
 
-      <LinodeSelect
+      <LinodeSelectNew
         value={selectedLinode?.id || null}
         errorText={linodeError}
         disabled={!canCreateImage}

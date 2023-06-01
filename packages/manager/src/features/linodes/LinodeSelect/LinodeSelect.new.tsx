@@ -1,3 +1,9 @@
+/**
+ * The plan is to eventually replace the existing `LinodeSelect` and
+ * `LinodeMultiSelect` components with this one. Once that happens,
+ * remove 'new' from this component's name.
+ */
+
 import { Filter, Linode } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
@@ -39,7 +45,7 @@ interface LinodeSingleSelectProps {
   handleChange: (selected: Linode | null) => void;
 }
 
-export const LinodeSelect = (props: LinodeSelectProps) => {
+export const LinodeSelectNew = (props: LinodeSelectProps) => {
   const {
     value,
     handleChange,
