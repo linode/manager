@@ -6,7 +6,11 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
 const Settings = React.lazy(() => import('./Settings'));
-const Referrals = React.lazy(() => import('./Referrals'));
+const Referrals = React.lazy(() =>
+  import('./Referrals/Referrals').then((module) => ({
+    default: module.Referrals,
+  }))
+);
 const OAuthClients = React.lazy(() => import('./OAuthClients/OAuthClients'));
 const LishSettings = React.lazy(() =>
   import('./LishSettings/LishSettings').then((module) => ({
