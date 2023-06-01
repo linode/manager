@@ -55,7 +55,7 @@ The styles for Cloud Manager are located in three places:
 
 ### Writing a Custom Event
 
-Custom events live (mostly) in `analytics.ts`. Try to write and export custom events in this file if possible, and import them in the component(s) where they are used.
+Custom events live (mostly) in `src/utilities/analytics.ts`. Try to write and export custom events in this file if possible, and import them in the component(s) where they are used.
 
 ```tsx
 // Component.tsx {file(s) where the event is called, for quick reference}
@@ -63,7 +63,7 @@ Custom events live (mostly) in `analytics.ts`. Try to write and export custom ev
 
 sendDescriptiveNameEvent () => {
       category: '{Descriptive/Page Name}',
-      action: '{interaction; e.g. Click, Hover, Focus}:{input type; e.g. button, link, toggle, checkbox, text field}',
+      action: '{interaction such as Click, Hover, Focus}:{input type such as button, link, toggle, checkbox, text field} e.g. Click:link',
       label: '{string associated with the event; e.g event label} (optional)',
       value: '{number associated with the event; e.g. size of a volume} (optional)',
 }
