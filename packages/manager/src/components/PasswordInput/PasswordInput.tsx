@@ -11,7 +11,7 @@ interface Props extends TextFieldProps {
   hideValidation?: boolean;
 }
 
-const PasswordInput = React.memo((props: Props) => {
+const PasswordInput = (props: Props) => {
   const {
     value,
     required,
@@ -46,7 +46,7 @@ const PasswordInput = React.memo((props: Props) => {
       )}
     </Grid>
   );
-});
+};
 
 const maybeStrength = (value: Props['value']) => {
   if (!value) {
