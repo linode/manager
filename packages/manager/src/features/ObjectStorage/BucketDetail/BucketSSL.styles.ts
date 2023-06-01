@@ -1,9 +1,16 @@
+import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import TextField from 'src/components/TextField';
 import { styled } from '@mui/material/styles';
 
-export const StyledWrapper = styled('div', {
-  label: 'StyledWrapper',
+export const StyledHelperText = styled(Typography, {
+  label: 'StyledHelperText',
+})(({ theme }) => ({
+  paddingTop: theme.spacing(),
+  lineHeight: 1.5,
+}));
+
+export const StyledFieldsWrapper = styled('div', {
+  label: 'StyledTextFieldWrapper',
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
@@ -12,12 +19,6 @@ export const StyledWrapper = styled('div', {
   [theme.breakpoints.down('lg')]: {
     justifyContent: 'flex-start',
   },
-}));
-
-export const StyledTextArea = styled(TextField, {
-  label: 'StyledTextArea',
-})(() => ({
-  minWidth: '100%',
 }));
 
 export const StyledCertWrapper = styled(Grid, {

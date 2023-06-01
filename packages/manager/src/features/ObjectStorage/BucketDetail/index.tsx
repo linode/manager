@@ -13,7 +13,11 @@ import type { ComponentType, LazyExoticComponent } from 'react';
 const ObjectList: LazyExoticComponent<ComponentType<any>> = React.lazy(() =>
   import('./BucketDetail').then((module) => ({ default: module.BucketDetail }))
 );
-const BucketSSL = React.lazy(() => import('./BucketSSL'));
+const BucketSSL = React.lazy(() =>
+  import('./BucketSSL').then((module) => ({
+    default: module.BucketSSL,
+  }))
+);
 
 interface MatchProps {
   clusterId: ObjectStorageClusterID;

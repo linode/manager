@@ -8,67 +8,38 @@ import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'src/components/TextField';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { ObjectStorageBucketSSLRequest } from '@linode/api-v4/lib/object-storage';
+import { useTheme } from '@mui/material/styles';
+import {
+  StyledCertWrapper,
+  StyledFieldsWrapper,
+  StyledHelperText,
+  StyledKeyWrapper,
+} from './BucketSSL.styles';
 import {
   useBucketSSLDeleteMutation,
   useBucketSSLMutation,
   useBucketSSLQuery,
 } from 'src/queries/objectStorage';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(3),
-  },
-  helperText: {
-    paddingTop: theme.spacing(),
-    lineHeight: 1.5,
-  },
-  textArea: {
-    minWidth: '100%',
-  },
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    flexFlow: 'row wrap',
-    [theme.breakpoints.down('lg')]: {
-      justifyContent: 'flex-start',
-    },
-  },
-  certWrapper: {
-    paddingRight: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
-      padding: 0,
-    },
-  },
-  keyWrapper: {
-    paddingLeft: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
-      padding: 0,
-    },
-  },
-}));
-
 interface Props {
   bucketName: string;
   clusterId: string;
 }
 
-const BucketSSL = (props: Props) => {
+export const BucketSSL = (props: Props) => {
   const { bucketName, clusterId } = props;
-  const classes = useStyles();
+  const theme = useTheme();
 
   return (
-    <Paper className={classes.root}>
+    <Paper sx={{ padding: theme.spacing(3) }}>
       <Typography variant="h2">SSL/TLS Certificate</Typography>
-      <Typography className={classes.helperText}>
+      <StyledHelperText>
         Object Storage buckets are automatically served with a default TLS
         certificate that is valid for subdomains of linodeobjects.com. You can
         upload a custom certificate that will be used for the TLS portion of the
@@ -80,7 +51,7 @@ const BucketSSL = (props: Props) => {
           text="custom certificates for Object Storage buckets"
         />
         .
-      </Typography>
+      </StyledHelperText>
       <SSLBody bucketName={bucketName} clusterId={clusterId} />
     </Paper>
   );
@@ -88,9 +59,7 @@ const BucketSSL = (props: Props) => {
 
 export const SSLBody = (props: Props) => {
   const { bucketName, clusterId } = props;
-
   const { data, isLoading, error } = useBucketSSLQuery(clusterId, bucketName);
-
   const hasSSL = Boolean(data?.ssl);
 
   if (isLoading) {
@@ -111,8 +80,6 @@ export const SSLBody = (props: Props) => {
 const AddCertForm = (props: Props) => {
   const { bucketName, clusterId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const classes = useStyles();
-
   const { mutateAsync, isLoading, error } = useBucketSSLMutation(
     clusterId,
     bucketName
@@ -140,8 +107,8 @@ const AddCertForm = (props: Props) => {
         <Notice error text={errorMap.none} spacingTop={8} spacingBottom={0} />
       )}
       <div>
-        <div className={classes.wrapper}>
-          <Grid xs={12} md={6} className={classes.certWrapper}>
+        <StyledFieldsWrapper>
+          <StyledCertWrapper xs={12} md={6}>
             <TextField
               label="Certificate"
               name="certificate"
@@ -150,26 +117,26 @@ const AddCertForm = (props: Props) => {
               multiline
               fullWidth={false}
               rows="3"
-              className={classes.textArea}
               data-testid="ssl-cert-input"
               errorText={errorMap.certificate}
+              sx={{ '& > div': { minWidth: '100%' } }}
             />
-          </Grid>
-          <Grid xs={12} md={6} className={classes.keyWrapper}>
+          </StyledCertWrapper>
+          <StyledKeyWrapper xs={12} md={6}>
             <TextField
               label="Private Key"
               name="private_key"
               fullWidth
               onChange={formik.handleChange}
               value={formik.values.private_key}
-              className={classes.textArea}
               multiline
               rows="3"
               data-testid="ssl-cert-input"
               errorText={errorMap.private_key}
+              sx={{ '& > div': { minWidth: '100%' } }}
             />
-          </Grid>
-        </div>
+          </StyledKeyWrapper>
+        </StyledFieldsWrapper>
         <Grid>
           <ActionsPanel>
             <Button loading={isLoading} buttonType="primary" type="submit">
@@ -186,7 +153,6 @@ const RemoveCertForm = (props: Props) => {
   const { bucketName, clusterId } = props;
   const [open, setOpen] = React.useState(false);
   const { enqueueSnackbar } = useSnackbar();
-
   const {
     mutateAsync: deleteSSLCert,
     isLoading,
@@ -244,5 +210,3 @@ const RemoveCertForm = (props: Props) => {
     </>
   );
 };
-
-export default React.memo(BucketSSL);
