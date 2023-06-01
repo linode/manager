@@ -1,56 +1,37 @@
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
+import EditSSHKeyDrawer from './EditSSHKeyDrawer';
 import Grid from '@mui/material/Unstable_Grid2';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
+import Hidden from 'src/components/core/Hidden';
+import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
+import SSHKeyCreationDrawer from './CreateSSHKeyDrawer';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
-import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
+import Typography from 'src/components/core/Typography';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
-import SSHKeyCreationDrawer from './CreateSSHKeyDrawer';
-import { useSSHKeysQuery } from 'src/queries/profile';
-import { usePagination } from 'src/hooks/usePagination';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { parseAPIDate } from 'src/utilities/date';
-import EditSSHKeyDrawer from './EditSSHKeyDrawer';
+import { styled } from '@mui/material/styles';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { usePagination } from 'src/hooks/usePagination';
+import { useSSHKeysQuery } from 'src/queries/profile';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  sshKeysHeader: {
-    margin: 0,
-    width: '100%',
-  },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-      paddingRight: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
-}));
+const PREFERENCE_KEY = 'ssh-keys';
 
-const preferenceKey = 'ssh-keys';
-
-const SSHKeys = () => {
-  const { classes } = useStyles();
-
+export const SSHKeys = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
   const [selectedKeyId, setSelectedKeyId] = React.useState(-1);
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
   const params = {
     page: pagination.page,
@@ -71,7 +52,7 @@ const SSHKeys = () => {
     setIsEditDrawerOpen(true);
   };
 
-  const renderTableBody = () => {
+  const renderTableBody = React.useCallback(() => {
     if (isLoading) {
       return <TableRowLoading columns={4} />;
     }
@@ -109,7 +90,7 @@ const SSHKeys = () => {
         </TableCell>
       </TableRow>
     ));
-  };
+  }, [data, error, isLoading]);
 
   return (
     <>
@@ -118,15 +99,18 @@ const SSHKeys = () => {
         container
         alignItems="flex-end"
         justifyContent="flex-end"
-        className={classes.sshKeysHeader}
         spacing={2}
+        sx={{
+          margin: 0,
+          width: '100%',
+        }}
       >
-        <Grid className={classes.addNewWrapper}>
+        <StyledAddNewWrapperGridItem>
           <AddNewLink
             label="Add an SSH Key"
             onClick={() => setIsCreateDrawerOpen(true)}
           />
-        </Grid>
+        </StyledAddNewWrapperGridItem>
       </Grid>
       <Table>
         <TableHead>
@@ -168,4 +152,12 @@ const SSHKeys = () => {
   );
 };
 
-export default SSHKeys;
+const StyledAddNewWrapperGridItem = styled(Grid)(({ theme }) => ({
+  '&.MuiGrid-item': {
+    paddingTop: 0,
+    paddingRight: 0,
+  },
+  [theme.breakpoints.down('md')]: {
+    marginRight: theme.spacing(),
+  },
+}));

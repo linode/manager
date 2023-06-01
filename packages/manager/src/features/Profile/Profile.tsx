@@ -4,7 +4,11 @@ import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-const SSHKeys = React.lazy(() => import('./SSHKeys'));
+const SSHKeys = React.lazy(() =>
+  import('./SSHKeys/SSHKeys').then((module) => ({
+    default: module.SSHKeys,
+  }))
+);
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() =>
   import('./Referrals/Referrals').then((module) => ({
