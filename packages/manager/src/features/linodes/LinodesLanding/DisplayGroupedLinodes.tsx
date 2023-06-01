@@ -20,8 +20,8 @@ import {
 } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableRow } from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { DialogType } from 'src/features/linodes/types';
+import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';

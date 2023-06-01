@@ -15,7 +15,7 @@ import {
   getProgressOrDefault,
   linodeInTransition,
   transitionText,
-} from 'src/features/linodes/transitions';
+} from 'src/features/Linodes/transitions';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';

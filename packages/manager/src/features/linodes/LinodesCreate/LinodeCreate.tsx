@@ -29,8 +29,8 @@ import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { getMonthlyAndHourlyNodePricing } from 'src/features/linodes/LinodesCreate/utilities';
-import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
+import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
+import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,

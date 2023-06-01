@@ -33,7 +33,7 @@ import {
   ResizeLinodeDisk,
   UpdateLinodeDisk,
   withLinodeDetailContext,
-} from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+} from 'src/features/Linodes/LinodesDetail/linodeDetailContext';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEvent } from 'src/utilities/ga';
 import LinodeDiskDrawer from './LinodeDiskDrawer';

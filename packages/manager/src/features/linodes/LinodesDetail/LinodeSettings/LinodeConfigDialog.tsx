@@ -37,8 +37,8 @@ import TextField from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import DeviceSelection, {
   ExtendedDisk,
-} from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import { titlecase } from 'src/features/linodes/presentation';
+} from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { titlecase } from 'src/features/Linodes/presentation';
 import { useAccount } from 'src/queries/account';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';

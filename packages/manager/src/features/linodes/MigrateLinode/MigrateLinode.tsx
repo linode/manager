@@ -14,8 +14,8 @@ import Typography from 'src/components/core/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
-import { displayType } from 'src/features/linodes/presentation';
+import { addUsedDiskSpace } from 'src/features/Linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
+import { displayType } from 'src/features/Linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import useFlags from 'src/hooks/useFlags';
 import {

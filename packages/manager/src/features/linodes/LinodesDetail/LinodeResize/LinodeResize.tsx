@@ -32,8 +32,8 @@ import {
   WithTypesProps,
 } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { linodeInTransition } from 'src/features/linodes/transitions';
+import SelectPlanPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel';
+import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';

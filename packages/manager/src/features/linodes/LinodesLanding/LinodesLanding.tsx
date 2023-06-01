@@ -22,7 +22,7 @@ import {
 } from 'src/containers/profile.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups';
-import { DialogType } from 'src/features/linodes/types';
+import { DialogType } from 'src/features/Linodes/types';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import { MapState } from 'src/store/types';
@@ -32,7 +32,7 @@ import {
 } from 'src/utilities/ga';
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
-import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
+import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
 import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';

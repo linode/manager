@@ -35,7 +35,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import {
   DeleteLinodeConfig,
   withLinodeDetailContext,
-} from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+} from 'src/features/Linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';

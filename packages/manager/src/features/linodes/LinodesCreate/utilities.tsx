@@ -3,7 +3,7 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { displayType } from 'src/features/linodes/presentation';
+import { displayType } from 'src/features/Linodes/presentation';
 import { ExtendedType } from 'src/utilities/extendType';
 import { ExtendedLinode } from './types';
 

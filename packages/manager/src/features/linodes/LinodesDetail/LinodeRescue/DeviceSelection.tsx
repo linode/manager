@@ -4,7 +4,7 @@ import { defaultTo } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { titlecase } from 'src/features/linodes/presentation';
+import { titlecase } from 'src/features/Linodes/presentation';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 export interface ExtendedDisk extends Disk {

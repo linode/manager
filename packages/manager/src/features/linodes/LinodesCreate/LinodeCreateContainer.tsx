@@ -39,7 +39,7 @@ import withAgreements, {
 } from 'src/features/Account/Agreements/withAgreements';
 import withLabelGenerator, {
   LabelProps,
-} from 'src/features/linodes/LinodesCreate/withLabelGenerator';
+} from 'src/features/Linodes/LinodesCreate/withLabelGenerator';
 import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import {
   queryKey as accountAgreementsQueryKey,

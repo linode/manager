@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
-import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
+import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
 import {
   PowerActionsDialog,
   Action,
-} from 'src/features/linodes/PowerActionsDialogOrDrawer';
+} from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
-import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
+import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import LinodeResize from '../LinodeResize/LinodeResize';

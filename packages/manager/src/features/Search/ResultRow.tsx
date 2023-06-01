@@ -9,7 +9,7 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
-import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

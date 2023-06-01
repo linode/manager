@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import Grid from '@mui/material/Unstable_Grid2';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import { withLinodeDetailContext } from 'src/features/Linodes/LinodesDetail/linodeDetailContext';
 import LinodeConfigs from './LinodeConfigs';
 
 type CombinedProps = LinodeContextProps;

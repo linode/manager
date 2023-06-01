@@ -18,7 +18,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyS
 import TableRowError from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import { withLinodeDetailContext } from 'src/features/Linodes/LinodesDetail/linodeDetailContext';
 import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
 import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';

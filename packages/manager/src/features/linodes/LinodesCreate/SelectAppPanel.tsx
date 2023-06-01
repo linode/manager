@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Loading from 'src/components/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
-import AppPanelSection from 'src/features/linodes/LinodesCreate/AppPanelSection';
+import AppPanelSection from 'src/features/Linodes/LinodesCreate/AppPanelSection';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import Panel from './Panel';
 import { AppsData } from './types';

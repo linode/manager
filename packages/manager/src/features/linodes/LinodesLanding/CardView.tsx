@@ -4,7 +4,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
-import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
+import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
 import { useProfile } from 'src/queries/profile';
 import { RenderLinodesProps } from './DisplayLinodes';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
