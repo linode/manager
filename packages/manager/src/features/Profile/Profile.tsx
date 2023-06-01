@@ -9,7 +9,11 @@ const SSHKeys = React.lazy(() =>
     default: module.SSHKeys,
   }))
 );
-const Settings = React.lazy(() => import('./Settings'));
+const Settings = React.lazy(() =>
+  import('./Settings/Settings').then((module) => ({
+    default: module.ProfileSettings,
+  }))
+);
 const Referrals = React.lazy(() =>
   import('./Referrals/Referrals').then((module) => ({
     default: module.Referrals,
