@@ -6,7 +6,7 @@ import RadioGroup from 'src/components/core/RadioGroup';
 import Drawer from 'src/components/Drawer';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
-import Radio from 'src/components/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import TextField from 'src/components/TextField';
 import { useFormik } from 'formik';

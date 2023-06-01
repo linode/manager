@@ -17,7 +17,7 @@ import { Currency } from 'src/components/Currency';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
-import Radio from 'src/components/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';

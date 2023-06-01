@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import * as React from 'react';
 import Check from 'src/assets/icons/monitor-ok.svg';
-import Radio from 'src/components/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({

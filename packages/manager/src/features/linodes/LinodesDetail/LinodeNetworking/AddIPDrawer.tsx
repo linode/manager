@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Radio from 'src/components/core/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';

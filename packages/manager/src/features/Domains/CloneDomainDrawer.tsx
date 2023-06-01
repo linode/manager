@@ -3,7 +3,7 @@ import Drawer from 'src/components/Drawer/Drawer';
 import RadioGroup from 'src/components/core/RadioGroup';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import TextField from 'src/components/TextField';
-import Radio from 'src/components/Radio/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button/Button';
 import { useCloneDomainMutation } from 'src/queries/domains';
