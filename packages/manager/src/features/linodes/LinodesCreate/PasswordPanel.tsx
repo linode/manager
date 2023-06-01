@@ -3,9 +3,12 @@ import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
-const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 import RenderGuard from 'src/components/RenderGuard';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+
+const PasswordInput = React.lazy(
+  () => import('src/components/PasswordInput/PasswordInput')
+);
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 

@@ -1,36 +1,17 @@
-import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Props as TextFieldProps } from 'src/components/TextField';
 import zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
-import HideShowText from './HideShowText';
+import { Props as TextFieldProps } from 'src/components/TextField';
+import { HideShowText } from './HideShowText';
 
-type Props = TextFieldProps & {
-  value?: string | undefined;
-  required?: boolean;
+interface Props extends TextFieldProps {
   disabledReason?: string | JSX.Element;
-  tooltipInteractive?: boolean;
   hideStrengthLabel?: boolean;
   hideValidation?: boolean;
-};
+}
 
-const useStyles = makeStyles(() => ({
-  usernameInput: {
-    display: 'none',
-  },
-}));
-
-type CombinedProps = Props;
-
-const PasswordInput: React.FC<CombinedProps> = (props) => {
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (props.onChange) {
-      props.onChange(e);
-    }
-  };
-
+const PasswordInput = React.memo((props: Props) => {
   const {
     value,
     required,
@@ -41,28 +22,16 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
     ...rest
   } = props;
 
-  const classes = useStyles();
-
   const strength = React.useMemo(() => maybeStrength(value), [value]);
 
   return (
     <Grid container spacing={1}>
       <Grid xs={12}>
-        <input
-          type="text"
-          name="name"
-          aria-hidden="true"
-          autoComplete="off"
-          className={classes.usernameInput}
-          value="root"
-          readOnly
-        />
         <HideShowText
           {...rest}
           tooltipText={disabledReason}
           tooltipInteractive={tooltipInteractive}
           value={value}
-          onChange={onChange}
           fullWidth
           required={required}
         />
@@ -77,14 +46,14 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
       )}
     </Grid>
   );
-};
+});
 
-const maybeStrength = (value?: string) => {
-  if (!value || isEmpty(value)) {
+const maybeStrength = (value: Props['value']) => {
+  if (!value) {
     return null;
   }
 
-  return zxcvbn(value).score;
+  return zxcvbn(String(value)).score;
 };
 
 export default React.memo(PasswordInput);
