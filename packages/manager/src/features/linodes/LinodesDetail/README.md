@@ -23,7 +23,7 @@ The context also exposes handlers that are preconfigured for the current Linode.
 withLinodeDetailContext is a high-order component that takes a function which allows you to map the Linode Detail Context object to props.
 
 ```jsx
-// src/features/linodes/LinodesDetail/MyComponent.tsx
+// src/features/Linodes/LinodesDetail/MyComponent.tsx
 /** Hooks used for berevity, they are not used in this PR. */
 import { withLinodeDetailContext } from './context'
 
@@ -51,7 +51,7 @@ export default enhanced(myComponent);
 The `LinodeDetailContextConsumer` is a render function as children component which allows you to subscribe the wrapped component to prop changes.
 
 ```jsx
-// src/features/linodes/LinodesDetail/MyComponent.tsx
+// src/features/Linodes/LinodesDetail/MyComponent.tsx
 /** Hooks used for berevity, they are not used in this PR. */
 import { LinodeDetailContextConsumer } from './context'
 
@@ -77,7 +77,7 @@ export default myComponent;
 **N**ot **Y**et **I**mplemented - This is an example of what the Linode Detail Context usage could look like with hooks. This is possible, with all of 1 line of code, but you should wait for Enzyme to be updated for Hooks or agree on a [new testing strategy](https://github.com/kentcdodds/react-testing-library).
 
 ```jsx
-// src/features/linodes/LinodesDetail/MyComponent.tsx
+// src/features/Linodes/LinodesDetail/MyComponent.tsx
 import { LinodeDetailContextConsumer } from './context';
 
 const MyComponent = props => {
