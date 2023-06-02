@@ -166,7 +166,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     failed: (e) =>
       `${formatEventWithAppendedText(
         e,
-        `Error creating Image ${e?.secondary_entity?.label ?? ''}.`,
+        `There was a problem creating Image ${
+          e?.secondary_entity?.label ?? ''
+        }.`,
         'Learn more about image technical specifications',
         'https://www.linode.com/docs/products/tools/images/#technical-specifications'
       )}`,

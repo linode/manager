@@ -71,6 +71,15 @@ const cloudInitTooltipMessage = (
     service. <Link to="/">Learn how.</Link>
   </Typography>
 );
+
+const imageSizeLimitsMessage = (
+  <Typography>
+    Image files must be raw disk images (.img) compressed using gzip (.gz). The
+    maximum file size is 5 GB (compressed) and maximum image size is 6 GB
+    (uncompressed).
+  </Typography>
+);
+
 export interface Props {
   label: string;
   description: string;
@@ -271,12 +280,11 @@ export const ImageUpload: React.FC<Props> = (props) => {
             />
           ) : null}
 
+          <Notice warning spacingTop={24} sx={{ fontSize: '0.875rem' }}>
+            {imageSizeLimitsMessage}
+          </Notice>
+
           <Typography className={classes.helperText}>
-            Image files must be raw disk images (.img) compressed using gzip
-            (.gz). The maximum file size is 5 GB (compressed) and maximum image
-            size is 6 GB (uncompressed).
-            <br />
-            <br />
             Custom Images are billed at $0.10/GB per month based on the
             uncompressed image size.
           </Typography>

@@ -114,7 +114,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               eventStatus: event.status,
               persistFailureMessage: true,
               successMessage: `Image ${secondaryLabel} created successfully.`,
-              failureMessage: `Error creating Image ${secondaryLabel}.`,
+              failureMessage: `There was a problem creating Image ${secondaryLabel}.`,
               link: formatLink(
                 'Learn more about image technical specifications.',
                 'https://www.linode.com/docs/products/tools/images/#technical-specifications'
