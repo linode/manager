@@ -1,3 +1,18 @@
+import * as React from 'react';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import Drawer from 'src/components/Drawer';
+import TextField from 'src/components/TextField';
+import Typography from 'src/components/core/Typography';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { confirmObjectStorage } from '../utilities';
+import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
+import { Formik } from 'formik';
+import { LimitedAccessControls } from './LimitedAccessControls';
+import { MODE } from './types';
+import { Notice } from 'src/components/Notice/Notice';
+import { useAccountSettings } from 'src/queries/accountSettings';
+import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import {
   AccessType,
   ObjectStorageBucket,
@@ -5,36 +20,20 @@ import {
   ObjectStorageKeyRequest,
   Scope,
 } from '@linode/api-v4/lib/object-storage';
-import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
-import { Formik } from 'formik';
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
-import Typography from 'src/components/core/Typography';
-import Drawer from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
-import { useAccountSettings } from 'src/queries/accountSettings';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import EnableObjectStorageModal from '../EnableObjectStorageModal';
-import { confirmObjectStorage } from '../utilities';
-import LimitedAccessControls from './LimitedAccessControls';
-import { MODE } from './types';
-export interface Props {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
+
+export interface AccessKeyDrawerProps {
+  isRestrictedUser: boolean;
   mode: MODE;
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
   objectStorageKey?: ObjectStorageKey;
-  isRestrictedUser: boolean;
+  onClose: () => void;
+  onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
+  open: boolean;
 }
-
-type CombinedProps = Props;
 
 interface FormState {
   label: string;
@@ -66,7 +65,7 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
     }))
     .sort(sortByCluster);
 
-export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
+export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const {
     isRestrictedUser,
     open,
@@ -261,5 +260,3 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
     </Drawer>
   );
 };
-
-export default React.memo(AccessKeyDrawer);

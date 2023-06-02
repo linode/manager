@@ -1,27 +1,18 @@
 import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu/';
+import ActionMenu from 'src/components/ActionMenu/';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import { styled } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: 0,
-  },
-}));
-
-export interface Props {
-  onRemove: () => void;
-  onDetails: () => void;
-  label: string;
+export interface BucketActionMenuProps {
   cluster: string;
+  label: string;
+  onDetails: () => void;
+  onRemove: () => void;
 }
 
-export const BucketActionMenu: React.FC<Props> = (props) => {
-  const classes = useStyles();
-
+export const BucketActionMenu = (props: BucketActionMenuProps) => {
   const actions: Action[] = [
     {
       title: 'Details',
@@ -38,7 +29,7 @@ export const BucketActionMenu: React.FC<Props> = (props) => {
   ];
 
   return (
-    <div className={classes.root}>
+    <StyledRootContainer>
       <Hidden mdDown>
         <InlineMenuAction
           actionText="Details"
@@ -59,8 +50,14 @@ export const BucketActionMenu: React.FC<Props> = (props) => {
           ariaLabel={`Action menu for Bucket ${props.label}`}
         />
       </Hidden>
-    </div>
+    </StyledRootContainer>
   );
 };
 
-export default BucketActionMenu;
+const StyledRootContainer = styled('div', {
+  label: 'StyledRootContainer',
+})(() => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  padding: 0,
+}));
