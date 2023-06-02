@@ -324,13 +324,28 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
             <Box className={classes.searchAndFilter}>
               <Box className={classes.search}>
                 <DebouncedSearchTextField
-                  placeholder="Search for app name"
+                  placeholder={
+                    appInstancesLoading ? 'Loading...' : 'Search for app name'
+                  }
                   fullWidth
                   onSearch={this.onSearch}
                   label="Search marketplace"
                   onClick={handleSearchFieldClick}
                   hideLabel
                   value={query}
+                  disabled={appInstancesLoading}
+                  sx={
+                    appInstancesLoading
+                      ? {
+                          '& input': {
+                            cursor: 'not-allowed',
+                          },
+                          '& svg': {
+                            opacity: 0.5,
+                          },
+                        }
+                      : null
+                  }
                 />
               </Box>
               <Box className={classes.filter}>
