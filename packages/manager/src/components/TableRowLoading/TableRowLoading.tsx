@@ -13,13 +13,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export interface Props {
+export interface TableRowLoadingProps {
   columns?: number;
   rows?: number;
   responsive?: Record<number, HiddenProps>;
 }
 
-export const TableRowLoading: React.FC<Props> = ({
+export const TableRowLoading: React.FC<TableRowLoadingProps> = ({
   rows = 1,
   columns = 1,
   responsive,
