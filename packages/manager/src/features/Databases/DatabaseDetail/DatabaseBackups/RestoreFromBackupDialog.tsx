@@ -10,11 +10,6 @@ import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-// import ActionsPanel from 'src/components/ActionsPanel';
-// import Button from 'src/components/Button';
-// import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-// import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-// import { usePreferences } from 'src/queries/preferences';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -24,14 +19,9 @@ interface Props extends Omit<DialogProps, 'title'> {
 }
 
 export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
-  // const { database, backup, onClose, open, ...rest } = props;
   const { database, backup, onClose, open } = props;
-
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-
-  // const [confirmationText, setConfirmationText] = React.useState('');
-  // const { data: preferences } = usePreferences();
   const { data: profile } = useProfile();
 
   const {
@@ -53,71 +43,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
     });
   };
 
-  // const actions = (
-  //   <ActionsPanel style={{ padding: 0 }}>
-  //     <Button buttonType="secondary" onClick={onClose}>
-  //       Cancel
-  //     </Button>
-  //     <Button
-  //       buttonType="primary"
-  //       onClick={handleRestoreDatabase}
-  //       disabled={
-  //         preferences?.type_to_confirm !== false &&
-  //         confirmationText !== database.label
-  //       }
-  //       loading={isLoading}
-  //     >
-  //       Restore Database
-  //     </Button>
-  //   </ActionsPanel>
-  // );
-
-  // React.useEffect(() => {
-  //   if (open) {
-  //     setConfirmationText('');
-  //   }
-  // }, [open]);
-
   return (
-    // <ConfirmationDialog
-    //   {...rest}
-    //   title={`Restore from Backup ${formatDate(backup.created, {
-    //     timezone: profile?.timezone,
-    //   })}`}
-    //   open={open}
-    //   onClose={onClose}
-    //   actions={actions}
-    // >
-    //   {error ? (
-    //     <Notice
-    //       error
-    //       text={
-    //         getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0]
-    //           .reason
-    //       }
-    //     />
-    //   ) : null}
-    //   <Notice warning>
-    //     <Typography style={{ fontSize: '0.875rem' }}>
-    //       <strong>Warning:</strong> Restoring from a backup will erase all
-    //       existing data on this cluster.
-    //     </Typography>
-    //   </Notice>
-    //   <TypeToConfirm
-    //     confirmationText={
-    //       <span>
-    //         To confirm restoration, type the name of the database cluster (
-    //         <strong>{database.label}</strong>) in the field below.
-    //       </span>
-    //     }
-    //     onChange={(input) => setConfirmationText(input)}
-    //     value={confirmationText}
-    //     label="Database Label"
-    //     visible={preferences?.type_to_confirm}
-    //     placeholder={database.label}
-    //   />
-    // </ConfirmationDialog>
-
     <TypeToConfirmDialog
       title={`Restore from Backup ${formatDate(backup.created, {
         timezone: profile?.timezone,
