@@ -32,7 +32,9 @@ export const getStackScripts = (params?: Params, filter?: Filter) =>
  */
 export const getStackScript = (stackscriptId: number) =>
   Request<StackScript>(
-    setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
+    setURL(
+      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`
+    ),
     setMethod('GET')
   );
 
@@ -77,7 +79,9 @@ export const updateStackScript = (
   payload: Partial<StackScriptPayload>
 ) =>
   Request<StackScript>(
-    setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
+    setURL(
+      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`
+    ),
     setMethod('PUT'),
     setData(payload, updateStackScriptSchema)
   );
@@ -89,6 +93,8 @@ export const updateStackScript = (
  */
 export const deleteStackScript = (stackscriptId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
+    setURL(
+      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`
+    ),
     setMethod('DELETE')
   );
