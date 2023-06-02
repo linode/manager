@@ -1,7 +1,7 @@
 import { Link } from '@reach/router';
 import * as React from 'react';
-import TabList from 'src/components/core/ReachTabList';
 import { Tab } from 'src/components/core/ReachTab';
+import { TabList } from 'src/components/core/ReachTabList';
 
 export interface Tab {
   title: string;
