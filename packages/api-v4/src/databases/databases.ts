@@ -61,7 +61,7 @@ export const getDatabaseTypes = (params?: Params, filter?: Filter) =>
  */
 export const getDatabaseType = (typeSlug: string) =>
   Request<DatabaseType>(
-    setURL(`${API_ROOT}/databases/types/${typeSlug}`),
+    setURL(`${API_ROOT}/databases/types/${encodeURIComponent(typeSlug)}`),
     setMethod('GET')
   );
 
@@ -87,7 +87,7 @@ export const getDatabaseEngines = (params?: Params, filter?: Filter) =>
  */
 export const getDatabaseEngine = (engineSlug: string) =>
   Request<DatabaseEngine>(
-    setURL(`${API_ROOT}/databases/engines/${engineSlug}`),
+    setURL(`${API_ROOT}/databases/engines/${encodeURIComponent(engineSlug)}`),
     setMethod('GET')
   );
 
@@ -102,7 +102,7 @@ export const createDatabase = (
   data: CreateDatabasePayload
 ) =>
   Request<Database>(
-    setURL(`${API_ROOT}/databases/${engine}/instances`),
+    setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
     setData(data, createDatabaseSchema)
   );
@@ -119,7 +119,7 @@ export const getEngineDatabases = (
   filter?: Filter
 ) =>
   Request<Page<Database>>(
-    setURL(`${API_ROOT}/databases/${engine}/instances`),
+    setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
@@ -133,7 +133,11 @@ export const getEngineDatabases = (
  */
 export const getEngineDatabase = (engine: Engine, databaseID: number) =>
   Request<Database>(
-    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}`
+    ),
     setMethod('GET')
   );
 
@@ -150,7 +154,11 @@ export const updateDatabase = (
   data: UpdateDatabasePayload
 ) =>
   Request<UpdateDatabaseResponse>(
-    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}`
+    ),
     setMethod('PUT'),
     setData(data, updateDatabaseSchema)
   );
@@ -162,7 +170,11 @@ export const updateDatabase = (
  */
 export const deleteDatabase = (engine: Engine, databaseID: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}`
+    ),
     setMethod('DELETE')
   );
 
@@ -179,7 +191,11 @@ export const getDatabaseBackups = (
   filter?: Filter
 ) =>
   Request<Page<DatabaseBackup>>(
-    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups`),
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}/backups`
+    ),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
@@ -198,7 +214,11 @@ export const getDatabaseBackup = (
 ) =>
   Request<DatabaseBackup>(
     setURL(
-      `${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/${backupID}`
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(
+        databaseID
+      )}/backups/${encodeURIComponent(backupID)}`
     ),
     setMethod('GET')
   );
@@ -215,7 +235,11 @@ export const restoreWithBackup = (
 ) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/${backupID}/restore`
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(
+        databaseID
+      )}/backups/${encodeURIComponent(backupID)}/restore`
     ),
     setMethod('POST')
   );
@@ -229,7 +253,9 @@ export const restoreWithBackup = (
 export const getDatabaseCredentials = (engine: Engine, databaseID: number) =>
   Request<DatabaseCredentials>(
     setURL(
-      `${API_ROOT}/databases/${engine}/instances/${databaseID}/credentials`
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}/credentials`
     ),
     setMethod('GET')
   );
@@ -242,7 +268,9 @@ export const getDatabaseCredentials = (engine: Engine, databaseID: number) =>
 export const resetDatabaseCredentials = (engine: Engine, databaseID: number) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/databases/${engine}/instances/${databaseID}/credentials/reset`
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}/credentials/reset`
     ),
     setMethod('POST')
   );
@@ -254,6 +282,10 @@ export const resetDatabaseCredentials = (engine: Engine, databaseID: number) =>
  */
 export const getSSLFields = (engine: Engine, databaseID: number) =>
   Request<SSLFields>(
-    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/ssl`),
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}/ssl`
+    ),
     setMethod('GET')
   );
