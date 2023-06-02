@@ -40,6 +40,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export interface NotificationItem {
+  originalId: number;
   id: string;
   body: string | JSX.Element;
   countInTotal: boolean;
@@ -48,8 +49,11 @@ export interface NotificationItem {
 interface NotificationSectionProps {
   header: string;
   count?: number;
-  showMoreText?: string;
-  showMoreTarget?: string;
+  showMore?: {
+    text: string;
+    target: string;
+    onClick?: () => void;
+  };
   content: NotificationItem[];
   loading?: boolean;
   emptyMessage?: string;
@@ -58,15 +62,7 @@ interface NotificationSectionProps {
 export const NotificationSection = (props: NotificationSectionProps) => {
   const { classes } = useStyles();
 
-  const {
-    content,
-    count,
-    header,
-    emptyMessage,
-    loading,
-    showMoreText,
-    showMoreTarget,
-  } = props;
+  const { content, count, header, emptyMessage, loading, showMore } = props;
 
   const _count = count ?? 5;
   const _loading = Boolean(loading); // false if not provided
@@ -99,14 +95,15 @@ export const NotificationSection = (props: NotificationSectionProps) => {
               <Box sx={{ width: '100%' }}>
                 <StyledHeader>
                   <Typography variant="h3">{header}</Typography>
-                  {showMoreTarget && (
+                  {showMore && (
                     <strong>
                       <Link
-                        to={showMoreTarget}
+                        to={showMore.target}
                         className={classes.menuItemLink}
                         style={{ padding: 0 }}
+                        onClick={showMore.onClick}
                       >
-                        {showMoreText ?? 'View history'}
+                        {showMore.text}
                       </Link>
                     </strong>
                   )}

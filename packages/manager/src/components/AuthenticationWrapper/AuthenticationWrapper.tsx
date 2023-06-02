@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
-import { connect, MapDispatchToProps } from 'react-redux';
+import * as React from 'react';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -11,8 +11,8 @@ import {
   withApplicationStore,
 } from 'src/containers/withApplicationStore.container';
 import {
-  withQueryClient,
   WithQueryClientProps,
+  withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';

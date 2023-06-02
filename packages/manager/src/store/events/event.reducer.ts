@@ -33,7 +33,10 @@ export const defaultState: State = {
   requestDeadline: Date.now(),
 };
 
-const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
+const reducer: Reducer<State> = (
+  state = defaultState,
+  action: AnyAction
+): State => {
   if (isType(action, addEvents)) {
     const { payload: events } = action;
     const {
@@ -46,10 +49,8 @@ const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
     return {
       ...state,
       events: updatedEvents,
-      mostRecentEventTime: events.reduce(
-        mostRecentCreated,
-        mostRecentEventTime
-      ),
+      mostRecentEventTime:
+        events.reduce(mostRecentCreated, mostRecentEventTime) ?? 0,
       countUnseenEvents: getNumUnseenEvents(updatedEvents),
       inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
     };

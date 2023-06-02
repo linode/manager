@@ -1,7 +1,6 @@
-import { Event, getEvents } from '@linode/api-v4/lib/account';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import { Event } from '@linode/api-v4/lib/account';
+import { Filter } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
@@ -20,12 +19,11 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { ApplicationState } from 'src/store';
-import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
-import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -53,224 +51,41 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  getEventsRequest?: typeof getEvents;
-  // isEventsLandingForEntity?: boolean;
+interface EventsLandingProps {
+  filter?: Filter;
   entityId?: number;
   errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
 }
 
-type CombinedProps = Props & StateProps & WithSnackbarProps;
+type CombinedProps = EventsLandingProps & StateProps & WithSnackbarProps;
 
-const appendToEvents = (oldEvents: Event[], newEvents: Event[]) =>
-  rCompose<Event[], Event[], Event[], Event[]>(
-    uniq, // Ensure no duplicates
-    concat(oldEvents), // Attach the new events
-    setDeletedEvents // Add a _deleted entry for each new event
-  )(newEvents);
-
-export interface ReducerState {
-  inProgressEvents: Record<number, number>;
-  eventsFromRedux: ExtendedEvent[];
-  reactStateEvents: Event[];
-  mostRecentEventTime: string;
-}
-
-interface Payload {
-  inProgressEvents: Record<number, number>;
-  eventsFromRedux: ExtendedEvent[];
-  reactStateEvents: Event[];
-  mostRecentEventTime: string;
-  entityId?: number;
-}
-
-export interface ReducerActions {
-  type: 'append' | 'prepend';
-  payload: Payload;
-}
-
-type EventsReducer = React.Reducer<ReducerState, ReducerActions>;
-
-export const reducer: EventsReducer = (state, action) => {
+export const EventsLanding = (props: CombinedProps) => {
   const {
-    payload: {
-      eventsFromRedux: nextReduxEvents,
-      inProgressEvents: nextInProgressEvents,
-      reactStateEvents: nextReactEvents,
-      mostRecentEventTime: nextMostRecentEventTime,
-      entityId,
-    },
-  } = action;
+    entitiesLoading,
+    errorMessage,
+    entityId,
+    emptyMessage,
+    filter,
+  } = props;
 
-  switch (action.type) {
-    case 'prepend':
-      if (
-        shouldUpdateEvents(
-          {
-            mostRecentEventTime: state.mostRecentEventTime,
-            inProgressEvents: state.inProgressEvents,
-          },
-          {
-            mostRecentEventTime: nextMostRecentEventTime,
-            inProgressEvents: nextInProgressEvents,
-          }
-        )
-      ) {
-        return {
-          eventsFromRedux: nextReduxEvents,
-          inProgressEvents: nextInProgressEvents,
-          mostRecentEventTime: nextMostRecentEventTime,
-          reactStateEvents: filterUniqueEvents([
-            /*
-              Pop new events from Redux on the top of the event stream, with some conditions
-            */
-            ...nextReduxEvents.filter((eachEvent) => {
-              return (
-                /** all events from Redux will have this flag as a boolean value */
-                !eachEvent._initial &&
-                /**
-                 * so here we're basically determining whether or not
-                 * an entityID prop was passed, and if so, only show the events
-                 * that pertain to that entity. This is useful because it helps
-                 * us show only relevant events on the Linode Activity panel, for example
-                 */
-                (typeof entityId === 'undefined' ||
-                  (eachEvent.entity && eachEvent.entity.id === entityId))
-              );
-            }),
-            /*
-            at this point, the state is populated with events from the cDM
-            request (which don't include the "_initial flag"), but it might also
-            contain events from Redux as well. We only want the ones where the "_initial"
-            flag doesn't exist
-            */
-            ...nextReactEvents.filter(
-              (eachEvent) => typeof eachEvent._initial === 'undefined'
-            ),
-          ]),
-        };
-      }
-      return {
-        eventsFromRedux: nextReduxEvents,
-        reactStateEvents: nextReactEvents,
-        inProgressEvents: nextInProgressEvents,
-        mostRecentEventTime: nextMostRecentEventTime,
-      };
-    case 'append':
-    default:
-      return {
-        reactStateEvents: appendToEvents(
-          state.reactStateEvents,
-          nextReactEvents
-        ),
-        eventsFromRedux: nextReduxEvents,
-        inProgressEvents: nextInProgressEvents,
-        mostRecentEventTime: nextMostRecentEventTime,
-      };
-  }
-};
-
-export const EventsLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [loadMoreEvents, setLoadMoreEvents] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
-  const [currentPage, setCurrentPage] = React.useState<number>(1);
-  const [isRequesting, setRequesting] = React.useState<boolean>(false);
-  const [initialLoaded, setInitialLoaded] = React.useState<boolean>(false);
+  const {
+    data: eventsData,
+    isLoading,
+    error,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useEventsInfiniteQuery(filter);
 
-  const [events, dispatch] = React.useReducer<EventsReducer>(reducer, {
-    inProgressEvents: props.inProgressEvents,
-    eventsFromRedux: props.eventsFromRedux,
-    reactStateEvents: [],
-    mostRecentEventTime: props.mostRecentEventTime,
-  });
+  const events = eventsData?.pages.reduce(
+    (events, page) => [...events, ...page.data],
+    []
+  );
 
-  const getNext = () => {
-    if (isRequesting) {
-      return;
-    }
-    setRequesting(true);
-
-    const getEventsRequest = props.getEventsRequest || getEvents;
-
-    getEventsRequest({ page: currentPage })
-      .then(handleEventsRequestSuccess)
-      .catch(() => {
-        props.enqueueSnackbar('There was an error loading more events', {
-          variant: 'error',
-        });
-        setLoading(false);
-        setRequesting(false);
-      });
-  };
-
-  const handleEventsRequestSuccess = (response: ResourcePage<Event>) => {
-    setCurrentPage(currentPage + 1);
-    setLoadMoreEvents(true);
-    /** append our events to component state */
-    dispatch({
-      type: 'append',
-      payload: {
-        eventsFromRedux: props.eventsFromRedux,
-        reactStateEvents: response.data,
-        entityId: props.entityId,
-        inProgressEvents: props.inProgressEvents,
-        mostRecentEventTime: props.mostRecentEventTime,
-      },
-    });
-    setLoading(false);
-    setRequesting(false);
-    setError(undefined);
-    if (response.pages === currentPage) {
-      setLoadMoreEvents(false);
-    }
-  };
-
-  React.useEffect(() => {
-    setLoading(true);
-    setRequesting(true);
-    setError(undefined);
-
-    const getEventsRequest = props.getEventsRequest || getEvents;
-
-    getEventsRequest()
-      .then(handleEventsRequestSuccess)
-      .then(() => setInitialLoaded(true))
-      .catch(() => {
-        setLoading(false);
-        setError('Error');
-      });
-  }, []);
-
-  /**
-   * For the purposes of concat-ing the events from Redux and React state
-   * so we can display events in real-time
-   */
-  React.useEffect(() => {
-    const { eventsFromRedux, inProgressEvents } = props;
-    /** in this case, we're getting new events from Redux, so we want to prepend */
-    dispatch({
-      type: 'prepend',
-      payload: {
-        eventsFromRedux,
-        inProgressEvents,
-        reactStateEvents: events.reactStateEvents,
-        entityId: props.entityId,
-        mostRecentEventTime: props.mostRecentEventTime,
-      },
-    });
-  }, [
-    events.reactStateEvents,
-    props,
-    props.eventsFromRedux,
-    props.inProgressEvents,
-  ]);
-
-  const { entitiesLoading, errorMessage, entityId, emptyMessage } = props;
-  const isLoading = loading || entitiesLoading;
+  const loading = isLoading || isFetchingNextPage || entitiesLoading;
 
   return (
     <>
@@ -303,24 +118,24 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
         </TableHead>
         <TableBody>
           {renderTableBody(
-            isLoading,
-            isRequesting,
+            loading,
             errorMessage,
             entityId,
-            error,
-            events.reactStateEvents,
+            error ? 'Error' : undefined,
+            events,
             emptyMessage
           )}
         </TableBody>
       </Table>
-      {loadMoreEvents && initialLoaded && !isLoading ? (
-        <Waypoint onEnter={getNext}>
+      {hasNextPage && events !== undefined && !loading ? (
+        <Waypoint onEnter={() => fetchNextPage()}>
           <div />
         </Waypoint>
       ) : (
-        !isLoading &&
+        !loading &&
         !error &&
-        events.reactStateEvents.length > 0 && (
+        events &&
+        events.length > 0 && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
           </Typography>
@@ -332,7 +147,6 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
 
 export const renderTableBody = (
   loading: boolean,
-  isRequesting: boolean,
   errorMessage = 'There was an error retrieving the events on your account.',
   entityId?: number,
   error?: string,
@@ -341,15 +155,7 @@ export const renderTableBody = (
 ) => {
   const filteredEvents = removeBlocklistedEvents(events, ['profile_update']);
 
-  if (loading) {
-    return (
-      <TableRowLoading
-        columns={4}
-        rows={5}
-        responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
-      />
-    );
-  } else if (error) {
+  if (error) {
     return (
       <TableRowError
         colSpan={12}
@@ -357,7 +163,7 @@ export const renderTableBody = (
         data-qa-events-table-error
       />
     );
-  } else if (filteredEvents.length === 0) {
+  } else if (filteredEvents.length === 0 && !loading) {
     return (
       <TableRowEmptyState
         colSpan={12}
@@ -375,7 +181,7 @@ export const renderTableBody = (
             event={thisEvent}
           />
         ))}
-        {isRequesting && (
+        {loading && (
           <TableRowLoading
             columns={4}
             rows={5}
@@ -403,6 +209,9 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(connected, withSnackbar);
+const enhanced = compose<CombinedProps, EventsLandingProps>(
+  connected,
+  withSnackbar
+);
 
 export default enhanced(EventsLanding);
