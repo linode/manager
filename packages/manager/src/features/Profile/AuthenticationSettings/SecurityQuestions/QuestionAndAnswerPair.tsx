@@ -75,7 +75,7 @@ const StyledQuestionContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
   flexShrink: 1.5,
-  paddingTop: edit ? theme.spacing(2) : 0,
+  paddingTop: !edit ? theme.spacing(2) : 0,
 }));
 
 const StyledAnswerContainer = styled(Box, {

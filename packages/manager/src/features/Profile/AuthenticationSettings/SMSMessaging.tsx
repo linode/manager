@@ -6,13 +6,12 @@ import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { getFormattedNumber } from './PhoneVerification/helpers';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useProfile } from 'src/queries/profile';
 import { useSMSOptOutMutation } from 'src/queries/profile';
 import { useSnackbar } from 'notistack';
 
 export const SMSMessaging = () => {
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const {
@@ -45,19 +44,13 @@ export const SMSMessaging = () => {
 
   return (
     <>
-      <Notice
+      <StyledNotice
         spacingBottom={16}
         spacingLeft={1}
         spacingTop={12}
         success={hasVerifiedPhoneNumber}
-        sx={
-          hasVerifiedPhoneNumber
-            ? {
-                borderLeft: `5px solid ${theme.color.green}`,
-              }
-            : null
-        }
         warning={!hasVerifiedPhoneNumber}
+        hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
       >
         <Typography sx={{ fontSize: '0.875rem !important' }}>
           <b>
@@ -66,7 +59,7 @@ export const SMSMessaging = () => {
               : 'You are opted out of SMS messaging.'}
           </b>
         </Typography>
-      </Notice>
+      </StyledNotice>
       <StyledCopy>
         An authentication code is sent via SMS as part of the phone verification
         process. Messages are not sent for any other reason. SMS authentication
@@ -133,3 +126,13 @@ const StyledCopy = styled(Typography, {
   maxWidth: 960,
   lineHeight: '20px',
 }));
+
+const StyledNotice = styled(Notice, {
+  label: 'StyledNotice',
+})<{ hasVerifiedPhoneNumber: boolean }>(
+  ({ theme, hasVerifiedPhoneNumber }) => ({
+    borderLeft: hasVerifiedPhoneNumber
+      ? `5px solid ${theme.color.green}`
+      : 'none',
+  })
+);

@@ -63,7 +63,7 @@ export const StyledPhoneNumberInput = styled(TextField, {
 export const StyledSelect = styled(Select, {
   label: 'StyledSelect',
 })(({ theme }) => ({
-  width: '70px',
+  width: '70px !important',
   height: '34px',
   border: 'unset',
   '&:focus': {
