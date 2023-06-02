@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-useless-fragment */
 import * as React from 'react';
 import Tooltip from 'src/components/core/Tooltip';
 import { styled } from '@mui/material/styles';
@@ -44,7 +43,7 @@ export const TopMenuIcon = ({ title, children }: Props) => {
       leaveDelay={0}
       describeChild={true}
     >
-      <>{children}</>
+      <div>{children}</div>
     </Tooltip>
   );
 };
