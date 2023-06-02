@@ -89,7 +89,6 @@ export const LinodeSelectNew = (props: LinodeSelectProps) => {
       options={filteredLinodes ?? []}
       getOptionLabel={(linode) => linode.label}
       clearOnBlur
-      placeholder={placeholder}
       multiple={multiple}
       loading={linodesDataLoading || loading}
       disabled={disabled}
@@ -107,7 +106,9 @@ export const LinodeSelectNew = (props: LinodeSelectProps) => {
       renderInput={(params) => (
         <TextField
           label="Linodes"
-          placeholder="Select Linodes"
+          placeholder={
+            placeholder ?? multiple ? 'Select Linodes' : 'Select a Linode'
+          }
           loading={linodesDataLoading}
           errorText={error?.[0].reason ?? errorText}
           helperText={helperText}
@@ -167,6 +168,7 @@ const CustomPopper = (props: PopperProps) => {
   return (
     <Popper
       {...props}
+      data-qa-autocomplete-popper
       modifiers={[{ name: 'preventOverflow', enabled: false }]}
       style={{
         ...(props.style ?? {}),
