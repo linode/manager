@@ -53,7 +53,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   } = props;
 
   const [confirmText, setConfirmText] = React.useState('');
-  // const [primaryBtnText, setPrimaryBtnText] = React.useState('');
 
   const { data: preferences } = usePreferences();
   const disabled =

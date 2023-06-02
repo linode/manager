@@ -14,11 +14,6 @@ import { updateAccountSettingsData } from 'src/queries/accountSettings';
 import { useProfile } from 'src/queries/profile';
 import { queryKey } from 'src/queries/objectStorage';
 import { useQueryClient } from 'react-query';
-// import { usePreferences } from 'src/queries/preferences';
-// import ActionsPanel from 'src/components/ActionsPanel';
-// import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-// import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }
@@ -77,10 +72,6 @@ export const EnableObjectStorage = (props: Props) => {
   const { data: profile } = useProfile();
   const queryClient = useQueryClient();
   const username = profile?.username;
-  // const [confirmText, setConfirmText] = React.useState('');
-  // const { data: preferences } = usePreferences();
-  // const disabledConfirm =
-  //   preferences?.type_to_confirm !== false && confirmText !== username;
 
   const handleClose = () => {
     setOpen(false);
@@ -105,28 +96,6 @@ export const EnableObjectStorage = (props: Props) => {
       .catch(handleError);
   };
 
-  // const actions = (
-  //   <ActionsPanel>
-  //     <Button
-  //       buttonType="secondary"
-  //       onClick={handleClose}
-  //       data-testid="dialog-cancel"
-  //     >
-  //       Cancel
-  //     </Button>
-
-  //     <Button
-  //       buttonType="primary"
-  //       onClick={handleSubmit}
-  //       disabled={disabledConfirm}
-  //       loading={isLoading}
-  //       data-testid="dialog-confirm"
-  //     >
-  //       Confirm Cancellation
-  //     </Button>
-  //   </ActionsPanel>
-  // );
-
   return (
     <>
       <Accordion heading="Object Storage" defaultExpanded={true}>
@@ -135,39 +104,6 @@ export const EnableObjectStorage = (props: Props) => {
           openConfirmationModal={() => setOpen(true)}
         />
       </Accordion>
-
-      {/* <ConfirmationDialog
-        open={isOpen}
-        error={error}
-        onClose={() => handleClose()}
-        title="Cancel Object Storage"
-        actions={actions}
-      >
-
-        <Notice warning>
-          <Typography style={{ fontSize: '0.875rem' }}>
-            <strong>Warning:</strong> Canceling Object Storage will permanently
-            delete all buckets and their objects. Object Storage Access Keys
-            will be revoked.
-          </Typography>
-        </Notice>
-
-        <TypeToConfirm
-          data-testid="dialog-confirm-text-input"
-          label="Username"
-          onChange={(input) => setConfirmText(input)}
-          expand
-          value={confirmText}
-          confirmationText={
-            <span>
-              To confirm cancellation, type your username (<b>{username}</b>) in
-              the field below:
-            </span>
-          }
-          visible={preferences?.type_to_confirm}
-        />
-      </ConfirmationDialog> */}
-
       <TypeToConfirmDialog
         title={`Cancel Object Storage`}
         entity={{
@@ -182,13 +118,11 @@ export const EnableObjectStorage = (props: Props) => {
         onClick={handleSubmit}
       >
         {error ? <Notice error text={error} /> : null}
-
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>
             Deleting this NodeBalancer is permanent and can’t be undone.
           </Typography>
         </Notice>
-
         <Typography variant="body1">
           Traffic will no longer be routed through this NodeBalancer. Please
           check your DNS settings and either provide the IP address of another
