@@ -37,8 +37,8 @@ import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
-import Radio from 'src/components/Radio';
-import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import { Radio } from 'src/components/Radio/Radio';
+import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
@@ -503,7 +503,9 @@ const DatabaseCreate = () => {
             regions={regionsData}
             selectedID={values.region}
           />
-          <div style={{ marginTop: 8 }}>{regionHelperText()}</div>
+          <div style={{ marginTop: 8 }}>
+            <RegionHelperText />
+          </div>
         </Grid>
         <Divider spacingTop={38} spacingBottom={12} />
         <Grid>

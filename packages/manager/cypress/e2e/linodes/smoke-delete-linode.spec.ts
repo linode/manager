@@ -1,6 +1,7 @@
 import { createLinode } from 'support/api/linodes';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
+import { chooseRegion } from 'support/util/regions';
 
 describe('delete linode', () => {
   it('deletes linode from linode details page', () => {

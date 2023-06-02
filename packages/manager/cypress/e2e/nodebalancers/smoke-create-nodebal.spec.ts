@@ -10,17 +10,19 @@ import {
 } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
 const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 const createNodeBalancerWithUI = (nodeBal) => {
+  const regionName = getRegionById(nodeBal.region).name;
   cy.visitWithLogin('/nodebalancers/create');
   getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
   containsClick('create a tag').type(entityTag);
   // this will create the NB in newark, where the default Linode was created
-  containsClick(selectRegionString).type('new {enter}');
+  containsClick(selectRegionString).type(`${regionName}{enter}`);
 
   // node backend config
   fbtClick('Label').type(randomLabel());
@@ -31,9 +33,11 @@ const createNodeBalancerWithUI = (nodeBal) => {
 describe('create NodeBalancer', () => {
   it('creates a nodebal - positive', () => {
     // create a linode in NW where the NB will be created
-    createLinode().then((linode) => {
+    const region = chooseRegion();
+    createLinode({ region: region.id }).then((linode) => {
       const nodeBal = {
         label: randomLabel(),
+        region: region.id,
         linodePrivateIp: linode.ipv4[1],
       };
       // catch request
@@ -47,14 +51,17 @@ describe('create NodeBalancer', () => {
     });
   });
   it('API error Handling', () => {
-    createLinode().then((linode) => {
+    const region = chooseRegion();
+    createLinode({ region: region.id }).then((linode) => {
       // catch request
       cy.intercept('POST', apiMatcher('nodebalancers')).as(
         'createNodeBalancer'
       );
       createNodeBalancerWithUI({
-        label: 'cy-test-dfghjk^uu7',
+        // Label should have a special character to trigger API error.
+        label: `${randomLabel()}-^`,
         linodePrivateIp: linode.ipv4[1],
+        region: region.id,
       });
       fbtVisible(`Label can't contain special characters or spaces.`);
       getVisible('[id="nodebalancer-label"]')

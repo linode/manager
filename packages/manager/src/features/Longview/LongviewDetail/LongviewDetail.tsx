@@ -14,7 +14,7 @@ import NotFound from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import withLongviewClients, {
   DispatchProps,
   Props as LVProps,
