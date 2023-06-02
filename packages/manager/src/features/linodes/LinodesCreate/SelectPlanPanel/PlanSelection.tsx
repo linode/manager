@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
@@ -14,8 +14,18 @@ import { TableRow } from 'src/components/TableRow';
 import { ApplicationState } from 'src/store';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { PlanSelectionType } from '../SelectPlanPanel';
+import { ExtendedType } from 'src/utilities/extendType';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
+
+export interface PlanSelectionType extends BaseType {
+  class: ExtendedType['class'];
+  formattedLabel: ExtendedType['formattedLabel'];
+  heading: ExtendedType['heading'];
+  network_out?: ExtendedType['network_out'];
+  price: ExtendedType['price'];
+  subHeadings: ExtendedType['subHeadings'];
+  transfer?: ExtendedType['transfer'];
+}
 
 interface Props {
   currentPlanHeading?: string;
