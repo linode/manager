@@ -4,24 +4,16 @@ import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
 
-interface Props {
+export interface TagDrawerProps {
   entityLabel: string;
   tags: string[];
   open: boolean;
+  entityID: number;
   updateTags: (tags: string[]) => Promise<any>;
   onClose: () => void;
 }
 
-export interface TagDrawerProps {
-  label: string;
-  tags: string[];
-  open: boolean;
-  entityID: number;
-}
-
-export type CombinedProps = Props;
-
-export const TagDrawer: React.FC<Props> = (props) => {
+const TagDrawer = (props: TagDrawerProps) => {
   const { updateTags, entityLabel, onClose, open, tags } = props;
 
   return (
@@ -31,4 +23,4 @@ export const TagDrawer: React.FC<Props> = (props) => {
   );
 };
 
-export default TagDrawer;
+export { TagDrawer };
