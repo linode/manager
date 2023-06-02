@@ -1,5 +1,9 @@
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
+import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
+import { Theme, useTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { SxProps } from '@mui/system';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -7,47 +11,42 @@ import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import Button from 'src/components/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import EntityDetail from 'src/components/EntityDetail';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
+import { TableBody } from 'src/components/TableBody';
+import { TableRow } from 'src/components/TableRow';
+import { TagCell } from 'src/components/TagCell/TagCell';
 import Box from 'src/components/core/Box';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
-import EntityDetail from 'src/components/EntityDetail';
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import { TableRow } from 'src/components/TableRow';
-import TagCell from 'src/components/TagCell';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
-import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useTypeQuery } from 'src/queries/types';
 import { useAllImagesQuery } from 'src/queries/images';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useTypeQuery } from 'src/queries/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
+import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import {
+  transitionText as _transitionText,
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
-  transitionText as _transitionText,
 } from './transitions';
-import { useTheme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
-import { useProfile } from 'src/queries/profile';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';
 import { TableCell } from 'src/components/TableCell';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
-import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];

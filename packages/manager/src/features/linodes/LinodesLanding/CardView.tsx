@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
+import Typography from 'src/components/core/Typography';
 import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
+import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
 import { RenderLinodesProps } from './DisplayLinodes';
-import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
@@ -33,10 +33,12 @@ const CardView = (props: RenderLinodesProps) => {
 
   const { data: profile } = useProfile();
 
-  const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
+  const [tagDrawer, setTagDrawer] = React.useState<
+    Omit<TagDrawerProps, 'updateTags' | 'onClose'>
+  >({
     open: false,
     tags: [],
-    label: '',
+    entityLabel: '',
     entityID: 0,
   });
 
@@ -48,10 +50,14 @@ const CardView = (props: RenderLinodesProps) => {
     setTagDrawer({ ...tagDrawer, open: false });
   };
 
-  const openTagDrawer = (label: string, entityID: number, tags: string[]) => {
+  const openTagDrawer = (
+    entityLabel: string,
+    entityID: number,
+    tags: string[]
+  ) => {
     setTagDrawer({
       open: true,
-      label,
+      entityLabel,
       tags,
       entityID,
     });
@@ -110,7 +116,8 @@ const CardView = (props: RenderLinodesProps) => {
         ))}
       </Grid>
       <TagDrawer
-        entityLabel={tagDrawer.label}
+        entityID={tagDrawer.entityID}
+        entityLabel={tagDrawer.entityLabel}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
         updateTags={updateTags}
