@@ -6,7 +6,7 @@ import { Table } from 'src/components/Table';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableCell } from 'src/components/TableCell';
-import Radio from 'src/components/Radio/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { usePagination } from 'src/hooks/usePagination';

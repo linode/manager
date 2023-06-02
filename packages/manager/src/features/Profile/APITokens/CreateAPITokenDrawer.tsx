@@ -12,13 +12,13 @@ import { TableHead } from 'src/components/TableHead';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import Radio from 'src/components/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import AccessCell from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
+import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   Permission,

@@ -1,21 +1,22 @@
 import * as React from 'react';
-import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { buckets } from 'src/__data__/buckets';
-import { BucketTableRow, CombinedProps } from './BucketTableRow';
+import { BucketTableRow } from './BucketTableRow';
+import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import type { BucketTableRowProps } from './BucketTableRow';
 
 const mockOnRemove = jest.fn();
 const bucket = buckets[0];
 
 describe('BucketTableRow', () => {
-  const props: CombinedProps = {
-    label: bucket.label,
+  const props: BucketTableRowProps = {
     cluster: bucket.cluster,
-    hostname: bucket.hostname,
     created: bucket.created,
-    size: bucket.size,
+    hostname: bucket.hostname,
+    label: bucket.label,
     objects: bucket.objects,
-    onRemove: mockOnRemove,
     onDetails: jest.fn(),
+    onRemove: mockOnRemove,
+    size: bucket.size,
   };
 
   it('should render the bucket name', () => {
