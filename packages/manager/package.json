@@ -19,6 +19,7 @@
     "@emotion/styled": "^11.10.4",
     "@linode/api-v4": "*",
     "@linode/validation": "*",
+    "@linode/design-language-system": "^0.0.5",
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.4",
     "@mui/styles": "^5.10.3",
