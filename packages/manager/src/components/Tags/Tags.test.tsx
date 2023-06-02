@@ -8,12 +8,12 @@ describe('Tags list', () => {
       <Tags tags={['tag1', 'tag2', 'tag3', 'tag4', 'tag5']} />
     );
 
-    expect(component.find('WithStyles(ShowMore)')).toHaveLength(1);
+    expect(component.find('ShowMore')).toHaveLength(1);
   });
 
   it('shouldn\'t display the "Show More" button if the tags list contains 3 or fewer tags', () => {
     const component = shallow(<Tags tags={['tag1', 'tag2', 'tag3']} />);
 
-    expect(component.find('WithStyles(ShowMore)')).toHaveLength(0);
+    expect(component.find('ShowMore')).toHaveLength(0);
   });
 });
