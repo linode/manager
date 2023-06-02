@@ -102,8 +102,7 @@ const StyledCopyTooltip = styled(CopyTooltip, {
 }));
 
 const StyledLinkContainer = styled('div', {
-  label: 'StyledCopyTooltip',
+  label: 'StyledLinkContainer',
 })(() => ({
-  marginLeft: '1em',
-  padding: 0,
+  display: 'flex',
 }));
