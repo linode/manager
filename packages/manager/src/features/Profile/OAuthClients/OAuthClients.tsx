@@ -23,17 +23,17 @@ import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
 import { EditOAuthClientDrawer } from './EditOAuthClientDrawer';
 import { SecretTokenDialog } from '../SecretTokenDialog/SecretTokenDialog';
 
-const preferenceKey = 'oauth-clients';
+const PREFERENCE_KEY = 'oauth-clients';
 
 const OAuthClients = () => {
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'status',
       order: 'desc',
     },
-    preferenceKey
+    PREFERENCE_KEY
   );
 
   const { data, error, isLoading } = useOAuthClientsQuery(

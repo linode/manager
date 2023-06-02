@@ -10,13 +10,6 @@ interface Props {
   width?: number;
 }
 
-const StyledAvatar = styled(Avatar, {
-  label: 'StyledAvatar',
-})<Partial<Props>>(({ height, width }) => ({
-  height: height || 28,
-  width: width || 28,
-}));
-
 interface Props {
   className?: string;
   email: string;
@@ -37,3 +30,10 @@ export const GravatarByEmail = (props: Props) => {
     </StyledAvatar>
   );
 };
+
+const StyledAvatar = styled(Avatar, {
+  label: 'StyledAvatar',
+})<Partial<Props>>(({ height, width }) => ({
+  height: height || 28,
+  width: width || 28,
+}));
