@@ -22,7 +22,7 @@ interface Props {
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
-export const RenderSelectionLKE = ({
+export const KubernetesPlanSelection = ({
   disabled,
   getTypeCount,
   idx,

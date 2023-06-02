@@ -9,7 +9,7 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
 } from './utils';
-import { RenderPlanContainer } from './PlanContainer';
+import { PlanContainer } from './PlanContainer';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
 
@@ -71,7 +71,7 @@ export const PlansPanel = (props: Props) => {
               disabledClasses={props.disabledClasses}
               planType={plan}
             />
-            <RenderPlanContainer
+            <PlanContainer
               isCreate={isCreate}
               plans={plans[plan]}
               showTransfer={showTransfer}

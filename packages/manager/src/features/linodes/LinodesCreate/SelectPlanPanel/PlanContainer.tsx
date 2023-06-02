@@ -10,7 +10,7 @@ import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanSelectionType } from '../SelectPlanPanel';
-import { RenderSelection } from './PlanSelection';
+import { PlanSelection } from './PlanSelection';
 
 const tableCells = [
   { cellName: '', testId: '', center: false, noWrap: false },
@@ -42,7 +42,7 @@ export interface Props {
   showTransfer?: boolean;
 }
 
-export const RenderPlanContainer = ({
+export const PlanContainer = ({
   currentPlanHeading,
   disabled,
   disabledClasses,
@@ -67,7 +67,7 @@ export const RenderPlanContainer = ({
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         {plans.map((plan, id) => (
-          <RenderSelection
+          <PlanSelection
             currentPlanHeading={currentPlanHeading}
             disabled={disabled}
             disabledClasses={disabledClasses}
@@ -116,7 +116,7 @@ export const RenderPlanContainer = ({
             </TableHead>
             <TableBody role="radiogroup">
               {plans.map((plan, id) => (
-                <RenderSelection
+                <PlanSelection
                   currentPlanHeading={currentPlanHeading}
                   disabled={disabled}
                   disabledClasses={disabledClasses}

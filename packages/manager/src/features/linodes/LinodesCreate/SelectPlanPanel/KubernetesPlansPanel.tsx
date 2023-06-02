@@ -4,7 +4,7 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
-import { RenderPlanContainer } from './KubernetesPlanContainer';
+import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
@@ -53,7 +53,7 @@ export const KubernetesPlansPanel = ({
         return (
           <>
             <PlanInformation planType={plan} />
-            <RenderPlanContainer
+            <KubernetesPlanContainer
               disabled={disabled}
               getTypeCount={getTypeCount}
               onAdd={onAdd}

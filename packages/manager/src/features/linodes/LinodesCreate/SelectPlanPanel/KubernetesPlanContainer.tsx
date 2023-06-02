@@ -7,7 +7,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableCell } from 'src/components/TableCell';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
-import { RenderSelectionLKE } from './KubernetesPlanSelection';
+import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 
 const tableCells = [
   { cellName: 'Plan', testId: 'plan', center: false, noWrap: false },
@@ -29,7 +29,7 @@ interface Props {
   updatePlanCount: (planId: string, newCount: number) => void;
 }
 
-export const RenderPlanContainer = ({
+export const KubernetesPlanContainer = ({
   disabled,
   getTypeCount,
   onAdd,
@@ -42,7 +42,7 @@ export const RenderPlanContainer = ({
     <Grid container spacing={2}>
       <Hidden mdUp>
         {plans.map((plan, id) => (
-          <RenderSelectionLKE
+          <KubernetesPlanSelection
             disabled={disabled}
             getTypeCount={getTypeCount}
             idx={id}
@@ -77,7 +77,7 @@ export const RenderPlanContainer = ({
             </TableHead>
             <TableBody role="grid">
               {plans.map((plan, id) => (
-                <RenderSelectionLKE
+                <KubernetesPlanSelection
                   disabled={disabled}
                   getTypeCount={getTypeCount}
                   idx={id}

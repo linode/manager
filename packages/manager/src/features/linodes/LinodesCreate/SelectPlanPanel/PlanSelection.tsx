@@ -39,7 +39,7 @@ const getDisabledClass = (
   return disabledClasses.includes(typeClass);
 };
 
-export const RenderSelection = ({
+export const PlanSelection = ({
   currentPlanHeading,
   disabled,
   disabledClasses,
