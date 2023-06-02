@@ -11,14 +11,11 @@ export const StyledHelperText = styled(Typography, {
 
 export const StyledFieldsWrapper = styled('div', {
   label: 'StyledTextFieldWrapper',
-})(({ theme }) => ({
+})(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
   flexFlow: 'row wrap',
-  [theme.breakpoints.down('lg')]: {
-    justifyContent: 'flex-start',
-  },
 }));
 
 export const StyledCertWrapper = styled(Grid, {

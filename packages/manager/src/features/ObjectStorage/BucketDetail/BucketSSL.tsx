@@ -106,45 +106,43 @@ const AddCertForm = (props: Props) => {
       {errorMap.none && (
         <Notice error text={errorMap.none} spacingTop={8} spacingBottom={0} />
       )}
-      <div>
-        <StyledFieldsWrapper>
-          <StyledCertWrapper xs={12} md={6}>
-            <TextField
-              label="Certificate"
-              name="certificate"
-              onChange={formik.handleChange}
-              value={formik.values.certificate}
-              multiline
-              fullWidth={false}
-              rows="3"
-              data-testid="ssl-cert-input"
-              errorText={errorMap.certificate}
-              sx={{ '& > div': { minWidth: '100%' } }}
-            />
-          </StyledCertWrapper>
-          <StyledKeyWrapper xs={12} md={6}>
-            <TextField
-              label="Private Key"
-              name="private_key"
-              fullWidth
-              onChange={formik.handleChange}
-              value={formik.values.private_key}
-              multiline
-              rows="3"
-              data-testid="ssl-cert-input"
-              errorText={errorMap.private_key}
-              sx={{ '& > div': { minWidth: '100%' } }}
-            />
-          </StyledKeyWrapper>
-        </StyledFieldsWrapper>
-        <Grid>
-          <ActionsPanel>
-            <Button loading={isLoading} buttonType="primary" type="submit">
-              Upload Certificate
-            </Button>
-          </ActionsPanel>
-        </Grid>
-      </div>
+      <StyledFieldsWrapper>
+        <StyledCertWrapper xs={12} md={6}>
+          <TextField
+            label="Certificate"
+            name="certificate"
+            onChange={formik.handleChange}
+            value={formik.values.certificate}
+            multiline
+            fullWidth={false}
+            rows="3"
+            data-testid="ssl-cert-input"
+            errorText={errorMap.certificate}
+            sx={{ '& > div': { minWidth: '100%' } }}
+          />
+        </StyledCertWrapper>
+        <StyledKeyWrapper xs={12} md={6}>
+          <TextField
+            label="Private Key"
+            name="private_key"
+            fullWidth
+            onChange={formik.handleChange}
+            value={formik.values.private_key}
+            multiline
+            rows="3"
+            data-testid="ssl-cert-input"
+            errorText={errorMap.private_key}
+            sx={{ '& > div': { minWidth: '100%' } }}
+          />
+        </StyledKeyWrapper>
+      </StyledFieldsWrapper>
+      <Grid>
+        <ActionsPanel>
+          <Button loading={isLoading} buttonType="primary" type="submit">
+            Upload Certificate
+          </Button>
+        </ActionsPanel>
+      </Grid>
     </form>
   );
 };
