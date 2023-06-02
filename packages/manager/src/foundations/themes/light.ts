@@ -293,7 +293,7 @@ export const lightTheme: ThemeOptions = {
     success: {
       light: '#d7e3ef', // TODO: We do not have light versions of status colors
       main: '#d7e3ef', // TODO: We do not have light versions of status colors
-      dark: COLORS.BRAND.BRAND04,
+      dark: COLORS.STATUS.SUCCESS,
     },
     warning: {
       light: '#fdf4da', // TODO: We do not have light versions of status colors
@@ -421,7 +421,7 @@ export const lightTheme: ThemeOptions = {
           color: COLORS.NEUTRALS.WHITE,
           padding: '2px 20px',
           '&:hover, &:focus': {
-            backgroundColor: COLORS.BRAND.BRAND04, // TODO: This was the closest color according to our palette
+            backgroundColor: COLORS.BRAND.BRAND05, // TODO: This was the closest color according to our palette
           },
           '&:active': {
             backgroundColor: primaryColors.dark,
@@ -510,12 +510,12 @@ export const lightTheme: ThemeOptions = {
           },
         },
         clickable: {
-          backgroundColor: '#e5f1ff',
+          backgroundColor: COLORS.BRAND.BRAND01, // TODO: This was the closest color according to our palette
           '&:hover': {
-            backgroundColor: '#cce2ff',
+            backgroundColor: COLORS.BRAND.BRAND02, // TODO: This was the closest color according to our palette
           },
           '&:focus': {
-            backgroundColor: '#cce2ff',
+            backgroundColor: COLORS.BRAND.BRAND02, // TODO: This was the closest color according to our palette
           },
         },
         sizeSmall: {
@@ -563,7 +563,7 @@ export const lightTheme: ThemeOptions = {
     MuiDialog: {
       styleOverrides: {
         paper: {
-          boxShadow: '0 0 5px #bbb',
+          boxShadow: `0 0 5px ${COLORS.NEUTRALS.GREY06}`, // TODO: This was the closest color according to our palette
           [breakpoints.down('sm')]: {
             maxWidth: '100% !important',
             maxHeight: 'calc(100% - 48px)',
@@ -597,7 +597,7 @@ export const lightTheme: ThemeOptions = {
     MuiDialogTitle: {
       styleOverrides: {
         root: {
-          borderBottom: '1px solid #eee',
+          borderBottom: `1px solid ${COLORS.NEUTRALS.GREY03}`,
           marginBottom: 20,
           padding: '16px 24px',
           color: primaryColors.headline,
@@ -610,7 +610,7 @@ export const lightTheme: ThemeOptions = {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          boxShadow: '0 0 5px #bbb',
+          boxShadow: `0 0 5px ${COLORS.NEUTRALS.GREY06}`, // TODO: This was the closest color according to our palette
           /** @todo This is breaking typing. */
           // overflowY: 'overlay',
           display: 'block',
@@ -681,7 +681,7 @@ export const lightTheme: ThemeOptions = {
           marginTop: 16,
           minWidth: 120,
           '&.copy > div': {
-            backgroundColor: COLORS.NEUTRALS,
+            backgroundColor: COLORS.NEUTRALS.GREY02,
           },
           [breakpoints.down('xs')]: {
             width: '100%',
@@ -736,7 +736,7 @@ export const lightTheme: ThemeOptions = {
           fontSize: '0.875rem',
           lineHeight: 1.25,
           '&$error': {
-            color: '#ca0813',
+            color: COLORS.STATUS.DANGER,
           },
         },
       },
@@ -763,7 +763,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           alignItems: 'center',
           backgroundColor: COLORS.NEUTRALS.WHITE,
-          border: '1px solid #ccc',
+          border: `1px solid ${COLORS.NEUTRALS.GREY05}`,
           boxSizing: 'border-box',
           color: primaryColors.text,
           lineHeight: 1,
@@ -777,13 +777,13 @@ export const lightTheme: ThemeOptions = {
           },
           '&.Mui-focused': {
             borderColor: primaryColors.main,
-            boxShadow: '0 0 2px 1px #e1edfa',
+            boxShadow: `0 0 2px 1px ${COLORS.NEUTRALS.GREY04}`,
             '& .select-option-icon': {
               paddingLeft: `30px !important`,
             },
           },
           '&.Mui-error': {
-            borderColor: '#ca0813',
+            borderColor: COLORS.STATUS.DANGER,
           },
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
@@ -793,11 +793,11 @@ export const lightTheme: ThemeOptions = {
             fontSize: 18,
             color: primaryColors.main,
             '&:hover': {
-              color: '#5e9aea',
+              color: COLORS.BRAND.BRAND03,
             },
           },
           '&.affirmative': {
-            borderColor: '#00b159',
+            borderColor: COLORS.STATUS.SUCCESS,
           },
         },
         inputMultiline: {
@@ -874,7 +874,7 @@ export const lightTheme: ThemeOptions = {
     MuiLinearProgress: {
       styleOverrides: {
         colorPrimary: {
-          backgroundColor: '#b7d6f9',
+          backgroundColor: COLORS.BRAND.BRAND02, // TODO: This was the closest color according to our palette
         },
       },
     },
@@ -999,14 +999,14 @@ export const lightTheme: ThemeOptions = {
           borderRadius: 0,
         },
         outlined: {
-          border: '1px solid #e7e7e7',
+          border: `1px solid ${COLORS.NEUTRALS.GREY04}`,
         },
       },
     },
     MuiPopover: {
       styleOverrides: {
         paper: {
-          boxShadow: '0 0 5px #ddd',
+          boxShadow: `0 0 5px ${COLORS.NEUTRALS.GREY04}`,
           borderRadius: 0,
           minWidth: 200,
           [breakpoints.up('lg')]: {
@@ -1037,11 +1037,11 @@ export const lightTheme: ThemeOptions = {
             },
           },
           '&.Mui-disabled': {
-            color: '#ccc !important',
-            fill: '#f4f4f4 !important',
+            color: `${COLORS.NEUTRALS.GREY05} !important`,
+            fill: `${COLORS.NEUTRALS.GREY02} !important`,
             pointerEvents: 'none',
             '& .defaultFill': {
-              fill: COLORS.NEUTRALS,
+              fill: COLORS.NEUTRALS.GREY02,
             },
           },
         }),
@@ -1097,7 +1097,7 @@ export const lightTheme: ThemeOptions = {
     MuiSnackbarContent: {
       styleOverrides: {
         root: {
-          boxShadow: '0 0 5px #ddd',
+          boxShadow: `0 0 5px ${COLORS.NEUTRALS.GREY04}`,
           color: COLORS.NEUTRALS.GREY08,
           backgroundColor: 'white',
           borderLeft: `6px solid transparent`,
@@ -1262,7 +1262,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           margin: '16px 0',
-          boxShadow: 'inset 0 -1px 0 #c5c6c8',
+          boxShadow: `inset 0 -1px 0 ${COLORS.NEUTRALS.GREY05}`,
           minHeight: 48,
           position: 'relative',
           '& $scrollButtons:first-of-type': {
@@ -1377,7 +1377,7 @@ export const lightTheme: ThemeOptions = {
           borderRadius: 0,
           maxWidth: 200,
           backgroundColor: 'white',
-          boxShadow: '0 0 5px #bbb',
+          boxShadow: `0 0 5px ${COLORS.NEUTRALS.GREY06}`, // TODO: This was the closest color according to our palette
           color: COLORS.NEUTRALS.GREY08,
           textAlign: 'left',
           [breakpoints.up('sm')]: {
