@@ -1,33 +1,33 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import TagDrawer from 'src/components/TagCell/TagDrawer';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
+import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import {
-  PowerActionsDialog,
-  Action,
-} from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { parseQueryParams } from 'src/utilities/queryParams';
-import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { MigrateLinode } from 'src/features/linodes/MigrateLinode';
+import {
+  Action,
+  PowerActionsDialog,
+} from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import useEditableLabelState from 'src/hooks/useEditableLabelState';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendEvent } from 'src/utilities/ga';
+import { parseQueryParams } from 'src/utilities/queryParams';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
+import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
-import LandingHeader from 'src/components/LandingHeader';
-import { sendEvent } from 'src/utilities/ga';
-import useEditableLabelState from 'src/hooks/useEditableLabelState';
-import { APIError } from '@linode/api-v4/lib/types';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 interface TagDrawerProps {
   tags: string[];
@@ -266,6 +266,7 @@ const LinodeDetailHeader = () => {
       />
       <TagDrawer
         entityLabel={linode?.label ?? ''}
+        entityID={linode?.id}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
         updateTags={updateTags}
