@@ -1,14 +1,15 @@
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
-import { screen } from '@testing-library/react';
 import * as React from 'react';
+import { AccessKeyDrawer, getDefaultScopes } from './AccessKeyDrawer';
+import { getUpdatedScopes } from './AccessTable';
+import { MODE } from './types';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { AccessKeyDrawer, getDefaultScopes, Props } from './AccessKeyDrawer';
-import { getUpdatedScopes } from './LimitedAccessControls';
-import { MODE } from './types';
+import { Scope } from '@linode/api-v4/lib/object-storage/types';
+import { screen } from '@testing-library/react';
+import type { AccessKeyDrawerProps } from './AccessKeyDrawer';
 
 describe('AccessKeyDrawer', () => {
-  const props: Props = {
+  const props: AccessKeyDrawerProps = {
     open: true,
     onSubmit: jest.fn(),
     onClose: jest.fn(),

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import BucketSSL from './BucketSSL';
+import { BucketSSL } from './BucketSSL';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { rest, server } from 'src/mocks/testServer';
 
