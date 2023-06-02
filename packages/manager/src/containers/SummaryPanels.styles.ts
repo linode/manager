@@ -66,7 +66,7 @@ const summaryPanelStyles = (theme: Theme) =>
       '& .dif': {
         position: 'relative',
         width: 'auto',
-        '& .chip': {
+        '& .MuiChip-root': {
           position: 'absolute',
           top: '-4px',
           right: -10,
