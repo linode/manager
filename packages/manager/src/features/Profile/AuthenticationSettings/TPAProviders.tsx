@@ -73,7 +73,7 @@ export const TPAProviders = (props: Props) => {
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (2FA).
         </StyledCopy>
-        <StyledProvidersListGrid spacing={2}>
+        <StyledProvidersListGrid spacing={2} container>
           {providersIncludingLinode.map((thisProvider) => {
             const ProviderIcon = icons[thisProvider.name];
             const isProviderEnabled = props.authType === thisProvider.name;
@@ -83,10 +83,10 @@ export const TPAProviders = (props: Props) => {
                 <StyledButton
                   data-testid={`Button-${thisProvider.displayName}`}
                   disabled={isProviderEnabled}
+                  isButtonEnabled={isProviderEnabled}
                   onClick={() => {
                     handleProviderChange(thisProvider.name);
                   }}
-                  isButtonEnabled={isProviderEnabled}
                 >
                   <Box
                     alignItems="center"
@@ -102,7 +102,7 @@ export const TPAProviders = (props: Props) => {
                       flexGrow={1}
                     >
                       <ProviderIcon
-                        sx={{
+                        style={{
                           color: '#939598',
                           height: 32,
                           marginRight: theme.spacing(2),
