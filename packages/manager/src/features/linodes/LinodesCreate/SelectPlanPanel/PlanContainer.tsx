@@ -9,7 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
-import { PlanSelectionType } from '../SelectPlanPanel';
+import { PlanSelectionType } from './PlanSelection';
 import { PlanSelection } from './PlanSelection';
 
 const tableCells = [
