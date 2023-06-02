@@ -1,7 +1,11 @@
 import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
-import { COLORS } from '@linode/design-language-system/dist/cloudmanager';
+import {
+  COLORS,
+  COMPONENTS,
+  // TOKENS,
+} from '@linode/design-language-system/dist/cloudmanager';
 
 export const bg = {
   app: COLORS.NEUTRALS.GREY02,
@@ -417,17 +421,18 @@ export const lightTheme: ThemeOptions = {
           transition: 'none',
         },
         containedPrimary: {
-          backgroundColor: primaryColors.main,
-          color: COLORS.NEUTRALS.WHITE,
+          backgroundColor: COMPONENTS.BUTTON.PRIMARY.DEFAULT.BACKGROUND,
+          color: COMPONENTS.BUTTON.PRIMARY.DEFAULT.TEXT,
           padding: '2px 20px',
           '&:hover, &:focus': {
-            backgroundColor: COLORS.BRAND.BRAND05, // TODO: This was the closest color according to our palette
+            backgroundColor: COMPONENTS.BUTTON.PRIMARY.HOVER.BACKGROUND,
           },
           '&:active': {
-            backgroundColor: primaryColors.dark,
+            backgroundColor: COMPONENTS.BUTTON.PRIMARY.HOVER.BACKGROUND, // TODO: We need an active token
           },
           '&:disabled': {
-            color: 'white',
+            backgroundColor: COMPONENTS.BUTTON.PRIMARY.DISABLED.BACKGROUND,
+            color: COMPONENTS.BUTTON.PRIMARY.DISABLED.TEXT,
           },
           // TODO: We can remove this after migration since we can define variants
           '&.loading': {
@@ -436,20 +441,20 @@ export const lightTheme: ThemeOptions = {
         },
         containedSecondary: {
           backgroundColor: 'transparent',
-          color: textColors.linkActiveLight,
+          color: COMPONENTS.BUTTON.SECONDARY.DEFAULT.TEXT,
           '&:hover, &:focus': {
             backgroundColor: 'transparent',
-            color: textColors.linkActiveLight,
+            color: COMPONENTS.BUTTON.SECONDARY.HOVER.TEXT,
           },
           '&:active': {
             backgroundColor: 'transparent',
-            borderColor: primaryColors.dark,
-            color: primaryColors.dark,
+            borderColor: COMPONENTS.BUTTON.SECONDARY.HOVER.TEXT, // TODO: We need an ACTIVE token
+            color: COMPONENTS.BUTTON.SECONDARY.HOVER.TEXT, // TODO: We need an ACTIVE token
           },
           '&:disabled': {
             backgroundColor: 'transparent',
-            borderColor: COLORS.NEUTRALS.GREY05,
-            color: COLORS.NEUTRALS.GREY05,
+            borderColor: COMPONENTS.BUTTON.SECONDARY.DISABLED.TEXT,
+            color: COMPONENTS.BUTTON.SECONDARY.DISABLED.TEXT,
           },
           // TODO: We can remove this after migration since we can define variants
           '&.loading': {
