@@ -122,12 +122,11 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
       title={`Restore from Backup ${formatDate(backup.created, {
         timezone: profile?.timezone,
       })}`}
-      entity={{ type: 'Database', label: database.label }}
+      entity={{ type: 'Database', subType: 'Backup', label: database.label }}
       open={open}
       onClose={onClose}
       onClick={() => handleRestoreDatabase}
       loading={isLoading}
-      // {...rest}
     >
       {error ? (
         <Notice
