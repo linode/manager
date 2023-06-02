@@ -170,7 +170,11 @@ export const EnableObjectStorage = (props: Props) => {
 
       <TypeToConfirmDialog
         title={`Cancel Object Storage`}
-        entity={{ type: 'Username', label: username }}
+        entity={{
+          type: 'AccountSetting',
+          subType: 'ObjectStorage',
+          label: username,
+        }}
         open={isOpen}
         loading={isLoading}
         typographyStyle={{ marginTop: '20px' }}

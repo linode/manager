@@ -26,6 +26,9 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   dontgo: {
     marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    order: 3,
   },
 }));
 
@@ -165,7 +168,11 @@ Props) => {
 
     <TypeToConfirmDialog
       title="Are you sure you want to close your Linode account?"
-      entity={{ type: 'Account', label: profile.username }}
+      entity={{
+        type: 'AccountSetting',
+        subType: 'CloseAccount',
+        label: profile.username,
+      }}
       open={open}
       onClose={closeDialog}
       onClick={handleCancelAccount}
@@ -174,8 +181,19 @@ Props) => {
       disabled={!canSubmit}
     >
       {errors ? <Notice error text={errors ? errors[0].reason : ''} /> : null}
-      <Notice warning>
-        <Typography style={{ fontSize: '0.875rem' }}>
+
+      <Notice
+        warning
+        style={{ display: 'flex', flexDirection: 'column', order: 1 }}
+      >
+        <Typography
+          style={{
+            fontSize: '0.875rem',
+            display: 'flex',
+            flexDirection: 'column',
+            order: 3,
+          }}
+        >
           <strong>Warning:</strong> Please note this is an extremely destructive
           action. Closing your account means that all services including
           Linodes, Volumes, DNS Records, etc will be lost and may not be able to
@@ -189,16 +207,19 @@ Props) => {
         you&rsquo;ll be directed to a quick survey so we can better gauge your
         feedback.
       </Typography>
-      <TextField
-        label="Comments"
-        multiline
-        onChange={(e) => setComments(e.target.value)}
-        optional
-        placeholder="Provide Feedback"
-        rows={1}
-        value={comments}
-        aria-label="Optional comments field"
-      />
+
+      <div style={{ display: 'flex', flexDirection: 'column', order: 4 }}>
+        <TextField
+          label="Comments"
+          multiline
+          onChange={(e) => setComments(e.target.value)}
+          optional
+          placeholder="Provide Feedback"
+          rows={1}
+          value={comments}
+          aria-label="Optional comments field"
+        />
+      </div>
     </TypeToConfirmDialog>
   );
 };

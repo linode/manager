@@ -26,6 +26,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
       marginBottom: 0,
     },
   },
+  dialogContent: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));
 
 export interface ConfirmationDialogProps extends DialogProps {
@@ -56,7 +60,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       data-testid="drawer"
     >
       <DialogTitle title={title} onClose={onClose} />
-      <DialogContent data-qa-dialog-content className="dialog-content">
+      <DialogContent data-qa-dialog-content className={classes.dialogContent}>
         {children}
         {error && (
           <DialogContentText className={`${classes.error} error-for-scroll`}>
