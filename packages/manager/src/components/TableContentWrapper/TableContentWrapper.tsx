@@ -3,7 +3,7 @@ import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import {
-  Props as TableLoadingProps,
+  TableRowLoadingProps,
   TableRowLoading,
 } from 'src/components/TableRowLoading/TableRowLoading';
 
@@ -13,12 +13,12 @@ interface Props {
   lastUpdated?: number;
   error?: APIError[];
   emptyMessage?: string;
-  loadingProps?: TableLoadingProps;
+  loadingProps?: TableRowLoadingProps;
   rowEmptyState?: JSX.Element;
   customFirstRow?: JSX.Element;
 }
 
-const TableContentWrapper: React.FC<Props> = (props) => {
+export const TableContentWrapper: React.FC<Props> = (props) => {
   const {
     length,
     loading,
@@ -57,5 +57,3 @@ const TableContentWrapper: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default TableContentWrapper;
