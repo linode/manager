@@ -4,6 +4,7 @@ import * as React from 'react';
 import CircularProgress, {
   CircularProgressProps,
 } from 'src/components/core/CircularProgress';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 interface CircleProgressProps extends CircularProgressProps {
   className?: string;
@@ -110,9 +111,9 @@ const StyledCircularProgress = styled(CircularProgress)<CircleProgressProps>(
   })
 );
 
-const StyledMiniCircularProgress = styled(
-  CircularProgress
-)<CircleProgressProps>(({ theme, ...props }) => ({
+const StyledMiniCircularProgress = styled(CircularProgress, {
+  shouldForwardProp: (prop) => isPropValid(['noPadding'], prop),
+})<CircleProgressProps>(({ theme, ...props }) => ({
   padding: `calc(${theme.spacing()} * 1.3)`,
   ...(props.noPadding && {
     padding: 0,
