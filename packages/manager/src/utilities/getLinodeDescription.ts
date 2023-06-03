@@ -1,5 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { typeLabelLong } from 'src/features/linodes/presentation';
+import { typeLabelLong } from 'src/features/Linodes/presentation';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 
 export const getLinodeDescription = (
