@@ -1,5 +1,5 @@
 import * as React from 'react';
-import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
