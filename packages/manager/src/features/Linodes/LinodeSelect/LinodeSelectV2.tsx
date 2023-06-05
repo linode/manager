@@ -18,7 +18,7 @@ import {
 import React from 'react';
 import TextField from 'src/components/TextField';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
 
 interface LinodeSelectProps {
   /** Disable editing the input value. */
@@ -214,20 +214,5 @@ const getDefaultNoOptionsMessage = (
     return 'You have no Linodes to choose from';
   } else {
     return 'No options';
-  }
-};
-
-// Maps ids in the format expected by MUI Autocomplete
-const mapIdsToLinodes = (
-  ids: number[] | number | null,
-  linodes: Linode[] = []
-): Linode[] | Linode | null => {
-  const linodeMap = new Map(linodes.map((linode) => [linode.id, linode]));
-  if (Array.isArray(ids)) {
-    return ids.map((id) => linodeMap.get(id)).filter(isNotNullOrUndefined);
-  } else if (ids !== null) {
-    return linodeMap.get(ids) ?? null;
-  } else {
-    return null;
   }
 };
