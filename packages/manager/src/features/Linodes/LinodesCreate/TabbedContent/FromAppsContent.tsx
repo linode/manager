@@ -351,10 +351,13 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
               <Box className={classes.filter}>
                 <Select
                   label="Select category"
-                  placeholder="Select category"
+                  placeholder={
+                    appInstancesLoading ? 'Loading...' : 'Select category'
+                  }
                   options={appCategoryOptions}
                   onChange={this.handleSelectCategory}
                   value={categoryFilter}
+                  disabled={appInstancesLoading}
                   hideLabel
                 />
               </Box>
