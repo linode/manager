@@ -5,20 +5,13 @@
  */
 
 import { APIError, Filter, Linode } from '@linode/api-v4';
-import CloseIcon from '@mui/icons-material/Close';
-import DoneIcon from '@mui/icons-material/Done';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import {
-  Autocomplete,
-  Box,
-  Popper,
-  PopperProps,
-  useTheme,
-} from '@mui/material';
+import { Autocomplete, Box } from '@mui/material';
 import React from 'react';
 import TextField from 'src/components/TextField';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
+import { CustomPopper, RemoveIcon, SelectedIcon } from './LinodeSelect.styles';
 
 interface LinodeSelectProps {
   /** Disable editing the input value. */
@@ -90,8 +83,6 @@ export const LinodeSelectV2 = (
     fetchNextPage,
   } = useInfiniteLinodesQuery(filter);
 
-  const theme = useTheme();
-
   const linodes = linodesData?.pages.flatMap((page) => page.data);
   const filteredLinodes = optionsFilter
     ? linodes?.filter(optionsFilter)
@@ -149,54 +140,19 @@ export const LinodeSelectV2 = (
       disableCloseOnSelect={multiple}
       renderOption={(props, option, { selected }) => (
         <li {...props}>
-          <Box
-            component={DoneIcon}
-            sx={{ width: 17, height: 17, mr: '5px', ml: '-2px' }}
-            style={{
-              visibility: selected ? 'visible' : 'hidden',
-            }}
-          />
+          <SelectedIcon visible={selected} />
           <Box
             sx={{
               flexGrow: 1,
-              '& span': {
-                color: theme.palette.mode === 'light' ? '#586069' : '#8b949e',
-              },
             }}
           >
             {option.label}
           </Box>
-          {multiple && (
-            <Box
-              component={CloseIcon}
-              sx={{ opacity: 0.6, width: 18, height: 18 }}
-              style={{
-                visibility: selected ? 'visible' : 'hidden',
-              }}
-            />
-          )}
+          {multiple && <RemoveIcon visible={selected} />}
         </li>
       )}
       PopperComponent={CustomPopper}
       popupIcon={<KeyboardArrowDownIcon />}
-    />
-  );
-};
-
-const CustomPopper = (props: PopperProps) => {
-  return (
-    <Popper
-      {...props}
-      data-qa-autocomplete-popper
-      modifiers={[{ name: 'preventOverflow', enabled: false }]}
-      style={{
-        ...(props.style ?? {}),
-        ...(props.style?.width
-          ? typeof props.style.width == 'string'
-            ? { width: `calc(${props.style.width} + 2px)` }
-            : { width: props.style.width + 2 }
-          : {}),
-      }}
     />
   );
 };
