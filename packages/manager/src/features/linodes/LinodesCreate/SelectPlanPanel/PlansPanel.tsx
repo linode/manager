@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
-import { LDClient } from 'launchdarkly-js-client-sdk';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -32,7 +31,6 @@ interface Props {
   error?: string;
   header?: string;
   isCreate?: boolean;
-  ldClient?: LDClient;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   selectedDiskSize?: number;
