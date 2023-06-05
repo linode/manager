@@ -37,6 +37,7 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import useEvents from 'src/hooks/useEvents';
 import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { useImageQuery } from 'src/queries/images';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -207,7 +208,7 @@ export const MigrateLinode = React.memo((props: Props) => {
   };
 
   const newLabel = getLinodeDescription(
-    type?.label ?? linode.type ?? 'Unknown Type',
+    type ? formatStorageUnits(type.label) : linode.type ?? 'Unknown Type',
     linode.specs.memory,
     linode.specs.disk,
     linode.specs.vcpus,

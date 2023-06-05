@@ -116,7 +116,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { data: _publicImages } = useAllImagesQuery(
     {},
     { is_public: true },
-    shouldMakeRequests
+    searchActive
   );
 
   const { data: regions } = useRegionsQuery();
