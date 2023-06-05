@@ -12,7 +12,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { uploadImageFile } from 'src/features/Images/requests';
-import FileUpload from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
+import { FileUpload } from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { redirectToLogin } from 'src/session';

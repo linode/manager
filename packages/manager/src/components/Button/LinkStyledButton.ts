@@ -1,4 +1,3 @@
-import Button from './Button';
 import { styled } from '@mui/material/styles';
 
 /**
@@ -8,7 +7,7 @@ import { styled } from '@mui/material/styles';
  *
  * @todo apply this component wherever theme.applyLinkStyles is used. see #6621
  */
-export const LinkStyledButton = styled(Button, {
+export const LinkStyledButton = styled('button', {
   label: 'LinkStyledButton',
 })(({ theme }) => ({
   background: 'none',
