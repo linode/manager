@@ -29,7 +29,7 @@ import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { reportException } from 'src/exceptionReporting';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { LinodeSelectNew } from 'src/features/linodes/LinodeSelect/LinodeSelect.new';
+import { LinodeSelectNew } from 'src/features/Linodes/LinodeSelect/LinodeSelect.new';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
