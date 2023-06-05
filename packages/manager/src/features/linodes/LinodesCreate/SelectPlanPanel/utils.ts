@@ -26,6 +26,7 @@ export const getPlanSelectionsByPlanType = <
 >(
   types: T[]
 ): PlansByType<T> => {
+  //We could update this to add or remove any new or existing plan tabs.
   const planTypeOrder: (
     | Exclude<LinodeTypeClass, 'nanode' | 'standard'>
     | 'shared'
@@ -44,6 +45,7 @@ export const getPlanSelectionsByPlanType = <
     return acc;
   }, {} as PlansByType<T>);
 
+  //group plans by type
   for (const type of types) {
     if (type.class === 'nanode' || type.class === 'standard') {
       plansByType['shared'].push(type);
@@ -52,6 +54,7 @@ export const getPlanSelectionsByPlanType = <
     }
   }
 
+  // filter empty plan group
   Object.keys(plansByType).forEach((key) => {
     if (plansByType[key].length === 0) {
       delete plansByType[key];
