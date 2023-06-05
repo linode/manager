@@ -4,7 +4,7 @@
  * remove 'V2' from this component's name.
  */
 
-import { Filter, Linode } from '@linode/api-v4';
+import { APIError, Filter, Linode } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -99,11 +99,6 @@ export const LinodeSelectV2 = (
     ? linodes?.filter(optionsFilter)
     : linodes;
 
-  const defaultNoOptionsMessage =
-    !error && !linodesDataLoading && !filteredLinodes?.length
-      ? 'You have no Linodes to choose from'
-      : 'No options';
-
   return (
     <Autocomplete
       value={mapIdsToLinodes(value, linodes)}
@@ -120,7 +115,10 @@ export const LinodeSelectV2 = (
       }
       onBlur={onBlur}
       inputValue={inputValue}
-      noOptionsText={noOptionsMessage ?? defaultNoOptionsMessage}
+      noOptionsText={
+        noOptionsMessage ??
+        getDefaultNoOptionsMessage(error, linodesDataLoading, filteredLinodes)
+      }
       onInputChange={(_, input) => {
         setInputValue(input);
       }}
@@ -201,6 +199,22 @@ const CustomPopper = (props: PopperProps) => {
       }}
     />
   );
+};
+
+const getDefaultNoOptionsMessage = (
+  error: APIError[] | null,
+  loading: boolean,
+  filteredLinodes: Linode[] | undefined
+) => {
+  if (error) {
+    return 'An error occured while fetching your Linodes';
+  } else if (loading) {
+    return 'Loading your Linodes...';
+  } else if (!filteredLinodes?.length) {
+    return 'You have no Linodes to choose from';
+  } else {
+    return 'No options;';
+  }
 };
 
 // Maps ids in the format expected by MUI Autocomplete
