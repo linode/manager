@@ -20,32 +20,53 @@ import TextField from 'src/components/TextField';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
-export type LinodeSelectProps = {
+interface LinodeSelectProps {
+  /** Disable editing the input value. */
   disabled?: boolean;
+  /** Hint displayed with error styling. */
   errorText?: string;
+  /** Filter sent to the API when retrieving account Linodes. */
   filter?: Filter;
+  /** Hint displayed in normal styling. */
   helperText?: string;
+  /** Adds styling to indicate a loading state. */
   loading?: boolean;
+  /** Message displayed when no options match the user's search. */
   noOptionsMessage?: string;
+  /** Called when the input loses focus. */
   onBlur?: (e: React.FocusEvent) => void;
+  /** Determine which Linodes should be available as options. */
   optionsFilter?: (linode: Linode) => boolean;
+  /* Displayed when the input is blank. */
   placeholder?: string;
+  /* Displays an indication that the input is required. */
   required?: boolean;
-} & (LinodeMultiSelectProps | LinodeSingleSelectProps);
+}
 
-interface LinodeMultiSelectProps {
+export interface LinodeMultiSelectProps extends LinodeSelectProps {
+  /* Called when the value changes */
   handleChange: (selected: Linode[]) => void;
+  /* Enable multi-select. */
   multiple: true;
+  /* Current value of the input. */
   value: number[];
 }
 
-interface LinodeSingleSelectProps {
+export interface LinodeSingleSelectProps extends LinodeSelectProps {
+  /* Called when the value changes */
   handleChange: (selected: Linode | null) => void;
+  /* Enable single-select. */
   multiple?: false;
+  /* Current value of the input. */
   value: number | null;
 }
 
-export const LinodeSelectNew = (props: LinodeSelectProps) => {
+/**
+ * A select input allowing selection between account Linodes.
+ */
+export const LinodeSelectNew = (
+  props: LinodeSingleSelectProps | LinodeMultiSelectProps
+) => {
   const {
     disabled,
     errorText,
