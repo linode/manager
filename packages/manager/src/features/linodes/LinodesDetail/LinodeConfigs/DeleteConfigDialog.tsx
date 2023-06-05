@@ -49,8 +49,7 @@ export const DeleteConfigDialog = (props: Props) => {
       actions={actions}
     >
       <Typography>
-        Are you sure you want to delete &quot;
-        {config?.label}?&quot;
+        Are you sure you want to delete &quot;{config?.label}&quot;?
       </Typography>
     </ConfirmationDialog>
   );
