@@ -90,8 +90,6 @@ export const LinodeSelectV2 = (
     fetchNextPage,
   } = useInfiniteLinodesQuery(filter);
 
-  const [inputValue, setInputValue] = React.useState('');
-
   const theme = useTheme();
 
   const linodes = linodesData?.pages.flatMap((page) => page.data);
@@ -114,14 +112,16 @@ export const LinodeSelectV2 = (
           : !multiple && !Array.isArray(value) && handleChange(value)
       }
       onBlur={onBlur}
-      inputValue={inputValue}
       noOptionsText={
-        noOptionsMessage ??
-        getDefaultNoOptionsMessage(error, linodesDataLoading, filteredLinodes)
+        <i>
+          {noOptionsMessage ??
+            getDefaultNoOptionsMessage(
+              error,
+              linodesDataLoading,
+              filteredLinodes
+            )}
+        </i>
       }
-      onInputChange={(_, input) => {
-        setInputValue(input);
-      }}
       renderInput={(params) => (
         <TextField
           label="Linodes"
@@ -213,7 +213,7 @@ const getDefaultNoOptionsMessage = (
   } else if (!filteredLinodes?.length) {
     return 'You have no Linodes to choose from';
   } else {
-    return 'No options;';
+    return 'No options';
   }
 };
 
