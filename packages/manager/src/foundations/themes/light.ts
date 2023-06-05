@@ -390,11 +390,11 @@ export const lightTheme: ThemeOptions = {
           },
           '&.Mui-focused': {
             backgroundColor: `${primaryColors.main} !important`,
-            color: '#fff',
+            color: primaryColors.white,
           },
           ':hover': {
             backgroundColor: `${primaryColors.main} !important`,
-            color: '#fff',
+            color: primaryColors.white,
           },
         },
         listbox: {
