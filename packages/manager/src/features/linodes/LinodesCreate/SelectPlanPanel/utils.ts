@@ -7,75 +7,58 @@ import { PlanSelectionType } from './PlansPanel';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
+type PlansByType<T> = Omit<PlansTypes<T>, 'nanode' | 'standard'> & {
+  shared: T[];
+};
+
 /**
- * getPlanSelectionsByPlanType is common util funtion used to provide filtered plans by
+ * getPlanSelectionsByPlanType function takes an array of types, groups
+ * them based on their class property into different plan types, filters out empty
+ * plan types, and returns an object containing the filtered plan selections.
+ * getPlanSelectionsByPlanType is common util funtion used to provide plans by
  * type to Linode, Database and LKE plan tables.
+ * The planTypeOrder array specifies the order in which the Linode types should be processed.
+ * Any change to the order can result in incorrect rendering of plan tabs.
  */
 
 export const getPlanSelectionsByPlanType = <
   T extends { class: LinodeTypeClass }
 >(
   types: T[]
-) => {
-  const plansByType: PlansTypes<T> = {
-    nanode: [],
-    standard: [],
-    highmem: [],
-    prodedicated: [],
-    dedicated: [],
-    gpu: [],
-    metal: [],
-    premium: [],
-  };
+): PlansByType<T> => {
+  const planTypeOrder: (
+    | Exclude<LinodeTypeClass, 'nanode' | 'standard'>
+    | 'shared'
+  )[] = [
+    'prodedicated',
+    'dedicated',
+    'shared',
+    'highmem',
+    'gpu',
+    'metal',
+    'premium',
+  ];
+
+  const plansByType: PlansByType<T> = planTypeOrder.reduce((acc, key) => {
+    acc[key] = [];
+    return acc;
+  }, {} as PlansByType<T>);
 
   for (const type of types) {
-    switch (type.class) {
-      case 'nanode':
-        plansByType.nanode.push(type);
-        break;
-      case 'standard':
-        plansByType.standard.push(type);
-        break;
-      case 'highmem':
-        plansByType.highmem.push(type);
-        break;
-      case 'prodedicated':
-        plansByType.prodedicated.push(type);
-        break;
-      case 'dedicated':
-        plansByType.dedicated.push(type);
-        break;
-      case 'gpu':
-        plansByType.gpu.push(type);
-        break;
-      case 'metal':
-        plansByType.metal.push(type);
-        break;
-      case 'premium':
-        plansByType.premium.push(type);
-        break;
-      default:
-        break;
+    if (type.class === 'nanode' || type.class === 'standard') {
+      plansByType['shared'].push(type);
+    } else {
+      plansByType[type.class].push(type);
     }
   }
 
-  const updatedPlans = {
-    prodedicated: plansByType.prodedicated,
-    dedicated: plansByType.dedicated,
-    shared: [...plansByType.nanode, ...plansByType.standard],
-    highmem: plansByType.highmem,
-    gpu: plansByType.gpu,
-    metal: plansByType.metal,
-    premium: plansByType.premium,
-  };
-
-  Object.keys(updatedPlans).forEach((key) => {
-    if (updatedPlans[key].length === 0) {
-      delete updatedPlans[key];
+  Object.keys(plansByType).forEach((key) => {
+    if (plansByType[key].length === 0) {
+      delete plansByType[key];
     }
   });
 
-  return updatedPlans;
+  return plansByType;
 };
 
 export const determineInitialPlanCategoryTab = <T>(
