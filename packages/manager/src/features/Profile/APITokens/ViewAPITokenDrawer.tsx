@@ -5,7 +5,7 @@ import Drawer from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import AccessCell from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
+import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { scopeStringToPermTuples, basePermNameMap } from './utils';
 import { Token } from '@linode/api-v4/lib/profile/types';
 import { makeStyles } from '@mui/styles';

@@ -1,15 +1,13 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
-import ShowMore from 'src/components/ShowMore';
-import Tag from 'src/components/Tag';
+import { ShowMore } from 'src/components/ShowMore/ShowMore';
+import { Tag } from 'src/components/Tag/Tag';
 
-export interface Props {
+export interface TagsProps {
   tags: string[];
 }
 
-type CombinedProps = Props;
-
-export const Tags: React.FC<CombinedProps> = (props) => {
+const Tags = (props: TagsProps) => {
   const { tags } = props;
 
   const renderTags = (tags: string[]) => {
@@ -42,4 +40,4 @@ export const Tags: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default Tags;
+export { Tags };
