@@ -22,43 +22,43 @@ import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 export type LinodeSelectProps = {
   disabled?: boolean;
-  loading?: boolean;
-  required?: boolean;
-  onBlur?: (e: React.FocusEvent) => void;
-  filter?: Filter;
-  placeholder?: string;
-  helperText?: string;
   errorText?: string;
+  filter?: Filter;
+  helperText?: string;
+  loading?: boolean;
   noOptionsMessage?: string;
+  onBlur?: (e: React.FocusEvent) => void;
   optionsFilter?: (linode: Linode) => boolean;
+  placeholder?: string;
+  required?: boolean;
 } & (LinodeMultiSelectProps | LinodeSingleSelectProps);
 
 interface LinodeMultiSelectProps {
+  handleChange: (selected: Linode[]) => void;
   multiple: true;
   value: number[];
-  handleChange: (selected: Linode[]) => void;
 }
 
 interface LinodeSingleSelectProps {
+  handleChange: (selected: Linode | null) => void;
   multiple?: false;
   value: number | null;
-  handleChange: (selected: Linode | null) => void;
 }
 
 export const LinodeSelectNew = (props: LinodeSelectProps) => {
   const {
-    value,
-    handleChange,
-    multiple,
     disabled,
-    loading,
-    onBlur,
-    filter,
-    placeholder,
-    helperText,
     errorText,
+    filter,
+    handleChange,
+    helperText,
+    loading,
+    multiple,
     noOptionsMessage,
+    onBlur,
     optionsFilter,
+    placeholder,
+    value,
   } = props;
 
   const {
