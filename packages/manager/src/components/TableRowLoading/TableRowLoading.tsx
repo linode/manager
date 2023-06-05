@@ -15,15 +15,15 @@ const useStyles = makeStyles(() => ({
 
 export interface TableRowLoadingProps {
   columns?: number;
-  rows?: number;
   responsive?: Record<number, HiddenProps>;
+  rows?: number;
 }
 
-export const TableRowLoading: React.FC<TableRowLoadingProps> = ({
-  rows = 1,
+export const TableRowLoading = ({
   columns = 1,
   responsive,
-}) => {
+  rows = 1,
+}: TableRowLoadingProps) => {
   const classes = useStyles();
   const cols = [];
 
@@ -50,9 +50,9 @@ export const TableRowLoading: React.FC<TableRowLoadingProps> = ({
   for (let i = 0; i < rows; i++) {
     tableRows.push(
       <TableRow
+        aria-label="Table content is loading"
         className={classes.root}
         data-testid="table-row-loading"
-        aria-label="Table content is loading"
         key={`table-loading-row-${i}`}
       >
         {cols}
