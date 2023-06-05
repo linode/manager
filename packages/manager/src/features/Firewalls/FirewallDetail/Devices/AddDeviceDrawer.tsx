@@ -56,9 +56,7 @@ export const AddDeviceDrawer = (props: Props) => {
 
   const handleSubmit = async () => {
     await Promise.all(
-      selectedLinodeIds.map((thisLinode) =>
-        addDevice({ type: 'linode', id: thisLinode })
-      )
+      selectedLinodeIds.map((id) => addDevice({ type: 'linode', id }))
     );
     onClose();
     setSelectedLinodeIds([]);
