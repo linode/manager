@@ -7,7 +7,7 @@ import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { LinodeSelectNew } from 'src/features/linodes/LinodeSelect/LinodeSelect.new';
+import { LinodeSelectNew } from 'src/features/Linodes/LinodeSelect/LinodeSelect.new';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
