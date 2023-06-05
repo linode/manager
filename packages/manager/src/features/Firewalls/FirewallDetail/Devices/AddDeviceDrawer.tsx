@@ -7,7 +7,7 @@ import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { LinodeSelectNew } from 'src/features/Linodes/LinodeSelect/LinodeSelect.new';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
@@ -126,7 +126,7 @@ export const AddDeviceDrawer = (props: Props) => {
         }}
       >
         {errorMessage ? errorNotice(errorMessage) : null}
-        <LinodeSelectNew
+        <LinodeSelectV2
           multiple
           handleChange={(linodes) =>
             setSelectedLinodeIds(linodes.map((linode) => linode.id))

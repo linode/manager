@@ -29,7 +29,7 @@ import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { reportException } from 'src/exceptionReporting';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { LinodeSelectNew } from 'src/features/Linodes/LinodeSelect/LinodeSelect.new';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -422,7 +422,7 @@ export const CreateDomain = () => {
             {isCreatingPrimaryDomain &&
               defaultRecordsSetting.value === 'linode' && (
                 <React.Fragment>
-                  <LinodeSelectNew
+                  <LinodeSelectV2
                     errorText={errorMap.defaultLinode}
                     handleChange={(value) =>
                       setSelectedDefaultLinode(value ?? undefined)

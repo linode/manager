@@ -1,7 +1,7 @@
 /**
  * The plan is to eventually replace the existing `LinodeSelect` and
  * `LinodeMultiSelect` components with this one. Once that happens,
- * remove 'new' from this component's name.
+ * remove 'V2' from this component's name.
  */
 
 import { Filter, Linode } from '@linode/api-v4';
@@ -64,7 +64,7 @@ export interface LinodeSingleSelectProps extends LinodeSelectProps {
 /**
  * A select input allowing selection between account Linodes.
  */
-export const LinodeSelectNew = (
+export const LinodeSelectV2 = (
   props: LinodeSingleSelectProps | LinodeMultiSelectProps
 ) => {
   const {

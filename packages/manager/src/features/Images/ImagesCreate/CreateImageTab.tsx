@@ -16,7 +16,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
-import { LinodeSelectNew } from 'src/features/Linodes/LinodeSelect/LinodeSelect.new';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import useFlags from 'src/hooks/useFlags';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -244,7 +244,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       ) : null}
       {notice ? <Notice success text={notice} data-qa-notice /> : null}
 
-      <LinodeSelectNew
+      <LinodeSelectV2
         value={selectedLinode?.id || null}
         errorText={linodeError}
         disabled={!canCreateImage}

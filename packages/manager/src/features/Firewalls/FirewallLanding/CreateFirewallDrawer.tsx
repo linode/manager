@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import { LinodeSelectNew } from 'src/features/Linodes/LinodeSelect/LinodeSelect.new';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile';
@@ -161,7 +161,7 @@ const CreateFirewallDrawer = (props: Props) => {
             autoFocus: true,
           }}
         />
-        <LinodeSelectNew
+        <LinodeSelectV2
           multiple
           disabled={userCannotAddFirewall}
           helperText={firewallHelperText}
