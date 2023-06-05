@@ -1,16 +1,12 @@
 import {
   Config,
-  Disk,
   Interface,
-  Kernel,
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -22,7 +18,7 @@ import FormGroup from 'src/components/core/FormGroup';
 import FormHelperText from 'src/components/core/FormHelperText';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
@@ -35,15 +31,12 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import TextField from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-import DeviceSelection, {
-  ExtendedDisk,
-} from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import DeviceSelection from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import { useAccount } from 'src/queries/account';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
-import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
@@ -54,16 +47,22 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import {
-  CreateLinodeConfig,
-  UpdateLinodeConfig,
-  withLinodeDetailContext,
-} from '../linodeDetailContext';
-import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
-import KernelSelect from './KernelSelect';
+import InterfaceSelect, {
+  ExtendedInterface,
+} from '../LinodeSettings/InterfaceSelect';
+import KernelSelect from '../LinodeSettings/KernelSelect';
 import { useQueryClient } from 'react-query';
+import {
+  useAllLinodeKernelsQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import {
+  useLinodeConfigCreateMutation,
+  useLinodeConfigUpdateMutation,
+} from 'src/queries/linodes/configs';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     marginTop: theme.spacing(),
     marginLeft: 1,
@@ -118,18 +117,12 @@ interface EditableFields {
 }
 
 interface Props {
-  linodeHypervisor: 'kvm' | 'xen';
-  linodeRegion: string;
-  maxMemory: number;
   open: boolean;
-  linodeConfigId?: number;
+  config: Config | undefined;
   onClose: () => void;
-  kernels: Kernel[];
-  kernelError: APIError[] | null;
-  kernelsLoading: boolean;
+  linodeId: number;
+  isReadOnly: boolean;
 }
-
-type CombinedProps = LinodeContextProps & Props & StateProps;
 
 const defaultInterface = {
   purpose: 'none',
@@ -222,20 +215,32 @@ const deviceCounterDefault = 1;
 // DiskID reserved on the back-end to indicate Finnix.
 const finnixDiskID = 25669;
 
-const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
-  const {
-    open,
-    onClose,
-    config,
-    initrdFromConfig,
-    kernels,
-    linodeConfigId,
-    linodeRegion,
-    maxMemory,
-    readOnly,
-  } = props;
+export const LinodeConfigDialog = (props: Props) => {
+  const { open, onClose, config, isReadOnly, linodeId } = props;
 
-  const classes = useStyles();
+  const { data: linode } = useLinodeQuery(linodeId);
+
+  const {
+    data: kernels,
+    isLoading: kernelsLoading,
+    error: kernelsError,
+  } = useAllLinodeKernelsQuery(
+    {},
+    { [linode?.hypervisor ?? 'kvm']: true },
+    open && linode !== undefined
+  );
+
+  const { data: disks } = useAllLinodeDisksQuery(linodeId);
+
+  const initrdFromConfig = config?.initrd ? String(config.initrd) : '';
+
+  const { mutateAsync: createConfig } = useLinodeConfigCreateMutation(linodeId);
+  const { mutateAsync: updateConfig } = useLinodeConfigUpdateMutation(
+    linodeId,
+    config?.id ?? -1
+  );
+
+  const { classes } = useStyles();
   const regions = useRegionsQuery().data ?? [];
 
   const queryClient = useQueryClient();
@@ -252,7 +257,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const capabilities = account?.capabilities ?? [];
   const regionHasVLANS = regions.some(
     (thisRegion) =>
-      thisRegion.id === linodeRegion &&
+      thisRegion.id === linode?.region &&
       thisRegion.capabilities.includes('Vlans')
   );
   const showVlans = capabilities.includes('Vlans') && regionHasVLANS;
@@ -327,8 +332,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   };
 
   const onSubmit = (values: EditableFields) => {
-    const { linodeConfigId, createLinodeConfig, updateLinodeConfig } = props;
-
     formik.setSubmitting(true);
 
     const configData = convertStateToData(values) as LinodeConfigCreationData;
@@ -384,16 +387,12 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     };
 
     /** Editing */
-    if (linodeConfigId) {
-      return updateLinodeConfig(linodeConfigId, configData)
-        .then(handleSuccess)
-        .catch(handleError);
+    if (config) {
+      return updateConfig(configData).then(handleSuccess).catch(handleError);
     }
 
     /** Creating */
-    return createLinodeConfig(configData)
-      .then(handleSuccess)
-      .catch(handleError);
+    return createConfig(configData).then(handleSuccess).catch(handleError);
   };
 
   React.useEffect(() => {
@@ -456,8 +455,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     }
   }, [open, config, initrdFromConfig, resetForm]);
 
-  const isLoading = props.kernelsLoading;
-
   const generalError = formik.status?.generalError;
 
   // We need the API to allow us to filter on `linode_id`
@@ -474,7 +471,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const { data: volumesData } = useAllVolumesQuery(
     {},
-    { region: linodeRegion },
+    { region: linode?.region },
     open
   );
 
@@ -487,7 +484,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     }) ?? [];
 
   const availableDevices = {
-    disks: props.disks,
+    disks:
+      disks?.map((disk) => ({
+        ...disk,
+        _id: `disk-${disk.id}`,
+      })) ?? [],
     volumes: volumes.map((volume) => ({
       ...volume,
       _id: `volume-${volume.id}`,
@@ -581,14 +582,14 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={`${linodeConfigId ? 'Edit' : 'Add'} Configuration`}
+      title={`${config ? 'Edit' : 'Add'} Configuration`}
       open={open}
       onClose={onClose}
       fullHeight
       fullWidth
     >
       <Grid container direction="row">
-        <DialogContent loading={isLoading} errors={props.kernelError}>
+        <DialogContent loading={kernelsLoading} errors={kernelsError}>
           <React.Fragment>
             {generalError && (
               <Grid>
@@ -609,7 +610,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 onChange={formik.handleChange}
                 errorText={formik.errors.label}
                 errorGroup="linode-config-dialog"
-                disabled={readOnly}
+                disabled={isReadOnly}
               />
 
               <TextField
@@ -618,10 +619,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 value={values.comments}
                 onChange={formik.handleChange}
                 multiline={true}
-                rows={3}
+                rows={1.5}
                 errorText={formik.errors.comments}
                 errorGroup="linode-config-dialog"
-                disabled={readOnly}
+                disabled={isReadOnly}
               />
             </Grid>
 
@@ -633,7 +634,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 <FormLabel
                   htmlFor="virt_mode"
                   component="label"
-                  disabled={readOnly}
+                  disabled={isReadOnly}
                   aria-describedby="virtModeCaption"
                 >
                   VM Mode
@@ -648,13 +649,13 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   <FormControlLabel
                     value="paravirt"
                     label="Paravirtualization"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                     control={<Radio />}
                   />
                   <FormControlLabel
                     value="fullvirt"
                     label="Full virtualization"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                     control={<Radio />}
                   />
                   <FormHelperText id="virtModeCaption">
@@ -675,7 +676,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   kernels={kernels}
                   selectedKernel={values.kernel}
                   onChange={handleChangeKernel}
-                  readOnly={readOnly}
+                  readOnly={isReadOnly}
                   errorText={formik.errors.kernel}
                 />
               )}
@@ -683,7 +684,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               <FormControl
                 updateFor={[values.run_level, classes]}
                 fullWidth
-                disabled={readOnly}
+                disabled={isReadOnly}
               >
                 <FormLabel htmlFor="run_level" component="label">
                   Run Level
@@ -698,19 +699,19 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   <FormControlLabel
                     value="default"
                     label="Run Default Level"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                     control={<Radio />}
                   />
                   <FormControlLabel
                     value="single"
                     label="Single user mode"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                     control={<Radio />}
                   />
                   <FormControlLabel
                     value="binbash"
                     label="init=/bin/bash"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                     control={<Radio />}
                   />
                 </RadioGroup>
@@ -731,7 +732,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 <FormLabel
                   htmlFor="memory_limit"
                   component="label"
-                  disabled={readOnly}
+                  disabled={isReadOnly}
                 >
                   Memory Limit
                 </FormLabel>
@@ -745,13 +746,13 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   <FormControlLabel
                     value="no_limit"
                     label="Do not set any limits on memory usage"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                     control={<Radio />}
                   />
                   <FormControlLabel
                     value="set_limit"
                     label="Limit the amount of RAM this config uses"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                     control={<Radio />}
                   />
                 </RadioGroup>
@@ -764,11 +765,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   label="Memory Limit Allotment (in MB)"
                   value={values.memory_limit}
                   min={0}
-                  max={maxMemory}
+                  max={linode?.specs.memory}
                   onChange={formik.handleChange}
-                  helperText={`Max: ${maxMemory} MB`}
+                  helperText={`Max: ${linode?.specs.memory} MB`}
                   errorText={formik.errors.memory_limit}
-                  disabled={readOnly}
+                  disabled={isReadOnly}
                 />
               )}
             </Grid>
@@ -784,7 +785,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 onChange={handleDevicesChanges}
                 getSelected={(slot) => pathOr('', [slot], values.devices)}
                 errorText={formik.errors.devices as string}
-                disabled={readOnly}
+                disabled={isReadOnly}
               />
               <FormControl fullWidth>
                 <Select
@@ -809,7 +810,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
                 className={classes.button}
                 compactX
-                disabled={readOnly || deviceCounter >= deviceSlots.length - 1}
+                disabled={isReadOnly || deviceCounter >= deviceSlots.length - 1}
               >
                 Add a Device
               </Button>
@@ -822,7 +823,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     <Toggle
                       checked={useCustomRoot}
                       onChange={handleToggleCustomRoot}
-                      disabled={readOnly}
+                      disabled={isReadOnly}
                     />
                   }
                 />
@@ -838,7 +839,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     id="root_device"
                     errorText={formik.errors.root_device}
                     placeholder="None"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                     isClearable={false}
                   />
                 ) : (
@@ -851,7 +852,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     fullWidth
                     errorText={formik.errors.root_device}
                     errorGroup="linode-config-dialog"
-                    disabled={readOnly}
+                    disabled={isReadOnly}
                   />
                 )}
               </FormControl>
@@ -895,8 +896,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     <InterfaceSelect
                       key={`eth${idx}-interface`}
                       slotNumber={idx}
-                      readOnly={readOnly}
-                      region={linodeRegion}
+                      readOnly={isReadOnly}
+                      region={linode?.region}
                       labelError={formik.errors[`interfaces[${idx}].label`]}
                       ipamError={
                         formik.errors[`interfaces[${idx}].ipam_address`]
@@ -935,7 +936,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                       <Toggle
                         checked={values.helpers.distro}
                         onChange={formik.handleChange}
-                        disabled={readOnly}
+                        disabled={isReadOnly}
                         tooltipText="Helps maintain correct inittab/upstart console device"
                       />
                     }
@@ -949,7 +950,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                       <Toggle
                         checked={values.helpers.updatedb_disabled}
                         onChange={formik.handleChange}
-                        disabled={readOnly}
+                        disabled={isReadOnly}
                         tooltipText="Disables updatedb cron job to avoid disk thrashing"
                       />
                     }
@@ -963,7 +964,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                       <Toggle
                         checked={values.helpers.modules_dep}
                         onChange={formik.handleChange}
-                        disabled={readOnly}
+                        disabled={isReadOnly}
                         tooltipText="Creates a modules dependency file for the kernel you run"
                       />
                     }
@@ -977,7 +978,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                       <Toggle
                         checked={values.helpers.devtmpfs_automount}
                         onChange={formik.handleChange}
-                        disabled={readOnly}
+                        disabled={isReadOnly}
                         tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
                       />
                     }
@@ -991,7 +992,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                       <Toggle
                         checked={values.helpers.network}
                         onChange={formik.handleChange}
-                        disabled={readOnly}
+                        disabled={isReadOnly}
                         tooltipText={
                           <>
                             Automatically configure static networking
@@ -1018,10 +1019,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         <Button
           onClick={formik.submitForm}
           buttonType="primary"
-          disabled={readOnly}
+          disabled={isReadOnly}
           loading={formik.isSubmitting}
         >
-          {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
+          {config ? 'Save Changes' : 'Add Configuration'}
         </Button>
       </StyledActionPanel>
     </Dialog>
@@ -1059,45 +1060,3 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sdg',
     '/dev/sdh',
   ].includes(value) === false;
-
-interface StateProps {
-  disks: ExtendedDisk[];
-  config?: Config;
-  initrdFromConfig: string;
-}
-
-interface LinodeContextProps {
-  linodeId: number;
-  createLinodeConfig: CreateLinodeConfig;
-  updateLinodeConfig: UpdateLinodeConfig;
-  readOnly: boolean;
-}
-
-const enhanced = compose<CombinedProps, Props>(
-  withLinodeDetailContext(
-    ({ linode, createLinodeConfig, updateLinodeConfig }) => ({
-      disks: linode._disks.map((disk: Disk) => ({
-        ...disk,
-        _id: `disk-${disk.id}`,
-      })),
-      linodeId: linode.id,
-      readOnly: linode._permissions === 'read_only',
-      createLinodeConfig,
-      updateLinodeConfig,
-    })
-  ),
-
-  connect((state: ApplicationState, ownProps: LinodeContextProps & Props) => {
-    const { linodeConfigId, linodeId } = ownProps;
-
-    const config = linodeConfigId
-      ? state.__resources.linodeConfigs[linodeId].itemsById[linodeConfigId]
-      : undefined;
-
-    const initrdFromConfig = config?.initrd ? String(config.initrd) : '';
-
-    return { config, initrdFromConfig };
-  })
-);
-
-export default enhanced(LinodeConfigDialog);
