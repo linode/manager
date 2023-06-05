@@ -13,7 +13,7 @@ import Divider from 'src/components/core/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
-import AppInfo from '../../linodes/LinodesCreate/AppInfo';
+import AppInfo from '../../Linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
