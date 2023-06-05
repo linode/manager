@@ -16,7 +16,10 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { getErrorMap } from 'src/utilities/errorUtils';
-const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
+
+const PasswordInput = React.lazy(
+  () => import('src/components/PasswordInput/PasswordInput')
+);
 
 interface Props {
   linodeId: number;
