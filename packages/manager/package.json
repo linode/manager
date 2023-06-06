@@ -213,7 +213,7 @@
     "serve": "^14.0.1",
     "storybook": "~7.0.18",
     "storybook-dark-mode": "^3.0.0",
-    "vite": "^4.3.0",
+    "vite": "^4.3.9",
     "vite-plugin-svgr": "^2.4.0"
   },
   "jest": {
