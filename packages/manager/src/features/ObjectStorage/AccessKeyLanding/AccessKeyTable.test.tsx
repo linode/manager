@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { AccessKeyTable, Props } from './AccessKeyTable';
+import { AccessKeyTable, AccessKeyTableProps } from './AccessKeyTable';
 
 describe('ObjectStorageKeyTable', () => {
-  const props: Props = {
+  const props: AccessKeyTableProps = {
     openDrawer: jest.fn(),
     openRevokeDialog: jest.fn(),
     isRestrictedUser: false,

@@ -4,7 +4,7 @@ import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Volume } from '@linode/api-v4/lib/volumes';
-import { displayType } from 'src/features/linodes/presentation';
+import { displayType } from 'src/features/Linodes/presentation';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';

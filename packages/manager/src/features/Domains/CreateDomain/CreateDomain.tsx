@@ -27,7 +27,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import TextField from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import LinodeSelect from 'src/features/Linodes/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';

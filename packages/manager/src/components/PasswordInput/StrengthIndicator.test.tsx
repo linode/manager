@@ -1,14 +1,11 @@
-import { render } from '@testing-library/react';
 import * as React from 'react';
-import StrengthIndicator, { convertStrengthScore } from './StrengthIndicator';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { StrengthIndicator, convertStrengthScore } from './StrengthIndicator';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('StrengthIndicator', () => {
   it('renders a StrengthIndicator', () => {
-    const { queryByText } = render(
-      wrapWithTheme(
-        <StrengthIndicator strength={1} hideStrengthLabel={false} />
-      )
+    const { queryByText } = renderWithTheme(
+      <StrengthIndicator strength={1} hideStrengthLabel={false} />
     );
     expect(queryByText('Strength:')).toBeTruthy();
   });

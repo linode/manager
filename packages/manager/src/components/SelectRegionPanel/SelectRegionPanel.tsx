@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/linodes/LinodesCreate/utilities';
+import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { Notice } from 'src/components/Notice/Notice';
 import { Region } from '@linode/api-v4/lib/regions';

@@ -1,55 +1,42 @@
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import BucketDetailsDrawer from './BucketDetailsDrawer';
-import BucketTable from './BucketTable';
-import CancelNotice from '../CancelNotice';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
-import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import Typography from 'src/components/core/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { APIError } from '@linode/api-v4/lib/types';
+import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
+import { BucketTable } from './BucketTable';
+import { CancelNotice } from '../CancelNotice';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { makeStyles } from '@mui/styles';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { makeStyles } from 'tss-react/mui';
+import { Notice } from 'src/components/Notice/Notice';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Theme } from '@mui/material/styles';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
-
-import {
-  sendDeleteBucketEvent,
-  sendDeleteBucketFailedEvent,
-} from 'src/utilities/ga';
 import {
   BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import {
+  ObjectStorageBucket,
+  ObjectStorageCluster,
+} from '@linode/api-v4/lib/object-storage';
+import {
+  sendDeleteBucketEvent,
+  sendDeleteBucketFailedEvent,
+} from 'src/utilities/ga';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(),
-  },
-  empty: {
-    '& svg': {
-      marginTop: theme.spacing(1.5),
-      transform: 'scale(0.8)',
-    },
-  },
-  placeholderAdjustment: {
-    padding: `${theme.spacing(2)} 0 0 0`,
-    [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing(10)} 0 0 0`,
-    },
   },
 }));
 
@@ -72,7 +59,7 @@ export const BucketLanding = () => {
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const removeBucketConfirmationDialog = useOpenClose();
   const [bucketToRemove, setBucketToRemove] = React.useState<
@@ -279,14 +266,12 @@ const RenderEmpty = () => {
   return <BucketLandingEmptyState />;
 };
 
-export default BucketLanding;
-
 interface UnavailableClustersDisplayProps {
   unavailableClusters: ObjectStorageCluster[];
 }
 
-const UnavailableClustersDisplay: React.FC<UnavailableClustersDisplayProps> = React.memo(
-  ({ unavailableClusters }) => {
+const UnavailableClustersDisplay = React.memo(
+  ({ unavailableClusters }: UnavailableClustersDisplayProps) => {
     const { data: regions } = useRegionsQuery();
 
     const regionsAffected = unavailableClusters.map(
@@ -303,7 +288,7 @@ interface BannerProps {
   regionsAffected: string[];
 }
 
-const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
+const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (

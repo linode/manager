@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import Tab from 'src/components/core/ReachTab';
-import TabList from 'src/components/core/ReachTabList';
+import { Tab } from 'src/components/core/ReachTab';
+import { TabList } from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
