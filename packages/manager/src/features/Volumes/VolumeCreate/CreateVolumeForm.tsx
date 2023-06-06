@@ -18,7 +18,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import LinodeSelect from 'src/features/Linodes/LinodeSelect';
 import {
   reportAgreementSigningError,
   useAccountAgreements,

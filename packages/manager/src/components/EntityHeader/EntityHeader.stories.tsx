@@ -6,7 +6,7 @@ import Button from '../Button';
 import Link from '../Link';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
-import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
+import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 
 const sxBoxFlex = {
   alignItems: 'center',

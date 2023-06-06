@@ -134,7 +134,7 @@ interface Props {
 type CombinedProps = Props & GlobalErrorProps;
 
 const Account = React.lazy(() => import('src/features/Account'));
-const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
+const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
 const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() => import('src/features/Domains'));
 const Images = React.lazy(() => import('src/features/Images'));

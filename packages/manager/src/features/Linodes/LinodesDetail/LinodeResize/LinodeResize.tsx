@@ -1,0 +1,586 @@
+import { GrantLevel } from '@linode/api-v4/lib/account';
+import { Disk, LinodeStatus, resizeLinode } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
+import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { compose } from 'recompose';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import Button from 'src/components/Button';
+import Checkbox from 'src/components/CheckBox';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import Typography from 'src/components/core/Typography';
+import { Dialog } from 'src/components/Dialog/Dialog';
+import ExternalLink from 'src/components/ExternalLink';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { Notice } from 'src/components/Notice/Notice';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
+import {
+  withTypes,
+  withSpecificTypes,
+  WithSpecificTypesProps,
+  WithTypesProps,
+} from 'src/containers/types.container';
+import { resetEventsPolling } from 'src/eventsPolling';
+import SelectPlanPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel';
+import { linodeInTransition } from 'src/features/Linodes/transitions';
+import { ApplicationState } from 'src/store';
+import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
+import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
+import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
+import { EntityError } from 'src/store/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { GetAllData } from 'src/utilities/getAll';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import HostMaintenanceError from '../HostMaintenanceError';
+import LinodePermissionsError from '../LinodePermissionsError';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+
+type ClassNames =
+  | 'title'
+  | 'subTitle'
+  | 'toolTip'
+  | 'currentPlanContainer'
+  | 'resizeTitle'
+  | 'currentHeaderEmptyCell'
+  | 'selectPlanPanel'
+  | 'actionPanel';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    title: {
+      marginBottom: theme.spacing(2),
+    },
+    resizeTitle: {
+      display: 'flex',
+      alignItems: 'center',
+      minHeight: '44px',
+    },
+    subTitle: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(1),
+    },
+    currentPlanContainer: {
+      '& input[type=radio]': {
+        cursor: 'not-allowed',
+      },
+    },
+    currentHeaderEmptyCell: {
+      width: '13%',
+    },
+    selectPlanPanel: {
+      marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(3),
+      '& > div': {
+        padding: 0,
+      },
+    },
+    actionPanel: {
+      flexDirection: 'column',
+      '& button': {
+        alignSelf: 'flex-end',
+      },
+    },
+  });
+
+interface Props {
+  linodeId?: number;
+  linodeLabel?: string;
+  open: boolean;
+  onClose: () => void;
+}
+
+interface State {
+  selectedId: string | null;
+  errors?: APIError[];
+  autoDiskResize: boolean;
+  confirmationText: string;
+  submitting: boolean;
+  submissionError?: string | JSX.Element;
+}
+
+type CombinedProps = Props &
+  WithTypesProps &
+  WithSpecificTypesProps &
+  WithStyles<ClassNames> &
+  DispatchProps &
+  PreferencesProps &
+  WithSnackbarProps &
+  StateProps &
+  WithProfileProps;
+
+export class LinodeResize extends React.Component<CombinedProps, State> {
+  state: State = {
+    selectedId: null,
+    autoDiskResize: false,
+    confirmationText: '',
+    submitting: false,
+  };
+
+  onSubmit = () => {
+    const {
+      linodeId,
+      linodeType,
+      enqueueSnackbar,
+      updateLinode,
+      requestedTypesData,
+    } = this.props;
+    const { selectedId } = this.state;
+
+    const extendedTypeData = requestedTypesData.map(extendType);
+
+    if (!linodeId || !selectedId) {
+      return;
+    }
+
+    const isSmaller = isSmallerThanCurrentPlan(
+      selectedId,
+      linodeType ?? null,
+      extendedTypeData
+    );
+
+    this.setState({
+      submitting: true,
+    });
+
+    /**
+     * Only set the allow_auto_disk_resize flag to true if both the user
+     * has selected it (this.state.autoDiskResize) and
+     * the flag would be honored (so disable if the current plan
+     * is larger than the target plan).
+     */
+    resizeLinode(linodeId, selectedId, this.state.autoDiskResize && !isSmaller)
+      .then((_) => {
+        this.setState({
+          selectedId: null,
+          submitting: false,
+        });
+        resetEventsPolling();
+        enqueueSnackbar('Linode queued for resize.', {
+          variant: 'info',
+        });
+
+        // Update the Linode so we display the new plan information.
+        // This is important if resizing from a legacy plan. We need
+        // to do this in order for the "Upgrade available" banner to
+        // go away.
+        updateLinode(linodeId);
+
+        this.props.onClose();
+      })
+      .catch((errorResponse) => {
+        let error: string | JSX.Element = '';
+        const reason = errorResponse[0]?.reason ?? '';
+        /**
+         * The logic below is to manually intercept a certain
+         * error and add some JSX with a hyperlink to it.
+         *
+         * Unfortunately, we have global error interceptors that
+         * do the same thing, as is the case when your reputation
+         * score is too low to do what you're trying to do.
+         *
+         * If one of those already-intercepted errors comes through here,
+         * it will break the logic (since error[0].reason is not a string).
+         */
+        if (
+          typeof reason === 'string' &&
+          reason.match(/allocated more disk/i)
+        ) {
+          error = (
+            <Typography>
+              The current disk size of your Linode is too large for the new
+              service plan. Please resize your disk to accommodate the new plan.
+              You can read our{' '}
+              <ExternalLink
+                hideIcon
+                text="Resize Your Linode"
+                link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+              />{' '}
+              guide for more detailed instructions.
+            </Typography>
+          );
+        } else {
+          error = getAPIErrorOrDefault(
+            errorResponse,
+            'There was an issue resizing your Linode.'
+          )[0].reason;
+        }
+        this.setState({
+          submissionError: error,
+          submitting: false,
+        });
+        // Set to "block: end" since the sticky header would otherwise interfere.
+        scrollErrorIntoView(undefined, { block: 'end' });
+      });
+  };
+
+  handleSelectPlan = (id: string) => {
+    this.setState({ selectedId: id });
+  };
+
+  handleToggleAutoDisksResize = () => {
+    this.setState({ autoDiskResize: !this.state.autoDiskResize });
+  };
+
+  updateRequestedTypes = () => {
+    this.props.setRequestedTypes(
+      [this.props.linodeType, this.state.selectedId]
+        .filter(isNotNullOrUndefined)
+        .filter((type) => type.length > 0)
+    );
+  };
+
+  componentDidMount = () => {
+    this.updateRequestedTypes();
+  };
+
+  componentDidUpdate = (prevProps: CombinedProps, prevState: State) => {
+    if (
+      prevProps.linodeId !== this.props.linodeId &&
+      !!this.props.linodeId &&
+      this.props.linodeDisks?.length === 0
+    ) {
+      // @todo: Error?
+      this.props.getLinodeDisks(this.props.linodeId).catch((_) => null);
+    }
+
+    if (
+      prevProps.linodeDisks?.length == 0 &&
+      this.props.linodeDisks && // TS Compiler wasn't recognizing the optional chaining here.
+      this.props.linodeDisks.length > 0
+    ) {
+      this.setState({
+        autoDiskResize: shouldEnableAutoResizeDiskOption(
+          this.props.linodeDisks ?? []
+        )[1],
+      });
+    }
+
+    if (
+      prevProps.linodeType !== this.props.linodeType ||
+      prevState.selectedId !== this.state.selectedId
+    ) {
+      this.updateRequestedTypes();
+    }
+  };
+
+  render() {
+    const {
+      typesData,
+      requestedTypesData,
+      linodeType,
+      classes,
+      linodeDisks,
+      linodeStatus,
+      linodeDisksError,
+      linodeLabel,
+      linodeId,
+      grants,
+      preferences,
+    } = this.props;
+    const { confirmationText, submissionError } = this.state;
+    const extendedTypeData = requestedTypesData.map(extendType);
+    const type = extendedTypeData.find((t) => t.id === linodeType);
+
+    const hostMaintenance = linodeStatus === 'stopped';
+    const unauthorized =
+      getPermissionsForLinode(grants.data, linodeId || 0) === 'read_only';
+    const disksError = linodeDisksError?.read;
+
+    const tableDisabled =
+      hostMaintenance || unauthorized || Boolean(disksError);
+
+    const submitButtonDisabled =
+      preferences?.type_to_confirm !== false &&
+      confirmationText !== linodeLabel;
+
+    const currentPlanHeading = linodeType
+      ? type
+        ? type.formattedLabel
+        : 'Unknown Plan'
+      : 'No Assigned Plan';
+
+    const [
+      diskToResize,
+      _shouldEnableAutoResizeDiskOption,
+    ] = shouldEnableAutoResizeDiskOption(linodeDisks ?? []);
+
+    const isSmaller = isSmallerThanCurrentPlan(
+      this.state.selectedId,
+      linodeType || '',
+      extendedTypeData
+    );
+
+    const currentTypes = filterCurrentTypes(typesData?.map(extendType));
+
+    return (
+      <Dialog
+        title={`Resize Linode ${this.props.linodeLabel ?? ''}`}
+        open={this.props.open}
+        onClose={this.props.onClose}
+        fullWidth
+        fullHeight
+        maxWidth="md"
+      >
+        {unauthorized && <LinodePermissionsError />}
+        {hostMaintenance && <HostMaintenanceError />}
+        {disksError && (
+          <Notice
+            error
+            text="There was an error loading your Linode&rsquo;s Disks."
+          />
+        )}
+        {submissionError && <Notice error>{submissionError}</Notice>}
+        <Typography data-qa-description>
+          If you&rsquo;re expecting a temporary burst of traffic to your
+          website, or if you&rsquo;re not using your Linode as much as you
+          thought, you can temporarily or permanently resize your Linode to a
+          different plan.{' '}
+          <ExternalLink
+            fixedIcon
+            text="Learn more."
+            link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+          />
+        </Typography>
+
+        <div className={classes.selectPlanPanel}>
+          <SelectPlanPanel
+            currentPlanHeading={currentPlanHeading}
+            types={currentTypes}
+            onSelect={this.handleSelectPlan}
+            selectedID={this.state.selectedId ?? undefined}
+            disabled={tableDisabled}
+            updateFor={[this.state.selectedId, currentTypes]}
+          />
+        </div>
+        <Typography variant="h2" className={classes.resizeTitle}>
+          Auto Resize Disk
+          {disksError ? (
+            <TooltipIcon
+              sxTooltipIcon={{
+                marginLeft: '-2px',
+              }}
+              text={`There was an error loading your Linode&rsquo; disks.`}
+              status="help"
+            />
+          ) : isSmaller ? (
+            <TooltipIcon
+              sxTooltipIcon={{
+                marginLeft: '-2px',
+              }}
+              text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
+              status="help"
+            />
+          ) : !_shouldEnableAutoResizeDiskOption ? (
+            <TooltipIcon
+              sxTooltipIcon={{
+                marginLeft: '-2px',
+              }}
+              text={`Your ext disk can only be automatically resized if you have one ext
+                      disk or one ext disk and one swap disk on this Linode.`}
+              status="help"
+            />
+          ) : null}
+        </Typography>
+        <Checkbox
+          disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
+          checked={
+            !_shouldEnableAutoResizeDiskOption || isSmaller
+              ? false
+              : this.state.autoDiskResize
+          }
+          onChange={this.handleToggleAutoDisksResize}
+          text={
+            <Typography>
+              Would you like{' '}
+              {_shouldEnableAutoResizeDiskOption ? (
+                <strong>{diskToResize}</strong>
+              ) : (
+                'your disk'
+              )}{' '}
+              to be automatically scaled with this Linode&rsquo;s new size? We
+              recommend you keep this option enabled when available. Automatic
+              resizing is only available when moving to a larger plan, and when
+              you have a single ext disk (or one ext and one swap disk) on your
+              Linode.
+            </Typography>
+          }
+        />
+
+        <StyledActionPanel className={classes.actionPanel}>
+          <TypeToConfirm
+            title="Confirm"
+            confirmationText={
+              <span>
+                To confirm these changes, type the label of the Linode (
+                <strong>{linodeLabel}</strong>) in the field below:
+              </span>
+            }
+            typographyStyle={{ marginBottom: 8 }}
+            onChange={(input) => {
+              this.setState({ confirmationText: input });
+            }}
+            value={confirmationText}
+            hideLabel
+            visible={preferences?.type_to_confirm}
+            label="Linode Label"
+            textFieldStyle={{ marginBottom: 16 }}
+          />
+          <Button
+            disabled={
+              !this.state.selectedId ||
+              linodeInTransition(this.props.linodeStatus || '') ||
+              tableDisabled ||
+              submitButtonDisabled
+            }
+            loading={this.state.submitting}
+            buttonType="primary"
+            onClick={this.onSubmit}
+            data-qa-resize
+          >
+            Resize Linode
+          </Button>
+        </StyledActionPanel>
+      </Dialog>
+    );
+  }
+}
+
+const styled = withStyles(styles);
+
+interface DispatchProps {
+  updateLinode: (id: number) => void;
+  getLinodeDisks: (linodeId: number) => Promise<GetAllData<Disk>>;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
+) => {
+  return {
+    updateLinode: (id: number) => dispatch(requestLinodeForStore(id)),
+    getLinodeDisks: (linodeId: number) =>
+      dispatch(getAllLinodeDisks({ linodeId })),
+  };
+};
+
+interface StateProps {
+  linodeId?: number;
+  linodeType?: null | string;
+  linodeStatus?: LinodeStatus;
+  linodeLabel?: string;
+  permissions?: GrantLevel;
+  linodeDisks?: Disk[];
+  linodeDisksError?: EntityError;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props> = (
+  state: ApplicationState,
+  ownProps
+) => {
+  const { linodeId } = ownProps;
+
+  if (!linodeId) {
+    return {};
+  }
+
+  const linode = state.__resources.linodes.itemsById[linodeId];
+  const linodeDisks = state.__resources.linodeDisks;
+
+  if (!linode) {
+    return {};
+  }
+
+  return {
+    linodeId: linode.id,
+    linodeType: linode.type,
+    linodeStatus: linode.status,
+    linodeLabel: linode.label,
+    linodeDisks: getLinodeDisksForLinode(linodeDisks, linodeId),
+    linodeDisksError: linodeDisks[linodeId]?.error,
+  };
+};
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
+export const getLinodeType = (
+  types: ExtendedType[],
+  selectedTypeID: string
+) => {
+  return types.find((thisType) => thisType.id === selectedTypeID);
+};
+
+/**
+ * the user should only be given the option to automatically resize
+ * their disks under the 2 following conditions:
+ *
+ * 1. They have 1 ext disk (and nothing else)
+ * 2. They have 1 ext disk and 1 swap disk (and nothing else)
+ *
+ * If they have more than 2 disks, no automatic resizing is going to
+ * take place server-side, so given them the option to toggle
+ * the checkbox is pointless.
+ *
+ * @returns array of both the ext disk to resize and a boolean
+ * of whether the option should be enabled
+ */
+export const shouldEnableAutoResizeDiskOption = (
+  linodeDisks: Disk[]
+): [string | undefined, boolean] => {
+  const linodeExtDiskLabels = linodeDisks.reduce((acc, eachDisk) => {
+    return eachDisk.filesystem === 'ext3' || eachDisk.filesystem === 'ext4'
+      ? [...acc, eachDisk.label]
+      : acc;
+  }, []);
+  const linodeHasOneExtDisk = linodeExtDiskLabels.length === 1;
+  const linodeHasOneSwapDisk =
+    linodeDisks.reduce((acc, eachDisk) => {
+      return eachDisk.filesystem === 'swap'
+        ? [...acc, eachDisk.filesystem]
+        : acc;
+    }, []).length === 1;
+  const shouldEnable =
+    (linodeDisks.length === 1 && linodeHasOneExtDisk) ||
+    (linodeDisks.length === 2 && linodeHasOneSwapDisk && linodeHasOneExtDisk);
+  return [linodeExtDiskLabels[0], shouldEnable];
+};
+
+export const isSmallerThanCurrentPlan = (
+  selectedPlanID: string | null,
+  currentPlanID: string | null,
+  types: ExtendedType[]
+) => {
+  const currentType = types.find((thisType) => thisType.id === currentPlanID);
+  const nextType = types.find((thisType) => thisType.id === selectedPlanID);
+
+  if (!(currentType && nextType)) {
+    return false;
+  }
+
+  return currentType.disk > nextType.disk;
+};
+
+export default compose<CombinedProps, Props>(
+  // this awkward line avoids fetching all types until this dialog is opened which
+  // is important since LinodeResize is mounted on the default landing page
+  (component: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
+    withTypes(component, props.open)(props),
+  withSpecificTypes,
+  styled,
+  withSnackbar,
+  connected,
+  withProfile,
+  withPreferences
+)(LinodeResize);
