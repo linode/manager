@@ -8,8 +8,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import FileUploader from 'src/components/FileUploader/FileUploader';
 import Link from 'src/components/Link';
@@ -17,6 +15,8 @@ import LinodeCLIModal from 'src/components/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import useFlags from 'src/hooks/useFlags';
@@ -25,6 +25,7 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { useAllImagesQuery } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { redirectToLogin } from 'src/session';
@@ -100,6 +101,10 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
   const flags = useFlags();
+  const { data: images } = useAllImagesQuery();
+
+  const hasMetadataCustomerTag =
+    images?.some((image) => image.capabilities.includes('cloud-init')) ?? false;
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
@@ -238,7 +243,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             errorText={errorMap.description}
             disabled={!canCreateImage}
           />
-          {flags.metadata ? (
+          {flags.metadata && hasMetadataCustomerTag ? (
             <div className={classes.cloudInitCheckboxWrapper}>
               <CheckBox
                 checked={isCloudInit}

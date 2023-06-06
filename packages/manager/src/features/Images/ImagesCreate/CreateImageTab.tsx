@@ -18,7 +18,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
 import LinodeSelect from 'src/features/Linodes/LinodeSelect';
 import useFlags from 'src/hooks/useFlags';
-import { useCreateImageMutation } from 'src/queries/images';
+import { useAllImagesQuery, useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -96,6 +96,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const flags = useFlags();
+  const { data: images } = useAllImagesQuery();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
@@ -105,6 +106,9 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const [notice, setNotice] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
+
+  const hasMetadataCustomerTag =
+    images?.some((image) => image.capabilities.includes('cloud-init')) ?? false;
 
   const canCreateImage =
     Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
@@ -283,7 +287,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
-      {flags.metadata ? (
+      {flags.metadata && hasMetadataCustomerTag ? (
         <Box className={classes.cloudInitCheckboxWrapper}>
           <CheckBox
             checked={isCloudInit}
