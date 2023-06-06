@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TabbedPanel, { Tab } from 'src/components/TabbedPanel';
+import { Tab, TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import Preview from './PreviewReply';
 import Reply, { Props as ReplyProps } from './TicketReply';
 

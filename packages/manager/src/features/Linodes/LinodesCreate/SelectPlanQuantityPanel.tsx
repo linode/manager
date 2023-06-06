@@ -14,8 +14,7 @@ import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/Enhanced
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import SelectionCard from 'src/components/SelectionCard';
-import TabbedPanel from 'src/components/TabbedPanel';
-import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
+import { Tab, TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
