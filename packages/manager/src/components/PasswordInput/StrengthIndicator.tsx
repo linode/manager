@@ -1,17 +1,17 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 
 type StrengthValues = null | 0 | 1 | 2 | 3 | 4;
+
 interface Props {
   strength: StrengthValues;
   hideStrengthLabel?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     maxWidth: `calc(415px + ${theme.spacing(1)})`,
     [theme.breakpoints.down('sm')]: {
@@ -44,8 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const StrengthIndicator = (props: Props) => {
-  const classes = useStyles();
+export const StrengthIndicator = (props: Props) => {
+  const { classes, cx } = useStyles();
 
   const { strength, hideStrengthLabel } = props;
 
@@ -61,7 +61,7 @@ const StrengthIndicator = (props: Props) => {
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
         <Grid key={idx} xs={3} className={classes.blockOuter}>
           <div
-            className={classNames({
+            className={cx({
               [classes.block]: true,
               [`strength-${strength}`]:
                 strength !== undefined &&
@@ -86,8 +86,6 @@ const StrengthIndicator = (props: Props) => {
     </Grid>
   );
 };
-
-export default StrengthIndicator;
 
 const scaledStrength = (strength: number) => {
   if ([0, 1].includes(strength)) {
