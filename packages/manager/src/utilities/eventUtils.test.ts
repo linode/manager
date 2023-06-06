@@ -5,18 +5,18 @@ import { parseAPIDate } from './date';
 const createdTimestamp = '2023-06-06T20:23:43.000Z';
 const finishedTimestamp = '2023-06-06T20:24:43.000Z';
 const mockInProgressEvent = eventFactory.build({
-  status: 'started',
   created: createdTimestamp,
   duration: 0,
+  status: 'started',
 });
 const mockFinishedEvent1 = eventFactory.build({
-  status: 'finished',
-  duration: 60,
   created: createdTimestamp,
+  duration: 60,
+  status: 'finished',
 });
 const mockFinishedEvent2 = eventFactory.build({
-  status: 'finished',
   created: createdTimestamp,
+  status: 'finished',
 });
 
 describe('getEventTimestamp utility function', () => {
