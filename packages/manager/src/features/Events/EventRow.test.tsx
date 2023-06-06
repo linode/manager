@@ -2,63 +2,30 @@ import * as React from 'react';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { Row, RowProps } from './EventRow';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
-import { Event } from '@linode/api-v4/lib/account';
+import { eventFactory } from 'src/factories';
 
 const inProgressMessage = 'this is an in-progress message.';
 const finishedMessage = 'this is a finished message';
 const createdTimestamp = '2018-12-02T20:23:43';
 const finishedTimestamp = '2018-12-02T20:24:43';
 
-const inProgressEvent: Event = {
-  id: 1234,
-  time_remaining: '30',
-  secondary_entity: null,
-  seen: true,
-  created: createdTimestamp,
-  action: 'linode_boot',
-  read: false,
-  percent_complete: 50,
-  username: null,
-  rate: null,
-  entity: {
-    id: 11440645,
-    label: 'linode11440645',
-    type: 'linode',
-    url: '/v4/linode/instances/11440645',
-  },
+const mockInProgressEvent = eventFactory.build({
   status: 'started',
-  duration: 30,
-  message: inProgressMessage,
-};
-
-const finishedEvent: Event = {
-  id: 1234,
-  time_remaining: null,
-  secondary_entity: null,
-  seen: true,
   created: createdTimestamp,
-  action: 'linode_boot',
-  read: false,
-  percent_complete: 100,
-  username: null,
-  rate: null,
-  entity: {
-    id: 11440645,
-    label: 'linode11440645',
-    type: 'linode',
-    url: '/v4/linode/instances/11440645',
-  },
+  duration: 0,
+});
+const mockFinishedEvent = eventFactory.build({
   status: 'finished',
   duration: 60,
-  message: finishedMessage,
-};
+  created: createdTimestamp,
+});
 
 const inProgressEventProps: RowProps = {
   action: 'linode_boot',
   message: inProgressMessage,
   type: 'linode',
   username: null,
-  timestamp: getEventTimestamp(inProgressEvent),
+  timestamp: getEventTimestamp(mockInProgressEvent),
 };
 
 const finishedEventProps: RowProps = {
@@ -66,7 +33,7 @@ const finishedEventProps: RowProps = {
   message: finishedMessage,
   type: 'linode',
   username: null,
-  timestamp: getEventTimestamp(finishedEvent),
+  timestamp: getEventTimestamp(mockFinishedEvent),
 };
 
 describe('EventRow component', () => {
