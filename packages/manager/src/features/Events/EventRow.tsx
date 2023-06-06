@@ -84,7 +84,7 @@ export interface RowProps {
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
-  const { action, message, username, timestamp } = props;
+  const { action, message, timestamp, username } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
