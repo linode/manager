@@ -11,6 +11,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.text.primary,
       fontSize: '0.875rem',
     },
+    [theme.breakpoints.down('md')]: {
+      '& .SnackbarItem-contentRoot': {
+        flexWrap: 'nowrap',
+      },
+      '& .SnackbarItem-message': {
+        display: 'unset',
+      },
+    },
+    [theme.breakpoints.down('sm')]: {
+      '& .SnackbarItem-action': {
+        paddingLeft: 0,
+      },
+    },
   },
   info: {
     borderLeft: `6px solid ${theme.palette.primary.main}`,
