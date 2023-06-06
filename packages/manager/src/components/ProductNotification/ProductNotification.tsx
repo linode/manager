@@ -18,5 +18,7 @@ export const ProductNotification = ({
   text,
 }: ProductNotificationProps) => {
   const level = severityLevelMap[severity] ?? 'warning';
-  return React.createElement(Notice, { flag: true, [level]: true }, text);
+  const props = { flag: true, [level]: true };
+
+  return <Notice {...props}>{text}</Notice>;
 };
