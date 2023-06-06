@@ -65,7 +65,9 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   }, [open]);
 
   const getPrimaryBtnText = (entity: EntityInfo) => {
-    if (entity.type === 'Volume' && title.startsWith('Detach')) return 'Detach';
+    if (entity.type === 'Volume' && title?.startsWith('Detach')) {
+      return 'Detach';
+    }
 
     switch (entity.subType) {
       case 'Backup':
@@ -85,10 +87,12 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     if (entity.type === 'AccountSetting' && entity.subType === 'CloseAccount') {
       return `Please enter your username (${entity.label}) to confirm.`;
     }
+
     const ttcLabelText =
       entity.type === 'Bucket' || entity.subType === 'Cluster'
         ? 'Name'
         : 'Label';
+
     switch (entity.subType) {
       case 'ObjectStorage':
         return `Username`;
@@ -97,6 +101,40 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       default:
         return `${entity.type} ${ttcLabelText}`;
     }
+  };
+
+  const getConfirmationText = (entity: EntityInfo) => {
+    if (entity.subType === 'CloseAccount') {
+      return '';
+    }
+
+    let ttcAction = '';
+    if (entity.subType === 'Backup') {
+      ttcAction = 'restoration';
+    } else if (entity.subType === 'ObjectStorage') {
+      ttcAction = 'cancellation';
+    } else {
+      ttcAction = 'deletion';
+    }
+
+    let ttcEntityName = '';
+    if (entity.type === 'Kubernetes') {
+      ttcEntityName = 'cluster';
+    } else if (entity.subType === 'Backup' || entity.subType === 'Cluster') {
+      ttcEntityName = 'database cluster';
+    } else if (entity.subType === 'ObjectStorage') {
+      ttcEntityName = 'username';
+    } else {
+      ttcEntityName = entity.type;
+    }
+
+    return (
+      <span>
+        To confirm {ttcAction}, type{' '}
+        {entity.subType === 'ObjectStorage' ? 'your' : 'the name of the'}{' '}
+        {ttcEntityName} (<b>{entity.label}</b>) in the field below:
+      </span>
+    );
   };
 
   const actions = (
@@ -131,31 +169,20 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       error={errors ? errors[0].reason : undefined}
     >
       {children}
-      <div style={{ display: 'flex', flexDirection: 'column', order: 2 }}>
-        <TypeToConfirm
-          hideInstructions={entity.subType === 'CloseAccount'}
-          label={getLabelText(entity)}
-          confirmationText={
-            confirmationText || entity.subType === 'CloseAccount' ? (
-              confirmationText
-            ) : (
-              <span>
-                To confirm deletion, type the name of the {entity.type} (
-                <b>{entity.label}</b>) in the field below:
-              </span>
-            )
-          }
-          value={confirmText}
-          typographyStyle={typographyStyle}
-          data-testid={'dialog-confirm-text-input'}
-          expand
-          onChange={(input) => {
-            setConfirmText(input);
-          }}
-          visible={preferences?.type_to_confirm}
-          placeholder={entity.subType === 'CloseAccount' ? 'Username' : ''}
-        />
-      </div>
+      <TypeToConfirm
+        hideInstructions={entity.subType === 'CloseAccount'}
+        label={getLabelText(entity)}
+        confirmationText={confirmationText || getConfirmationText(entity)}
+        value={confirmText}
+        typographyStyle={typographyStyle}
+        data-testid={'dialog-confirm-text-input'}
+        expand
+        onChange={(input) => {
+          setConfirmText(input);
+        }}
+        visible={preferences?.type_to_confirm}
+        placeholder={entity.subType === 'CloseAccount' ? 'Username' : ''}
+      />
     </ConfirmationDialog>
   );
 };

@@ -113,21 +113,17 @@ export const EnableObjectStorage = (props: Props) => {
         }}
         open={isOpen}
         loading={isLoading}
-        typographyStyle={{ marginTop: '20px' }}
         onClose={handleClose}
         onClick={handleSubmit}
       >
         {error ? <Notice error text={error} /> : null}
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>
-            Deleting this NodeBalancer is permanent and can’t be undone.
+            <strong>Warning:</strong> Canceling Object Storage will permanently
+            delete all buckets and their objects. Object Storage Access Keys
+            will be revoked.
           </Typography>
         </Notice>
-        <Typography variant="body1">
-          Traffic will no longer be routed through this NodeBalancer. Please
-          check your DNS settings and either provide the IP address of another
-          NodeBalancer, or route traffic directly to your Linode.
-        </Typography>
       </TypeToConfirmDialog>
     </>
   );
