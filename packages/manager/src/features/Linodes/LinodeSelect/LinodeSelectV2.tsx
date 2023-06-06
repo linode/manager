@@ -5,6 +5,7 @@
  */
 
 import { APIError, Filter, Linode } from '@linode/api-v4';
+import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Autocomplete, Box } from '@mui/material';
 import React from 'react';
@@ -93,6 +94,7 @@ export const LinodeSelectV2 = (
       value={mapIdsToLinodes(value, linodes)}
       options={filteredLinodes ?? []}
       getOptionLabel={(linode) => linode.label}
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
       clearOnBlur
       multiple={multiple}
       loading={linodesDataLoading || loading}

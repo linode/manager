@@ -16,7 +16,6 @@ export const SelectedIcon = styled(DoneIcon, {
 export const RemoveIcon = styled(CloseIcon, {
   shouldForwardProp: (prop) => prop != 'visible',
 })<{ visible: boolean }>(({ visible }) => ({
-  opacity: 0.6,
   width: 18,
   height: 18,
   visibility: visible ? 'visible' : 'hidden',

@@ -388,13 +388,10 @@ export const lightTheme: ThemeOptions = {
           '&[aria-selected="true"]': {
             color: primaryColors.main,
           },
-          '&.Mui-focused': {
+          '&.Mui-focused, :hover': {
             backgroundColor: `${primaryColors.main} !important`,
             color: primaryColors.white,
-          },
-          ':hover': {
-            backgroundColor: `${primaryColors.main} !important`,
-            color: primaryColors.white,
+            transition: 'background-color 0.2s',
           },
         },
         listbox: {
@@ -430,6 +427,20 @@ export const lightTheme: ThemeOptions = {
         },
         noOptions: {
           border: `1px solid ${primaryColors.main}`,
+        },
+        tag: {
+          backgroundColor: bg.lightBlue1,
+          '.MuiChip-deleteIcon': {
+            borderRadius: '50%',
+            fontSize: '16px',
+            color: primaryColors.text,
+            margin: '0 4px',
+            ':hover': {
+              backgroundColor: primaryColors.main,
+              color: primaryColors.white,
+            },
+          },
+          padding: '12px 2px',
         },
       },
     },
