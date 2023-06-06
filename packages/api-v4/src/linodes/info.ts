@@ -97,7 +97,7 @@ export const getLinodeKernels = (params?: Params, filter?: Filter) =>
  */
 
 export const getLinodeKernel = (kernelId: string) =>
-  Request<Page<Kernel>>(
+  Request<Kernel>(
     setURL(`${API_ROOT}/linode/kernels/${kernelId}`),
     setMethod('GET')
   );

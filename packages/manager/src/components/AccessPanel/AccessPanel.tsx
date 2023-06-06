@@ -7,7 +7,9 @@ import { makeStyles } from 'tss-react/mui';
 import Divider from '../core/Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
-const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
+const PasswordInput = React.lazy(
+  () => import('src/components/PasswordInput/PasswordInput')
+);
 
 const useStyles = makeStyles<void, 'passwordInputOuter'>()(
   (theme: Theme, _params, classes) => ({
