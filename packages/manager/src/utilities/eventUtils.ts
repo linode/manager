@@ -5,7 +5,7 @@ import { parseAPIDate } from './date';
 // Calculates the finished event timestamp from the created event timestamp by adding the duration;
 // if the event is not finished, uses the created event timestamp.
 export const getEventTimestamp = (event: Event): DateTime => {
-  return event.status === 'finished' && event?.duration
+  return event?.status === 'finished' && event?.duration
     ? parseAPIDate(event.created).plus({ seconds: event.duration })
     : parseAPIDate(event.created);
 };
