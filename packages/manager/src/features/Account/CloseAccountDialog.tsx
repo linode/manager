@@ -18,8 +18,6 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   dontgo: {
     marginTop: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
     order: 3,
   },
 }));
@@ -110,20 +108,15 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       loading={isClosingAccount}
       inputRef={inputRef}
       disabled={!canSubmit}
+      typographyStyle={{ marginTop: '0px' }}
     >
       {errors ? <Notice error text={errors ? errors[0].reason : ''} /> : null}
-      <Notice
-        warning
-        style={{ display: 'flex', flexDirection: 'column', order: 1 }}
-      >
-        <Typography
-          style={{
-            fontSize: '0.875rem',
-            display: 'flex',
-            flexDirection: 'column',
-            order: 3,
-          }}
-        >
+      {/*
+        The order property helps inject the TypeToConfirm input field in the TypeToConfirmDialog when the components
+        below are passed in as the children prop.
+      */}
+      <Notice warning style={{ order: 1 }}>
+        <Typography sx={{ fontSize: '0.875rem', order: 2 }}>
           <strong>Warning:</strong> Please note this is an extremely destructive
           action. Closing your account means that all services including
           Linodes, Volumes, DNS Records, etc will be lost and may not be able to
@@ -136,7 +129,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         you&rsquo;ll be directed to a quick survey so we can better gauge your
         feedback.
       </Typography>
-      <div style={{ display: 'flex', flexDirection: 'column', order: 4 }}>
+      <div style={{ order: 4 }}>
         <TextField
           label="Comments"
           multiline

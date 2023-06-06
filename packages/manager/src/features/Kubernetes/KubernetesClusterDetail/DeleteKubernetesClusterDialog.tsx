@@ -27,13 +27,6 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
     error,
   } = useDeleteKubernetesClusterMutation();
   const history = useHistory();
-  const [confirmText, setConfirmText] = React.useState<string>('');
-
-  React.useEffect(() => {
-    if (open && confirmText !== '') {
-      setConfirmText('');
-    }
-  }, [open]);
 
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
