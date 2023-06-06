@@ -34,6 +34,7 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
+    "forceConsistentCasingInFileNames": false,
 
     /* Completeness */
     "skipLibCheck": true,
