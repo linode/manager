@@ -10,8 +10,8 @@ export const bg = {
   app: Colors.Neutrals.Grey02,
   main: Colors.Neutrals.Grey02,
   offWhite: Colors.Neutrals.Grey01,
-  lightBlue1: Colors.Brand.Brand01,
-  lightBlue2: Colors.Brand.Brand02,
+  lightBlue1: Colors.Brand01,
+  lightBlue2: Colors.Brand02,
   white: Colors.Neutrals.White,
   tableHeader: Colors.Neutrals.Grey01,
   primaryNavPaper: Colors.Neutrals.Grey10,
@@ -22,9 +22,9 @@ export const bg = {
 } as const;
 
 const primaryColors = {
-  main: Colors.Brand.Brand04,
-  light: Colors.Brand.Brand03,
-  dark: Colors.Brand.Brand05,
+  main: Colors.Brand04,
+  light: Colors.Brand03,
+  dark: Colors.Brand05,
   text: Colors.Neutrals.Grey08,
   headline: Colors.Neutrals.Grey10,
   divider: Colors.Neutrals.Grey02,
@@ -54,18 +54,18 @@ export const color = {
   offBlack: Colors.Neutrals.Grey09,
   boxShadow: Colors.Neutrals.Grey04,
   boxShadowDark: Colors.Neutrals.Grey06,
-  blueDTwhite: Colors.Brand.Brand04,
+  blueDTwhite: Colors.Brand04,
   tableHeaderText: 'rgba(0, 0, 0, 0.54)',
   drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
   label: Colors.Neutrals.Grey08,
   disabledText: Colors.Neutrals.Grey05,
-  tagButton: Colors.Brand.Brand01,
-  tagIcon: Colors.Brand.Brand03,
-  blue: Colors.Brand.Brand04,
+  tagButton: Colors.Brand01,
+  tagIcon: Colors.Brand03,
+  blue: Colors.Brand04,
 } as const;
 
 export const textColors = {
-  linkActiveLight: Colors.Brand.Brand04,
+  linkActiveLight: Colors.Brand04,
   headlineStatic: Colors.Neutrals.Grey10,
   tableHeader: Colors.Neutrals.Grey07,
   tableStatic: Colors.Neutrals.Grey08,
@@ -468,7 +468,7 @@ export const lightTheme: ThemeOptions = {
           '&:hover, &:focus': {
             backgroundColor: Colors.Neutrals.Grey02, // TODO: This was the closest color according to our palette
             border: `1px solid ${Colors.Neutrals.Grey04}`, // TODO: This was the closest color according to our palette
-            color: Colors.Brand.Brand04,
+            color: Colors.Brand04,
           },
         },
       },
@@ -514,12 +514,12 @@ export const lightTheme: ThemeOptions = {
           },
         },
         clickable: {
-          backgroundColor: Colors.Brand.Brand01, // TODO: This was the closest color according to our palette
+          backgroundColor: Colors.Brand01, // TODO: This was the closest color according to our palette
           '&:hover': {
-            backgroundColor: Colors.Brand.Brand02, // TODO: This was the closest color according to our palette
+            backgroundColor: Colors.Brand02, // TODO: This was the closest color according to our palette
           },
           '&:focus': {
-            backgroundColor: Colors.Brand.Brand02, // TODO: This was the closest color according to our palette
+            backgroundColor: Colors.Brand02, // TODO: This was the closest color according to our palette
           },
         },
         sizeSmall: {
@@ -644,8 +644,8 @@ export const lightTheme: ThemeOptions = {
           paddingRight: 12,
           paddingLeft: 16,
           '& svg': {
-            fill: Colors.Brand.Brand04,
-            stroke: Colors.Brand.Brand04,
+            fill: Colors.Brand04,
+            stroke: Colors.Brand04,
           },
           '&:hover': {
             '& h3': {
@@ -797,7 +797,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: 18,
             color: primaryColors.main,
             '&:hover': {
-              color: Colors.Brand.Brand03,
+              color: Colors.Brand03,
             },
           },
           '&.affirmative': {
@@ -878,7 +878,7 @@ export const lightTheme: ThemeOptions = {
     MuiLinearProgress: {
       styleOverrides: {
         colorPrimary: {
-          backgroundColor: Colors.Brand.Brand02, // TODO: This was the closest color according to our palette
+          backgroundColor: Colors.Brand02, // TODO: This was the closest color according to our palette
         },
       },
     },
