@@ -11,6 +11,7 @@ import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import Button from 'src/components/Button/Button';
+import Divider from 'src/components/core/Divider';
 import { useHistory } from 'react-router-dom';
 import {
   Box,
@@ -90,6 +91,7 @@ export const AddNewMenu = () => {
       description: 'Deploy applications with ease',
       icon: OneClickIcon,
       link: '/linodes/create?type=One-Click',
+      attr: { 'data-qa-one-click-add-new': true },
     },
   ];
 
@@ -109,6 +111,7 @@ export const AddNewMenu = () => {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+        data-qa-add-new-menu-button
       >
         Create
       </Button>
@@ -121,7 +124,8 @@ export const AddNewMenu = () => {
           'aria-labelledby': 'create-menu',
         }}
       >
-        {links.map((link) => (
+        {links.map((link, i) => [
+          i !== 0 && <Divider spacingTop={0} spacingBottom={0} />,
           <MenuItem
             key={link.entity}
             onClick={() => {
@@ -129,6 +133,7 @@ export const AddNewMenu = () => {
               handleClose();
             }}
             sx={{ paddingY: 1.5 }}
+            {...link.attr}
           >
             <ListItemIcon>
               <link.icon
@@ -143,8 +148,8 @@ export const AddNewMenu = () => {
               </Typography>
               <Typography>{link.description}</Typography>
             </Stack>
-          </MenuItem>
-        ))}
+          </MenuItem>,
+        ])}
       </Menu>
     </Box>
   );
