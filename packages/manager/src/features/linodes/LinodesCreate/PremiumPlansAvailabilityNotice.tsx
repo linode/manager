@@ -8,7 +8,11 @@ export const PremiumPlansAvailabilityNotice = React.memo(() => {
   const { premiumPlansAvailabilityNotice } = useFlags();
 
   if (premiumPlansAvailabilityNotice) {
-    return <Notice warning>{premiumPlansAvailabilityNotice}</Notice>;
+    return (
+      <Notice warning dataTestId="premium-notice">
+        {premiumPlansAvailabilityNotice}
+      </Notice>
+    );
   }
 
   return null;
