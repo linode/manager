@@ -10,9 +10,8 @@ import { chooseRegion } from 'support/util/regions';
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
 // @TODO Remove local storage override when stuck volumes are removed from test accounts.
-const pageSizeOverride = {
-  PAGE_SIZE: 100,
-};
+const map = new Map();
+map.set('PAGE_SIZE', 100);
 
 authenticate();
 describe('volume create flow', () => {
@@ -32,8 +31,7 @@ describe('volume create flow', () => {
 
     interceptCreateVolume().as('createVolume');
     cy.visitWithLogin('/volumes/create', {
-      localStorageOverrides: pageSizeOverride,
-      // localStorageOverrides: undefined,
+      localStorageOverrides: map.get('PAGE_SIZE'),
     });
 
     // Fill out and submit volume create form.
@@ -83,8 +81,7 @@ describe('volume create flow', () => {
     cy.defer(createLinode(linodeRequest)).then((linode) => {
       interceptCreateVolume().as('createVolume');
       cy.visitWithLogin('/volumes/create', {
-        localStorageOverrides: pageSizeOverride,
-        // localStorageOverrides: undefined,
+        localStorageOverrides: map.get('PAGE_SIZE'),
       });
 
       // Fill out and submit volume create form.
@@ -140,8 +137,7 @@ describe('volume create flow', () => {
       };
 
       cy.visitWithLogin(`/linodes/${linode.id}/storage`, {
-        localStorageOverrides: pageSizeOverride,
-        // localStorageOverrides: undefined,
+        localStorageOverrides: map.get('PAGE_SIZE'),
       });
 
       // Click "Create Volume" button, fill out and submit volume create drawer form.
@@ -170,8 +166,7 @@ describe('volume create flow', () => {
 
       // Confirm that volume is listed on landing page with expected configuration.
       cy.visitWithLogin('/volumes', {
-        localStorageOverrides: pageSizeOverride,
-        // localStorageOverrides: undefined,
+        localStorageOverrides: map.get('PAGE_SIZE'),
       });
       cy.findByText(volume.label)
         .closest('tr')
