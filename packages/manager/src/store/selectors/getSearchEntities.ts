@@ -38,7 +38,7 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 export const formatLinode = (
   linode: Linode,
   types: ExtendedType[],
-  imageLabel: string
+  imageLabel: string | null
 ): SearchableItem => ({
   label: linode.label,
   value: linode.id,

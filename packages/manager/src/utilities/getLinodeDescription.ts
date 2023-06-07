@@ -5,7 +5,7 @@ export const getLinodeDescription = (
   memory: number,
   disk: number,
   vcpus: number,
-  imageLabel: string
+  imageLabel: string | null
 ) => {
   const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
 

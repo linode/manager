@@ -35,6 +35,7 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { getImageLabelForLinode } from 'src/features/Images/utils';
 
 type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 
@@ -113,7 +114,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     shouldMakeRequests
   );
 
-  const { data: _publicImages } = useAllImagesQuery(
+  const { data: publicImages } = useAllImagesQuery(
     {},
     { is_public: true },
     searchActive
@@ -137,8 +138,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const types = extendTypesQueryResult(typesQuery);
 
   const searchableLinodes = linodes.map((linode) => {
-    const image = _publicImages?.find((image) => image.id === linode.image);
-    const imageLabel = image?.label ?? linode.image ?? 'Unknown Image';
+    const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
     return formatLinode(linode, types, imageLabel);
   });
 

@@ -26,6 +26,7 @@ import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { emptyResults, separateResultsByEntity } from './utils';
+import { getImageLabelForLinode } from '../Images/utils';
 
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
@@ -114,8 +115,7 @@ const requestEntities = (
           results.data.map((result) => result.type).filter(isNotNullOrUndefined)
         );
         return results.data.map((linode) => {
-          const image = images.find((image) => image.id === linode.image);
-          const imageLabel = image?.label ?? linode.image ?? 'Unknown Image';
+          const imageLabel = getImageLabelForLinode(linode, images);
           return formatLinode(linode, types, imageLabel);
         });
       }

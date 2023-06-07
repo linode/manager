@@ -39,6 +39,7 @@ import withStoreSearch, { SearchProps } from './withStoreSearch';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { getImageLabelForLinode } from '../Images/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -145,7 +146,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     error: imagesError,
   } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
 
-  const { data: _publicImages } = useAllImagesQuery(
+  const { data: publicImages } = useAllImagesQuery(
     {},
     { is_public: true },
     !_isLargeAccount
@@ -163,8 +164,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const types = extendTypesQueryResult(typesQuery);
 
   const searchableLinodes = linodes.map((linode) => {
-    const image = _publicImages?.find((image) => image.id === linode.image);
-    const imageLabel = image?.label ?? linode.image ?? 'Unknown Image';
+    const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
     return formatLinode(linode, types, imageLabel);
   });
 
