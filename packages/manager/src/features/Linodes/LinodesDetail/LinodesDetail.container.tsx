@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useLinodes } from 'src/hooks/useLinodes';
 import { useAllImagesQuery } from 'src/queries/images';
 import { ApplicationState } from 'src/store';
@@ -24,7 +23,6 @@ import LinodesDetail from './LinodesDetail';
 export const LinodesDetailContainer = () => {
   const { linodes } = useLinodes();
   const dispatch = useDispatch<ThunkDispatch>();
-  const { account } = useAccountManagement();
 
   const params = useParams<{ linodeId: string }>();
   const linodeId = params.linodeId;
@@ -36,10 +34,6 @@ export const LinodesDetailContainer = () => {
     const configs = state.__resources.linodeConfigs[linodeId];
     return { disks, configs };
   });
-
-  const capabilities = account?.capabilities ?? [];
-
-  const showVlans = capabilities.includes('Vlans');
 
   React.useEffect(() => {
     // Unconditionally request data for the Linode being viewed
@@ -65,7 +59,7 @@ export const LinodesDetailContainer = () => {
     if (shouldRequestEntity(disks)) {
       dispatch(getAllLinodeDisks({ linodeId: +linodeId }));
     }
-  }, [dispatch, configs, disks, showVlans, linodeId, linodes]);
+  }, [dispatch, configs, disks, linodeId, linodes]);
 
   if ((linodes.lastUpdated === 0 && linodes.loading) || imagesLoading) {
     return <CircleProgress />;
