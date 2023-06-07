@@ -9,7 +9,9 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import TextField from 'src/components/TextField';
 import { updateLabelSchema, updatePasswordSchema } from './credential.schema';
 
-const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
+const PasswordInput = React.lazy(
+  () => import('src/components/PasswordInput/PasswordInput')
+);
 
 export interface Props {
   label: string;

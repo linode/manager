@@ -9,7 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 import { Tags } from 'src/components/Tags/Tags';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
-import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

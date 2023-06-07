@@ -290,6 +290,7 @@ export const lightTheme: ThemeOptions = {
   palette: {
     divider: primaryColors.divider,
     primary: primaryColors,
+    secondary: primaryColors,
     text: {
       primary: primaryColors.text,
     },

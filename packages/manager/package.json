@@ -122,8 +122,8 @@
     "@storybook/addon-actions": "~7.0.18",
     "@storybook/addon-controls": "~7.0.18",
     "@storybook/addon-docs": "~7.0.18",
-    "@storybook/addon-viewport": "~7.0.18",
     "@storybook/addon-measure": "~7.0.18",
+    "@storybook/addon-viewport": "~7.0.18",
     "@storybook/addons": "~7.0.18",
     "@storybook/client-api": "~7.0.18",
     "@storybook/react": "~7.0.18",
@@ -172,7 +172,7 @@
     "@types/zxcvbn": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
-    "@vitejs/plugin-react-swc": "^3.3.0",
+    "@vitejs/plugin-react-swc": "^3.3.2",
     "axe-core": "^3.5.1",
     "browserslist": "^4.16.5",
     "chai-string": "^1.5.0",
@@ -214,8 +214,8 @@
     "serve": "^14.0.1",
     "storybook": "~7.0.18",
     "storybook-dark-mode": "^3.0.0",
-    "vite": "^4.3.0",
-    "vite-plugin-svgr": "^2.4.0"
+    "vite": "^4.3.9",
+    "vite-plugin-svgr": "^3.2.0"
   },
   "jest": {
     "testResultsProcessor": "jest-sonar-reporter",
