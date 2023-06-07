@@ -132,7 +132,13 @@ export const AddNewMenu = () => {
               history.push(link.link);
               handleClose();
             }}
-            sx={{ paddingY: 1.5 }}
+            sx={{
+              paddingY: 1.5,
+              '&:hover': {
+                // This MUI Menu gets special colors compared to the NodeBalancer mode select for example
+                backgroundColor: theme.bg.app,
+              },
+            }}
             {...link.attr}
           >
             <ListItemIcon>
