@@ -6,7 +6,9 @@ const __dirname = path.dirname(__filename);
 
 export const BOT = 'linode-gh-bot';
 export const CHANGELOG_PATH = path.join(__dirname, '../../../CHANGELOG.md');
-export const CHANGESET_DIRECTORY = path.join(__dirname, '../../../.changeset');
+export const changeSetDirectory = (linodePackage) =>
+  path.join(__dirname, `../../../packages/${linodePackage}/.changeset`);
+export const PACKAGES = ["api-v4", "manager", "validation"];
 export const CHANGESET_TYPES = [
   'Added',
   'Fixed',

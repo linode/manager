@@ -1,10 +1,14 @@
 import fs from 'fs';
 import inquirer from 'inquirer';
-import { execSync } from 'child_process';
-import { getPullRequestId } from './utils/getPullRequestId.mjs';
-import { promisify } from 'util';
-import { logger } from './utils/logger.mjs';
-import { CHANGESET_DIRECTORY, CHANGESET_TYPES } from './utils/constants.mjs';
+import { execSync } from "child_process";
+import { getPullRequestId } from "./utils/getPullRequestId.mjs";
+import { promisify } from "util";
+import { logger } from "./utils/logger.mjs";
+import {
+  changeSetDirectory,
+  CHANGESET_TYPES,
+  PACKAGES,
+} from "./utils/constants.mjs";
 
 const writeFileAsync = promisify(fs.writeFile);
 
@@ -13,12 +17,12 @@ async function generateChangeset() {
    * Check if the "gh" command-line tool is installed.
    */
   try {
-    execSync('gh version');
+    execSync("gh version");
   } catch (error) {
     logger.error({
       message: 'Error: The "gh" command-line tool is not installed.',
       info:
-        'Please install it from https://github.com/cli/cli#installation\nand sign in with your GitHub account.',
+        "Please install it from https://github.com/cli/cli#installation\nand sign in with your GitHub account.",
     });
   }
 
@@ -29,46 +33,56 @@ async function generateChangeset() {
   const pullRequestId = await getPullRequestId();
 
   /**
-   * Prompt the user for the type of change and a description and a commit option.
+   * Prompt the user for the linode package, type of change, a description and a commit option.
    */
+  const { linodePackage } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "linodePackage",
+      message: "What package is this changeset for? (default: manager)",
+      choices: PACKAGES,
+      default: "manager",
+    },
+  ]);
   const { type } = await inquirer.prompt([
     {
-      type: 'list',
-      name: 'type',
-      message: 'What type of change is this?',
+      type: "list",
+      name: "type",
+      message: "What type of change is this?",
       choices: CHANGESET_TYPES,
     },
   ]);
   const { description } = await inquirer.prompt([
     {
-      type: 'input',
-      name: 'description',
+      type: "input",
+      name: "description",
       message: "Describe the change (don't include the PR number):",
     },
   ]);
   const { commit } = await inquirer.prompt([
     {
-      type: 'confirm',
-      name: 'commit',
-      message: 'Do you want to commit the changeset file? (Y or enter for yes)',
+      type: "confirm",
+      name: "commit",
+      message: "Do you want to commit the changeset file? (Y or enter for yes)",
       default: true,
     },
   ]);
 
   const prLink = `https://github.com/linode/manager/pull/${pullRequestId}`;
-  const changesetFile = `${CHANGESET_DIRECTORY}/pr-${pullRequestId}-${type
+  const changesetPath = changeSetDirectory(linodePackage);
+  const changesetFile = `${changesetPath}/pr-${pullRequestId}-${type
     .toLowerCase()
-    .replace(/\s/g, '-')}-${Date.now()}.md`;
-  const changesetContent = `---\n"@linode/manager": ${type}\n---\n\n${description} ([#${pullRequestId}](${prLink}))\n`;
+    .replace(/\s/g, "-")}-${Date.now()}.md`;
+  const changesetContent = `---\n"@linode/${linodePackage}": ${type}\n---\n\n${description} ([#${pullRequestId}](${prLink}))\n`;
 
   /**
    * Create the changeset file.
    */
   try {
     await writeFileAsync(changesetFile, changesetContent, {
-      encoding: 'utf-8',
+      encoding: "utf-8",
     });
-    logger.success({ message: 'Changeset created!', info: changesetFile });
+    logger.success({ message: "Changeset created!", info: changesetFile });
   } catch (error) {
     logger.error({ message: error });
   }
@@ -86,7 +100,7 @@ async function generateChangeset() {
     execSync(addCmd);
     execSync(commitCmd);
 
-    logger.success({ message: 'Changeset committed!', info: changesetFile });
+    logger.success({ message: "Changeset committed!", info: changesetFile });
   } catch (error) {
     logger.error({ message: error });
   }
