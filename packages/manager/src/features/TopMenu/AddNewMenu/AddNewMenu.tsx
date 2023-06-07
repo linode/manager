@@ -12,7 +12,7 @@ import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import Button from 'src/components/Button/Button';
 import Divider from 'src/components/core/Divider';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Box,
   ListItemIcon,
@@ -25,7 +25,6 @@ import {
 
 export const AddNewMenu = () => {
   const theme = useTheme();
-  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
@@ -128,10 +127,7 @@ export const AddNewMenu = () => {
           i !== 0 && <Divider spacingTop={0} spacingBottom={0} />,
           <MenuItem
             key={link.entity}
-            onClick={() => {
-              history.push(link.link);
-              handleClose();
-            }}
+            onClick={handleClose}
             sx={{
               paddingY: 1.5,
               '&:hover': {
@@ -139,7 +135,13 @@ export const AddNewMenu = () => {
                 backgroundColor: theme.bg.app,
               },
             }}
+            component={Link}
+            to={link.link}
             {...link.attr}
+            style={{
+              // We have to do this because in packages/manager/src/index.css we force underline links
+              textDecoration: 'none',
+            }}
           >
             <ListItemIcon>
               <link.icon
