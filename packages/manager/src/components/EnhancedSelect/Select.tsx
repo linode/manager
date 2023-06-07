@@ -21,7 +21,7 @@ import MultiValueRemove from './components/MultiValueRemove';
 import NoOptionsMessage from './components/NoOptionsMessage';
 import Option from './components/Option';
 import Control from './components/SelectControl';
-import { SelectPlaceholder } from './components/SelectPlaceholder';
+import { SelectPlaceholder as Placeholder } from './components/SelectPlaceholder';
 
 export interface Item<T = string | number, L = string> {
   value: T;
@@ -43,7 +43,7 @@ export interface NoOptionsMessageProps {
 const _components = {
   Control,
   NoOptionsMessage,
-  SelectPlaceholder,
+  Placeholder,
   MultiValueLabel,
   MultiValueRemove,
   MenuList,
