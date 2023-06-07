@@ -5,7 +5,8 @@ import { getPullRequestId } from "./utils/getPullRequestId.mjs";
 import { promisify } from "util";
 import { logger } from "./utils/logger.mjs";
 import {
-  changeSetDirectory,
+  changelogPath,
+  changesetDirectory,
   CHANGESET_TYPES,
   PACKAGES,
 } from "./utils/constants.mjs";
@@ -69,7 +70,7 @@ async function generateChangeset() {
   ]);
 
   const prLink = `https://github.com/linode/manager/pull/${pullRequestId}`;
-  const changesetPath = changeSetDirectory(linodePackage);
+  const changesetPath = changesetDirectory(linodePackage);
   const changesetFile = `${changesetPath}/pr-${pullRequestId}-${type
     .toLowerCase()
     .replace(/\s/g, "-")}-${Date.now()}.md`;
