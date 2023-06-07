@@ -156,7 +156,7 @@ try {
         }
 
         // Delete the changeset files for each package
-        deleteChangesets();
+        deleteChangesets(linodePackage);
       }
     } catch (error) {
       logger.error({
