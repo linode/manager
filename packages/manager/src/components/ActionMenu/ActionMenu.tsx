@@ -168,6 +168,7 @@ const ActionMenu = (props: Props) => {
               }}
               data-qa-action-menu-item={a.title}
               disabled={a.disabled}
+              valueText={a.title}
             >
               {a.title}
               {a.tooltip ? (
