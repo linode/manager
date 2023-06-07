@@ -32,8 +32,8 @@ describe('volume create flow', () => {
 
     interceptCreateVolume().as('createVolume');
     cy.visitWithLogin('/volumes/create', {
-      // localStorageOverrides: pageSizeOverride,
-      localStorageOverrides: undefined,
+      localStorageOverrides: pageSizeOverride,
+      // localStorageOverrides: undefined,
     });
 
     // Fill out and submit volume create form.
@@ -83,8 +83,8 @@ describe('volume create flow', () => {
     cy.defer(createLinode(linodeRequest)).then((linode) => {
       interceptCreateVolume().as('createVolume');
       cy.visitWithLogin('/volumes/create', {
-        // localStorageOverrides: pageSizeOverride,
-        localStorageOverrides: undefined,
+        localStorageOverrides: pageSizeOverride,
+        // localStorageOverrides: undefined,
       });
 
       // Fill out and submit volume create form.
@@ -140,8 +140,8 @@ describe('volume create flow', () => {
       };
 
       cy.visitWithLogin(`/linodes/${linode.id}/storage`, {
-        // localStorageOverrides: pageSizeOverride,
-        localStorageOverrides: undefined,
+        localStorageOverrides: pageSizeOverride,
+        // localStorageOverrides: undefined,
       });
 
       // Click "Create Volume" button, fill out and submit volume create drawer form.
@@ -170,8 +170,8 @@ describe('volume create flow', () => {
 
       // Confirm that volume is listed on landing page with expected configuration.
       cy.visitWithLogin('/volumes', {
-        // localStorageOverrides: pageSizeOverride,
-        localStorageOverrides: undefined,
+        localStorageOverrides: pageSizeOverride,
+        // localStorageOverrides: undefined,
       });
       cy.findByText(volume.label)
         .closest('tr')
