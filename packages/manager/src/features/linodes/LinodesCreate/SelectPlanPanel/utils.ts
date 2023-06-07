@@ -11,6 +11,20 @@ type PlansByType<T> = Omit<PlansTypes<T>, 'nanode' | 'standard'> & {
   shared: T[];
 };
 
+//We could update this to add or remove any new or existing plan tabs.
+export const planTypeOrder: (
+  | Exclude<LinodeTypeClass, 'nanode' | 'standard'>
+  | 'shared'
+)[] = [
+  'prodedicated',
+  'dedicated',
+  'shared',
+  'highmem',
+  'gpu',
+  'metal',
+  'premium',
+];
+
 /**
  * getPlanSelectionsByPlanType function takes an array of types, groups
  * them based on their class property into different plan types, filters out empty
@@ -26,20 +40,6 @@ export const getPlanSelectionsByPlanType = <
 >(
   types: T[]
 ): PlansByType<T> => {
-  //We could update this to add or remove any new or existing plan tabs.
-  const planTypeOrder: (
-    | Exclude<LinodeTypeClass, 'nanode' | 'standard'>
-    | 'shared'
-  )[] = [
-    'prodedicated',
-    'dedicated',
-    'shared',
-    'highmem',
-    'gpu',
-    'metal',
-    'premium',
-  ];
-
   const plansByType: PlansByType<T> = planTypeOrder.reduce((acc, key) => {
     acc[key] = [];
     return acc;
