@@ -376,7 +376,10 @@ export const lightTheme: ThemeOptions = {
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: color.drawerBackdrop,
+        },
+        invisible: {
+          backgroundColor: 'transparent',
         },
       },
     },
@@ -957,6 +960,13 @@ export const lightTheme: ThemeOptions = {
             [breakpoints.down('xs')]: {
               minWidth: 200,
             },
+          },
+        },
+      },
+      defaultProps: {
+        slotProps: {
+          backdrop: {
+            invisible: true,
           },
         },
       },
