@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Tab as ReachTab, TabProps } from '@reach/tabs';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import classNames from 'classnames';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   tab: {
     '&[data-reach-tab]': {
       display: 'inline-flex',
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '&:hover': {
         backgroundColor: theme.color.grey7,
-        color: theme.palette.primary.main,
+        color: `${theme.palette.primary.main} !important`,
       },
     },
     '&[data-reach-tab][data-selected]': {
@@ -36,18 +35,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Tab: React.FC<TabProps & { className?: string }> = ({
+const Tab = ({
   children,
   className,
   ...rest
-}) => {
-  const classes = useStyles();
+}: TabProps & { className?: string }) => {
+  const { classes, cx } = useStyles();
 
   return (
-    <ReachTab className={classNames(classes.tab, className)} {...rest}>
+    <ReachTab className={cx(classes.tab, className)} {...rest}>
       {children}
     </ReachTab>
   );
 };
 
-export default Tab;
+export { Tab };

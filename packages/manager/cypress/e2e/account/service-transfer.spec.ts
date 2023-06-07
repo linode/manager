@@ -10,7 +10,6 @@ import { linodeFactory } from 'src/factories';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { formatDate } from 'src/utilities/formatDate';
 import { authenticate } from 'support/api/authentication';
-import { regions } from 'support/constants/regions';
 import {
   interceptInitiateEntityTransfer,
   mockAcceptEntityTransfer,
@@ -21,8 +20,9 @@ import {
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { pollLinodeStatus } from 'support/util/polling';
-import { randomItem, randomLabel, randomUuid } from 'support/util/random';
+import { randomLabel, randomUuid } from 'support/util/random';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
+import { chooseRegion } from 'support/util/regions';
 
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
@@ -238,7 +238,7 @@ describe('Account service transfers', () => {
     const setupLinode = async (): Promise<Linode> => {
       const payload = createLinodeRequestFactory.build({
         label: randomLabel(),
-        region: randomItem(regions),
+        region: chooseRegion().id,
       });
 
       const linode: Linode = await createLinode(payload);
@@ -434,7 +434,7 @@ describe('Account service transfers', () => {
       (item: null, index: number): Linode => {
         return linodeFactory.build({
           label: `Linode ${index}`,
-          region: regions[index],
+          region: chooseRegion().id,
         });
       }
     );

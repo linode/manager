@@ -1,7 +1,6 @@
 import { createLinode, Linode } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { regions } from 'support/constants/regions';
 import {
   interceptGetLinodeDetails,
   interceptRebootLinodeIntoRescueMode,
@@ -9,7 +8,8 @@ import {
 import { ui } from 'support/ui';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeStatus } from 'support/util/polling';
-import { randomLabel, randomItem } from 'support/util/random';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 // Submits the Rescue Linode dialog, initiating reboot into rescue mode.
 const rebootInRescueMode = () => {
@@ -24,7 +24,7 @@ const rebootInRescueMode = () => {
 const createAndBootLinode = async () => {
   const linodeRequest = createLinodeRequestFactory.build({
     label: randomLabel(),
-    region: randomItem(regions),
+    region: chooseRegion().id,
   });
 
   const linode = await createLinode(linodeRequest);
@@ -86,7 +86,7 @@ describe('Rescue Linodes', () => {
   it('Cannot reboot a provisioning Linode into rescue mode', () => {
     const linodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: randomItem(regions),
+      region: chooseRegion().id,
     });
 
     cy.wrap<Promise<Linode>, Linode>(createLinode(linodeRequest)).then(

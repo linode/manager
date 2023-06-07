@@ -34,6 +34,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import { ENABLE_MAINTENANCE_MODE } from './constants';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -133,7 +134,7 @@ interface Props {
 type CombinedProps = Props & GlobalErrorProps;
 
 const Account = React.lazy(() => import('src/features/Account'));
-const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
+const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
 const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() => import('src/features/Domains'));
 const Images = React.lazy(() => import('src/features/Images'));
@@ -239,7 +240,7 @@ const MainContent = (props: CombinedProps) => {
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
-  if (props.globalErrors.api_maintenance_mode) {
+  if (props.globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
 

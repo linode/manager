@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import { KubernetesPlansPanel } from 'src/features/linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
+import { KubernetesPlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';

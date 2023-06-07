@@ -5,7 +5,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { KubernetesPlansPanel } from 'src/features/linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
+import { KubernetesPlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 const DEFAULT_PLAN_COUNT = 3;

@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
-import LinearProgress from 'src/components/core/LinearProgress';
+import { LinearProgress } from 'src/components/LinearProgress';
 
 export interface BarPercentProps {
   /** Additional css class to pass to the component */

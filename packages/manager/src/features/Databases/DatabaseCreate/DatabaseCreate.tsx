@@ -37,15 +37,15 @@ import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
-import Radio from 'src/components/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import PlansPanel, {
   PlanSelectionType,
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
+} from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
+import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import useFlags from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
