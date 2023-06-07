@@ -67,7 +67,7 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
         preferenceKey={scheduledAPIMaintenance.id}
         key={scheduledAPIMaintenance.id}
       >
-        <Box display="flex" flexDirection="column">
+        <Stack>
           <Typography data-testid="scheduled-maintenance-banner">
             <Link to={scheduledAPIMaintenance.shortlink}>
               <strong data-testid="scheduled-maintenance-status">
