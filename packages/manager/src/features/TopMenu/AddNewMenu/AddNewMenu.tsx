@@ -131,7 +131,8 @@ export const AddNewMenu = () => {
             sx={{
               paddingY: 1.5,
               '&:hover': {
-                // This MUI Menu gets special colors compared to the NodeBalancer mode select for example
+                // This MUI Menu gets special colors compared
+                // to a standard menu such as the NodeBalancer Config Node Mode select menu
                 backgroundColor: theme.bg.app,
               },
             }}
