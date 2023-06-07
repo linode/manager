@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
@@ -25,9 +26,9 @@ export const UserDataAccordionHeading = ({ createType }: Props) => {
   return (
     <>
       <Box display="flex">
-        Add User Data{' '}
+        Add User Data <BetaChip component="span" />
         <TooltipIcon
-          sxTooltipIcon={{ padding: '0 8px' }}
+          sxTooltipIcon={{ padding: '0 8px', alignItems: 'baseline' }}
           text={
             <>
               User data is a virtual machine&rsquo;s cloud-init metadata
