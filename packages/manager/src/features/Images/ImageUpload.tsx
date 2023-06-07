@@ -17,6 +17,7 @@ import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
+import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import useFlags from 'src/hooks/useFlags';
@@ -25,7 +26,6 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { useAllImagesQuery } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { redirectToLogin } from 'src/session';
@@ -101,10 +101,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
   const flags = useFlags();
-  const { data: images } = useAllImagesQuery();
-
-  const hasMetadataCustomerTag =
-    images?.some((image) => image.capabilities.includes('cloud-init')) ?? false;
+  const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false

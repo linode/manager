@@ -15,10 +15,11 @@ import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
 import LinodeSelect from 'src/features/Linodes/LinodeSelect';
 import useFlags from 'src/hooks/useFlags';
-import { useAllImagesQuery, useCreateImageMutation } from 'src/queries/images';
+import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -96,9 +97,9 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const flags = useFlags();
-  const { data: images } = useAllImagesQuery();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
+  const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
@@ -106,9 +107,6 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const [notice, setNotice] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-
-  const hasMetadataCustomerTag =
-    images?.some((image) => image.capabilities.includes('cloud-init')) ?? false;
 
   const canCreateImage =
     Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);

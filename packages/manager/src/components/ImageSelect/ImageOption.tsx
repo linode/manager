@@ -8,8 +8,8 @@ import CloudInitIncompatibleIcon from 'src/assets/icons/cloud-init-incompatible.
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
 import TooltipIcon from 'src/components/TooltipIcon';
+import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import useFlags from 'src/hooks/useFlags';
-import { useAllImagesQuery } from 'src/queries/images';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,11 +53,7 @@ const ImageOption = (props: ImageOptionProps) => {
   const classes = useStyles();
   const { data, label, isFocused, isSelected } = props;
   const flags = useFlags();
-
-  const { data: images } = useAllImagesQuery();
-
-  const hasMetadataCustomerTag =
-    images?.some((image) => image.capabilities.includes('cloud-init')) ?? false;
+  const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   return (
     <Option

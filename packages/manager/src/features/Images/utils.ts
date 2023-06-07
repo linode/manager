@@ -1,3 +1,4 @@
+import { useAllImagesQuery } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 export const useImageAndLinodeGrantCheck = () => {
@@ -17,4 +18,12 @@ export const useImageAndLinodeGrantCheck = () => {
     : null;
 
   return { canCreateImage, permissionedLinodes };
+};
+
+export const useMetadataCustomerTag = () => {
+  const { data: images } = useAllImagesQuery();
+
+  return (
+    images?.some((image) => image.capabilities.includes('cloud-init')) ?? false
+  );
 };
