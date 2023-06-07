@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import TabbedPanel from 'src/components/TabbedPanel';
+import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';

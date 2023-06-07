@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
 import RenderGuard from 'src/components/RenderGuard';
-import TabbedPanel from 'src/components/TabbedPanel';
+import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
   determineInitialPlanCategoryTab,
