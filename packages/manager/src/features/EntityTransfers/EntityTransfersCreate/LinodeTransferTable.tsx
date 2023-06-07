@@ -6,7 +6,7 @@ import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SelectableTableRow from 'src/components/SelectableTableRow';
 import { TableCell } from 'src/components/TableCell';
-import TableContentWrapper from 'src/components/TableContentWrapper';
+import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { useSpecificTypes } from 'src/queries/types';
 import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
