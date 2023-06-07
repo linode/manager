@@ -39,8 +39,9 @@ async function generateChangeset() {
   const { linodePackage } = await inquirer.prompt([
     {
       type: "list",
+      prefix: `📦 Linode Package`,
       name: "linodePackage",
-      message: "What package is this changeset for? (default: manager)",
+      message: "\nWhat package is this changeset for? (default: manager)",
       choices: PACKAGES,
       default: "manager",
     },
@@ -48,23 +49,27 @@ async function generateChangeset() {
   const { type } = await inquirer.prompt([
     {
       type: "list",
+      prefix: `🆕 Semver`,
       name: "type",
-      message: "What type of change is this?",
+      message: "\nWhat type of change is this?",
       choices: CHANGESET_TYPES,
     },
   ]);
   const { description } = await inquirer.prompt([
     {
       type: "input",
+      prefix: `📝 Description`,
       name: "description",
-      message: "Describe the change (don't include the PR number):",
+      message: "\nDescribe the change (don't include the PR number):",
     },
   ]);
   const { commit } = await inquirer.prompt([
     {
       type: "confirm",
+      prefix: `✅ Commit`,
       name: "commit",
-      message: "Do you want to commit the changeset file? (Y or enter for yes)",
+      message:
+        "\nDo you want to commit the changeset file? (Y or enter for yes)",
       default: true,
     },
   ]);
@@ -83,7 +88,7 @@ async function generateChangeset() {
     await writeFileAsync(changesetFile, changesetContent, {
       encoding: "utf-8",
     });
-    logger.success({ message: "Changeset created!", info: changesetFile });
+    logger.success({ message: "🚀 Changeset created!", info: changesetFile });
   } catch (error) {
     logger.error({ message: error });
   }
@@ -101,7 +106,7 @@ async function generateChangeset() {
     execSync(addCmd);
     execSync(commitCmd);
 
-    logger.success({ message: "Changeset committed!", info: changesetFile });
+    logger.success({ message: "✅ Changeset committed!", info: changesetFile });
   } catch (error) {
     logger.error({ message: error });
   }

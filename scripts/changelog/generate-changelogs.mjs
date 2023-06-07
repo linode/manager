@@ -146,7 +146,7 @@ try {
           );
 
           logger.success({
-            message: `Changelog for @linode/${linodePackage} generated successfully!`,
+            message: `🚀 Changelog for @linode/${linodePackage} generated successfully!`,
           });
         } catch (error) {
           logger.error({
