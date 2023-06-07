@@ -38,7 +38,7 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 export const formatLinode = (
   linode: Linode,
   types: ExtendedType[],
-  images: Record<string, Image>
+  imageLabel: string | null
 ): SearchableItem => ({
   label: linode.label,
   value: linode.id,
@@ -50,8 +50,7 @@ export const formatLinode = (
       linode.specs.memory,
       linode.specs.disk,
       linode.specs.vcpus,
-      linode.image,
-      images
+      imageLabel
     ),
     icon: 'linode',
     path: `/linodes/${linode.id}`,
