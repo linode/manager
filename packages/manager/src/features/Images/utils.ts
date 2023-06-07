@@ -1,3 +1,4 @@
+import type { Linode, Image } from '@linode/api-v4';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 export const useImageAndLinodeGrantCheck = () => {
@@ -17,4 +18,9 @@ export const useImageAndLinodeGrantCheck = () => {
     : null;
 
   return { canCreateImage, permissionedLinodes };
+};
+
+export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
+  const image = images?.find((image) => image.id === linode.image);
+  return image?.label ?? linode.image;
 };
