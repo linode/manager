@@ -1,14 +1,15 @@
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
 import CloudInitIncompatibleIcon from 'src/assets/icons/cloud-init-incompatible.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
 import TooltipIcon from 'src/components/TooltipIcon';
 import useFlags from 'src/hooks/useFlags';
+import { useAllImagesQuery } from 'src/queries/images';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,6 +54,11 @@ const ImageOption = (props: ImageOptionProps) => {
   const { data, label, isFocused, isSelected } = props;
   const flags = useFlags();
 
+  const { data: images } = useAllImagesQuery();
+
+  const hasMetadataCustomerTag =
+    images?.some((image) => image.capabilities.includes('cloud-init')) ?? false;
+
   return (
     <Option
       className={classNames({
@@ -74,7 +80,9 @@ const ImageOption = (props: ImageOptionProps) => {
       >
         <span className={`${data.className} ${classes.distroIcon}`} />
         <Box>{label}</Box>
-        {flags.metadata && !data.isCloudInitCompatible ? (
+        {flags.metadata &&
+        hasMetadataCustomerTag &&
+        !data.isCloudInitCompatible ? (
           <TooltipIcon
             text="This image is not compatible with cloud-init."
             status="other"
