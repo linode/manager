@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
@@ -66,7 +67,7 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
         preferenceKey={scheduledAPIMaintenance.id}
         key={scheduledAPIMaintenance.id}
       >
-        <>
+        <Box display="flex" flexDirection="column">
           <Typography data-testid="scheduled-maintenance-banner">
             <Link to={scheduledAPIMaintenance.shortlink}>
               <strong data-testid="scheduled-maintenance-status">
@@ -77,7 +78,7 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
           <Typography
             dangerouslySetInnerHTML={{ __html: sanitizeHTML(bannerBody) }}
           />
-        </>
+        </Box>
       </DismissibleBanner>
     );
   };
