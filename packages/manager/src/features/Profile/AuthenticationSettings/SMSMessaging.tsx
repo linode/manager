@@ -1,37 +1,17 @@
 import * as React from 'react';
-import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
-import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { useProfile } from 'src/queries/profile';
-import { useSnackbar } from 'notistack';
-import { useSMSOptOutMutation } from 'src/queries/profile';
+import Box from 'src/components/core/Box';
+import Button from 'src/components/Button';
+import Typography from 'src/components/core/Typography';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { getFormattedNumber } from './PhoneVerification/helpers';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  notice: {
-    borderLeft: `5px solid ${theme.color.green}`,
-  },
-  text: {
-    fontSize: '0.875rem !important',
-  },
-  button: {
-    marginTop: theme.spacing(),
-    width: '150px',
-  },
-  copy: {
-    maxWidth: 960,
-    lineHeight: '20px',
-  },
-}));
+import { Notice } from 'src/components/Notice/Notice';
+import { styled } from '@mui/material/styles';
+import { useProfile } from 'src/queries/profile';
+import { useSMSOptOutMutation } from 'src/queries/profile';
+import { useSnackbar } from 'notistack';
 
 export const SMSMessaging = () => {
-  const classes = useStyles();
-
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const {
@@ -40,15 +20,12 @@ export const SMSMessaging = () => {
     isLoading,
     reset,
   } = useSMSOptOutMutation();
-
   const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
-
   const [open, setOpen] = React.useState(false);
 
   const onOpen = () => {
     setOpen(true);
   };
-
   const onClose = () => {
     setOpen(false);
     if (error) {
@@ -67,44 +44,36 @@ export const SMSMessaging = () => {
 
   return (
     <>
-      <Notice
-        spacingTop={12}
+      <StyledNotice
         spacingBottom={16}
         spacingLeft={1}
+        spacingTop={12}
         success={hasVerifiedPhoneNumber}
         warning={!hasVerifiedPhoneNumber}
-        className={hasVerifiedPhoneNumber ? classes.notice : undefined}
+        hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
       >
-        <Typography className={classes.text}>
+        <Typography sx={{ fontSize: '0.875rem !important' }}>
           <b>
             {hasVerifiedPhoneNumber
               ? 'You have opted in to SMS messaging.'
               : 'You are opted out of SMS messaging.'}
           </b>
         </Typography>
-      </Notice>
-      <Typography className={classes.copy}>
+      </StyledNotice>
+      <StyledCopy>
         An authentication code is sent via SMS as part of the phone verification
         process. Messages are not sent for any other reason. SMS authentication
         is optional and provides an important degree of account security. You
         may opt out at any time and your verified phone number will be deleted.
-      </Typography>
+      </StyledCopy>
       {hasVerifiedPhoneNumber ? (
         <Box display="flex" justifyContent="flex-end">
-          <Button
-            className={classes.button}
-            buttonType="primary"
-            onClick={onOpen}
-          >
+          <StyledButton buttonType="primary" onClick={onOpen}>
             Opt Out
-          </Button>
+          </StyledButton>
         </Box>
       ) : null}
       <ConfirmationDialog
-        title={'Opt out of SMS messaging for phone verification'}
-        open={open}
-        onClose={onClose}
-        error={error?.[0].reason}
         actions={() => (
           <ActionsPanel>
             <Button buttonType="secondary" onClick={onClose}>
@@ -115,6 +84,10 @@ export const SMSMessaging = () => {
             </Button>
           </ActionsPanel>
         )}
+        error={error?.[0].reason}
+        onClose={onClose}
+        open={open}
+        title={'Opt out of SMS messaging for phone verification'}
       >
         <Typography>
           Opting out of SMS messaging will reduce security and limit the ways
@@ -124,10 +97,10 @@ export const SMSMessaging = () => {
           </a>
         </Typography>
         <Notice
-          spacingTop={16}
-          spacingBottom={0}
-          className={classes.text}
           error
+          spacingBottom={0}
+          spacingTop={16}
+          sx={{ fontSize: '0.875rem !important' }}
         >
           <b>Warning:</b> As part of this action, your verified phone number{' '}
           {profile?.verified_phone_number
@@ -139,3 +112,27 @@ export const SMSMessaging = () => {
     </>
   );
 };
+
+const StyledButton = styled(Button, {
+  label: 'StyledButton',
+})(({ theme }) => ({
+  marginTop: theme.spacing(),
+  width: '150px',
+}));
+
+const StyledCopy = styled(Typography, {
+  label: 'StyledCopy',
+})(() => ({
+  maxWidth: 960,
+  lineHeight: '20px',
+}));
+
+const StyledNotice = styled(Notice, {
+  label: 'StyledNotice',
+})<{ hasVerifiedPhoneNumber: boolean }>(
+  ({ theme, hasVerifiedPhoneNumber }) => ({
+    borderLeft: hasVerifiedPhoneNumber
+      ? `5px solid ${theme.color.green}`
+      : `5px solid ${theme.color.yellow}`,
+  })
+);
