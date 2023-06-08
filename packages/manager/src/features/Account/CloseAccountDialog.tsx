@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
@@ -18,7 +18,7 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   dontgo: {
     marginTop: theme.spacing(2),
-    order: 3,
+    order: 1,
   },
 }));
 
@@ -111,25 +111,23 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       typographyStyle={{ marginTop: '0px' }}
     >
       {errors ? <Notice error text={errors ? errors[0].reason : ''} /> : null}
-      {/*
-        The order property helps inject the TypeToConfirm input field in the TypeToConfirmDialog when the components
-        below are passed in as the children prop.
-      */}
-      <Notice warning style={{ order: 1 }}>
-        <Typography sx={{ fontSize: '0.875rem', order: 2 }}>
-          <strong>Warning:</strong> Please note this is an extremely destructive
-          action. Closing your account means that all services including
-          Linodes, Volumes, DNS Records, etc will be lost and may not be able to
-          be restored.
-        </Typography>
-      </Notice>
+      <StyledNoticeWrapper>
+        <Notice warning>
+          <Typography sx={{ fontSize: '0.875rem' }}>
+            <strong>Warning:</strong> Please note this is an extremely
+            destructive action. Closing your account means that all services
+            Linodes, Volumes, DNS Records, etc will be lost and may not be able
+            be restored.
+          </Typography>
+        </Notice>
+      </StyledNoticeWrapper>
       <Typography className={classes.dontgo}>
         We&rsquo;d hate to see you go. Please let us know what we could be doing
         better in the comments section below. After your account is closed,
         you&rsquo;ll be directed to a quick survey so we can better gauge your
         feedback.
       </Typography>
-      <div style={{ order: 4 }}>
+      <StyledCommentSectionWrapper>
         <TextField
           label="Comments"
           multiline
@@ -140,9 +138,19 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
           value={comments}
           aria-label="Optional comments field"
         />
-      </div>
+      </StyledCommentSectionWrapper>
     </TypeToConfirmDialog>
   );
 };
+
+// The order property helps inject the TypeToConfirm input field in the TypeToConfirmDialog when the components
+// below are passed in as the children prop.
+const StyledNoticeWrapper = styled('div')(() => ({
+  order: 0,
+}));
+
+const StyledCommentSectionWrapper = styled('div')(() => ({
+  order: 2,
+}));
 
 export default React.memo(CloseAccountDialog);

@@ -41,7 +41,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           <Typography variant="h2">{title}</Typography>
           <Typography style={typographyStyle}>{confirmationText}</Typography>
           <TextField
-            style={textFieldStyle}
+            sx={textFieldStyle}
             onChange={(e) => onChange(e.target.value)}
             {...rest}
           />
