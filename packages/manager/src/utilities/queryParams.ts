@@ -1,7 +1,8 @@
 /**
- * Parses a string of key/value pairs separated by '&', with the key and value separated by '='
+ * Parses a string of key/value pairs starting with ? and
+ * separated by '&', with the key and value separated by '='
  *
- * @param str The string to parse
+ * @param str The search params to parse. This must ONLY be the query string and not the entire URL.
  * @returns An object of the parsed key/value pairs
  */
 export const parseQueryParams = (str: string) =>
