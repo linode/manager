@@ -10,7 +10,7 @@ import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceTogg
 import { Toggle } from 'src/components/Toggle';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { getQueryParam } from 'src/utilities/queryParams';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
 import { ThemeChoice } from 'src/utilities/theme';
 import FormControl from 'src/components/core/FormControl';
@@ -43,13 +43,19 @@ const ProfileSettings = () => {
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   React.useEffect(() => {
-    if (getQueryParam(window.location.search, 'preferenceEditor') === 'true') {
+    if (
+      getQueryParamFromQueryString(
+        window.location.search,
+        'preferenceEditor'
+      ) === 'true'
+    ) {
       setPreferenceEditorOpen(true);
     }
   }, []);
 
   const preferenceEditorMode =
-    getQueryParam(window.location.search, 'preferenceEditor') === 'true';
+    getQueryParamFromQueryString(window.location.search, 'preferenceEditor') ===
+    'true';
 
   const toggle = () => {
     setSubmitting(true);

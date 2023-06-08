@@ -6,7 +6,7 @@ import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
@@ -19,7 +19,7 @@ const SupportTicketsLanding = () => {
   const history = useHistory();
 
   /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
-  const parsedParams = getParamsFromUrl(location.search);
+  const parsedParams = getQueryParamsFromQueryString(location.search);
 
   const stateParams = location.state;
 
