@@ -109,12 +109,13 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     }
 
     let ttcAction = '';
-    if (entity.subType === 'Backup') {
-      ttcAction = 'restoration';
-    } else if (entity.subType === 'ObjectStorage') {
-      ttcAction = 'cancellation';
-    } else {
-      ttcAction = 'deletion';
+    switch (entity.subType) {
+      case 'Backup':
+        ttcAction = 'restoration';
+      case 'ObjectStorage':
+        ttcAction = 'cancellation';
+      default:
+        ttcAction = 'deletion';
     }
 
     let ttcEntityName = '';
