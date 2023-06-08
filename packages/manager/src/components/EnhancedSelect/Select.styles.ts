@@ -1,12 +1,8 @@
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes dash': {
-    to: {
-      'stroke-dashoffset': 0,
-    },
-  },
+// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
+export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: '100%',
     position: 'relative',
