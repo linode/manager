@@ -147,7 +147,7 @@ export const VolumesActionMenu = (props: Props) => {
     disabled: !isVolumesLanding,
     tooltip: isVolumesLanding
       ? undefined
-      : 'This volume must be detched before it can be deleted.',
+      : 'This volume must be detached before it can be deleted.',
   });
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
