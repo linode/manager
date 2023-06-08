@@ -28,7 +28,7 @@ export const getNodePools = (
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools`)
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`)
   );
 
 /**
@@ -39,7 +39,11 @@ export const getNodePools = (
 export const getNodePool = (clusterID: number, nodePoolID: number) =>
   Request<KubeNodePoolResponse>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID
+      )}/pools/${encodeURIComponent(nodePoolID)}`
+    )
   );
 
 /**
@@ -50,7 +54,7 @@ export const getNodePool = (clusterID: number, nodePoolID: number) =>
 export const createNodePool = (clusterID: number, data: CreateNodePoolData) =>
   Request<KubeNodePoolResponse>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools`),
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`),
     setData(data, nodePoolSchema)
   );
 
@@ -66,7 +70,11 @@ export const updateNodePool = (
 ) =>
   Request<KubeNodePoolResponse>(
     setMethod('PUT'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID
+      )}/pools/${encodeURIComponent(nodePoolID)}`
+    ),
     setData(data, nodePoolSchema)
   );
 
@@ -78,7 +86,11 @@ export const updateNodePool = (
 export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID
+      )}/pools/${encodeURIComponent(nodePoolID)}`
+    )
   );
 
 /**
@@ -89,7 +101,11 @@ export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
 export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
   Request<{}>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}/recycle`)
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID
+      )}/pools/${encodeURIComponent(nodePoolID)}/recycle`
+    )
   );
 
 /**
@@ -100,5 +116,9 @@ export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
 export const recycleNode = (clusterID: number, nodeID: string) =>
   Request<{}>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/nodes/${nodeID}/recycle`)
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID
+      )}/nodes/${encodeURIComponent(nodeID)}/recycle`
+    )
   );

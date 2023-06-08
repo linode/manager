@@ -1,14 +1,13 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
 import Grid from '@mui/material/Unstable_Grid2';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     padding: theme.spacing(1),
   },
@@ -30,15 +29,13 @@ interface RegionOptionProps extends OptionProps<any, any> {
   data: RegionItem;
 }
 
-type CombinedProps = RegionOptionProps;
-
-export const RegionOption: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const RegionOption = (props: RegionOptionProps) => {
+  const { classes, cx } = useStyles();
   const { data, label } = props;
   const isDisabled = Boolean(data.disabledMessage);
   return (
     <Option
-      className={classNames({
+      className={cx({
         [classes.root]: true,
         [classes.focused]: props.isFocused,
         [classes.disabled]: isDisabled,
@@ -80,5 +77,3 @@ export const RegionOption: React.FC<CombinedProps> = (props) => {
     </Option>
   );
 };
-
-export default RegionOption;
