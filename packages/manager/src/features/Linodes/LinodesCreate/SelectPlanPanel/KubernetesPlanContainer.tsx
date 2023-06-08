@@ -69,7 +69,11 @@ export const KubernetesPlanContainer = ({
                       noWrap={noWrap}
                       key={testId}
                     >
-                      {cellName}
+                      {cellName === 'Quantity' ? (
+                        <p className="visually-hidden">{cellName}</p>
+                      ) : (
+                        cellName
+                      )}
                     </TableCell>
                   );
                 })}
