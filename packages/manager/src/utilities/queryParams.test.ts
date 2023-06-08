@@ -7,19 +7,20 @@ import {
 describe('Url/query parsing utilities', () => {
   describe('getParamsFromUrl function', () => {
     it('should parse a url', () => {
-      expect(getParamsFromUrl('https://example.com/?query=false')).toEqual({
+      expect(getParamsFromUrl('?query=false')).toEqual({
         query: 'false',
       });
     });
     it('should handle multiple key/value pairs', () => {
-      expect(
-        getParamsFromUrl('https://example.com/?query=false&this=that')
-      ).toEqual({ query: 'false', this: 'that' });
+      expect(getParamsFromUrl('?query=false&this=that')).toEqual({
+        query: 'false',
+        this: 'that',
+      });
     });
     it('should handle escaped whitespace', () => {
-      expect(
-        getParamsFromUrl('https://example.com/?query=this%20that')
-      ).toEqual({ query: 'this that' });
+      expect(getParamsFromUrl('?query=this%20that')).toEqual({
+        query: 'this that',
+      });
     });
     it('should handle blank input', () => {
       expect(getParamsFromUrl('')).toEqual({});

@@ -1,6 +1,3 @@
-import { pathOr } from 'ramda';
-import parseUrl from 'url-parse';
-
 /**
  * Parses a string of key/value pairs separated by '&', with the key and value separated by '='
  *
@@ -16,12 +13,11 @@ export const getQueryParam = (
   defaultValue: string = ''
 ) => {
   const params = parseQueryParams(str);
-  return pathOr(defaultValue, [paramName], params);
+  return params[paramName] ?? defaultValue;
 };
 
 export const getParamsFromUrl = (url: string) => {
-  const parsedUrl = parseUrl(url) as any;
-  return parseQueryParams(parsedUrl.query);
+  return parseQueryParams(url);
 };
 
 export const getParamFromUrl = (
@@ -29,6 +25,5 @@ export const getParamFromUrl = (
   paramName: string,
   defaultValue: string = ''
 ): string => {
-  const parsedUrl = parseUrl(url) as any;
-  return getQueryParam(parsedUrl.query, paramName, defaultValue);
+  return getQueryParam(url, paramName, defaultValue);
 };
