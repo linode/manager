@@ -24,7 +24,9 @@ export const getNodeBalancerConfigs = (
   params?: Params
 ) =>
   Request<Page<NodeBalancerConfig>>(
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
+    setURL(
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/configs`
+    ),
     setMethod('GET'),
     setParams(params)
   );
@@ -41,7 +43,11 @@ export const getNodeBalancerConfig = (
   configId: number
 ) =>
   Request<Page<NodeBalancerConfig>>(
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
+    setURL(
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}`
+    ),
     setMethod('GET')
   );
 
@@ -59,7 +65,9 @@ export const createNodeBalancerConfig = (
 ) =>
   Request<NodeBalancerConfig>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
+    setURL(
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/configs`
+    ),
     setData(
       data,
       createNodeBalancerConfigSchema,
@@ -82,7 +90,11 @@ export const updateNodeBalancerConfig = (
 ) =>
   Request<NodeBalancerConfig>(
     setMethod('PUT'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
+    setURL(
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}`
+    ),
     setData(data, UpdateNodeBalancerConfigSchema)
   );
 
@@ -100,5 +112,9 @@ export const deleteNodeBalancerConfig = (
 ) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`)
+    setURL(
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}`
+    )
   );
