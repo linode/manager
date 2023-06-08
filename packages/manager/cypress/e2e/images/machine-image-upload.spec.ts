@@ -81,7 +81,7 @@ const eventIntercept = (
  */
 const assertFailed = (label: string, id: string, message: string) => {
   ui.toast.assertMessage(
-    `There was a problem processing image ${label}: ${message}`
+    `There was a problem uploading image ${label}: ${message}`
   );
 
   cy.get(`[data-qa-image-cell="${id}"]`).within(() => {

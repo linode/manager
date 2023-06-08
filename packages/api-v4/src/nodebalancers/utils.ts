@@ -6,8 +6,8 @@ export const combineConfigNodeAddressAndPort = (data: any) => ({
     address: `${n.address}:${n.port}`,
     label: n.label,
     mode: n.mode,
-    weight: n.weight
-  }))
+    weight: n.weight,
+  })),
 });
 
 export const combineNodeBalancerConfigNodeAddressAndPort = (data: any) => ({
@@ -18,12 +18,12 @@ export const combineNodeBalancerConfigNodeAddressAndPort = (data: any) => ({
       address: `${n.address}:${n.port}`,
       label: n.label,
       mode: n.mode,
-      weight: n.weight
-    }))
-  }))
+      weight: n.weight,
+    })),
+  })),
 });
 
 export const mergeAddressAndPort = (node: NodeBalancerConfigNodeWithPort) => ({
   ...node,
-  address: `${node.address}:${node.port}`
+  address: `${node.address}:${node.port}`,
 });

@@ -27,7 +27,7 @@ export const getAppTokens = (params?: Params, filters?: Filter) =>
 export const getAppToken = (tokenId: number) =>
   Request<Token>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/profile/apps/${tokenId}`)
+    setURL(`${API_ROOT}/profile/apps/${encodeURIComponent(tokenId)}`)
   );
 
 /**
@@ -40,6 +40,6 @@ export const getAppToken = (tokenId: number) =>
  */
 export const deleteAppToken = (tokenId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/profile/apps/${tokenId}`),
+    setURL(`${API_ROOT}/profile/apps/${encodeURIComponent(tokenId)}`),
     setMethod('DELETE')
   );
