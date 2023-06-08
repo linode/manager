@@ -11,7 +11,7 @@ type PlansByType<T> = Omit<PlansTypes<T>, 'nanode' | 'standard'> & {
   shared: T[];
 };
 
-//We could update this to add or remove any new or existing plan tabs.
+// We could update this to add or remove any new or existing plan tabs.
 export const planTypeOrder: (
   | Exclude<LinodeTypeClass, 'nanode' | 'standard'>
   | 'shared'
@@ -45,7 +45,7 @@ export const getPlanSelectionsByPlanType = <
     return acc;
   }, {} as PlansByType<T>);
 
-  //group plans by type
+// group plans by type
   for (const type of types) {
     switch (type.class) {
       case 'nanode':
