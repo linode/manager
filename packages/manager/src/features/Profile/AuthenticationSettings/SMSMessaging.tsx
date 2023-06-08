@@ -133,6 +133,6 @@ const StyledNotice = styled(Notice, {
   ({ theme, hasVerifiedPhoneNumber }) => ({
     borderLeft: hasVerifiedPhoneNumber
       ? `5px solid ${theme.color.green}`
-      : 'none',
+      : `5px solid ${theme.color.yellow}`,
   })
 );

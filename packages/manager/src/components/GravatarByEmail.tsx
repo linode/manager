@@ -6,13 +6,10 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 import { styled } from '@mui/material/styles';
 
 interface Props {
-  height?: number;
-  width?: number;
-}
-
-interface Props {
   className?: string;
   email: string;
+  height?: number;
+  width?: number;
 }
 
 export const GravatarByEmail = (props: Props) => {
