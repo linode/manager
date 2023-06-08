@@ -205,9 +205,7 @@ export const darkTheme: ThemeOptions = {
     },
     MuiBackdrop: {
       styleOverrides: {
-        root: {
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        },
+        root: customDarkModeOptions.color.drawerBackdrop,
       },
     },
     MuiAutocomplete: {
