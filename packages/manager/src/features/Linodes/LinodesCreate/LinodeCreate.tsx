@@ -48,7 +48,7 @@ import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
 import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
-import SelectPlanPanel from './SelectPlanPanel';
+import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
@@ -702,7 +702,7 @@ export class LinodeCreate extends React.PureComponent<
               helperText={this.props.regionHelperText}
             />
           )}
-          <SelectPlanPanel
+          <PlansPanel
             key={this.state.planKey}
             data-qa-select-plan
             error={hasErrorFor.type}
