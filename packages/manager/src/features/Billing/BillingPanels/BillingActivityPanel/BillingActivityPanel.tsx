@@ -23,7 +23,7 @@ import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
-import TableContentWrapper from 'src/components/TableContentWrapper';
+import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';

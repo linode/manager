@@ -11,7 +11,6 @@ import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { useAccount } from 'src/queries/account';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
 import { privateIPRegex } from 'src/utilities/ipUtils';
@@ -88,17 +87,9 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   } = props;
 
   const classes = useStyles();
-  const { data: account } = useAccount();
 
-  // Making this an && instead of the usual hasFeatureEnabled, which is || based.
-  // Doing this so that we can toggle our flag without enabling vlans for all customers.
-  const capabilities = account?.capabilities ?? [];
-
-  // The VLAN section is shown when:
-  // - the user has the capability
-  // - the user is not creating by cloning (cloning copies the network interfaces)
-  const showVlans =
-    capabilities.includes('Vlans') && createType !== 'fromLinode';
+  // The VLAN section is shown when the user is not creating by cloning (cloning copies the network interfaces)
+  const showVlans = createType !== 'fromLinode';
 
   const isBareMetal = /metal/.test(selectedTypeID ?? '');
 

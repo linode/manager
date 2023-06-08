@@ -13,7 +13,7 @@ import { IPAllocationRequest, LinodeIPsResponse } from './types';
  */
 export const getLinodeIPs = (id: number) =>
   Request<LinodeIPsResponse>(
-    setURL(`${API_ROOT}/linode/instances/${id}/ips`),
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(id)}/ips`),
     setMethod('GET')
   );
 
@@ -32,7 +32,7 @@ export const allocateIPAddress = (
   data: IPAllocationRequest
 ) =>
   Request<IPAddress>(
-    setURL(`${API_ROOT}/linode/instances/${linodeID}/ips`),
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeID)}/ips`),
     setMethod('POST'),
     setData(data, IPAllocationSchema)
   );
@@ -52,7 +52,9 @@ export const removeIPAddress = (payload: {
 }) => {
   return Request<{}>(
     setURL(
-      `${API_ROOT}/linode/instances/${payload.linodeID}/ips/${payload.address}`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        payload.linodeID
+      )}/ips/${encodeURIComponent(payload.address)}`
     ),
     setMethod('DELETE')
   );
@@ -67,7 +69,9 @@ export const removeIPAddress = (payload: {
  */
 export const removeIPv6Range = (payload: { range: string }) => {
   return Request<{}>(
-    setURL(`${API_ROOT}/networking/ipv6/ranges/${payload.range}`),
+    setURL(
+      `${API_ROOT}/networking/ipv6/ranges/${encodeURIComponent(payload.range)}`
+    ),
     setMethod('DELETE')
   );
 };

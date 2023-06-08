@@ -27,6 +27,6 @@ export const getAccountLogins = (params?: Params, filter?: Filter) =>
  */
 export const getAccountLogin = (loginId: number) =>
   Request<AccountLogin>(
-    setURL(`${API_ROOT}/account/logins/${loginId}`),
+    setURL(`${API_ROOT}/account/logins/${encodeURIComponent(loginId)}`),
     setMethod('GET')
   );

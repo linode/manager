@@ -25,7 +25,9 @@ export const getNodeBalancerConfigNodes = (
   Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
     setURL(
-      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes`
     )
   );
 
@@ -46,7 +48,11 @@ export const getNodeBalancerConfigNode = (
   Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
     setURL(
-      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
+        nodeId
+      )}`
     )
   );
 /**
@@ -81,7 +87,9 @@ export const createNodeBalancerConfigNode = (
   Request<NodeBalancerConfigNode>(
     setMethod('POST'),
     setURL(
-      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes`
     ),
     setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
   );
@@ -118,7 +126,11 @@ export const updateNodeBalancerConfigNode = (
   Request<NodeBalancerConfigNode>(
     setMethod('PUT'),
     setURL(
-      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
+        nodeId
+      )}`
     ),
     setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
   );
@@ -140,6 +152,10 @@ export const deleteNodeBalancerConfigNode = (
   Request<{}>(
     setMethod('DELETE'),
     setURL(
-      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
+        nodeId
+      )}`
     )
   );

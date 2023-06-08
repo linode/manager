@@ -33,7 +33,6 @@ import TextField from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import DeviceSelection from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
-import { useAccount } from 'src/queries/account';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
@@ -245,22 +244,19 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const queryClient = useQueryClient();
 
-  const { data: account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(
     deviceCounterDefault
   );
 
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
-  // Making this an && instead of the usual hasFeatureEnabled, which is || based.
-  // Doing this so that we can toggle our flag without enabling vlans for all customers.
-  const capabilities = account?.capabilities ?? [];
   const regionHasVLANS = regions.some(
     (thisRegion) =>
       thisRegion.id === linode?.region &&
       thisRegion.capabilities.includes('Vlans')
   );
-  const showVlans = capabilities.includes('Vlans') && regionHasVLANS;
+
+  const showVlans = regionHasVLANS;
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
