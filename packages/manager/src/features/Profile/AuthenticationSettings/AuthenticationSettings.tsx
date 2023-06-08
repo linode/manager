@@ -1,51 +1,30 @@
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
+import Link from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import TrustedDevices from './TrustedDevices';
 import Typography from 'src/components/core/Typography';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { useProfile } from 'src/queries/profile';
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
-import ResetPassword from './ResetPassword';
+import { ResetPassword } from './ResetPassword';
+import { SecurityQuestions } from './SecurityQuestions/SecurityQuestions';
 import { SMSMessaging } from './SMSMessaging';
-import TPAProviders from './TPAProviders';
-import TrustedDevices from './TrustedDevices';
-import TwoFactor from './TwoFactor';
-import SecurityQuestions from './SecurityQuestions';
-import Link from 'src/components/Link';
+import { styled } from '@mui/material/styles';
+import { TPAProviders } from './TPAProviders';
+import { TwoFactor } from './TwoFactor/TwoFactor';
+import { useProfile } from 'src/queries/profile';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(3),
-    paddingTop: 17,
-  },
-  linode: {
-    marginBottom: theme.spacing(2),
-  },
-  copy: {
-    maxWidth: 960,
-    lineHeight: '20px',
-    marginTop: theme.spacing(),
-  },
-}));
-
-export const AuthenticationSettings: React.FC = () => {
-  const classes = useStyles();
-
+export const AuthenticationSettings = () => {
   const {
     data: profile,
     isLoading: profileLoading,
     error: profileError,
   } = useProfile();
-
   const authType = profile?.authentication_type ?? 'password';
   const twoFactor = Boolean(profile?.two_factor_auth);
   const username = profile?.username;
-
   const isThirdPartyAuthEnabled = authType !== 'password';
 
   if (profileError) {
@@ -60,10 +39,10 @@ export const AuthenticationSettings: React.FC = () => {
     <>
       <DocumentTitleSegment segment="Login & Authentication" />
       <TPAProviders authType={authType} />
-      <Paper className={classes.root}>
-        <Typography className={classes.linode} variant="h3">
+      <StyledRootContainer>
+        <StyledSecuritySettingsCopy variant="h3">
           Security Settings
-        </Typography>
+        </StyledSecuritySettingsCopy>
         <Divider spacingTop={24} spacingBottom={16} />
         {!isThirdPartyAuthEnabled ? (
           <>
@@ -76,7 +55,7 @@ export const AuthenticationSettings: React.FC = () => {
         <SecurityQuestions />
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
-        <Typography variant="body1" className={classes.copy}>
+        <StyledMainCopy variant="body1">
           A verified phone number provides our team with a secure method of
           verifying your identity as the owner of your Cloud Manager user
           account. This phone number is only ever used to send an SMS message
@@ -86,7 +65,7 @@ export const AuthenticationSettings: React.FC = () => {
           <Link to="https://www.linode.com/docs/guides/user-security-controls#phone-verification">
             Learn more about security options.
           </Link>
-        </Typography>
+        </StyledMainCopy>
         <PhoneVerification />
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">SMS Messaging</Typography>
@@ -97,9 +76,29 @@ export const AuthenticationSettings: React.FC = () => {
             <TrustedDevices />
           </>
         ) : null}
-      </Paper>
+      </StyledRootContainer>
     </>
   );
 };
 
-export default AuthenticationSettings;
+export const StyledRootContainer = styled(Paper, {
+  label: 'StyledRootContainer',
+})(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  padding: theme.spacing(3),
+  paddingTop: 17,
+}));
+
+export const StyledSecuritySettingsCopy = styled(Typography, {
+  label: 'StyledSecuritySettingsCopy',
+})(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+}));
+
+export const StyledMainCopy = styled(Typography, {
+  label: 'StyledMainCopy',
+})(({ theme }) => ({
+  maxWidth: 960,
+  lineHeight: '20px',
+  marginTop: theme.spacing(),
+}));

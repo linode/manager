@@ -3,67 +3,33 @@ import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import Box from 'src/components/core/Box';
 import { Question } from './Question';
 import { Answer } from './Answer';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Item } from 'src/components/EnhancedSelect';
+import { styled } from '@mui/material/styles';
 
 interface Props {
-  questionResponse: SecurityQuestion | undefined;
-  options: Item<number>[];
-  setFieldValue: (field: string, value: number | SecurityQuestion) => void;
-  handleChange: any;
   edit: boolean;
+  handleChange: any;
   index: number;
   onEdit: () => void;
+  options: Item<number>[];
+  questionResponse: SecurityQuestion | undefined;
+  setFieldValue: (field: string, value: number | SecurityQuestion) => void;
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    flexBasis: 'flex-start',
-    minHeight: '74px',
-    '& > div': {
-      flexGrow: 1,
-      width: '100%',
-    },
-    [theme.breakpoints.up('md')]: {
-      flexDirection: 'row',
-    },
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-  question: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexShrink: 1.5,
-  },
-  answer: {
-    paddingLeft: theme.spacing(5.75),
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: 0,
-    },
-  },
-}));
 
 export const QuestionAndAnswerPair = (props: Props) => {
   const {
-    questionResponse,
-    options,
-    setFieldValue,
-    handleChange,
     edit,
+    handleChange,
     onEdit,
+    options,
+    questionResponse,
+    setFieldValue,
     ...rest
   } = props;
-  const classes = useStyles();
 
   return (
-    <Box className={classes.root}>
-      <Box
-        className={classes.question}
-        style={{ paddingTop: !edit ? '16px' : 0 }}
-      >
+    <StyledRootContainer>
+      <StyledQuestionContainer edit={edit}>
         <Question
           questionResponse={questionResponse}
           isReadOnly={!edit}
@@ -72,15 +38,51 @@ export const QuestionAndAnswerPair = (props: Props) => {
           setFieldValue={setFieldValue}
           {...rest}
         />
-      </Box>
-      <Box className={classes.answer}>
+      </StyledQuestionContainer>
+      <StyledAnswerContainer>
         <Answer
           isReadOnly={!edit}
           handleChange={handleChange}
           questionResponse={questionResponse}
           {...rest}
         />
-      </Box>
-    </Box>
+      </StyledAnswerContainer>
+    </StyledRootContainer>
   );
 };
+
+const StyledRootContainer = styled(Box, {
+  label: 'StyledRootContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  flexBasis: 'flex-start',
+  minHeight: '74px',
+  '& > div': {
+    flexGrow: 1,
+    width: '100%',
+  },
+  [theme.breakpoints.up('md')]: {
+    flexDirection: 'row',
+  },
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
+}));
+
+const StyledQuestionContainer = styled(Box, {
+  label: 'StyledQuestionContainer',
+})<{ edit: boolean }>(({ theme, edit }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  flexShrink: 1.5,
+  paddingTop: !edit ? theme.spacing(2) : 0,
+}));
+
+const StyledAnswerContainer = styled(Box, {
+  label: 'StyledQuestionContainer',
+})(({ theme }) => ({
+  paddingLeft: theme.spacing(5.75),
+  [theme.breakpoints.down('md')]: {
+    paddingLeft: 0,
+  },
+}));

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable';
@@ -9,6 +8,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { MODE, OpenAccessDrawer } from './types';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
+import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { useErrors } from 'src/hooks/useErrors';
 import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
