@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { RenderLinodesProps } from './DisplayLinodes';
 import { LinodeRow } from './LinodeRow/LinodeRow';
 
@@ -10,7 +10,7 @@ export const ListView: React.FC<RenderLinodesProps> = (props) => {
   // state is shown higher up in the tree). This is specifically for the case of
   // VLAN Details, where we want to show the table even if there's nothing attached.
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={12} />;
+    return <TableRowEmpty colSpan={12} />;
   }
 
   return (

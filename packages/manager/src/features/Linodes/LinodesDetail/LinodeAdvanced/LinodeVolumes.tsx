@@ -14,8 +14,8 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { withLinodeDetailContext } from 'src/features/Linodes/LinodesDetail/linodeDetailContext';
@@ -249,9 +249,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results === 0) {
-      return (
-        <TableRowEmptyState colSpan={5} message="No Volumes to display." />
-      );
+      return <TableRowEmpty colSpan={5} message="No Volumes to display." />;
     } else if (data) {
       return data.data.map((volume) => (
         <VolumeTableRow
