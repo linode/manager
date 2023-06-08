@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import StatusBanners from './StatusBanners';
 
-const HelpLanding = React.lazy(() => import('./HelpLanding'));
+const HelpLanding = React.lazy(() =>
+  import('./HelpLanding').then((module) => ({ default: module.HelpLanding }))
+);
 
 const SupportSearchLanding = React.lazy(
-  () => import('src/features/Help/SupportSearchLanding')
+  () => import('src/features/Help/SupportSearchLanding/SupportSearchLanding')
 );
 
 const SupportTickets = React.lazy(

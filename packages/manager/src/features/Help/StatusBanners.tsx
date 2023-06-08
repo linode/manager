@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import { DateTime } from 'luxon';
 import * as React from 'react';
+import Box from '@mui/material/Box';
+import { makeStyles } from 'tss-react/mui';
+import { DateTime } from 'luxon';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import {
   IncidentImpact,
@@ -15,7 +15,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { truncateEnd } from 'src/utilities/truncate';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(),
   },
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const StatusBanners: React.FC<{}> = (_) => {
+export const StatusBanners = () => {
   const { data: incidentsData } = useIncidentQuery();
   const incidents = incidentsData?.incidents ?? [];
 
@@ -72,10 +72,10 @@ export interface IncidentProps {
   impact: IncidentImpact;
 }
 
-export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
+export const IncidentBanner = React.memo((props: IncidentProps) => {
   const { message, status: _status, title, impact, href } = props;
   const status = _status ?? '';
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const preferenceKey = `${href}-${status}`;
 
@@ -116,4 +116,4 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
   );
 });
 
-export default React.memo(StatusBanners);
+export default StatusBanners;

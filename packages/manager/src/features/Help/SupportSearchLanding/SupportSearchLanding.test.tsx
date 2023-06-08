@@ -5,18 +5,7 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { CombinedProps, SupportSearchLanding } from './SupportSearchLanding';
 
-const classes = {
-  root: '',
-  backButton: '',
-  searchBar: '',
-  searchBoxInner: '',
-  searchHeading: '',
-  searchField: '',
-  searchIcon: '',
-};
-
 const props: CombinedProps = {
-  classes,
   searchAlgolia: jest.fn(),
   searchResults: [[], []],
   searchEnabled: true,
@@ -28,11 +17,12 @@ const propsWithMultiWordURLQuery = assocPath(
   '?query=search%20two%20words',
   props
 );
-const component = shallow<SupportSearchLanding>(
+
+const component = shallow<typeof SupportSearchLanding>(
   <SupportSearchLanding {...props} />
 );
 // Query is read on mount so we have to mount twice.
-const component2 = shallow<SupportSearchLanding>(
+const component2 = shallow<typeof SupportSearchLanding>(
   <SupportSearchLanding {...propsWithMultiWordURLQuery} />
 );
 

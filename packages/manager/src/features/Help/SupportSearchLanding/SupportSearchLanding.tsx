@@ -3,8 +3,6 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import { H1Header } from 'src/components/H1Header/H1Header';
@@ -13,160 +11,104 @@ import TextField from 'src/components/TextField';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { getQueryParam } from 'src/utilities/queryParams';
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
-import DocumentationResults, { SearchResult } from './DocumentationResults';
+import { DocumentationResults, SearchResult } from './DocumentationResults';
 import HelpResources from './HelpResources';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 
-type ClassNames =
-  | 'root'
-  | 'searchBar'
-  | 'searchBoxInner'
-  | 'searchHeading'
-  | 'searchField'
-  | 'searchIcon';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      maxWidth: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      position: 'relative',
-    },
-    searchBar: {
+const useStyles = makeStyles()((theme: Theme) => ({
+  searchBar: {
+    maxWidth: '100%',
+  },
+  searchBoxInner: {
+    padding: theme.spacing(3),
+    backgroundColor: theme.color.grey2,
+    marginTop: 0,
+    '& > div': {
       maxWidth: '100%',
     },
-    searchBoxInner: {
-      padding: theme.spacing(3),
-      backgroundColor: theme.color.grey2,
-      marginTop: 0,
-      '& > div': {
-        maxWidth: '100%',
-      },
+  },
+  searchIcon: {
+    marginRight: 0,
+    '& svg': {
+      color: theme.palette.text.primary,
     },
-    searchHeading: {
-      color: theme.color.black,
-      marginBottom: theme.spacing(2),
-      fontSize: '175%',
-    },
-    searchField: {
-      padding: theme.spacing(3),
-    },
-    searchIcon: {
-      marginRight: 0,
-      '& svg': {
-        color: theme.palette.text.primary,
-      },
-    },
-  });
+  },
+}));
 
-interface State {
-  query: string;
-}
+export type CombinedProps = AlgoliaProps & RouteComponentProps<{}>;
 
-export type CombinedProps = AlgoliaProps &
-  WithStyles<ClassNames> &
-  RouteComponentProps<{}>;
+export const SupportSearchLanding = (props: CombinedProps) => {
+  const { classes } = useStyles();
+  const { searchEnabled, searchError, searchResults } = props;
+  const [query, setQuery] = React.useState('');
 
-export class SupportSearchLanding extends React.Component<
-  CombinedProps,
-  State
-> {
-  searchIndex: any = null;
-  state: State = {
-    query: '',
+  React.useEffect(() => {
+    setQuery(getQueryParam(props.location.search, 'query'));
+    props.searchAlgolia(query);
+  }, [props, query]);
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value ?? '');
+    props.history.replace({ search: `?query=${query}` });
+    props.searchAlgolia(query);
   };
 
-  componentDidMount() {
-    this.searchFromParams();
-  }
+  const [docs, community] = searchResults;
 
-  searchFromParams() {
-    const query = getQueryParam(this.props.location.search, 'query');
-    this.setState({ query });
-    this.props.searchAlgolia(query);
-  }
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (!prevProps.searchEnabled && this.props.searchEnabled) {
-      this.searchFromParams();
-    }
-  }
-
-  onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuery = e.target.value ?? '';
-    this.setState({ query: newQuery });
-    this.props.history.replace({ search: `?query=${newQuery}` });
-    this.props.searchAlgolia(newQuery);
-  };
-
-  render() {
-    const { classes, searchEnabled, searchError, searchResults } = this.props;
-    const { query } = this.state;
-
-    const [docs, community] = searchResults;
-
-    return (
-      <Grid container direction="column">
-        <Box
-          sx={{
-            marginBottom: '16px',
+  return (
+    <Grid container direction="column">
+      <Box
+        sx={{
+          marginBottom: '16px',
+        }}
+      >
+        <H1Header
+          title={query.length > 1 ? `Search results for "${query}"` : 'Search'}
+          data-qa-support-search-landing-title
+        />
+      </Box>
+      <Box>
+        {searchError && <Notice error>{searchError}</Notice>}
+        <TextField
+          data-qa-search-landing-input
+          className={classes.searchBoxInner}
+          placeholder="Search Linode documentation and community questions"
+          label="Search Linode documentation and community questions"
+          hideLabel
+          value={query}
+          onChange={onInputChange}
+          disabled={!Boolean(searchEnabled)}
+          InputProps={{
+            className: classes.searchBar,
+            startAdornment: (
+              <InputAdornment position="end" className={classes.searchIcon}>
+                <Search />
+              </InputAdornment>
+            ),
           }}
-        >
-          <H1Header
-            title={
-              query.length > 1 ? `Search results for "${query}"` : 'Search'
-            }
-            data-qa-support-search-landing-title
-          />
-        </Box>
-        <Box>
-          {searchError && <Notice error>{searchError}</Notice>}
-          <TextField
-            data-qa-search-landing-input
-            className={classes.searchBoxInner}
-            placeholder="Search Linode documentation and community questions"
-            label="Search Linode documentation and community questions"
-            hideLabel
-            value={query}
-            onChange={this.onInputChange}
-            disabled={!Boolean(searchEnabled)}
-            InputProps={{
-              className: classes.searchBar,
-              startAdornment: (
-                <InputAdornment position="end" className={classes.searchIcon}>
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-        <Box>
-          <DocumentationResults
-            sectionTitle="Documentation"
-            results={docs as SearchResult[]}
-            target={DOCS_SEARCH_URL + query}
-          />
-        </Box>
-        <Box>
-          <DocumentationResults
-            sectionTitle="Community Posts"
-            results={community as SearchResult[]}
-            target={COMMUNITY_SEARCH_URL + query}
-          />
-        </Box>
-        <HelpResources />
-      </Grid>
-    );
-  }
-}
+        />
+      </Box>
+      <Box>
+        <DocumentationResults
+          sectionTitle="Documentation"
+          results={docs as SearchResult[]}
+          target={DOCS_SEARCH_URL + query}
+        />
+      </Box>
+      <Box>
+        <DocumentationResults
+          sectionTitle="Community Posts"
+          results={community as SearchResult[]}
+          target={COMMUNITY_SEARCH_URL + query}
+        />
+      </Box>
+      <HelpResources />
+    </Grid>
+  );
+};
 
-const styled = withStyles(styles);
 const searchable = withSearch({ hitsPerPage: 5, highlight: false });
-const enhanced: any = compose(
-  styled,
-  searchable,
-  withRouter
-)(SupportSearchLanding);
+const enhanced: any = compose(searchable, withRouter)(SupportSearchLanding);
 
 export default enhanced;

@@ -220,5 +220,6 @@ export default (options: SearchOptions) => (
       });
     }
   }
+
   return WrappedComponent;
 };
