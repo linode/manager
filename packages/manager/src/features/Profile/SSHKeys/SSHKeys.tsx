@@ -153,10 +153,9 @@ export const SSHKeys = () => {
 };
 
 const StyledAddNewWrapperGridItem = styled(Grid)(({ theme }) => ({
-  '&.MuiGrid-item': {
-    paddingTop: 0,
-    paddingRight: 0,
-  },
+  paddingTop: 0,
+  paddingRight: 0,
+
   [theme.breakpoints.down('md')]: {
     marginRight: theme.spacing(),
   },
