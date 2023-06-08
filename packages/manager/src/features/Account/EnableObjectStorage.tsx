@@ -118,7 +118,7 @@ export const EnableObjectStorage = (props: Props) => {
       >
         {error ? <Notice error text={error} /> : null}
         <Notice warning>
-          <Typography style={{ fontSize: '0.875rem' }}>
+          <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Canceling Object Storage will permanently
             delete all buckets and their objects. Object Storage Access Keys
             will be revoked.
