@@ -33,7 +33,9 @@ export const getEntityTransfers = (params?: Params, filter?: Filter) =>
 export const getEntityTransfer = (token: string) =>
   Request<EntityTransfer>(
     setMethod('GET'),
-    setURL(`${BETA_API_ROOT}/account/entity-transfers/${token}`)
+    setURL(
+      `${BETA_API_ROOT}/account/entity-transfers/${encodeURIComponent(token)}`
+    )
   );
 
 /**
@@ -57,7 +59,11 @@ export const createEntityTransfer = (data: CreateTransferPayload) =>
 export const acceptEntityTransfer = (token: string) =>
   Request<{}>(
     setMethod('POST'),
-    setURL(`${BETA_API_ROOT}/account/entity-transfers/${token}/accept`)
+    setURL(
+      `${BETA_API_ROOT}/account/entity-transfers/${encodeURIComponent(
+        token
+      )}/accept`
+    )
   );
 
 /**
@@ -70,5 +76,7 @@ export const acceptEntityTransfer = (token: string) =>
 export const cancelTransfer = (token: string) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${BETA_API_ROOT}/account/entity-transfers/${token}`)
+    setURL(
+      `${BETA_API_ROOT}/account/entity-transfers/${encodeURIComponent(token)}`
+    )
   );

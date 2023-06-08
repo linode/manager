@@ -20,7 +20,9 @@ export const getObjectURL = (
   Request<ObjectStorageObjectURL>(
     setMethod('POST'),
     setURL(
-      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-url`
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/object-url`
     ),
     setData({ name, method, ...options })
   );
@@ -39,7 +41,11 @@ export const getObjectACL = (
   Request<ObjectStorageObjectACL>(
     setMethod('GET'),
     setURL(
-      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-acl?name=${name}`
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/object-acl?name=${encodeURIComponent(
+        name
+      )}`
     )
   );
 
@@ -58,7 +64,9 @@ export const updateObjectACL = (
   Request<ObjectStorageObjectACL>(
     setMethod('PUT'),
     setURL(
-      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-acl`
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/object-acl`
     ),
     setData({ acl, name })
   );

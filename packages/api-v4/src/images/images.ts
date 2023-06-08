@@ -20,7 +20,10 @@ import { Image, ImageUploadPayload, UploadImageResponse } from './types';
  * @param imageId { string } ID of the Image to look up.
  */
 export const getImage = (imageId: string) =>
-  Request<Image>(setURL(`${API_ROOT}/images/${imageId}`), setMethod('GET'));
+  Request<Image>(
+    setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}`),
+    setMethod('GET')
+  );
 
 /**
  * Returns a paginated list of Images.
@@ -80,7 +83,7 @@ export const updateImage = (
   };
 
   return Request<Image>(
-    setURL(`${API_ROOT}/images/${imageId}`),
+    setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}`),
     setMethod('PUT'),
     setData(data, updateImageSchema)
   );
@@ -93,7 +96,7 @@ export const updateImage = (
  */
 export const deleteImage = (imageId: string) => {
   return Request<{}>(
-    setURL(`${API_ROOT}/images/${imageId}`),
+    setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}`),
     setMethod('DELETE')
   );
 };

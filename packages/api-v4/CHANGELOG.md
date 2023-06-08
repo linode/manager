@@ -1,4 +1,10 @@
+## [Unreleased] - v0.94.0
+
+### Added:
+- Encode URI components before passing them to the Linode API #9205
+
 ## [2023-05-30] - v0.93.0
+
 ### Added:
 - `ticket_update` to account types ([#9105](https://github.com/linode/manager/pull/9105))
 - filtering on IPv6 ranges ([#9097](https://github.com/linode/manager/pull/9097))

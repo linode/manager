@@ -7,7 +7,6 @@ import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useAccount } from 'src/queries/account';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,10 +50,6 @@ interface Props {
 
 const CautionNotice = (props: Props) => {
   const classes = useStyles();
-  const { data: account } = useAccount();
-
-  const capabilities = account?.capabilities ?? [];
-  const vlansCapability = capabilities.includes('Vlans');
 
   // This is not great, but lets us get all of the volumes for a Linode while keeping
   // the React Query store in a paginated shape. We want to keep data in a paginated shape
@@ -93,15 +88,13 @@ const CautionNotice = (props: Props) => {
             Configure Your Linode for Reverse DNS (rDNS).
           </Link>
         </li>
-        {vlansCapability && (
-          <li>
-            Any attached VLANs will be inaccessible if the destination region
-            does not support VLANs.{` `}
-            <Link to="https://linode.com/docs/products/networking/vlans/">
-              Check VLAN region compatibility.
-            </Link>
-          </li>
-        )}
+        <li>
+          Any attached VLANs will be inaccessible if the destination region does
+          not support VLANs.{` `}
+          <Link to="https://linode.com/docs/products/networking/vlans/">
+            Check VLAN region compatibility.
+          </Link>
+        </li>
         <li>Your Linode will be powered off.</li>
         <li>
           Block Storage can&rsquo;t be migrated to other regions.{' '}

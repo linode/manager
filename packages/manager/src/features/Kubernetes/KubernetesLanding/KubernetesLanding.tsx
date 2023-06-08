@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Hidden from 'src/components/core/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -148,6 +149,7 @@ export const KubernetesLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
+      <ProductInformationBanner bannerLocation="Kubernetes" warning important />
       <LandingHeader
         title="Kubernetes"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"

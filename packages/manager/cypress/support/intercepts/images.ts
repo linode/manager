@@ -86,7 +86,8 @@ export const mockGetImage = (
   id: string,
   status: ImageStatus
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher(`images/${id}*`), (req) => {
+  const encodedId = encodeURIComponent(id);
+  return cy.intercept('GET', apiMatcher(`images/${encodedId}*`), (req) => {
     return req.reply(
       imageFactory.build({
         label,
@@ -109,7 +110,8 @@ export const mockUpdateImage = (
   id: string,
   updatedImage: Image
 ): Cypress.Chainable<null> => {
-  return cy.intercept('PUT', apiMatcher(`images/${id}`), updatedImage);
+  const encodedId = encodeURIComponent(id);
+  return cy.intercept('PUT', apiMatcher(`images/${encodedId}`), updatedImage);
 };
 
 /**
@@ -120,5 +122,6 @@ export const mockUpdateImage = (
  * @returns Cypress chainable.
  */
 export const mockDeleteImage = (id: string): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', apiMatcher(`images/${id}`), {});
+  const encodedId = encodeURIComponent(id);
+  return cy.intercept('DELETE', apiMatcher(`images/${encodedId}`), {});
 };

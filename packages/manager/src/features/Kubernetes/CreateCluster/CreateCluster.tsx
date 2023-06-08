@@ -36,6 +36,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
 import LandingHeader from 'src/components/LandingHeader';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -245,6 +246,7 @@ export const CreateCluster = () => {
   return (
     <Grid container className={classes.root}>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+      <ProductInformationBanner bannerLocation="Kubernetes" warning important />
       <LandingHeader
         title="Create Cluster"
         docsLabel="Docs"

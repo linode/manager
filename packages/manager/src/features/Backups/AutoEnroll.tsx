@@ -61,7 +61,7 @@ export const AutoEnroll: React.FC<CombinedProps> = (props) => {
               <ExternalLink
                 data-qa-backups-price
                 fixedIcon
-                link="https://www.linode.com/backups"
+                link="https://www.linode.com/products/backups/"
                 text="Backups pricing page"
               />
             </Typography>

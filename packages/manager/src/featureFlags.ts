@@ -113,7 +113,20 @@ interface ReferralBannerText {
   };
 }
 
-export type ProductInformationBannerLocation = 'Object Storage' | 'Databases';
+export type ProductInformationBannerLocation =
+  | 'Account'
+  | 'Databases'
+  | 'Domains'
+  | 'Firewalls'
+  | 'Images'
+  | 'Kubernetes'
+  | 'Linodes'
+  | 'Managed'
+  | 'Marketplace'
+  | 'NodeBalancers'
+  | 'Object Storage'
+  | 'StackScripts'
+  | 'Volumes';
 
 export interface ProductInformationBannerFlag {
   // `key` should be unique across product information banners

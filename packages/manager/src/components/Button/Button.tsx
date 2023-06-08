@@ -62,7 +62,10 @@ const Span = styled('span')({
 const Button = React.forwardRef<HTMLButtonElement, Props>(
   (
     {
-      buttonType,
+      // default to secondary as some components never define a buttonType (usually buttons with icons)
+      // and we end up with the wrong styles (purple color, see #6455)
+      // It would be nice to remove this default and require the prop but this fixes the issue for now.
+      buttonType = 'secondary',
       children,
       className,
       compactX,
