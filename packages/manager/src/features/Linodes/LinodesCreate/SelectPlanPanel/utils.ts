@@ -55,13 +55,14 @@ export const getPlanSelectionsByPlanType = <
   }
 
   // filter empty plan group
-  Object.keys(plansByType).forEach((key) => {
-    if (plansByType[key].length === 0) {
-      delete plansByType[key];
+  const filteredPlansByType = Object.keys(plansByType).reduce((acc, key) => {
+    if (plansByType[key].length > 0) {
+      acc[key] = plansByType[key];
     }
-  });
+    return acc;
+  }, {} as PlansByType<T>);
 
-  return plansByType;
+  return filteredPlansByType;
 };
 
 export const determineInitialPlanCategoryTab = <T>(
