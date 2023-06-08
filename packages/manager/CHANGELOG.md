@@ -4,6 +4,53 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-06-12] - v1.95.0
+
+### Added:
+
+- June 2023 Marketplace Release ([#9114])
+- Metadata beta updates ([#9222])
+- Kubernetes product information banner ([#9226])
+
+### Changed:
+
+- Improve failed Image creation and upload error messages ([#9184])
+
+### Fixed:
+
+- Tooltip console errors and top menu icon hover ([#9206](https://github.com/linode/manager/pull/9206))
+- Disable Marketplace app search until loading complete ([#9207](https://github.com/linode/manager/pull/9207))
+- Prevent rendering of purple content within Buttons without a buttonType prop ([#9209](https://github.com/linode/manager/pull/9209))
+- VLANs configuration not showing for restricted users ([#9214](https://github.com/linode/manager/pull/9214))
+
+### Tech Stories:
+
+- Move dismissibleButton to DismissibleBanner component ([#9142])
+- Resolve yaml dependabot alert for CVE-2023-2251 ([#9156])
+- Simplify SelectPlanPanel and SelectPlanQuantityPanel ([#9165])
+- React Query - Object Storage - Bucket SSL ([#9167])
+- React Query - Linode Migrate Dialog ([#9195])
+- React Query - Linode Configurations ([#9198])
+- Added REACT_APP_MAINTENANCE_MODE env var to explicitly enable maintenance mode ([#9171])
+- Update Storybook to 7.0.18 and add measure addon ([#9181])
+- Update to vite@4.3.9 for CVE-2023-34092 ([#9212])
+- MUI v5 - `Components > Tag` ([#9164])
+- MUI v5 Migration - `Components > ShowMore` ([#9169])
+- MUI v5 - `Components > PreferenceToggle` ([#9172])
+- MUI v5 - `Components > SelectRegionPanel` ([#9173])
+- MUI v5 - `Components > Linear Progress` ([#9177])
+- MUI v5 Migration - `Features > ObjectStorage` ([#9180])
+- MUI v5 Migration - `Components > TagCell, Tags, AddTag` ([#9186])
+- MUI v5 Migration - `Components > TabbedPanel, ReachTab, ReachTabList` ([#9191])
+- MUI v5 Migration - Features > Profile ([#9197])
+- MUI v5 Migration - `Components > PasswordInput` ([#9202])
+- MUI v5 - `Components > TableContentWrapper` ([#9208])
+- MUI v5 - `Components > ProductNotification` ([#9211])
+- MUI v5 Migration - `Components > TabLink` and `Components > TabLinkList` ([#9159])
+- MUI v5 Migration - `Components > EditableText` ([#9179])
+- MUI v5 Migration - `Components > EnhancedSelect` ([#9194])
+- Rename `features/linodes` to `features/Linodes` ([#9201])
+
 ## [2023-05-30] - v1.94.0
 
 ### Added:
@@ -5535,19 +5582,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-
 ## [2023-05-01] - v1.92.0
 
 ### Added:
+
 - No Results section for Marketplace Search #8999
 - Private IP checkbox when cloning a Linode #9039
 - Metadata migrate warning #9033
 
 ### Changed:
+
 - Region Select will dynamically get country flags and group all countries based on API data #8996
 - Removed MongoDB Marketplace Apps #9071
 
 ### Fixed:
+
 - Kubernetes Delete Dialog clears when it is re-opened #9000
 - HTML showing up in event messages #9003
 - Inability to edit and save Linode Configurations #9053
@@ -5558,6 +5607,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Blank Kubernetes Node Pool plan selection #9009
 
 ### Tech Stories:
+
 - MUI v5 Migration - `Components > CircleProgress` #9028
 - MUI v5 Migration - `Components > StatusIcon` #9014
 - MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
@@ -5592,27 +5642,32 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-04-18] - v1.91.1
 
 ### Fixed:
+
 - Add Premium plans to LKE #9021
 
 ## [2023-04-17] - v1.91.0
 
 ### Added:
+
 - Cross Data Center Clone warning #8937
 - `Plan` column header to plan select table #8943
 
 ### Changed:
+
 - Use Akamai logo for TPA provider screen #8982
 - Use Akamai logo for the favicon #8988
 - Only fetch grants when the user is restricted #8941
 - Improve the StackScript user defined fields (UDF) forms #8973
 
 ### Fixed:
+
 - Styling of Linode Details Add Configurations modal header #8981
 - Alignment issues with Kubernetes Node Pool table and buttons #8967
 - Domain Records not updating when navigating #8957
 - Notification menu displaying empty menu on secondary status click #8902
 
 ### Tech Story:
+
 - React Query for NodeBalancers #8964
 - React Query for Profile - Trusted Devices #8942
 - React Query for OAuth Apps #8938
