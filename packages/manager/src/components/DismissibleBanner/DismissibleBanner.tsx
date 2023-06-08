@@ -1,9 +1,11 @@
 import Close from '@mui/icons-material/Close';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
-import Notice, { NoticeProps } from 'src/components/Notice';
+import type { NoticeProps } from 'src/components/Notice/Notice';
+import { Notice } from 'src/components/Notice/Notice';
+import Box from 'src/components/core/Box';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
@@ -14,12 +16,20 @@ interface Props {
   className?: string;
   options?: DismissibleNotificationOptions;
   sx?: SxProps;
+  actionButton?: JSX.Element;
 }
 
 type CombinedProps = Props & Partial<NoticeProps>;
 
 export const DismissibleBanner = (props: CombinedProps) => {
-  const { className, preferenceKey, options, children, ...rest } = props;
+  const {
+    className,
+    preferenceKey,
+    options,
+    children,
+    actionButton,
+    ...rest
+  } = props;
 
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
     preferenceKey,
@@ -43,12 +53,19 @@ export const DismissibleBanner = (props: CombinedProps) => {
   );
 
   return (
-    <StyledNotice
-      className={className}
-      dismissibleButton={dismissibleButton}
-      {...rest}
-    >
-      {children}
+    <StyledNotice className={className} {...rest}>
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        {children}
+        <Box display="flex" alignItems="center">
+          {actionButton}
+          {dismissibleButton}
+        </Box>
+      </Box>
     </StyledNotice>
   );
 };
@@ -84,6 +101,11 @@ const StyledNotice = styled(Notice)(({ theme }) => ({
   marginBottom: theme.spacing(),
   padding: theme.spacing(2),
   background: theme.bg.bgPaper,
+  '&&': {
+    p: {
+      lineHeight: '1.25rem',
+    },
+  },
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({

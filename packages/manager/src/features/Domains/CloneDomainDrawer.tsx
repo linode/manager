@@ -3,14 +3,14 @@ import Drawer from 'src/components/Drawer/Drawer';
 import RadioGroup from 'src/components/core/RadioGroup';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import TextField from 'src/components/TextField';
-import Radio from 'src/components/Radio/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button/Button';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useFormik } from 'formik';
 import { Domain } from '@linode/api-v4';
 import { useProfile, useGrants } from 'src/queries/profile';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { useHistory } from 'react-router-dom';
 
 interface Props {

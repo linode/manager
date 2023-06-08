@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
-import TableContentWrapper from './TableContentWrapper';
+import { TableContentWrapper } from './TableContentWrapper';
 
 const children = [
   <tr key={1}>

@@ -22,7 +22,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 import { Toggle } from 'src/components/Toggle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -34,9 +34,9 @@ import {
 } from './UserPermissionsEntitySection';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Tab from 'src/components/core/ReachTab';
+import { Tab } from 'src/components/core/ReachTab';
 import SafeTabPanel from 'src/components/SafeTabPanel/SafeTabPanel';
-import TabList from 'src/components/core/ReachTabList';
+import { TabList } from 'src/components/core/ReachTabList';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import {
   withQueryClient,

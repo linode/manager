@@ -95,7 +95,10 @@ export const getTrustedDevices = (params?: Params, filter?: Filter) =>
  * Deletes a trusted device from a user's profile
  */
 export const deleteTrustedDevice = (id: number) =>
-  Request<{}>(setURL(`${API_ROOT}/profile/devices/${id}`), setMethod('DELETE'));
+  Request<{}>(
+    setURL(`${API_ROOT}/profile/devices/${encodeURIComponent(id)}`),
+    setMethod('DELETE')
+  );
 
 /**
  * getUserPreferences

@@ -18,6 +18,7 @@ import {
   Domain,
   ImportZonePayload,
   UpdateDomainPayload,
+  ZoneFile,
 } from './types';
 
 /**
@@ -38,7 +39,10 @@ export const getDomains = (params?: Params, filter?: Filter) =>
  * @param domainId { number } The ID of the Domain to access.
  */
 export const getDomain = (domainId: number) =>
-  Request<Domain>(setURL(`${API_ROOT}/domains/${domainId}`), setMethod('GET'));
+  Request<Domain>(
+    setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}`),
+    setMethod('GET')
+  );
 
 /**
  * Adds a new Domain to Linode's DNS Manager.
@@ -60,7 +64,7 @@ export const createDomain = (data: CreateDomainPayload) =>
  */
 export const updateDomain = (domainId: number, data: UpdateDomainPayload) =>
   Request<Domain>(
-    setURL(`${API_ROOT}/domains/${domainId}`),
+    setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}`),
     setMethod('PUT'),
     setData(data, updateDomainSchema)
   );
@@ -72,7 +76,10 @@ export const updateDomain = (domainId: number, data: UpdateDomainPayload) =>
  * @param domainId { number } The ID of the Domain to delete.
  */
 export const deleteDomain = (domainId: number) =>
-  Request<{}>(setURL(`${API_ROOT}/domains/${domainId}`), setMethod('DELETE'));
+  Request<{}>(
+    setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}`),
+    setMethod('DELETE')
+  );
 
 /**
  * Clones a Domain.
@@ -83,7 +90,7 @@ export const deleteDomain = (domainId: number) =>
 export const cloneDomain = (domainId: number, data: CloneDomainPayload) =>
   Request<Domain>(
     setData(data),
-    setURL(`${API_ROOT}/domains/${domainId}/clone`),
+    setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}/clone`),
     setMethod('POST')
   );
 
@@ -98,4 +105,15 @@ export const importZone = (data: ImportZonePayload) =>
     setData(data, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
     setMethod('POST')
+  );
+
+/**
+ * Download DNS Zone file.
+ *
+ ** @param domainId { number } The ID of the Domain to download DNS zone file.
+ */
+export const getDNSZoneFile = (domainId: number) =>
+  Request<ZoneFile>(
+    setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}/zone-file`),
+    setMethod('GET')
   );

@@ -8,6 +8,10 @@ export const ENABLE_DEV_TOOLS = Boolean(
   import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
 );
 
+// allow us to explicity enable maintenance mode
+export const ENABLE_MAINTENANCE_MODE =
+  import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE === 'true';
+
 /** required for the app to function */
 export const APP_ROOT =
   import.meta.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
@@ -69,6 +73,7 @@ export const GTM_ID = import.meta.env.REACT_APP_GTM_ID;
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
+export const NUM_ADOBE_SCRIPTS = 3;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
 

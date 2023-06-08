@@ -1,34 +1,36 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import {
   ConfirmationDialog,
   ConfirmationDialogProps,
 } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import TypeToConfirm from 'src/components/TypeToConfirm';
+import {
+  TypeToConfirm,
+  TypeToConfirmProps,
+} from 'src/components/TypeToConfirm/TypeToConfirm';
 import { usePreferences } from 'src/queries/preferences';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import { TypeToConfirmProps } from 'src/components/TypeToConfirm';
-import { APIError } from '@linode/api-v4/lib/types';
 
 interface EntityInfo {
   type: 'Linode' | 'Volume' | 'NodeBalancer' | 'Bucket';
   label: string | undefined;
 }
 
-interface Props {
+interface TypeToConfirmDialogProps {
   entity: EntityInfo;
   children: React.ReactNode;
   loading: boolean;
   confirmationText?: string | JSX.Element;
-  errors?: APIError[] | undefined;
+  errors?: APIError[] | undefined | null;
   onClick: () => void;
 }
 
-type CombinedProps = Props &
+type CombinedProps = TypeToConfirmDialogProps &
   ConfirmationDialogProps &
   Partial<TypeToConfirmProps>;
 
-const TypeToConfirmDialog: React.FC<CombinedProps> = (props) => {
+export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
     open,
     title,
@@ -106,5 +108,3 @@ const TypeToConfirmDialog: React.FC<CombinedProps> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default TypeToConfirmDialog;

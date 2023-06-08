@@ -1,76 +1,96 @@
-import { createMockImage } from 'support/api/images';
-import { createMockLinodeList } from 'support/api/linodes';
 import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
-import { randomString } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { mockGetAllImages } from 'support/intercepts/images';
+import { imageFactory, linodeFactory } from '@src/factories';
+import { chooseRegion } from 'support/util/regions';
 
-const mockImage = createMockImage().data[0];
-const imageLabel = mockImage.label;
-const linodeId = 99999999;
-const rootpass = randomString(32);
-const region = 'us-west';
-const regionSelect = 'Fremont, CA';
-const imageId = mockImage.id;
-const type = 'g6-nanode-1';
-const mockLinodeList = createMockLinodeList({
-  id: linodeId,
-  label: `${imageLabel}-${region}`,
-  region,
-  type,
+const region = chooseRegion();
+
+const mockLinode = linodeFactory.build({
+  region: region.id,
 });
 
-const mockLinode = mockLinodeList.data[0];
+const mockImage = imageFactory.build({
+  label: randomLabel(),
+  is_public: false,
+  eol: null,
+  id: `private/${randomNumber()}`,
+});
 
 const createLinodeWithImageMock = (preselectedImage: boolean) => {
-  cy.intercept(apiMatcher('images*'), (req) => {
-    req.reply(createMockImage());
-  }).as('mockImage');
+  mockGetAllImages([mockImage]).as('mockImage');
 
   cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
     req.reply({
       body: mockLinode,
-      headers: { image: imageId },
+      headers: { image: mockImage.id },
     });
   }).as('mockLinodeRequest');
-  cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}`), (req) => {
-    req.reply(mockLinode);
-  }).as('mockLinodeResponse');
+
+  cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${mockLinode.id}`),
+    (req) => {
+      req.reply(mockLinode);
+    }
+  ).as('mockLinodeResponse');
 
   cy.wait('@mockImage');
   if (!preselectedImage) {
     cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
       containsClick('Choose an image');
     });
-    cy.get(`[data-qa-image-select-item="${imageId}"]`).within(() => {
+    cy.get(`[data-qa-image-select-item="${mockImage.id}"]`).within(() => {
       cy.get('span').should('have.class', 'fl-tux');
-      fbtClick(imageLabel);
+      fbtClick(mockImage.label);
     });
   }
+
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
-  containsClick(regionSelect);
+  containsClick(region.name);
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
-  cy.get('[id="root-password"]').type(rootpass);
+  cy.get('[id="root-password"]').type(randomString(32));
   getClick('[data-qa-deploy-linode="true"]');
 
   cy.wait('@mockLinodeRequest');
   cy.wait('@mockLinodeResponse');
 
   fbtVisible(mockLinode.label);
-  fbtVisible(regionSelect);
-  fbtVisible(linodeId);
+  fbtVisible(region.name);
+  fbtVisible(mockLinode.id);
 };
 
 describe('create linode from image, mocked data', () => {
+  /*
+   * - Confirms UI flow when user attempts to create a Linode from images without having any images.
+   */
+  it('cannot create a Linode when the user has no private images', () => {
+    // Substrings of the message shown to ensure user is informed of why they
+    // cannot create a Linode and guided towards creating an Image.
+    const noImagesMessages = [
+      'You don’t have any private Images.',
+      'create an Image from one of your Linode’s disks.',
+    ];
+
+    mockGetAllImages([]).as('getImages');
+    cy.visitWithLogin('/linodes/create?type=Images');
+    cy.wait('@getImages');
+    noImagesMessages.forEach((message: string) => {
+      cy.findByText(message, { exact: false }).should('be.visible');
+    });
+  });
+
   it('creates linode from image on images tab', () => {
     cy.visitWithLogin('/linodes/create?type=Images');
     createLinodeWithImageMock(false);
   });
 
   it('creates linode from preselected image on images tab', () => {
-    cy.visitWithLogin(`/linodes/create/?type=Images&imageID=${imageId}`);
+    cy.visitWithLogin(`/linodes/create/?type=Images&imageID=${mockImage.id}`);
     createLinodeWithImageMock(true);
   });
 });

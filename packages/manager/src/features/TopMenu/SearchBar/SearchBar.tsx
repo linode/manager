@@ -5,7 +5,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { components } from 'react-select';
 import { compose } from 'recompose';
-import IconButton from 'src/components/core/IconButton';
+import { IconButton } from 'src/components/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import useAPISearch from 'src/features/Search/useAPISearch';
@@ -29,13 +29,13 @@ import SearchSuggestion from './SearchSuggestion';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
-import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { getImageLabelForLinode } from 'src/features/Images/utils';
 
 type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 
@@ -69,13 +69,17 @@ export const selectStyles = {
     border: 0,
   }),
   dropdownIndicator: () => ({ display: 'none' }),
-  placeholder: (base: any) => ({ ...base, color: 'blue' }),
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: '0.875rem',
+    color: base?.palette?.text?.primary,
+  }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
 const searchDeps: ReduxEntity[] = ['linodes'];
 
-export const SearchBar: React.FC<CombinedProps> = (props) => {
+export const SearchBar = (props: CombinedProps) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
   const [searchText, setSearchText] = React.useState<string>('');
@@ -114,12 +118,11 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     shouldMakeRequests
   );
 
-  const { data: _publicImages } = useAllImagesQuery(
+  const { data: publicImages } = useAllImagesQuery(
     {},
     { is_public: true },
-    shouldMakeRequests
+    searchActive
   );
-  const publicImages = _publicImages ?? [];
 
   const { data: regions } = useRegionsQuery();
 
@@ -138,9 +141,10 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
   const types = extendTypesQueryResult(typesQuery);
 
-  const searchableLinodes = linodes.map((linode) =>
-    formatLinode(linode, types, listToItemsByID(publicImages))
-  );
+  const searchableLinodes = linodes.map((linode) => {
+    const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
+    return formatLinode(linode, types, imageLabel);
+  });
 
   const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
 

@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,

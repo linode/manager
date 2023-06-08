@@ -1,15 +1,15 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import Tags from 'src/components/Tags';
-import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { Tags } from 'src/components/Tags/Tags';
+import Hidden from 'src/components/core/Hidden';
+import Typography from 'src/components/core/Typography';
+import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

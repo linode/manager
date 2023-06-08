@@ -1,14 +1,13 @@
+import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
-import { makeStyles } from 'tss-react/mui';
-import { withTheme, WithTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import { SxProps } from '@mui/system';
+import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles<
   void,
@@ -57,9 +56,6 @@ export const useStyles = makeStyles<
   },
   inner: {
     width: '100%',
-    '& p': {
-      fontSize: '1rem',
-    },
   },
   breakWords: {
     [`& .${classes.noticeText}`]: {
@@ -112,7 +108,7 @@ export const useStyles = makeStyles<
   },
 }));
 
-export interface Props extends Grid2Props {
+export interface NoticeProps extends Grid2Props {
   text?: string;
   error?: boolean;
   errorGroup?: string;
@@ -130,12 +126,9 @@ export interface Props extends Grid2Props {
   sx?: SxProps;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  dismissibleButton?: JSX.Element;
 }
 
-type CombinedProps = Props & WithTheme;
-
-const Notice: React.FC<CombinedProps> = (props) => {
+export const Notice = (props: NoticeProps) => {
   const {
     className,
     important,
@@ -154,7 +147,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
     spacingTop,
     spacingBottom,
     spacingLeft,
-    dismissibleButton,
     sx,
   } = props;
 
@@ -239,9 +231,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}
       <div className={classes.inner}>{innerText || _children}</div>
-      {dismissibleButton}
     </Grid>
   );
 };
-
-export default withTheme(Notice);

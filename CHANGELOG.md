@@ -8,44 +8,186 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 
-- Metadata
-- Add No Results section for Marketplace Search #8999
-- Add Private IP checkbox when cloning a Linode #9039
-- Accessible graph tabled data for `LineGraph` component #5915
+- Resource links to empty state Images landing page #9095
+- Resource links to empty state Object Storage landing page #9098
 
 ### Changed:
 
-- `<RegionSelect />` can now dynamically get country flag and group all countries #8996
-
 ### Fixed:
 
-- Typesafety of the `<Select />` component #8986
-- Clear the Kubernetes Delete Dialog when it is re-opened #9000
-- @linode/validation version badge Label in `README.md` #9011
-- Event entities should only be linked for true labels
-- Radio button hover effect #9031
-- Prevent form submission unless action was taken (IP transfer & IP sharing modals) #5976
-- Inability to edit and save Linode Configurations #9053
+- Ability to search Linodes by IPv6 #9073
 
 ### Tech Stories:
 
-- MUIv5 Migration - Components > CircleProgress #9028
-- MUIv5 Migration - Components > StatusIcon #9014
-- MUIv5 Migration - Components > TagsInput, TagsPanel #8995
-- MUIv5 Migration - Grid v2 for Features #8985
-- MUIv5 Migration - Components > Dialog #9020
-- MUIv5 Migration - Components > DialogTitle #9050
-- MUIv5 Migration - Components > DeletionDialog #9047
-- MUIv5 Migration - Components > Currency #9030
-- MUIv5 Migration - Components > DisplayPrice #9022
-- MUIv5 Migration - Components > CreateLinodeDisabled #9015
-- MUIv5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
-- MUIv5 Migration - `SRC > Components > ConfirmationDialog` #9016
-- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
-- MUIv5 Migration - `SRC > Components > CopyTooltip` #9040
-- MUIv5 Migration - `SRC > Components > CheckoutBar` #9051
-- MUIv5 Migration - `SRC > Components > CopyableTextField` #9018
+- React Query - Linodes - Networking #9046
+- React Query - Linodes - Details Header #9099
+- MUI v5 Migration - `Components > IconButton` #9102
+- MUI v5 Migration - `Components > EntityHeader` #9109
+- MUI v5 Migration - `Components > TransferDisplay` #9107
+
+## [2023-05-30] - v1.94.0
+
+### Added:
+
+- Resource links to Object Storage empty state landing page #9098
+- Resource links to Images empty state landing page #9095
+
+### Fixed:
+
+- Required fields for Firewall rules drawer form #9127
+- Cloud Manager maintenance mode #9130
+- Error handling for loadScript and Adobe Analytics #9161
+
+### Removed:
+
+- Unifi Marketplace app #9145
+
+### Tech Stories:
+
+- Automate the changelog with changeset generation #9104
+- Upgrade Cypress to v12.11 #9038
+- React Query for Linode Details - General Details #9099
+- React Query Linode Details - Network Tab #9097
+- React Query for Linode Details Settings Tab #9121
+- React Query for Support Tickets - Ticket Details #9105
+- MUI v5 Migration - `Components > EditableEntityLabel` #9129
+- MUI v5 Migration - `Components > EnhancedNumberInput` #9152
+- MUI v5 Migration - `Components > EntityDetail` #9123
+- MUI v5 Migration - `Components > EntityHeader` #9109
+- MUI v5 Migration - `Components > EntityIcon` #9125
+- MUI v5 Migration - `Components > ErrorState` #9128
+- MUI v5 Migration - `Components > IconButton` #9102
+- MUI v5 Migration - `Components > Placeholder & Components > H1 Header` #9131
+- MUI v5 Migration - `Components > TransferDisplay` #9107
+- MUI v5 Migration - `Components > TypeToConfirm` & `Components > TypeToConfirmDialog` #9124
+- MUI v5 Migration - `Features > CancelLanding` #9113
+- MUI v5 Migration - `Features > NodeBalancers` #9139
+- MUI v5 Migration - `Features > NotificationCenter` #9162
+
+## [2023-05-22] - v1.93.3
+
+### Fixed:
+
+- LISH Console via SSH containing `none` as the username #9148
+- Ability to add a Linode to a Firewall when the Firewall contains a large number of Linodes #9151
+- Inability of restricted users with NodeBalancer creation permissions to add NodeBalancers #9150
+- Bucket Access unnecessarily refreshing #9140
+
+## [2023-05-22] - v1.93.2
+
+### Fixed:
+
+- Issue where linode "Reboot" button was disabled #9143
+
+## [2023-05-18] - v1.93.1
+
+### Fixed:
+
+- Initialize linode before referencing #9133
+- Revert linode landing changes #9136
+
+## [2023-05-15] - v1.93.0
+
+### Added:
+
+- Resource links to empty state Volumes landing page #9065
+- Resource links to empty state Firewalls landing page #9078
+- Resource links to empty state StackScripts landing page #9091
+- Resource links to empty state Domains landing page #9092
+- Ability download DNS zone file #9075
+- New flag to deliver DC availability notice for premium plans #9066
+- Accessible graph data for LineGraphs #9045
+
+### Changed:
+
+- Banner text size and spacing to improve readability #9064
+- Updated ClusterControl description #9081
+- Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
+
+### Fixed:
+
+- Ability to search Linodes by IPv6 #9073
+- Surface general errors in the Object Storage Bucket Create Drawer #9067
+- Large file size for invoices due to uncompressed JPG logo #9069
+- Phone Verification error does not reset #9059
+- Show error for PayPal payments #9058
+- Send Adobe Analytics page views #9108
+
+### Tech Stories:
+
+- MUI v5 Migration - `Components > CheckoutSummary` #9100
+- MUI v5 Migration - `Components > CopyableTextField` #9018
+- MUI v5 Migration - `Components > DialogTitle` #9050
+- MUI v5 Migration - `Components > DownloadCSV` #9084
+- MUI v5 Migration - `Components > Notice` #9094
+- MUI v5 Migration - `Components > PrimaryNav` #9090
+- MUI v5 Migration - `Components > ShowMoreExpansion` #9096
+- MUI v5 Migration - `Components > Table` #9082
+- MUI v5 Migration - `Components > TableBody` #9082
+- MUI v5 Migration - `Components > TableCell` #9082
+- MUI v5 Migration - `Components > TableHead` #9082
+- MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > TableSortCell` #9082
+- React Query - Linodes - Prepare for React Query for Linodes #9049
+- React Query - Linodes - Landing #9062
+- React Query - Linodes - Detail - Backups #9079
+- Add Adobe Analytics custom event tracking #9004
+
+## [2023-05-01] - v1.92.0
+
+### Added:
+
+- No Results section for Marketplace Search #8999
+- Private IP checkbox when cloning a Linode #9039
+- Metadata migrate warning #9033
+
+### Changed:
+
+- Region Select will dynamically get country flags and group all countries based on API data #8996
+- Removed MongoDB Marketplace Apps #9071
+
+### Fixed:
+
+- Kubernetes Delete Dialog clears when it is re-opened #9000
+- HTML showing up in event messages #9003
+- Inability to edit and save Linode Configurations #9053
+- Marketplace One Click Cluster UDF caching issue #8997
+- Prevent IP transfer & sharing modals form submission if no action selected #9026
+- Increase radio button padding to fix hover effect shape #9031
+- Blank Kubernetes Node Pool plan selection #9009
+
+### Tech Stories:
+
+- MUI v5 Migration - `Components > CircleProgress` #9028
+- MUI v5 Migration - `Components > StatusIcon` #9014
+- MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
+- MUI v5 Migration - Grid v2 for Features #8985
+- MUI v5 Migration - `Components > Dialog` #9020
+- MUI v5 Migration - `Components > DeletionDialog` #9047
+- MUI v5 Migration - `Components > Currency` #9030
+- MUI v5 Migration - `Components > DisplayPrice` #9022
+- MUI v5 Migration - `Components > CreateLinodeDisabled` #9015
+- MUI v5 Migration - `Components > DateTimeDisplay, DebouncedSearchTextField` #9007
+- MUI v5 Migration - `Components > ConfirmationDialog` #9016
+- MUI v5 Migration - `Components > CopyTooltip` #9040
+- MUI v5 Migration - `Components > CheckoutBar` #9051
+- MUI v5 Migration - `Components > CreateLinodeDisabled` #9015
+- MUI v5 Migration - `Components > ColorPalette` #9013
+- MUI v5 Migration - `Components > Tile` #9001
+- MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
+- MUI v5 Migration - `Components > DismissibleBanner` #8998
+- MUI v5 Migration - `Components > SupportLink, TextTooltip` #8993
+- MUI v5 Migration - `Components > Toggle` #8990
+- MUI v5 Migration - `Components > SplashScreen` #8994
+- Remove `ConditionalWrapper` #9002
+- Upgrade New Relic to v1230 #9005
 - Add basic Adobe Analytics tracking #8989
+- Add more eslint rules #9043
+- @linode/validation version badge Label in `README.md` #9011
+- Improve Firewall ports regex to prevent exponential backtracking #9010
+- Fix code scanning alert that DOM text is reinterpreted as HTML #9032
+- Fix the typesafety of the `<Select />` component #8986
+- Update PayPal and Braintree dependencies #9052
 
 ## [2023-04-18] - v1.91.1
 

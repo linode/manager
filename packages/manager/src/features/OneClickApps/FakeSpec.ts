@@ -151,6 +151,29 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'Appwrite',
+    alt_name: 'Self-hosted backend-as-a-service',
+    alt_description:
+      'A self-hosted backend-as-a-service platform that provides developers with all the core APIs required to build any application..',
+    categories: ['Development'],
+    description: `A self-hosted Firebase alternative for web, mobile & flutter developers.`,
+    summary:
+      'Appwrite is an open-source, cross-platform and technology-agnostic alternative to Firebase, providing all the core APIs necessary for web, mobile and flutter developement.',
+    related_guides: [
+      {
+        title: 'Deploy Appwrite through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/appwrite/',
+      },
+    ],
+    website: 'https://appwrite.io/',
+    logo_url: 'appwrite.svg',
+    colors: {
+      start: 'f02e65',
+      end: 'f02e65',
+    },
+  },
+  {
     name: 'Ark',
     alt_name: 'Survival game',
     alt_description: 'Prehistoric, open world survival crafting game.',
@@ -311,9 +334,9 @@ export const oneClickApps: OCA[] = [
     name: 'ClusterControl',
     alt_name: 'Database monitoring',
     alt_description:
-      'SQL and NoSQL database interface and monitoring for MySQL, MongoDB, PostgreSQL, and more.',
+      'SQL and NoSQL database interface and monitoring for MySQL, PostgreSQL, and more.',
     categories: ['Databases'],
-    description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, MongoDB, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
+    description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
     summary:
       'All-in-one database deployment, management, and monitoring system.',
     related_guides: [
@@ -805,6 +828,29 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: 'ffd712',
       end: '545556',
+    },
+  },
+  {
+    name: 'Illa Builder',
+    alt_name: 'Low-code development platform',
+    alt_description:
+      'Retool open-source alternative, with low-code UI components .',
+    categories: ['Security'],
+    description:
+      'Illa Builder is a Retool open-source alternative, with low-code UI components for self-hosting the developement of internal tools.',
+    summary: 'An open-source, low-code developement platfor.',
+    related_guides: [
+      {
+        title: 'Deploy Illa Builder through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/illa-builder',
+      },
+    ],
+    website: 'https://github.com/illacloud/illa-builder',
+    logo_url: 'illabuilder.svg',
+    colors: {
+      start: '654AEC',
+      end: 'FF58BE',
     },
   },
   {
@@ -1519,6 +1565,28 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'ownCloud',
+    alt_name: 'Collabrative file sharing',
+    alt_description: 'Self-hosted file sharing and collaboration platform.',
+    categories: ['Productivity'],
+    description: `LAMP-stack-based server application that allows you to access your files from anywhere in a secure way.`,
+    summary:
+      'DropBox and oneDrive alternative that lets you remain in control of your files.',
+    related_guides: [
+      {
+        title: 'Deploy ownCloud through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/owncloud/',
+      },
+    ],
+    website: 'https://doc.owncloud.com/docs/next/',
+    logo_url: 'owncloud.svg',
+    colors: {
+      start: '041e42',
+      end: '041e42',
+    },
+  },
+  {
     name: 'Passky',
     alt_name: 'Pass Key',
     alt_description: 'Password Manager',
@@ -1949,6 +2017,29 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'Seatable',
+    alt_name:
+      'Spreadsheet style interface with the power of a relational database.',
+    alt_description: 'A safe home for all your data.',
+    categories: ['Productivity'],
+    description: `Self-hosted database for a variety of management projects.`,
+    summary:
+      'Collaborative web interface for data backed project and process management.',
+    related_guides: [
+      {
+        title: 'Deploy Seatable through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/seatable/',
+      },
+    ],
+    website: 'https://seatable.io/docs/?lang=auto',
+    logo_url: 'seatable.svg',
+    colors: {
+      start: 'FF8000',
+      end: 'FF8000',
+    },
+  },
+  {
     name: 'Secure Your Server',
     alt_name: 'Secure server tool',
     alt_description: 'Limited user, hardened SSH, Fail2Ban Linode server.',
@@ -2097,28 +2188,6 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: 'b95b26',
       end: '873d0c',
-    },
-  },
-  {
-    name: 'UniFi Network Application',
-    alt_name: 'Networking control panel',
-    alt_description: 'Interface for UniFi networking devices and software.',
-    categories: ['Control Panels'],
-    description: `UniFi Network Application is a versatile control panel that simplifies network management across regions, customizes access to wifi networks, and more. Manage and apply updates to UniFi networking devices to ensure your networks are performant and secure.`,
-    summary: `Multi-use networking control panel`,
-    related_guides: [
-      {
-        title:
-          'Deploy the UniFi Network Application through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/unifi-network-application/',
-      },
-    ],
-    website: 'https://www.ui.com/',
-    logo_url: 'unifi.svg',
-    colors: {
-      start: '1681FC',
-      end: '63666A',
     },
   },
   {

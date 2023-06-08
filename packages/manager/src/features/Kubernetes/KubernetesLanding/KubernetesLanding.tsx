@@ -1,27 +1,29 @@
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
+
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Hidden from 'src/components/core/Hidden';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
-import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
-import TransferDisplay from 'src/components/TransferDisplay';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import UpgradeVersionModal from '../UpgradeVersionModal';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { KubeNodePoolResponse } from '@linode/api-v4';
+import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
+import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { useHistory } from 'react-router-dom';
+import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
-import KubernetesEmptyState from './KubernetesLandingEmptyState';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useHistory } from 'react-router-dom';
-import { KubeNodePoolResponse } from '@linode/api-v4';
 
 interface ClusterDialogState {
   open: boolean;
@@ -147,6 +149,7 @@ export const KubernetesLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
+      <ProductInformationBanner bannerLocation="Kubernetes" warning important />
       <LandingHeader
         title="Kubernetes"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"

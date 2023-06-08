@@ -5,7 +5,7 @@ import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'header' | 'toggleLabel' | 'toggleLabelText';
@@ -61,7 +61,7 @@ export const AutoEnroll: React.FC<CombinedProps> = (props) => {
               <ExternalLink
                 data-qa-backups-price
                 fixedIcon
-                link="https://www.linode.com/backups"
+                link="https://www.linode.com/products/backups/"
                 text="Backups pricing page"
               />
             </Typography>

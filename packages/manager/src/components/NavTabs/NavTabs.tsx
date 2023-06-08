@@ -5,7 +5,7 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import ReachTabs from 'src/components/core/ReachTabs';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from '../TabLinkList/TabLinkList';
+import { TabLinkList } from '../TabLinkList/TabLinkList';
 
 export interface NavTab {
   title: string;

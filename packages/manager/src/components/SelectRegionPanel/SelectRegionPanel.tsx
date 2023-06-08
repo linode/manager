@@ -1,64 +1,28 @@
-import { Region } from '@linode/api-v4/lib/regions';
-import { Theme } from '@mui/material/styles';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
-import { compose } from 'recompose';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import Notice from 'src/components/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/linodes/LinodesCreate/utilities';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
+import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { Notice } from 'src/components/Notice/Notice';
+import { Region } from '@linode/api-v4/lib/regions';
+import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
+import { useLocation } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(3),
-      '& svg': {
-        '& g': {
-          // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
-          clipPath: 'none !important' as 'none',
-        },
-      },
-    },
-  });
-
-interface Props {
-  regions: Region[];
+interface SelectRegionPanelProps {
+  disabled?: boolean;
   error?: string;
   handleSelection: (id: string) => void;
-  selectedID?: string;
-  disabled?: boolean;
   helperText?: string;
+  regions: Region[];
+  selectedID?: string;
 }
 
-export const regionHelperText = (onClick?: () => void) => (
-  <Typography variant="body1">
-    You can use
-    {` `}
-    <a
-      onClick={onClick}
-      target="_blank"
-      aria-describedby="external-site"
-      rel="noopener noreferrer"
-      href="https://www.linode.com/speed-test/"
-    >
-      our speedtest page
-    </a>
-    {` `}
-    to find the best region for your current location.
-  </Typography>
-);
-
-const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
+export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const {
-    classes,
     disabled,
     error,
     handleSelection,
@@ -66,23 +30,34 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
     regions,
     selectedID,
   } = props;
-
+  const theme = useTheme();
   const location = useLocation();
+  const params = getParamsFromUrl(location.search);
+  const showCrossDataCenterCloneWarning =
+    /clone/i.test(params.type) && selectedID && params.regionID !== selectedID;
 
   if (props.regions.length === 0) {
     return null;
   }
 
-  const params = getParamsFromUrl(location.search);
-  const showCrossDataCenterCloneWarning =
-    /clone/i.test(params.type) && selectedID && params.regionID !== selectedID;
-
   return (
-    <Paper className={classes.root}>
+    <Paper
+      sx={{
+        marginTop: theme.spacing(3),
+        '& svg': {
+          '& g': {
+            // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
+            clipPath: 'none !important' as 'none',
+          },
+        },
+      }}
+    >
       <Typography variant="h2" data-qa-tp="Region">
         Region
       </Typography>
-      {regionHelperText(() => sendLinodeCreateDocsEvent('Speedtest Link'))}
+      <RegionHelperText
+        onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
+      />
       {showCrossDataCenterCloneWarning ? (
         <Box marginTop="16px" data-testid="region-select-warning">
           <Notice warning text={CROSS_DATA_CENTER_CLONE_WARNING} />
@@ -99,13 +74,3 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
     </Paper>
   );
 };
-
-const styled = withStyles(styles);
-
-export default compose<
-  Props & WithStyles<ClassNames>,
-  Props & RenderGuardProps
->(
-  RenderGuard,
-  styled
-)(SelectRegionPanel);

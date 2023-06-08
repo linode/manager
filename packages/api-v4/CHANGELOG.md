@@ -1,3 +1,29 @@
+## [Unreleased] - v0.94.0
+
+### Added:
+- Encode URI components before passing them to the Linode API #9205
+
+## [2023-05-30] - v0.93.0
+
+### Added:
+- `ticket_update` to account types ([#9105](https://github.com/linode/manager/pull/9105))
+- filtering on IPv6 ranges ([#9097](https://github.com/linode/manager/pull/9097))
+
+## [2023-05-15] - v0.92.0
+
+### Added:
+- Ability download DNS zone file #9075
+- React Query - Linodes - Landing #9062
+- Added `available` to the `LinodeBackup` type #9079
+
+### Fixed:
+- Removed deprecated PayPal endpoints #9058
+
+## [2023-05-01] - v0.91.0
+
+### Added:
+- `InterfacePayload` type for network interface data when creating a Linode or a Linode configuration #9053
+- `id` to the `Interface` type #9053
 
 ## [2023-04-17] - v0.90.0
 

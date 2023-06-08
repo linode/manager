@@ -1,20 +1,17 @@
-import {
-  FirewallPolicyType,
-  FirewallRules,
-  FirewallRuleType,
-} from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
+import Typography from 'src/components/core/Typography';
+import { parseFirewallRuleError } from './shared';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { FirewallRuleDrawer } from './FirewallRuleDrawer';
+import { FirewallRuleTable } from './FirewallRuleTable';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
+import { makeStyles } from '@mui/styles';
+import { Notice } from 'src/components/Notice/Notice';
+import { Theme } from '@mui/material/styles';
+import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
 import curriedFirewallRuleEditorReducer, {
   editorStateToRules,
   hasModified as _hasModified,
@@ -22,9 +19,14 @@ import curriedFirewallRuleEditorReducer, {
   prepareRules,
   stripExtendedFields,
 } from './firewallRuleEditor';
-import FirewallRuleTable from './FirewallRuleTable';
-import { Category, parseFirewallRuleError } from './shared';
-import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Category } from './shared';
+import type {
+  FirewallPolicyType,
+  FirewallRules,
+  FirewallRuleType,
+} from '@linode/api-v4/lib/firewalls';
+import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -54,7 +56,7 @@ interface Props {
 }
 
 interface Drawer {
-  mode: Mode;
+  mode: FirewallRuleDrawerMode;
   category: Category;
   isOpen: boolean;
   ruleIdx?: number;
@@ -106,7 +108,11 @@ const FirewallRulesLanding = (props: Props) => {
     setDiscardChangesModalOpen,
   ] = React.useState<boolean>(false);
 
-  const openRuleDrawer = (category: Category, mode: Mode, idx?: number) =>
+  const openRuleDrawer = (
+    category: Category,
+    mode: FirewallRuleDrawerMode,
+    idx?: number
+  ) =>
     setRuleDrawer({
       mode,
       ruleIdx: idx,

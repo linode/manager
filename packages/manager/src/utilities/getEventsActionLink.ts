@@ -1,10 +1,5 @@
 import { Entity, EventAction } from '@linode/api-v4/lib/account';
 import { nonClickEvents } from 'src/constants';
-import { ApplicationStore } from 'src/store';
-import {
-  EntityType,
-  getEntityByIDFromStore,
-} from 'src/utilities/getEntityByIDFromStore';
 
 export const getEngineFromDatabaseEntityURL = (url: string) => {
   return url.match(/databases\/(\w*)\/instances/i)?.[1];
@@ -116,25 +111,8 @@ export const getLinkForEvent = (
   }
 };
 
-export const getLinkTargets = (
-  entity: Entity | null,
-  store: ApplicationStore
-) => {
+export const getLinkTargets = (entity: Entity | null) => {
   if (entity === null) {
-    return null;
-  }
-
-  const entityInStore = getEntityByIDFromStore(
-    entity.type as EntityType,
-    entity.id,
-    store
-  );
-  /**
-   * If the entity doesn't exist in the store, don't link to it
-   * as it is probably an old ticket re: an entity that
-   * has since been deleted.
-   */
-  if (!entityInStore) {
     return null;
   }
 
@@ -143,13 +121,25 @@ export const getLinkTargets = (
       return `/linodes/${entity.id}`;
     case 'domain':
       return `/domains/${entity.id}`;
+    case 'firewall':
+      return `/firewalls/${entity.id}`;
+    case 'stackscript':
+      return `/stackscripts/${entity.id}`;
     case 'nodebalancer':
       return `/nodebalancers/${entity.id}`;
+    case 'lkecluster':
+      return `/kubernetes/clusters/${entity.id}`;
+    case 'database':
+      return `/databases/${getEngineFromDatabaseEntityURL(entity.url)}/${
+        entity.id
+      }/summary`;
+    case 'image':
+      return '/images';
     case 'longview':
       return '/longview';
     case 'volume':
       return '/volumes';
     default:
-      return '';
+      return null;
   }
 };

@@ -1,28 +1,26 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
-import BucketTableRow from './BucketTableRow';
+import { BucketTableRow } from './BucketTableRow';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
 
 interface Props {
   data: ObjectStorageBucket[];
-  orderBy: string;
-  order: 'asc' | 'desc';
-  handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
-  handleClickRemove: (bucket: ObjectStorageBucket) => void;
   handleClickDetails: (bucket: ObjectStorageBucket) => void;
+  handleClickRemove: (bucket: ObjectStorageBucket) => void;
+  handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
+  order: 'asc' | 'desc';
+  orderBy: string;
 }
 
-type CombinedProps = Props;
-
-export const BucketTable: React.FC<CombinedProps> = (props) => {
+export const BucketTable = (props: Props) => {
   const {
     data,
     orderBy,
@@ -148,5 +146,3 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
     </>
   );
 };
-
-export default BucketTable;

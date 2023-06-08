@@ -6,6 +6,7 @@ import * as dialog from './dialog';
 import * as drawer from './drawer';
 import * as entityHeader from './entity-header';
 import * as heading from './heading';
+import * as landingPageEmptyStateResources from './landing-page-empty-state-resources';
 import * as nav from './nav';
 import * as select from './select';
 import * as tabList from './tab-list';
@@ -21,6 +22,7 @@ export const ui = {
   ...drawer,
   ...entityHeader,
   ...heading,
+  ...landingPageEmptyStateResources,
   ...nav,
   ...select,
   ...toast,

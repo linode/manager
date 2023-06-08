@@ -59,7 +59,9 @@ export const createLinodeConfig = (
   data: LinodeConfigCreationData
 ) =>
   Request<Config>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/configs`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/configs`
+    ),
     setMethod('POST'),
     setData(data, CreateLinodeConfigSchema)
   );
@@ -75,7 +77,11 @@ export const createLinodeConfig = (
 export const deleteLinodeConfig = (linodeId: number, configId: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`)
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/configs/${encodeURIComponent(configId)}`
+    )
   );
 
 /**
@@ -92,7 +98,11 @@ export const updateLinodeConfig = (
   data: Partial<LinodeConfigCreationData>
 ) =>
   Request<Config>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/configs/${encodeURIComponent(configId)}`
+    ),
     setMethod('PUT'),
     setData(data, UpdateLinodeConfigSchema)
   );

@@ -1,24 +1,20 @@
-import { ACLType } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 import ExternalLink from 'src/components/ExternalLink';
-import Notice from 'src/components/Notice';
-import { Toggle } from 'src/components/Toggle';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Typography from 'src/components/core/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { capitalize } from 'src/utilities/capitalize';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { ACLType } from '@linode/api-v4/lib/object-storage';
 import { bucketACLOptions, objectACLOptions } from '../utilities';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  submitButton: { marginTop: theme.spacing(3) },
-}));
+import { capitalize } from 'src/utilities/capitalize';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { copy } from './AccessSelect.data';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { Notice } from 'src/components/Notice/Notice';
+import { styled } from '@mui/material/styles';
+import { Toggle } from 'src/components/Toggle';
 
 interface AccessPayload {
   acl: ACLType;
@@ -26,39 +22,29 @@ interface AccessPayload {
 }
 
 export interface Props {
-  variant: 'bucket' | 'object';
-  name: string;
   getAccess: () => Promise<AccessPayload>;
+  name: string;
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
+  variant: 'bucket' | 'object';
 }
 
-type CombinedProps = Props;
-
-const AccessSelect: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const AccessSelect = React.memo((props: Props) => {
   const { getAccess, updateAccess, name, variant } = props;
-
   // Access data for this Object (from the API).
   const [aclData, setACLData] = React.useState<ACLType | null>(null);
   const [corsData, setCORSData] = React.useState(true);
-
   const [accessLoading, setAccessLoading] = React.useState(false);
   const [accessError, setAccessError] = React.useState('');
-
   // The ACL Option currently selected in the <EnhancedSelect /> component.
   const [selectedACL, setSelectedACL] = React.useState<ACLType | null>(null);
   // The CORS Option currently selected in the <Toggle /> component.
   const [selectedCORSOption, setSelectedCORSOption] = React.useState(true);
-
   // State for submitting access options.
   const [updateAccessLoading, setUpdateAccessLoading] = React.useState(false);
   const [updateAccessError, setUpdateAccessError] = React.useState('');
   const [updateAccessSuccess, setUpdateAccessSuccess] = React.useState(false);
-
   // State for dealing with the confirmation modal when selecting read/write.
   const { open: openDialog, isOpen, close: closeDialog } = useOpenClose();
-
   const label = capitalize(variant);
 
   React.useEffect(() => {
@@ -204,8 +190,7 @@ const AccessSelect: React.FC<CombinedProps> = (props) => {
       ) : null}
 
       <ActionsPanel style={{ padding: 0 }}>
-        <Button
-          className={classes.submitButton}
+        <StyledSubmitButton
           buttonType="primary"
           onClick={() => {
             // This isn't really a sane option: open a dialog for confirmation.
@@ -220,7 +205,7 @@ const AccessSelect: React.FC<CombinedProps> = (props) => {
           loading={updateAccessLoading}
         >
           Save
-        </Button>
+        </StyledSubmitButton>
       </ActionsPanel>
 
       <ConfirmationDialog
@@ -244,79 +229,10 @@ const AccessSelect: React.FC<CombinedProps> = (props) => {
       </ConfirmationDialog>
     </>
   );
-};
+});
 
-export default React.memo(AccessSelect);
-
-const copy: Record<
-  'bucket' | 'object',
-  Partial<Record<ACLType, JSX.Element>>
-> = {
-  object: {
-    private: (
-      <>
-        <strong>Only you</strong> can download this Object.
-      </>
-    ),
-    'authenticated-read': (
-      <>
-        <strong>All authenticated Object Storage users </strong> can download
-        this Object.
-      </>
-    ),
-    'public-read': (
-      <>
-        <strong>Everyone </strong> can download this Object.
-      </>
-    ),
-    custom: (
-      <>
-        This Object has a custom ACL. Use another{' '}
-        <ExternalLink
-          text="S3-compatible tool"
-          link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
-          hideIcon
-        />{' '}
-        to edit the ACL, or select a predefined ACL.
-      </>
-    ),
-  },
-  bucket: {
-    private: (
-      <>
-        <strong>Only you</strong> can list, create, overwrite, and delete
-        Objects in this Bucket.
-      </>
-    ),
-    'authenticated-read': (
-      <>
-        <strong>All authenticated Object Storage users </strong> can list
-        Objects in this Bucket, but only you can create, overwrite, and delete
-        them.
-      </>
-    ),
-    'public-read': (
-      <>
-        <strong>Everyone </strong> can list Objects in this Bucket, but only you
-        can create, overwrite, and delete them.
-      </>
-    ),
-    'public-read-write': (
-      <>
-        <strong>Everyone </strong> can list, create, overwrite, and delete
-        Objects in this Bucket. <strong>This is not recommended.</strong>
-      </>
-    ),
-    custom: (
-      <>
-        This Bucket has a custom ACL. Use{' '}
-        <ExternalLink
-          text="another S3-compatible tool"
-          link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
-          hideIcon
-        />{' '}
-        to edit the ACL, or select a pre-defined ACL here.
-      </>
-    ),
-  },
-};
+export const StyledSubmitButton = styled(Button, {
+  label: 'StyledFileUploadsContainer',
+})(({ theme }) => ({
+  marginTop: theme.spacing(3),
+}));

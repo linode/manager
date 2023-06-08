@@ -24,7 +24,7 @@ import { CreateLinodeRequest, Linode } from './types';
  */
 export const getLinode = (linodeId: number) =>
   Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}`),
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
     setMethod('GET')
   );
 
@@ -37,7 +37,9 @@ export const getLinode = (linodeId: number) =>
  */
 export const getLinodeLishToken = (linodeId: number) =>
   Request<{ lish_token: string }>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/lish_token`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/lish_token`
+    ),
     setMethod('POST')
   );
 
@@ -55,7 +57,9 @@ export const getLinodeVolumes = (
   filter: Filter = {}
 ) =>
   Request<Page<Volume>>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/volumes`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/volumes`
+    ),
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
@@ -104,7 +108,7 @@ export const createLinode = (data: CreateLinodeRequest) =>
  */
 export const updateLinode = (linodeId: number, values: DeepPartial<Linode>) =>
   Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}`),
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
     setMethod('PUT'),
     setData(values, UpdateLinodeSchema)
   );
@@ -118,7 +122,7 @@ export const updateLinode = (linodeId: number, values: DeepPartial<Linode>) =>
  */
 export const deleteLinode = (linodeId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}`),
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
     setMethod('DELETE')
   );
 
@@ -134,7 +138,9 @@ export const deleteLinode = (linodeId: number) =>
 
 export const changeLinodePassword = (linodeId: number, root_pass: string) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/password`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/password`
+    ),
     setData({ root_pass }),
     setMethod('POST')
   );
@@ -151,7 +157,9 @@ export const getLinodeFirewalls = (
   filter?: Filter
 ) =>
   Request<Page<Firewall>>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/firewalls`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/firewalls`
+    ),
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)

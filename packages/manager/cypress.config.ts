@@ -5,6 +5,7 @@ import { resolve } from 'path';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const vitePreprocessor = require('cypress-vite');
 import * as dotenv from 'dotenv';
+import { unlinkSync } from 'fs';
 
 /**
  * Returns a configuration object containing environment variables.
@@ -14,7 +15,7 @@ import * as dotenv from 'dotenv';
  *
  * @returns Configuration.
  */
-const loadConfiguration = () => {
+const loadConfiguration = (): Partial<Cypress.ConfigOptions> => {
   const dotenvPath = resolve(__dirname, '.env');
   const conf = dotenv.config({
     path: dotenvPath,
@@ -58,6 +59,32 @@ const nodeVersionCheck = () => {
 };
 
 /**
+ * Displays a warning if one region override var is specified but not the other.
+ *
+ * Cypress does not attempt to infer the region name if given an ID, nor vice-
+ * versa, so the user must specify both the region ID (as used by Linode API)
+ * and the region name (as shown in Cloud Manager's UI).
+ */
+const regionOverrideWarningCheck = (configWithEnv: Cypress.ConfigOptions) => {
+  const overrideRegionId = configWithEnv.env?.['CY_TEST_REGION_ID'];
+  const overrideRegionName = configWithEnv.env?.['CY_TEST_REGION_NAME'];
+
+  // If one environment variable is specified but not the other, warn that they
+  // will be disregarded.
+  if (
+    (!!overrideRegionId && !overrideRegionName) ||
+    (!overrideRegionId && !!overrideRegionName)
+  ) {
+    console.warn(
+      'Either CY_TEST_REGION_ID or CY_TEST_REGION_NAME was specified, but not both.'
+    );
+    console.warn(
+      'CY_TEST_REGION_ID and CY_TEST_REGION_NAME must both be specified in order to override test region selection behavior.'
+    );
+  }
+};
+
+/**
  * Exports a Cypress configuration object.
  *
  * {@link https://docs.cypress.io/guides/references/configuration#Options | Cypress configuration documentation}
@@ -73,6 +100,7 @@ export default defineConfig({
   requestTimeout: 30000,
   responseTimeout: 80000,
   retries: 2,
+  experimentalMemoryManagement: true,
   e2e: {
     experimentalRunAllSpecs: true,
     baseUrl: 'http://localhost:3000',
@@ -80,6 +108,15 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // Display warning if running an unsupported version of Node JS.
       nodeVersionCheck();
+
+      // Get configuration by loading .env file, if one exists.
+      const configWithEnv = {
+        ...config,
+        ...loadConfiguration(),
+      };
+
+      // Display warning if region override vars are defined incorrectly.
+      regionOverrideWarningCheck(configWithEnv);
 
       on(
         'file:preprocessor',
@@ -104,11 +141,29 @@ export default defineConfig({
         return launchOptions;
       });
 
-      // Return configuration by loading .env file, if one exists.
-      return {
-        ...config,
-        ...loadConfiguration(),
-      };
+      /*
+       * Delete recordings for any specs that passed without requiring any
+       * retries (ie only keep recordings for failed and flaky tests) during
+       * runs in CI environments.
+       *
+       * This should save time by avoiding compressing and uploading recordings
+       * that we don't need.
+       */
+      on('after:spec', (spec, results) => {
+        if (results?.video) {
+          const isFailedOrFlaky = results.tests.some((testResult) => {
+            return testResult.attempts.some(
+              (attempt) => attempt.state === 'failed'
+            );
+          });
+
+          if (!isFailedOrFlaky && configWithEnv.env['CI']) {
+            unlinkSync(results.video);
+          }
+        }
+      });
+
+      return configWithEnv;
     },
   },
 });

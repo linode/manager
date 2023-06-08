@@ -5,21 +5,21 @@ import { Link } from 'react-router-dom';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
+import { TableBody } from 'src/components/TableBody';
 import TableFooter from 'src/components/core/TableFooter';
-import TableHead from 'src/components/core/TableHead';
+import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableContentWrapper from 'src/components/TableContentWrapper';
-import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
-import { transitionText } from 'src/features/linodes/transitions';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { transitionText } from 'src/features/Linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
@@ -237,7 +237,11 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow ariaLabel={label} className={classes.row}>
+    <TableRow
+      ariaLabel={label}
+      className={classes.row}
+      data-qa-node-row={nodeId}
+    >
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid>

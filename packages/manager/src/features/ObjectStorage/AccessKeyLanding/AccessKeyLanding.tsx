@@ -1,3 +1,19 @@
+import * as React from 'react';
+import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
+import ViewPermissionsDrawer from './ViewPermissionsDrawer';
+import { AccessKeyDrawer } from './AccessKeyDrawer';
+import { AccessKeyTable } from './AccessKeyTable';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { FormikBag } from 'formik';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { MODE, OpenAccessDrawer } from './types';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
+import { useAccountSettings } from 'src/queries/accountSettings';
+import { useErrors } from 'src/hooks/useErrors';
+import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
+import { useOpenClose } from 'src/hooks/useOpenClose';
+import { usePagination } from 'src/hooks/usePagination';
 import {
   createObjectStorageKeys,
   ObjectStorageKey,
@@ -5,45 +21,29 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
-import { FormikBag } from 'formik';
-import * as React from 'react';
-import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useErrors } from 'src/hooks/useErrors';
-import { useOpenClose } from 'src/hooks/useOpenClose';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
 } from 'src/utilities/ga';
-import AccessKeyDrawer from './AccessKeyDrawer';
-import AccessKeyTable from './AccessKeyTable';
-import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
-import { MODE, OpenAccessDrawer } from './types';
-import ViewPermissionsDrawer from './ViewPermissionsDrawer';
-import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
-import { usePagination } from 'src/hooks/usePagination';
-import PaginationFooter from 'src/components/PaginationFooter';
 
 interface Props {
-  isRestrictedUser: boolean;
   accessDrawerOpen: boolean;
-  openAccessDrawer: (mode: MODE) => void;
   closeAccessDrawer: () => void;
+  isRestrictedUser: boolean;
   mode: MODE;
+  openAccessDrawer: (mode: MODE) => void;
 }
 
 export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
 
-export const AccessKeyLanding: React.FC<Props> = (props) => {
+export const AccessKeyLanding = (props: Props) => {
   const {
-    closeAccessDrawer,
-    openAccessDrawer,
-    mode,
     accessDrawerOpen,
+    closeAccessDrawer,
     isRestrictedUser,
+    mode,
+    openAccessDrawer,
   } = props;
 
   const pagination = usePagination(1);
@@ -247,52 +247,50 @@ export const AccessKeyLanding: React.FC<Props> = (props) => {
     <div>
       <DocumentTitleSegment segment="Access Keys" />
       <AccessKeyTable
+        data-qa-access-key-table
         data={data?.data}
-        isLoading={isLoading}
         error={error}
+        isLoading={isLoading}
         isRestrictedUser={isRestrictedUser}
         openDrawer={openDrawer}
         openRevokeDialog={openRevokeDialog}
-        data-qa-access-key-table
       />
       <PaginationFooter
-        page={pagination.page}
-        pageSize={pagination.pageSize}
         count={data?.results || 0}
+        eventCategory="object storage keys table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
-        eventCategory="object storage keys table"
+        page={pagination.page}
+        pageSize={pagination.pageSize}
       />
       <AccessKeyDrawer
-        open={accessDrawerOpen}
-        onClose={closeAccessDrawer}
-        onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+        isRestrictedUser={props.isRestrictedUser}
         mode={mode}
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
-        isRestrictedUser={props.isRestrictedUser}
+        onClose={closeAccessDrawer}
+        onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+        open={accessDrawerOpen}
       />
       <ViewPermissionsDrawer
-        open={viewPermissionsDrawer.isOpen}
-        onClose={viewPermissionsDrawer.close}
         objectStorageKey={keyToEdit}
+        onClose={viewPermissionsDrawer.close}
+        open={viewPermissionsDrawer.isOpen}
       />
       <SecretTokenDialog
-        title="Access Keys"
-        open={displayKeysDialog.isOpen}
-        onClose={displayKeysDialog.close}
         objectStorageKey={keyToDisplay}
+        onClose={displayKeysDialog.close}
+        open={displayKeysDialog.isOpen}
+        title="Access Keys"
       />
       <RevokeAccessKeyDialog
-        isOpen={revokeKeysDialog.isOpen}
-        label={(keyToRevoke && keyToRevoke.label) || ''}
+        errors={revokeErrors}
         handleClose={closeRevokeDialog}
         handleSubmit={handleRevokeKeys}
         isLoading={isRevoking}
+        isOpen={revokeKeysDialog.isOpen}
+        label={keyToRevoke?.label || ''}
         numAccessKeys={data?.results || 0}
-        errors={revokeErrors}
       />
     </div>
   );
 };
-
-export default AccessKeyLanding;

@@ -2,22 +2,22 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Hidden from 'src/components/core/Hidden';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
-import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table';
-import TableCell from 'src/components/TableCell/TableCell';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import TransferDisplay from 'src/components/TransferDisplay';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
-import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
+import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
 const preferenceKey = 'nodebalancers';
@@ -77,7 +77,7 @@ export const NodeBalancersLanding = () => {
   }
 
   if (data?.results === 0) {
-    return <NodeBalancersLandingEmptyState />;
+    return <NodeBalancerLandingEmptyState />;
   }
 
   return (

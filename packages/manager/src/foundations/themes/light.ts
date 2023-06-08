@@ -286,6 +286,7 @@ export const lightTheme: ThemeOptions = {
   palette: {
     divider: primaryColors.divider,
     primary: primaryColors,
+    secondary: primaryColors,
     text: {
       primary: primaryColors.text,
     },
@@ -753,6 +754,9 @@ export const lightTheme: ThemeOptions = {
           marginRight: 0,
         },
       },
+      defaultProps: {
+        size: 'large',
+      },
     },
     MuiInput: {
       styleOverrides: {
@@ -1013,13 +1017,36 @@ export const lightTheme: ThemeOptions = {
     },
     MuiRadio: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           '& $checked': {
             color: primaryColors.main,
           },
-          color: primaryColors.main,
-        },
-        checked: {},
+          color: '#ccc',
+          padding: '10px 10px',
+          transition: theme.transitions.create(['color']),
+          '& .defaultFill': {
+            fill: theme.color.white,
+            transition: theme.transitions.create(['fill']),
+          },
+          '&:hover': {
+            color: theme.palette.primary.main,
+            fill: theme.color.white,
+            '& .defaultFill': {
+              fill: theme.color.white,
+            },
+          },
+          '&.Mui-disabled': {
+            color: '#ccc !important',
+            fill: '#f4f4f4 !important',
+            pointerEvents: 'none',
+            '& .defaultFill': {
+              fill: '#f4f4f4',
+            },
+          },
+        }),
+        checked: ({ theme }) => ({
+          color: theme.palette.primary.main,
+        }),
         colorSecondary: {
           color: primaryColors.main,
           '&$checked': {

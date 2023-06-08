@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import EntityHeader from './EntityHeader';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import Button from '../Button';
 import Link from '../Link';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
-import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
+import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 
 const sxBoxFlex = {
   alignItems: 'center',
@@ -79,7 +79,6 @@ export const Default: Story = {
             linodeRegion="us-east"
             linodeStatus="running"
             linodeType={{
-              subHeadings: ['2GB RAM', '1 vCPU', '80GB Storage', 'Linode 4GB'],
               addons: {
                 backups: {
                   price: {
@@ -97,17 +96,18 @@ export const Default: Story = {
               },
               class: 'standard',
               successor: 'g6-standard-1',
-              isDeprecated: false,
-              heading: 'Linode 2GB',
               disk: 81920,
               id: 'g6-standard-2',
-              formattedLabel: 'Linode 2 GB',
               label: 'Linode 2GB',
               memory: 2048,
               vcpus: 1,
             }}
-            openDialog={action('openDialog')}
-            openPowerActionDialog={action('openPowerActionDialog')}
+            onOpenPowerDialog={action('onOpenPowerDialog')}
+            onOpenDeleteDialog={action('onOpenDeleteDialog')}
+            onOpenResizeDialog={action('onOpenResizeDialog')}
+            onOpenRebuildDialog={action('onOpenRebuildDialog')}
+            onOpenRescueDialog={action('onOpenRescueDialog')}
+            onOpenMigrateDialog={action('onOpenMigrateDialog')}
           />
         </Box>
       </EntityHeader>
