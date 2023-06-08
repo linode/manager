@@ -1,6 +1,6 @@
 import * as React from 'react';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Link } from 'react-router-dom';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
@@ -10,243 +10,161 @@ import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
-import { Theme } from '@mui/material/styles';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { AddNewMenuItem } from './AddNewMenuItem';
-import useFlags from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
-import { makeStyles } from '@mui/styles';
-import '@reach/menu-button/styles.css';
+import Button from 'src/components/Button/Button';
+import Divider from 'src/components/core/Divider';
+import { Link } from 'react-router-dom';
 import {
+  Box,
+  ListItemIcon,
   Menu,
-  MenuButton,
-  MenuItems,
-  MenuLink,
-  MenuPopover,
-} from '@reach/menu-button';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  wrapper: {
-    position: 'relative',
-    marginRight: theme.spacing(1),
-    [theme.breakpoints.down('md')]: {
-      flex: 1,
-    },
-  },
-  button: {
-    display: 'flex',
-    alignItems: 'center',
-    '&[data-reach-menu-button]': {
-      textTransform: 'inherit',
-      borderRadius: 1,
-      fontSize: '1rem',
-      lineHeight: 1,
-      fontFamily:
-        Number(theme.spacing()) === 4 ? theme.font.normal : theme.font.bold,
-      backgroundColor: theme.palette.primary.main,
-      color: '#fff',
-      padding: `2px 20px`,
-      paddingRight: 12,
-      maxHeight: 34,
-      position: 'relative',
-      minHeight: `34px`,
-      cursor: 'pointer',
-      border: 'none',
-      [theme.breakpoints.down('md')]: {
-        maxHeight: 34,
-        minWidth: 100,
-      },
-      '&:hover, &:focus': {
-        backgroundColor: '#226dc3',
-      },
-      '&[aria-expanded="true"]': {
-        backgroundColor: theme.palette.primary.light,
-        '& $caret': {
-          marginTop: 4,
-          transform: 'rotate(180deg)',
-        },
-      },
-    },
-  },
-  caret: {
-    marginTop: 2,
-    marginLeft: 4,
-  },
-  menuItemLink: {
-    '&[data-reach-menu-item]': {
-      padding: 0,
-      cursor: 'pointer',
-      textDecoration: 'none',
-      '& h3': {
-        color: theme.textColors.linkActiveLight,
-      },
-      '&:hover': {
-        '& h3': {
-          color: theme.palette.primary.main,
-          textDecoration: 'underline',
-        },
-      },
-    },
-    '&[data-reach-menu-item][data-selected]': {
-      background: theme.bg.main,
-      '& svg': {
-        ...theme.addCircleHoverEffect,
-        backgroundColor: theme.bg.main,
-        color: theme.palette.text.primary,
-      },
-    },
-    '& svg': {
-      width: 20,
-      height: 20,
-    },
-  },
-  menuItemList: {
-    '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.white,
-      border: 'none',
-      boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-      padding: 0,
-      whiteSpace: 'normal',
-      zIndex: 3000,
-    },
-  },
-  menuPopover: {
-    '&[data-reach-menu], &[data-reach-menu-popover]': {
-      width: 350,
-      left: theme.spacing(),
-      [theme.breakpoints.up('md')]: {
-        left: 0,
-      },
-    },
-  },
-}));
+  MenuItem,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material';
 
 export const AddNewMenu = () => {
-  const flags = useFlags();
-  const classes = useStyles();
-  const { data: account } = useAccount();
+  const theme = useTheme();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const showDatabases = isFeatureEnabled(
-    'Managed Databases',
-    Boolean(flags.databases),
-    account?.capabilities ?? []
-  );
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const links = [
+    {
+      entity: 'Linode',
+      description: 'High performance SSD Linux servers',
+      icon: LinodeIcon,
+      link: '/linodes/create',
+    },
+    {
+      entity: 'Volume',
+      description: 'Attach additional storage to your Linode',
+      icon: VolumeIcon,
+      link: '/volumes/create',
+    },
+    {
+      entity: 'NodeBalancer',
+      description: 'Ensure your services are highly available',
+      icon: NodebalancerIcon,
+      link: '/nodebalancers/create',
+    },
+    {
+      entity: 'Firewall',
+      description: 'Control network access to your Linodes',
+      icon: FirewallIcon,
+      link: '/firewalls/create',
+    },
+    {
+      entity: 'Domain',
+      description: 'Manage your DNS records',
+      icon: DomainIcon,
+      link: '/domains/create',
+    },
+    {
+      entity: 'Database',
+      description: 'High-performance managed database clusters',
+      icon: DatabaseIcon,
+      link: '/databases/create',
+    },
+    {
+      entity: 'Kubernetes',
+      description: 'Highly available container workloads',
+      icon: KubernetesIcon,
+      link: '/kubernetes/create',
+    },
+    {
+      entity: 'Bucket',
+      description: 'S3-compatible object storage',
+      icon: BucketIcon,
+      link: '/object-storage/buckets/create',
+    },
+    {
+      entity: 'Marketplace',
+      description: 'Deploy applications with ease',
+      icon: OneClickIcon,
+      link: '/linodes/create?type=One-Click',
+      attr: { 'data-qa-one-click-add-new': true },
+    },
+  ];
 
   return (
-    <div className={classes.wrapper}>
-      <Menu>
-        <MenuButton className={classes.button} data-qa-add-new-menu-button>
-          Create
-          <KeyboardArrowDown className={classes.caret} />
-        </MenuButton>
-        <MenuPopover className={classes.menuPopover} portal={false}>
-          <MenuItems className={classes.menuItemList}>
-            <MenuLink
-              as={Link}
-              to="/linodes/create"
-              className={classes.menuItemLink}
-            >
-              <AddNewMenuItem
-                title="Linode"
-                body="High performance SSD Linux servers"
-                ItemIcon={LinodeIcon}
+    <Box
+      sx={{
+        [theme.breakpoints.down('md')]: {
+          flex: 1,
+        },
+      }}
+    >
+      <Button
+        buttonType="primary"
+        id="create-menu"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+        data-qa-add-new-menu-button
+      >
+        Create
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'create-menu',
+        }}
+        PaperProps={{
+          // UX requested a drop shadow that didn't affect the button.
+          // If we revise our theme's shadows, we could consider removing
+          sx: { boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)' },
+        }}
+      >
+        {links.map((link, i) => [
+          i !== 0 && <Divider spacingTop={0} spacingBottom={0} />,
+          <MenuItem
+            key={link.entity}
+            onClick={handleClose}
+            sx={{
+              paddingY: 1.5,
+              '&:hover': {
+                // This MUI Menu gets special colors compared
+                // to a standard menu such as the NodeBalancer Config Node Mode select menu
+                backgroundColor: theme.bg.app,
+              },
+            }}
+            component={Link}
+            to={link.link}
+            {...link.attr}
+            style={{
+              // We have to do this because in packages/manager/src/index.css we force underline links
+              textDecoration: 'none',
+            }}
+          >
+            <ListItemIcon>
+              <link.icon
+                width={20}
+                height={20}
+                color={theme.palette.text.primary}
               />
-            </MenuLink>
-            <MenuLink
-              as={Link}
-              to="/volumes/create"
-              className={classes.menuItemLink}
-            >
-              <AddNewMenuItem
-                title="Volume"
-                body="Attach additional storage to your Linode"
-                ItemIcon={VolumeIcon}
-              />
-            </MenuLink>
-            <MenuLink
-              as={Link}
-              to="/nodebalancers/create"
-              className={classes.menuItemLink}
-            >
-              <AddNewMenuItem
-                title="NodeBalancer"
-                body="Ensure your services are highly available"
-                ItemIcon={NodebalancerIcon}
-              />
-            </MenuLink>
-            <MenuLink
-              as={Link}
-              to="/firewalls/create"
-              className={classes.menuItemLink}
-            >
-              <AddNewMenuItem
-                title="Firewall"
-                body="Control network access to your Linodes"
-                ItemIcon={FirewallIcon}
-              />
-            </MenuLink>
-            <MenuLink
-              as={Link}
-              to="/domains/create"
-              className={classes.menuItemLink}
-            >
-              <AddNewMenuItem
-                title="Domain"
-                body="Manage your DNS records"
-                ItemIcon={DomainIcon}
-              />
-            </MenuLink>
-            {showDatabases ? (
-              <MenuLink
-                as={Link}
-                to="/databases/create"
-                className={classes.menuItemLink}
-              >
-                <AddNewMenuItem
-                  title="Database"
-                  body="High-performance managed database clusters"
-                  ItemIcon={DatabaseIcon}
-                  attr={{ 'data-qa-database-add-new': true }}
-                />
-              </MenuLink>
-            ) : null}
-            <MenuLink
-              as={Link}
-              to="/kubernetes/create"
-              className={classes.menuItemLink}
-            >
-              <AddNewMenuItem
-                title="Kubernetes"
-                body="Highly available container workloads"
-                ItemIcon={KubernetesIcon}
-              />
-            </MenuLink>
-            <MenuLink
-              as={Link}
-              to="/object-storage/buckets/create"
-              className={classes.menuItemLink}
-            >
-              <AddNewMenuItem
-                title="Bucket"
-                body="S3-compatible object storage"
-                ItemIcon={BucketIcon}
-              />
-            </MenuLink>
-            <MenuLink
-              as={Link}
-              to="/linodes/create?type=One-Click"
-              className={classes.menuItemLink}
-            >
-              <AddNewMenuItem
-                title="Marketplace"
-                body="Deploy applications with ease"
-                ItemIcon={OneClickIcon}
-                attr={{ 'data-qa-one-click-add-new': true }}
-              />
-            </MenuLink>
-          </MenuItems>
-        </MenuPopover>
+            </ListItemIcon>
+            <Stack>
+              <Typography variant="h3" color={theme.textColors.linkActiveLight}>
+                {link.entity}
+              </Typography>
+              <Typography>{link.description}</Typography>
+            </Stack>
+          </MenuItem>,
+        ])}
       </Menu>
-    </div>
+    </Box>
   );
 };
