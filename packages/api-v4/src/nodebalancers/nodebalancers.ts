@@ -40,7 +40,7 @@ export const getNodeBalancers = (params?: Params, filters?: Filter) =>
  */
 export const getNodeBalancer = (nodeBalancerId: number) =>
   Request<NodeBalancer>(
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`),
+    setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
     setMethod('GET')
   );
 
@@ -58,7 +58,7 @@ export const updateNodeBalancer = (
   data: Partial<NodeBalancer>
 ) =>
   Request<NodeBalancer>(
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`),
+    setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
     setMethod('PUT'),
     setData(data, UpdateNodeBalancerSchema)
   );
@@ -89,7 +89,7 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
 export const deleteNodeBalancer = (nodeBalancerId: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`)
+    setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`)
   );
 
 /**
@@ -101,7 +101,9 @@ export const deleteNodeBalancer = (nodeBalancerId: number) =>
  */
 export const getNodeBalancerStats = (nodeBalancerId: number) => {
   return Request<NodeBalancerStats>(
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/stats`),
+    setURL(
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/stats`
+    ),
     setMethod('GET')
   );
 };
