@@ -47,10 +47,16 @@ export const getPlanSelectionsByPlanType = <
 
   //group plans by type
   for (const type of types) {
-    if (type.class === 'nanode' || type.class === 'standard') {
-      plansByType['shared'].push(type);
-    } else {
-      plansByType[type.class].push(type);
+    switch (type.class) {
+      case 'nanode':
+      case 'standard':
+        plansByType['shared'].push(type);
+        break;
+      default:
+        if (plansByType.hasOwnProperty(type.class)) {
+          plansByType[type.class].push(type);
+        }
+        break;
     }
   }
 
