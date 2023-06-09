@@ -16,7 +16,8 @@ type ClassNames =
   | 'root'
   | 'searchIcon'
   | 'searchItem'
-  | 'enhancedSelectWrapper';
+  | 'enhancedSelectWrapper'
+  | 'notice';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -55,6 +56,12 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.up('md')]: {
         width: 500,
+      },
+    },
+    notice: {
+      '& p': {
+        color: theme.color.white,
+        fontFamily: 'LatoWeb',
       },
     },
   });
@@ -147,7 +154,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {searchError && (
-          <Notice error spacingTop={8} spacingBottom={0}>
+          <Notice error spacingTop={8} className={classes.notice}>
             {searchError}
           </Notice>
         )}
