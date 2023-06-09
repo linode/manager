@@ -8,7 +8,7 @@ import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { ConfigSelection } from './utilities';
 
 const useStyles = makeStyles(() => ({
@@ -46,7 +46,7 @@ export const Configs: React.FC<Props> = (props) => {
             <Table aria-label="List of Configurations" className={classes.root}>
               <TableBody>
                 {paginatedData.length === 0 ? (
-                  <TableRowEmptyState colSpan={1} />
+                  <TableRowEmpty colSpan={1} />
                 ) : (
                   paginatedData.map((config: Config) => (
                     <TableRow key={config.id} data-qa-config={config.label}>

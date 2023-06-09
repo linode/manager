@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Table } from 'src/components/Table';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { TableBody } from 'src/components/TableBody';
@@ -168,7 +168,7 @@ export const LinodeBackups = () => {
                 )}
               </>
             ) : (
-              <TableRowEmptyState
+              <TableRowEmpty
                 colSpan={7}
                 message="Automatic and manual backups will be listed here"
               />

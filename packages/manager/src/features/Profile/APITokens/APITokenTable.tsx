@@ -2,10 +2,7 @@ import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Box from 'src/components/core/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
 import Typography from 'src/components/core/Typography';
-import { APITokenMenu } from './APITokenMenu';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { EditAPITokenDrawer } from './EditAPITokenDrawer';
@@ -19,8 +16,11 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { APITokenMenu } from './APITokenMenu';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { TableSortCell } from 'src/components/TableSortCell';
 import { Token } from '@linode/api-v4/lib/profile';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -127,7 +127,7 @@ export const APITokenTable = (props: Props) => {
     }
 
     return data?.results === 0 ? (
-      <TableRowEmptyState colSpan={6} />
+      <TableRowEmpty colSpan={6} />
     ) : (
       renderRows(data?.data ?? [])
     );
