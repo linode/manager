@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Box from '../core/Box';
-import Select from 'src/components/EnhancedSelect/Select';
+import Select from '../EnhancedSelect/Select';
 import { PaginationControls } from '../PaginationControls/PaginationControls';
-import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material/styles';
 
 export const MIN_PAGE_SIZE = 25;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     background: theme.bg.bgPaper,
   },
@@ -52,8 +52,7 @@ const baseOptions = [
 ];
 
 export const PaginationFooter = (props: Props) => {
-  const classes = useStyles();
-  const theme = useTheme();
+  const { classes } = useStyles();
   const {
     count,
     fixedSize,
@@ -87,7 +86,7 @@ export const PaginationFooter = (props: Props) => {
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      sx={{ background: theme.bg.bgPaper }}
+      className={classes.root}
     >
       {!isShowingAll && (
         <PaginationControls
