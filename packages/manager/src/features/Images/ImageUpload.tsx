@@ -11,7 +11,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import FileUploader from 'src/components/FileUploader/FileUploader';
 import Link from 'src/components/Link';
-import LinodeCLIModal from 'src/components/LinodeCLIModal';
+import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
