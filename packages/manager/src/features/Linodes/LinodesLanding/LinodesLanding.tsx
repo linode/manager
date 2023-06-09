@@ -43,7 +43,7 @@ import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
 import { ExtendedStatus, statusToPriority } from './utils';
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
-import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';
+import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';

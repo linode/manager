@@ -30,6 +30,8 @@ import {
   getLinodeKernels,
   Kernel,
   getLinodeKernel,
+  resizeLinode,
+  ResizeLinodePayload,
 } from '@linode/api-v4/lib/linodes';
 
 export const queryKey = 'linodes';
@@ -215,6 +217,18 @@ export const useLinodeMigrateMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { region: string } | undefined>(
     (data) => scheduleOrQueueMigration(id, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
+};
+
+export const useLinodeResizeMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], ResizeLinodePayload>(
+    (data) => resizeLinode(id, data),
     {
       onSuccess() {
         queryClient.invalidateQueries([queryKey]);

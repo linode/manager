@@ -24,7 +24,7 @@ import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
-import LinodeResize from '../LinodeResize/LinodeResize';
+import { LinodeResize } from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
