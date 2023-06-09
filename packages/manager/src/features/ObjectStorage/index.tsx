@@ -2,7 +2,11 @@ import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
-const ObjectStorageLanding = React.lazy(() => import('./ObjectStorageLanding'));
+const ObjectStorageLanding = React.lazy(() =>
+  import('./ObjectStorageLanding').then((module) => ({
+    default: module.ObjectStorageLanding,
+  }))
+);
 const BucketDetail = React.lazy(() => import('./BucketDetail'));
 
 type CombinedProps = RouteComponentProps;

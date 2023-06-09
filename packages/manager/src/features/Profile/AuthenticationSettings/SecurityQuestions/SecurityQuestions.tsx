@@ -1,45 +1,21 @@
 import * as React from 'react';
+import Box from 'src/components/core/Box';
+import Button from 'src/components/Button';
+import Typography from 'src/components/core/Typography';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
+import { Link } from 'src/components/Link';
+import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
+import { SecurityQuestionsData } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import { useFormik, FormikConfig } from 'formik';
+import { useSnackbar } from 'notistack';
 import {
   useSecurityQuestions,
   useMutateSecurityQuestions,
 } from 'src/queries/securityQuestions';
-import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
-import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Box from 'src/components/core/Box';
-import Typography from 'src/components/core/Typography';
-import { SecurityQuestionsData } from '@linode/api-v4';
-import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { useSnackbar } from 'notistack';
-import { Link } from 'src/components/Link';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  copy: {
-    lineHeight: '20px',
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(),
-    maxWidth: 960,
-  },
-  form: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  buttonContainer: {
-    marginTop: theme.spacing(2),
-    gap: theme.spacing(),
-    [theme.breakpoints.down('md')]: {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
-
-const SecurityQuestions = () => {
-  const classes = useStyles();
-
+export const SecurityQuestions = () => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
   const {
     mutateAsync: updateSecurityQuestions,
@@ -140,7 +116,7 @@ const SecurityQuestions = () => {
   return (
     <Box>
       <Typography variant="h3">Security Questions</Typography>
-      <Typography variant="body1" className={classes.copy}>
+      <StyledCopy variant="body1">
         Security questions enable you to regain access to your Cloud Manager
         user account in certain situations, such as when 2FA is enabled and you
         no longer have access to the token or recovery codes. Answers to
@@ -149,8 +125,8 @@ const SecurityQuestions = () => {
         <Link to="https://www.linode.com/docs/guides/user-security-controls#security-questions">
           Learn more about security options.
         </Link>
-      </Typography>
-      <form className={classes.form} onSubmit={handleSubmit}>
+      </StyledCopy>
+      <StyledForm onSubmit={handleSubmit}>
         <QuestionAndAnswerPair
           questionResponse={values.security_questions[0]}
           index={0}
@@ -190,11 +166,7 @@ const SecurityQuestions = () => {
           })}
           {...qaProps}
         />
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          className={classes.buttonContainer}
-        >
+        <StyledButtonContainer display="flex" justifyContent="flex-end">
           {hasSecurityQuestionsCompleted &&
           questionEditStates.includes(true) ? (
             <Button buttonType="secondary" onClick={onCancel}>
@@ -211,10 +183,35 @@ const SecurityQuestions = () => {
               hasSecurityQuestionsCompleted ? 'Update' : 'Add'
             } Security Questions`}
           </Button>
-        </Box>
-      </form>
+        </StyledButtonContainer>
+      </StyledForm>
     </Box>
   );
 };
 
-export default SecurityQuestions;
+const StyledCopy = styled(Typography, {
+  label: 'StyledCopy',
+})(({ theme }) => ({
+  lineHeight: '20px',
+  marginTop: theme.spacing(),
+  marginBottom: theme.spacing(),
+  maxWidth: 960,
+}));
+
+const StyledForm = styled('form', {
+  label: 'StyledForm',
+})(() => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const StyledButtonContainer = styled(Box, {
+  label: 'StyledButtonContainer',
+})(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  gap: theme.spacing(),
+  [theme.breakpoints.down('md')]: {
+    marginTop: theme.spacing(2),
+  },
+}));

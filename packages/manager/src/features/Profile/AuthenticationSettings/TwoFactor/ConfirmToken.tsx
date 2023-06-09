@@ -1,44 +1,30 @@
 import * as React from 'react';
-import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import Button from 'src/components/Button';
+import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import TextField from 'src/components/TextField';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  warning: {
-    marginTop: theme.spacing(2),
-    marginLeft: '0 !important',
-  },
-}));
+import { styled } from '@mui/material/styles';
 
 interface Props {
-  token: string;
-  submitting: boolean;
   error?: string;
-  twoFactorConfirmed: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCancel: () => void;
   onSubmit: () => void;
+  submitting: boolean;
+  token: string;
+  twoFactorConfirmed: boolean;
 }
 
-type CombinedProps = Props & RenderGuardProps;
-
-const ConfirmToken: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const ConfirmToken = React.memo((props: Props) => {
   const {
-    token,
     error,
     handleChange,
+    onCancel,
     onSubmit,
     submitting,
+    token,
     twoFactorConfirmed,
-    onCancel,
   } = props;
 
   return (
@@ -54,11 +40,10 @@ const ConfirmToken: React.FC<CombinedProps> = (props) => {
         data-qa-confirm-token
       />
       {twoFactorConfirmed && (
-        <Notice
+        <StyledWarningNotice
           warning
           spacingTop={16}
           spacingBottom={8}
-          className={classes.warning}
           text={
             'Confirming a new key will invalidate codes generated from any previous key.'
           }
@@ -79,8 +64,11 @@ const ConfirmToken: React.FC<CombinedProps> = (props) => {
       </Box>
     </React.Fragment>
   );
-};
+});
 
-export default compose<CombinedProps, Props & RenderGuardProps>(RenderGuard)(
-  ConfirmToken
-);
+const StyledWarningNotice = styled(Notice, {
+  label: 'StyledWarningNotice',
+})(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  marginLeft: '0 !important',
+}));

@@ -10,8 +10,8 @@ import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { LongviewPort } from 'src/features/Longview/request.types';
@@ -143,9 +143,7 @@ const renderLoadingErrorData = (
     return <TableRowLoading columns={3} />;
   }
   if (data.length === 0) {
-    return (
-      <TableRowEmptyState colSpan={12} message={'No active connections.'} />
-    );
+    return <TableRowEmpty colSpan={12} message={'No active connections.'} />;
   }
 
   return data.map((thisConnection, idx) => (
