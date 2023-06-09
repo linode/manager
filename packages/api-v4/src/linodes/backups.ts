@@ -14,7 +14,7 @@ type Backup = LinodeBackup;
  */
 export const getLinodeBackups = (id: number) =>
   Request<LinodeBackupsResponse>(
-    setURL(`${API_ROOT}/linode/instances/${id}/backups`),
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(id)}/backups`),
     setMethod('GET')
   );
 
@@ -27,7 +27,11 @@ export const getLinodeBackups = (id: number) =>
  */
 export const enableBackups = (linodeId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/backups/enable`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/backups/enable`
+    ),
     setMethod('POST')
   );
 
@@ -40,7 +44,11 @@ export const enableBackups = (linodeId: number) =>
  */
 export const cancelBackups = (linodeId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/backups/cancel`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/backups/cancel`
+    ),
     setMethod('POST')
   );
 
@@ -55,7 +63,9 @@ export const cancelBackups = (linodeId: number) =>
  */
 export const takeSnapshot = (linodeId: number, label: string) =>
   Request<Backup>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/backups`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/backups`
+    ),
     setMethod('POST'),
     setData({ label }, CreateSnapshotSchema)
   );
@@ -79,7 +89,9 @@ export const restoreBackup = (
 ) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/linode/instances/${linodeId}/backups/${backupId}/restore`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/backups/${encodeURIComponent(backupId)}/restore`
     ),
     setMethod('POST'),
     setData({ linode_id: targetLinodeId, overwrite })

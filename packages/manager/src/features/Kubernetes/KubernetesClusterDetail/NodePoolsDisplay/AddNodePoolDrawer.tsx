@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import SelectPlanQuantityPanel from 'src/features/Linodes/LinodesCreate/SelectPlanQuantityPanel';
+import { KubernetesPlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -141,7 +141,7 @@ export const AddNodePoolDrawer = (props: Props) => {
         <Notice className={classes.error} error text={error?.[0].reason} />
       )}
       <form className={classes.plans}>
-        <SelectPlanQuantityPanel
+        <KubernetesPlansPanel
           // No nanodes or GPUs in clusters
           types={extendedTypes.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'

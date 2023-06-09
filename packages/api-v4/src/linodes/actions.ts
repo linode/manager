@@ -26,7 +26,7 @@ import {
  */
 export const linodeBoot = (linodeId: number | string, config_id?: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/boot`),
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/boot`),
     setMethod('POST'),
     setData({ config_id })
   );
@@ -43,7 +43,9 @@ export const linodeBoot = (linodeId: number | string, config_id?: number) =>
  */
 export const linodeReboot = (linodeId: number | string, config_id?: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/reboot`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/reboot`
+    ),
     setMethod('POST'),
     setData({ config_id })
   );
@@ -59,7 +61,9 @@ export const linodeReboot = (linodeId: number | string, config_id?: number) =>
  */
 export const linodeShutdown = (linodeId: number | string) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/shutdown`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/shutdown`
+    ),
     setMethod('POST')
   );
 
@@ -83,7 +87,9 @@ export const resizeLinode = (
   allow_auto_disk_resize: boolean = true
 ) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/resize`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/resize`
+    ),
     setMethod('POST'),
     setData({
       type,
@@ -108,7 +114,9 @@ export const resizeLinode = (
  */
 export const rebuildLinode = (linodeId: number, data: RebuildRequest) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/rebuild`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/rebuild`
+    ),
     setMethod('POST'),
     setData(data, RebuildLinodeSchema)
   );
@@ -134,7 +142,9 @@ export const rescueLinode = (
   const _devices = { ...devices } as any;
   delete _devices['sdh'];
   return Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/rescue`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/rescue`
+    ),
     setMethod('POST'),
     setData({ devices: _devices as RescueRequestObject })
   );
@@ -156,7 +166,9 @@ export const rescueLinode = (
  */
 export const rescueMetalLinode = (linodeId: number): Promise<{}> =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/rescue`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/rescue`
+    ),
     setMethod('POST')
   );
 
@@ -173,7 +185,9 @@ export const rescueMetalLinode = (linodeId: number): Promise<{}> =>
  */
 export const cloneLinode = (sourceLinodeId: number, data: LinodeCloneData) => {
   return Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances/${sourceLinodeId}/clone`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(sourceLinodeId)}/clone`
+    ),
     setMethod('POST'),
     setData(data)
   );
@@ -192,7 +206,9 @@ export const cloneLinode = (sourceLinodeId: number, data: LinodeCloneData) => {
  */
 export const startMutation = (linodeID: number) => {
   return Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeID}/mutate`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeID)}/mutate`
+    ),
     setMethod('POST')
   );
 };
@@ -210,7 +226,9 @@ export const scheduleOrQueueMigration = (
   payload?: { region: string }
 ) =>
   Request<{}>(
-    setURL(`${API_ROOT}/linode/instances/${linodeID}/migrate`),
+    setURL(
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeID)}/migrate`
+    ),
     setData(payload || {}),
     setMethod('POST')
   );

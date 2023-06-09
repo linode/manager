@@ -1,120 +1,46 @@
-import { TPAProvider } from '@linode/api-v4/lib/profile';
-import classNames from 'classnames';
 import * as React from 'react';
-import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
-import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
-import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
-import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
 import ExternalLink from 'src/components/ExternalLink';
+import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
+import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
+import Typography from 'src/components/core/Typography';
 import useFlags from 'src/hooks/useFlags';
-import TPADialog from './TPADialog';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(3),
-    paddingTop: 17,
-  },
-  copy: {
-    lineHeight: '1.25rem',
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(2),
-    maxWidth: 960,
-  },
-  providersList: {
-    marginBottom: 0,
-    width: 'calc(100% + 24px)',
-    '& .MuiGrid-item': {
-      [theme.breakpoints.down(1100)]: {
-        flexBasis: '50%',
-        maxWidth: '50%',
-      },
-      [theme.breakpoints.down('sm')]: {
-        flexBasis: '100%',
-        maxWidth: '100%',
-      },
-    },
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(),
-    },
-  },
-  button: {
-    borderRadius: 1,
-    backgroundColor: theme.name === 'light' ? '#f5f6f7' : '#444',
-    marginTop: theme.spacing(),
-    minHeight: 70,
-    paddingRight: `calc(${theme.spacing(3)} - 4px)`,
-    paddingLeft: `calc(${theme.spacing(3)} - 4px)`,
-    width: 'calc(100% - 8px)',
-    [theme.breakpoints.down('md')]: {
-      marginLeft: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-      marginTop: 0,
-      marginLeft: 0,
-    },
-    '&:hover': {
-      backgroundColor: theme.color.grey6,
-    },
-    '& > span': {
-      display: 'inline-block',
-      width: '100%',
-      color: theme.color.headline,
-    },
-  },
-  providerIcon: {
-    color: '#939598',
-    height: 32,
-    width: 32,
-    marginRight: theme.spacing(2),
-  },
-  providerContent: {
-    width: '100%',
-  },
-  isButtonEnabled: {
-    border: `1px solid ${theme.palette.primary.main} !important`,
-  },
-  enabledText: {
-    fontFamily: theme.font.normal,
-    marginLeft: 4,
-  },
-  notice: {
-    fontFamily: theme.font.bold,
-    fontSize: '0.875rem',
-  },
-}));
+import { TPADialog } from './TPADialog';
+import { TPAProvider } from '@linode/api-v4/lib/profile';
+import { useTheme } from '@mui/material/styles';
+import {
+  StyledButton,
+  StyledCopy,
+  StyledEnabledText,
+  StyledNotice,
+  StyledProvidersListGrid,
+  StyledRootContainer,
+} from './TPAProviders.styles';
 
 interface Props {
   authType: TPAProvider;
 }
 
-type CombinedProps = Props;
-
 const icons: Record<TPAProvider, any> = {
-  password: AkamaiWaveOnlyIcon,
-  google: GoogleIcon,
   github: GitHubIcon,
+  google: GoogleIcon,
+  password: AkamaiWaveOnlyIcon,
 };
 
 const linode = {
   displayName: 'Cloud Manager',
-  name: 'password' as TPAProvider,
-  icon: AkamaiWaveOnlyIcon,
   href: '',
+  icon: AkamaiWaveOnlyIcon,
+  name: 'password' as TPAProvider,
 };
 
-export const TPAProviders: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const TPAProviders = (props: Props) => {
+  const theme = useTheme();
   const flags = useFlags();
 
   // Get list of providers from LaunchDarkly
@@ -123,9 +49,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
   const currentProvider =
     providers.find((thisProvider) => thisProvider.name === props.authType) ??
     linode;
-
   const isThirdPartyAuthEnabled = props.authType !== 'password';
-
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [newProvider, setNewProvider] = React.useState<TPAProvider>(
     providers[0]?.name
@@ -138,9 +62,9 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Paper className={classes.root}>
+      <StyledRootContainer>
         <Typography variant="h3">Login Method</Typography>
-        <Typography className={classes.copy}>
+        <StyledCopy>
           You can use your Cloud Manager credentials or another provider such as
           Google or GitHub to log in to your Cloud Manager account. More
           information is available in{' '}
@@ -148,72 +72,70 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             How to Enable Third Party Authentication on Your User Account
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (2FA).
-        </Typography>
-        <Grid container className={classes.providersList} spacing={2}>
+        </StyledCopy>
+        <StyledProvidersListGrid spacing={2} container>
           {providersIncludingLinode.map((thisProvider) => {
             const ProviderIcon = icons[thisProvider.name];
             const isProviderEnabled = props.authType === thisProvider.name;
 
             return (
               <Grid xs={12} sm={6} md={4} key={thisProvider.displayName}>
-                <Button
+                <StyledButton
                   data-testid={`Button-${thisProvider.displayName}`}
-                  className={classNames({
-                    [classes.button]: true,
-                    [classes.isButtonEnabled]: isProviderEnabled,
-                  })}
                   disabled={isProviderEnabled}
+                  isButtonEnabled={isProviderEnabled}
                   onClick={() => {
                     handleProviderChange(thisProvider.name);
                   }}
                 >
                   <Box
-                    display="flex"
                     alignItems="center"
-                    justifyContent="space-between"
+                    display="flex"
                     flexDirection="row"
-                    className={classes.providerContent}
+                    justifyContent="space-between"
+                    sx={{ width: '100%' }}
                   >
                     <Box
+                      alignItems="center"
                       display="flex"
                       flexDirection="row"
-                      alignItems="center"
                       flexGrow={1}
                     >
-                      <ProviderIcon className={classes.providerIcon} />
+                      <ProviderIcon
+                        style={{
+                          color: '#939598',
+                          height: 32,
+                          marginRight: theme.spacing(2),
+                          width: 32,
+                        }}
+                      />
                       {thisProvider.displayName}
                       {isProviderEnabled ? (
-                        <span
-                          className={classes.enabledText}
+                        <StyledEnabledText
                           data-testid={`Enabled-${thisProvider.displayName}`}
                         >
                           (Enabled)
-                        </span>
+                        </StyledEnabledText>
                       ) : null}
                     </Box>
                     {isProviderEnabled ? <EnabledIcon /> : null}
                   </Box>
-                </Button>
+                </StyledButton>
               </Grid>
             );
           })}
-        </Grid>
+        </StyledProvidersListGrid>
         {isThirdPartyAuthEnabled ? (
           <div data-testid={`Notice-${currentProvider.displayName}`}>
             <Divider spacingTop={24} spacingBottom={16} />
             <Typography variant="h3">
               {currentProvider.displayName} Authentication
             </Typography>
-            <Notice
-              className={classes.notice}
-              spacingTop={16}
-              spacingBottom={16}
-              warning
-            >
+            <StyledNotice spacingBottom={16} spacingTop={16} warning>
               Your login credentials are currently managed via{' '}
               {currentProvider.displayName}.
-            </Notice>
-            <Typography variant="body1" className={classes.copy}>
+            </StyledNotice>
+            <StyledCopy variant="body1">
               If you need to reset your password or set up Two-Factor
               Authentication (2FA), please visit the{' '}
               <ExternalLink
@@ -222,20 +144,16 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                 text={`${currentProvider.displayName}` + ` website`}
               />
               .
-            </Typography>
-            <Typography
-              variant="body1"
-              className={classes.copy}
-              style={{ marginBottom: 8 }}
-            >
+            </StyledCopy>
+            <StyledCopy variant="body1" style={{ marginBottom: 8 }}>
               To disable {currentProvider.displayName} authentication and log in
               using your Linode credentials, click the Linode button above.
               We&rsquo;ll send you an e-mail with instructions on how to reset
               your password.
-            </Typography>
+            </StyledCopy>
           </div>
         ) : null}
-      </Paper>
+      </StyledRootContainer>
       <TPADialog
         currentProvider={currentProvider}
         newProvider={newProvider}
@@ -245,5 +163,3 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default TPAProviders;

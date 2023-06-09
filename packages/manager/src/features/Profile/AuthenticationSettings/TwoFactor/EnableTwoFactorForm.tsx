@@ -1,27 +1,25 @@
-import { confirmTwoFactor } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import { Notice } from 'src/components/Notice/Notice';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import ConfirmToken from './ConfirmToken';
-import QRCodeForm from './QRCodeForm';
+import { APIError } from '@linode/api-v4/lib/types';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ConfirmToken } from './ConfirmToken';
+import { confirmTwoFactor } from '@linode/api-v4/lib/profile';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { Notice } from 'src/components/Notice/Notice';
+import { QRCodeForm } from './QRCodeForm';
 
 interface Props {
   loading: boolean;
-  secret: string;
-  username: string;
-  twoFactorConfirmed: boolean;
-  onSuccess: (scratchCode: string) => void;
   onCancel: () => void;
+  onSuccess: (scratchCode: string) => void;
+  secret: string;
   toggleDialog: () => void;
+  twoFactorConfirmed: boolean;
+  username: string;
 }
 
-type CombinedProps = Props;
-
-export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
+export const EnableTwoFactorForm = (props: Props) => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');
@@ -82,11 +80,7 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
       {loading ? (
         <CircleProgress />
       ) : (
-        <QRCodeForm
-          secret={secret}
-          secretLink={secretLink}
-          updateFor={[secret, secretLink]}
-        />
+        <QRCodeForm secret={secret} secretLink={secretLink} />
       )}
       <Divider spacingTop={44} spacingBottom={20} />
       <ConfirmToken
@@ -97,10 +91,7 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
         handleChange={handleTokenInputChange}
         onCancel={props.onCancel}
         onSubmit={onSubmit}
-        updateFor={[token, tokenError, submitting]}
       />
     </React.Fragment>
   );
 };
-
-export default EnableTwoFactorForm;

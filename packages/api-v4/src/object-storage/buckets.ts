@@ -32,7 +32,11 @@ import {
 export const getBucket = (clusterId: string, bucketName: string) =>
   Request<ObjectStorageBucket>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}`)
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}`
+    )
   );
 
 /**
@@ -62,7 +66,9 @@ export const getBucketsInCluster = (
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}`)
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(clusterId)}`
+    )
   );
 
 /**
@@ -92,7 +98,11 @@ export const deleteBucket = ({
   label,
 }: ObjectStorageDeleteBucketRequestPayload) =>
   Request<ObjectStorageBucket>(
-    setURL(`${API_ROOT}/object-storage/buckets/${cluster}/${label}`),
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        cluster
+      )}/${encodeURIComponent(label)}`
+    ),
     setMethod('DELETE')
   );
 
@@ -108,7 +118,9 @@ export const getObjectList = (
     setMethod('GET'),
     setParams(params),
     setURL(
-      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-list`
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/object-list`
     )
   );
 
@@ -123,7 +135,11 @@ export const uploadSSLCert = (
   Request<ObjectStorageBucketSSLResponse>(
     setMethod('POST'),
     setData(data, UploadCertificateSchema),
-    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/ssl`
+    )
   );
 
 /**
@@ -135,7 +151,11 @@ export const uploadSSLCert = (
 export const getSSLCert = (clusterId: string, bucketName: string) =>
   Request<ObjectStorageBucketSSLResponse>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/ssl`
+    )
   );
 
 /**
@@ -148,7 +168,11 @@ export const getSSLCert = (clusterId: string, bucketName: string) =>
 export const deleteSSLCert = (clusterId: string, bucketName: string) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/ssl`
+    )
   );
 
 /**
@@ -160,7 +184,9 @@ export const getBucketAccess = (clusterId: string, bucketName: string) =>
   Request<ObjectStorageBucketAccessResponse>(
     setMethod('GET'),
     setURL(
-      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/access`
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/access`
     )
   );
 
@@ -177,7 +203,9 @@ export const updateBucketAccess = (
   Request<{}>(
     setMethod('PUT'),
     setURL(
-      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/access`
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        clusterId
+      )}/${encodeURIComponent(bucketName)}/access`
     ),
     setData(data, UpdateBucketAccessSchema)
   );

@@ -1,49 +1,17 @@
 import * as React from 'react';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Drawer from 'src/components/Drawer';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { scopeStringToPermTuples, basePermNameMap } from './utils';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { Token } from '@linode/api-v4/lib/profile/types';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  permsTable: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(),
-  },
-  accessCell: {
-    width: '31%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-  },
-  noneCell: {
-    width: '23%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-    textAlign: 'center',
-  },
-  readOnlyCell: {
-    width: '23%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-    textAlign: 'center',
-  },
-  readWritecell: {
-    width: '23%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-    textAlign: 'center',
-  },
-}));
+import {
+  StyledAccessCell,
+  StyledPermissionsCell,
+  StyledPermsTable,
+} from './APITokenDrawer.styles';
 
 interface Props {
   open: boolean;
@@ -52,16 +20,14 @@ interface Props {
 }
 
 export const ViewAPITokenDrawer = (props: Props) => {
-  const classes = useStyles();
   const { open, onClose, token } = props;
 
   const permissions = scopeStringToPermTuples(token?.scopes ?? '');
 
   return (
     <Drawer title={token?.label ?? 'Token'} open={open} onClose={onClose}>
-      <Table
+      <StyledPermsTable
         aria-label="Personal Access Token Permissions"
-        className={classes.permsTable}
         spacingTop={24}
         spacingBottom={16}
       >
@@ -89,18 +55,10 @@ export const ViewAPITokenDrawer = (props: Props) => {
                 key={scopeTup[0]}
                 data-qa-row={basePermNameMap[scopeTup[0]]}
               >
-                <TableCell
-                  parentColumn="Access"
-                  padding="checkbox"
-                  className={classes.accessCell}
-                >
+                <StyledAccessCell parentColumn="Access" padding="checkbox">
                   {basePermNameMap[scopeTup[0]]}
-                </TableCell>
-                <TableCell
-                  parentColumn="None"
-                  padding="checkbox"
-                  className={classes.noneCell}
-                >
+                </StyledAccessCell>
+                <StyledPermissionsCell parentColumn="None" padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 0}
                     scope="0"
@@ -109,11 +67,10 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     disabled={false}
                     onChange={() => null}
                   />
-                </TableCell>
-                <TableCell
+                </StyledPermissionsCell>
+                <StyledPermissionsCell
                   parentColumn="Read Only"
                   padding="checkbox"
-                  className={classes.readOnlyCell}
                 >
                   <AccessCell
                     active={scopeTup[1] === 1}
@@ -123,12 +80,8 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     disabled={false}
                     onChange={() => null}
                   />
-                </TableCell>
-                <TableCell
-                  parentColumn="Read/Write"
-                  padding="checkbox"
-                  className={classes.readWritecell}
-                >
+                </StyledPermissionsCell>
+                <TableCell parentColumn="Read/Write" padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 2}
                     scope="2"
@@ -142,7 +95,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
             );
           })}
         </TableBody>
-      </Table>
+      </StyledPermsTable>
     </Drawer>
   );
 };

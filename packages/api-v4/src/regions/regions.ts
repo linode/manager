@@ -31,6 +31,9 @@ export const getRegions = (params?: Params) =>
  *
  */
 export const getRegion = (regionID: string) =>
-  Request<Region>(setURL(`${API_ROOT}/regions/${regionID}`), setMethod('GET'));
+  Request<Region>(
+    setURL(`${API_ROOT}/regions/${encodeURIComponent(regionID)}`),
+    setMethod('GET')
+  );
 
 export { Region };

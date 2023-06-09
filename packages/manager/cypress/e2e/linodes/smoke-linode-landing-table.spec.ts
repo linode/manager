@@ -190,30 +190,53 @@ describe('linode landing checks', () => {
 
   it('checks the create menu dropdown items', () => {
     getClick('[data-qa-add-new-menu-button="true"]');
-    getVisible(
-      '[data-valuetext="LinodeHigh performance SSD Linux servers"][href="/linodes/create"]'
-    );
-    getVisible(
-      '[data-valuetext="VolumeAttach additional storage to your Linode"][href="/volumes/create"]'
-    );
-    getVisible(
-      '[data-valuetext="NodeBalancerEnsure your services are highly available"][href="/nodebalancers/create"]'
-    );
-    getVisible(
-      '[data-valuetext="FirewallControl network access to your Linodes"][href="/firewalls/create"]'
-    );
-    getVisible(
-      '[data-valuetext="DomainManage your DNS records"][href="/domains/create"]'
-    );
-    getVisible(
-      '[data-valuetext="KubernetesHighly available container workloads"][href="/kubernetes/create"]'
-    );
-    getVisible(
-      '[data-valuetext="BucketS3-compatible object storage"][href="/object-storage/buckets/create"]'
-    );
-    getVisible(
-      '[data-valuetext="MarketplaceDeploy applications with ease"][href="/linodes/create?type=One-Click"]'
-    );
+
+    getVisible('[aria-labelledby="create-menu"]').within(() => {
+      getVisible('[href="/linodes/create"]').within(() => {
+        fbtVisible('Linode');
+        fbtVisible('High performance SSD Linux servers');
+      });
+
+      getVisible('[href="/volumes/create"]').within(() => {
+        fbtVisible('Volume');
+        fbtVisible('Attach additional storage to your Linode');
+      });
+
+      getVisible('[href="/nodebalancers/create"]').within(() => {
+        fbtVisible('NodeBalancer');
+        fbtVisible('Ensure your services are highly available');
+      });
+
+      getVisible('[href="/firewalls/create"]').within(() => {
+        fbtVisible('Firewall');
+        fbtVisible('Control network access to your Linodes');
+      });
+
+      getVisible('[href="/firewalls/create"]').within(() => {
+        fbtVisible('Firewall');
+        fbtVisible('Control network access to your Linodes');
+      });
+
+      getVisible('[href="/domains/create"]').within(() => {
+        fbtVisible('Domain');
+        fbtVisible('Manage your DNS records');
+      });
+
+      getVisible('[href="/kubernetes/create"]').within(() => {
+        fbtVisible('Kubernetes');
+        fbtVisible('Highly available container workloads');
+      });
+
+      getVisible('[href="/object-storage/buckets/create"]').within(() => {
+        fbtVisible('Bucket');
+        fbtVisible('S3-compatible object storage');
+      });
+
+      getVisible('[href="/linodes/create?type=One-Click"]').within(() => {
+        fbtVisible('Marketplace');
+        fbtVisible('Deploy applications with ease');
+      });
+    });
   });
 
   it('checks the table and action menu buttons/labels', () => {
