@@ -144,10 +144,10 @@ export const VolumesActionMenu = (props: Props) => {
     onClick: () => {
       handleDelete();
     },
-    disabled: !isVolumesLanding,
-    tooltip: isVolumesLanding
-      ? undefined
-      : 'This volume must be detached before it can be deleted.',
+    disabled: attached,
+    tooltip: attached
+      ? 'Your volume must be detached before it can be deleted.'
+      : undefined,
   });
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
