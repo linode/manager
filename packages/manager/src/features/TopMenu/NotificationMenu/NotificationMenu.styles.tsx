@@ -1,9 +1,9 @@
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { isPropValid } from 'src/utilities/isPropValid';
-import { StyledTopMenuSvgWrapper } from '../TopMenuIcon';
+import { StyledTopMenuIconWrapper } from '../TopMenuIcon';
 
-export const NotificationIconWrapper = styled(StyledTopMenuSvgWrapper, {
+export const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
   label: 'NotificationIconWrapper',
   shouldForwardProp: (prop) => isPropValid(['isMenuOpen'], prop),
 })<{

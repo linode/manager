@@ -2,7 +2,7 @@ import * as React from 'react';
 import Community from 'src/assets/icons/community_nav.svg';
 import Link from 'src/components/Link';
 import TopMenuIcon from './TopMenuIcon';
-import { StyledTopMenuSvgWrapper } from './TopMenuIcon';
+import { StyledTopMenuIconWrapper } from './TopMenuIcon';
 
 type Props = {
   className?: string;
@@ -15,11 +15,11 @@ export const Help = ({ className }: Props) => {
       aria-label="Link to Linode Community site"
       to="https://linode.com/community"
     >
-      <TopMenuIcon title="Linode Cloud Community">
-        <StyledTopMenuSvgWrapper>
+      <StyledTopMenuIconWrapper>
+        <TopMenuIcon title="Linode Cloud Community">
           <Community />
-        </StyledTopMenuSvgWrapper>
-      </TopMenuIcon>
+        </TopMenuIcon>
+      </StyledTopMenuIconWrapper>
     </Link>
   );
 };
