@@ -163,9 +163,11 @@ export const PowerActionsDialog = (props: Props) => {
         </ActionsPanel>
       }
     >
-      <Typography className={classes.root}>
-        Are you sure you want to {props.action.toLowerCase()} your Linode?
-      </Typography>
+      {props.action === 'Power On' ? (
+        <Typography className={classes.root}>
+          Are you sure you want to {props.action.toLowerCase()} your Linode?{' '}
+        </Typography>
+      ) : null}
       {showConfigSelect && (
         <Select
           label="Config"
@@ -179,9 +181,11 @@ export const PowerActionsDialog = (props: Props) => {
       )}
       {props.action === 'Power Off' && (
         <span>
-          <Notice warning important className={classes.notice}>
+          <Notice warning className={classes.notice}>
             <strong>Note: </strong>
-            Powered down Linodes will still accrue charges. See the&nbsp;
+            Powered down Linodes will still accrue charges.
+            <br />
+            See the&nbsp;
             <ExternalLink
               link="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services"
               text="Billing and Payments documentation"
