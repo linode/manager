@@ -18,10 +18,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- Tooltip console errors and top menu icon hover ([#9206](https://github.com/linode/manager/pull/9206))
-- Disable Marketplace app search until loading complete ([#9207](https://github.com/linode/manager/pull/9207))
-- Prevent rendering of purple content within Buttons without a buttonType prop ([#9209](https://github.com/linode/manager/pull/9209))
-- VLANs configuration not showing for restricted users ([#9214](https://github.com/linode/manager/pull/9214))
+- Tooltip console errors and top menu icon hover ([#9206])
+- Disable Marketplace app search until loading complete ([#9207])
+- Prevent rendering of purple content within Buttons without a buttonType prop ([#9209])
+- VLANs configuration not showing for restricted users ([#9214])
 
 ### Tech Stories:
 
