@@ -1,71 +1,32 @@
-import { updateUser } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Link from 'src/components/Link';
-import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 import { ApplicationState } from 'src/store';
-import { v4 } from 'uuid';
+import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { TimezoneForm } from './TimezoneForm';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { updateUser } from '@linode/api-v4/lib/account';
+import { useLocation } from 'react-router-dom';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  profile: {
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(4),
-  },
-  profileTitle: {
-    fontSize: '1rem',
-  },
-  profileCopy: {
-    marginTop: 4,
-    marginBottom: theme.spacing(2),
-    maxWidth: 360,
-  },
-  gravatar: {
-    height: 88,
-    width: 88,
-  },
-  tooltip: {
-    '& .MuiTooltip-tooltip': {
-      minWidth: 350,
-    },
-  },
-  addImageLink: {
-    fontFamily: theme.font.bold,
-    fontSize: '1rem',
-    '& svg': {
-      height: '1rem',
-      width: '1rem',
-      position: 'relative',
-      top: 3,
-      left: 6,
-    },
-  },
-}));
+import { useSelector } from 'react-redux';
+import { styled, useTheme } from '@mui/material/styles';
+import { v4 } from 'uuid';
 
 export const DisplaySettings = () => {
-  const classes = useStyles();
-
+  const theme = useTheme();
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { data: profile, refetch: requestProfile } = useProfile();
   const { data: notifications, refetch } = useNotificationsQuery();
-
   const loggedInAsCustomer = useSelector(
     (state: ApplicationState) => state.authentication.loggedInAsCustomer
   );
   const location = useLocation<{ focusEmail: boolean }>();
-
   const emailRef = React.createRef<HTMLInputElement>();
 
   React.useEffect(() => {
@@ -103,16 +64,19 @@ export const DisplaySettings = () => {
 
   return (
     <Paper>
-      <Box className={classes.profile} display="flex" style={{ gap: 16 }}>
-        <GravatarByEmail
-          email={profile?.email ?? ''}
-          className={classes.gravatar}
-        />
+      <Box
+        display="flex"
+        sx={{
+          gap: 2,
+          marginTop: theme.spacing(),
+          marginBottom: theme.spacing(4),
+        }}
+      >
+        <GravatarByEmail email={profile?.email ?? ''} height={88} width={88} />
         <div>
-          <Typography className={classes.profileTitle} variant="h2">
+          <Typography variant="h2" sx={{ fontSize: '1rem' }}>
             Profile photo
-            <TooltipIcon
-              classes={{ popper: classes.tooltip }}
+            <StyledTooltipIcon
               interactive
               text={tooltipIconText}
               status="help"
@@ -123,12 +87,11 @@ export const DisplaySettings = () => {
               }}
             />
           </Typography>
-          <Typography className={classes.profileCopy} variant="body1">
+          <StyledProfileCopy variant="body1">
             Create, upload, and manage your globally recognized avatar from a
             single place with Gravatar.
-          </Typography>
-          <ExternalLink
-            className={classes.addImageLink}
+          </StyledProfileCopy>
+          <StyledAddImageLink
             link="https://en.gravatar.com/"
             text={'Manage photo'}
             fixedIcon
@@ -175,4 +138,32 @@ export const DisplaySettings = () => {
   );
 };
 
-export default DisplaySettings;
+const StyledAddImageLink = styled(ExternalLink, {
+  label: 'StyledAddImageLink',
+})(({ theme }) => ({
+  fontFamily: theme.font.bold,
+  fontSize: '1rem',
+  '& svg': {
+    height: '1rem',
+    width: '1rem',
+    position: 'relative',
+    top: 3,
+    left: 6,
+  },
+}));
+
+const StyledProfileCopy = styled(Typography, {
+  label: 'StyledProfileCopy',
+})(({ theme }) => ({
+  marginTop: 4,
+  marginBottom: theme.spacing(2),
+  maxWidth: 360,
+}));
+
+const StyledTooltipIcon = styled(TooltipIcon, {
+  label: 'StyledTooltip',
+})(() => ({
+  '& .MuiTooltip-tooltip': {
+    minWidth: 350,
+  },
+}));

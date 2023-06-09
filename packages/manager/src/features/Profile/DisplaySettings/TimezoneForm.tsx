@@ -1,36 +1,15 @@
 import * as React from 'react';
-import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
+import Button from 'src/components/Button';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import timezones from 'src/assets/timezones/timezones';
 import Typography from 'src/components/core/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { useSnackbar } from 'notistack';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { DateTime } from 'luxon';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-  button: {
-    minWidth: 180,
-    [theme.breakpoints.up('md')]: {
-      marginTop: 16,
-    },
-  },
-  loggedInAsCustomerNotice: {
-    backgroundColor: 'pink',
-    padding: 16,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-}));
+import { styled } from '@mui/material/styles';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   loggedInAsCustomer: boolean;
@@ -66,13 +45,11 @@ const renderTimeZonesList = (): Item<string>[] => {
 const timezoneList = renderTimeZonesList();
 
 export const TimezoneForm = (props: Props) => {
-  const classes = useStyles();
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile, isLoading, error } = useMutateProfile();
   const [value, setValue] = React.useState<Item<string> | null>(null);
-
   const timezone = profile?.timezone ?? '';
 
   const handleTimezoneChange = (timezone: Item<string>) => {
@@ -102,44 +79,62 @@ export const TimezoneForm = (props: Props) => {
   return (
     <>
       {loggedInAsCustomer ? (
-        <div
-          className={classes.loggedInAsCustomerNotice}
-          data-testid="admin-notice"
-        >
+        <StyledLoggedInAsCustomerNotice data-testid="admin-notice">
           <Typography variant="h2">
             While you are logged in as a customer, all times, dates, and graphs
             will be displayed in your browser&rsquo;s timezone ({timezone}).
           </Typography>
-        </div>
+        </StyledLoggedInAsCustomerNotice>
       ) : null}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        className={classes.root}
-      >
+      <StyledRootContainer display="flex" justifyContent="space-between">
         <Select
-          options={timezoneList}
-          placeholder={'Choose a Timezone'}
-          errorText={error?.[0].reason}
-          onChange={handleTimezoneChange}
           data-qa-tz-select
           defaultValue={defaultTimeZone}
+          errorText={error?.[0].reason}
           isClearable={false}
           label="Timezone"
+          onChange={handleTimezoneChange}
+          options={timezoneList}
+          placeholder={'Choose a Timezone'}
         />
         <ActionsPanel>
-          <Button
-            className={classes.button}
+          <StyledButton
             buttonType="primary"
-            onClick={onSubmit}
+            data-qa-tz-submit
             disabled={disabled}
             loading={isLoading}
-            data-qa-tz-submit
+            onClick={onSubmit}
           >
             Update Timezone
-          </Button>
+          </StyledButton>
         </ActionsPanel>
-      </Box>
+      </StyledRootContainer>
     </>
   );
 };
+
+const StyledRootContainer = styled(Box, {
+  label: 'StyledRootContainer',
+})(({ theme }) => ({
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
+}));
+
+const StyledButton = styled(Button, {
+  label: 'StyledButton',
+})(({ theme }) => ({
+  minWidth: 180,
+  [theme.breakpoints.up('md')]: {
+    marginTop: 16,
+  },
+}));
+
+const StyledLoggedInAsCustomerNotice = styled('div', {
+  label: 'StyledLoggedInAsCustomerNotice',
+})(({ theme }) => ({
+  backgroundColor: theme.color.red,
+  padding: 16,
+  marginBottom: 8,
+  textAlign: 'center',
+}));

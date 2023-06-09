@@ -1,8 +1,8 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import TPAProviders from './TPAProviders';
+import { screen } from '@testing-library/react';
+import { TPAProviders } from './TPAProviders';
 
 jest.mock('src/hooks/useFlags', () => ({
   __esModule: true,
