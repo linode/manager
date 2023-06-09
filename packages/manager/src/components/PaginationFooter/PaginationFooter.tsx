@@ -1,22 +1,15 @@
 import * as React from 'react';
-import classNames from 'classnames';
+import Box from '../core/Box';
 import Select from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
 import { PaginationControls } from '../PaginationControls/PaginationControls';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 
 export const MIN_PAGE_SIZE = 25;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     background: theme.bg.bgPaper,
-    margin: 0,
-    minHeight: theme.spacing(5),
-    width: '100%',
-  },
-  padded: {
-    padding: `0 ${theme.spacing(2)} ${theme.spacing(1)}`,
   },
   select: {
     '& .MuiInput-root': {
@@ -47,7 +40,6 @@ export interface PaginationProps {
 interface Props extends PaginationProps {
   handlePageChange: (page: number) => void;
   handleSizeChange: (pageSize: number) => void;
-  padded?: boolean;
 }
 
 export const PAGE_SIZES = [MIN_PAGE_SIZE, 50, 75, 100, Infinity];
@@ -61,6 +53,7 @@ const baseOptions = [
 
 export const PaginationFooter = (props: Props) => {
   const classes = useStyles();
+  const theme = useTheme();
   const {
     count,
     fixedSize,
@@ -68,7 +61,6 @@ export const PaginationFooter = (props: Props) => {
     pageSize,
     handlePageChange,
     handleSizeChange,
-    padded,
     showAll,
   } = props;
 
@@ -91,27 +83,22 @@ export const PaginationFooter = (props: Props) => {
   const isShowingAll = pageSize === Infinity;
 
   return (
-    <Grid
-      container
+    <Box
+      display="flex"
       justifyContent="space-between"
       alignItems="center"
-      className={classNames({
-        [classes.root]: true,
-        [classes.padded]: padded,
-      })}
+      sx={{ background: theme.bg.bgPaper }}
     >
-      <Grid>
-        {!isShowingAll && (
-          <PaginationControls
-            onClickHandler={handlePageChange}
-            page={page}
-            count={count}
-            pageSize={pageSize}
-          />
-        )}
-      </Grid>
+      {!isShowingAll && (
+        <PaginationControls
+          onClickHandler={handlePageChange}
+          page={page}
+          count={count}
+          pageSize={pageSize}
+        />
+      )}
       {!fixedSize ? (
-        <Grid className={classes.select}>
+        <Box className={classes.select}>
           <Select
             options={finalOptions}
             defaultValue={defaultPagination}
@@ -123,9 +110,9 @@ export const PaginationFooter = (props: Props) => {
             menuPlacement="top"
             medium
           />
-        </Grid>
+        </Box>
       ) : null}
-    </Grid>
+    </Box>
   );
 };
 
