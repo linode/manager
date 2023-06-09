@@ -34,9 +34,9 @@ export const DNSResolvers = (props: DNSResolversProps) => {
   return (
     <Grid
       container
-      spacing={2}
       sx={{
         display: 'grid',
+        overflowX: 'auto',
         gridTemplateAreas: `
             'one one'
             'two three'
