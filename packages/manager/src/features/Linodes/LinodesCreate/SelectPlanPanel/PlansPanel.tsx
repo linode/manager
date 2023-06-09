@@ -9,7 +9,7 @@ import {
   planTabInfoContent,
 } from './utils';
 import { PlanContainer } from './PlanContainer';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
+import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
 
 export interface PlanSelectionType extends BaseType {
@@ -56,7 +56,7 @@ export const PlansPanel = (props: Props) => {
     types,
   } = props;
 
-  const { classes } = useSelectPlanPanelStyles();
+  const { classes } = usePlansPanelStyles();
 
   const plans = getPlanSelectionsByPlanType(types);
 

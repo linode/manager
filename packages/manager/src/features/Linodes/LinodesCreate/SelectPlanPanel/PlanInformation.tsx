@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Typography from 'src/components/core/Typography';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
+import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { planTabInfoContent } from './utils';
 import { GPUNotice } from './GPUNotice';
 import { MetalNotice } from './MetalNotice';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const PlanInformation = ({ disabledClasses, planType }: Props) => {
-  const { classes } = useSelectPlanPanelStyles();
+  const { classes } = usePlansPanelStyles();
 
   const getDisabledClass = (thisClass: LinodeTypeClass) => {
     return Boolean(disabledClasses?.includes(thisClass));

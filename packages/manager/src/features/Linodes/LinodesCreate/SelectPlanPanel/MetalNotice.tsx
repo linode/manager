@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
+import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { getRegionsWithCapability } from './utils';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const MetalNotice = ({ hasDisabledClass, dataTestId }: Props) => {
-  const { classes } = useSelectPlanPanelStyles();
+  const { classes } = usePlansPanelStyles();
   const { data: regions } = useRegionsQuery();
 
   // Until BM-426 is merged, we aren't filtering for regions in getDisabledClass

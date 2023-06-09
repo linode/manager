@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
+import { usePlansPanelStyles } from './styles/plansPanelStyles';
 
 interface Props {
   disabled?: boolean;
@@ -32,7 +32,7 @@ export const KubernetesPlanSelection = ({
   type,
   updatePlanCount,
 }: Props) => {
-  const { classes } = useSelectPlanQuantityStyles();
+  const { classes } = usePlansPanelStyles();
 
   const count = getTypeCount(type.id);
 

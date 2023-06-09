@@ -15,7 +15,7 @@ import { ApplicationState } from 'src/store';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
+import { usePlansPanelStyles } from './styles/plansPanelStyles';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -73,7 +73,7 @@ export const PlanSelection = ({
   const shouldShowTransfer = showTransfer && type.transfer;
   const shouldShowNetwork = showTransfer && type.network_out;
 
-  const { classes } = useSelectPlanPanelStyles();
+  const { classes } = usePlansPanelStyles();
 
   const selectedLinodePlanType = useSelector((state: ApplicationState) => {
     if (linodeID) {

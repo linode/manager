@@ -8,7 +8,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
+import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
 
 const tableCells = [
@@ -53,7 +53,7 @@ export const PlanContainer = ({
   selectedID,
   showTransfer,
 }: Props) => {
-  const { classes } = useSelectPlanPanelStyles();
+  const { classes } = usePlansPanelStyles();
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
     showTransfer && plans.some((plan: ExtendedType) => plan.transfer);

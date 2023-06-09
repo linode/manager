@@ -1,7 +1,7 @@
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 
-export const useSelectPlanPanelStyles = makeStyles()((theme: Theme) => ({
+export const usePlansPanelStyles = makeStyles()((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(3),
     width: '100%',
@@ -45,7 +45,7 @@ export const useSelectPlanPanelStyles = makeStyles()((theme: Theme) => ({
   },
   radioCell: {
     height: theme.spacing(6),
-    width: '5%',
+    width: '3%',
     paddingRight: 0,
   },
   focusedRow: {
@@ -63,6 +63,28 @@ export const useSelectPlanPanelStyles = makeStyles()((theme: Theme) => ({
     },
     '& p': {
       fontFamily: '"LatoWebBold", sans-serif',
+    },
+  },
+  enhancedInputOuter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start',
+    },
+    alignItems: 'center',
+  },
+  enhancedInputButton: {
+    marginLeft: 10,
+    minWidth: 85,
+    paddingTop: 7,
+    paddingBottom: 7,
+    [theme.breakpoints.down('md')]: {
+      minWidth: 80,
+      paddingTop: 12,
+      paddingBottom: 12,
+      '& span': {
+        color: '#fff !important',
+      },
     },
   },
 }));

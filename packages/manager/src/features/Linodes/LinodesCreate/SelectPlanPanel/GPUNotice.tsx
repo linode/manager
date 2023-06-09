@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
+import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { getRegionsWithCapability } from './utils';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const GPUNotice = ({ hasDisabledClass, dataTestId }: Props) => {
-  const { classes } = useSelectPlanPanelStyles();
+  const { classes } = usePlansPanelStyles();
   const { data: regions } = useRegionsQuery();
 
   const programInfo = hasDisabledClass ? (

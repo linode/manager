@@ -3,7 +3,7 @@ import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
+import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -43,7 +43,8 @@ export const KubernetesPlansPanel = ({
   onSelect,
   selectedID,
 }: Props) => {
-  const { classes } = useSelectPlanQuantityStyles();
+  // const { classes } = useSelectPlanQuantityStyles();
+  const { classes } = usePlansPanelStyles();
 
   const plans = getPlanSelectionsByPlanType(types);
 
