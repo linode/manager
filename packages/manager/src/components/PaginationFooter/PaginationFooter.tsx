@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import Select from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
-import PaginationControls from '../PaginationControls';
+import { PaginationControls } from '../PaginationControls/PaginationControls';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
@@ -69,7 +69,6 @@ export const PaginationFooter = (props: Props) => {
     handlePageChange,
     handleSizeChange,
     padded,
-    eventCategory,
     showAll,
   } = props;
 
@@ -108,7 +107,6 @@ export const PaginationFooter = (props: Props) => {
             page={page}
             count={count}
             pageSize={pageSize}
-            eventCategory={eventCategory}
           />
         )}
       </Grid>
