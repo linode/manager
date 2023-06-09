@@ -11,11 +11,12 @@ import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import { GravatarByUsername } from '../../components/GravatarByUsername';
 import { useApplicationStore } from 'src/store';
+import { getEventTimestamp } from 'src/utilities/eventUtils';
+import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   row: {
@@ -48,6 +49,7 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id, store);
+  const timestamp = getEventTimestamp(event);
 
   const rowProps = {
     action: event.action,
@@ -56,8 +58,8 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
     type,
-    created: event.created,
     username: event.username,
+    timestamp,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -75,14 +77,14 @@ export interface RowProps {
     | 'stackscript'
     | 'volume'
     | 'database';
-  created: string;
   username: string | null;
+  timestamp: DateTime;
 }
 
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
-  const { action, message, created, username } = props;
+  const { action, message, timestamp, username } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -116,11 +118,11 @@ export const Row: React.FC<RowProps> = (props) => {
         />
       </TableCell>
       <TableCell parentColumn="Relative Date">
-        {parseAPIDate(created).toRelative()}
+        {timestamp.toRelative()}
       </TableCell>
       <Hidden mdDown>
         <TableCell parentColumn="Absolute Date" data-qa-event-created-cell>
-          <DateTimeDisplay value={created} />
+          <DateTimeDisplay value={timestamp.toString()} />
         </TableCell>
       </Hidden>
     </TableRow>
