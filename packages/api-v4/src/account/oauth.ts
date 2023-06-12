@@ -37,7 +37,7 @@ export const getOAuthClients = (params?: Params, filter?: Filter) =>
  */
 export const getOAuthClient = (clientId: number) =>
   Request<string>(
-    setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
+    setURL(`${API_ROOT}/account/oauth-clients/${encodeURIComponent(clientId)}`),
     setMethod('GET')
   );
 
@@ -70,7 +70,11 @@ export const createOAuthClient = (data: OAuthClientRequest) =>
  */
 export const resetOAuthClientSecret = (clientId: number | string) =>
   Request<OAuthClient & { secret: string }>(
-    setURL(`${API_ROOT}/account/oauth-clients/${clientId}/reset-secret`),
+    setURL(
+      `${API_ROOT}/account/oauth-clients/${encodeURIComponent(
+        clientId
+      )}/reset-secret`
+    ),
     setMethod('POST')
   );
 
@@ -86,7 +90,7 @@ export const updateOAuthClient = (
   data: Partial<OAuthClientRequest>
 ) =>
   Request<OAuthClient>(
-    setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
+    setURL(`${API_ROOT}/account/oauth-clients/${encodeURIComponent(clientId)}`),
     setMethod('PUT'),
     setData(data, updateOAuthClientSchema)
   );
@@ -105,6 +109,6 @@ export const updateOAuthClient = (
  */
 export const deleteOAuthClient = (clientId: number | string) =>
   Request<{}>(
-    setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
+    setURL(`${API_ROOT}/account/oauth-clients/${encodeURIComponent(clientId)}`),
     setMethod('DELETE')
   );

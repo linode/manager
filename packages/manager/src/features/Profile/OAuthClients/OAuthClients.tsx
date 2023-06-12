@@ -12,7 +12,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import ActionMenu from './OAuthClientActionMenu';
-import SecretTokenDialog from '../SecretTokenDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useOAuthClientsQuery } from 'src/queries/accountOAuth';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
@@ -22,18 +21,19 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
 import { EditOAuthClientDrawer } from './EditOAuthClientDrawer';
+import { SecretTokenDialog } from '../SecretTokenDialog/SecretTokenDialog';
 
-const preferenceKey = 'oauth-clients';
+const PREFERENCE_KEY = 'oauth-clients';
 
 const OAuthClients = () => {
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'status',
       order: 'desc',
     },
-    preferenceKey
+    PREFERENCE_KEY
   );
 
   const { data, error, isLoading } = useOAuthClientsQuery(

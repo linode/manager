@@ -6,7 +6,7 @@ import DialogContent from 'src/components/core/DialogContent';
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { styled, useTheme } from '@mui/material/styles';
-import { convertForAria } from 'src/components/TabLink/TabLink';
+import { convertForAria } from 'src/utilities/stringUtils';
 
 export interface DialogProps extends _DialogProps {
   className?: string;

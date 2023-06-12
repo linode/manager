@@ -1,101 +1,28 @@
 import * as React from 'react';
+import CircularProgress from 'src/components/core/CircularProgress';
+import Grid from '@mui/material/Unstable_Grid2';
+import Link from 'src/components/Link';
+import Paper from 'src/components/core/Paper';
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
-import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import CircularProgress from 'src/components/core/CircularProgress';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
+import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { Notice } from 'src/components/Notice/Notice';
 import { useProfile } from 'src/queries/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  StyledEarnedGrid,
+  StyledImageCopy,
+  StyledImageGrid,
+  StyledImagesGridContainer,
+  StyledLimitNotice,
+  StyledReferralGrid,
+  StyledResultsWrapper,
+} from './Referrals.styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    maxWidth: 920,
-  },
-  link: {
-    '& label': {
-      color: theme.textColors.headlineStatic,
-    },
-  },
-  removeDisabledStyles: {
-    '&.Mui-disabled': {
-      borderColor: theme.name === 'light' ? '#ccc' : '#222',
-      color: theme.name === 'light' ? 'inherit' : '#fff !important',
-      opacity: 1,
-    },
-  },
-  resultsWrapper: {
-    borderTop: '1px solid #D6D7D9',
-    fontSize: '0.875rem',
-    lineHeight: '1.125rem',
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(),
-    paddingTop: theme.spacing(),
-    width: 180,
-  },
-  referrals: {
-    color: theme.textColors.headlineStatic,
-  },
-  earned: {
-    color: theme.color.green,
-    fontFamily: theme.font.bold,
-  },
-  limitNotice: {
-    marginLeft: theme.spacing(),
-    '& p': {
-      color: `${theme.textColors.tableStatic} !important`,
-      fontSize: '0.875rem',
-    },
-  },
-  images: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(),
-    maxWidth: 850,
-    '& svg': {
-      height: 145,
-      width: 145,
-      [theme.breakpoints.only('sm')]: {
-        height: 120,
-        width: 120,
-      },
-    },
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  },
-  image: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '& svg': {
-      color: theme.name === 'light' ? '#ededf4' : '#83868c',
-    },
-    [theme.breakpoints.down('sm')]: {
-      marginBottom: theme.spacing(2),
-    },
-  },
-  imageCopy: {
-    color: theme.textColors.headlineStatic,
-    fontFamily: theme.font.bold,
-    textAlign: 'center',
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: 216,
-    },
-  },
-}));
-
-export const Referrals: React.FC<{}> = () => {
-  const classes = useStyles();
+export const Referrals = () => {
   const {
     data: profile,
     isLoading: profileLoading,
@@ -121,13 +48,12 @@ export const Referrals: React.FC<{}> = () => {
   }
 
   const { url, total, completed, pending, credit } = profile?.referrals;
-
   const allowReferral = Boolean(url);
 
   return (
     <Paper>
       <DocumentTitleSegment segment="Referrals" />
-      <Grid container className={classes.root} spacing={2}>
+      <Grid container spacing={2} sx={{ maxWidth: 920 }}>
         <Grid>
           <Typography variant="body1" style={{ marginBottom: 12 }}>
             When you refer friends or colleagues to Linode using your referral
@@ -146,7 +72,7 @@ export const Referrals: React.FC<{}> = () => {
           </Typography>
         </Grid>
         <>
-          <Grid xs={12} className={classes.link}>
+          <Grid xs={12}>
             {allowReferral ? (
               <CopyableTextField
                 expand
@@ -156,42 +82,38 @@ export const Referrals: React.FC<{}> = () => {
             ) : null}
           </Grid>
           {allowReferral && total !== undefined && total > 0 ? (
-            <div className={classes.resultsWrapper}>
+            <StyledResultsWrapper>
               {pending !== undefined && pending > 0 ? (
-                <Grid
+                <StyledReferralGrid
                   container
                   justifyContent="space-between"
-                  className={classes.referrals}
                   spacing={2}
                 >
                   <Grid>Pending referrals</Grid>
                   <Grid>{pending}</Grid>
-                </Grid>
+                </StyledReferralGrid>
               ) : null}
-              <Grid
+              <StyledReferralGrid
                 container
                 justifyContent="space-between"
-                className={classes.referrals}
                 spacing={2}
               >
                 <Grid>Completed referrals</Grid>
                 <Grid>{completed}</Grid>
-              </Grid>
-              <Grid
+              </StyledReferralGrid>
+              <StyledEarnedGrid
                 container
                 justifyContent="space-between"
-                className={classes.earned}
                 spacing={2}
               >
                 <Grid>Credit earned</Grid>
                 <Grid>${credit}</Grid>
-              </Grid>
-            </div>
+              </StyledEarnedGrid>
+            </StyledResultsWrapper>
           ) : null}
           {!allowReferral ? (
-            <Notice
+            <StyledLimitNotice
               warning
-              className={classes.limitNotice}
               spacingTop={8}
               spacingBottom={0}
               sx={{
@@ -202,42 +124,39 @@ export const Referrals: React.FC<{}> = () => {
               }}
             >
               Spend $25 with Linode to activate your personal referral link
-            </Notice>
+            </StyledLimitNotice>
           ) : null}
-          <Grid
+          <StyledImagesGridContainer
             container
             direction="row"
             justifyContent="space-between"
             wrap="nowrap"
-            className={classes.images}
             sx={{
               width: '100%',
               padding: 0,
             }}
           >
-            <Grid className={classes.image}>
+            <StyledImageGrid>
               <Step1 />
-              <Typography variant="body1" className={classes.imageCopy}>
+              <StyledImageCopy variant="body1">
                 Share your referral link with friends and colleagues
-              </Typography>
-            </Grid>
-            <Grid className={classes.image}>
+              </StyledImageCopy>
+            </StyledImageGrid>
+            <StyledImageGrid>
               <Step2 />
-              <Typography variant="body1" className={classes.imageCopy}>
+              <StyledImageCopy variant="body1">
                 They sign up and receive a $100, 60-day credit
-              </Typography>
-            </Grid>
-            <Grid className={classes.image}>
+              </StyledImageCopy>
+            </StyledImageGrid>
+            <StyledImageGrid>
               <Step3 />
-              <Typography variant="body1" className={classes.imageCopy}>
+              <StyledImageCopy variant="body1">
                 You earn $25 after they make their first payment of $25
-              </Typography>
-            </Grid>
-          </Grid>
+              </StyledImageCopy>
+            </StyledImageGrid>
+          </StyledImagesGridContainer>
         </>
       </Grid>
     </Paper>
   );
 };
-
-export default Referrals;

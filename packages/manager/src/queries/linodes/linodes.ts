@@ -26,6 +26,10 @@ import {
   linodeReboot,
   linodeShutdown,
   changeLinodePassword,
+  scheduleOrQueueMigration,
+  getLinodeKernels,
+  Kernel,
+  getLinodeKernel,
 } from '@linode/api-v4/lib/linodes';
 
 export const queryKey = 'linodes';
@@ -99,6 +103,25 @@ export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   );
 };
 
+export const useAllLinodeKernelsQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled = true
+) => {
+  return useQuery<Kernel[], APIError[]>(
+    [queryKey, 'linode', 'kernels', params, filter],
+    () => getAllLinodeKernelsRequest(params, filter),
+    { enabled }
+  );
+};
+
+export const useLinodeKernelQuery = (kernel: string) => {
+  return useQuery<Kernel, APIError[]>(
+    [queryKey, 'linode', 'kernels', 'kernel', kernel],
+    () => getLinodeKernel(kernel)
+  );
+};
+
 export const useLinodeLishTokenQuery = (id: number) => {
   return useQuery<{ lish_token: string }, APIError[]>(
     [queryKey, 'linode', id, 'lish-token'],
@@ -114,6 +137,17 @@ const getAllLinodesRequest = (
 ) =>
   getAll<Linode>((params, filter) =>
     getLinodes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+  )().then((data) => data.data);
+
+const getAllLinodeKernelsRequest = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
+  getAll<Kernel>((params, filter) =>
+    getLinodeKernels(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter }
+    )
   )().then((data) => data.data);
 
 const getAllLinodeConfigs = (id: number) =>
@@ -175,4 +209,16 @@ export const useLinodeDeleteMutation = (id: number) => {
       queryClient.invalidateQueries([queryKey]);
     },
   });
+};
+
+export const useLinodeMigrateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { region: string } | undefined>(
+    (data) => scheduleOrQueueMigration(id, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
 };

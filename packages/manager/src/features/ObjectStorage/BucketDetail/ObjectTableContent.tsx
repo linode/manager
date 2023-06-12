@@ -1,8 +1,3 @@
-import {
-  ObjectStorageObject,
-  ObjectStorageObjectListResponse,
-} from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -10,17 +5,22 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
-import FolderTableRow from './FolderTableRow';
-import ObjectTableRow from './ObjectTableRow';
+import { FolderTableRow } from './FolderTableRow';
+import { ObjectTableRow } from './ObjectTableRow';
+import type {
+  ObjectStorageObject,
+  ObjectStorageObjectListResponse,
+} from '@linode/api-v4';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   data: ObjectStorageObjectListResponse[];
-  isFetching: boolean;
-  isFetchingNextPage: boolean;
   error?: APIError[];
-  handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: (object: ObjectStorageObject) => void;
+  handleClickDownload: (objectName: string, newTab: boolean) => void;
+  isFetching: boolean;
+  isFetchingNextPage: boolean;
   numOfDisplayedObjects: number;
   prefix: any;
 }
@@ -28,12 +28,12 @@ interface Props {
 const ObjectTableContent: React.FC<Props> = (props) => {
   const {
     data,
-    isFetching,
-    isFetchingNextPage,
     error,
-    handleClickDownload,
     handleClickDelete,
     handleClickDetails,
+    handleClickDownload,
+    isFetching,
+    isFetchingNextPage,
     numOfDisplayedObjects,
     prefix,
   } = props;
@@ -99,7 +99,6 @@ const ObjectTableContent: React.FC<Props> = (props) => {
 
           return (
             <ObjectTableRow
-              key={object.name}
               displayName={truncateMiddle(
                 displayName(object.name),
                 maxNameWidth
@@ -111,12 +110,13 @@ const ObjectTableContent: React.FC<Props> = (props) => {
                * `null`. The OR fallbacks are to make TSC happy, and to safeguard
                * in the event of the data being something we don't expect.
                */
-              objectSize={object.size || 0}
-              objectLastModified={object.last_modified || ''}
-              manuallyCreated={false}
-              handleClickDownload={handleClickDownload}
               handleClickDelete={handleClickDelete}
               handleClickDetails={() => handleClickDetails(object)}
+              handleClickDownload={handleClickDownload}
+              key={object.name}
+              manuallyCreated={false}
+              objectLastModified={object.last_modified || ''}
+              objectSize={object.size || 0}
             />
           );
         });
