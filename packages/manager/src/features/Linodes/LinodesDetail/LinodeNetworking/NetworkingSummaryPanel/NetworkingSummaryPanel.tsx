@@ -26,7 +26,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   dnsResolverContainer: {
     display: 'flex',
-    justifyContent: 'flex-end',
     [theme.breakpoints.down('md')]: {
       order: 2,
     },
@@ -51,8 +50,8 @@ const LinodeNetworkingSummaryPanel = (props: Props) => {
 
   return (
     <Paper className={classes.root}>
-      <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-        <Grid xs={12} sm={6} md={3}>
+      <Grid container spacing={4} sx={{ flexGrow: 1 }}>
+        <Grid xs={12} sm={6} md={2.5}>
           <NetworkTransfer linodeID={linode.id} linodeLabel={linode.label} />
         </Grid>
         <Grid xs={12} sm md className={classes.transferHistoryContainer}>
@@ -64,7 +63,7 @@ const LinodeNetworkingSummaryPanel = (props: Props) => {
         <Grid
           xs={12}
           sm={6}
-          md={3}
+          md={3.5}
           className={classes.dnsResolverContainer}
           sx={{
             paddingBottom: 0,

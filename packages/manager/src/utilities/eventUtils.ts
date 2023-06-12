@@ -1,4 +1,15 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { DateTime } from 'luxon';
+import { parseAPIDate } from './date';
+
+// Calculates the finished (or failed) event timestamp from the created event timestamp by adding the duration;
+// if the event is not finished or has not failed, uses the created event timestamp.
+export const getEventTimestamp = (event: Event): DateTime => {
+  return (event?.status === 'finished' || event?.status === 'failed') &&
+    event?.duration
+    ? parseAPIDate(event.created).plus({ seconds: event.duration })
+    : parseAPIDate(event.created);
+};
 
 // Removes events we don't want to display.
 export const removeBlocklistedEvents = (
