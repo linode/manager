@@ -83,7 +83,6 @@ export const LinodeResize = (props: Props) => {
   } = useLinodeResizeMutation(linodeId ?? -1);
 
   const formik = useFormik({
-    enableReinitialize: true,
     initialValues: {
       type: '',
       allow_auto_disk_resize: shouldEnableAutoResizeDiskOption(disks ?? [])[1],
@@ -111,6 +110,16 @@ export const LinodeResize = (props: Props) => {
       onClose();
     },
   });
+
+  React.useEffect(() => {
+    const allow_auto_disk_resize = shouldEnableAutoResizeDiskOption(
+      disks ?? []
+    )[1];
+
+    if (allow_auto_disk_resize !== formik.values.allow_auto_disk_resize) {
+      formik.setFieldValue('allow_auto_disk_resize', allow_auto_disk_resize);
+    }
+  }, [disks]);
 
   React.useEffect(() => {
     // Set to "block: end" since the sticky header would otherwise interfere.
