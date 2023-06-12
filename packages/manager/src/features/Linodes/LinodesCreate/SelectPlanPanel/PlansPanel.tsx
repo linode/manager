@@ -11,6 +11,7 @@ import {
 import { PlanContainer } from './PlanContainer';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
+import type { Region } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -33,8 +34,10 @@ interface Props {
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
+  regionsData?: Region[];
   selectedDiskSize?: number;
   selectedID?: string;
+  selectedRegionID?: string;
   showTransfer?: boolean;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
@@ -51,7 +54,9 @@ export const PlansPanel = (props: Props) => {
     header,
     isCreate,
     linodeID,
+    regionsData,
     selectedID,
+    selectedRegionID,
     showTransfer,
     types,
   } = props;
@@ -68,6 +73,8 @@ export const PlansPanel = (props: Props) => {
             <PlanInformation
               disabledClasses={props.disabledClasses}
               planType={plan}
+              regionsData={regionsData}
+              selectedRegionID={selectedRegionID}
             />
             <PlanContainer
               isCreate={isCreate}
