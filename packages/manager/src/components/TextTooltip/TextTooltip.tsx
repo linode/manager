@@ -1,52 +1,59 @@
-import { SxProps } from '@mui/material';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import { styled } from '@mui/material/styles';
+import type { SxProps } from '@mui/material';
+import type { TooltipProps } from '@mui/material/Tooltip';
 
-interface TextTooltipProps {
+export interface TextTooltipProps {
+  /** The text to hover on to display the tooltip */
   displayText: string;
-  tooltipText: JSX.Element | string;
+  /** If true, the tooltip will not have a min-width of 375px
+   * @default 375px
+   */
+  minWidth?: number | string;
+  /**
+   * The placement of the tooltip
+   * @default bottom
+   */
+  placement?: TooltipProps['placement'];
+  /** Optional custom styles */
   sxTypography?: SxProps;
+  /** The text to display inside the tooltip */
+  tooltipText: JSX.Element | string;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    position: 'relative',
-    borderRadius: 4,
-    cursor: 'pointer',
-    textDecoration: `underline dotted ${theme.palette.primary.main}`,
-    color: theme.palette.primary.main,
-  },
-  flex: {
-    display: 'flex',
-    width: 'auto !important',
-  },
-  popper: {
-    '& .MuiTooltip-tooltip': {
-      minWidth: 375,
-    },
-  },
-}));
-
-const TextTooltip = (props: TextTooltipProps) => {
-  const { classes } = useStyles();
-  const { displayText, tooltipText, sxTypography } = props;
+/**
+ * Dotted underline copy with a tooltip on hover
+ */
+export const TextTooltip = (props: TextTooltipProps) => {
+  const { displayText, minWidth, placement, sxTypography, tooltipText } = props;
 
   return (
-    <ToolTip
-      title={tooltipText}
-      placement="bottom"
+    <StyledRootTooltip
       enterTouchDelay={0}
-      className={classes.root}
-      classes={{ popper: classes.popper }}
+      placement={placement ? placement : 'bottom'}
+      leaveDelay={10000000000}
+      PopperProps={{
+        sx: {
+          '& > div': minWidth ? minWidth : { minWidth: 375 },
+        },
+      }}
+      title={tooltipText}
     >
       <Typography component="span" sx={sxTypography}>
         {displayText}
       </Typography>
-    </ToolTip>
+    </StyledRootTooltip>
   );
 };
 
-export { TextTooltip };
+const StyledRootTooltip = styled(ToolTip, {
+  label: 'StyledRootTooltip',
+})(({ theme }) => ({
+  borderRadius: 4,
+  color: theme.palette.primary.main,
+  cursor: 'pointer',
+  position: 'relative',
+  textDecoration: `underline dotted ${theme.palette.primary.main}`,
+}));
