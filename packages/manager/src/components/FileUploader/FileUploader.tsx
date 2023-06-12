@@ -1,11 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import {
   StyledCopy,
   StyledDropZoneContentDiv,
@@ -18,10 +17,10 @@ import { uploadImageFile } from 'src/features/Images/requests';
 import { FileUpload } from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 import {
-  curriedObjectUploaderReducer,
-  defaultState,
   MAX_FILE_SIZE_IN_BYTES,
   MAX_PARALLEL_UPLOADS,
+  curriedObjectUploaderReducer,
+  defaultState,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
 import { Dispatch } from 'src/hooks/types';
@@ -32,7 +31,7 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { sendImageUploadEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-interface Props {
+interface FileUploaderProps {
   label: string;
   description?: string;
   isCloudInit?: boolean;
@@ -45,9 +44,7 @@ interface Props {
   onSuccess?: () => void;
 }
 
-type CombinedProps = Props & WithSnackbarProps;
-
-const FileUploader: React.FC<CombinedProps> = (props) => {
+export const FileUploader = React.memo((props: FileUploaderProps) => {
   const {
     label,
     description,
@@ -59,6 +56,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     onSuccess,
   } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
   const queryClient = useQueryClient();
   const { mutateAsync: uploadImage } = useUploadImageQuery({
@@ -127,17 +125,17 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     }) exceeded`;
 
     if (wrongFileType) {
-      props.enqueueSnackbar(fileTypeErrorMessage, {
+      enqueueSnackbar(fileTypeErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
     } else if (moreThanOneFile) {
-      props.enqueueSnackbar(fileNumberErrorMessage, {
+      enqueueSnackbar(fileNumberErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
     } else {
-      props.enqueueSnackbar(fileSizeErrorMessage, {
+      enqueueSnackbar(fileSizeErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
@@ -188,7 +186,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
         const successfulUploadMessage = `Image ${label} uploaded successfully. It is being processed and will be available shortly.`;
 
-        props.enqueueSnackbar(successfulUploadMessage, {
+        enqueueSnackbar(successfulUploadMessage, {
           variant: 'success',
           autoHideDuration: 6000,
         });
@@ -371,11 +369,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       </StyledDropZoneContentDiv>
     </StyledDropZoneDiv>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(withSnackbar, React.memo);
-
-export default enhanced(FileUploader);
+});
 
 const recordImageAnalytics = (
   action: 'start' | 'success' | 'fail',
