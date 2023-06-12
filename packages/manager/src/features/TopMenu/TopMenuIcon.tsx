@@ -43,7 +43,7 @@ export const TopMenuIcon = ({ title, children }: Props) => {
       leaveDelay={0}
       describeChild={true}
     >
-      {children}
+      <div>{children}</div>
     </Tooltip>
   );
 };

@@ -17,7 +17,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
-import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import TextField from 'src/components/TextField';
 import {
   reportAgreementSigningError,
@@ -36,6 +36,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
 import LandingHeader from 'src/components/LandingHeader';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -245,6 +246,7 @@ export const CreateCluster = () => {
   return (
     <Grid container className={classes.root}>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+      <ProductInformationBanner bannerLocation="Kubernetes" warning important />
       <LandingHeader
         title="Create Cluster"
         docsLabel="Docs"
@@ -276,7 +278,7 @@ export const CreateCluster = () => {
                 regions={filteredRegions}
                 selectedID={selectedID}
                 textFieldProps={{
-                  helperText: regionHelperText(),
+                  helperText: <RegionHelperText />,
                   helperTextPosition: 'top',
                 }}
               />

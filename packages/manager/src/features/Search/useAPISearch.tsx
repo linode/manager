@@ -10,7 +10,6 @@ import React from 'react';
 import { useCallback } from 'react';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useSpecificTypes } from 'src/queries/types';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -27,6 +26,7 @@ import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { emptyResults, separateResultsByEntity } from './utils';
+import { getImageLabelForLinode } from '../Images/utils';
 
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
@@ -34,14 +34,12 @@ interface Search {
 
 export const useAPISearch = (conductedSearch: boolean): Search => {
   const { _isRestrictedUser } = useAccountManagement();
-  const { data: _images } = useAllImagesQuery({}, {}, conductedSearch);
+  const { data: images } = useAllImagesQuery({}, {}, conductedSearch);
   const { data: regions } = useRegionsQuery();
 
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes);
   const types = extendTypesQueryResult(typesQuery);
-
-  const images = listToItemsByID(_images ?? []);
 
   const searchAPI = useCallback(
     (searchText: string) => {
@@ -56,7 +54,7 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
         searchText,
         types ?? [],
         setRequestedTypes,
-        images,
+        images ?? [],
         regions ?? [],
         _isRestrictedUser
       ).then((results) => {
@@ -103,7 +101,7 @@ const requestEntities = (
   searchText: string,
   types: ExtendedType[],
   setRequestedTypes: (types: string[]) => void,
-  images: Record<string, Image>,
+  images: Image[],
   regions: Region[],
   isRestricted: boolean = false
 ) => {
@@ -116,9 +114,10 @@ const requestEntities = (
         setRequestedTypes(
           results.data.map((result) => result.type).filter(isNotNullOrUndefined)
         );
-        return results.data.map((thisResult) =>
-          formatLinode(thisResult, types, images)
-        );
+        return results.data.map((linode) => {
+          const imageLabel = getImageLabelForLinode(linode, images);
+          return formatLinode(linode, types, imageLabel);
+        });
       }
     ),
     getImages(

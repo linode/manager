@@ -61,7 +61,7 @@ const AutoBackups = (props: Props) => {
             rate noted on the&nbsp;
             <a
               data-qa-backups-price
-              href="https://linode.com/backups"
+              href="https://www.linode.com/products/backups/"
               target="_blank"
               aria-describedby="external-site"
               rel="noopener noreferrer"

@@ -16,7 +16,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import LandingHeader from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';

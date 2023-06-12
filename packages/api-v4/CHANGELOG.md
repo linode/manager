@@ -1,4 +1,16 @@
+## [2023-06-12] - v0.94.0
+
+### Changed:
+- Corrected `getLinodeKernel` return type from `ResourcePage<Kernel>` to `Kernel` #9198
+- Corrected the return type of `deleteSSLCert` from `ObjectStorageBucketSSLResponse` to `{}` #9167
+- Updated `lint-staged` to `^13.2.2` #9156
+- Removed unused `handlebars` resolution #9156
+
+### Fixed:
+- Encode `api-v4` Path Parameters #9205
+
 ## [2023-05-30] - v0.93.0
+
 ### Added:
 - `ticket_update` to account types ([#9105](https://github.com/linode/manager/pull/9105))
 - filtering on IPv6 ranges ([#9097](https://github.com/linode/manager/pull/9097))

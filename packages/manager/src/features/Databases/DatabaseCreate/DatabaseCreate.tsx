@@ -26,10 +26,10 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
+import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
@@ -37,15 +37,15 @@ import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
-import Radio from 'src/components/Radio';
-import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import { Radio } from 'src/components/Radio/Radio';
+import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import SelectPlanPanel, {
+import PlansPanel, {
   PlanSelectionType,
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
+} from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
+import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import useFlags from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
@@ -486,7 +486,7 @@ const DatabaseCreate = () => {
             className={classes.engineSelect}
             errorText={errors.engine}
             options={engineOptions}
-            components={{ Option: RegionOption, SingleValue }}
+            components={{ Option: RegionOption, SingleValue: _SingleValue }}
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
               setFieldValue('engine', selected.value);
@@ -503,11 +503,13 @@ const DatabaseCreate = () => {
             regions={regionsData}
             selectedID={values.region}
           />
-          <div style={{ marginTop: 8 }}>{regionHelperText()}</div>
+          <div style={{ marginTop: 8 }}>
+            <RegionHelperText />
+          </div>
         </Grid>
         <Divider spacingTop={38} spacingBottom={12} />
         <Grid>
-          <SelectPlanPanel
+          <PlansPanel
             data-qa-select-plan
             error={errors.type}
             types={displayTypes}

@@ -10,7 +10,9 @@ import { VolumesMigrationQueue } from './types';
  */
 export const getVolumesMigrationQueue = (region: string) =>
   Request<VolumesMigrationQueue>(
-    setURL(`${BETA_API_ROOT}/regions/${region}/migration-queue`),
+    setURL(
+      `${BETA_API_ROOT}/regions/${encodeURIComponent(region)}/migration-queue`
+    ),
     setMethod('GET')
   );
 

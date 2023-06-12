@@ -1,38 +1,32 @@
-import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import { TabList as ReachTabList, TabListProps } from '@reach/tabs';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import classNames from 'classnames';
+import * as React from 'react';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  tabList: {
-    color: theme.color.tableHeaderText,
-    '&[data-reach-tab-list]': {
-      background: 'none !important',
-      boxShadow: `inset 0 -1px 0 ${
-        theme.name === 'light' ? '#e3e5e8' : '#2e3238'
-      }`,
-      marginBottom: theme.spacing(),
-      [theme.breakpoints.down('lg')]: {
-        overflowX: 'auto',
-        padding: 1,
-      },
-    },
-  },
-}));
-
-const TabList: React.FC<TabListProps & { className?: string }> = ({
+const TabList = ({
   children,
   className,
   ...rest
-}) => {
-  const classes = useStyles();
-
+}: TabListProps & { className?: string }) => {
   return (
-    <ReachTabList className={classNames(classes.tabList, className)} {...rest}>
+    <StyledReachTabList className={className} {...rest}>
       {children}
-    </ReachTabList>
+    </StyledReachTabList>
   );
 };
 
-export default TabList;
+export { TabList };
+
+const StyledReachTabList = styled(ReachTabList)(({ theme }) => ({
+  color: theme.color.tableHeaderText,
+  '&[data-reach-tab-list]': {
+    background: 'none !important',
+    boxShadow: `inset 0 -1px 0 ${
+      theme.name === 'light' ? '#e3e5e8' : '#2e3238'
+    }`,
+    marginBottom: theme.spacing(),
+    [theme.breakpoints.down('lg')]: {
+      overflowX: 'auto',
+      padding: 1,
+    },
+  },
+}));

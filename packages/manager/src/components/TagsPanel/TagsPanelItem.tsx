@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Tag, { TagProps } from 'src/components/Tag';
+import { Tag, TagProps } from 'src/components/Tag/Tag';
 
 interface Props extends TagProps {
   tagLabel: string;

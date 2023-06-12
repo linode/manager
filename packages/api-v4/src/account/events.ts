@@ -25,7 +25,7 @@ export const getEvents = (params: Params = {}, filter: Filter = {}) =>
  */
 export const getEvent = (eventId: number) =>
   Request<Event>(
-    setURL(`${API_ROOT}/account/events/${eventId}`),
+    setURL(`${API_ROOT}/account/events/${encodeURIComponent(eventId)}`),
     setMethod('GET')
   );
 
@@ -38,7 +38,7 @@ export const getEvent = (eventId: number) =>
  */
 export const markEventSeen = (eventId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/account/events/${eventId}/seen`),
+    setURL(`${API_ROOT}/account/events/${encodeURIComponent(eventId)}/seen`),
     setMethod('POST')
   );
 
@@ -52,7 +52,7 @@ export const markEventSeen = (eventId: number) =>
  */
 export const markEventRead = (eventId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/account/events/${eventId}/read`),
+    setURL(`${API_ROOT}/account/events/${encodeURIComponent(eventId)}/read`),
     setMethod('POST')
   );
 

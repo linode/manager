@@ -12,11 +12,11 @@ describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
       // @TODO Add assertions for DBaaS pricing.
-      it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
+      it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         const databaseMock = databaseInstanceFactory.build({
           label: configuration.label,
           type: configuration.linodeType,
-          region: configuration.region,
+          region: configuration.region.id,
           version: configuration.version,
           status: 'provisioning',
           cluster_size: configuration.clusterSize,
@@ -64,7 +64,7 @@ describe('create a database cluster, mocked data', () => {
           .type(`${configuration.engine} v${configuration.version} {enter}`);
         cy.contains('Select a Region')
           .click()
-          .type(`${configuration.regionTypeahead} {enter}`);
+          .type(`${configuration.region.name} {enter}`);
 
         // Database Linode type selection.
         if (configuration.linodeType.indexOf('-dedicated-') !== -1) {
@@ -93,7 +93,7 @@ describe('create a database cluster, mocked data', () => {
             cy.findByText(`${configuration.engine} v${configuration.version}`, {
               exact: false,
             }).should('be.visible');
-            cy.findByText(configuration.regionTypeahead, {
+            cy.findByText(configuration.region.name, {
               exact: false,
             }).should('be.visible');
           }

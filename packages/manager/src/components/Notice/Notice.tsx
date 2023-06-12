@@ -1,13 +1,13 @@
+import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import { SxProps } from '@mui/system';
+import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles<
   void,
@@ -126,7 +126,7 @@ export interface NoticeProps extends Grid2Props {
   sx?: SxProps;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  dismissibleButton?: JSX.Element;
+  dataTestId?: string;
 }
 
 export const Notice = (props: NoticeProps) => {
@@ -148,7 +148,7 @@ export const Notice = (props: NoticeProps) => {
     spacingTop,
     spacingBottom,
     spacingLeft,
-    dismissibleButton,
+    dataTestId,
     sx,
   } = props;
 
@@ -232,8 +232,9 @@ export const Notice = (props: NoticeProps) => {
             <Warning className={classes.icon} data-qa-warning-img />
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}
-      <div className={classes.inner}>{innerText || _children}</div>
-      {dismissibleButton}
+      <div className={classes.inner} data-testid={dataTestId}>
+        {innerText || _children}
+      </div>
     </Grid>
   );
 };

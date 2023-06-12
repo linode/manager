@@ -36,7 +36,7 @@ export const getSSHKeys = (params?: Params, filters?: Filter) =>
 export const getSSHKey = (keyId: number) =>
   Request<SSHKey>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/profile/sshkeys/${keyId}`)
+    setURL(`${API_ROOT}/profile/sshkeys/${encodeURIComponent(keyId)}`)
   );
 
 /**
@@ -63,7 +63,7 @@ export const createSSHKey = (data: { label: string; ssh_key: string }) =>
 export const updateSSHKey = (keyId: number, data: { label: string }) =>
   Request<SSHKey>(
     setMethod('PUT'),
-    setURL(`${API_ROOT}/profile/sshkeys/${keyId}`),
+    setURL(`${API_ROOT}/profile/sshkeys/${encodeURIComponent(keyId)}`),
     setData(data, updateSSHKeySchema)
   );
 
@@ -78,5 +78,5 @@ export const updateSSHKey = (keyId: number, data: { label: string }) =>
 export const deleteSSHKey = (keyId: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/profile/sshkeys/${keyId}`)
+    setURL(`${API_ROOT}/profile/sshkeys/${encodeURIComponent(keyId)}`)
   );
