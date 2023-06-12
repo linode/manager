@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import Crumbs, { CrumbOverridesProps } from './Crumbs';
+import { Crumbs, CrumbOverridesProps } from './Crumbs';
 import { EditableProps, LabelProps } from './types';
 
 export interface BreadcrumbProps {

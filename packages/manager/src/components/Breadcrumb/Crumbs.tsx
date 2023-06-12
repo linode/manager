@@ -2,11 +2,10 @@ import classNames from 'classnames';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import FinalCrumb from './FinalCrumb';
+import { FinalCrumb } from './FinalCrumb';
 import FinalCrumbPrefix from './FinalCrumbPrefix';
 import { EditableProps, LabelProps } from './types';
 
@@ -54,9 +53,7 @@ interface Props {
   onEditHandlers?: EditableProps;
 }
 
-type CombinedProps = Props;
-
-const Crumbs: React.FC<CombinedProps> = (props) => {
+export const Crumbs = React.memo((props: Props) => {
   const classes = useStyles();
 
   const {
@@ -147,6 +144,4 @@ const Crumbs: React.FC<CombinedProps> = (props) => {
         labelOptions.suffixComponent}
     </>
   );
-};
-
-export default compose<CombinedProps, Props>(React.memo)(Crumbs);
+});

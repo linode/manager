@@ -1,7 +1,6 @@
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { Filter, Params, ResourcePage as Page } from '../types';
-
 import { VLAN } from './types';
 
 /**
@@ -26,6 +25,6 @@ export const getVlans = (params?: Params, filters?: Filter) =>
  */
 export const getVlan = (vlanID: number) =>
   Request<Page<VLAN>>(
-    setURL(`${API_ROOT}/networking/vlans/${vlanID}`),
+    setURL(`${API_ROOT}/networking/vlans/${encodeURIComponent(vlanID)}`),
     setMethod('GET')
   );

@@ -1,25 +1,32 @@
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import LandingHeader from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import { BucketAccess } from './BucketAccess';
-import LandingHeader from 'src/components/LandingHeader';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import type { ComponentType, LazyExoticComponent } from 'react';
 
-const ObjectList = React.lazy(() => import('./BucketDetail'));
-const BucketSSL = React.lazy(() => import('./BucketSSL'));
+const ObjectList: LazyExoticComponent<ComponentType<any>> = React.lazy(() =>
+  import('./BucketDetail').then((module) => ({ default: module.BucketDetail }))
+);
+const BucketSSL = React.lazy(() =>
+  import('./BucketSSL').then((module) => ({
+    default: module.BucketSSL,
+  }))
+);
 
 interface MatchProps {
   clusterId: ObjectStorageClusterID;
   bucketName: string;
 }
 
-type CombinedProps = RouteComponentProps<MatchProps>;
+type Props = RouteComponentProps<MatchProps>;
 
-export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
+export const BucketDetailLanding = React.memo((props: Props) => {
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
@@ -86,6 +93,6 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
       </Tabs>
     </>
   );
-};
+});
 
-export default React.memo(BucketDetailLanding);
+export default BucketDetailLanding;

@@ -1,70 +1,43 @@
-import { Profile } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
-import { makeStyles } from '@mui/styles';
-import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
-import Paper from 'src/components/core/Paper';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import Paper from 'src/components/core/Paper';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import TextField from 'src/components/TextField';
+import Typography from 'src/components/core/Typography';
+import { APIError } from '@linode/api-v4/lib/types';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { equals, lensPath, remove, set } from 'ramda';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { Notice } from 'src/components/Notice/Notice';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useTheme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  intro: {
-    marginBottom: theme.spacing(2),
-  },
-  modeControl: {
-    display: 'flex',
-  },
-  sshWrap: {
-    margin: `${theme.spacing(1)} 0`,
-  },
-  keyTextarea: {
-    [theme.breakpoints.up('md')]: {
-      minWidth: 415,
-    },
-  },
-  sshKeyButton: {
-    marginTop: theme.spacing(),
-  },
-}));
-
-const LishSettings = () => {
-  const classes = useStyles();
+export const LishSettings = () => {
+  const theme = useTheme();
   const { data: profile, isLoading } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
-
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-
   const [lishAuthMethod, setLishAuthMethod] = React.useState<
     Profile['lish_auth_method'] | undefined
   >(profile?.lish_auth_method || 'password_keys');
-
   const [authorizedKeys, setAuthorizedKeys] = React.useState<string[]>(
     profile?.authorized_keys || []
   );
   const [authorizedKeysCount, setAuthorizedKeysCount] = React.useState<number>(
     profile?.authorized_keys ? profile!.authorized_keys.length : 1
   );
-
   const [errors, setErrors] = React.useState<APIError[]>([]);
   const [success, setSuccess] = React.useState<string>();
-
   const thirdPartyEnabled = profile?.authentication_type !== 'password';
-
   const tooltipText = thirdPartyEnabled
     ? 'Password is disabled because Third-Party Authentication has been enabled.'
     : '';
-
   const hasErrorFor = getAPIErrorFor(
     {
       lish_auth_method: 'authentication method',
@@ -150,64 +123,68 @@ const LishSettings = () => {
         {success && <Notice success text={success} />}
         {authorizedKeysError && <Notice error text={authorizedKeysError} />}
         {generalError && <Notice error text={generalError} />}
-        <Typography className={classes.intro}>
+        <Typography sx={{ marginBottom: theme.spacing(2) }}>
           This controls what authentication methods are allowed to connect to
           the Lish console servers.
         </Typography>
         {isLoading ? null : (
           <>
-            <FormControl className={classes.modeControl}>
+            <FormControl sx={{ display: 'flex' }}>
               <Select
+                defaultValue={defaultMode}
+                errorText={authMethodError}
+                id="mode-select"
+                isClearable={false}
+                label="Authentication Mode"
+                name="mode-select"
+                onChange={onListAuthMethodChange as any}
+                options={modeOptions}
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-mode-select': true,
                   },
                   tooltipText,
                 }}
-                options={modeOptions}
-                name="mode-select"
-                id="mode-select"
-                label="Authentication Mode"
-                defaultValue={defaultMode}
-                onChange={onListAuthMethodChange as any}
-                isClearable={false}
-                errorText={authMethodError}
               />
             </FormControl>
             {Array.from(Array(authorizedKeysCount)).map((value, idx) => (
-              <div className={classes.sshWrap} key={idx}>
+              <Box key={idx} sx={{ margin: `${theme.spacing(1)} 0` }}>
                 <TextField
+                  data-qa-public-key
                   key={idx}
                   label="SSH Public Key"
-                  onChange={onPublicKeyChange(idx)}
-                  value={authorizedKeys[idx] || ''}
                   multiline
+                  onChange={onPublicKeyChange(idx)}
                   rows={1.75}
-                  className={classes.keyTextarea}
-                  data-qa-public-key
+                  sx={{
+                    [theme.breakpoints.up('md')]: {
+                      minWidth: 415,
+                    },
+                  }}
+                  value={authorizedKeys[idx] || ''}
                 />
                 {(idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
                 idx > 0 ? (
                   <Button
                     buttonType="outlined"
-                    className={classes.sshKeyButton}
                     compactX
-                    onClick={onPublicKeyRemove(idx)}
                     data-qa-remove
+                    onClick={onPublicKeyRemove(idx)}
+                    sx={{ marginTop: theme.spacing() }}
                   >
                     Remove
                   </Button>
                 ) : null}
-              </div>
+              </Box>
             ))}
             <Typography style={{ paddingTop: 2 }}>
               Place your SSH public keys here for use with Lish console access.
             </Typography>
             <Button
-              onClick={addSSHPublicKeyField}
-              className={classes.sshKeyButton}
               buttonType="outlined"
               compactX
+              onClick={addSSHPublicKeyField}
+              sx={{ marginTop: theme.spacing() }}
             >
               Add SSH Public Key
             </Button>
@@ -216,13 +193,13 @@ const LishSettings = () => {
         <ActionsPanel>
           <Button
             buttonType="primary"
-            onClick={onSubmit}
-            loading={submitting}
+            data-qa-save
             disabled={
               lishAuthMethod === profile?.lish_auth_method &&
               equals(authorizedKeys, profile?.authorized_keys)
             }
-            data-qa-save
+            loading={submitting}
+            onClick={onSubmit}
           >
             Save
           </Button>
@@ -231,5 +208,3 @@ const LishSettings = () => {
     </>
   );
 };
-
-export default LishSettings;

@@ -1,4 +1,4 @@
-import { regionsMap } from 'support/constants/regions';
+import { getRegionById, getRegionByName } from 'support/util/regions';
 
 /**
  * UI helpers for Enhanced Select component.
@@ -52,13 +52,8 @@ export const regionSelect = {
    * @returns Cypress chainable.
    */
   findItemByRegionId: (regionId: string) => {
-    const regionName = regionsMap[regionId];
-
-    if (!regionName) {
-      throw new Error(`Unable to find a region name for ID '${regionId}'`);
-    }
-
-    return select.findItemByText(`${regionName} (${regionId})`);
+    const region = getRegionById(regionId);
+    return select.findItemByText(`${region.name} (${region.id})`);
   },
 
   /**
@@ -71,16 +66,7 @@ export const regionSelect = {
    * @returns Cypress chainable.
    */
   findItemByRegionName: (regionName: string) => {
-    const regionId = Object.keys(regionsMap).find(
-      (regionIdKey) => regionsMap[regionIdKey] === regionName
-    );
-
-    if (!regionId) {
-      throw new Error(
-        `Unable to find a region ID for region name '${regionName}'`
-      );
-    }
-
-    return select.findItemByText(`${regionName} (${regionId})`);
+    const region = getRegionByName(regionName);
+    return select.findItemByText(`${region.name} (${region.id})`);
   },
 };

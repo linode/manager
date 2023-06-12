@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Added:
+
+- Resource links to empty state Images landing page #9095
+- Resource links to empty state Object Storage landing page #9098
+
+### Changed:
+
+### Fixed:
+
+- Ability to search Linodes by IPv6 #9073
+
+### Tech Stories:
+
+- React Query - Linodes - Networking #9046
+- React Query - Linodes - Details Header #9099
+- MUI v5 Migration - `Components > IconButton` #9102
+- MUI v5 Migration - `Components > EntityHeader` #9109
+- MUI v5 Migration - `Components > TransferDisplay` #9107
+
 ## [2023-05-30] - v1.94.0
 
 ### Added:
@@ -130,7 +151,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Kubernetes Delete Dialog clears when it is re-opened #9000
 - HTML showing up in event messages #9003
 - Inability to edit and save Linode Configurations #9053
-- Excessively large file size for invoices due to uncompressed JPG logo #9069
 - Marketplace One Click Cluster UDF caching issue #8997
 - Prevent IP transfer & sharing modals form submission if no action selected #9026
 - Increase radio button padding to fix hover effect shape #9031

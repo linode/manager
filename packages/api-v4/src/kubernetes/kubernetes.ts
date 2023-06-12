@@ -38,7 +38,7 @@ export const getKubernetesClusters = (params?: Params, filters?: Filter) =>
 export const getKubernetesCluster = (clusterID: number) =>
   Request<KubernetesCluster>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
   );
 
 /**
@@ -64,7 +64,7 @@ export const updateKubernetesCluster = (
 ) =>
   Request<KubernetesCluster>(
     setMethod('PUT'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}`),
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`),
     setData(data)
   );
 
@@ -76,7 +76,7 @@ export const updateKubernetesCluster = (
 export const deleteKubernetesCluster = (clusterID: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
   );
 
 /**
@@ -90,7 +90,9 @@ export const deleteKubernetesCluster = (clusterID: number) =>
 export const getKubeConfig = (clusterId: number) =>
   Request<KubeConfigResponse>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterId)}/kubeconfig`
+    )
   );
 
 /**
@@ -103,7 +105,9 @@ export const getKubeConfig = (clusterId: number) =>
 export const resetKubeConfig = (clusterId: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterId)}/kubeconfig`
+    )
   );
 
 /** getKubernetesVersions
@@ -129,7 +133,7 @@ export const getKubernetesVersions = (params?: Params, filters?: Filter) =>
 export const getKubernetesVersion = (versionID: string) =>
   Request<KubernetesVersion>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/lke/versions/${versionID}`)
+    setURL(`${API_ROOT}/lke/versions/${encodeURIComponent(versionID)}`)
   );
 
 /** getKubernetesClusterEndpoint
@@ -147,7 +151,9 @@ export const getKubernetesClusterEndpoints = (
     setMethod('GET'),
     setXFilter(filters),
     setParams(params),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/api-endpoints`)
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/api-endpoints`
+    )
   );
 
 /** getKubernetesClusterDashboard
@@ -158,7 +164,9 @@ export const getKubernetesClusterEndpoints = (
 export const getKubernetesClusterDashboard = (clusterID: number) =>
   Request<KubernetesDashboardResponse>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/dashboard`)
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/dashboard`
+    )
   );
 
 /** recycleClusterNodes
@@ -170,5 +178,5 @@ export const getKubernetesClusterDashboard = (clusterID: number) =>
 export const recycleClusterNodes = (clusterID: number) =>
   Request<{}>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/recycle`)
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/recycle`)
   );

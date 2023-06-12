@@ -4,13 +4,13 @@ import { Linode, Volume } from '@linode/api-v4/types';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
-import { regions } from 'support/constants/regions';
 import {
   interceptAttachVolume,
   interceptDetachVolume,
 } from 'support/intercepts/volumes';
-import { randomItem, randomLabel, randomString } from 'support/util/random';
+import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
+import { chooseRegion } from 'support/util/regions';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -25,17 +25,17 @@ const pageSizeOverride = {
  * @returns Promise that resolves to an array containing created Linode and Volume.
  */
 const createLinodeAndAttachVolume = async (): Promise<[Linode, Volume]> => {
-  const commonRegion = randomItem(regions);
+  const commonRegion = chooseRegion();
   const linodeRequest = createLinodeRequestFactory.build({
     label: randomLabel(),
-    region: commonRegion,
+    region: commonRegion.id,
     root_pass: randomString(32),
   });
 
   const linode = await createLinode(linodeRequest);
   const volumeRequest = volumeRequestPayloadFactory.build({
     label: randomLabel(),
-    region: commonRegion,
+    region: commonRegion.id,
     linode_id: linode.id,
   });
   const volume = await createVolume(volumeRequest);
@@ -49,15 +49,15 @@ describe('volume attach and detach flows', () => {
    * - Confirms that volume attach toast appears and that Linode is listed as attached for Volume.
    */
   it('attaches a volume to a Linode', () => {
-    const commonRegion = randomItem(regions);
+    const commonRegion = chooseRegion();
     const volumeRequest = volumeRequestPayloadFactory.build({
       label: randomLabel(),
-      region: commonRegion,
+      region: commonRegion.id,
     });
 
     const linodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: commonRegion,
+      region: commonRegion.id,
       root_pass: randomString(32),
     });
 

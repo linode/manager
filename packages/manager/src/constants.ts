@@ -8,6 +8,10 @@ export const ENABLE_DEV_TOOLS = Boolean(
   import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
 );
 
+// allow us to explicity enable maintenance mode
+export const ENABLE_MAINTENANCE_MODE =
+  import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE === 'true';
+
 /** required for the app to function */
 export const APP_ROOT =
   import.meta.env.REACT_APP_APP_ROOT || 'http://localhost:3000';

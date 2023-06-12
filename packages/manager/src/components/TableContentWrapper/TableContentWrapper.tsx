@@ -3,31 +3,33 @@ import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import {
-  Props as TableLoadingProps,
+  TableRowLoadingProps,
   TableRowLoading,
 } from 'src/components/TableRowLoading/TableRowLoading';
 
-interface Props {
+interface TableContentWrapperProps {
+  children?: React.ReactNode;
+  customFirstRow?: JSX.Element;
+  emptyMessage?: string;
+  error?: APIError[];
+  lastUpdated?: number;
   length: number;
   loading: boolean;
-  lastUpdated?: number;
-  error?: APIError[];
-  emptyMessage?: string;
-  loadingProps?: TableLoadingProps;
+  loadingProps?: TableRowLoadingProps;
   rowEmptyState?: JSX.Element;
-  customFirstRow?: JSX.Element;
 }
 
-const TableContentWrapper: React.FC<Props> = (props) => {
+export const TableContentWrapper = (props: TableContentWrapperProps) => {
   const {
-    length,
-    loading,
+    children,
+    customFirstRow,
     emptyMessage,
     error,
     lastUpdated,
+    length,
+    loading,
     loadingProps,
     rowEmptyState,
-    customFirstRow,
   } = props;
 
   if (loading) {
@@ -53,9 +55,7 @@ const TableContentWrapper: React.FC<Props> = (props) => {
   return (
     <>
       {customFirstRow ? customFirstRow : undefined}
-      {props.children}
+      {children}
     </>
   );
 };
-
-export default TableContentWrapper;

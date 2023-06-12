@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { components, SingleValueProps } from 'react-select';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -25,10 +25,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props extends SingleValueProps<any> {}
 
-type CombinedProps = Props;
-
-const _SingleValue: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const _SingleValue: React.FC<Props> = (props) => {
+  const { classes } = useStyles();
   return (
     <>
       <components.SingleValue
@@ -44,5 +42,3 @@ const _SingleValue: React.FC<CombinedProps> = (props) => {
     </>
   );
 };
-
-export default _SingleValue;

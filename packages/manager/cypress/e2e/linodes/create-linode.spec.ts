@@ -9,6 +9,7 @@ import { selectRegionString } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomString, randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 describe('create linode', () => {
   it('creates a nanode', () => {
@@ -19,7 +20,7 @@ describe('create linode', () => {
     cy.get('[data-qa-deploy-linode]');
     cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    containsClick(selectRegionString).type('new {enter}');
+    containsClick(selectRegionString).type(`${chooseRegion().name} {enter}`);
     fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
     getClick('#linode-label').clear().type(linodeLabel);

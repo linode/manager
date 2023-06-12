@@ -1,18 +1,15 @@
-import { getObjectURL } from '@linode/api-v4/lib/object-storage';
-import classNames from 'classnames';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useDropzone, FileRejection } from 'react-dropzone';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import { updateBucket } from 'src/queries/objectStorage';
-import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
-import { readableBytes } from 'src/utilities/unitConversions';
 import { debounce } from 'throttle-debounce';
+import { FileUpload } from './FileUpload';
+import { getObjectURL } from '@linode/api-v4/lib/object-storage';
+import { readableBytes } from 'src/utilities/unitConversions';
+import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
+import { updateBucket } from 'src/queries/objectStorage';
 import { uploadObject } from '../requests';
-import FileUpload from './FileUpload';
+import { useDropzone, FileRejection } from 'react-dropzone';
+import { useQueryClient } from 'react-query';
+import { useSnackbar } from 'notistack';
 import {
   curriedObjectUploaderReducer,
   defaultState,
@@ -22,90 +19,12 @@ import {
   ObjectUploaderAction,
   pathOrFileName,
 } from './reducer';
-import { useQueryClient } from 'react-query';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingBottom: 60,
-    position: 'relative',
-  },
-  dropzone: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-    borderColor: theme.palette.primary.main,
-    borderRadius: 6,
-    borderStyle: 'dashed',
-    borderWidth: 1,
-    color: theme.palette.primary.main,
-    height: '100%',
-    maxHeight: 400,
-    marginTop: theme.spacing(2),
-    minHeight: 140,
-    outline: 'none',
-    overflow: 'auto',
-    padding: theme.spacing(),
-    transition: theme.transitions.create(['border-color', 'background-color']),
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-      marginLeft: theme.spacing(),
-    },
-  },
-  active: {
-    // The `active` class active when a user is hovering over the dropzone.
-    borderColor: theme.palette.primary.light,
-    backgroundColor: theme.color.white,
-    '& $uploadButton': {
-      opacity: 0.5,
-    },
-  },
-  accept: {
-    // The `accept` class active when a user is hovering over the dropzone
-    // with files that will be accepted (based on file size, number of files).
-    borderColor: theme.palette.primary.light,
-  },
-  reject: {
-    // The `reject` class active when a user is hovering over the dropzone
-    // with files that will be rejected (based on file size, number of files).
-    borderColor: theme.color.red,
-  },
-  fileUploads: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    justifyContent: 'flex-start',
-  },
-  dropzoneContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    width: '100%',
-  },
-  UploadZoneActiveButton: {
-    backgroundColor: 'transparent',
-    bottom: theme.spacing(1.5),
-    padding: 0,
-    position: 'absolute',
-    width: `calc(100% - ${theme.spacing(4)})`,
-    zIndex: 10,
-    '& $uploadButton': {
-      marginTop: 0,
-    },
-  },
-  copy: {
-    color: theme.palette.text.primary,
-    margin: '0 auto',
-  },
-  uploadButton: {
-    marginTop: theme.spacing(2),
-    opacity: 1,
-    transition: theme.transitions.create(['opacity']),
-  },
-}));
+import {
+  StyledDropZoneContent,
+  StyledDropZoneCopy,
+  StyledFileUploadsContainer,
+  useStyles,
+} from './ObjectUploader.styles';
 
 interface Props {
   clusterId: string;
@@ -114,14 +33,11 @@ interface Props {
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
 }
 
-const ObjectUploader: React.FC<Props> = (props) => {
+export const ObjectUploader = React.memo((props: Props) => {
   const { clusterId, bucketName, prefix } = props;
-
   const { enqueueSnackbar } = useSnackbar();
-  const classes = useStyles();
-
+  const { classes, cx } = useStyles();
   const queryClient = useQueryClient();
-
   const [state, dispatch] = React.useReducer(
     curriedObjectUploaderReducer,
     defaultState
@@ -281,21 +197,21 @@ const ObjectUploader: React.FC<Props> = (props) => {
   const {
     getInputProps,
     getRootProps,
-    isDragActive,
     isDragAccept,
+    isDragActive,
     isDragReject,
     open,
   } = useDropzone({
-    onDrop,
-    onDropRejected,
+    maxSize: MAX_FILE_SIZE_IN_BYTES,
     noClick: true,
     noKeyboard: true,
-    maxSize: MAX_FILE_SIZE_IN_BYTES,
+    onDrop,
+    onDropRejected,
   });
 
   const className = React.useMemo(
     () =>
-      classNames({
+      cx({
         [classes.active]: isDragActive,
         [classes.accept]: isDragAccept,
         [classes.reject]: isDragReject,
@@ -307,7 +223,7 @@ const ObjectUploader: React.FC<Props> = (props) => {
 
   return (
     <div
-      className={classNames({
+      className={cx({
         [classes.root]: UploadZoneActive,
       })}
     >
@@ -319,7 +235,7 @@ const ObjectUploader: React.FC<Props> = (props) => {
           }
         />
 
-        <div className={classes.fileUploads}>
+        <StyledFileUploadsContainer>
           {state.files.map((upload, idx) => {
             const path = (upload.file as any).path || upload.file.name;
             return (
@@ -338,19 +254,18 @@ const ObjectUploader: React.FC<Props> = (props) => {
               />
             );
           })}
-        </div>
+        </StyledFileUploadsContainer>
 
-        <div
+        <StyledDropZoneContent
           data-qa-drop-zone
-          className={classNames({
-            [classes.dropzoneContent]: true,
+          className={cx({
             [classes.UploadZoneActiveButton]: UploadZoneActive,
           })}
         >
           {!UploadZoneActive && (
-            <Typography variant="subtitle2" className={classes.copy}>
+            <StyledDropZoneCopy variant="subtitle2">
               You can browse your device to upload files or drop them here.
-            </Typography>
+            </StyledDropZoneCopy>
           )}
           <Button
             buttonType="primary"
@@ -359,13 +274,11 @@ const ObjectUploader: React.FC<Props> = (props) => {
           >
             Browse Files
           </Button>
-        </div>
+        </StyledDropZoneContent>
       </div>
     </div>
   );
-};
-
-export default React.memo(ObjectUploader);
+});
 
 export const onUploadProgressFactory = (
   dispatch: (value: ObjectUploaderAction) => void,
