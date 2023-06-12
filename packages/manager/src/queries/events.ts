@@ -17,7 +17,7 @@ import {
   useQueryClient,
 } from 'react-query';
 import { INTERVAL, ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { isInProgressEvent } from 'src/utilities/eventUtils';
 import { generateInFilter } from 'src/utilities/requestFilters';
 
 const queryKey = 'events';

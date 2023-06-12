@@ -2,6 +2,22 @@ import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { parseAPIDate } from './date';
 
+export const isLongPendingEvent = (event: Event): boolean => {
+  const { status, action } = event;
+  return status === 'scheduled' && action === 'image_upload';
+};
+
+export const isInProgressEvent = (
+  event: Event
+): event is Event & { percent_complete: number } => {
+  const { percent_complete } = event;
+  if (percent_complete === null || isLongPendingEvent(event)) {
+    return false;
+  } else {
+    return percent_complete !== null && percent_complete < 100;
+  }
+};
+
 // Calculates the finished (or failed) event timestamp from the created event timestamp by adding the duration;
 // if the event is not finished or has not failed, uses the created event timestamp.
 export const getEventTimestamp = (event: Event): DateTime => {
