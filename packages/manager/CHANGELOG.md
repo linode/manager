@@ -5580,10 +5580,6 @@ A new visual design has begun!
 - simplify initial api call logic #1770
 - now using `npm --no-git-tag-version version patch|minor|major` to bump versions so that shrinkwrap also gets updated
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
-
 ## [2023-05-01] - v1.92.0
 
 ### Added:
