@@ -32,11 +32,87 @@ const infiniteEventsQueryKey = (filter: Filter | undefined = {}) => [
   ...(filter ? [filter] : []),
 ];
 
-export const useEventsPolling = (options: {
-  enabled?: boolean;
-  eventHandler?: (event: Event) => void;
-  filter?: Filter;
-}) => {
+export const useEventsInfiniteQuery = (
+  options: {
+    enabled?: boolean;
+    eventHandler?: (event: Event) => void;
+    filter?: Filter;
+  } = {}
+) => {
+  const { enabled = true, eventHandler, filter } = options;
+
+  const queryClient = useQueryClient();
+  const queryKey = infiniteEventsQueryKey(filter);
+
+  const eventsCache = queryClient.getQueryData<
+    InfiniteData<ResourcePage<Event>>
+  >(queryKey);
+
+  const incompleteEvents = React.useMemo(
+    () =>
+      eventsCache?.pages
+        .reduce((events, page) => [...events, ...page.data], [])
+        .filter(incompleteEvent),
+    [eventsCache]
+  );
+
+  const pollingEventHandler = (event: Event) => {
+    updateEventsCache(queryClient, queryKey, event);
+    if (eventHandler) {
+      eventHandler(event);
+    }
+  };
+
+  // Poll for new events
+  useEventsPolling({
+    enabled,
+    eventHandler: pollingEventHandler,
+    filter,
+  });
+
+  // Poll in-progress events for updates
+  useEventsPolling({
+    enabled: enabled && incompleteEvents && incompleteEvents.length > 0,
+    eventHandler: pollingEventHandler,
+    filter: {
+      created: undefined,
+      '+or': [
+        ...generateInFilter(
+          'id',
+          incompleteEvents?.map((event) => event.id) ?? []
+        ),
+      ],
+    },
+  });
+
+  return useInfiniteQuery<ResourcePage<Event>, APIError[]>(
+    queryKey,
+    ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }, filter),
+    {
+      getNextPageParam: ({ page, pages }) =>
+        page < pages ? page + 1 : undefined,
+    }
+  );
+};
+
+export const useMarkEventsAsSeen = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[], number>(
+    (eventId) => markEventSeen(eventId),
+    {
+      onSuccess: (_, eventId) => updateSeenEvents(eventId, queryClient),
+    }
+  );
+};
+
+const useEventsPolling = (
+  options: {
+    enabled?: boolean;
+    eventHandler?: (event: Event) => void;
+    filter?: Filter;
+  } = {}
+) => {
   const { enabled = true, eventHandler, filter } = options;
 
   const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
@@ -73,62 +149,6 @@ export const useEventsPolling = (options: {
   );
 
   return { resetEventsPolling: () => setIntervalMultiplier(1) };
-};
-
-export const useEventsInfiniteQuery = (filter?: Filter) => {
-  const queryClient = useQueryClient();
-  const queryKey = infiniteEventsQueryKey(filter);
-
-  const eventsCache = queryClient.getQueryData<
-    InfiniteData<ResourcePage<Event>>
-  >(queryKey);
-
-  const incompleteEvents = React.useMemo(
-    () =>
-      eventsCache?.pages
-        .reduce((events, page) => [...events, ...page.data], [])
-        .filter(incompleteEvent),
-    [eventsCache]
-  );
-
-  // Update existing events or invalidate when new events come in
-  useEventsPolling({
-    eventHandler: (event) => updateEventsCache(queryClient, queryKey, event),
-    filter,
-  });
-  useEventsPolling({
-    enabled: incompleteEvents && incompleteEvents.length > 0,
-    eventHandler: (event) => updateEventsCache(queryClient, queryKey, event),
-    filter: {
-      created: undefined,
-      '+or': [
-        ...generateInFilter(
-          'id',
-          incompleteEvents?.map((event) => event.id) ?? []
-        ),
-      ],
-    },
-  });
-
-  return useInfiniteQuery<ResourcePage<Event>, APIError[]>(
-    queryKey,
-    ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }, filter),
-    {
-      getNextPageParam: ({ page, pages }) =>
-        page < pages ? page + 1 : undefined,
-    }
-  );
-};
-
-export const useMarkEventsAsSeen = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation<{}, APIError[], number>(
-    (eventId) => markEventSeen(eventId),
-    {
-      onSuccess: (_, eventId) => updateSeenEvents(eventId, queryClient),
-    }
-  );
 };
 
 const updateEventsCache = (

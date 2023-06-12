@@ -78,7 +78,7 @@ export const EventsLanding = (props: CombinedProps) => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useEventsInfiniteQuery(filter);
+  } = useEventsInfiniteQuery({ filter });
 
   const events = eventsData?.pages.reduce(
     (events, page) => [...events, ...page.data],
