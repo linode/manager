@@ -38,7 +38,10 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
 
   const [selectedDiskId, setSelectedDiskId] = React.useState<number | null>(
     null

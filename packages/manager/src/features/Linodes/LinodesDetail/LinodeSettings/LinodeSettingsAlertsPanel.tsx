@@ -31,7 +31,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
     error,
   } = useLinodeUpdateMutation(linodeId);
 
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
 
   const isBareMetalInstance = type?.class === 'metal';
 
