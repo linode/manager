@@ -1,10 +1,7 @@
 import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
-import {
-  Colors,
-  Components,
-} from '@linode/design-language-system/cloudmanager';
+import { Colors, Components } from '@linode/design-language-system/akamai';
 
 export const bg = {
   app: Colors.Neutrals.Grey02,
