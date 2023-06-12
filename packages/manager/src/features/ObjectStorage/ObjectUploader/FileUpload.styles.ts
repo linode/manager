@@ -1,8 +1,10 @@
-import Typography from 'src/components/core/Typography';
-import { makeStyles } from 'tss-react/mui';
-import { styled } from '@mui/material/styles';
-import type { FileUploadProps } from './FileUpload';
 import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import UploadPending from 'src/assets/icons/uploadPending.svg';
+import Typography from 'src/components/core/Typography';
+import { rotate360 } from 'src/styles/keyframes';
+import { makeStyles } from 'tss-react/mui';
+import type { FileUploadProps } from './FileUpload';
 
 export const StyledRootContainer = styled('div', {
   label: 'StyledRootContainer',
@@ -43,6 +45,12 @@ export const StyledRightWrapper = styled('div', {
 })(() => ({
   display: 'flex',
   alignItems: 'center',
+}));
+
+export const StyledUploadPending = styled(UploadPending, {
+  label: 'StyledUploadPending',
+})(() => ({
+  animation: `${rotate360} 2s linear infinite`,
 }));
 
 export const StyledFileSizeTypography = styled(Typography, {
@@ -91,16 +99,5 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: '100%',
     position: 'absolute',
     zIndex: 1,
-  },
-  rotate: {
-    animation: '$rotate 2s linear infinite',
-  },
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(360deg)',
-    },
-    to: {
-      transform: 'rotate(0deg)',
-    },
   },
 }));
