@@ -54,6 +54,6 @@ export const useTypeQuery = (type: string, enabled = true) => {
     queryKey: specificTypesQueryKey(type),
     queryFn: () => getType(type),
     ...queryPresets.oneTimeFetch,
-    enabled: enabled && type !== '',
+    enabled: enabled && Boolean(type),
   });
 };
