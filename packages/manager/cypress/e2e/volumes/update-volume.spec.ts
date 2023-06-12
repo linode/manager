@@ -3,6 +3,7 @@ import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 authenticate();
 describe('volume update flow', () => {
@@ -12,6 +13,7 @@ describe('volume update flow', () => {
   it("updates a volume's label and tags", () => {
     const volumeRequest = volumeRequestPayloadFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
 
     const newLabel = randomLabel();

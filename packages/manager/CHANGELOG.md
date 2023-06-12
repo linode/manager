@@ -4,6 +4,55 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-06-12] - v1.95.0
+
+### Added:
+
+- June 2023 Marketplace Release ([#9114])
+- Metadata beta updates ([#9222])
+- Kubernetes product information banner ([#9226])
+
+### Changed:
+
+- Improve failed Image creation and upload error messages ([#9184])
+
+### Fixed:
+
+- Tooltip console errors and top menu icon hover ([#9206])
+- Disable Marketplace app search until loading complete ([#9207])
+- Prevent rendering of purple content within Buttons without a buttonType prop ([#9209])
+- VLANs configuration not showing for restricted users ([#9214])
+- Linode Settings Disk I/O notification threshold value unable to be changed ([#9247])
+- Linode Details crashing for Linodes with no `type` ([#9249])
+
+### Tech Stories:
+
+- Move dismissibleButton to DismissibleBanner component ([#9142])
+- Resolve yaml dependabot alert for CVE-2023-2251 ([#9156])
+- Simplify SelectPlanPanel and SelectPlanQuantityPanel ([#9165])
+- React Query - Object Storage - Bucket SSL ([#9167])
+- React Query - Linode Migrate Dialog ([#9195])
+- React Query - Linode Configurations ([#9198])
+- Added REACT_APP_MAINTENANCE_MODE env var to explicitly enable maintenance mode ([#9171])
+- Update Storybook to 7.0.18 and add measure addon ([#9181])
+- Update to vite@4.3.9 for CVE-2023-34092 ([#9212])
+- MUI v5 - `Components > Tag` ([#9164])
+- MUI v5 Migration - `Components > ShowMore` ([#9169])
+- MUI v5 - `Components > PreferenceToggle` ([#9172])
+- MUI v5 - `Components > SelectRegionPanel` ([#9173])
+- MUI v5 - `Components > Linear Progress` ([#9177])
+- MUI v5 Migration - `Features > ObjectStorage` ([#9180])
+- MUI v5 Migration - `Components > TagCell, Tags, AddTag` ([#9186])
+- MUI v5 Migration - `Components > TabbedPanel, ReachTab, ReachTabList` ([#9191])
+- MUI v5 Migration - Features > Profile ([#9197])
+- MUI v5 Migration - `Components > PasswordInput` ([#9202])
+- MUI v5 - `Components > TableContentWrapper` ([#9208])
+- MUI v5 - `Components > ProductNotification` ([#9211])
+- MUI v5 Migration - `Components > TabLink` and `Components > TabLinkList` ([#9159])
+- MUI v5 Migration - `Components > EditableText` ([#9179])
+- MUI v5 Migration - `Components > EnhancedSelect` ([#9194])
+- Rename `features/linodes` to `features/Linodes` ([#9201])
+
 ## [2023-05-30] - v1.94.0
 
 ### Added:

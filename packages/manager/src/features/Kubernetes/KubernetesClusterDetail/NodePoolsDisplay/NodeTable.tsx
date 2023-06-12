@@ -16,10 +16,10 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
-import TableContentWrapper from 'src/components/TableContentWrapper';
+import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { transitionText } from 'src/features/linodes/transitions';
+import { transitionText } from 'src/features/Linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';

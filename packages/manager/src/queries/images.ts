@@ -36,8 +36,10 @@ export const useImagesQuery = (params: Params, filters: Filter) =>
   );
 
 // Get specific Image
-export const useImageQuery = (imageID: string) =>
-  useQuery<Image, APIError[]>([queryKey, imageID], () => getImage(imageID));
+export const useImageQuery = (imageID: string, enabled = true) =>
+  useQuery<Image, APIError[]>([queryKey, imageID], () => getImage(imageID), {
+    enabled,
+  });
 
 // Create Image
 export const useCreateImageMutation = () => {
