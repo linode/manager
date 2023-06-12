@@ -16,10 +16,10 @@ import {
 } from "./utils/constants.mjs";
 
 const today = new Date().toISOString().slice(0, 10);
-const changesetEntries = {};
 
 try {
   for (const pkg in PACKAGES) {
+    const changesetEntries = {};
     const linodePackage = PACKAGES[pkg];
     const packageJsonFile = await readFile(
       packageJsonPath(linodePackage),
