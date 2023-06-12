@@ -23,7 +23,6 @@ export type Action = 'Reboot' | 'Power Off' | 'Power On';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(1.25),
-    display: 'flex',
     alignItems: 'center',
     lineHeight: '1.25rem',
     fontSize: '0.875rem',
@@ -165,7 +164,13 @@ export const PowerActionsDialog = (props: Props) => {
     >
       {props.action === 'Power On' ? (
         <Typography className={classes.root}>
-          Are you sure you want to {props.action.toLowerCase()} your Linode?{' '}
+          See the&nbsp;
+          <ExternalLink
+            link="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/"
+            text="guide for setting up and securing a compute instance"
+            hideIcon
+          />
+          &nbsp;for more information.
         </Typography>
       ) : null}
       {showConfigSelect && (
