@@ -32,12 +32,12 @@ export const MutationNotification = (props: Props) => {
 
   const { data: currentTypeInfo } = useTypeQuery(
     linode?.type ?? '',
-    linode !== undefined
+    Boolean(linode?.type)
   );
 
   const { data: successorTypeInfo } = useTypeQuery(
     currentTypeInfo?.successor ?? '',
-    currentTypeInfo !== undefined && currentTypeInfo.successor !== null
+    Boolean(currentTypeInfo?.successor)
   );
 
   const { data: disks } = useAllLinodeDisksQuery(

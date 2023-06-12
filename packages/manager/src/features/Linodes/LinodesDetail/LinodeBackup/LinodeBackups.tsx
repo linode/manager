@@ -53,7 +53,10 @@ export const LinodeBackups = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
   const { data: backups, error, isLoading } = useLinodeBackupsQuery(
     id,
     Boolean(linode?.backups.enabled)
