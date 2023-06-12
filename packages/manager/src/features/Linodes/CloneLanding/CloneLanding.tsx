@@ -24,7 +24,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';

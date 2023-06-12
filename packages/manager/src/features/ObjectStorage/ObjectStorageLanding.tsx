@@ -3,7 +3,7 @@ import DismissibleBanner from 'src/components/DismissibleBanner';
 import LandingHeader from 'src/components/LandingHeader';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import TabPanels from 'src/components/core/ReachTabPanels';

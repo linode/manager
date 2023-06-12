@@ -22,7 +22,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';

@@ -3,7 +3,7 @@ import { matchPath, Redirect, useHistory, useLocation } from 'react-router-dom';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import ReachTabs from 'src/components/core/ReachTabs';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from '../TabLinkList/TabLinkList';
 
