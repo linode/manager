@@ -424,7 +424,7 @@ export const CreateDomain = () => {
                 <React.Fragment>
                   <LinodeSelectV2
                     errorText={errorMap.defaultLinode}
-                    handleChange={(value) =>
+                    onSelectionChange={(value) =>
                       setSelectedDefaultLinode(value ?? undefined)
                     }
                     value={selectedDefaultLinode?.id ?? null}

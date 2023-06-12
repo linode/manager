@@ -39,7 +39,7 @@ interface LinodeSelectProps {
 
 export interface LinodeMultiSelectProps extends LinodeSelectProps {
   /* Called when the value changes */
-  handleChange: (selected: Linode[]) => void;
+  onSelectionChange: (selected: Linode[]) => void;
   /* Enable multi-select. */
   multiple: true;
   /* Current value of the input. */
@@ -48,7 +48,7 @@ export interface LinodeMultiSelectProps extends LinodeSelectProps {
 
 export interface LinodeSingleSelectProps extends LinodeSelectProps {
   /* Called when the value changes */
-  handleChange: (selected: Linode | null) => void;
+  onSelectionChange: (selected: Linode | null) => void;
   /* Enable single-select. */
   multiple?: false;
   /* Current value of the input. */
@@ -65,7 +65,7 @@ export const LinodeSelectV2 = (
     disabled,
     errorText,
     filter,
-    handleChange,
+    onSelectionChange,
     helperText,
     loading,
     multiple,
@@ -101,8 +101,8 @@ export const LinodeSelectV2 = (
       disabled={disabled}
       onChange={(_, value) =>
         multiple && Array.isArray(value)
-          ? handleChange(value)
-          : !multiple && !Array.isArray(value) && handleChange(value)
+          ? onSelectionChange(value)
+          : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
       onBlur={onBlur}
       noOptionsText={

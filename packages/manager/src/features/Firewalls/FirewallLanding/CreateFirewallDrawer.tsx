@@ -166,7 +166,7 @@ const CreateFirewallDrawer = (props: Props) => {
           disabled={userCannotAddFirewall}
           helperText={firewallHelperText}
           errorText={errors['devices.linodes']}
-          handleChange={(selected) =>
+          onSelectionChange={(selected) =>
             setFieldValue(
               'devices.linodes',
               selected.map((linode) => linode.id)

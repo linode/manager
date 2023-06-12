@@ -250,7 +250,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         value={selectedLinode?.id || null}
         errorText={linodeError}
         disabled={!canCreateImage}
-        handleChange={(linode) => handleLinodeChange(linode)}
+        onSelectionChange={(linode) => handleLinodeChange(linode)}
         optionsFilter={(linode) =>
           availableLinodesToImagize?.includes(linode.id) ?? true
         }

@@ -126,7 +126,7 @@ export const AddDeviceDrawer = (props: Props) => {
         {errorMessage ? errorNotice(errorMessage) : null}
         <LinodeSelectV2
           multiple
-          handleChange={(linodes) =>
+          onSelectionChange={(linodes) =>
             setSelectedLinodeIds(linodes.map((linode) => linode.id))
           }
           value={selectedLinodeIds}
