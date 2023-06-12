@@ -111,7 +111,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         checked: boolean
       ) => formik.setFieldValue('io', checked ? 10000 : 0),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('io', e.target.valueAsDate),
+        formik.setFieldValue('io', e.target.valueAsNumber),
       error: hasErrorFor('alerts.io'),
       endAdornment: 'IOPS',
       hidden: isBareMetalInstance,

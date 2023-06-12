@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Disable Marketplace app search until loading complete ([#9207])
 - Prevent rendering of purple content within Buttons without a buttonType prop ([#9209])
 - VLANs configuration not showing for restricted users ([#9214])
+- Linode Settings Disk I/O notification threshold value unable to be changed ([#9247])
 
 ### Tech Stories:
 
