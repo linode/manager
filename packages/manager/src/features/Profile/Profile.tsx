@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LandingHeader from 'src/components/LandingHeader';
-import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
+import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
