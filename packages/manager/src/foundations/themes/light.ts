@@ -4,7 +4,7 @@ import { latoWeb } from 'src/foundations/fonts';
 import {
   Colors,
   Components,
-} from '@linode/design-language-system/dist/cloudmanager';
+} from '@linode/design-language-system/cloudmanager';
 
 export const bg = {
   app: Colors.Neutrals.Grey02,
