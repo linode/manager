@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Prevent rendering of purple content within Buttons without a buttonType prop ([#9209])
 - VLANs configuration not showing for restricted users ([#9214])
 - Linode Settings Disk I/O notification threshold value unable to be changed ([#9247])
+- Linode Details crashing for Linodes with no `type` ([#9249])
 
 ### Tech Stories:
 
