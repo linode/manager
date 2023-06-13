@@ -1,5 +1,6 @@
-import * as React from 'react';
+import { Theme, useTheme } from '@mui/material';
 import classNames from 'classnames';
+import * as React from 'react';
 import ReactSelect, {
   ActionMeta,
   NamedProps as SelectProps,
@@ -10,18 +11,17 @@ import CreatableSelect, {
 } from 'react-select/creatable';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
-import DropdownIndicator from './components/DropdownIndicator';
+import { reactSelectStyles, useStyles } from './Select.styles';
+import { DropdownIndicator } from './components/DropdownIndicator';
 import Input from './components/Input';
-import LoadingIndicator from './components/LoadingIndicator';
+import { LoadingIndicator } from './components/LoadingIndicator';
 import MenuList from './components/MenuList';
 import MultiValueLabel from './components/MultiValueLabel';
 import MultiValueRemove from './components/MultiValueRemove';
 import NoOptionsMessage from './components/NoOptionsMessage';
 import Option from './components/Option';
 import Control from './components/SelectControl';
-import Placeholder from './components/SelectPlaceholder';
-import { reactSelectStyles, useStyles } from './Select.styles';
-import { Theme, useTheme } from '@mui/material';
+import { SelectPlaceholder as Placeholder } from './components/SelectPlaceholder';
 
 export interface Item<T = string | number, L = string> {
   value: T;
@@ -117,7 +117,7 @@ const Select = <
   props: BaseSelectProps<I, IsMulti, Clearable>
 ) => {
   const theme = useTheme<Theme>();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const {
     className,
     components,

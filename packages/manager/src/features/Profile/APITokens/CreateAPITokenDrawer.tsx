@@ -1,25 +1,29 @@
-import { useFormik } from 'formik';
-import { DateTime } from 'luxon';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Drawer from 'src/components/Drawer';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import TextField from 'src/components/TextField';
+import { DateTime } from 'luxon';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import TextField from 'src/components/TextField';
-import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
+import { useFormik } from 'formik';
+import {
+  StyledAccessCell,
+  StyledPermissionsCell,
+  StyledPermsTable,
+  StyledSelectCell,
+} from './APITokenDrawer.styles';
 import {
   Permission,
   permTuplesToScopeString,
@@ -27,7 +31,6 @@ import {
   allScopesAreTheSame,
   basePermNameMap,
 } from './utils';
-import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
 
 type Expiry = [string, string];
 
@@ -64,44 +67,6 @@ export const genExpiryTups = (): Expiry[] => {
   ];
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  permsTable: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(),
-  },
-  selectCell: {
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
-    fontSize: '.9rem',
-  },
-  accessCell: {
-    width: '31%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-  },
-  noneCell: {
-    width: '23%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-    textAlign: 'center',
-  },
-  readOnlyCell: {
-    width: '23%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-    textAlign: 'center',
-  },
-  readWritecell: {
-    width: '23%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-    textAlign: 'center',
-  },
-}));
-
 interface RadioButton extends HTMLInputElement {
   name: string;
 }
@@ -114,7 +79,6 @@ interface Props {
 
 export const CreateAPITokenDrawer = (props: Props) => {
   const expiryTups = genExpiryTups();
-  const classes = useStyles();
   const { open, onClose, showSecret } = props;
 
   const initialValues = {
@@ -207,9 +171,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
           isClearable={false}
         />
       </FormControl>
-      <Table
+      <StyledPermsTable
         aria-label="Personal Access Token Permissions"
-        className={classes.permsTable}
         spacingTop={24}
         spacingBottom={16}
       >
@@ -229,18 +192,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
         </TableHead>
         <TableBody>
           <TableRow data-qa-row="Select All">
-            <TableCell
-              parentColumn="Access"
-              padding="checkbox"
-              className={classes.selectCell}
-            >
+            <StyledSelectCell parentColumn="Access" padding="checkbox">
               Select All
-            </TableCell>
-            <TableCell
-              parentColumn="None"
-              padding="checkbox"
-              className={classes.noneCell}
-            >
+            </StyledSelectCell>
+            <StyledPermissionsCell parentColumn="None" padding="checkbox">
               <Radio
                 name="Select All"
                 checked={indexOfColumnWhereAllAreSelected === 0}
@@ -252,12 +207,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
                   'aria-label': 'Select none for all',
                 }}
               />
-            </TableCell>
-            <TableCell
-              parentColumn="Read Only"
-              padding="checkbox"
-              className={classes.readOnlyCell}
-            >
+            </StyledPermissionsCell>
+            <StyledPermissionsCell parentColumn="Read Only" padding="checkbox">
               <Radio
                 name="Select All"
                 checked={indexOfColumnWhereAllAreSelected === 1}
@@ -269,12 +220,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
                   'aria-label': 'Select read-only for all',
                 }}
               />
-            </TableCell>
-            <TableCell
-              parentColumn="Read/Write"
-              padding="checkbox"
-              className={classes.readWritecell}
-            >
+            </StyledPermissionsCell>
+            <StyledPermissionsCell parentColumn="Read/Write" padding="checkbox">
               <Radio
                 name="Select All"
                 checked={indexOfColumnWhereAllAreSelected === 2}
@@ -286,7 +233,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
                   'aria-label': 'Select read/write for all',
                 }}
               />
-            </TableCell>
+            </StyledPermissionsCell>
           </TableRow>
           {form.values.scopes.map((scopeTup) => {
             if (!basePermNameMap[scopeTup[0]]) {
@@ -297,18 +244,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
                 key={scopeTup[0]}
                 data-qa-row={basePermNameMap[scopeTup[0]]}
               >
-                <TableCell
-                  parentColumn="Access"
-                  padding="checkbox"
-                  className={classes.accessCell}
-                >
+                <StyledAccessCell parentColumn="Access" padding="checkbox">
                   {basePermNameMap[scopeTup[0]]}
-                </TableCell>
-                <TableCell
-                  parentColumn="None"
-                  padding="checkbox"
-                  className={classes.noneCell}
-                >
+                </StyledAccessCell>
+                <StyledPermissionsCell parentColumn="None" padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 0}
                     scope="0"
@@ -317,11 +256,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
                     disabled={false}
                     onChange={handleScopeChange}
                   />
-                </TableCell>
-                <TableCell
+                </StyledPermissionsCell>
+                <StyledPermissionsCell
                   parentColumn="Read Only"
                   padding="checkbox"
-                  className={classes.readOnlyCell}
                 >
                   <AccessCell
                     active={scopeTup[1] === 1}
@@ -331,11 +269,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
                     disabled={false}
                     onChange={handleScopeChange}
                   />
-                </TableCell>
-                <TableCell
+                </StyledPermissionsCell>
+                <StyledPermissionsCell
                   parentColumn="Read/Write"
                   padding="checkbox"
-                  className={classes.readWritecell}
                 >
                   <AccessCell
                     active={scopeTup[1] === 2}
@@ -345,12 +282,12 @@ export const CreateAPITokenDrawer = (props: Props) => {
                     disabled={false}
                     onChange={handleScopeChange}
                   />
-                </TableCell>
+                </StyledPermissionsCell>
               </TableRow>
             );
           })}
         </TableBody>
-      </Table>
+      </StyledPermsTable>
       {errorMap.scopes && (
         <FormHelperText error>{errorMap.scopes}</FormHelperText>
       )}

@@ -34,7 +34,7 @@ import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
 import { VolumeAttachmentDrawer } from './VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
-import VolumeTableRow from './VolumeTableRow';
+import { VolumeTableRow } from './VolumeTableRow';
 
 interface Props {
   isVolumesLanding?: boolean;

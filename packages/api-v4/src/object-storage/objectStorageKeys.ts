@@ -50,7 +50,7 @@ export const updateObjectStorageKey = (
 ) =>
   Request<ObjectStorageKey>(
     setMethod('PUT'),
-    setURL(`${API_ROOT}/object-storage/keys/${id}`),
+    setURL(`${API_ROOT}/object-storage/keys/${encodeURIComponent(id)}`),
     setData(data, createObjectStorageKeysSchema)
   );
 
@@ -62,5 +62,5 @@ export const updateObjectStorageKey = (
 export const revokeObjectStorageKey = (id: number) =>
   Request<ObjectStorageKey>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/object-storage/keys/${id}`)
+    setURL(`${API_ROOT}/object-storage/keys/${encodeURIComponent(id)}`)
   );

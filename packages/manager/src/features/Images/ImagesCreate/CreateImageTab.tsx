@@ -15,8 +15,9 @@ import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
-import DiskSelect from 'src/features/linodes/DiskSelect';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { useMetadataCustomerTag } from 'src/features/Images/utils';
+import DiskSelect from 'src/features/Linodes/DiskSelect';
+import LinodeSelect from 'src/features/Linodes/LinodeSelect';
 import useFlags from 'src/hooks/useFlags';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -98,6 +99,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const flags = useFlags();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
+  const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
@@ -283,7 +285,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
-      {flags.metadata ? (
+      {flags.metadata && hasMetadataCustomerTag ? (
         <Box className={classes.cloudInitCheckboxWrapper}>
           <CheckBox
             checked={isCloudInit}
