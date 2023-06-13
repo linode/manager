@@ -1,88 +1,91 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, pathOr } from 'ramda';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'redux';
-import { Subscription } from 'rxjs/Subscription';
-import {
-  DocumentTitleSegment,
-  withDocumentTitleProvider,
-} from 'src/components/DocumentTitle';
-import 'highlight.js/styles/a11y-light.css';
 import 'highlight.js/styles/a11y-dark.css';
+import 'highlight.js/styles/a11y-light.css';
+import { useSnackbar } from 'notistack';
+import { pathOr } from 'ramda';
+import * as React from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { compose } from 'redux';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
-import composeState from 'src/utilities/composeState';
-import { MapState } from './store/types';
+import GoTo from './GoTo';
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
-import GoTo from './GoTo';
+import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
+import { reportException } from './exceptionReporting';
+import { useAuthentication } from './hooks/useAuthentication';
+import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
+import useLinodes from './hooks/useLinodes';
+import { loadScript } from './hooks/useScript';
+import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
-import { volumeEventsHandler } from './queries/volumes';
-import { imageEventsHandler } from './queries/images';
-import { tokenEventHandler } from './queries/tokens';
-import withPreferences, {
-  PreferencesActionsProps,
-  PreferencesStateProps,
-} from './containers/preferences.container';
-import { loadScript } from './hooks/useScript';
-import { getNextThemeValue } from './utilities/theme';
-import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
-import { nodebalanacerEventHandler } from './queries/nodebalancers';
-import { oauthClientsEventHandler } from './queries/accountOAuth';
-import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
+import { imageEventsHandler } from './queries/images';
 import { linodeEventsHandler } from './queries/linodes/events';
+import { nodebalanacerEventHandler } from './queries/nodebalancers';
+import { useMutatePreferences, usePreferences } from './queries/preferences';
+import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
-import { reportException } from './exceptionReporting';
+import { tokenEventHandler } from './queries/tokens';
+import { volumeEventsHandler } from './queries/volumes';
+import { ApplicationState } from './store';
+import { getNextThemeValue } from './utilities/theme';
 
-interface Props {
-  location: RouteComponentProps['location'];
-  history: RouteComponentProps['history'];
-}
+export const App = () => {
+  const history = useHistory();
 
-interface State {
-  menuOpen: boolean;
-  welcomeBanner: boolean;
-  hasError: boolean;
-  goToOpen: boolean;
-}
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
-type CombinedProps = Props &
-  StateProps &
-  RouteComponentProps &
-  WithSnackbarProps &
-  FeatureFlagConsumerProps &
-  PreferencesStateProps &
-  PreferencesActionsProps;
+  const { featureFlagsLoading } = useFeatureFlagsLoad();
+  const appIsLoading = useSelector(
+    (state: ApplicationState) => state.initialLoad.appIsLoading
+  );
+  const { loggedInAsCustomer } = useAuthentication();
 
-export class App extends React.Component<CombinedProps, State> {
-  composeState = composeState;
+  const { enqueueSnackbar } = useSnackbar();
 
-  eventsSub: Subscription;
+  const {
+    linodes: {
+      error: { read: linodesError },
+    },
+  } = useLinodes();
 
-  state: State = {
-    menuOpen: false,
-    welcomeBanner: false,
-    hasError: false,
-    goToOpen: false,
-  };
+  const [goToOpen, setGoToOpen] = React.useState(false);
 
-  componentDidCatch() {
-    this.setState({ hasError: true });
-  }
+  const theme = preferences?.theme;
+  const keyboardListener = React.useCallback(
+    (event: KeyboardEvent) => {
+      const isOSMac = navigator.userAgent.includes('Mac');
+      const letterForThemeShortcut = 'D';
+      const letterForGoToOpen = 'K';
+      const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
+      if (event[modifierKey] && event.shiftKey) {
+        switch (event.key) {
+          case letterForThemeShortcut:
+            const currentTheme = theme;
+            const newTheme = getNextThemeValue(currentTheme);
 
-  componentDidMount() {
+            updateUserPreferences({ theme: newTheme });
+            break;
+          case letterForGoToOpen:
+            setGoToOpen(!goToOpen);
+            break;
+        }
+      }
+    },
+    [goToOpen, theme, updateUserPreferences]
+  );
+
+  React.useEffect(() => {
     if (import.meta.env.PROD && !import.meta.env.REACT_APP_DISABLE_NEW_RELIC) {
       loadScript('/new-relic.js');
     }
@@ -109,11 +112,13 @@ export class App extends React.Component<CombinedProps, State> {
           // Do nothing; a user may have analytics script requests blocked.
         });
     }
+  }, []);
 
+  React.useEffect(() => {
     /**
      * Send pageviews
      */
-    this.props.history.listen(({ pathname }) => {
+    history.listen(({ pathname }) => {
       // Send Google Analytics page view events
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
@@ -126,234 +131,178 @@ export class App extends React.Component<CombinedProps, State> {
         });
       }
     });
+  }, [history]);
 
+  React.useEffect(() => {
     /**
      * Allow an Easter egg for toggling the theme with
      * a key combination
      */
     // eslint-disable-next-line
-    document.addEventListener('keydown', this.keyboardListener);
+    document.addEventListener('keydown', keyboardListener);
+    return () => {
+      document.removeEventListener('keydown', keyboardListener);
+    };
+  }, [keyboardListener]);
 
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('database') && !event._initial
-      )
-      .subscribe(databaseEventsHandler);
+  React.useEffect(() => {
+    const subscriptions = [
+      events$
+        .filter(
+          ({ event }) => event.action.startsWith('database') && !event._initial
+        )
+        .subscribe(databaseEventsHandler),
 
-    events$
-      .filter(
-        ({ event }) =>
-          event.action.startsWith('domain') &&
-          !event._initial &&
-          event.entity !== null
-      )
-      .subscribe(domainEventsHandler);
+      events$
+        .filter(
+          ({ event }) =>
+            event.action.startsWith('domain') &&
+            !event._initial &&
+            event.entity !== null
+        )
+        .subscribe(domainEventsHandler),
 
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('volume') && !event._initial
-      )
-      .subscribe(volumeEventsHandler);
+      events$
+        .filter(
+          ({ event }) => event.action.startsWith('volume') && !event._initial
+        )
+        .subscribe(volumeEventsHandler),
 
-    events$
-      .filter(
-        ({ event }) =>
-          (event.action.startsWith('image') ||
-            event.action === 'disk_imagize') &&
-          !event._initial
-      )
-      .subscribe(imageEventsHandler);
+      events$
+        .filter(
+          ({ event }) =>
+            (event.action.startsWith('image') ||
+              event.action === 'disk_imagize') &&
+            !event._initial
+        )
+        .subscribe(imageEventsHandler),
 
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('token') && !event._initial
-      )
-      .subscribe(tokenEventHandler);
+      events$
+        .filter(
+          ({ event }) => event.action.startsWith('token') && !event._initial
+        )
+        .subscribe(tokenEventHandler),
 
-    events$
-      .filter(
-        ({ event }) =>
-          event.action.startsWith('user_ssh_key') && !event._initial
-      )
-      .subscribe(sshKeyEventHandler);
+      events$
+        .filter(
+          ({ event }) =>
+            event.action.startsWith('user_ssh_key') && !event._initial
+        )
+        .subscribe(sshKeyEventHandler),
 
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('firewall') && !event._initial
-      )
-      .subscribe(firewallEventsHandler);
+      events$
+        .filter(
+          ({ event }) => event.action.startsWith('firewall') && !event._initial
+        )
+        .subscribe(firewallEventsHandler),
 
-    events$
-      .filter(
-        ({ event }) =>
-          event.action.startsWith('nodebalancer') && !event._initial
-      )
-      .subscribe(nodebalanacerEventHandler);
+      events$
+        .filter(
+          ({ event }) =>
+            event.action.startsWith('nodebalancer') && !event._initial
+        )
+        .subscribe(nodebalanacerEventHandler),
 
-    events$
-      .filter(
-        ({ event }) =>
-          event.action.startsWith('oauth_client') && !event._initial
-      )
-      .subscribe(oauthClientsEventHandler);
+      events$
+        .filter(
+          ({ event }) =>
+            event.action.startsWith('oauth_client') && !event._initial
+        )
+        .subscribe(oauthClientsEventHandler),
 
-    events$
-      .filter(
-        ({ event }) =>
-          (event.action.startsWith('linode') ||
-            event.action.startsWith('backups')) &&
-          !event._initial
-      )
-      .subscribe(linodeEventsHandler);
+      events$
+        .filter(
+          ({ event }) =>
+            (event.action.startsWith('linode') ||
+              event.action.startsWith('backups')) &&
+            !event._initial
+        )
+        .subscribe(linodeEventsHandler),
 
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('ticket') && !event._initial
-      )
-      .subscribe(supportTicketEventHandler);
+      events$
+        .filter(
+          ({ event }) => event.action.startsWith('ticket') && !event._initial
+        )
+        .subscribe(supportTicketEventHandler),
 
-    /*
-     * We want to listen for migration events side-wide
-     * It's unpredictable when a migration is going to happen. It could take
-     * hours and it could take days. We want to notify to the user when it happens
-     * and then update the Linodes in LinodesDetail and LinodesLanding
-     */
-    this.eventsSub = events$
-      .filter(
-        ({ event }) =>
-          !event._initial && ['linode_migrate'].includes(event.action)
-      )
-      .subscribe(({ event }) => {
-        const { entity: migratedLinode } = event;
-        if (event.action === 'linode_migrate' && event.status === 'finished') {
-          this.props.enqueueSnackbar(
-            `Linode ${migratedLinode!.label} migrated successfully.`,
-            {
-              variant: 'success',
-            }
-          );
-        }
+      /*
+       * We want to listen for migration events side-wide
+       * It's unpredictable when a migration is going to happen. It could take
+       * hours and it could take days. We want to notify to the user when it happens
+       * and then update the Linodes in LinodesDetail and LinodesLanding
+       */
+      events$
+        .filter(
+          ({ event }) =>
+            !event._initial && ['linode_migrate'].includes(event.action)
+        )
+        .subscribe(({ event }) => {
+          const { entity: migratedLinode } = event;
+          if (
+            event.action === 'linode_migrate' &&
+            event.status === 'finished'
+          ) {
+            enqueueSnackbar(
+              `Linode ${migratedLinode!.label} migrated successfully.`,
+              {
+                variant: 'success',
+              }
+            );
+          }
 
-        if (event.action === 'linode_migrate' && event.status === 'failed') {
-          this.props.enqueueSnackbar(
-            `Linode ${migratedLinode!.label} migration failed.`,
-            {
-              variant: 'error',
-            }
-          );
-        }
-      });
+          if (event.action === 'linode_migrate' && event.status === 'failed') {
+            enqueueSnackbar(
+              `Linode ${migratedLinode!.label} migration failed.`,
+              {
+                variant: 'error',
+              }
+            );
+          }
+        }),
+    ];
+
+    return () => {
+      subscriptions.forEach((sub) => sub.unsubscribe());
+    };
+  }, [enqueueSnackbar]);
+
+  /**
+   * basically, if we get an "invalid oauth token"
+   * error from the API, just render nothing because the user is
+   * about to get shot off to login
+   */
+  if (hasOauthError(linodesError)) {
+    return null;
   }
-  componentWillUnmount(): void {
-    document.removeEventListener('keydown', this.keyboardListener);
-  }
 
-  keyboardListener = (event: KeyboardEvent) => {
-    const isOSMac = navigator.userAgent.includes('Mac');
-    const letterForThemeShortcut = 'D';
-    const letterForGoToOpen = 'K';
-    const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
-    if (event[modifierKey] && event.shiftKey) {
-      switch (event.key) {
-        case letterForThemeShortcut:
-          const currentTheme = this.props.preferences?.theme;
-          const newTheme = getNextThemeValue(currentTheme);
+  return (
+    <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
+      {/** Accessibility helper */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <div hidden>
+        <span id="new-window">Opens in a new window</span>
+        <span id="external-site">Opens an external site</span>
+        <span id="external-site-new-window">
+          Opens an external site in a new window
+        </span>
+      </div>
+      <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
+      {/** Update the LD client with the user's id as soon as we know it */}
+      <IdentifyUser />
+      <DocumentTitleSegment segment="Linode Manager" />
+      {featureFlagsLoading ? null : (
+        <MainContent
+          appIsLoading={appIsLoading}
+          isLoggedInAsCustomer={loggedInAsCustomer}
+        />
+      )}
+    </ErrorBoundary>
+  );
+};
 
-          this.props.updateUserPreferences({ theme: newTheme });
-          break;
-        case letterForGoToOpen:
-          this.setState((prevState) => ({
-            ...prevState,
-            goToOpen: !prevState.goToOpen,
-          }));
-          break;
-      }
-    }
-  };
-
-  goToClose = () => {
-    this.setState({ goToOpen: false });
-  };
-
-  render() {
-    const { hasError } = this.state;
-    const { linodesError } = this.props;
-
-    if (hasError) {
-      return <TheApplicationIsOnFire />;
-    }
-
-    /**
-     * basically, if we get an "invalid oauth token"
-     * error from the API, just render nothing because the user is
-     * about to get shot off to login
-     */
-    if (hasOauthError(linodesError)) {
-      return null;
-    }
-
-    return (
-      <React.Fragment>
-        {/** Accessibility helper */}
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
-        <div hidden>
-          <span id="new-window">Opens in a new window</span>
-          <span id="external-site">Opens an external site</span>
-          <span id="external-site-new-window">
-            Opens an external site in a new window
-          </span>
-        </div>
-        <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
-        {/** Update the LD client with the user's id as soon as we know it */}
-        <IdentifyUser />
-        <DocumentTitleSegment segment="Linode Manager" />
-        {this.props.featureFlagsLoading ? null : (
-          <MainContent
-            appIsLoading={this.props.appIsLoading}
-            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-          />
-        )}
-      </React.Fragment>
-    );
-  }
-}
-
-interface StateProps {
-  linodes: Linode[];
-  isLoggedInAsCustomer: boolean;
-  linodesLoading: boolean;
-  linodesError?: APIError[];
-  bucketsError?: APIError[];
-  appIsLoading: boolean;
-  euuid?: string;
-  featureFlagsLoading: boolean;
-}
-
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  linodes: Object.values(state.__resources.linodes.itemsById),
-  linodesError: path(['read'], state.__resources.linodes.error),
-  isLoggedInAsCustomer: pathOr(
-    false,
-    ['authentication', 'loggedInAsCustomer'],
-    state
-  ),
-  linodesLoading: state.__resources.linodes.loading,
-  appIsLoading: state.initialLoad.appIsLoading,
-  featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
-});
-
-const connected = connect(mapStateToProps);
-
-export default compose(
-  connected,
-  withDocumentTitleProvider,
-  withSnackbar,
-  withFeatureFlagProvider,
-  withFeatureFlagConsumer,
-  withPreferences
-)(App);
+export default compose(withFeatureFlagProvider, withFeatureFlagConsumer)(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
   return args.some((eachError) => {

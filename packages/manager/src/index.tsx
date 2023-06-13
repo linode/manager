@@ -2,12 +2,7 @@ import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider as ReduxStoreProvider } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Route,
-  RouteComponentProps,
-  Switch,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
@@ -51,7 +46,7 @@ const NullAuth = () => <span>null auth route</span>;
 
 const Null = () => <span>null route</span>;
 
-const AppWrapper = (props: RouteComponentProps) => (
+const AppWrapper = () => (
   <>
     <SplashScreen />
     <SnackBar
@@ -61,7 +56,7 @@ const AppWrapper = (props: RouteComponentProps) => (
       data-qa-toast
       hideIconVariant={true}
     >
-      <App location={props.location} history={props.history} />
+      <App />
     </SnackBar>
   </>
 );
