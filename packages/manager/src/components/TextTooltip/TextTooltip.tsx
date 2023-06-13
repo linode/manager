@@ -9,7 +9,7 @@ export interface TextTooltipProps {
   /** The text to hover on to display the tooltip */
   displayText: string;
   /** If true, the tooltip will not have a min-width of 375px
-   * @default 375px
+   * @default 375
    */
   minWidth?: number | string;
   /**
@@ -33,7 +33,6 @@ export const TextTooltip = (props: TextTooltipProps) => {
     <StyledRootTooltip
       enterTouchDelay={0}
       placement={placement ? placement : 'bottom'}
-      leaveDelay={10000000000}
       PopperProps={{
         sx: {
           '& > div': minWidth ? minWidth : { minWidth: 375 },

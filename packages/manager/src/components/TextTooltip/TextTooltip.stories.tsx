@@ -11,8 +11,8 @@ export const Default: StoryObj<TextTooltipProps> = {
       This paragraph contains a{' '}
       <TextTooltip
         {...args}
-        displayText="tooltip text"
-        tooltipText="This is the tooltip content"
+        displayText={args.displayText}
+        tooltipText={args.tooltipText}
       />{' '}
       component.
     </Typography>
@@ -26,8 +26,8 @@ export const Customized: StoryObj<TextTooltipProps> = {
       This paragraph contains a{' '}
       <TextTooltip
         {...args}
-        displayText="tooltip text"
-        tooltipText="This is the tooltip content"
+        displayText={args.displayText}
+        tooltipText={args.tooltipText}
         placement="top"
         minWidth={'auto'}
       />{' '}
@@ -38,6 +38,10 @@ export const Customized: StoryObj<TextTooltipProps> = {
 
 const meta: Meta<TextTooltipProps> = {
   title: 'Elements/Tooltip/Text Tooltip',
+  args: {
+    displayText: 'tooltip text',
+    tooltipText: 'This is the tooltip content',
+  },
   component: TextTooltip,
 };
 export default meta;
