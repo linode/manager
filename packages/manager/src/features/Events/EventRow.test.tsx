@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { Row, RowProps } from './EventRow';
+import { DateTime } from 'luxon';
 
 const message = 'this is a message.';
 const props: RowProps = {
   action: 'linode_boot',
   message,
   type: 'linode',
-  created: '2018-01-01',
   username: null,
+  timestamp: DateTime.now(),
 };
 
 describe('EventRow component', () => {
