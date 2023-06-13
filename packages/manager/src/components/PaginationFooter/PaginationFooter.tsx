@@ -2,31 +2,9 @@ import * as React from 'react';
 import Box from '../core/Box';
 import Select from '../EnhancedSelect/Select';
 import { PaginationControls } from '../PaginationControls/PaginationControls';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 
 export const MIN_PAGE_SIZE = 25;
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    background: theme.bg.bgPaper,
-  },
-  select: {
-    '& .MuiInput-root': {
-      backgroundColor: theme.bg.bgPaper,
-      border: 'none',
-      '&.Mui-focused': {
-        boxShadow: 'none',
-      },
-    },
-    '& .MuiInput-input': {
-      paddingTop: 4,
-    },
-    '& .react-select__value-container': {
-      paddingLeft: 12,
-    },
-  },
-}));
 
 export interface PaginationProps {
   count: number;
@@ -52,7 +30,7 @@ const baseOptions = [
 ];
 
 export const PaginationFooter = (props: Props) => {
-  const { classes } = useStyles();
+  const theme = useTheme();
   const {
     count,
     fixedSize,
@@ -86,7 +64,9 @@ export const PaginationFooter = (props: Props) => {
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      className={classes.root}
+      sx={{
+        background: theme.bg.bgPaper,
+      }}
     >
       {!isShowingAll && (
         <PaginationControls
@@ -97,7 +77,7 @@ export const PaginationFooter = (props: Props) => {
         />
       )}
       {!fixedSize ? (
-        <Box className={classes.select}>
+        <PageSizeSelectContainer>
           <Select
             options={finalOptions}
             defaultValue={defaultPagination}
@@ -109,11 +89,29 @@ export const PaginationFooter = (props: Props) => {
             menuPlacement="top"
             medium
           />
-        </Box>
+        </PageSizeSelectContainer>
       ) : null}
     </Box>
   );
 };
+
+const PageSizeSelectContainer = styled(Box, {
+  label: 'PageSizeSelectContainer',
+})(({ theme }) => ({
+  '& .MuiInput-root': {
+    backgroundColor: theme.bg.bgPaper,
+    border: 'none',
+    '&.Mui-focused': {
+      boxShadow: 'none',
+    },
+  },
+  '& .MuiInput-input': {
+    paddingTop: 4,
+  },
+  '& .react-select__value-container': {
+    paddingLeft: 12,
+  },
+}));
 
 /**
  * Return the minimum page size needed to display a given number of items (`value`).
