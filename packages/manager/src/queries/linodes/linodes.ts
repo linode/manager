@@ -33,6 +33,7 @@ import {
   resizeLinode,
   ResizeLinodePayload,
 } from '@linode/api-v4/lib/linodes';
+import { queryKey as accountQueryKey } from '../account';
 
 export const queryKey = 'linodes';
 
@@ -232,6 +233,7 @@ export const useLinodeResizeMutation = (id: number) => {
     {
       onSuccess() {
         queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries([accountQueryKey, 'notifications']);
       },
     }
   );
