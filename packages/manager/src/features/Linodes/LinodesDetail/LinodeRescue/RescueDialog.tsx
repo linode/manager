@@ -17,7 +17,10 @@ export const RescueDialog = (props: Props) => {
     linodeId ?? -1,
     linodeId !== undefined && open
   );
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
 
   const isBareMetalInstance = type?.class === 'metal';
 

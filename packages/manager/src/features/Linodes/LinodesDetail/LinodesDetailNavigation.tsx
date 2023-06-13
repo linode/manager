@@ -42,7 +42,10 @@ const LinodesDetailNavigation = () => {
   const { url } = useRouteMatch();
   const history = useHistory();
 
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
 
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = type?.class === 'metal';
