@@ -5,7 +5,6 @@ import Button from './Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 /**
- * **Overview** <br />
  * Buttons allow users to take actions, and make choices, with a single tap.
  * - Buttons are aligned right with primary button to the far right and secondary buttons positioned to the left.
  * - There can be more than one secondary button.
