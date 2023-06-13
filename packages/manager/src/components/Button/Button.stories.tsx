@@ -3,11 +3,21 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Button from './Button';
 
+/**
+ * **Overview** <br />
+ * Buttons allow users to take actions, and make choices, with a single tap.
+ * - Buttons are aligned right with primary button to the far right and secondary buttons positioned to the left.
+ * - There can be more than one secondary button.
+ * - Ideally there is one primary button per page. This helps provide a visual focus to the main purpose of the page.
+ * - Button labels should support the user taking their desired action by clearly stating what will happen when clicked (ex. Create Linode, Delete Firewall).
+ * - There is no destructive button style. We do not take an implied position on the user’s knowledge or intention by using an alert color such as red for destructive actions.
+ */
+
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   argTypes: {
-    tooltipGAEvent: {
+    tooltipAnalyticsEvent: {
       action: 'GA Event Action',
     },
   },
@@ -20,7 +30,7 @@ const meta: Meta<typeof Button> = {
     loading: false,
     sx: {},
     tooltipText: '',
-    tooltipGAEvent: action('tooltipGAEvent'),
+    tooltipAnalyticsEvent: action('tooltipAnalyticsEvent'),
   },
 };
 
@@ -28,11 +38,18 @@ export default meta;
 
 type Story = StoryObj<typeof Button>;
 
+/**
+ * Default Primary Button
+ *  Bold and easily visible. Represents the primary or preferred action on the page.
+ */
 export const Default: Story = {
   args: {},
   render: (args) => <Button {...args} />,
 };
 
+/** Secondary Button
+ * The bold text is intentionally understated to pair well with a primary button, sit inside a table head or within a form.
+ */
 export const Secondary: Story = {
   args: {
     buttonType: 'secondary',
@@ -40,6 +57,11 @@ export const Secondary: Story = {
   render: (args) => <Button {...args} />,
 };
 
+/** Outlined Button
+ * This hybrid button style should be used with discretion. It is used when:
+ * - A primary button is appropriate but is distracting or misleading. One example is a Delete button on an entity and we do not want to suggest deleting is the preferred action.
+ * - A secondary button is appropriate but it could be missed because of its positioning on the page.
+ */
 export const Outlined: Story = {
   args: {
     buttonType: 'outlined',
