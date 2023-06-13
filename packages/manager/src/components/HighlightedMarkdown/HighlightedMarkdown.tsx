@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import * as hljs from 'highlight.js/lib/core';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
@@ -19,14 +18,6 @@ hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('nginx', nginx);
 hljs.registerLanguage('yaml', yaml);
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    '& .hljs': {
-      color: theme.color.offBlack,
-    },
-  },
-}));
 
 export type SupportedLanguage =
   | 'plaintext'
@@ -45,7 +36,7 @@ export interface HighlightedMarkdownProps {
 }
 
 export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
-  const { classes, cx } = useStyles();
+  const theme = useTheme<Theme>();
   const { className, language, textOrMarkdown, sanitizeOptions } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
 
@@ -84,7 +75,12 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
 
   return (
     <Typography
-      className={cx(classes.root, 'formatted-text', className)}
+      className={`formatted-text ${className}`}
+      sx={{
+        '& .hljs': {
+          color: theme.color.offBlack,
+        },
+      }}
       ref={rootRef}
       dangerouslySetInnerHTML={{
         __html: sanitizedHtml,
