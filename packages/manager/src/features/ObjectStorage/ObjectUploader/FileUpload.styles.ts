@@ -49,8 +49,9 @@ export const StyledRightWrapper = styled('div', {
 
 export const StyledUploadPending = styled(UploadPending, {
   label: 'StyledUploadPending',
-})(() => ({
+})(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
+  color: theme.textColors.headlineStatic,
 }));
 
 export const StyledFileSizeTypography = styled(Typography, {

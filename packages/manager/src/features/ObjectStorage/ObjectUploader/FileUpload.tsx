@@ -104,11 +104,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
               width={22}
             />
           ) : (
-            <StyledUploadPending
-              className={classes.iconRight}
-              height={22}
-              width={22}
-            />
+            <StyledUploadPending height={22} width={22} />
           )}
         </StyledRightWrapper>
       </StyledContainer>

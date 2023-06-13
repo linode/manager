@@ -5,7 +5,9 @@ import Typography from 'src/components/core/Typography';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 
-export const StyledDropZoneDiv = styled('div')(({ theme }) => ({
+export const StyledDropZoneDiv = styled('div', {
+  label: 'StyledDropZoneDiv',
+})(({ theme }) => ({
   position: 'relative',
   display: 'flex',
   flexDirection: 'row',
@@ -22,10 +24,12 @@ export const StyledDropZoneDiv = styled('div')(({ theme }) => ({
   outline: 'none',
   overflow: 'auto',
   padding: theme.spacing(),
-  transition: theme.transitions.create(['border-color', 'background-color']),
+  transition: theme.transitions.create(['background-color', 'border-color']),
 }));
 
-export const StyledFileUploadsDiv = styled('div')({
+export const StyledFileUploadsDiv = styled('div', {
+  label: 'StyledFileUploadsDiv',
+})({
   display: 'flex',
   flexDirection: 'column',
   flexGrow: 1,
@@ -33,6 +37,7 @@ export const StyledFileUploadsDiv = styled('div')({
 });
 
 export const StyledDropZoneContentDiv = styled('div', {
+  label: 'StyledDropZoneContentDiv',
   shouldForwardProp: (prop) => isPropValid(['uploadZoneActive'], prop),
 })<{
   uploadZoneActive: boolean;
@@ -54,12 +59,16 @@ export const StyledDropZoneContentDiv = styled('div', {
   }),
 }));
 
-export const StyledCopy = styled(Typography)(({ theme }) => ({
+export const StyledCopy = styled(Typography, {
+  label: 'StyledCopy',
+})(({ theme }) => ({
   color: theme.palette.text.primary,
   margin: '0 auto',
 }));
 
-export const StyledUploadButton = styled(Button)(({ theme }) => ({
+export const StyledUploadButton = styled(Button, {
+  label: 'StyledUploadButton',
+})(({ theme }) => ({
   marginTop: theme.spacing(2),
   opacity: 1,
   transition: theme.transitions.create(['opacity']),
