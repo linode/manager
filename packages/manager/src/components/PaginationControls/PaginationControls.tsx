@@ -15,7 +15,7 @@ export const PaginationControls = (props: Props) => {
     <Pagination
       count={Math.ceil(count / pageSize)}
       page={page}
-      onChange={(event, page) => onClickHandler(page)}
+      onChange={(_, page) => onClickHandler(page)}
       shape="rounded"
     />
   );
