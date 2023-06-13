@@ -44,7 +44,7 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { sendEvent } from 'src/utilities/ga';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
 import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
@@ -214,7 +214,7 @@ export class LinodeCreate extends React.PureComponent<
     super(props);
 
     /** Get the query params as an object, excluding the "?" */
-    const queryParams = getParamsFromUrl(location.search);
+    const queryParams = getQueryParamsFromQueryString(location.search);
 
     const _tabs = [
       'Distributions',

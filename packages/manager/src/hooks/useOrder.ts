@@ -4,7 +4,7 @@ import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
 import { Order } from 'src/components/Pagey/Pagey';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 
 /**
@@ -29,7 +29,7 @@ export const useOrder = (
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
   const history = useHistory();
-  const params = getParamsFromUrl(location.search);
+  const params = getQueryParamsFromQueryString(location.search);
 
   const initialOrder = getInitialValuesFromUserPreferences(
     preferenceKey || '',

@@ -84,7 +84,6 @@
     "tss-react": "^4.8.2",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
-    "url-parse": "^1.5.9",
     "xterm": "^4.2.0",
     "yup": "^0.32.9",
     "zxcvbn": "^4.4.2"
@@ -165,7 +164,6 @@
     "@types/redux-mock-store": "^1.0.1",
     "@types/sanitize-html": "1.22.0",
     "@types/throttle-debounce": "^1.0.0",
-    "@types/url-parse": "^1.4.1",
     "@types/uuid": "^3.4.3",
     "@types/yup": "^0.29.13",
     "@types/zxcvbn": "^4.4.0",

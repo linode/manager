@@ -8,7 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Loading from 'src/components/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
 import AppPanelSection from 'src/features/Linodes/LinodesCreate/AppPanelSection';
-import { getParamFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import Panel from './Panel';
 import { AppsData } from './types';
 
@@ -51,7 +51,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class SelectAppPanel extends React.PureComponent<CombinedProps> {
   clickAppIfQueryParamExists = () => {
     const { handleClick, appInstances } = this.props;
-    const appIDFromURL = getParamFromUrl(location.search, 'appID');
+    const appIDFromURL = getQueryParamFromQueryString(location.search, 'appID');
     const matchedApp = appInstances
       ? appInstances.find((eachApp) => eachApp.id === +appIDFromURL)
       : undefined;
@@ -81,7 +81,10 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       }
 
       // If the URL also included &showInfo, open the Info drawer as well
-      const showInfo = getParamFromUrl(location.search, 'showInfo');
+      const showInfo = getQueryParamFromQueryString(
+        location.search,
+        'showInfo'
+      );
       if (showInfo) {
         this.props.openDrawer(matchedApp.label);
       }
