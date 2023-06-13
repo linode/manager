@@ -7,7 +7,7 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Typography from 'src/components/core/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Link } from 'react-router-dom';
-import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { makeStyles } from 'tss-react/mui';
 import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
 import { styled } from '@mui/material/styles';
@@ -179,7 +179,7 @@ const ContentBody = React.memo((props: BodyProps) => {
       ))}
       {content.length > count ? (
         <StyledLToggleContainer display="flex" justifyContent="flex-end">
-          <LinkStyledButton
+          <StyledLinkButton
             onClick={() => setShowAll(!showAll)}
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
@@ -195,7 +195,7 @@ const ContentBody = React.memo((props: BodyProps) => {
                 [classes.inverted]: showAll,
               })}
             />
-          </LinkStyledButton>
+          </StyledLinkButton>
         </StyledLToggleContainer>
       ) : null}
     </>
