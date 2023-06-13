@@ -1,5 +1,4 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
-import { ResizeLinodeDiskSchema } from '@linode/validation/lib/linodes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
