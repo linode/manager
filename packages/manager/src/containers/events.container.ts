@@ -1,18 +1,26 @@
 import { Event } from '@linode/api-v4/lib/account';
-import { connect } from 'react-redux';
-import { ApplicationState } from 'src/store';
+import { ResourcePage } from '@linode/api-v4/lib/types';
+import React from 'react';
+import { InfiniteData } from 'react-query';
+import { EventsQueryOptions, useEventsInfiniteQuery } from 'src/queries/events';
 
-export interface EventsProps {
-  eventsData: Event[];
+interface EventsInfiniteQueryProps {
+  eventsData?: InfiniteData<ResourcePage<Event>>;
+  eventsLoading: boolean;
 }
 
-export default <TInner extends {}, TOuter extends {}>(
-  mapEventsToProps?: (ownProps: TOuter, eventsData: Event[]) => TInner
-) =>
-  connect((state: ApplicationState, ownProps: TOuter) => {
-    const eventsData = state.events.events;
-    if (mapEventsToProps) {
-      return mapEventsToProps(ownProps, eventsData);
-    }
-    return { eventsData };
+export const withEventsInfiniteQuery = <Props>(
+  options?: EventsQueryOptions
+) => (Component: React.ComponentType<Props & EventsInfiniteQueryProps>) => (
+  props: Props
+) => {
+  const { data: eventsData, isLoading: eventsLoading } = useEventsInfiniteQuery(
+    options
+  );
+
+  return React.createElement(Component, {
+    ...props,
+    eventsData,
+    eventsLoading,
   });
+};

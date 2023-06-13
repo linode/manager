@@ -32,13 +32,13 @@ const infiniteEventsQueryKey = (filter: Filter | undefined = {}) => [
   ...(filter ? [filter] : []),
 ];
 
-export const useEventsInfiniteQuery = (
-  options: {
-    enabled?: boolean;
-    eventHandler?: (event: Event) => void;
-    filter?: Filter;
-  } = {}
-) => {
+export interface EventsQueryOptions {
+  enabled?: boolean;
+  eventHandler?: (event: Event) => void;
+  filter?: Filter;
+}
+
+export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
   const { enabled = true, eventHandler, filter } = options;
 
   const queryClient = useQueryClient();
@@ -106,13 +106,7 @@ export const useMarkEventsAsSeen = () => {
   );
 };
 
-const useEventsPolling = (
-  options: {
-    enabled?: boolean;
-    eventHandler?: (event: Event) => void;
-    filter?: Filter;
-  } = {}
-) => {
+const useEventsPolling = (options: EventsQueryOptions = {}) => {
   const { enabled = true, eventHandler, filter } = options;
 
   const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
