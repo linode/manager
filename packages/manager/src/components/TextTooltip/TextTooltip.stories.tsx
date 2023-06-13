@@ -40,6 +40,7 @@ const meta: Meta<TextTooltipProps> = {
   title: 'Elements/Tooltip/Text Tooltip',
   args: {
     displayText: 'tooltip text',
+    minWidth: 375,
     tooltipText: 'This is the tooltip content',
   },
   component: TextTooltip,
