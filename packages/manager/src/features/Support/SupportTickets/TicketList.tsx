@@ -161,7 +161,6 @@ export const TicketList = (props: Props) => {
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         eventCategory="ticket list"
-        padded
       />
     </>
   );
