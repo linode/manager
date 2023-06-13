@@ -1,11 +1,11 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-interface Props {
+interface ScriptCodeProps {
   script: string;
 }
 
-export const ScriptCode = (props: Props) => {
+export const ScriptCode = (props: ScriptCodeProps) => {
   const { script } = props;
 
   return (
