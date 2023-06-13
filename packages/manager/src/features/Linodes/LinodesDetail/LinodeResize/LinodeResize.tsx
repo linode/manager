@@ -122,6 +122,13 @@ export const LinodeResize = (props: Props) => {
   }, [disks]);
 
   React.useEffect(() => {
+    if (!open) {
+      formik.resetForm();
+      setConfirmationText('');
+    }
+  }, [open]);
+
+  React.useEffect(() => {
     // Set to "block: end" since the sticky header would otherwise interfere.
     scrollErrorIntoView(undefined, { block: 'end' });
   }, [resizeError]);
