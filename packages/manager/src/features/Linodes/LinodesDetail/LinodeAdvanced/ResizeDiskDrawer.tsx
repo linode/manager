@@ -25,6 +25,7 @@ import {
   useAllLinodeDisksQuery,
   useLinodeDiskResizeMutation,
 } from 'src/queries/linodes/disks';
+import { resetEventsPolling } from 'src/eventsPolling';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formHelperTextLink: {
@@ -68,13 +69,12 @@ export const ResizeDiskDrawer = (props: Props) => {
 
   const formik = useFormik({
     initialValues: {
-      size: disk?.size || maximumSize || 0,
+      size: disk?.size ?? maximumSize,
     },
-    validationSchema: ResizeLinodeDiskSchema,
-    validateOnChange: true,
     enableReinitialize: true,
     async onSubmit(values) {
       await resizeDisk(values);
+      resetEventsPolling();
       enqueueSnackbar('Successfully started resize', { variant: 'success' });
       onClose();
     },
@@ -90,19 +90,19 @@ export const ResizeDiskDrawer = (props: Props) => {
 
   return (
     <Drawer title="Resize Disk" open={open} onClose={onClose}>
-      <Grid container direction="row">
-        <Grid xs={12}>
-          {errorMap.none && (
-            <Notice
-              error
-              spacingBottom={8}
-              errorGroup="linode-disk-drawer"
-              text={errorMap.none}
-            />
-          )}
-        </Grid>
-        <Grid xs={12}>
-          <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit}>
+        <Grid container direction="row">
+          <Grid xs={12}>
+            {errorMap.none && (
+              <Notice
+                error
+                spacingBottom={8}
+                errorGroup="linode-disk-drawer"
+                text={errorMap.none}
+              />
+            )}
+          </Grid>
+          <Grid xs={12}>
             <FormHelperText>
               The size of a Linode Compute Instance&rsquo;s disk can be
               increased or decreased as needed.
@@ -122,6 +122,7 @@ export const ResizeDiskDrawer = (props: Props) => {
             </FormHelperText>
             <TextField
               disabled
+              required
               label="Label"
               name="label"
               value={disk?.label}
@@ -170,27 +171,27 @@ export const ResizeDiskDrawer = (props: Props) => {
                 tooltipText={MaxSizeTooltipText}
               />
             </FormHelperText>
-          </form>
+          </Grid>
         </Grid>
-      </Grid>
-      <ActionsPanel>
-        <Button
-          onClick={onClose}
-          buttonType="secondary"
-          className="cancel"
-          data-qa-disk-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          buttonType="primary"
-          loading={formik.isSubmitting}
-          data-testid="submit-disk-form"
-        >
-          Resize
-        </Button>
-      </ActionsPanel>
+        <ActionsPanel>
+          <Button
+            onClick={onClose}
+            buttonType="secondary"
+            className="cancel"
+            data-qa-disk-cancel
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            buttonType="primary"
+            loading={formik.isSubmitting}
+            data-testid="submit-disk-form"
+          >
+            Resize
+          </Button>
+        </ActionsPanel>
+      </form>
     </Drawer>
   );
 };

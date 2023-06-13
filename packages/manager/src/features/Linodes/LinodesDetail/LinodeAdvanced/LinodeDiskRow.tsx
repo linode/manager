@@ -45,18 +45,18 @@ interface Props {
   onDelete: () => void;
 }
 
-export const LinodeDiskRow: React.FC<Props> = (props) => {
+export const LinodeDiskRow = React.memo((props: Props) => {
   const classes = useStyles();
   const { inProgressEvents } = useEvents();
   const {
     disk,
     linodeId,
+    linodeStatus,
+    readOnly,
     onDelete,
     onImagize,
     onRename,
     onResize,
-    linodeStatus,
-    readOnly,
   } = props;
 
   const resizeEvent = inProgressEvents.find(
@@ -69,7 +69,6 @@ export const LinodeDiskRow: React.FC<Props> = (props) => {
     <TableRow data-qa-disk={disk.label}>
       <TableCell className={classes.diskLabel}>{disk.label}</TableCell>
       <TableCell className={classes.diskType}>{disk.filesystem}</TableCell>
-
       <TableCell className={classes.diskSize}>
         {Boolean(resizeEvent) ? (
           <div className={classes.progressBar}>
@@ -106,6 +105,4 @@ export const LinodeDiskRow: React.FC<Props> = (props) => {
       </TableCell>
     </TableRow>
   );
-};
-
-export default React.memo(LinodeDiskRow);
+});

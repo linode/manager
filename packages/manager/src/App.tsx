@@ -42,7 +42,10 @@ import { firewallEventsHandler } from './queries/firewalls';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
-import { linodeEventsHandler } from './queries/linodes/events';
+import {
+  diskEventHandler,
+  linodeEventsHandler,
+} from './queries/linodes/events';
 import { supportTicketEventHandler } from './queries/support';
 import { reportException } from './exceptionReporting';
 
@@ -211,6 +214,10 @@ export class App extends React.Component<CombinedProps, State> {
         ({ event }) => event.action.startsWith('ticket') && !event._initial
       )
       .subscribe(supportTicketEventHandler);
+
+    events$
+      .filter(({ event }) => event.action.startsWith('disk') && !event._initial)
+      .subscribe(diskEventHandler);
 
     /*
      * We want to listen for migration events side-wide

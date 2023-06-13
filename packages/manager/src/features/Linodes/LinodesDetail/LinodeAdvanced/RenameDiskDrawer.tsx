@@ -83,19 +83,19 @@ export const RenameDiskDrawer = (props: Props) => {
 
   return (
     <Drawer title="Rename Disk" open={open} onClose={onClose}>
-      <Grid container direction="row">
-        <Grid xs={12}>
-          {errorMap.none && (
-            <Notice
-              error
-              spacingBottom={8}
-              errorGroup="linode-disk-drawer"
-              text={errorMap.none}
-            />
-          )}
-        </Grid>
-        <Grid xs={12} className={classes.section}>
-          <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit}>
+        <Grid container direction="row">
+          <Grid xs={12}>
+            {errorMap.none && (
+              <Notice
+                error
+                spacingBottom={8}
+                errorGroup="linode-disk-drawer"
+                text={errorMap.none}
+              />
+            )}
+          </Grid>
+          <Grid xs={12} className={classes.section}>
             <TextField
               label="Label"
               name="label"
@@ -137,27 +137,27 @@ export const RenameDiskDrawer = (props: Props) => {
               }}
               data-qa-disk-size
             />
-          </form>
+          </Grid>
         </Grid>
-      </Grid>
-      <ActionsPanel>
-        <Button
-          onClick={onClose}
-          buttonType="secondary"
-          className="cancel"
-          data-qa-disk-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          type="submit"
-          loading={formik.isSubmitting}
-          data-testid="submit-disk-form"
-        >
-          Rename
-        </Button>
-      </ActionsPanel>
+        <ActionsPanel>
+          <Button
+            onClick={onClose}
+            buttonType="secondary"
+            className="cancel"
+            data-qa-disk-cancel
+          >
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            type="submit"
+            loading={formik.isSubmitting}
+            data-testid="submit-disk-form"
+          >
+            Rename
+          </Button>
+        </ActionsPanel>
+      </form>
     </Drawer>
   );
 };

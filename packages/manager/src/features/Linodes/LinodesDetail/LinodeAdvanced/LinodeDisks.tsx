@@ -1,16 +1,16 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
+import OrderBy from 'src/components/OrderBy';
+import Paginate from 'src/components/Paginate';
+import Typography from 'src/components/core/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Disk } from '@linode/api-v4/lib/linodes';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import OrderBy from 'src/components/OrderBy';
-import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
@@ -19,7 +19,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { sendEvent } from 'src/utilities/ga';
-import LinodeDiskRow from './LinodeDiskRow';
+import { LinodeDiskRow } from './LinodeDiskRow';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useParams } from 'react-router-dom';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -29,6 +29,7 @@ import { CreateDiskDrawer } from './CreateDiskDrawer';
 import { RenameDiskDrawer } from './RenameDiskDrawer';
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { CreateImageFromDiskDialog } from './CreateImageFromDiskDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -70,6 +71,7 @@ export const LinodeDisks = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
   const [isRenameDrawerOpen, setIsRenameDrawerOpen] = React.useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = React.useState(false);
+  const [isImageDrawerOpen, setIsImageDrawerOpen] = React.useState(false);
 
   const [selectedDiskId, setSelectedDiskId] = React.useState<number>();
   const selectedDisk = disks?.find((d) => d.id === selectedDiskId);
@@ -102,9 +104,14 @@ export const LinodeDisks = () => {
     setIsDeleteDialogOpen(true);
   };
 
+  const onImagize = (disk: Disk) => {
+    setSelectedDiskId(disk.id);
+    setIsImageDrawerOpen(true);
+  };
+
   const renderTableContent = (disks: Disk[] | undefined) => {
     if (error) {
-      return <TableRowError colSpan={4} message={error[0]?.reason} />;
+      return <TableRowError colSpan={5} message={error[0]?.reason} />;
     }
 
     if (isLoading) {
@@ -121,11 +128,11 @@ export const LinodeDisks = () => {
         disk={disk}
         linodeId={id}
         linodeStatus={linode?.status ?? 'offline'}
+        readOnly={readOnly}
         onRename={() => onRename(disk)}
         onResize={() => onResize(disk)}
-        onImagize={() => null}
+        onImagize={() => onImagize(disk)}
         onDelete={() => onDelete(disk)}
-        readOnly={readOnly}
       />
     ));
   };
@@ -266,20 +273,11 @@ export const LinodeDisks = () => {
         linodeId={id}
         disk={selectedDisk}
       />
-      {/* <ImagesDrawer
-        mode={'imagize' as DrawerMode}
-        open={open}
-        description={description}
-        label={label}
-        disks={disk ? [disk] : []}
-        selectedDisk={disk ? '' + disk.id : null}
-        onClose={this.closeImagizeDrawer}
-        changeDescription={this.changeImageDescription}
-        changeLabel={this.changeImageLabel}
-        changeDisk={() => null}
-        changeLinode={() => null}
-        selectedLinode={null}
-      /> */}
+      <CreateImageFromDiskDialog
+        open={isImageDrawerOpen}
+        onClose={() => setIsImageDrawerOpen(false)}
+        disk={selectedDisk}
+      />
     </React.Fragment>
   );
 };
