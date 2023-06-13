@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Button from './Button';
+import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
 
 /**
  * **Overview** <br />
@@ -66,5 +67,25 @@ export const Outlined: Story = {
   args: {
     buttonType: 'outlined',
   },
+  parameters: {
+    controls: {
+      exclude: /.*/,
+    },
+  },
   render: (args) => <Button {...args} />,
+};
+
+/**
+ * This is a styled component `<LinkStyledButton />` which is a button that looks like a link. Eventually this treatment will go away,
+ * but the sake of the MUI migration we need to keep it around for now, and as a styled component in order to get rid of
+ * spreading theme.applyLinkStyles.
+ */
+export const LinkButton: Story = {
+  parameters: {
+    controls: {
+      exclude: /.*/,
+    },
+  },
+  // _args must be present in order to disable controls
+  render: (_args) => <LinkStyledButton>Button</LinkStyledButton>,
 };
