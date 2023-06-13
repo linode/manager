@@ -31,7 +31,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
     error,
   } = useLinodeUpdateMutation(linodeId);
 
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
 
   const isBareMetalInstance = type?.class === 'metal';
 
@@ -111,7 +114,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         checked: boolean
       ) => formik.setFieldValue('io', checked ? 10000 : 0),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('io', e.target.valueAsDate),
+        formik.setFieldValue('io', e.target.valueAsNumber),
       error: hasErrorFor('alerts.io'),
       endAdornment: 'IOPS',
       hidden: isBareMetalInstance,
