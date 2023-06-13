@@ -1,33 +1,20 @@
 import * as React from 'react';
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-import { makeStyles } from '@mui/styles';
-import { Notice } from 'src/components/Notice/Notice';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
-import Box from 'src/components/core/Box';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
+import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Notice } from 'src/components/Notice/Notice';
+import { styled } from '@mui/material/styles';
+import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 interface Props {
+  objectStorageKey?: ObjectStorageKey | null;
+  onClose: () => void;
+  open: boolean;
   title: string;
   value?: string | undefined;
-  objectStorageKey?: ObjectStorageKey | null;
-  open: boolean;
-  onClose: () => void;
 }
-
-const useStyles = makeStyles(() => ({
-  noticeText: {
-    '& .noticeText': {
-      color: 'inherit',
-      lineHeight: 'inherit',
-      fontFamily: 'inherit',
-      fontSize: '0.875rem',
-    },
-  },
-}));
-
-type CombinedProps = Props;
 
 const renderActions = (
   onClose: () => void,
@@ -36,17 +23,16 @@ const renderActions = (
   <ActionsPanel>
     <Button
       buttonType="primary"
-      onClick={onClose}
       data-qa-confirm
       data-testid="dialog-confirm"
+      onClick={onClose}
     >
       {modalConfirmationButtonText}
     </Button>
   </ActionsPanel>
 );
 
-export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const SecretTokenDialog = (props: Props) => {
   const { title, value, objectStorageKey, open, onClose } = props;
 
   const modalConfirmationButtonText = objectStorageKey
@@ -57,18 +43,17 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
 
   return (
     <ConfirmationDialog
-      title={title}
-      open={open}
-      onClose={onClose}
-      disableEscapeKeyDown
-      maxWidth="sm"
-      fullWidth
       actions={actions}
+      disableEscapeKeyDown
+      fullWidth
+      maxWidth="sm"
+      onClose={onClose}
+      open={open}
+      title={title}
     >
-      <Notice
+      <StyledNotice
         spacingTop={8}
         warning
-        className={classes.noticeText}
         text={`${
           objectStorageKey ? 'Your keys have been generated.' : ''
         } For security purposes, we can only display your ${
@@ -81,16 +66,16 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
             <CopyableAndDownloadableTextField
               expand
               label={'Access Key'}
-              value={objectStorageKey.access_key || ''}
               spellCheck={false}
+              value={objectStorageKey.access_key || ''}
             />
           </Box>
           <Box marginBottom="16px">
             <CopyableAndDownloadableTextField
               expand
               label={'Secret Key'}
-              value={objectStorageKey.secret_key || ''}
               spellCheck={false}
+              value={objectStorageKey.secret_key || ''}
             />
           </Box>
         </>
@@ -99,8 +84,8 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
           <CopyableAndDownloadableTextField
             expand
             label={title}
-            value={value || ''}
             spellCheck={false}
+            value={value || ''}
           />
         </Box>
       ) : null}
@@ -108,4 +93,13 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default SecretTokenDialog;
+const StyledNotice = styled(Notice, {
+  label: 'StyledNotice',
+})(() => ({
+  '& .noticeText': {
+    color: 'inherit',
+    lineHeight: 'inherit',
+    fontFamily: 'inherit',
+    fontSize: '0.875rem',
+  },
+}));

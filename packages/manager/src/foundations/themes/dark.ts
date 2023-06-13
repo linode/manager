@@ -155,8 +155,7 @@ export const darkTheme: ThemeOptions = {
     ...iconCircleAnimation,
   },
   palette: {
-    // We really should be using this...
-    // mode: 'dark',
+    mode: 'dark',
     divider: primaryColors.divider,
     primary: primaryColors,
     text: {
@@ -205,9 +204,7 @@ export const darkTheme: ThemeOptions = {
     },
     MuiBackdrop: {
       styleOverrides: {
-        root: {
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        },
+        root: customDarkModeOptions.color.drawerBackdrop,
       },
     },
     MuiAutocomplete: {
@@ -450,6 +447,7 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           backgroundColor: '#2e3238',
+          backgroundImage: 'none', // I have no idea why MUI defaults to setting a background image...
         },
         outlined: {
           border: '1px solid rgba(0, 0, 0, 0.2)',

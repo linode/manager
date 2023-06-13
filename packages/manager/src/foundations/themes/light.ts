@@ -166,7 +166,7 @@ const graphTransparency = '0.7';
 const spacing = 8;
 
 export const lightTheme: ThemeOptions = {
-  name: 'light', // we really should just leverage pallete.mode
+  name: 'light', // @todo remove this because we leverage pallete.mode now
   breakpoints,
   shadows: [
     'none',
@@ -284,6 +284,7 @@ export const lightTheme: ThemeOptions = {
     ...genericTableHeaderStyle,
   },
   palette: {
+    mode: 'light',
     divider: primaryColors.divider,
     primary: primaryColors,
     secondary: primaryColors,
@@ -377,7 +378,10 @@ export const lightTheme: ThemeOptions = {
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: color.drawerBackdrop,
+        },
+        invisible: {
+          backgroundColor: 'transparent',
         },
       },
     },
@@ -958,6 +962,13 @@ export const lightTheme: ThemeOptions = {
             [breakpoints.down('xs')]: {
               minWidth: 200,
             },
+          },
+        },
+      },
+      defaultProps: {
+        slotProps: {
+          backdrop: {
+            invisible: true,
           },
         },
       },

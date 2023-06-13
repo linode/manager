@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LandingHeader from 'src/components/LandingHeader';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';

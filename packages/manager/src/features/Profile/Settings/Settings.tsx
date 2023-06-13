@@ -1,35 +1,25 @@
 import * as React from 'react';
+import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import Grid from '@mui/material/Unstable_Grid2';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import PreferenceEditor from './PreferenceEditor';
+import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
+import { FormLabel } from '@mui/material';
+import { getQueryParam } from 'src/utilities/queryParams';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { Radio } from 'src/components/Radio/Radio';
+import { ThemeChoice } from 'src/utilities/theme';
 import { Toggle } from 'src/components/Toggle';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { getQueryParam } from 'src/utilities/queryParams';
-import PreferenceEditor from './PreferenceEditor';
-import { ThemeChoice } from 'src/utilities/theme';
-import FormControl from 'src/components/core/FormControl';
-import RadioGroup from 'src/components/core/RadioGroup';
-import { Radio } from 'src/components/Radio/Radio';
-import { FormLabel } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(2),
-  },
-  title: {
-    marginBottom: theme.spacing(2),
-  },
-}));
-
-const ProfileSettings = () => {
-  const classes = useStyles();
+export const ProfileSettings = () => {
+  const theme = useTheme();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [
     preferenceEditorOpen,
@@ -61,8 +51,8 @@ const ProfileSettings = () => {
   return (
     <>
       <DocumentTitleSegment segment="My Settings" />
-      <Paper className={classes.root}>
-        <Typography variant="h2" className={classes.title}>
+      <Paper sx={{ marginTop: theme.spacing(2) }}>
+        <Typography variant="h2" sx={{ marginBottom: theme.spacing(2) }}>
           Notifications
         </Typography>
         <Grid container alignItems="center">
@@ -90,7 +80,7 @@ const ProfileSettings = () => {
           />
         )}
       </Paper>
-      <Paper className={classes.root}>
+      <Paper sx={{ marginTop: theme.spacing(2) }}>
         <Grid container alignItems="center">
           <Grid xs={12}>
             <FormControl>
@@ -125,8 +115,8 @@ const ProfileSettings = () => {
           </Grid>
         </Grid>
       </Paper>
-      <Paper className={classes.root}>
-        <Typography variant="h2" className={classes.title}>
+      <Paper sx={{ marginTop: theme.spacing(2) }}>
+        <Typography variant="h2" sx={{ marginBottom: theme.spacing(2) }}>
           Type-to-Confirm
         </Typography>
         <Typography variant="body1">
@@ -165,5 +155,3 @@ const ProfileSettings = () => {
     </>
   );
 };
-
-export default ProfileSettings;
