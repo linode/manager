@@ -62,6 +62,14 @@ export const PlanContainer = ({
   const shouldShowNetwork =
     showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
 
+  // If the user has selected an eligible plan, but changes the region to a non eligible premium region,
+  // we need to clear the selection.
+  React.useEffect(() => {
+    if (disabled) {
+      onSelect('');
+    }
+  }, [disabled, onSelect]);
+
   return (
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>

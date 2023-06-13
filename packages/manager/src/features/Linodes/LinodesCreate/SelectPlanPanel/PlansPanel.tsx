@@ -54,6 +54,7 @@ export const PlansPanel = (props: Props) => {
     header,
     isCreate,
     linodeID,
+    onSelect,
     regionsData,
     selectedID,
     selectedRegionID,
@@ -62,8 +63,18 @@ export const PlansPanel = (props: Props) => {
   } = props;
 
   const { classes } = useSelectPlanPanelStyles();
-
   const plans = getPlanSelectionsByPlanType(types);
+  const selectedRegion: Region | undefined = regionsData?.find(
+    (region: Region) => region.id === selectedRegionID
+  );
+  const hasSelectedRegion: boolean = Boolean(selectedRegionID);
+  const isSelectedRegionPremium: boolean = Boolean(
+    selectedRegion?.capabilities.includes(
+      'Bare Metal'
+    ) /**  @TODO: change to 'Premium' when API is updated */
+  );
+  const isDisabledPremiumPlan = (plan: string) =>
+    hasSelectedRegion && plan === 'premium' && !isSelectedRegionPremium;
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
@@ -72,21 +83,22 @@ export const PlansPanel = (props: Props) => {
           <>
             <PlanInformation
               disabledClasses={props.disabledClasses}
+              hasSelectedRegion={hasSelectedRegion}
+              isSelectedRegionPremium={isSelectedRegionPremium}
               planType={plan}
-              regionsData={regionsData}
-              selectedRegionID={selectedRegionID}
+              regionsData={regionsData || []}
             />
             <PlanContainer
-              isCreate={isCreate}
-              plans={plans[plan]}
-              showTransfer={showTransfer}
-              selectedDiskSize={props.selectedDiskSize}
               currentPlanHeading={currentPlanHeading}
+              disabled={disabled || isDisabledPremiumPlan(plan)}
               disabledClasses={props.disabledClasses}
-              disabled={disabled}
-              selectedID={selectedID}
+              isCreate={isCreate}
               linodeID={linodeID}
-              onSelect={props.onSelect}
+              onSelect={onSelect}
+              plans={plans[plan]}
+              selectedDiskSize={props.selectedDiskSize}
+              selectedID={selectedID}
+              showTransfer={showTransfer}
             />
           </>
         );

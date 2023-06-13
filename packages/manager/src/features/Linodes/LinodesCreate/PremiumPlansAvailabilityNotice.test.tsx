@@ -1,11 +1,18 @@
 import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
+import type { PremiumPlansAvailabilityNoticeProps } from './PremiumPlansAvailabilityNotice';
 
 jest.mock('src/hooks/useFlags', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
+
+const props: PremiumPlansAvailabilityNoticeProps = {
+  hasSelectedRegion: true,
+  isSelectedRegionPremium: false,
+  regionsData: [],
+};
 
 describe('PremiumPlansAvailabilityNotice', () => {
   it('should render Notice component when premiumPlansAvailabilityNotice is truthy', () => {
@@ -15,7 +22,9 @@ describe('PremiumPlansAvailabilityNotice', () => {
     });
     require('src/hooks/useFlags').default = useFlagsMock;
 
-    const { getByTestId } = renderWithTheme(<PremiumPlansAvailabilityNotice />);
+    const { getByTestId } = renderWithTheme(
+      <PremiumPlansAvailabilityNotice {...props} />
+    );
 
     // Assert that Notice component is rendered with the correct message
     expect(getByTestId('premium-notice').textContent).toBe(
@@ -31,7 +40,7 @@ describe('PremiumPlansAvailabilityNotice', () => {
     require('src/hooks/useFlags').default = useFlagsMock;
 
     const { queryByTestId } = renderWithTheme(
-      <PremiumPlansAvailabilityNotice />
+      <PremiumPlansAvailabilityNotice {...props} />
     );
 
     // Assert that Notice component is not rendered
