@@ -4,6 +4,7 @@ import Typography from 'src/components/core/Typography';
 import { styled } from '@mui/material/styles';
 import type { SxProps } from '@mui/material';
 import type { TooltipProps } from '@mui/material/Tooltip';
+import type { TypographyProps } from 'src/components/core/Typography';
 
 export interface TextTooltipProps {
   /** The text to hover on to display the tooltip */
@@ -21,13 +22,25 @@ export interface TextTooltipProps {
   sxTypography?: SxProps;
   /** The text to display inside the tooltip */
   tooltipText: JSX.Element | string;
+  /**
+   * Optional variant override for the Typography
+   * @default body1
+   */
+  variant?: TypographyProps['variant'];
 }
 
 /**
  * Dotted underline copy with a tooltip on hover
  */
 export const TextTooltip = (props: TextTooltipProps) => {
-  const { displayText, minWidth, placement, sxTypography, tooltipText } = props;
+  const {
+    displayText,
+    minWidth,
+    placement,
+    sxTypography,
+    tooltipText,
+    variant = 'body1',
+  } = props;
 
   return (
     <StyledRootTooltip
@@ -35,12 +48,14 @@ export const TextTooltip = (props: TextTooltipProps) => {
       placement={placement ? placement : 'bottom'}
       PopperProps={{
         sx: {
-          '& > div': minWidth ? minWidth : { minWidth: 375 },
+          '& > div': {
+            minWidth: minWidth ? minWidth : 375,
+          },
         },
       }}
       title={tooltipText}
     >
-      <Typography component="span" sx={sxTypography}>
+      <Typography component="span" variant={variant} sx={sxTypography}>
         {displayText}
       </Typography>
     </StyledRootTooltip>

@@ -104,7 +104,7 @@ export const PlanSelection = ({
           aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
           className={classNames(classes.focusedRow, {
             [classes.disabledRow]:
-              isSamePlan || planTooSmall || isDisabledClass,
+              isSamePlan || planTooSmall || isDisabledClass || disabled,
           })}
         >
           <TableCell className={classes.radioCell}>

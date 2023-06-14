@@ -1,8 +1,12 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+import ListItem from 'src/components/core/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
-import { TextTooltip } from 'src/components/TextTooltip';
 import type { Region } from '@linode/api-v4';
+import {
+  StyledFormattedRegionList,
+  StyledNoticeTypography,
+  StyledTextTooltip,
+} from './PremiumPlansAvailabilityNotice.styles';
 
 export interface PremiumPlansAvailabilityNoticeProps {
   isSelectedRegionPremium?: boolean;
@@ -14,16 +18,16 @@ export const PremiumPlansAvailabilityNotice = React.memo(
   (props: PremiumPlansAvailabilityNoticeProps) => {
     const { isSelectedRegionPremium, hasSelectedRegion, regionsData } = props;
 
-    const getPremiumRegionList = () => {
+    const getPremiumRegionList = React.useCallback(() => {
       return (
         regionsData?.filter(
           (region: Region) =>
             region.capabilities.includes(
-              'Bare Metal'
+              'Linodes'
             ) /**  @TODO: change to 'Premium' when API is updated */
         ) || []
       );
-    };
+    }, [regionsData]);
 
     return !isSelectedRegionPremium ? (
       <PremiumPlansAvailabilityNoticeMessage
@@ -45,32 +49,38 @@ const PremiumPlansAvailabilityNoticeMessage = (
   const { hasSelectedRegion, premiumRegionList } = props;
 
   const FormattedRegionList = () => (
-    <ul>
+    <StyledFormattedRegionList>
       {premiumRegionList?.map((region: Region) => {
-        return <li key={region.id}>{`${region.label} (${region.id})`}</li>;
+        return (
+          <ListItem
+            disablePadding
+            key={region.id}
+          >{`${region.label} (${region.id})`}</ListItem>
+        );
       })}
-    </ul>
+    </StyledFormattedRegionList>
   );
 
   return hasSelectedRegion ? (
     <Notice error dataTestId="premium-notice">
-      <Typography>
+      <StyledNoticeTypography>
         Premium Plans are not currently available in this region.&nbsp;
-        <TextTooltip
+        <StyledTextTooltip
           displayText="See Global availability"
           tooltipText={<FormattedRegionList />}
         />
-      </Typography>
+      </StyledNoticeTypography>
     </Notice>
   ) : (
     <Notice warning dataTestId="premium-notice">
-      <Typography>
-        Premium Plans are currently available in select regions:&nbsp;
-        <TextTooltip
+      <StyledNoticeTypography>
+        Premium Plans are currently available in&nbsp;
+        <StyledTextTooltip
           displayText="select regions"
           tooltipText={<FormattedRegionList />}
         />
-      </Typography>
+        .
+      </StyledNoticeTypography>
     </Notice>
   );
 };
