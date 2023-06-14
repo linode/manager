@@ -156,7 +156,7 @@ export const LinodeDisks = () => {
             <TooltipIcon
               text={noFreeDiskSpaceWarning}
               status="help"
-              tooltipGAEvent={() =>
+              tooltipAnalyticsEvent={() =>
                 sendEvent({
                   category: `Disk Resize Flow`,
                   action: `Open:tooltip`,
