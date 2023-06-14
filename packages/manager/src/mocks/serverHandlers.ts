@@ -175,8 +175,13 @@ const databases = [
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });
+    const premiumTypes = databaseTypeFactory.buildList(7, {
+      class: 'premium',
+    });
     return res(
-      ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+      ctx.json(
+        makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
+      )
     );
   }),
 
