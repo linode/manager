@@ -102,7 +102,9 @@ export const PlanContainer = ({
                   return (
                     <TableCell
                       center={center}
-                      className={classes.headerCell}
+                      className={`${
+                        cellName === 'Plan' ? 'planHeaderCell' : ''
+                      } ${classes.headerCell}`}
                       data-qa={attributeValue}
                       key={testId}
                       noWrap={noWrap}

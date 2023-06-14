@@ -122,7 +122,7 @@ export const PlanSelection = ({
               />
             )}
           </TableCell>
-          <TableCell data-qa-plan-name>
+          <TableCell data-qa-plan-name className={classes.planCell}>
             <div className={classes.headingCellContainer}>
               {type.heading}{' '}
               {(isSamePlan || type.id === selectedLinodePlanType) && (

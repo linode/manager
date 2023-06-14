@@ -20,6 +20,7 @@ export const usePlansPanelStyles = makeStyles()((theme: Theme) => ({
     borderRight: `1px solid ${theme.borderColors.borderTable}`,
     overflowX: 'hidden',
   },
+  planCell: { paddingLeft: 4 },
   headingCellContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -35,6 +36,9 @@ export const usePlansPanelStyles = makeStyles()((theme: Theme) => ({
     },
     '&:last-child': {
       paddingRight: 15,
+    },
+    '&.planHeaderCell': {
+      paddingLeft: 4,
     },
   },
   chip: {
