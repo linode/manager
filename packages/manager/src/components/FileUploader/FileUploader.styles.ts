@@ -2,12 +2,22 @@ import Button from 'src/components/Button';
 import { styled } from '@mui/material/styles';
 import { isPropValid } from 'src/utilities/isPropValid';
 import Typography from 'src/components/core/Typography';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+
+interface DropZoneClassProps {
+  isDragActive: boolean;
+  isDragAccept: boolean;
+  isDragReject: boolean;
+  dropzoneDisabled: boolean;
+}
 
 export const StyledDropZoneDiv = styled('div', {
   label: 'StyledDropZoneDiv',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) =>
+    isPropValid(
+      ['dropzoneDisabled', 'isDragActive', 'isDragAccept', 'isDragReject'],
+      prop
+    ),
+})<DropZoneClassProps>(({ theme, ...props }) => ({
   position: 'relative',
   display: 'flex',
   flexDirection: 'row',
@@ -25,6 +35,25 @@ export const StyledDropZoneDiv = styled('div', {
   overflow: 'auto',
   padding: theme.spacing(),
   transition: theme.transitions.create(['background-color', 'border-color']),
+  ...(props.isDragActive && {
+    // The `active` class active when a user is hovering over the dropzone.
+    borderColor: theme.palette.primary.light,
+    backgroundColor: theme.color.white,
+  }),
+  ...(props.isDragAccept && {
+    // The `accept` class active when a user is hovering over the dropzone
+    // with files that will be accepted (based on file size, number of files).
+    borderColor: theme.palette.primary.light,
+  }),
+  ...(props.isDragReject && {
+    // The `reject` class active when a user is hovering over the dropzone
+    // with files that will be rejected (based on file size, number of files).
+    borderColor: theme.color.red,
+  }),
+  ...(props.dropzoneDisabled && {
+    // When the dropzone is disabled
+    borderColor: '#888',
+  }),
 }));
 
 export const StyledFileUploadsDiv = styled('div', {
@@ -72,26 +101,4 @@ export const StyledUploadButton = styled(Button, {
   marginTop: theme.spacing(2),
   opacity: 1,
   transition: theme.transitions.create(['opacity']),
-}));
-
-export const useStyles = makeStyles()((theme: Theme) => ({
-  active: {
-    // The `active` class active when a user is hovering over the dropzone.
-    borderColor: theme.palette.primary.light,
-    backgroundColor: theme.color.white,
-  },
-  inactive: {
-    // When the dropzone is disabled
-    borderColor: '#888',
-  },
-  accept: {
-    // The `accept` class active when a user is hovering over the dropzone
-    // with files that will be accepted (based on file size, number of files).
-    borderColor: theme.palette.primary.light,
-  },
-  reject: {
-    // The `reject` class active when a user is hovering over the dropzone
-    // with files that will be rejected (based on file size, number of files).
-    borderColor: theme.color.red,
-  },
 }));

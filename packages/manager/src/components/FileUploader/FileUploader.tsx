@@ -11,7 +11,6 @@ import {
   StyledDropZoneDiv,
   StyledFileUploadsDiv,
   StyledUploadButton,
-  useStyles,
 } from 'src/components/FileUploader/FileUploader.styles';
 import { uploadImageFile } from 'src/features/Images/requests';
 import { FileUpload } from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
@@ -66,7 +65,6 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
     cloud_init: isCloudInit ? isCloudInit : undefined,
   });
 
-  const { classes, cx } = useStyles();
   const history = useHistory();
 
   // Keep track of the session token since we may need to grab the user a new
@@ -302,23 +300,6 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
   const hideDropzoneBrowseBtn =
     (isDragAccept || acceptedFiles.length > 0) && !apiError; // Checking that there isn't an apiError set to prevent disappearance of button if image creation isn't available in a region at that moment, etc.
 
-  const dropZoneClasses = React.useMemo(
-    () =>
-      cx({
-        [classes.active]: isDragActive,
-        [classes.accept]: isDragAccept,
-        [classes.reject]: isDragReject,
-        [classes.inactive]: dropzoneDisabled || uploadInProgressOrFinished,
-      }),
-    [
-      isDragActive,
-      isDragAccept,
-      isDragReject,
-      dropzoneDisabled,
-      uploadInProgressOrFinished,
-    ]
-  );
-
   // const UploadZoneActive =
   //   state.files.filter((upload) => upload.status !== 'QUEUED').length !== 0;
 
@@ -330,9 +311,11 @@ export const FileUploader = React.memo((props: FileUploaderProps) => {
 
   return (
     <StyledDropZoneDiv
-      {...getRootProps({
-        className: `${dropZoneClasses}`,
-      })}
+      {...getRootProps({})}
+      isDragActive={isDragActive}
+      isDragAccept={isDragAccept}
+      isDragReject={isDragReject}
+      dropzoneDisabled={dropzoneDisabled || uploadInProgressOrFinished}
     >
       <input {...getInputProps()} placeholder={placeholder} />
       <StyledFileUploadsDiv>
