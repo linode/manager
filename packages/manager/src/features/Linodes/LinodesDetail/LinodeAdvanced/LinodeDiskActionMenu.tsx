@@ -105,7 +105,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
               onClick={action.onClick}
               disabled={action.disabled}
               tooltip={action.tooltip}
-              tooltipGAEvent={
+              tooltipAnalyticsEvent={
                 action.title === 'Resize'
                   ? () =>
                       sendEvent({

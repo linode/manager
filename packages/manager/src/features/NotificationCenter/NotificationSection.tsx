@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ExtendedAccordion } from 'src/components/ExtendedAccordion/ExtendedAccordion';
 import Box from 'src/components/core/Box';
@@ -179,7 +179,7 @@ const ContentBody = React.memo((props: BodyProps) => {
       ))}
       {content.length > count ? (
         <StyledLToggleContainer display="flex" justifyContent="flex-end">
-          <LinkStyledButton
+          <StyledLinkButton
             onClick={() => setShowAll(!showAll)}
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
@@ -195,7 +195,7 @@ const ContentBody = React.memo((props: BodyProps) => {
                 [classes.inverted]: showAll,
               })}
             />
-          </LinkStyledButton>
+          </StyledLinkButton>
         </StyledLToggleContainer>
       ) : null}
     </>
