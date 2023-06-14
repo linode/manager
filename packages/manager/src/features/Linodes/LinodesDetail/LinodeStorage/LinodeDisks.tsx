@@ -274,7 +274,7 @@ export const LinodeDisks = () => {
         disk={selectedDisk}
       />
       <CreateImageFromDiskDialog
-        open={isImageDialog}
+        open={isImageDialogOpen}
         onClose={() => setIsImageDialogOpen(false)}
         disk={selectedDisk}
       />
