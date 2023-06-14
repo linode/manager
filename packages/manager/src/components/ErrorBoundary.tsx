@@ -10,6 +10,11 @@ interface State {
 }
 
 export class ErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     if (this.props.callback) {
       this.props.callback(error, errorInfo);
