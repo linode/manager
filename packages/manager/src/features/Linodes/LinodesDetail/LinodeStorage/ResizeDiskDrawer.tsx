@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  disk?: Disk;
+  disk: Disk | undefined;
   open: boolean;
   onClose: () => void;
   linodeId: number;
