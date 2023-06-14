@@ -154,7 +154,7 @@ export const oneClickApps: OCA[] = [
     name: 'Appwrite',
     alt_name: 'Self-hosted backend-as-a-service',
     alt_description:
-      'A self-hosted backend-as-a-service platform that provides developers with all the core APIs required to build any application..',
+      'A self-hosted backend-as-a-service platform that provides developers with all the core APIs required to build any application.',
     categories: ['Development'],
     description: `A self-hosted Firebase alternative for web, mobile & flutter developers.`,
     summary:
@@ -834,11 +834,11 @@ export const oneClickApps: OCA[] = [
     name: 'Illa Builder',
     alt_name: 'Low-code development platform',
     alt_description:
-      'Retool open-source alternative, with low-code UI components .',
+      'Retool open-source alternative, with low-code UI components.',
     categories: ['Security'],
     description:
       'Illa Builder is a Retool open-source alternative, with low-code UI components for self-hosting the developement of internal tools.',
-    summary: 'An open-source, low-code developement platfor.',
+    summary: 'An open-source, low-code development platform.',
     related_guides: [
       {
         title: 'Deploy Illa Builder through the Linode Marketplace',
