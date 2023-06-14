@@ -1571,7 +1571,7 @@ export const oneClickApps: OCA[] = [
     categories: ['Productivity'],
     description: `LAMP-stack-based server application that allows you to access your files from anywhere in a secure way.`,
     summary:
-      'DropBox and OneDrive alternative that lets you remain in control of your files.',
+      'Dropbox and OneDrive alternative that lets you remain in control of your files.',
     related_guides: [
       {
         title: 'Deploy ownCloud through the Linode Marketplace',
