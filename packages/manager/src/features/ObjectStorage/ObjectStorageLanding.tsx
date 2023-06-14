@@ -23,7 +23,7 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -187,11 +187,11 @@ export const BillingNotice = React.memo(() => {
         You are being billed for Object Storage but do not have any Buckets. You
         can cancel Object Storage in your{' '}
         <Link to="/account/settings">Account Settings</Link>, or{' '}
-        <LinkStyledButton
+        <StyledLinkButton
           onClick={() => history.replace('/object-storage/buckets/create')}
         >
           create a Bucket.
-        </LinkStyledButton>
+        </StyledLinkButton>
       </Typography>
     </DismissibleBanner>
   );
