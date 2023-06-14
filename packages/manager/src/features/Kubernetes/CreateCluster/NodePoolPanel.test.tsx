@@ -7,6 +7,7 @@ import type { NodePoolPanelProps } from './NodePoolPanel';
 const props: NodePoolPanelProps = {
   hasSelectedRegion: true,
   isSelectedRegionPremium: false,
+  isDisabledPremiumPlan: false,
   types: extendedTypes,
   typesLoading: false,
   addNodePool: jest.fn(),
