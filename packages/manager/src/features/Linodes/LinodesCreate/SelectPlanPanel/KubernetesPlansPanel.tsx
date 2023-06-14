@@ -43,7 +43,6 @@ export const KubernetesPlansPanel = ({
   onSelect,
   selectedID,
 }: Props) => {
-  // const { classes } = useSelectPlanQuantityStyles();
   const { classes } = usePlansPanelStyles();
 
   const plans = getPlanSelectionsByPlanType(types);
