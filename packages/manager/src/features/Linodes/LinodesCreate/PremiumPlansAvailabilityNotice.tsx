@@ -62,7 +62,7 @@ const PremiumPlansAvailabilityNoticeMessage = (
   );
 
   return hasSelectedRegion ? (
-    <Notice error dataTestId="premium-notice">
+    <Notice error dataTestId="premium-notice-error">
       <StyledNoticeTypography>
         Premium Plans are not currently available in this region.&nbsp;
         <StyledTextTooltip
@@ -72,7 +72,7 @@ const PremiumPlansAvailabilityNoticeMessage = (
       </StyledNoticeTypography>
     </Notice>
   ) : (
-    <Notice warning dataTestId="premium-notice">
+    <Notice warning dataTestId="premium-notice-warning">
       <StyledNoticeTypography>
         Premium Plans are currently available in&nbsp;
         <StyledTextTooltip
