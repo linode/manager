@@ -1,32 +1,32 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
+import Typography from 'src/components/core/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { withLinodeDetailContext } from 'src/features/Linodes/LinodesDetail/linodeDetailContext';
 import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
 import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
-import VolumeTableRow from 'src/features/Volumes/VolumeTableRow';
+import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useParams } from 'react-router-dom';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   LinodeOptions,
   openForClone,
@@ -87,21 +87,23 @@ interface DispatchProps {
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
-type CombinedProps = LinodeContextProps & DispatchProps;
+type Props = DispatchProps;
 
 export const preferenceKey = 'linode-volumes';
 
-export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
+export const LinodeVolumes = (props: Props) => {
   const {
     openForConfig,
     openForClone,
     openForEdit,
     openForResize,
     openForCreating,
-    linodeId,
-    linodeLabel,
-    linodeRegion,
   } = props;
+
+  const { linodeId } = useParams<{ linodeId: string }>();
+  const id = Number(linodeId);
+
+  const { data: linode } = useLinodeQuery(id);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
@@ -121,8 +123,9 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const regions = useRegionsQuery().data ?? [];
+
   const { data, isLoading, error } = useLinodeVolumesQuery(
-    linodeId ?? 0,
+    id,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -208,20 +211,18 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
   const openCreateVolumeDrawer = (e: any) => {
     e.preventDefault();
 
-    if (linodeId && linodeLabel && linodeRegion) {
+    if (linode) {
       return openForCreating('Created from Linode Details', {
-        linodeId,
-        linodeLabel,
-        linodeRegion,
+        linodeId: linode.id,
+        linodeLabel: linode.label,
+        linodeRegion: linode.region,
       });
     }
   };
 
-  const currentRegion = regions.find(
-    (thisRegion) => thisRegion.id === linodeRegion
-  );
+  const region = regions.find((thisRegion) => thisRegion.id === linode?.region);
 
-  if (!currentRegion || !currentRegion.capabilities.includes('Block Storage')) {
+  if (!region?.capabilities.includes('Block Storage')) {
     return null;
   }
 
@@ -249,9 +250,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results === 0) {
-      return (
-        <TableRowEmptyState colSpan={5} message="No Volumes to display." />
-      );
+      return <TableRowEmpty colSpan={5} message="No Volumes to display." />;
     } else if (data) {
       return data.data.map((volume) => (
         <VolumeTableRow
@@ -342,7 +341,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
         open={destructiveDialog.open}
         volumeLabel={destructiveDialog.volumeLabel}
         linodeLabel={destructiveDialog.linodeLabel}
-        linodeId={linodeId ?? 0}
+        linodeId={id}
         volumeId={destructiveDialog.volumeId ?? 0}
         mode={destructiveDialog.mode}
         onClose={closeDestructiveDialog}
@@ -363,25 +362,6 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
     dispatch
   );
 
-interface LinodeContextProps {
-  linodeId?: number;
-  linodeStatus?: string;
-  linodeLabel?: string;
-  linodeRegion?: string;
-  readOnly: boolean;
-}
-
-const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeId: linode.id,
-  linodeStatus: linode.status,
-  linodeLabel: linode.label,
-  linodeRegion: linode.region,
-  readOnly: linode._permissions === 'read_only',
-}));
-
 const connected = connect(undefined, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
-  connected,
-  linodeContext
-)(LinodeVolumes);
+export default connected(LinodeVolumes);

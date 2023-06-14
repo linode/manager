@@ -14,8 +14,8 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
@@ -187,7 +187,7 @@ const UsersLanding = () => {
     }
 
     if (!users || users.results === 0) {
-      return <TableRowEmptyState colSpan={4} />;
+      return <TableRowEmpty colSpan={4} />;
     }
 
     return users.data.map((user) => renderUserRow(user));

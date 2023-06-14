@@ -8,9 +8,9 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import Typography from 'src/components/core/Typography';
 import { usePagination } from 'src/hooks/usePagination';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
@@ -116,9 +116,7 @@ const MaintenanceTable = ({ type }: Props) => {
     }
 
     if (data?.results === 0) {
-      return (
-        <TableRowEmptyState message={`No ${type} maintenance.`} colSpan={7} />
-      );
+      return <TableRowEmpty message={`No ${type} maintenance.`} colSpan={7} />;
     }
 
     if (data) {

@@ -1,10 +1,10 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { sshKeyFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-import SSHKeys from './SSHKeys';
+import { rest, server } from 'src/mocks/testServer';
+import { sshKeyFactory } from 'src/factories';
+import { SSHKeys } from './SSHKeys';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 
 // We have to do this because if we don't, the <Hidden /> columns don't render
 beforeAll(() => mockMatchMedia());

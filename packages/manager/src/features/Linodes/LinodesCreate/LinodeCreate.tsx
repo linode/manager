@@ -22,7 +22,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
@@ -44,11 +44,11 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { sendEvent } from 'src/utilities/ga';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
 import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
-import SelectPlanPanel from './SelectPlanPanel';
+import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
@@ -214,7 +214,7 @@ export class LinodeCreate extends React.PureComponent<
     super(props);
 
     /** Get the query params as an object, excluding the "?" */
-    const queryParams = getParamsFromUrl(location.search);
+    const queryParams = getQueryParamsFromQueryString(location.search);
 
     const _tabs = [
       'Distributions',
@@ -702,7 +702,7 @@ export class LinodeCreate extends React.PureComponent<
               helperText={this.props.regionHelperText}
             />
           )}
-          <SelectPlanPanel
+          <PlansPanel
             key={this.state.planKey}
             data-qa-select-plan
             error={hasErrorFor.type}
