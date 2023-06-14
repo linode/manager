@@ -1,6 +1,6 @@
 import * as React from 'react';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import Typography from 'src/components/core/Typography';
 import { AccessKeyMenu } from './AccessKeyMenu';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -36,7 +36,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
 
   const renderContent = () => {
     if (isRestrictedUser) {
-      return <TableRowEmptyState colSpan={12} />;
+      return <TableRowEmpty colSpan={12} />;
     }
 
     if (isLoading) {
@@ -55,7 +55,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     return data && data.length > 0 ? (
       renderRows(data)
     ) : (
-      <TableRowEmptyState colSpan={12} />
+      <TableRowEmpty colSpan={12} />
     );
   };
 

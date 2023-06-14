@@ -4,7 +4,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Link from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { capitalize } from 'src/utilities/capitalize';
 import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';

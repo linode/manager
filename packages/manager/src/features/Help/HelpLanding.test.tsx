@@ -4,13 +4,7 @@ import * as React from 'react';
 import { HelpLanding } from './HelpLanding';
 
 describe('Help Landing', () => {
-  const component = shallow(
-    <HelpLanding
-      classes={{
-        root: '',
-      }}
-    />
-  );
+  const component = shallow(<HelpLanding />);
   xit('should render search panel', () => {
     expect(component.find('WithStyles(SearchPanel)')).toHaveLength(1);
   });

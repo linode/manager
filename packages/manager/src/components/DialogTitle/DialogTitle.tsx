@@ -54,7 +54,6 @@ const DialogTitle = (props: DialogTitleProps) => {
             onClick={onClose}
             size="large"
             sx={{
-              position: 'absolute',
               right: '-12px',
             }}
           >

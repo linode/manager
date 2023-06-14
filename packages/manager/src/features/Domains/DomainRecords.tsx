@@ -38,7 +38,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -754,7 +754,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                               </TableHead>
                               <TableBody>
                                 {type.data.length === 0 ? (
-                                  <TableRowEmptyState
+                                  <TableRowEmpty
                                     colSpan={type.columns.length}
                                   />
                                 ) : (

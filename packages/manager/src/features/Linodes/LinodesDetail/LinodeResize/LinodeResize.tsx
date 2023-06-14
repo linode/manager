@@ -32,7 +32,7 @@ import {
   WithTypesProps,
 } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import SelectPlanPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel';
+import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
@@ -357,7 +357,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         </Typography>
 
         <div className={classes.selectPlanPanel}>
-          <SelectPlanPanel
+          <PlansPanel
             currentPlanHeading={currentPlanHeading}
             types={currentTypes}
             onSelect={this.handleSelectPlan}

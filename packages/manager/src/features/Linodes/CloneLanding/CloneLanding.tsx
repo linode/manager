@@ -24,7 +24,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
@@ -37,7 +37,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
@@ -157,9 +157,10 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
 
   // A config and/or disk can be selected via query param. Memoized
   // so it can be used as a dep in the useEffects that consume it.
-  const queryParams = React.useMemo(() => getParamsFromUrl(location.search), [
-    location.search,
-  ]);
+  const queryParams = React.useMemo(
+    () => getQueryParamsFromQueryString(location.search),
+    [location.search]
+  );
 
   // Toggle config if a valid configId is specified as a query param.
   React.useEffect(() => {

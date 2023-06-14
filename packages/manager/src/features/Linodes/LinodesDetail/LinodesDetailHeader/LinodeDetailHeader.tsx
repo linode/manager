@@ -18,7 +18,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEvent } from 'src/utilities/ga';
-import { parseQueryParams } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
@@ -41,7 +41,7 @@ const LinodeDetailHeader = () => {
   // logic changes the URL) to determine if a modal should be open when this component
   // is first rendered.
   const location = useLocation();
-  const queryParams = parseQueryParams(location.search);
+  const queryParams = getQueryParamsFromQueryString(location.search);
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
     path: '/linodes/:linodeId/:subpath?',

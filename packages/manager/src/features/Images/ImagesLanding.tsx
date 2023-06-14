@@ -9,7 +9,7 @@ import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 import LandingHeader from 'src/components/LandingHeader';
 import Paper from 'src/components/core/Paper';
 import produce from 'immer';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import Typography from 'src/components/core/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { ApplicationState } from 'src/store';
@@ -439,14 +439,11 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   }
 
   const noManualImages = (
-    <TableRowEmptyState message={`No Custom Images to display.`} colSpan={5} />
+    <TableRowEmpty message={`No Custom Images to display.`} colSpan={5} />
   );
 
   const noAutomaticImages = (
-    <TableRowEmptyState
-      message={`No Recovery Images to display.`}
-      colSpan={6}
-    />
+    <TableRowEmpty message={`No Recovery Images to display.`} colSpan={6} />
   );
 
   return (

@@ -57,7 +57,7 @@ import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendCreateLinodeEvent, sendEvent } from 'src/utilities/ga';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
@@ -193,7 +193,7 @@ const isNonDefaultImageType = (prevType: string, type: string) => {
 };
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
-  params = getParamsFromUrl(this.props.location.search) as Record<
+  params = getQueryParamsFromQueryString(this.props.location.search) as Record<
     string,
     string
   >;
@@ -232,10 +232,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     // Update search params for Linode Clone
     if (prevProps.location.search !== this.props.history.location.search) {
-      this.params = getParamsFromUrl(this.props.location.search) as Record<
-        string,
-        string
-      >;
+      this.params = getQueryParamsFromQueryString(
+        this.props.location.search
+      ) as Record<string, string>;
     }
   }
 

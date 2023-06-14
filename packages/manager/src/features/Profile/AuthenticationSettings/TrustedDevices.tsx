@@ -6,8 +6,8 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowError from 'src/components/TableRowError/TableRowError';
-import TableRowEmpty from 'src/components/TableRowEmptyState';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import InlineMenuAction from 'src/components/InlineMenuAction';

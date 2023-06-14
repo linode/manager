@@ -2,12 +2,17 @@ import * as React from 'react';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import { useTabsContext } from '@reach/tabs';
 
+interface SafeTabPanelProps {
+  children: React.ReactNode | null;
+  index: number | null;
+}
+
 /**
  * SafeTabPanel only renders its children when it is currently selected. This is helpful when a
  * child component of SafeTabPanel requests data when it is mounted. In this case, we may want to
  * avoid mounting the component until the tab is actually selected/visible.
  */
-const SafeTabPanel: React.FC<{ index: number | null }> = (props) => {
+export const SafeTabPanel = (props: SafeTabPanelProps) => {
   const { index, ...tabPanelProps } = props;
 
   const { selectedIndex } = useTabsContext();
@@ -17,5 +22,3 @@ const SafeTabPanel: React.FC<{ index: number | null }> = (props) => {
     <TabPanel {...tabPanelProps}>{isSelected ? props.children : null}</TabPanel>
   );
 };
-
-export default SafeTabPanel;

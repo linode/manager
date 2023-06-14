@@ -10,7 +10,7 @@ import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { H1Header } from 'src/components/H1Header/H1Header';
-import ScriptCode from 'src/components/ScriptCode';
+import { ScriptCode } from 'src/components/ScriptCode/ScriptCode';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';

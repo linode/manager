@@ -1,34 +1,35 @@
-import { pathOr } from 'ramda';
-import parseUrl from 'url-parse';
+/**
+ * Parses a query string (aka search string) and returns its values
+ * as key value pairs.
+ *
+ * A leading '?', if present, is ignored.
+ *
+ * @param queryString The search string aka the query string to parse. This must ONLY be the query string and not the entire URL.
+ * @returns An object of the parsed key/value pairs
+ *
+ * @example
+ * getQueryParamsFromQueryString('?query=false&this=that')
+ * // { query: 'false', this: 'that' }
+ */
+export const getQueryParamsFromQueryString = (queryString: string) =>
+  Object.fromEntries(new URLSearchParams(queryString));
 
 /**
- * Parses a string of key/value pairs separated by '&', with the key and value separated by '='
+ * Gets the value of a single query parameter by its name
+ * @param queryString The search string aka the query string to parse. This must ONLY be the query string and not the entire URL.
+ * @param paramName The name or key of the parameter you want the value of
+ * @param defaultValue an optional default to fallback to if the query param is not found
+ * @returns the value of the query parameter you requested
  *
- * @param str The string to parse
- * @returns An object of the parsed key/value pairs
+ * @example
+ * getQueryParamFromQueryString('?query=false&this=that', 'this')
+ * // "that"
  */
-export const parseQueryParams = (str: string) =>
-  Object.fromEntries(new URLSearchParams(str));
-
-export const getQueryParam = (
-  str: string,
+export const getQueryParamFromQueryString = (
+  queryString: string,
   paramName: string,
   defaultValue: string = ''
 ) => {
-  const params = parseQueryParams(str);
-  return pathOr(defaultValue, [paramName], params);
-};
-
-export const getParamsFromUrl = (url: string) => {
-  const parsedUrl = parseUrl(url) as any;
-  return parseQueryParams(parsedUrl.query);
-};
-
-export const getParamFromUrl = (
-  url: string,
-  paramName: string,
-  defaultValue: string = ''
-): string => {
-  const parsedUrl = parseUrl(url) as any;
-  return getQueryParam(parsedUrl.query, paramName, defaultValue);
+  const params = new URLSearchParams(queryString);
+  return params.get(paramName) ?? defaultValue;
 };

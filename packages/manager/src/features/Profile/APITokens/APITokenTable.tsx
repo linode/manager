@@ -1,57 +1,39 @@
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import Box from 'src/components/core/Box';
 import Grid from '@mui/material/Unstable_Grid2';
+import Typography from 'src/components/core/Typography';
+import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { EditAPITokenDrawer } from './EditAPITokenDrawer';
+import { isWayInTheFuture } from './utils';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { RevokeTokenDialog } from './RevokeTokenDialog';
+import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
+import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import { TableSortCell } from 'src/components/TableSortCell';
-import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { APITokenMenu } from './APITokenMenu';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { Token } from '@linode/api-v4/lib/profile';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
-import { Token } from '@linode/api-v4/lib/profile';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { isWayInTheFuture } from './utils';
-import { RevokeTokenDialog } from './RevokeTokenDialog';
 import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
-import { EditAPITokenDrawer } from './EditAPITokenDrawer';
+import {
+  StyledAddNewWrapper,
+  StyledHeadline,
+  StyledRootContainer,
+} from './APITokenTable.styles';
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
 } from 'src/queries/tokens';
-import Box from 'src/components/core/Box';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    background: theme.color.white,
-    width: '100%',
-  },
-  headline: {
-    marginLeft: 7,
-  },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      padding: 5,
-    },
-  },
-  labelCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '40%',
-    [theme.breakpoints.down('lg')]: {
-      width: '25%',
-    },
-  },
-}));
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
 
@@ -64,10 +46,9 @@ interface Props {
   title: APITokenTitle;
 }
 
-const preferenceKey = 'api-tokens';
+const PREFERENCE_KEY = 'api-tokens';
 
 export const APITokenTable = (props: Props) => {
-  const classes = useStyles();
   const { type, title } = props;
 
   const { order, orderBy, handleOrderChange } = useOrder(
@@ -75,10 +56,10 @@ export const APITokenTable = (props: Props) => {
       orderBy: 'created',
       order: 'desc',
     },
-    `${preferenceKey}-order}`,
+    `${PREFERENCE_KEY}-order}`,
     type === 'OAuth Client Token' ? 'oauth' : 'token'
   );
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
   const queryMap = {
     'OAuth Client Token': useAppTokensQuery,
@@ -146,7 +127,7 @@ export const APITokenTable = (props: Props) => {
     }
 
     return data?.results === 0 ? (
-      <TableRowEmptyState colSpan={6} />
+      <TableRowEmpty colSpan={6} />
     ) : (
       renderRows(data?.data ?? [])
     );
@@ -200,43 +181,37 @@ export const APITokenTable = (props: Props) => {
 
   return (
     <Box>
-      <Grid
-        className={`${classes.root} m0`}
+      <StyledRootContainer
         container
         alignItems="center"
         justifyContent="space-between"
         spacing={2}
       >
         <Grid>
-          <Typography
-            variant="h3"
-            className={classes.headline}
-            data-qa-table={type}
-          >
+          <StyledHeadline variant="h3" data-qa-table={type}>
             {title}
-          </Typography>
+          </StyledHeadline>
         </Grid>
-        <Grid className={classes.addNewWrapper}>
+        <StyledAddNewWrapper>
           {type === 'Personal Access Token' && (
             <AddNewLink
               onClick={() => setIsCreateOpen(true)}
               label="Create a Personal Access Token"
             />
           )}
-        </Grid>
-      </Grid>
+        </StyledAddNewWrapper>
+      </StyledRootContainer>
       <Table aria-label={`List of ${title}`}>
         <TableHead>
           <TableRow data-qa-table-head>
-            <TableSortCell
-              className={classes.labelCell}
+            <StyledTableSortCell
               active={orderBy === 'label'}
               label="label"
               direction={order}
               handleClick={handleOrderChange}
             >
               Label
-            </TableSortCell>
+            </StyledTableSortCell>
             <TableSortCell
               active={orderBy === 'created'}
               label="created"
@@ -296,5 +271,3 @@ export const APITokenTable = (props: Props) => {
     </Box>
   );
 };
-
-export default APITokenTable;

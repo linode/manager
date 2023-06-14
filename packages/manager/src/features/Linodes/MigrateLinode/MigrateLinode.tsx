@@ -88,7 +88,10 @@ export const MigrateLinode = React.memo((props: Props) => {
     linodeId !== undefined && open
   );
 
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
 
   const { data: image } = useImageQuery(
     linode?.image ?? '',

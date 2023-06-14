@@ -6,7 +6,7 @@ import ObjectActionMenu from './ObjectActionMenu';
 import Typography from 'src/components/core/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { styled } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';
@@ -43,9 +43,9 @@ export const ObjectTableRow = (props: Props) => {
           <Grid>
             <Box display="flex" alignItems="center">
               <Typography>
-                <LinkStyledButton onClick={handleClickDetails}>
+                <StyledLinkButton onClick={handleClickDetails}>
                   {displayName}
-                </LinkStyledButton>
+                </StyledLinkButton>
               </Typography>
             </Box>
           </Grid>

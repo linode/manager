@@ -42,9 +42,9 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import SelectPlanPanel, {
+import PlansPanel, {
   PlanSelectionType,
-} from 'src/features/Linodes/LinodesCreate/SelectPlanPanel';
+} from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import useFlags from 'src/hooks/useFlags';
 import {
@@ -509,7 +509,7 @@ const DatabaseCreate = () => {
         </Grid>
         <Divider spacingTop={38} spacingBottom={12} />
         <Grid>
-          <SelectPlanPanel
+          <PlansPanel
             data-qa-select-plan
             error={errors.type}
             types={displayTypes}

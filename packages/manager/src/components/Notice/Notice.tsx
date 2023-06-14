@@ -126,6 +126,7 @@ export interface NoticeProps extends Grid2Props {
   sx?: SxProps;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  dataTestId?: string;
 }
 
 export const Notice = (props: NoticeProps) => {
@@ -147,6 +148,7 @@ export const Notice = (props: NoticeProps) => {
     spacingTop,
     spacingBottom,
     spacingLeft,
+    dataTestId,
     sx,
   } = props;
 
@@ -230,7 +232,9 @@ export const Notice = (props: NoticeProps) => {
             <Warning className={classes.icon} data-qa-warning-img />
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}
-      <div className={classes.inner}>{innerText || _children}</div>
+      <div className={classes.inner} data-testid={dataTestId}>
+        {innerText || _children}
+      </div>
     </Grid>
   );
 };
