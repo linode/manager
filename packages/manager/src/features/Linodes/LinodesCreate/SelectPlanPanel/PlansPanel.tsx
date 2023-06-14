@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
-import RenderGuard from 'src/components/RenderGuard';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
@@ -11,6 +10,7 @@ import {
 import { PlanContainer } from './PlanContainer';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
+import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
 import type { Region } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
@@ -64,17 +64,14 @@ export const PlansPanel = (props: Props) => {
 
   const { classes } = useSelectPlanPanelStyles();
   const plans = getPlanSelectionsByPlanType(types);
-  const selectedRegion: Region | undefined = regionsData?.find(
-    (region: Region) => region.id === selectedRegionID
-  );
-  const hasSelectedRegion: boolean = Boolean(selectedRegionID);
-  const isSelectedRegionPremium: boolean = Boolean(
-    selectedRegion?.capabilities.includes(
-      'Bare Metal'
-    ) /**  @TODO: change to 'Premium' when API is updated */
-  );
-  const isDisabledPremiumPlan = (plan: string) =>
-    hasSelectedRegion && plan === 'premium' && !isSelectedRegionPremium;
+  const {
+    hasSelectedRegion,
+    isDisabledPremiumPlan,
+    isSelectedRegionPremium,
+  } = usePremiumPlansUtils({
+    selectedRegionID,
+    regionsData,
+  });
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
@@ -128,4 +125,4 @@ export const PlansPanel = (props: Props) => {
   );
 };
 
-export default RenderGuard(PlansPanel);
+export default PlansPanel;

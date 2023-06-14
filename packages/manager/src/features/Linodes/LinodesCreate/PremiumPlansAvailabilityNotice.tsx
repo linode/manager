@@ -1,52 +1,55 @@
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
 import type { Region } from '@linode/api-v4';
 import {
   StyledFormattedRegionList,
+  StyledNotice,
   StyledNoticeTypography,
   StyledTextTooltip,
 } from './PremiumPlansAvailabilityNotice.styles';
 
 export interface PremiumPlansAvailabilityNoticeProps {
-  isSelectedRegionPremium?: boolean;
-  hasSelectedRegion?: boolean;
+  isSelectedRegionPremium: boolean;
+  hasSelectedRegion: boolean;
   regionsData?: Region[];
 }
 
 export const PremiumPlansAvailabilityNotice = React.memo(
   (props: PremiumPlansAvailabilityNoticeProps) => {
-    const { isSelectedRegionPremium, hasSelectedRegion, regionsData } = props;
+    const { hasSelectedRegion, isSelectedRegionPremium, regionsData } = props;
 
     const getPremiumRegionList = React.useCallback(() => {
       return (
-        regionsData?.filter(
-          (region: Region) =>
-            region.capabilities.includes(
-              'Linodes'
-            ) /**  @TODO: change to 'Premium' when API is updated */
+        regionsData?.filter((region: Region) =>
+          region.capabilities.includes('Premium Plans')
         ) || []
       );
     }, [regionsData]);
 
-    return !isSelectedRegionPremium ? (
+    return (
       <PremiumPlansAvailabilityNoticeMessage
         hasSelectedRegion={hasSelectedRegion}
+        isSelectedRegionPremium={isSelectedRegionPremium}
         premiumRegionList={getPremiumRegionList()}
       />
-    ) : null;
+    );
   }
 );
 
 interface PremiumPlansAvailabilityNoticeMessageProps {
-  hasSelectedRegion?: boolean;
-  premiumRegionList?: Region[];
+  hasSelectedRegion: boolean;
+  isSelectedRegionPremium: boolean;
+  premiumRegionList: Region[];
 }
 
 const PremiumPlansAvailabilityNoticeMessage = (
   props: PremiumPlansAvailabilityNoticeMessageProps
 ) => {
-  const { hasSelectedRegion, premiumRegionList } = props;
+  const {
+    hasSelectedRegion,
+    isSelectedRegionPremium,
+    premiumRegionList,
+  } = props;
 
   const FormattedRegionList = () => (
     <StyledFormattedRegionList>
@@ -61,8 +64,8 @@ const PremiumPlansAvailabilityNoticeMessage = (
     </StyledFormattedRegionList>
   );
 
-  return hasSelectedRegion ? (
-    <Notice error dataTestId="premium-notice-error">
+  return hasSelectedRegion && !isSelectedRegionPremium ? (
+    <StyledNotice error dataTestId="premium-notice-error">
       <StyledNoticeTypography>
         Premium Plans are not currently available in this region.&nbsp;
         <StyledTextTooltip
@@ -70,9 +73,9 @@ const PremiumPlansAvailabilityNoticeMessage = (
           tooltipText={<FormattedRegionList />}
         />
       </StyledNoticeTypography>
-    </Notice>
-  ) : (
-    <Notice warning dataTestId="premium-notice-warning">
+    </StyledNotice>
+  ) : !hasSelectedRegion ? (
+    <StyledNotice warning dataTestId="premium-notice-warning">
       <StyledNoticeTypography>
         Premium Plans are currently available in&nbsp;
         <StyledTextTooltip
@@ -81,6 +84,6 @@ const PremiumPlansAvailabilityNoticeMessage = (
         />
         .
       </StyledNoticeTypography>
-    </Notice>
-  );
+    </StyledNotice>
+  ) : null;
 };

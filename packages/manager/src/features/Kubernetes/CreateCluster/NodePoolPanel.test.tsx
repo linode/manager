@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import NodePoolPanel from './NodePoolPanel';
+import { NodePoolPanel } from './NodePoolPanel';
 import { extendedTypes } from 'src/__data__';
+import type { NodePoolPanelProps } from './NodePoolPanel';
 
-const props = {
-  clusterId: 0,
-  clusterLabel: 'test',
-  open: true,
-  onClose: jest.fn(),
+const props: NodePoolPanelProps = {
+  hasSelectedRegion: true,
+  isSelectedRegionPremium: false,
   types: extendedTypes,
   typesLoading: false,
   addNodePool: jest.fn(),

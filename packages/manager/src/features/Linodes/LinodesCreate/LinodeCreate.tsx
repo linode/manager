@@ -466,10 +466,6 @@ export class LinodeCreate extends React.PureComponent<
 
     const generalError = getErrorMap(errorMap, errors).none;
 
-    /** TODO: remove this when done */
-    // console.log('Errors: ', errors);
-    // console.log('Selected Plan: ', this.props.selectedTypeID);
-
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
     }
@@ -716,12 +712,6 @@ export class LinodeCreate extends React.PureComponent<
             selectedRegionID={selectedRegionID}
             selectedID={this.props.selectedTypeID}
             linodeID={this.props.selectedLinodeID}
-            updateFor={[
-              this.props.selectedTypeID,
-              this.props.disabledClasses,
-              this.props.createType,
-              errors,
-            ]}
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
             isCreate

@@ -8,15 +8,15 @@ import { PremiumPlansAvailabilityNotice } from '../PremiumPlansAvailabilityNotic
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import type { Region } from '@linode/api-v4';
 
-interface Props {
+export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
-  hasSelectedRegion?: boolean;
-  isSelectedRegionPremium?: boolean;
+  hasSelectedRegion: boolean;
+  isSelectedRegionPremium: boolean;
   planType: LinodeTypeClass;
   regionsData?: Region[];
 }
 
-export const PlanInformation = (props: Props) => {
+export const PlanInformation = (props: PlanInformationProps) => {
   const { classes } = useSelectPlanPanelStyles();
   const {
     disabledClasses,

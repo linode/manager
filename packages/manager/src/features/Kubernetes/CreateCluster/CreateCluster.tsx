@@ -34,9 +34,10 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
-import NodePoolPanel from './NodePoolPanel';
+import { NodePoolPanel } from './NodePoolPanel';
 import LandingHeader from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -134,7 +135,7 @@ export const CreateCluster = () => {
       : [];
   }, [regionsData]);
 
-  const [selectedRegion, setSelectedRegion] = React.useState<string>('');
+  const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [highAvailability, setHighAvailability] = React.useState<boolean>(
@@ -155,11 +156,13 @@ export const CreateCluster = () => {
   }));
   const history = useHistory();
 
+  console.log('selectedRegion: ', selectedRegionID);
+
   React.useEffect(() => {
-    if (filteredRegions.length === 1 && !selectedRegion) {
-      setSelectedRegion(filteredRegions[0].id);
+    if (filteredRegions.length === 1 && !selectedRegionID) {
+      setSelectedRegionID(filteredRegions[0].id);
     }
-  }, [filteredRegions, selectedRegion]);
+  }, [filteredRegions, selectedRegionID]);
 
   const createCluster = () => {
     const { push } = history;
@@ -178,7 +181,7 @@ export const CreateCluster = () => {
 
     const payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability },
-      region: selectedRegion,
+      region: selectedRegionID,
       node_pools,
       label,
       k8s_version,
@@ -232,7 +235,16 @@ export const CreateCluster = () => {
     errors
   );
 
-  const selectedID = selectedRegion || null;
+  const selectedID = selectedRegionID || null;
+
+  const {
+    hasSelectedRegion,
+    isDisabledPremiumPlan,
+    isSelectedRegionPremium,
+  } = usePremiumPlansUtils({
+    selectedRegionID,
+    regionsData,
+  });
 
   if (typesError || regionsError || versionLoadError) {
     /**
@@ -273,7 +285,7 @@ export const CreateCluster = () => {
                 className={classes.regionSubtitle}
                 errorText={errorMap.region}
                 handleSelection={(regionID: string) =>
-                  setSelectedRegion(regionID)
+                  setSelectedRegionID(regionID)
                 }
                 regions={filteredRegions}
                 selectedID={selectedID}
@@ -309,14 +321,10 @@ export const CreateCluster = () => {
                     )[0].reason
                   : undefined
               }
+              isDisabledPremiumPlan={isDisabledPremiumPlan('premium')}
+              hasSelectedRegion={hasSelectedRegion}
+              isSelectedRegionPremium={isSelectedRegionPremium}
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
-              updateFor={[
-                nodePools,
-                typesData,
-                errorMap,
-                typesLoading,
-                classes,
-              ]}
             />
           </Box>
         </Paper>
@@ -333,13 +341,13 @@ export const CreateCluster = () => {
           removePool={removePool}
           highAvailability={highAvailability}
           setHighAvailability={setHighAvailability}
-          region={selectedRegion}
+          region={selectedRegionID}
           hasAgreed={hasAgreed}
           toggleHasAgreed={toggleHasAgreed}
           updateFor={[
             hasAgreed,
             highAvailability,
-            selectedRegion,
+            selectedRegionID,
             nodePools,
             submitting,
             typesData,

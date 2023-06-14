@@ -19,7 +19,10 @@ interface Props {
   disabled?: boolean;
   error?: string;
   getTypeCount: (planId: string) => number;
+  hasSelectedRegion: boolean;
   header?: string;
+  isDisabledPremiumPlan: boolean;
+  isSelectedRegionPremium: boolean;
   isSubmitting?: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
@@ -33,7 +36,10 @@ export const KubernetesPlansPanel = ({
   copy,
   disabled,
   error,
+  hasSelectedRegion,
   header,
+  isDisabledPremiumPlan,
+  isSelectedRegionPremium,
   onAdd,
   updatePlanCount,
   types,
@@ -52,9 +58,13 @@ export const KubernetesPlansPanel = ({
       render: () => {
         return (
           <>
-            <PlanInformation planType={plan} />
+            <PlanInformation
+              planType={plan}
+              hasSelectedRegion={hasSelectedRegion}
+              isSelectedRegionPremium={isSelectedRegionPremium}
+            />
             <KubernetesPlanContainer
-              disabled={disabled}
+              disabled={disabled || isDisabledPremiumPlan}
               getTypeCount={getTypeCount}
               onAdd={onAdd}
               onSelect={onSelect}

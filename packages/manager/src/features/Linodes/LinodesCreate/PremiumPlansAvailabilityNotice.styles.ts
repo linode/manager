@@ -1,8 +1,15 @@
 import List from 'src/components/core/List';
 import Typography from 'src/components/core/Typography';
+import { Notice } from 'src/components/Notice/Notice';
 import { styled } from '@mui/material/styles';
 import { TextTooltip } from 'src/components/TextTooltip';
 import type { Theme } from '@mui/material/styles';
+
+export const StyledNotice = styled(Notice, {
+  label: 'StyledNotice',
+})(() => ({
+  minHeight: 50,
+}));
 
 export const StyledNoticeTypography = styled(Typography, {
   label: 'StyledNoticeTypography',

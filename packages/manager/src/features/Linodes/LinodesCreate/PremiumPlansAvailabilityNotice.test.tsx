@@ -16,7 +16,7 @@ const mockedRegionData: Region[] = [
   {
     id: '2',
     label: 'Region 2',
-    capabilities: ['Premium'],
+    capabilities: ['Premium Plans'],
     country: 'US',
     status: 'ok',
     resolvers: { ipv4: '', ipv6: '' },
