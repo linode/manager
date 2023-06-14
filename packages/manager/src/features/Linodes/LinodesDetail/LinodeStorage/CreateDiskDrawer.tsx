@@ -1,5 +1,4 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -106,101 +105,86 @@ export const CreateDiskDrawer = (props: Props) => {
   return (
     <Drawer title="Create Disk" open={open} onClose={onClose}>
       <form onSubmit={formik.handleSubmit}>
-        <Grid container direction="row">
-          <Grid data-qa-mode-toggle>
-            <ModeSelect
-              modes={modeList}
-              selected={selectedMode}
-              onChange={(e) => setSelectedMode(e.target.value as CreateMode)}
-            />
-          </Grid>
-          <Grid xs={12}>
-            {errorMap.none && (
-              <Notice
-                error
-                spacingBottom={8}
-                errorGroup="linode-disk-drawer"
-                text={errorMap.none}
-              />
-            )}
-          </Grid>
-          <Grid xs={12}>
-            <TextField
-              label="Label"
-              name="label"
-              required
-              value={formik.values.label}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              errorText={errorMap.label}
-              errorGroup="linode-disk-drawer"
-              data-qa-label
-            />
-            {selectedMode === 'empty' && (
-              <TextField
-                label="Filesystem"
-                name="filesystem"
-                select
-                value={formik.values.filesystem}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                errorText={errorMap.filesystem}
-              >
-                <MenuItem value="_none_">
-                  <em>Select a Filesystem</em>
-                </MenuItem>
-                {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map((fs) => (
-                  <MenuItem value={fs} key={fs}>
-                    {fs}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-            {selectedMode === 'from_image' && (
-              <ImageAndPassword
-                onImageChange={(selected: Item) =>
-                  formik.setFieldValue('image', selected?.value ?? null)
-                }
-                imageFieldError={errorMap.image}
-                password={formik.values.root_pass}
-                passwordError={errorMap.root_pass}
-                onPasswordChange={(root_pass: string) =>
-                  formik.setFieldValue('root_pass', root_pass)
-                }
-                authorizedUsers={formik.values.authorized_users}
-                setAuthorizedUsers={(value) =>
-                  formik.setFieldValue('authorized_users', value)
-                }
-              />
-            )}
-            <TextField
-              label="Size"
-              type="number"
-              name="size"
-              required
-              value={formik.values.size}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              errorText={errorMap.size}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">MB</InputAdornment>
-                ),
-              }}
-              data-qa-disk-size
-            />
-            <FormHelperText style={{ marginTop: 8 }}>
-              Maximum size: {maximumSize} MB
-            </FormHelperText>
-          </Grid>
-        </Grid>
-        <ActionsPanel>
-          <Button
-            onClick={onClose}
-            buttonType="secondary"
-            className="cancel"
-            data-qa-disk-cancel
+        <ModeSelect
+          modes={modeList}
+          selected={selectedMode}
+          onChange={(e) => setSelectedMode(e.target.value as CreateMode)}
+        />
+        {errorMap.none && (
+          <Notice
+            error
+            spacingBottom={8}
+            errorGroup="linode-disk-drawer"
+            text={errorMap.none}
+          />
+        )}
+        <TextField
+          label="Label"
+          name="label"
+          required
+          value={formik.values.label}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          errorText={errorMap.label}
+          errorGroup="linode-disk-drawer"
+          data-qa-label
+        />
+        {selectedMode === 'empty' && (
+          <TextField
+            label="Filesystem"
+            name="filesystem"
+            select
+            value={formik.values.filesystem}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            errorText={errorMap.filesystem}
           >
+            <MenuItem value="_none_">
+              <em>Select a Filesystem</em>
+            </MenuItem>
+            {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map((fs) => (
+              <MenuItem value={fs} key={fs}>
+                {fs}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
+        {selectedMode === 'from_image' && (
+          <ImageAndPassword
+            onImageChange={(selected: Item) =>
+              formik.setFieldValue('image', selected?.value ?? null)
+            }
+            imageFieldError={errorMap.image}
+            password={formik.values.root_pass}
+            passwordError={errorMap.root_pass}
+            onPasswordChange={(root_pass: string) =>
+              formik.setFieldValue('root_pass', root_pass)
+            }
+            authorizedUsers={formik.values.authorized_users}
+            setAuthorizedUsers={(value) =>
+              formik.setFieldValue('authorized_users', value)
+            }
+          />
+        )}
+        <TextField
+          label="Size"
+          type="number"
+          name="size"
+          required
+          value={formik.values.size}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          errorText={errorMap.size}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">MB</InputAdornment>,
+          }}
+          data-qa-disk-size
+        />
+        <FormHelperText style={{ marginTop: 8 }}>
+          Maximum size: {maximumSize} MB
+        </FormHelperText>
+        <ActionsPanel>
+          <Button onClick={onClose} buttonType="secondary" className="cancel">
             Cancel
           </Button>
           <Button

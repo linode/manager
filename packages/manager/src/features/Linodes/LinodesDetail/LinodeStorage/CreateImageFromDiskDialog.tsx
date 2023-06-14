@@ -31,8 +31,8 @@ export const CreateImageFromDiskDialog = (props: Props) => {
   };
 
   const ticketDescription = error
-    ? `I see a notice saying "${error?.[0].reason}" when trying to create an Image from my disk ${disk?.label} (${disk?.id})`
-    : `I would like to create an Image from my disk ${disk?.label} (${disk?.id})`;
+    ? `I see a notice saying "${error?.[0].reason}" when trying to create an Image from my disk ${disk?.label} (${disk?.id}).`
+    : `I would like to create an Image from my disk ${disk?.label} (${disk?.id}).`;
 
   return (
     <ConfirmationDialog

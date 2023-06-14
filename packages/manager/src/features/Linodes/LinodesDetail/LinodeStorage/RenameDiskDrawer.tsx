@@ -3,10 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import InputAdornment from 'src/components/core/InputAdornment';
-import MenuItem from 'src/components/core/MenuItem';
 import Drawer from 'src/components/Drawer';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { object, string } from 'yup';
@@ -67,68 +64,27 @@ export const RenameDiskDrawer = (props: Props) => {
   return (
     <Drawer title="Rename Disk" open={open} onClose={onClose}>
       <form onSubmit={formik.handleSubmit}>
-        <Grid container direction="row">
-          <Grid xs={12}>
-            {errorMap.none && (
-              <Notice
-                error
-                spacingBottom={8}
-                errorGroup="linode-disk-drawer"
-                text={errorMap.none}
-              />
-            )}
-          </Grid>
-          <Grid xs={12}>
-            <TextField
-              label="Label"
-              name="label"
-              required
-              value={formik.values.label}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              errorText={formik.touched.label ? formik.errors.label : undefined}
-              errorGroup="linode-disk-drawer"
-              data-qa-label
-            />
-            <TextField
-              disabled
-              label="Filesystem"
-              name="filesystem"
-              select
-              value={disk?.filesystem}
-            >
-              <MenuItem value="_none_">
-                <em>Select a Filesystem</em>
-              </MenuItem>
-              {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map((fs) => (
-                <MenuItem value={fs} key={fs}>
-                  {fs}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              disabled
-              label="Size"
-              type="number"
-              name="size"
-              required
-              value={disk?.size}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">MB</InputAdornment>
-                ),
-              }}
-              data-qa-disk-size
-            />
-          </Grid>
-        </Grid>
+        {errorMap.none && (
+          <Notice
+            error
+            spacingBottom={8}
+            errorGroup="linode-disk-drawer"
+            text={errorMap.none}
+          />
+        )}
+        <TextField
+          label="Label"
+          name="label"
+          required
+          value={formik.values.label}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          errorText={formik.touched.label ? formik.errors.label : undefined}
+          errorGroup="linode-disk-drawer"
+          data-qa-label
+        />
         <ActionsPanel>
-          <Button
-            onClick={onClose}
-            buttonType="secondary"
-            className="cancel"
-            data-qa-disk-cancel
-          >
+          <Button onClick={onClose} buttonType="secondary" className="cancel">
             Cancel
           </Button>
           <Button
