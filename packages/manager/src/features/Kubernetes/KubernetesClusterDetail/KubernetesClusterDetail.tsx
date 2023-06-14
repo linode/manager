@@ -16,7 +16,7 @@ import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 import LandingHeader from 'src/components/LandingHeader';
-import ProductInformationBanner from 'src/components/ProductInformationBanner';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
