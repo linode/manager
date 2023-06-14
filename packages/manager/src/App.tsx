@@ -9,11 +9,10 @@ import * as React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'redux';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import { events$ } from 'src/events';
+import { EventWithStore, events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import GoTo from './GoTo';
 import IdentifyUser from './IdentifyUser';
@@ -145,131 +144,119 @@ export const App = () => {
     };
   }, [keyboardListener]);
 
+  /*
+   * We want to listen for migration events side-wide
+   * It's unpredictable when a migration is going to happen. It could take
+   * hours and it could take days. We want to notify to the user when it happens
+   * and then update the Linodes in LinodesDetail and LinodesLanding
+   */
+  const handleMigrationEvent = React.useCallback(
+    ({ event }: EventWithStore) => {
+      const { entity: migratedLinode } = event;
+      if (event.action === 'linode_migrate' && event.status === 'finished') {
+        enqueueSnackbar(
+          `Linode ${migratedLinode!.label} migrated successfully.`,
+          {
+            variant: 'success',
+          }
+        );
+      }
+
+      if (event.action === 'linode_migrate' && event.status === 'failed') {
+        enqueueSnackbar(`Linode ${migratedLinode!.label} migration failed.`, {
+          variant: 'error',
+        });
+      }
+    },
+    [enqueueSnackbar]
+  );
+
   React.useEffect(() => {
-    const subscriptions = [
-      events$
-        .filter(
-          ({ event }) => event.action.startsWith('database') && !event._initial
-        )
-        .subscribe(databaseEventsHandler),
-
-      events$
-        .filter(
-          ({ event }) =>
-            event.action.startsWith('domain') &&
-            !event._initial &&
-            event.entity !== null
-        )
-        .subscribe(domainEventsHandler),
-
-      events$
-        .filter(
-          ({ event }) => event.action.startsWith('volume') && !event._initial
-        )
-        .subscribe(volumeEventsHandler),
-
-      events$
-        .filter(
-          ({ event }) =>
-            (event.action.startsWith('image') ||
-              event.action === 'disk_imagize') &&
-            !event._initial
-        )
-        .subscribe(imageEventsHandler),
-
-      events$
-        .filter(
-          ({ event }) => event.action.startsWith('token') && !event._initial
-        )
-        .subscribe(tokenEventHandler),
-
-      events$
-        .filter(
-          ({ event }) =>
-            event.action.startsWith('user_ssh_key') && !event._initial
-        )
-        .subscribe(sshKeyEventHandler),
-
-      events$
-        .filter(
-          ({ event }) => event.action.startsWith('firewall') && !event._initial
-        )
-        .subscribe(firewallEventsHandler),
-
-      events$
-        .filter(
-          ({ event }) =>
-            event.action.startsWith('nodebalancer') && !event._initial
-        )
-        .subscribe(nodebalanacerEventHandler),
-
-      events$
-        .filter(
-          ({ event }) =>
-            event.action.startsWith('oauth_client') && !event._initial
-        )
-        .subscribe(oauthClientsEventHandler),
-
-      events$
-        .filter(
-          ({ event }) =>
-            (event.action.startsWith('linode') ||
-              event.action.startsWith('backups')) &&
-            !event._initial
-        )
-        .subscribe(linodeEventsHandler),
-
-      events$
-        .filter(
-          ({ event }) => event.action.startsWith('ticket') && !event._initial
-        )
-        .subscribe(supportTicketEventHandler),
-
-      /*
-       * We want to listen for migration events side-wide
-       * It's unpredictable when a migration is going to happen. It could take
-       * hours and it could take days. We want to notify to the user when it happens
-       * and then update the Linodes in LinodesDetail and LinodesLanding
-       */
-      events$
-        .filter(
-          ({ event }) =>
-            !event._initial && ['linode_migrate'].includes(event.action)
-        )
-        .subscribe(({ event }) => {
-          const { entity: migratedLinode } = event;
-          if (
-            event.action === 'linode_migrate' &&
-            event.status === 'finished'
-          ) {
-            enqueueSnackbar(
-              `Linode ${migratedLinode!.label} migrated successfully.`,
-              {
-                variant: 'success',
-              }
-            );
-          }
-
-          if (event.action === 'linode_migrate' && event.status === 'failed') {
-            enqueueSnackbar(
-              `Linode ${migratedLinode!.label} migration failed.`,
-              {
-                variant: 'error',
-              }
-            );
-          }
-        }),
+    const eventHandlers: {
+      filter: (event: EventWithStore) => boolean;
+      handler: (event: EventWithStore) => void;
+    }[] = [
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('database') && !event._initial,
+        handler: databaseEventsHandler,
+      },
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('domain') &&
+          !event._initial &&
+          event.entity !== null,
+        handler: domainEventsHandler,
+      },
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('volume') && !event._initial,
+        handler: volumeEventsHandler,
+      },
+      {
+        filter: ({ event }) =>
+          (event.action.startsWith('image') ||
+            event.action === 'disk_imagize') &&
+          !event._initial,
+        handler: imageEventsHandler,
+      },
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('token') && !event._initial,
+        handler: tokenEventHandler,
+      },
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('user_ssh_key') && !event._initial,
+        handler: sshKeyEventHandler,
+      },
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('firewall') && !event._initial,
+        handler: firewallEventsHandler,
+      },
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('nodebalancer') && !event._initial,
+        handler: nodebalanacerEventHandler,
+      },
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('oauth_client') && !event._initial,
+        handler: oauthClientsEventHandler,
+      },
+      {
+        filter: ({ event }) =>
+          (event.action.startsWith('linode') ||
+            event.action.startsWith('backups')) &&
+          !event._initial,
+        handler: linodeEventsHandler,
+      },
+      {
+        filter: ({ event }) =>
+          event.action.startsWith('ticket') && !event._initial,
+        handler: supportTicketEventHandler,
+      },
+      {
+        filter: ({ event }) =>
+          !event._initial && ['linode_migrate'].includes(event.action),
+        handler: handleMigrationEvent,
+      },
     ];
+
+    const subscriptions = eventHandlers.map(({ filter, handler }) =>
+      events$.filter(filter).subscribe(handler)
+    );
 
     return () => {
       subscriptions.forEach((sub) => sub.unsubscribe());
     };
-  }, [enqueueSnackbar]);
+  }, [handleMigrationEvent]);
 
   /**
-   * basically, if we get an "invalid oauth token"
-   * error from the API, just render nothing because the user is
-   * about to get shot off to login
+   * in the event that we encounter an "invalid OAuth token" error from the API,
+   * we can simply refrain from rendering any content since the user will
+   * imminently be redirected to the login page.
    */
   if (hasOauthError(linodesError)) {
     return null;
@@ -302,7 +289,7 @@ export const App = () => {
   );
 };
 
-export default compose(withFeatureFlagProvider, withFeatureFlagConsumer)(App);
+export default withFeatureFlagProvider(withFeatureFlagConsumer(App));
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
   return args.some((eachError) => {
