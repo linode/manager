@@ -55,7 +55,7 @@ export const ResizeDiskDrawer = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: resizeDisk, error } = useLinodeDiskResizeMutation(
+  const { mutateAsync: resizeDisk, error, reset } = useLinodeDiskResizeMutation(
     linodeId,
     disk?.id ?? -1
   );
@@ -82,6 +82,7 @@ export const ResizeDiskDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       formik.resetForm();
+      reset();
     }
   }, [open]);
 

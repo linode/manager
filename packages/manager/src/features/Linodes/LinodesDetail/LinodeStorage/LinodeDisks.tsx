@@ -71,7 +71,7 @@ export const LinodeDisks = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
   const [isRenameDrawerOpen, setIsRenameDrawerOpen] = React.useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = React.useState(false);
-  const [isImageDrawerOpen, setIsImageDrawerOpen] = React.useState(false);
+  const [isImageDialogOpen, setIsImageDialogOpen] = React.useState(false);
 
   const [selectedDiskId, setSelectedDiskId] = React.useState<number>();
   const selectedDisk = disks?.find((d) => d.id === selectedDiskId);
@@ -106,7 +106,7 @@ export const LinodeDisks = () => {
 
   const onImagize = (disk: Disk) => {
     setSelectedDiskId(disk.id);
-    setIsImageDrawerOpen(true);
+    setIsImageDialogOpen(true);
   };
 
   const renderTableContent = (disks: Disk[] | undefined) => {
@@ -274,8 +274,8 @@ export const LinodeDisks = () => {
         disk={selectedDisk}
       />
       <CreateImageFromDiskDialog
-        open={isImageDrawerOpen}
-        onClose={() => setIsImageDrawerOpen(false)}
+        open={isImageDialog}
+        onClose={() => setIsImageDialogOpen(false)}
         disk={selectedDisk}
       />
     </React.Fragment>

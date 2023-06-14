@@ -53,7 +53,7 @@ export const CreateDiskDrawer = (props: Props) => {
 
   const { data: disks } = useAllLinodeDisksQuery(linodeId);
 
-  const { mutateAsync: createDisk, error } = useLinodeDiskCreateMutation(
+  const { mutateAsync: createDisk, error, reset } = useLinodeDiskCreateMutation(
     linodeId
   );
 
@@ -90,14 +90,16 @@ export const CreateDiskDrawer = (props: Props) => {
     },
   });
 
-  const fields = Object.keys(initialValues) as (keyof typeof initialValues)[];
-
-  const errorMap = getErrorMap(fields, error);
+  const errorMap = getErrorMap(
+    ['label', 'size', 'filesystem', 'image', 'root_pass'],
+    error
+  );
 
   React.useEffect(() => {
     if (open) {
       setSelectedMode('empty');
       formik.resetForm();
+      reset();
     }
   }, [open]);
 
@@ -159,9 +161,7 @@ export const CreateDiskDrawer = (props: Props) => {
                 onImageChange={(selected: Item) =>
                   formik.setFieldValue('image', selected?.value ?? null)
                 }
-                imageFieldError={
-                  formik.touched.image ? formik.errors.image : undefined
-                }
+                imageFieldError={errorMap.image}
                 password={formik.values.root_pass}
                 passwordError={errorMap.root_pass}
                 onPasswordChange={(root_pass: string) =>
