@@ -156,9 +156,9 @@ export const oneClickApps: OCA[] = [
     alt_description:
       'A self-hosted backend-as-a-service platform that provides developers with all the core APIs required to build any application.',
     categories: ['Development'],
-    description: `A self-hosted Firebase alternative for web, mobile & flutter developers.`,
+    description: `A self-hosted Firebase alternative for web, mobile & Flutter developers.`,
     summary:
-      'Appwrite is an open-source, cross-platform and technology-agnostic alternative to Firebase, providing all the core APIs necessary for web, mobile and flutter developement.',
+      'Appwrite is an open-source, cross-platform and technology-agnostic alternative to Firebase, providing all the core APIs necessary for web, mobile and Flutter development.',
     related_guides: [
       {
         title: 'Deploy Appwrite through the Linode Marketplace',
@@ -837,7 +837,7 @@ export const oneClickApps: OCA[] = [
       'Retool open-source alternative, with low-code UI components.',
     categories: ['Security'],
     description:
-      'Illa Builder is a Retool open-source alternative, with low-code UI components for self-hosting the developement of internal tools.',
+      'Illa Builder is a Retool open-source alternative, with low-code UI components for self-hosting the development of internal tools.',
     summary: 'An open-source, low-code development platform.',
     related_guides: [
       {
@@ -1571,7 +1571,7 @@ export const oneClickApps: OCA[] = [
     categories: ['Productivity'],
     description: `LAMP-stack-based server application that allows you to access your files from anywhere in a secure way.`,
     summary:
-      'DropBox and oneDrive alternative that lets you remain in control of your files.',
+      'DropBox and OneDrive alternative that lets you remain in control of your files.',
     related_guides: [
       {
         title: 'Deploy ownCloud through the Linode Marketplace',
