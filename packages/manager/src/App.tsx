@@ -6,7 +6,6 @@ import 'highlight.js/styles/a11y-light.css';
 import { useSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -37,6 +36,7 @@ import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export const App = () => {
   const history = useHistory();
@@ -117,7 +117,7 @@ export const App = () => {
     /**
      * Send pageviews
      */
-    history.listen(({ pathname }) => {
+    return history.listen(({ pathname }) => {
       // Send Google Analytics page view events
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
