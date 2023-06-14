@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from 'src/components/core/Box';
 import classNames from 'classnames';
 import Divider from 'src/components/core/Divider';
-import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import Typography from 'src/components/core/Typography';
 import useEventInfo from './useEventInfo';
 import { Event } from '@linode/api-v4/lib/account/types';
