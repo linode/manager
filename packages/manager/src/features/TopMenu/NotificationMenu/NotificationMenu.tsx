@@ -25,6 +25,30 @@ import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import usePrevious from 'src/hooks/usePrevious';
 import { isPropValid } from 'src/utilities/isPropValid';
 
+const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
+  label: 'NotificationIconWrapper',
+  shouldForwardProp: (prop) => isPropValid(['isMenuOpen'], prop),
+})<{
+  isMenuOpen: boolean;
+}>(({ ...props }) => ({
+  color: props.isMenuOpen ? '#606469' : '#c9c7c7',
+}));
+
+const NotificationIconBadge = styled('div')(({ theme }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.color.green,
+  borderRadius: '50%',
+  color: 'white',
+  display: 'flex',
+  fontSize: '0.72rem',
+  height: '1rem',
+  justifyContent: 'center',
+  left: 20,
+  position: 'absolute',
+  top: 2,
+  width: '1rem',
+}));
+
 export const NotificationMenu = () => {
   const theme = useTheme();
 
@@ -165,27 +189,3 @@ export const NotificationMenu = () => {
     </>
   );
 };
-
-const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
-  label: 'NotificationIconWrapper',
-  shouldForwardProp: (prop) => isPropValid(['isMenuOpen'], prop),
-})<{
-  isMenuOpen: boolean;
-}>(({ ...props }) => ({
-  color: props.isMenuOpen ? '#606469' : '#c9c7c7',
-}));
-
-const NotificationIconBadge = styled('div')(({ theme }) => ({
-  alignItems: 'center',
-  backgroundColor: theme.color.green,
-  borderRadius: '50%',
-  color: 'white',
-  display: 'flex',
-  fontSize: '0.72rem',
-  height: '1rem',
-  justifyContent: 'center',
-  left: 20,
-  position: 'absolute',
-  top: 2,
-  width: '1rem',
-}));
