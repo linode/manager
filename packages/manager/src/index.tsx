@@ -18,7 +18,7 @@ import LinodeThemeWrapper from './LinodeThemeWrapper';
 import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import App from './App';
+import { App } from './App';
 import { queryClientFactory } from './queries/base';
 
 const queryClient = queryClientFactory();
