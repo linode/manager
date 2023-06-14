@@ -60,9 +60,9 @@ export const ResizeDiskDrawer = (props: Props) => {
     disk?.id ?? -1
   );
 
-  const { data: disks } = useAllLinodeDisksQuery(linodeId);
+  const { data: disks } = useAllLinodeDisksQuery(linodeId, open);
 
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId, open);
 
   const maximumSize = calculateDiskFree(linode, disks, disk?.id ?? 0);
 

@@ -19,7 +19,14 @@ export const DeleteDiskDialog = (props: Props) => {
     mutateAsync: deleteDisk,
     isLoading,
     error,
+    reset,
   } = useLinodeDeleteDiskMutation(linodeId, disk?.id ?? -1);
+
+  React.useEffect(() => {
+    if (open) {
+      reset();
+    }
+  }, [open]);
 
   const onDelete = async () => {
     await deleteDisk();

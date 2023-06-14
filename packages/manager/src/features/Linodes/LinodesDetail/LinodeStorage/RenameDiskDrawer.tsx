@@ -5,30 +5,14 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { object, string } from 'yup';
-
 import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
 import { useSnackbar } from 'notistack';
 import { getErrorMap } from 'src/utilities/errorUtils';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  section: {},
-  divider: {
-    margin: `${theme.spacing(2)} ${theme.spacing(1)} 0 `,
-    width: `calc(100% - ${theme.spacing(2)})`,
-  },
-  formHelperTextLink: {
-    display: 'block',
-    marginTop: theme.spacing(1),
-  },
-}));
 
 const RenameDiskSchema = object({
   label: string()
@@ -47,12 +31,10 @@ export interface Props {
 export const RenameDiskDrawer = (props: Props) => {
   const { disk, open, onClose, linodeId } = props;
 
-  const { mutateAsync: updateDisk, error } = useLinodeDiskUpdateMutation(
+  const { mutateAsync: updateDisk, error, reset } = useLinodeDiskUpdateMutation(
     linodeId,
     disk?.id ?? -1
   );
-
-  const classes = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -76,6 +58,7 @@ export const RenameDiskDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       formik.resetForm();
+      reset();
     }
   }, [open]);
 
@@ -95,7 +78,7 @@ export const RenameDiskDrawer = (props: Props) => {
               />
             )}
           </Grid>
-          <Grid xs={12} className={classes.section}>
+          <Grid xs={12}>
             <TextField
               label="Label"
               name="label"

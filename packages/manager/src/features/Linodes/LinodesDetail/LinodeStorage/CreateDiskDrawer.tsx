@@ -49,9 +49,9 @@ export const CreateDiskDrawer = (props: Props) => {
 
   const [selectedMode, setSelectedMode] = React.useState<CreateMode>('empty');
 
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId, open);
 
-  const { data: disks } = useAllLinodeDisksQuery(linodeId);
+  const { data: disks } = useAllLinodeDisksQuery(linodeId, open);
 
   const { mutateAsync: createDisk, error, reset } = useLinodeDiskCreateMutation(
     linodeId
