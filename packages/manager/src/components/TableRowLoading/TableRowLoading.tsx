@@ -44,7 +44,7 @@ export const TableRowLoading = ({
         data-testid="table-row-loading"
         key={`table-loading-row-${i}`}
         sx={{
-          '& :last-child': {
+          '&& :last-child': {
             paddingRight: '15px',
           },
         }}

@@ -18,7 +18,19 @@ interface Props {
 export const CreateImageFromDiskDialog = (props: Props) => {
   const { open, onClose, disk, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: createImage, error } = useCreateImageMutation();
+
+  const {
+    mutateAsync: createImage,
+    isLoading,
+    error,
+    reset,
+  } = useCreateImageMutation();
+
+  React.useEffect(() => {
+    if (open) {
+      reset();
+    }
+  }, [open]);
 
   const onCreate = async () => {
     await createImage({
@@ -45,7 +57,7 @@ export const CreateImageFromDiskDialog = (props: Props) => {
           <Button buttonType="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button buttonType="primary" onClick={onCreate}>
+          <Button buttonType="primary" onClick={onCreate} loading={isLoading}>
             Create Image
           </Button>
         </ActionsPanel>
