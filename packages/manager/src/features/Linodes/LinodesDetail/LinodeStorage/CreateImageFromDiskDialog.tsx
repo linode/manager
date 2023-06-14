@@ -6,15 +6,17 @@ import { useSnackbar } from 'notistack';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button/Button';
 import { Typography } from '@mui/material';
+import { SupportLink } from 'src/components/SupportLink/SupportLink';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   disk: Disk | undefined;
+  linodeId: number;
 }
 
 export const CreateImageFromDiskDialog = (props: Props) => {
-  const { open, onClose, disk } = props;
+  const { open, onClose, disk, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createImage, error } = useCreateImageMutation();
 
@@ -27,6 +29,10 @@ export const CreateImageFromDiskDialog = (props: Props) => {
       variant: 'info',
     });
   };
+
+  const ticketDescription = error
+    ? `I see a notice saying "${error?.[0].reason}" when trying to create an Image from my disk ${disk?.label} (${disk?.id})`
+    : `I would like to create an Image from my disk ${disk?.label} (${disk?.id})`;
 
   return (
     <ConfirmationDialog
@@ -47,10 +53,16 @@ export const CreateImageFromDiskDialog = (props: Props) => {
     >
       <Typography>
         Linode Images are limited to 6144 MB of data per disk by default. Please
-        ensure that your disk content does not exceed this size limit, or open a
-        Support ticket to request a higher limit. Additionally, Linode Images
-        cannot be created if you are using raw disks or disks that have been
-        formatted using custom filesystems.
+        ensure that your disk content does not exceed this size limit, or{' '}
+        <SupportLink
+          text="open a support ticket"
+          title="Increase Image Size Request"
+          description={ticketDescription}
+          entity={{ id: linodeId, type: 'linode_id' }}
+        />{' '}
+        to request a higher limit. Additionally, Linode Images cannot be created
+        if you are using raw disks or disks that have been formatted using
+        custom filesystems.
       </Typography>
     </ConfirmationDialog>
   );

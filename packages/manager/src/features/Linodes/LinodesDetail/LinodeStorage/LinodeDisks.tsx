@@ -277,6 +277,7 @@ export const LinodeDisks = () => {
         open={isImageDialogOpen}
         onClose={() => setIsImageDialogOpen(false)}
         disk={selectedDisk}
+        linodeId={id}
       />
     </React.Fragment>
   );
