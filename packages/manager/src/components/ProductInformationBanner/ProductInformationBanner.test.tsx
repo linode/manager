@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { productInformationBannerFactory } from 'src/factories/featureFlags';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import ProductInformationBanner from './ProductInformationBanner';
+import { ProductInformationBanner } from './ProductInformationBanner';
 import { DateTime } from 'luxon';
 import { screen } from '@testing-library/react';
 import { ProductInformationBannerFlag } from 'src/featureFlags';
