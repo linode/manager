@@ -97,10 +97,11 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   return (
     <TypeToConfirmDialog
       title="Are you sure you want to close your Linode account?"
+      label={`Please enter your Username (${profile.username}) to confirm.`}
       entity={{
         type: 'AccountSetting',
         subType: 'CloseAccount',
-        label: profile.username,
+        primaryBtnText: 'Close Account',
       }}
       open={open}
       onClose={closeDialog}
@@ -108,11 +109,11 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       loading={isClosingAccount}
       inputRef={inputRef}
       disabled={!canSubmit}
-      typographyStyle={{ marginTop: '0px' }}
+      textFieldStyle={{ maxWidth: '415px' }}
     >
       {errors ? <Notice error text={errors ? errors[0].reason : ''} /> : null}
       <StyledNoticeWrapper>
-        <Notice warning>
+        <Notice warning spacingBottom={12}>
           <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Please note this is an extremely
             destructive action. Closing your account means that all services

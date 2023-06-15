@@ -48,7 +48,14 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
   return (
     <TypeToConfirmDialog
       title={`Delete Database Cluster ${databaseLabel}`}
-      entity={{ type: 'Database', subType: 'Cluster', label: databaseLabel }}
+      label={'Cluster Name'}
+      entity={{
+        type: 'Database',
+        subType: 'Cluster',
+        action: 'deletion',
+        name: databaseLabel,
+        primaryBtnText: 'Delete',
+      }}
       open={open}
       onClose={onClose}
       onClick={onDeleteCluster}

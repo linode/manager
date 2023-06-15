@@ -4,7 +4,7 @@ import TextField, { Props } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 
 export interface TypeToConfirmProps extends Omit<Props, 'onChange'> {
-  confirmationText?: JSX.Element | string;
+  confirmationText?: JSX.Element | null;
   textFieldStyle?: React.CSSProperties;
   typographyStyle?: React.CSSProperties;
   visible?: boolean | undefined;
@@ -41,7 +41,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           <Typography variant="h2">{title}</Typography>
           <Typography style={typographyStyle}>{confirmationText}</Typography>
           <TextField
-            sx={textFieldStyle}
+            style={textFieldStyle}
             onChange={(e) => onChange(e.target.value)}
             {...rest}
           />
