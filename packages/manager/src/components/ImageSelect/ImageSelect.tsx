@@ -179,7 +179,7 @@ export const ImageSelect = (props: ImageSelectProps) => {
   };
 
   return (
-    <Paper data-qa-select-image-panel data-testid="data-qa-select-image-panel">
+    <Paper data-qa-select-image-panel>
       <Typography variant="h2" data-qa-tp={title}>
         {title}
       </Typography>
