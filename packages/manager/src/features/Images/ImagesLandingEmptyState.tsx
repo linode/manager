@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './ImagesLandingEmptyStateData';
 
@@ -19,7 +19,7 @@ export const ImagesLandingEmptyState = () => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create Image',
             });
@@ -31,7 +31,7 @@ export const ImagesLandingEmptyState = () => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={ImageIcon}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />
   );

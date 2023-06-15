@@ -393,20 +393,6 @@ export const sendMarketplaceSearchEvent = (
   });
 };
 
-// DatabaseEmptyState.tsx
-// KubernetesLandingEmptyState.tsx
-// ListLinodesEmptyState.tsx
-export const sendEmptyStateLandingCreateEvent = (
-  productName: string,
-  eventLabel?: string
-) => {
-  sendEvent({
-    category: `${productName} landing page empty`,
-    action: 'Click:button',
-    label: `Create ${eventLabel ?? productName}`,
-  });
-};
-
 // LinodeCreate.tsx
 // LinodesCreate/CodeBlock/index.tsx
 // LinodesCreate/ApiAwareness/index.tsx

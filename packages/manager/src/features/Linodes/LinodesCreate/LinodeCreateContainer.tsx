@@ -56,7 +56,10 @@ import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { sendCreateLinodeEvent, sendEvent } from 'src/utilities/analytics';
+import {
+  sendCreateLinodeEvent,
+  sendLinodeCreateFlowDocsClickEvent,
+} from 'src/utilities/analytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
@@ -779,13 +782,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             title="Create"
             docsLabel="Getting Started"
             docsLink="https://www.linode.com/docs/guides/platform/get-started/"
-            onDocsClick={() => {
-              sendEvent({
-                category: 'Linode Create Flow',
-                action: 'Click:link',
-                label: 'Getting Started',
-              });
-            }}
+            onDocsClick={() =>
+              sendLinodeCreateFlowDocsClickEvent('Getting Started')
+            }
           />
           <LinodeCreate
             regionDisplayInfo={this.getRegionInfo()}

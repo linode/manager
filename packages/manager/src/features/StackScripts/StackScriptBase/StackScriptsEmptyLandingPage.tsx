@@ -5,7 +5,7 @@ import { sendEvent } from 'src/utilities/analytics';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './StackScriptsEmptyResourcesData';
 
@@ -22,7 +22,7 @@ export const StackScriptsEmptyLandingState = (props: Props) => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create StackScript',
             });
@@ -34,7 +34,7 @@ export const StackScriptsEmptyLandingState = (props: Props) => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={StackScriptsIcon}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />
   );

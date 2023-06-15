@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './LinodesLandingEmptyStateData';
 
@@ -29,7 +29,7 @@ export const LinodesLandingEmptyState = () => {
           onClick: () => {
             push('/linodes/create');
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create Linode',
             });
@@ -43,7 +43,7 @@ export const LinodesLandingEmptyState = () => {
           icon={<MarketplaceIcon />}
           MoreLink={(props) => (
             <ResourcesMoreLink
-              onClick={getLinkOnClick(linkGAEvent, APPS_MORE_LINKS_TEXT)}
+              onClick={getLinkOnClick(linkAnalyticsEvent, APPS_MORE_LINKS_TEXT)}
               to="/linodes/create?type=One-Click"
               {...props}
             >
@@ -59,7 +59,7 @@ export const LinodesLandingEmptyState = () => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={LinodeSvg}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       showTransferDisplay={true}
       youtubeLinkData={youtubeLinkData}
       wide={true}

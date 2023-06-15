@@ -17,7 +17,7 @@ import {
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
@@ -220,11 +220,7 @@ const LinodeDetailHeader = () => {
           },
         }}
         onDocsClick={() => {
-          sendEvent({
-            category: 'Linode Create Flow',
-            action: 'Click:link',
-            label: 'Getting Started',
-          });
+          sendLinodeCreateFlowDocsClickEvent('Getting Started');
         }}
       />
       <LinodeEntityDetail

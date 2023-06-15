@@ -5,7 +5,7 @@ import { sendEvent } from 'src/utilities/analytics';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './DomainsEmptyResourcesData';
 
@@ -23,7 +23,7 @@ export const DomainsEmptyLandingState = (props: Props) => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create Domain',
             });
@@ -34,7 +34,7 @@ export const DomainsEmptyLandingState = (props: Props) => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Import a Zone',
             });
@@ -46,7 +46,7 @@ export const DomainsEmptyLandingState = (props: Props) => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={DomainIcon}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />
   );

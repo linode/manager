@@ -43,7 +43,10 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { sendEvent } from 'src/utilities/analytics';
+import {
+  sendApiAwarenessClickEvent,
+  sendLinodeCreateFlowDocsClickEvent,
+} from 'src/utilities/analytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
 import { AddonsPanel } from './AddonsPanel';
@@ -414,11 +417,7 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_id: this.props.selectedStackScriptID,
       stackscript_data: this.props.selectedUDFs,
     };
-    sendEvent({
-      category: 'Linode Create API CLI Awareness Modal',
-      action: 'Click:Button',
-      label: 'Create Using Command Line',
-    });
+    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
     this.props.checkValidation(payload);
   };
 
@@ -725,11 +724,7 @@ export class LinodeCreate extends React.PureComponent<
                 href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
                 label="Choosing a Plan"
                 onClick={() => {
-                  sendEvent({
-                    category: 'Linode Create Flow',
-                    action: 'Click:link',
-                    label: 'Choosing a Plan',
-                  });
+                  sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
                 }}
               />
             }

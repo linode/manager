@@ -5,7 +5,7 @@ import { sendEvent } from 'src/utilities/analytics';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './FirewallLandingEmptyResourcesData';
 
@@ -22,7 +22,7 @@ export const FirewallLandingEmptyState = (props: Props) => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create Firewall',
             });
@@ -34,7 +34,7 @@ export const FirewallLandingEmptyState = (props: Props) => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={FirewallIcon}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />
   );
