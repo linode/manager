@@ -30,9 +30,12 @@ export const NodeBalancerDeleteDialog = ({
   return (
     <TypeToConfirmDialog
       title={`Delete ${label}?`}
+      label={'NodeBalancer Label'}
       entity={{
         type: 'NodeBalancer',
-        label,
+        action: 'deletion',
+        name: label,
+        primaryBtnText: 'Delete',
       }}
       open={open}
       loading={isLoading}

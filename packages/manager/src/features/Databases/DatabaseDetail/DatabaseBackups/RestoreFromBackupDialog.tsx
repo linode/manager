@@ -48,7 +48,14 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
       title={`Restore from Backup ${formatDate(backup.created, {
         timezone: profile?.timezone,
       })}`}
-      entity={{ type: 'Database', subType: 'Backup', label: database.label }}
+      label={'Database Label'}
+      entity={{
+        type: 'Database',
+        subType: 'Cluster',
+        action: 'restoration',
+        name: database.label,
+        primaryBtnText: 'Restore',
+      }}
       open={open}
       onClose={onClose}
       onClick={() => handleRestoreDatabase}

@@ -38,7 +38,14 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   return (
     <TypeToConfirmDialog
       title={`Delete Cluster ${clusterLabel}`}
-      entity={{ type: 'Kubernetes', subType: 'Cluster', label: clusterLabel }}
+      label={'Cluster Name'}
+      entity={{
+        type: 'Kubernetes',
+        subType: 'Cluster',
+        action: 'deletion',
+        name: clusterLabel,
+        primaryBtnText: 'Delete',
+      }}
       open={open}
       onClose={onClose}
       onClick={onDelete}

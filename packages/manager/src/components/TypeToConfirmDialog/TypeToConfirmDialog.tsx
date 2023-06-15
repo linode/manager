@@ -21,16 +21,23 @@ interface EntityInfo {
     | 'Database'
     | 'Kubernetes'
     | 'AccountSetting';
-  label: string | undefined;
-  subType?: 'Backup' | 'Cluster' | 'ObjectStorage' | 'CloseAccount';
+  subType?: 'Cluster' | 'ObjectStorage' | 'CloseAccount';
+  action?: 'deletion' | 'detachment' | 'restoration' | 'cancellation';
+  name?: string | undefined;
+  primaryBtnText:
+    | 'Delete'
+    | 'Detach'
+    | 'Restore'
+    | 'Confirm Cancellation'
+    | 'Close Account';
 }
 
 interface TypeToConfirmDialogProps {
   entity: EntityInfo;
   children: React.ReactNode;
   loading: boolean;
-  confirmationText?: string | JSX.Element;
   errors?: APIError[] | undefined | null;
+  label: string;
   onClick: () => void;
 }
 
@@ -46,17 +53,18 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     onClick,
     loading,
     entity,
+    label,
     children,
-    confirmationText,
     errors,
     typographyStyle,
+    textFieldStyle,
   } = props;
 
   const [confirmText, setConfirmText] = React.useState('');
 
   const { data: preferences } = usePreferences();
   const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== entity.label;
+    preferences?.type_to_confirm !== false && confirmText !== entity.name;
 
   React.useEffect(() => {
     if (open) {
@@ -64,79 +72,10 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     }
   }, [open]);
 
-  const getPrimaryBtnText = (entity: EntityInfo) => {
-    if (entity.type === 'Volume' && title?.startsWith('Detach')) {
-      return 'Detach';
-    }
-
-    switch (entity.subType) {
-      case 'Backup':
-        return 'Restore Database';
-      case 'Cluster':
-        return 'Delete Cluster';
-      case 'ObjectStorage':
-        return 'Confirm Cancellation';
-      case 'CloseAccount':
-        return 'Close Account';
-      default:
-        return 'Delete';
-    }
-  };
-
-  const getLabelText = (entity: EntityInfo) => {
-    if (entity.type === 'AccountSetting' && entity.subType === 'CloseAccount') {
-      return `Please enter your username (${entity.label}) to confirm.`;
-    }
-
-    const ttcLabelText =
-      entity.type === 'Bucket' || entity.subType === 'Cluster'
-        ? 'Name'
-        : 'Label';
-
-    switch (entity.subType) {
-      case 'ObjectStorage':
-        return `Username`;
-      case 'Cluster':
-        return `Cluster ${ttcLabelText}`;
-      default:
-        return `${entity.type} ${ttcLabelText}`;
-    }
-  };
-
-  const getConfirmationText = (entity: EntityInfo) => {
-    if (entity.subType === 'CloseAccount') {
-      return '';
-    }
-
-    let ttcAction = '';
-    switch (entity.subType) {
-      case 'Backup':
-        ttcAction = 'restoration';
-      case 'ObjectStorage':
-        ttcAction = 'cancellation';
-      default:
-        ttcAction = 'deletion';
-    }
-
-    let ttcEntityName = '';
-    if (entity.type === 'Kubernetes') {
-      ttcEntityName = 'cluster';
-    } else if (entity.subType === 'Backup' || entity.subType === 'Cluster') {
-      ttcEntityName = 'database cluster';
-    } else if (entity.subType === 'ObjectStorage') {
-      ttcEntityName = 'username';
-    } else {
-      ttcEntityName = entity.type;
-    }
-
-    return (
-      <span>
-        To confirm {ttcAction}, type{' '}
-        {entity.subType === 'ObjectStorage' ? 'your' : 'the name of the'}{' '}
-        {ttcEntityName} (<b>{entity.label}</b>) in the field below:
-      </span>
-    );
-  };
+  const typeInstructions =
+    entity.action === 'cancellation'
+      ? `type your Username `
+      : `type  the name of the ${entity.type} ${entity.subType || ''} `;
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
@@ -156,7 +95,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        {getPrimaryBtnText(entity)}
+        {entity.primaryBtnText}
       </Button>
     </ActionsPanel>
   );
@@ -172,10 +111,18 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       {children}
       <TypeToConfirm
         hideInstructions={entity.subType === 'CloseAccount'}
-        label={getLabelText(entity)}
-        confirmationText={confirmationText || getConfirmationText(entity)}
+        label={label}
+        confirmationText={
+          entity.subType === 'CloseAccount' ? null : (
+            <span>
+              To confirm {entity.action}, {typeInstructions}(
+              <b>{entity.name}</b>) in the field below:
+            </span>
+          )
+        }
         value={confirmText}
         typographyStyle={typographyStyle}
+        textFieldStyle={textFieldStyle}
         data-testid={'dialog-confirm-text-input'}
         expand
         onChange={(input) => {

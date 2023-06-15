@@ -203,9 +203,12 @@ export const BucketLanding = () => {
       </Grid>
       <TypeToConfirmDialog
         title={`Delete Bucket ${bucketLabel}`}
+        label={'Bucket Name'}
         entity={{
           type: 'Bucket',
-          label: bucketLabel,
+          action: 'deletion',
+          name: bucketLabel,
+          primaryBtnText: 'Delete',
         }}
         open={removeBucketConfirmationDialog.isOpen}
         loading={isLoading}
