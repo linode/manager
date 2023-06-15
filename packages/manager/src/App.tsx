@@ -38,7 +38,10 @@ import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
-export const App = withFeatureFlagProvider(
+// Ensure component's display name is 'App'
+export const App = () => <BaseApp />;
+
+const BaseApp = withFeatureFlagProvider(
   withFeatureFlagConsumer(() => {
     const history = useHistory();
 
