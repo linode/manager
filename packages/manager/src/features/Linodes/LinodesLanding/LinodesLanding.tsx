@@ -29,7 +29,7 @@ import { MapState } from 'src/store/types';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';

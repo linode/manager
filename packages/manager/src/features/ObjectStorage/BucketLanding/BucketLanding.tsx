@@ -32,7 +32,7 @@ import {
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {

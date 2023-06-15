@@ -1,7 +1,7 @@
 import * as React from 'react';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,

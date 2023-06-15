@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import Link from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { events$ } from 'src/events';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 
 interface ToastOptions {
   enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'];

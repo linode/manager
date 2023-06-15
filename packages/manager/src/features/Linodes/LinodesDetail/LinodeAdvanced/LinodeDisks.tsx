@@ -35,7 +35,7 @@ import {
   withLinodeDetailContext,
 } from 'src/features/Linodes/LinodesDetail/linodeDetailContext';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
 

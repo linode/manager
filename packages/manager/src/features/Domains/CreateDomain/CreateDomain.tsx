@@ -36,7 +36,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateDomainEvent } from 'src/utilities/ga';
+import { sendCreateDomainEvent } from 'src/utilities/analytics';
 import {
   ExtendedIP,
   extendedIPToString,

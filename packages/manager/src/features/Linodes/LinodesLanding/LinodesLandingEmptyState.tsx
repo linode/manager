@@ -8,7 +8,7 @@ import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/Reso
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,

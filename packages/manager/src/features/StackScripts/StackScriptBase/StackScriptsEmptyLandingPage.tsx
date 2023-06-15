@@ -1,7 +1,7 @@
 import * as React from 'react';
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import {
   gettingStartedGuides,
   headers,
