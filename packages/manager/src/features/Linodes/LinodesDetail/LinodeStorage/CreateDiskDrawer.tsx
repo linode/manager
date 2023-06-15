@@ -17,9 +17,13 @@ import {
   useLinodeDiskCreateMutation,
 } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 import { resetEventsPolling } from 'src/eventsPolling';
+import {
+  CreateLinodeDiskFromImageSchema,
+  CreateLinodeDiskSchema,
+} from '@linode/validation';
+import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
 
@@ -52,7 +56,7 @@ export const CreateDiskDrawer = (props: Props) => {
 
   const { data: disks } = useAllLinodeDisksQuery(linodeId, open);
 
-  const { mutateAsync: createDisk, error, reset } = useLinodeDiskCreateMutation(
+  const { mutateAsync: createDisk, reset } = useLinodeDiskCreateMutation(
     linodeId
   );
 
@@ -67,32 +71,37 @@ export const CreateDiskDrawer = (props: Props) => {
     authorized_users: [],
   };
 
+  const validationSchema =
+    selectedMode === 'from_image'
+      ? CreateLinodeDiskFromImageSchema
+      : CreateLinodeDiskSchema;
+
   const formik = useFormik({
     initialValues,
     enableReinitialize: true,
-    async onSubmit(values) {
-      const cleanedValues =
-        selectedMode === 'empty'
-          ? {
-              label: values.label,
-              size: values.size,
-              filesystem: values.filesystem,
-            }
-          : values;
+    validationSchema,
+    async onSubmit(values, helpers) {
+      try {
+        const cleanedValues =
+          selectedMode === 'empty'
+            ? {
+                label: values.label,
+                size: values.size,
+                filesystem: values.filesystem,
+              }
+            : values;
 
-      await createDisk(cleanedValues);
-      resetEventsPolling();
-      enqueueSnackbar(`Started creation of disk ${values.label}`, {
-        variant: 'success',
-      });
-      onClose();
+        await createDisk(cleanedValues);
+        resetEventsPolling();
+        enqueueSnackbar(`Started creation of disk ${values.label}`, {
+          variant: 'success',
+        });
+        onClose();
+      } catch (e) {
+        handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
+      }
     },
   });
-
-  const errorMap = getErrorMap(
-    ['label', 'size', 'filesystem', 'image', 'root_pass'],
-    error
-  );
 
   React.useEffect(() => {
     if (open) {
@@ -110,12 +119,12 @@ export const CreateDiskDrawer = (props: Props) => {
           selected={selectedMode}
           onChange={(e) => setSelectedMode(e.target.value as CreateMode)}
         />
-        {errorMap.none && (
+        {formik.status && (
           <Notice
             error
             spacingBottom={8}
             errorGroup="linode-disk-drawer"
-            text={errorMap.none}
+            text={formik.status}
           />
         )}
         <TextField
@@ -125,7 +134,7 @@ export const CreateDiskDrawer = (props: Props) => {
           value={formik.values.label}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          errorText={errorMap.label}
+          errorText={formik.errors.label}
           errorGroup="linode-disk-drawer"
           data-qa-label
         />
@@ -137,7 +146,7 @@ export const CreateDiskDrawer = (props: Props) => {
             value={formik.values.filesystem}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            errorText={errorMap.filesystem}
+            errorText={formik.errors.filesystem}
           >
             <MenuItem value="_none_">
               <em>Select a Filesystem</em>
@@ -154,9 +163,9 @@ export const CreateDiskDrawer = (props: Props) => {
             onImageChange={(selected: Item) =>
               formik.setFieldValue('image', selected?.value ?? null)
             }
-            imageFieldError={errorMap.image}
+            imageFieldError={formik.errors.image}
             password={formik.values.root_pass}
-            passwordError={errorMap.root_pass}
+            passwordError={formik.errors.root_pass}
             onPasswordChange={(root_pass: string) =>
               formik.setFieldValue('root_pass', root_pass)
             }
@@ -174,7 +183,7 @@ export const CreateDiskDrawer = (props: Props) => {
           value={formik.values.size}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          errorText={errorMap.size}
+          errorText={formik.errors.size}
           InputProps={{
             endAdornment: <InputAdornment position="end">MB</InputAdornment>,
           }}
