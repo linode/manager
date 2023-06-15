@@ -8,7 +8,7 @@ interface PremiumPlanInfoProps {
 /**
  * @param {Region[]} regionsData
  * @param {string} selectedRegionID
- * @returns {object} { hasSelectedRegion, isDisabledPremiumPlan, isSelectedRegionPremium }
+ * @returns {object} { hasSelectedRegion, isPremiumPlanPanelDisabled, isSelectedRegionPremium }
  */
 export const usePremiumPlansUtils = (props: PremiumPlanInfoProps) => {
   const { regionsData, selectedRegionID } = props;
@@ -39,8 +39,12 @@ export const usePremiumPlansUtils = (props: PremiumPlanInfoProps) => {
    * A util to determine if the Premium Plan selection should be disabled
    * @returns {boolean}
    */
-  const isDisabledPremiumPlan = (planType: LinodeTypeClass) =>
+  const isPremiumPlanPanelDisabled = (planType?: LinodeTypeClass) =>
     hasSelectedRegion && planType === 'premium' && !isSelectedRegionPremium;
 
-  return { hasSelectedRegion, isDisabledPremiumPlan, isSelectedRegionPremium };
+  return {
+    hasSelectedRegion,
+    isPremiumPlanPanelDisabled,
+    isSelectedRegionPremium,
+  };
 };

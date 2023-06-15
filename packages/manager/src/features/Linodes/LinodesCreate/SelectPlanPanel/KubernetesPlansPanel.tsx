@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { CreateNodePoolData, Region } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -11,6 +10,7 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
 } from './utils';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
@@ -21,7 +21,7 @@ interface Props {
   getTypeCount: (planId: string) => number;
   hasSelectedRegion: boolean;
   header?: string;
-  isDisabledPremiumPlan: boolean;
+  isPremiumPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionPremium: boolean;
   isSubmitting?: boolean;
   onAdd?: (key: string, value: number) => void;
@@ -39,7 +39,7 @@ export const KubernetesPlansPanel = ({
   error,
   hasSelectedRegion,
   header,
-  isDisabledPremiumPlan,
+  isPremiumPlanPanelDisabled,
   isSelectedRegionPremium,
   onAdd,
   regionsData,
@@ -67,7 +67,7 @@ export const KubernetesPlansPanel = ({
               regionsData={regionsData}
             />
             <KubernetesPlanContainer
-              disabled={disabled || isDisabledPremiumPlan}
+              disabled={disabled || isPremiumPlanPanelDisabled(plan)}
               getTypeCount={getTypeCount}
               onAdd={onAdd}
               onSelect={onSelect}

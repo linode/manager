@@ -143,7 +143,7 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   const {
     hasSelectedRegion,
-    isDisabledPremiumPlan,
+    isPremiumPlanPanelDisabled,
     isSelectedRegionPremium,
   } = usePremiumPlansUtils({
     selectedRegionID: clusterRegionId,
@@ -174,7 +174,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             }
           }}
           hasSelectedRegion={hasSelectedRegion}
-          isDisabledPremiumPlan={isDisabledPremiumPlan('premium')}
+          isPremiumPlanPanelDisabled={isPremiumPlanPanelDisabled}
           isSelectedRegionPremium={isSelectedRegionPremium}
           regionsData={regionsData}
           updatePlanCount={updatePlanCount}

@@ -1,4 +1,4 @@
-import { KubeNodePoolResponse, Region } from '@linode/api-v4';
+import { KubeNodePoolResponse, LinodeTypeClass, Region } from '@linode/api-v4';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -13,7 +13,7 @@ export interface NodePoolPanelProps {
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
-  isDisabledPremiumPlan: boolean;
+  isPremiumPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   hasSelectedRegion: boolean;
   isSelectedRegionPremium: boolean;
   regionsData: Region[];
@@ -49,7 +49,7 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     types,
     hasSelectedRegion,
     isSelectedRegionPremium,
-    isDisabledPremiumPlan,
+    isPremiumPlanPanelDisabled,
     regionsData,
   } = props;
 
@@ -93,7 +93,7 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
           isSelectedRegionPremium={isSelectedRegionPremium}
           onSelect={(newType: string) => setSelectedType(newType)}
           error={apiError}
-          isDisabledPremiumPlan={isDisabledPremiumPlan}
+          isPremiumPlanPanelDisabled={isPremiumPlanPanelDisabled}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
           regionsData={regionsData}

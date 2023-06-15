@@ -237,7 +237,7 @@ export const CreateCluster = () => {
 
   const {
     hasSelectedRegion,
-    isDisabledPremiumPlan,
+    isPremiumPlanPanelDisabled,
     isSelectedRegionPremium,
   } = usePremiumPlansUtils({
     selectedRegionID,
@@ -320,7 +320,7 @@ export const CreateCluster = () => {
                   : undefined
               }
               regionsData={regionsData}
-              isDisabledPremiumPlan={isDisabledPremiumPlan('premium')}
+              isPremiumPlanPanelDisabled={isPremiumPlanPanelDisabled}
               hasSelectedRegion={hasSelectedRegion}
               isSelectedRegionPremium={isSelectedRegionPremium}
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}

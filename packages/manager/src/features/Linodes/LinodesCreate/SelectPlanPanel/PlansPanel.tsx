@@ -66,7 +66,7 @@ export const PlansPanel = (props: Props) => {
   const plans = getPlanSelectionsByPlanType(types);
   const {
     hasSelectedRegion,
-    isDisabledPremiumPlan,
+    isPremiumPlanPanelDisabled,
     isSelectedRegionPremium,
   } = usePremiumPlansUtils({
     selectedRegionID,
@@ -87,7 +87,7 @@ export const PlansPanel = (props: Props) => {
             />
             <PlanContainer
               currentPlanHeading={currentPlanHeading}
-              disabled={disabled || isDisabledPremiumPlan(plan)}
+              disabled={disabled || isPremiumPlanPanelDisabled(plan)}
               disabledClasses={props.disabledClasses}
               isCreate={isCreate}
               linodeID={linodeID}
