@@ -8,7 +8,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { object, string } from 'yup';
 import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
-import { useSnackbar } from 'notistack';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 const RenameDiskSchema = object({
@@ -33,8 +32,6 @@ export const RenameDiskDrawer = (props: Props) => {
     disk?.id ?? -1
   );
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const formik = useFormik({
     initialValues: {
       label: disk?.label ?? '',
@@ -45,10 +42,6 @@ export const RenameDiskDrawer = (props: Props) => {
     async onSubmit(values, helpers) {
       try {
         await updateDisk(values);
-        enqueueSnackbar(
-          `Successfully updated disk label from ${disk?.label} to ${values.label}`,
-          { variant: 'success' }
-        );
         onClose();
       } catch (e) {
         handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);

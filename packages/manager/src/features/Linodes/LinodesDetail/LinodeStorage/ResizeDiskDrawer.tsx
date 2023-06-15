@@ -76,7 +76,7 @@ export const ResizeDiskDrawer = (props: Props) => {
       try {
         await resizeDisk(values);
         resetEventsPolling();
-        enqueueSnackbar('Successfully started resize', { variant: 'success' });
+        enqueueSnackbar('Disk queued for resizing.', { variant: 'success' });
         onClose();
       } catch (e) {
         handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
