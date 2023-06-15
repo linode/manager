@@ -202,6 +202,14 @@ export const NodeBalancerSummary = () => {
         </ResponsiveContainer>
       </Paper>
       <Paper sx={{ height: 550, padding: 0 }}>
+        <Typography
+          position="absolute"
+          variant="h2"
+          paddingTop={2}
+          paddingLeft={2}
+        >
+          Topology
+        </Typography>
         <ReactFlow
           nodes={[nodebalancerNode, ...configNodes, ...nodes]}
           edges={[...configEdges, ...nodeEdges]}
