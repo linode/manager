@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-06-14] - v1.95.1
+
+### Fixed:
+- New Marketplace apps display and toggle ([#9259])
+
 ## [2023-06-12] - v1.95.0
 
 ### Added:

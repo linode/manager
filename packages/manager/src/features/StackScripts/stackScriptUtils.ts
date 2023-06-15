@@ -127,10 +127,6 @@ export const baseApps = {
   // '1067004': 'MongoDB Cluster',
   '1068726': 'PostgreSQL Cluster',
   '1132204': 'Redis Sentinel Cluster',
-  '1160816': 'ownCloud',
-  '1160820': 'Appwrite',
-  '1177225': 'Seatable',
-  '1177605': 'Illa Builder',
 };
 
 const oneClickFilter = [
