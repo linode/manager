@@ -1,5 +1,4 @@
-import { event } from 'react-ga';
-import { GA_ID, ADOBE_ANALYTICS_URL } from 'src/constants';
+import { ADOBE_ANALYTICS_URL } from 'src/constants';
 
 interface AnalyticsEvent {
   category: string;
@@ -22,9 +21,6 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
       value: eventPayload.value,
     });
   }
-
-  /** only send events if we have a GA ID */
-  return !!GA_ID ? event(eventPayload) : undefined;
 };
 
 // LinodeActionMenu.tsx
