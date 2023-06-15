@@ -154,11 +154,11 @@ export const oneClickApps: OCA[] = [
     name: 'Appwrite',
     alt_name: 'Self-hosted backend-as-a-service',
     alt_description:
-      'A self-hosted backend-as-a-service platform that provides developers with all the core APIs required to build any application..',
+      'A self-hosted backend-as-a-service platform that provides developers with all the core APIs required to build any application.',
     categories: ['Development'],
-    description: `A self-hosted Firebase alternative for web, mobile & flutter developers.`,
+    description: `A self-hosted Firebase alternative for web, mobile & Flutter developers.`,
     summary:
-      'Appwrite is an open-source, cross-platform and technology-agnostic alternative to Firebase, providing all the core APIs necessary for web, mobile and flutter development.',
+      'Appwrite is an open-source, cross-platform and technology-agnostic alternative to Firebase, providing all the core APIs necessary for web, mobile and Flutter development.',
     related_guides: [
       {
         title: 'Deploy Appwrite through the Linode Marketplace',
@@ -834,7 +834,7 @@ export const oneClickApps: OCA[] = [
     name: 'Illa Builder',
     alt_name: 'Low-code development platform',
     alt_description:
-      'Retool open-source alternative, with low-code UI components .',
+      'Retool open-source alternative, with low-code UI components.',
     categories: ['Security'],
     description:
       'Illa Builder is a Retool open-source alternative, with low-code UI components for self-hosting the development of internal tools.',
