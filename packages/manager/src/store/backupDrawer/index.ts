@@ -273,7 +273,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
         dispatch(handleEnableSuccess(response.success));
       }
       dispatch(updateMultipleLinodes(response.success));
-      // GA Event
+      // Analytics Event
       sendBackupsEnabledEvent(
         `Enabled backups for ${response.success.length} Linodes`
       );

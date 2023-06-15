@@ -212,7 +212,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               `Volume scheduled for creation.`
             );
             history.push('/volumes');
-            // GA Event
+            // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {

@@ -257,7 +257,7 @@ const NodeBalancerCreate = () => {
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
-        // GA Event
+        // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
       .catch((errorResponse) => {

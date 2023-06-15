@@ -116,7 +116,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               filesystem_path,
               `Volume scheduled for creation.`
             );
-            // GA Event
+            // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {

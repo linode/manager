@@ -127,7 +127,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   };
 
   /**
-   * when you change the linode view, send an event to google analytics, debounced.
+   * when you change the linode view, send analytics event, debounced.
    */
   changeViewDelayed = (style: 'grid' | 'list') => {
     sendLinodesViewEvent(eventCategory, style);

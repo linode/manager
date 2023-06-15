@@ -626,7 +626,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           this.props.upsertLinode(response);
         }
 
-        /** GA creation event */
+        /** Analytics creation event */
         handleAnalytics(
           createType,
           payload,
