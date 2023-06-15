@@ -2,8 +2,8 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import Stack from '@mui/material/Stack';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useParams } from 'react-router-dom';
-import { Typography, useTheme } from '@mui/material';
+import { useHistory, useParams } from 'react-router-dom';
+import { Box, Typography, useTheme } from '@mui/material';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatDate } from 'src/utilities/formatDate';
 import { parseAPIDate } from 'src/utilities/date';
@@ -12,19 +12,23 @@ import {
   useAllNodeBalancerConfigsWithNodesQuery,
   useNodeBalancerQuery,
   useNodeBalancerStats,
+  useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
 import ReactFlow from 'reactflow';
 import 'reactflow/dist/style.css';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 
 export const NodeBalancerSummary = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const theme = useTheme();
+  const history = useHistory();
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: regions } = useRegionsQuery();
   const { data: stats } = useNodeBalancerStats(id);
   const { data: configs } = useAllNodeBalancerConfigsWithNodesQuery(id);
+  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
 
   const region = regions?.find((r) => r.id === nodebalancer?.region);
 
@@ -32,7 +36,11 @@ export const NodeBalancerSummary = () => {
     configs?.map((config, idx) => ({
       id: String(config.id),
       position: { x: idx * 100, y: 0 },
-      data: { label: `${config.port} ${config.protocol.toUpperCase()}` },
+      data: {
+        onClick: () =>
+          history.push(`/nodebalancers/${id}/configurations/${config.id}`),
+        label: `${config.port} ${config.protocol.toUpperCase()}`,
+      },
     })) ?? [];
 
   const nodes =
@@ -42,6 +50,8 @@ export const NodeBalancerSummary = () => {
           id: String(node.id),
           position: { x: idx * 200, y: 100 },
           data: {
+            onClick: () =>
+              history.push(`/nodebalancers/${id}/configurations/${config.id}`),
             label: (
               <Stack alignItems="center">
                 <p>{node.label}</p>
@@ -59,10 +69,11 @@ export const NodeBalancerSummary = () => {
   const edges =
     configs
       ?.map((config) =>
-        config.nodes.map((node, idx) => ({
+        config.nodes.map((node) => ({
           id: `${config.id}-to-${node.id}`,
           source: String(config.id),
           target: String(node.id),
+          animated: true,
         }))
       )
       .flat() ?? [];
@@ -70,7 +81,7 @@ export const NodeBalancerSummary = () => {
   return (
     <Stack spacing={2}>
       <DocumentTitleSegment segment={`${nodebalancer?.label} - Summary`} />
-      <Paper>
+      <Paper sx={{ paddingBottom: 1 }}>
         <Stack direction="row" columnGap={4} rowGap={2} flexWrap="wrap">
           <Stack>
             <Typography variant="h2">Region</Typography>
@@ -99,6 +110,12 @@ export const NodeBalancerSummary = () => {
             </Typography>
           </Stack>
         </Stack>
+        <Box mt={2}>
+          <TagsPanel
+            tags={nodebalancer?.tags ?? []}
+            updateTags={(tags) => updateNodeBalancer({ tags })}
+          />
+        </Box>
       </Paper>
       <Paper sx={{ height: 250, padding: 0 }}>
         <Typography
@@ -163,7 +180,11 @@ export const NodeBalancerSummary = () => {
         </ResponsiveContainer>
       </Paper>
       <Paper sx={{ height: 550, padding: 0 }}>
-        <ReactFlow nodes={[...configNodes, ...nodes]} edges={edges} />
+        <ReactFlow
+          nodes={[...configNodes, ...nodes]}
+          edges={edges}
+          onNodeClick={(data, node) => node.data.onClick()}
+        />
       </Paper>
     </Stack>
   );
