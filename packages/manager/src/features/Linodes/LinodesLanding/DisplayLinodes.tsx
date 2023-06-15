@@ -17,7 +17,7 @@ import { IconButton } from 'src/components/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
@@ -105,7 +105,7 @@ const DisplayLinodes = (props: CombinedProps) => {
   const maxPageNumber = Math.ceil(count / pageSize);
 
   const { search } = useLocation();
-  const params = getParamsFromUrl(search);
+  const params = getQueryParamsFromQueryString(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
   return (

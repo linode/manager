@@ -24,7 +24,7 @@ import { StackScriptsRequest } from '../types';
 import { Table } from 'src/components/Table';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getDisplayName } from 'src/utilities/getDisplayName';
-import { getQueryParam } from 'src/utilities/queryParams';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { Waypoint } from 'react-waypoint';
@@ -127,7 +127,10 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     componentDidMount() {
       this.mounted = true;
       // If the URL contains a QS param called "query" treat it as a filter.
-      const query = getQueryParam(this.props.location.search, 'query');
+      const query = getQueryParamFromQueryString(
+        this.props.location.search,
+        'query'
+      );
       if (query) {
         return this.handleSearch(query);
       }
@@ -464,7 +467,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       // Use the query string if the argument has been specified.
       const query = useQueryString
-        ? getQueryParam(this.props.location.search, 'query')
+        ? getQueryParamFromQueryString(this.props.location.search, 'query')
         : undefined;
 
       return (

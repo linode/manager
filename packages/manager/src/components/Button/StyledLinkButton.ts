@@ -7,8 +7,8 @@ import { styled } from '@mui/material/styles';
  *
  * @todo apply this component wherever theme.applyLinkStyles is used. see #6621
  */
-export const LinkStyledButton = styled('button', {
-  label: 'LinkStyledButton',
+export const StyledLinkButton = styled('button', {
+  label: 'StyledLinkButton',
 })(({ theme }) => ({
   background: 'none',
   color: theme.textColors.linkActiveLight,
