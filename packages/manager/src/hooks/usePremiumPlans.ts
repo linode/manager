@@ -2,7 +2,7 @@ import type { LinodeTypeClass, Region } from '@linode/api-v4';
 
 interface PremiumPlanInfoProps {
   regionsData: Region[] | undefined;
-  selectedRegionID?: string;
+  selectedRegionID?: Region['id'];
 }
 
 /**

@@ -156,8 +156,6 @@ export const CreateCluster = () => {
   }));
   const history = useHistory();
 
-  console.log('selectedRegion: ', selectedRegionID);
-
   React.useEffect(() => {
     if (filteredRegions.length === 1 && !selectedRegionID) {
       setSelectedRegionID(filteredRegions[0].id);
@@ -321,6 +319,7 @@ export const CreateCluster = () => {
                     )[0].reason
                   : undefined
               }
+              regionsData={regionsData}
               isDisabledPremiumPlan={isDisabledPremiumPlan('premium')}
               hasSelectedRegion={hasSelectedRegion}
               isSelectedRegionPremium={isSelectedRegionPremium}

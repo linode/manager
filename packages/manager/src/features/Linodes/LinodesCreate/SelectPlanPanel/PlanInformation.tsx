@@ -48,7 +48,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
         <PremiumPlansAvailabilityNotice
           isSelectedRegionPremium={isSelectedRegionPremium}
           hasSelectedRegion={hasSelectedRegion}
-          regionsData={regionsData}
+          regionsData={regionsData || []}
         />
       ) : null}
       <Typography data-qa-prodedi className={classes.copy}>

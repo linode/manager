@@ -8,6 +8,7 @@ const props: NodePoolPanelProps = {
   hasSelectedRegion: true,
   isSelectedRegionPremium: false,
   isDisabledPremiumPlan: false,
+  regionsData: [],
   types: extendedTypes,
   typesLoading: false,
   addNodePool: jest.fn(),

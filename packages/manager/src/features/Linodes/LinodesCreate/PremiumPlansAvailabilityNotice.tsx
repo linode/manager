@@ -11,7 +11,7 @@ import {
 export interface PremiumPlansAvailabilityNoticeProps {
   isSelectedRegionPremium: boolean;
   hasSelectedRegion: boolean;
-  regionsData?: Region[];
+  regionsData: Region[];
 }
 
 export const PremiumPlansAvailabilityNotice = React.memo(

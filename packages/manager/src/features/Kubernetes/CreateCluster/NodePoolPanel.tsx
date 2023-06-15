@@ -1,4 +1,4 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
+import { KubeNodePoolResponse, Region } from '@linode/api-v4';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -16,6 +16,7 @@ export interface NodePoolPanelProps {
   isDisabledPremiumPlan: boolean;
   hasSelectedRegion: boolean;
   isSelectedRegionPremium: boolean;
+  regionsData: Region[];
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
 }
 
@@ -49,6 +50,7 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     hasSelectedRegion,
     isSelectedRegionPremium,
     isDisabledPremiumPlan,
+    regionsData,
   } = props;
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
@@ -94,6 +96,7 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
           isDisabledPremiumPlan={isDisabledPremiumPlan}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
+          regionsData={regionsData}
           updatePlanCount={updatePlanCount}
           onAdd={submitForm}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes

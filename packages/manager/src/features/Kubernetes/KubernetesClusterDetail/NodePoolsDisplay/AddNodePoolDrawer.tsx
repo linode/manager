@@ -15,6 +15,8 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { nodeWarning } from '../../kubeUtils';
+import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
+import type { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
@@ -66,12 +68,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   clusterId: number;
   clusterLabel: string;
+  clusterRegionId: Region['id'];
   open: boolean;
   onClose: () => void;
+  regionsData: Region[];
 }
 
 export const AddNodePoolDrawer = (props: Props) => {
-  const { clusterId, clusterLabel, onClose, open } = props;
+  const {
+    clusterId,
+    clusterLabel,
+    clusterRegionId,
+    onClose,
+    open,
+    regionsData,
+  } = props;
   const classes = useStyles();
   const { data: types } = useAllTypes(open);
   const {
@@ -130,6 +141,15 @@ export const AddNodePoolDrawer = (props: Props) => {
     });
   };
 
+  const {
+    hasSelectedRegion,
+    isDisabledPremiumPlan,
+    isSelectedRegionPremium,
+  } = usePremiumPlansUtils({
+    selectedRegionID: clusterRegionId,
+    regionsData,
+  });
+
   return (
     <Drawer
       title={`Add a Node Pool: ${clusterLabel}`}
@@ -153,6 +173,10 @@ export const AddNodePoolDrawer = (props: Props) => {
               setSelectedTypeInfo({ planId: newType, count: 1 });
             }
           }}
+          hasSelectedRegion={hasSelectedRegion}
+          isDisabledPremiumPlan={isDisabledPremiumPlan('premium')}
+          isSelectedRegionPremium={isSelectedRegionPremium}
+          regionsData={regionsData}
           updatePlanCount={updatePlanCount}
           addPool={handleAdd}
           isSubmitting={isLoading}
