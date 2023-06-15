@@ -37,7 +37,8 @@ Feel free to open an issue to report a bug or request a feature.
         - install it via `brew`: https://cli.github.com/manual/installation or upgrade with `brew upgrade gh`
         - Once installed, run `gh repo set-default` and pick `linode/manager` (only > 2.21.0)
         - You can also just create the changeset manually, in this case make sure to use the proper formatting for it.
-    - Run `yarn changeset` and provide a description for the change. You can either have it committed automatically or do it manually
+    - Run `yarn changeset`from the root, choose the package to create a changeset for, and provide a description for the change.
+    You can either have it committed automatically or do it manually if you need to edit it.
     - A changeset is optional, it merely depends if it falls in one of the following categories:
     `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`
 

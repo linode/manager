@@ -36,7 +36,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
 import LandingHeader from 'src/components/LandingHeader';
-import ProductInformationBanner from 'src/components/ProductInformationBanner';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

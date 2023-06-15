@@ -1,12 +1,10 @@
 import * as React from 'react';
-import Button from 'src/components/Button';
 import CautionIcon from 'src/assets/icons/caution.svg';
 import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
-import UploadPending from 'src/assets/icons/uploadPending.svg';
+import Button from 'src/components/Button';
+import { LinearProgress } from 'src/components/LinearProgress';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import { LinearProgress } from 'src/components/LinearProgress';
-import { ObjectUploaderAction } from './reducer';
 import { readableBytes } from 'src/utilities/unitConversions';
 import {
   StyledActionsContainer,
@@ -15,8 +13,10 @@ import {
   StyledLeftWrapper,
   StyledRightWrapper,
   StyledRootContainer,
+  StyledUploadPending,
   useStyles,
 } from './FileUpload.styles';
+import { ObjectUploaderAction } from './reducer';
 
 export interface FileUploadProps {
   dispatch: React.Dispatch<ObjectUploaderAction>;
@@ -104,11 +104,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
               width={22}
             />
           ) : (
-            <UploadPending
-              className={`${classes.iconRight} ${classes.rotate}`}
-              height={22}
-              width={22}
-            />
+            <StyledUploadPending height={22} width={22} />
           )}
         </StyledRightWrapper>
       </StyledContainer>

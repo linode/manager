@@ -3,8 +3,6 @@ import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError/TableRowError';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { makeStyles } from '@mui/styles';
@@ -15,6 +13,8 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
@@ -250,9 +250,7 @@ export const LinodeVolumes = (props: Props) => {
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results === 0) {
-      return (
-        <TableRowEmptyState colSpan={5} message="No Volumes to display." />
-      );
+      return <TableRowEmpty colSpan={5} message="No Volumes to display." />;
     } else if (data) {
       return data.data.map((volume) => (
         <VolumeTableRow

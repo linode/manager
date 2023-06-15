@@ -35,7 +35,7 @@ import {
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { Tab } from 'src/components/core/ReachTab';
-import SafeTabPanel from 'src/components/SafeTabPanel/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabList } from 'src/components/core/ReachTabList';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import {
