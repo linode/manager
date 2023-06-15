@@ -26,7 +26,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
 
@@ -113,11 +113,7 @@ const getTitle = (v: DrawerMode) => {
 };
 
 const handleLinkClick = (label: string) => {
-  sendEvent({
-    category: 'Disk Resize Flow',
-    action: `Click:link`,
-    label,
-  });
+  sendLinodeDiskEvent('Resize', 'Click:link', label);
 };
 
 export const DiskDrawer: React.FC<CombinedProps> = (props) => {
