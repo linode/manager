@@ -3,7 +3,7 @@ import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
 
 export const bg = {
-  app: '#f4f5f6',
+  app: '#ccc',
   main: '#f4f4f4',
   offWhite: '#fbfbfb',
   lightBlue1: '#f0f7ff',
