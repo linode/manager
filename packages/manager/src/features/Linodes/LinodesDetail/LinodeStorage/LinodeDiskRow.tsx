@@ -59,24 +59,27 @@ export const LinodeDiskRow = React.memo((props: Props) => {
     onResize,
   } = props;
 
-  const resizeEvent = inProgressEvents.find(
+  const event = inProgressEvents.find(
     (thisEvent) =>
       thisEvent.secondary_entity?.id === disk.id &&
       ['disk_create', 'disk_resize'].includes(thisEvent.action)
   );
+
+  const progressLabel =
+    event?.action === 'disk_create' ? 'Creating' : 'Resizing';
 
   return (
     <TableRow data-qa-disk={disk.label}>
       <TableCell className={classes.diskLabel}>{disk.label}</TableCell>
       <TableCell className={classes.diskType}>{disk.filesystem}</TableCell>
       <TableCell className={classes.diskSize}>
-        {Boolean(resizeEvent) ? (
+        {Boolean(event) ? (
           <div className={classes.progressBar}>
-            Resizing ({resizeEvent?.percent_complete}%)
+            {progressLabel} ({event?.percent_complete}%)
             <BarPercent
               className={classes.bar}
               max={100}
-              value={resizeEvent?.percent_complete ?? 0}
+              value={event?.percent_complete ?? 0}
               rounded
               narrow
             />

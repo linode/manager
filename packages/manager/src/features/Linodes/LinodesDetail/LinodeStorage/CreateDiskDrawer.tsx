@@ -134,7 +134,7 @@ export const CreateDiskDrawer = (props: Props) => {
           value={formik.values.label}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          errorText={formik.errors.label}
+          errorText={formik.touched.label ? formik.errors.label : undefined}
           errorGroup="linode-disk-drawer"
           data-qa-label
         />
@@ -146,7 +146,9 @@ export const CreateDiskDrawer = (props: Props) => {
             value={formik.values.filesystem}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            errorText={formik.errors.filesystem}
+            errorText={
+              formik.touched.filesystem ? formik.errors.filesystem : undefined
+            }
           >
             <MenuItem value="_none_">
               <em>Select a Filesystem</em>
@@ -163,9 +165,13 @@ export const CreateDiskDrawer = (props: Props) => {
             onImageChange={(selected: Item) =>
               formik.setFieldValue('image', selected?.value ?? null)
             }
-            imageFieldError={formik.errors.image}
+            imageFieldError={
+              formik.touched.image ? formik.errors.image : undefined
+            }
             password={formik.values.root_pass}
-            passwordError={formik.errors.root_pass}
+            passwordError={
+              formik.touched.root_pass ? formik.errors.root_pass : undefined
+            }
             onPasswordChange={(root_pass: string) =>
               formik.setFieldValue('root_pass', root_pass)
             }
@@ -183,7 +189,7 @@ export const CreateDiskDrawer = (props: Props) => {
           value={formik.values.size}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          errorText={formik.errors.size}
+          errorText={formik.touched.size ? formik.errors.size : undefined}
           InputProps={{
             endAdornment: <InputAdornment position="end">MB</InputAdornment>,
           }}
