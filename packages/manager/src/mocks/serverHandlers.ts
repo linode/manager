@@ -451,6 +451,10 @@ export const handlers = [
     ];
     return res(ctx.json(makeResourcePage(linodes)));
   }),
+  rest.get('*/linode/instances/:id', async (req, res, ctx) => {
+    const id = Number(req.params.clusterId);
+    return res(ctx.json(linodeFactory.build({ id })));
+  }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
   }),
