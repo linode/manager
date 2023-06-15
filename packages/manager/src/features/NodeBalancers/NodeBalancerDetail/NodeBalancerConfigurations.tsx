@@ -122,7 +122,7 @@ interface State {
 
 type CombinedProps = Props & RouteProps & PreloadedProps & WithQueryClientProps;
 
-const getConfigsWithNodes = (nodeBalancerId: number) => {
+export const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
     return Promise.all(
       configs.data.map((config) => {

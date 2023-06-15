@@ -73,6 +73,8 @@
     "react-select": "~3.1.0",
     "react-vnc": "^0.5.3",
     "react-waypoint": "~9.0.2",
+    "reactflow": "^11.7.2",
+    "recharts": "^2.7.0",
     "recompose": "^0.30.0",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",

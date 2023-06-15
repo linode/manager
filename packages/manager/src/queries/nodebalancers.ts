@@ -32,6 +32,7 @@ import {
 } from '@linode/api-v4/lib/types';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
 import { EventWithStore } from 'src/events';
+import { getConfigsWithNodes } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerConfigurations';
 
 export const queryKey = 'nodebalancers';
 
@@ -156,6 +157,13 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
     }
   );
 };
+
+export const useAllNodeBalancerConfigsWithNodesQuery = (id: number) =>
+  useQuery(
+    [queryKey, 'nodebalanacer', id, 'configs-with-nodes'],
+    () => getConfigsWithNodes(id),
+    { refetchInterval: 20000 }
+  );
 
 export const useAllNodeBalancerConfigsQuery = (id: number) =>
   useQuery<NodeBalancerConfig[], APIError[]>(

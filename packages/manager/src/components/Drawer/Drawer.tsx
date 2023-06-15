@@ -15,7 +15,6 @@ export interface Props extends DrawerProps {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   paper: {
-    width: 300,
     padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       width: 480,
