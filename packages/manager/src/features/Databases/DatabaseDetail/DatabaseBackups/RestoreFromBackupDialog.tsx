@@ -30,10 +30,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
     error,
   } = useRestoreFromBackupMutation(database.engine, database.id, backup.id);
 
-  const handleRestoreDatabase = (
-    e: React.MouseEvent<HTMLButtonElement>
-  ): void => {
-    e.preventDefault();
+  const handleRestoreDatabase = () => {
     restore().then(() => {
       history.push('summary');
       enqueueSnackbar('Your database is being restored.', {
@@ -58,7 +55,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
       }}
       open={open}
       onClose={onClose}
-      onClick={() => handleRestoreDatabase}
+      onClick={handleRestoreDatabase}
       loading={isLoading}
     >
       {error ? (
