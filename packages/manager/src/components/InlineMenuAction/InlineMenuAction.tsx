@@ -2,46 +2,10 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { latoWeb } from 'src/foundations/fonts';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  btnRoot: {
-    ...theme.applyLinkStyles,
-    padding: '12px 10px',
-    minWidth: 0,
-    color: theme.textColors.linkActiveLight,
-    whiteSpace: 'nowrap',
-    borderRadius: 0,
-    '&:hover, &:focus': {
-      backgroundColor: '#3683dc',
-      color: '#ffffff',
-      textDecoration: 'none',
-    },
-    '&[disabled]': {
-      // Override disabled background color defined for dark mode
-      backgroundColor: 'transparent',
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit',
-        textDecoration: 'none',
-      },
-    },
-  },
-  linkRoot: {
-    textAlign: 'center',
-    color: theme.textColors.linkActiveLight,
-    borderRadius: 0,
-    '&:hover, &:focus': {
-      backgroundColor: '#3683dc',
-      color: '#ffffff',
-      textDecoration: 'none',
-    },
-  },
-}));
-
-interface Props {
+interface InlineMenuActionProps {
   actionText: string;
   className?: string;
   href?: string;
@@ -52,9 +16,7 @@ interface Props {
   tooltipAnalyticsEvent?: () => void;
 }
 
-type CombinedProps = Props;
-
-const InlineMenuAction: React.FC<CombinedProps> = (props) => {
+export const InlineMenuAction = (props: InlineMenuActionProps) => {
   const {
     actionText,
     className,
@@ -66,23 +28,28 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
     tooltipAnalyticsEvent,
   } = props;
 
-  const classes = useStyles();
-
   if (href) {
     return (
-      <Link className={`${className} ${classes.linkRoot}`} to={href}>
+      <StyledLink className={className} to={href}>
         <span>{actionText}</span>
-      </Link>
+      </StyledLink>
     );
   } else {
     return (
       <Button
-        className={`${className} ${classes.btnRoot}`}
+        buttonType="secondary"
         onClick={onClick}
         disabled={disabled}
         loading={loading}
         tooltipText={tooltip}
         tooltipAnalyticsEvent={tooltipAnalyticsEvent}
+        compactX
+        sx={{
+          // TODO: We need to better define our button guidelines for this type of usage
+          fontFamily: latoWeb.normal,
+          fontSize: '14px',
+          padding: '12px 10px',
+        }}
       >
         {actionText}
       </Button>
@@ -90,4 +57,6 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
   }
 };
 
-export default InlineMenuAction;
+const StyledLink = styled(Link)(() => ({
+  paddingRight: '15px',
+}));

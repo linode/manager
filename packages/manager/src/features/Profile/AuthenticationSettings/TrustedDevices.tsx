@@ -10,7 +10,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { usePagination } from 'src/hooks/usePagination';

@@ -7,7 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { IPTypes } from './types';
 
 const useStyles = makeStyles()(() => ({

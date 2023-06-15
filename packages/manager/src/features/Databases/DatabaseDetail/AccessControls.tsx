@@ -8,7 +8,7 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TableBody } from 'src/components/TableBody';
 import Typography from 'src/components/core/Typography';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
