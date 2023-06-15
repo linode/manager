@@ -14,7 +14,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { sendEvent } from 'src/utilities/ga';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { useSnackbar } from 'notistack';
 import { calculateDiskFree } from './CreateDiskDrawer';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -23,6 +22,8 @@ import {
   useLinodeDiskResizeMutation,
 } from 'src/queries/linodes/disks';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { ResizeLinodeDiskSchema } from '@linode/validation';
+import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formHelperTextLink: {
@@ -53,7 +54,7 @@ export const ResizeDiskDrawer = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: resizeDisk, error, reset } = useLinodeDiskResizeMutation(
+  const { mutateAsync: resizeDisk, reset } = useLinodeDiskResizeMutation(
     linodeId,
     disk?.id ?? -1
   );
@@ -68,12 +69,18 @@ export const ResizeDiskDrawer = (props: Props) => {
     initialValues: {
       size: disk?.size ?? maximumSize,
     },
+    validationSchema: ResizeLinodeDiskSchema,
+    validateOnChange: true,
     enableReinitialize: true,
-    async onSubmit(values) {
-      await resizeDisk(values);
-      resetEventsPolling();
-      enqueueSnackbar('Successfully started resize', { variant: 'success' });
-      onClose();
+    async onSubmit(values, helpers) {
+      try {
+        await resizeDisk(values);
+        resetEventsPolling();
+        enqueueSnackbar('Successfully started resize', { variant: 'success' });
+        onClose();
+      } catch (e) {
+        handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
+      }
     },
   });
 
@@ -84,17 +91,15 @@ export const ResizeDiskDrawer = (props: Props) => {
     }
   }, [open]);
 
-  const errorMap = getErrorMap(['size'], error);
-
   return (
     <Drawer title={`Resize ${disk?.label}`} open={open} onClose={onClose}>
       <form onSubmit={formik.handleSubmit}>
-        {errorMap.none && (
+        {formik.status && (
           <Notice
             error
             spacingBottom={8}
             errorGroup="linode-disk-drawer"
-            text={errorMap.none}
+            text={formik.status}
           />
         )}
         <FormHelperText>
@@ -121,7 +126,7 @@ export const ResizeDiskDrawer = (props: Props) => {
           value={formik.values.size}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          errorText={errorMap.size}
+          errorText={formik.errors.size}
           InputProps={{
             endAdornment: <InputAdornment position="end">MB</InputAdornment>,
           }}

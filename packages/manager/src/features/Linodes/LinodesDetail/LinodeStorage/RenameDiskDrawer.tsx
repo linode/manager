@@ -51,7 +51,7 @@ export const RenameDiskDrawer = (props: Props) => {
         );
         onClose();
       } catch (e) {
-        handleAPIErrors(e, helpers.setFieldError, formik.setStatus);
+        handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
       }
     },
   });
