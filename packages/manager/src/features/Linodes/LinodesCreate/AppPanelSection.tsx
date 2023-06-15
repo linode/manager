@@ -41,6 +41,10 @@ export const AppPanelSection: React.FC<Props> = (props) => {
     searchValue,
   } = props;
 
+  if (heading === 'New apps' && !apps.length) {
+    return null;
+  }
+
   return (
     <>
       <Typography variant="h2">{heading}</Typography>
