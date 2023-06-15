@@ -1,34 +1,13 @@
 import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
+import { regionFactory } from 'src/factories/regions';
 import type { PremiumPlansAvailabilityNoticeProps } from './PremiumPlansAvailabilityNotice';
 import type { Region } from '@linode/api-v4';
 
 const mockedRegionData: Region[] = [
-  {
-    id: '1',
-    label: 'Region 1',
-    capabilities: ['Linodes'],
-    country: 'US',
-    status: 'ok',
-    resolvers: { ipv4: '', ipv6: '' },
-  },
-  {
-    id: '2',
-    label: 'Region 2',
-    capabilities: ['Premium Plans'],
-    country: 'US',
-    status: 'ok',
-    resolvers: { ipv4: '', ipv6: '' },
-  },
-  {
-    id: '3',
-    label: 'Region 3',
-    capabilities: ['Linodes'],
-    country: 'US',
-    status: 'ok',
-    resolvers: { ipv4: '', ipv6: '' },
-  },
+  ...regionFactory.buildList(2, {}),
+  ...regionFactory.buildList(1, { capabilities: ['Premium Plans'] }),
 ];
 
 describe('PremiumPlansAvailabilityNotice', () => {

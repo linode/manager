@@ -19,11 +19,7 @@ export const StyledNoticeTypography = styled(Typography, {
 
 export const StyledTextTooltip = styled(TextTooltip, {
   label: 'StyledTextTooltip',
-})(({ theme }) => ({
-  '& ': {
-    fontFamily: theme.font.bold,
-  },
-}));
+})(() => ({}));
 
 export const StyledFormattedRegionList = styled(List, {
   label: 'StyledFormattedRegionList',

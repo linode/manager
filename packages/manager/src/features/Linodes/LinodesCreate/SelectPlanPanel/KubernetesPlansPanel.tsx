@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import { CreateNodePoolData, Region } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
@@ -10,6 +9,7 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
 } from './utils';
+import type { CreateNodePoolData, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
