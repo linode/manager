@@ -9,7 +9,6 @@ import TextField from 'src/components/TextField';
 import { object, string } from 'yup';
 import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
 import { useSnackbar } from 'notistack';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 const RenameDiskSchema = object({
@@ -29,7 +28,7 @@ export interface Props {
 export const RenameDiskDrawer = (props: Props) => {
   const { disk, open, onClose, linodeId } = props;
 
-  const { mutateAsync: updateDisk, error, reset } = useLinodeDiskUpdateMutation(
+  const { mutateAsync: updateDisk, reset } = useLinodeDiskUpdateMutation(
     linodeId,
     disk?.id ?? -1
   );
@@ -52,7 +51,7 @@ export const RenameDiskDrawer = (props: Props) => {
         );
         onClose();
       } catch (e) {
-        handleAPIErrors(e, helpers.setFieldError);
+        handleAPIErrors(e, helpers.setFieldError, formik.setStatus);
       }
     },
   });
@@ -64,17 +63,15 @@ export const RenameDiskDrawer = (props: Props) => {
     }
   }, [open]);
 
-  const errorMap = getErrorMap(['label'], error);
-
   return (
     <Drawer title="Rename Disk" open={open} onClose={onClose}>
       <form onSubmit={formik.handleSubmit}>
-        {errorMap.none && (
+        {formik.status && (
           <Notice
             error
             spacingBottom={8}
             errorGroup="linode-disk-drawer"
-            text={errorMap.none}
+            text={formik.status}
           />
         )}
         <TextField
