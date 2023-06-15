@@ -1,32 +1,32 @@
+import type {
+  FirewallPolicyType,
+  FirewallRuleType,
+  FirewallRules,
+} from '@linode/api-v4/lib/firewalls';
+import type { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Prompt from 'src/components/Prompt';
-import Typography from 'src/components/core/Typography';
-import { parseFirewallRuleError } from './shared';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { FirewallRuleDrawer } from './FirewallRuleDrawer';
-import { FirewallRuleTable } from './FirewallRuleTable';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { makeStyles } from '@mui/styles';
 import { Notice } from 'src/components/Notice/Notice';
-import { Theme } from '@mui/material/styles';
+import { Prompt } from 'src/components/Prompt/Prompt';
+import Typography from 'src/components/core/Typography';
 import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { FirewallRuleDrawer } from './FirewallRuleDrawer';
+import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
+import { FirewallRuleTable } from './FirewallRuleTable';
 import curriedFirewallRuleEditorReducer, {
-  editorStateToRules,
   hasModified as _hasModified,
+  editorStateToRules,
   initRuleEditorState,
   prepareRules,
   stripExtendedFields,
 } from './firewallRuleEditor';
-import type { APIError } from '@linode/api-v4/lib/types';
 import type { Category } from './shared';
-import type {
-  FirewallPolicyType,
-  FirewallRules,
-  FirewallRuleType,
-} from '@linode/api-v4/lib/firewalls';
-import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
+import { parseFirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {

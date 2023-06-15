@@ -1,7 +1,13 @@
-## [Unreleased] - v0.94.0
+## [2023-06-12] - v0.94.0
 
-### Added:
-- Encode URI components before passing them to the Linode API #9205
+### Changed:
+- Corrected `getLinodeKernel` return type from `ResourcePage<Kernel>` to `Kernel` #9198
+- Corrected the return type of `deleteSSLCert` from `ObjectStorageBucketSSLResponse` to `{}` #9167
+- Updated `lint-staged` to `^13.2.2` #9156
+- Removed unused `handlebars` resolution #9156
+
+### Fixed:
+- Encode `api-v4` Path Parameters #9205
 
 ## [2023-05-30] - v0.93.0
 

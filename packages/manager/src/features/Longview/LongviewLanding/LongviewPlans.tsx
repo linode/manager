@@ -21,7 +21,7 @@ import { SupportLink } from 'src/components/SupportLink';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';

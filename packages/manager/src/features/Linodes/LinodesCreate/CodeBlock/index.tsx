@@ -1,5 +1,5 @@
 import React from 'react';
-import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { sendEvent } from 'src/utilities/ga';
 import { useCodeBlockStyles } from './styles';

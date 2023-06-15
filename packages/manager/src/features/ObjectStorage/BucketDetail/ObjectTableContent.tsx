@@ -1,6 +1,6 @@
 import * as React from 'react';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
@@ -55,7 +55,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
 
   if (numOfDisplayedObjects === 0) {
     return (
-      <TableRowEmptyState
+      <TableRowEmpty
         colSpan={6}
         message={prefix ? 'This folder is empty.' : 'This bucket is empty.'}
       />
@@ -72,7 +72,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
           if (isEmptyObjectForFolder(object)) {
             if (numOfDisplayedObjects === 1) {
               return (
-                <TableRowEmptyState
+                <TableRowEmpty
                   key={`empty-${object.name}`}
                   colSpan={6}
                   message="This folder is empty."

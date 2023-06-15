@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Table } from 'src/components/Table';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { TableBody } from 'src/components/TableBody';
@@ -53,7 +53,10 @@ export const LinodeBackups = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
-  const { data: type } = useTypeQuery(linode?.type ?? '', linode !== undefined);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
   const { data: backups, error, isLoading } = useLinodeBackupsQuery(
     id,
     Boolean(linode?.backups.enabled)
@@ -168,7 +171,7 @@ export const LinodeBackups = () => {
                 )}
               </>
             ) : (
-              <TableRowEmptyState
+              <TableRowEmpty
                 colSpan={7}
                 message="Automatic and manual backups will be listed here"
               />

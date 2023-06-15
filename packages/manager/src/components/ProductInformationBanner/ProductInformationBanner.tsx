@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import type { NoticeProps } from 'src/components/Notice/Notice';
 import { reportException } from 'src/exceptionReporting';
 import { ProductInformationBannerLocation } from 'src/featureFlags';

@@ -45,7 +45,7 @@ export const getPlanSelectionsByPlanType = <
     return acc;
   }, {} as PlansByType<T>);
 
-// group plans by type
+  // group plans by type
   for (const type of types) {
     switch (type.class) {
       case 'nanode':
