@@ -32,10 +32,18 @@ export const NodeBalancerSummary = () => {
 
   const region = regions?.find((r) => r.id === nodebalancer?.region);
 
+  const nodebalancerNode = {
+    id: String(nodebalancer?.id),
+    position: { x: 0, y: 0 },
+    data: {
+      label: nodebalancer?.label,
+    },
+  };
+
   const configNodes =
     configs?.map((config, idx) => ({
       id: String(config.id),
-      position: { x: idx * 100, y: 0 },
+      position: { x: idx * 100, y: 100 },
       data: {
         onClick: () =>
           history.push(`/nodebalancers/${id}/configurations/${config.id}`),
@@ -48,17 +56,23 @@ export const NodeBalancerSummary = () => {
       ?.map((config) =>
         config.nodes.map((node, idx) => ({
           id: String(node.id),
-          position: { x: idx * 200, y: 100 },
+          position: { x: idx * 200, y: 200 },
           data: {
             onClick: () =>
               history.push(`/nodebalancers/${id}/configurations/${config.id}`),
             label: (
-              <Stack alignItems="center">
-                <p>{node.label}</p>
-                <p>{node.address}</p>
-                <StatusIcon
-                  status={node.status === 'UP' ? 'active' : 'error'}
-                />
+              <Stack alignItems="center" spacing={1}>
+                <div>{node.label}</div>
+                <div>
+                  {/* @ts-expect-error not true */}
+                  {node.address}:{node.port}
+                </div>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <div>{node.status}</div>
+                  <StatusIcon
+                    status={node.status === 'UP' ? 'active' : 'error'}
+                  />
+                </Stack>
               </Stack>
             ),
           },
@@ -66,7 +80,15 @@ export const NodeBalancerSummary = () => {
       )
       .flat() ?? [];
 
-  const edges =
+  const configEdges =
+    configs?.map((config) => ({
+      id: `nobal-to-${config.id}`,
+      source: String(nodebalancer?.id),
+      target: String(config.id),
+      animated: true,
+    })) ?? [];
+
+  const nodeEdges =
     configs
       ?.map((config) =>
         config.nodes.map((node) => ({
@@ -181,8 +203,8 @@ export const NodeBalancerSummary = () => {
       </Paper>
       <Paper sx={{ height: 550, padding: 0 }}>
         <ReactFlow
-          nodes={[...configNodes, ...nodes]}
-          edges={edges}
+          nodes={[nodebalancerNode, ...configNodes, ...nodes]}
+          edges={[...configEdges, ...nodeEdges]}
           onNodeClick={(data, node) => node.data.onClick()}
         />
       </Paper>
