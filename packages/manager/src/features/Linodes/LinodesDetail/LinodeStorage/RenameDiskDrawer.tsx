@@ -10,6 +10,7 @@ import { object, string } from 'yup';
 import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
 import { useSnackbar } from 'notistack';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 const RenameDiskSchema = object({
   label: string()
@@ -42,13 +43,17 @@ export const RenameDiskDrawer = (props: Props) => {
     validationSchema: RenameDiskSchema,
     validateOnChange: true,
     enableReinitialize: true,
-    async onSubmit(values) {
-      await updateDisk(values);
-      enqueueSnackbar(
-        `Successfully updated disk label from ${disk?.label} to ${values.label}`,
-        { variant: 'success' }
-      );
-      onClose();
+    async onSubmit(values, helpers) {
+      try {
+        await updateDisk(values);
+        enqueueSnackbar(
+          `Successfully updated disk label from ${disk?.label} to ${values.label}`,
+          { variant: 'success' }
+        );
+        onClose();
+      } catch (e) {
+        handleAPIErrors(e, helpers.setFieldError);
+      }
     },
   });
 
@@ -79,7 +84,7 @@ export const RenameDiskDrawer = (props: Props) => {
           value={formik.values.label}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          errorText={formik.touched.label ? formik.errors.label : undefined}
+          errorText={formik.errors.label}
           errorGroup="linode-disk-drawer"
           data-qa-label
         />
