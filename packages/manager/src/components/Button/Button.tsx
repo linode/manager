@@ -32,11 +32,12 @@ const StyledButton = styled(_Button, {
   shouldForwardProp: (prop) =>
     isPropValid(['compactX', 'compactY', 'loading', 'buttonType'], prop),
 })<Props>(({ theme, ...props }) => ({
-  ...(props.compactX && {
-    minWidth: 50,
-    paddingRight: 0,
-    paddingLeft: 0,
-  }),
+  ...(props.buttonType === 'secondary' &&
+    props.compactX && {
+      minWidth: 50,
+      paddingRight: 0,
+      paddingLeft: 0,
+    }),
   ...(props.buttonType === 'secondary' &&
     props.compactY && {
       minHeight: 20,

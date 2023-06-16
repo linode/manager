@@ -88,6 +88,7 @@ export const EnhancedNumberInput = React.memo(
       >
         <StyledButton
           buttonType="outlined"
+          compactX
           disabled={disabled || value === min}
           onClick={decrementValue}
           name="Subtract 1"
@@ -117,6 +118,7 @@ export const EnhancedNumberInput = React.memo(
         />
         <StyledButton
           buttonType="outlined"
+          compactX
           disabled={disabled || value === max}
           onClick={incrementValue}
           name="Add 1"

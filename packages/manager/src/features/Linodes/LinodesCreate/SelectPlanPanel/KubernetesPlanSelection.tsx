@@ -59,7 +59,7 @@ export const KubernetesPlanSelection = ({
             buttonType="primary"
             onClick={() => onAdd(type.id, count)}
             disabled={count < 1}
-            compactX
+            className={classes.enhancedInputButton}
           >
             Add
           </Button>
@@ -107,7 +107,7 @@ export const KubernetesPlanSelection = ({
                   buttonType="primary"
                   onClick={() => onAdd(type.id, count)}
                   disabled={count < 1}
-                  compactX
+                  className={classes.enhancedInputButton}
                 >
                   Add
                 </Button>

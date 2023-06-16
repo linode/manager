@@ -44,9 +44,6 @@ Bold and easily visible. Represents the primary or preferred action on the page.
     <Button buttonType="primary" data-qa-button="primary">
       Primary
     </Button>
-    <Button buttonType="primary" compactX data-qa-button="primary">
-      compactX Primary
-    </Button>
     <Button buttonType="primary" disabled data-qa-button="primary">
       Disabled Primary
     </Button>
@@ -70,12 +67,7 @@ The bold text is intentionally understated to pair well with a primary button, s
     <Button buttonType="secondary" compactX data-qa-button="secondary">
       CompactX Secondary
     </Button>
-    <Button
-      buttonType="secondary"
-      compactY
-      data-qa-button="secondary"
-      style={{ marginTop: 7, maxHeight: 20 }}
-    >
+    <Button buttonType="secondary" compactY data-qa-button="secondary" style={{ marginTop: 7, maxHeight: 20 }}>
       CompactY Secondary
     </Button>
     <Button buttonType="secondary" disabled data-qa-button="secondary">
@@ -100,9 +92,6 @@ This hybrid button style should be used with discretion. It is used when:
   <Story name="Outlined">
     <Button buttonType="outlined" data-qa-button="outlined">
       Outlined
-    </Button>
-    <Button buttonType="outlined" compactX data-qa-button="outlined">
-      compactX Outlined
     </Button>
     <Button buttonType="outlined" disabled data-qa-button="outlined">
       Disabled Outlined
@@ -142,7 +131,7 @@ export const Template = (args) => (
       },
       compactX: {
         description:
-          'Removes the left and right spacing of the text for  buttons.',
+          'Removes the left and right spacing of the text for secondary buttons only.',
         table: {
           defaultValue: { summary: 'false' },
         },
