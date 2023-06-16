@@ -7,12 +7,7 @@ import {
   updatePersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
 import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { updateInPaginatedStore } from './base';
 import { queryKey } from './profile';
 import {
@@ -21,7 +16,6 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { EventWithStore } from 'src/events';
 import { AppEventHandler } from 'src/App';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {

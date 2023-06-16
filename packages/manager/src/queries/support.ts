@@ -4,7 +4,6 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { EventWithStore } from 'src/events';
 import {
   closeSupportTicket,
   createReply,

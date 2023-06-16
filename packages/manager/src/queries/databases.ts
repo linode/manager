@@ -38,7 +38,6 @@ import {
 } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets, updateInPaginatedStore } from './base';
-import { Event } from '@linode/api-v4';
 import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'databases';

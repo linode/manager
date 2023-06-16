@@ -32,7 +32,6 @@ import {
 import { Grants } from '../../../api-v4/lib';
 import { queryPresets } from './base';
 import { queryKey as accountQueryKey } from './account';
-import { EventWithStore } from 'src/events';
 import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'profile';

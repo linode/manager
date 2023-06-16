@@ -39,6 +39,7 @@ import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
+import { useToastNotifications } from './hooks/useToastNotifications/useToastNotifications';
 
 export type AppEventHandler = (event: Event, queryClient: QueryClient) => void;
 
@@ -58,7 +59,10 @@ const BaseApp = withFeatureFlagProvider(
     );
     const { loggedInAsCustomer } = useAuthentication();
 
+    const queryClient = useQueryClient();
+
     const { enqueueSnackbar } = useSnackbar();
+    useToastNotifications();
 
     const {
       linodes: {
@@ -259,7 +263,6 @@ const BaseApp = withFeatureFlagProvider(
       [handleMigrationEvent]
     );
 
-    const queryClient = useQueryClient();
     useEventsInfiniteQuery({
       eventHandler: (event) => {
         eventHandlers

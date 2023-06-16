@@ -9,7 +9,6 @@ import {
   Image,
   updateImage,
   UploadImageResponse,
-  Event,
 } from '@linode/api-v4';
 import {
   APIError,
@@ -25,7 +24,6 @@ import {
 } from 'react-query';
 import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
 import { getAll } from 'src/utilities/getAll';
-import { EventWithStore } from 'src/events';
 import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'images';

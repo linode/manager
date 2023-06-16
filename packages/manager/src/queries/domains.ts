@@ -5,12 +5,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   cloneDomain,
   createDomain,
@@ -27,7 +22,6 @@ import {
   getDomainRecords,
   DomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { EventWithStore } from 'src/events';
 import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'domains';

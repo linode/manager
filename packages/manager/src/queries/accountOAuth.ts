@@ -12,7 +12,6 @@ import {
   resetOAuthClientSecret,
   updateOAuthClient,
 } from '@linode/api-v4';
-import { EventWithStore } from 'src/events';
 import { AppEventHandler } from 'src/App';
 
 const queryKey = [accountQueryKey, 'oauth'];

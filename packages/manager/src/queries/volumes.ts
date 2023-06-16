@@ -3,7 +3,6 @@ import { Filter, Params } from '@linode/api-v4/src/types';
 import { getAll } from 'src/utilities/getAll';
 import { updateInPaginatedStore } from './base';
 import {
-  QueryClient,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -25,7 +24,6 @@ import {
   VolumeRequestPayload,
   createVolume,
   getLinodeVolumes,
-  Event,
 } from '@linode/api-v4';
 import { AppEventHandler } from 'src/App';
 
