@@ -69,9 +69,10 @@ const PremiumPlansAvailabilityNoticeMessage = (
       <StyledNoticeTypography>
         Premium Plans are not currently available in this region.&nbsp;
         <StyledTextTooltip
-          displayText="See Global availability"
+          displayText="See global availability"
           tooltipText={<FormattedRegionList />}
         />
+        .
       </StyledNoticeTypography>
     </StyledNotice>
   ) : !hasSelectedRegion ? (
