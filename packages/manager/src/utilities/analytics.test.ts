@@ -1,4 +1,4 @@
-import { generateTimeOfDay } from './ga';
+import { generateTimeOfDay } from './analytics';
 
 describe('Utility Functions', () => {
   it('should generate human-readable time of day', () => {

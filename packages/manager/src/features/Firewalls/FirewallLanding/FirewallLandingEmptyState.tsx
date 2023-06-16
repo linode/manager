@@ -1,11 +1,11 @@
 import * as React from 'react';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './FirewallLandingEmptyResourcesData';
 
@@ -22,7 +22,7 @@ export const FirewallLandingEmptyState = (props: Props) => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create Firewall',
             });
@@ -34,7 +34,7 @@ export const FirewallLandingEmptyState = (props: Props) => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={FirewallIcon}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />
   );

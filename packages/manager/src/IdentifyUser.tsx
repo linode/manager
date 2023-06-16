@@ -2,7 +2,6 @@ import md5 from 'md5';
 import * as React from 'react';
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
-import { initGTMUser } from './analytics';
 import { configureErrorReportingUser } from './exceptionReporting';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 import { useAccount } from './queries/account';
@@ -23,7 +22,6 @@ export const IdentifyUser = () => {
 
   const { setFeatureFlagsLoaded } = useFeatureFlagsLoad();
 
-  const euuid = account?.euuid;
   const userID = profile?.uid;
   const username = profile?.username;
 
@@ -33,13 +31,6 @@ export const IdentifyUser = () => {
       configureErrorReportingUser(String(userID), username);
     }
   }, [userID, username]);
-
-  // Configure user for GTM once we have the info we need.
-  React.useEffect(() => {
-    if (euuid) {
-      initGTMUser(euuid);
-    }
-  }, [euuid]);
 
   React.useEffect(() => {
     if (!LAUNCH_DARKLY_API_KEY) {

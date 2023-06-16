@@ -30,7 +30,7 @@ import {
   oneClickApps,
   AppCategory,
 } from 'src/features/OneClickApps/oneClickApps';
-import { sendMarketplaceSearchEvent } from 'src/utilities/ga';
+import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
 
 type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
 

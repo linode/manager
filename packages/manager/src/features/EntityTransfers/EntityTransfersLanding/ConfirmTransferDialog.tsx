@@ -24,7 +24,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { sendEntityTransferReceiveEvent } from 'src/utilities/ga';
+import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics';
 import { pluralize } from 'src/utilities/pluralize';
 import { countByEntity } from '../utilities';
 import { useQueryClient } from 'react-query';

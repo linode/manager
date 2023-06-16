@@ -3,12 +3,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import SnackBar from 'src/components/SnackBar';
 import SplashScreen from 'src/components/SplashScreen';
-import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
@@ -34,13 +32,6 @@ const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
-
-/*
- * Initialize Analytic and Google Tag Manager
- */
-initAnalytics(isProductionBuild, GA_ID);
-
-initTagManager(GTM_ID);
 
 const NullAuth = () => <span>null auth route</span>;
 

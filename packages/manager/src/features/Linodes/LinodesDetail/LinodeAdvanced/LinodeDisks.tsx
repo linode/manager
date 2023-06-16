@@ -35,7 +35,7 @@ import {
   withLinodeDetailContext,
 } from 'src/features/Linodes/LinodesDetail/linodeDetailContext';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendEvent } from 'src/utilities/ga';
+import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
 
@@ -181,11 +181,11 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                 text={noFreeDiskSpaceWarning}
                 status="help"
                 tooltipAnalyticsEvent={() =>
-                  sendEvent({
-                    category: `Disk Resize Flow`,
-                    action: `Open:tooltip`,
-                    label: `Add a Disk help icon tooltip`,
-                  })
+                  sendLinodeDiskEvent(
+                    'Resize',
+                    'Open:tooltip',
+                    'Add a Disk help icon tooltip'
+                  )
                 }
               />
             ) : undefined}

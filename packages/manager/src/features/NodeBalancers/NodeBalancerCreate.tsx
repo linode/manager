@@ -21,7 +21,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import { Notice } from 'src/components/Notice/Notice';
-import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
+import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useHistory } from 'react-router-dom';
@@ -263,7 +263,7 @@ const NodeBalancerCreate = () => {
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
-        // GA Event
+        // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
       .catch((errorResponse) => {
