@@ -4,10 +4,9 @@ import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
 import 'highlight.js/styles/a11y-dark.css';
 import 'highlight.js/styles/a11y-light.css';
-import { useSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from 'react-query';
+import { QueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -21,25 +20,14 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
+import { useEventHandlers } from './hooks/useEventHandlers';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 import useLinodes from './hooks/useLinodes';
 import { loadScript } from './hooks/useScript';
-import { oauthClientsEventHandler } from './queries/accountOAuth';
-import { databaseEventsHandler } from './queries/databases';
-import { domainEventsHandler } from './queries/domains';
-import { useEventsInfiniteQuery } from './queries/events';
-import { firewallEventsHandler } from './queries/firewalls';
-import { imageEventsHandler } from './queries/images';
-import { linodeEventsHandler } from './queries/linodes/events';
-import { nodebalanacerEventHandler } from './queries/nodebalancers';
+import { useToastNotifications } from './hooks/useToastNotifications';
 import { useMutatePreferences, usePreferences } from './queries/preferences';
-import { sshKeyEventHandler } from './queries/profile';
-import { supportTicketEventHandler } from './queries/support';
-import { tokenEventHandler } from './queries/tokens';
-import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
-import { useToastNotifications } from './hooks/useToastNotifications/useToastNotifications';
 
 export type AppEventHandler = (event: Event, queryClient: QueryClient) => void;
 
@@ -59,10 +47,8 @@ const BaseApp = withFeatureFlagProvider(
     );
     const { loggedInAsCustomer } = useAuthentication();
 
-    const queryClient = useQueryClient();
-
-    const { enqueueSnackbar } = useSnackbar();
     useToastNotifications();
+    useEventHandlers();
 
     const {
       linodes: {
@@ -158,118 +144,6 @@ const BaseApp = withFeatureFlagProvider(
         document.removeEventListener('keydown', keyboardListener);
       };
     }, [keyboardListener]);
-
-    /*
-     * We want to listen for migration events side-wide
-     * It's unpredictable when a migration is going to happen. It could take
-     * hours and it could take days. We want to notify to the user when it happens
-     * and then update the Linodes in LinodesDetail and LinodesLanding
-     */
-    const handleMigrationEvent = React.useCallback<AppEventHandler>(
-      (event) => {
-        const { entity: migratedLinode } = event;
-        if (event.action === 'linode_migrate' && event.status === 'finished') {
-          enqueueSnackbar(
-            `Linode ${migratedLinode!.label} migrated successfully.`,
-            {
-              variant: 'success',
-            }
-          );
-        }
-
-        if (event.action === 'linode_migrate' && event.status === 'failed') {
-          enqueueSnackbar(`Linode ${migratedLinode!.label} migration failed.`, {
-            variant: 'error',
-          });
-        }
-      },
-      [enqueueSnackbar]
-    );
-
-    const eventHandlers = React.useMemo<
-      {
-        filter: (event: Event) => boolean;
-        handler: AppEventHandler;
-      }[]
-    >(
-      () => [
-        {
-          filter: (event) =>
-            event.action.startsWith('database') && !event._initial,
-          handler: databaseEventsHandler,
-        },
-        {
-          filter: (event) =>
-            event.action.startsWith('domain') &&
-            !event._initial &&
-            event.entity !== null,
-          handler: domainEventsHandler,
-        },
-        {
-          filter: (event) =>
-            event.action.startsWith('volume') && !event._initial,
-          handler: volumeEventsHandler,
-        },
-        {
-          filter: (event) =>
-            (event.action.startsWith('image') ||
-              event.action === 'disk_imagize') &&
-            !event._initial,
-          handler: imageEventsHandler,
-        },
-        {
-          filter: (event) =>
-            event.action.startsWith('token') && !event._initial,
-          handler: tokenEventHandler,
-        },
-        {
-          filter: (event) =>
-            event.action.startsWith('user_ssh_key') && !event._initial,
-          handler: sshKeyEventHandler,
-        },
-        {
-          filter: (event) =>
-            event.action.startsWith('firewall') && !event._initial,
-          handler: firewallEventsHandler,
-        },
-        {
-          filter: (event) =>
-            event.action.startsWith('nodebalancer') && !event._initial,
-          handler: nodebalanacerEventHandler,
-        },
-        {
-          filter: (event) =>
-            event.action.startsWith('oauth_client') && !event._initial,
-          handler: oauthClientsEventHandler,
-        },
-        {
-          filter: (event) =>
-            (event.action.startsWith('linode') ||
-              event.action.startsWith('backups')) &&
-            !event._initial,
-          handler: linodeEventsHandler,
-        },
-        {
-          filter: (event) =>
-            event.action.startsWith('ticket') && !event._initial,
-          handler: supportTicketEventHandler,
-        },
-        {
-          filter: (event) =>
-            !event._initial && ['linode_migrate'].includes(event.action),
-          handler: handleMigrationEvent,
-        },
-      ],
-      [handleMigrationEvent]
-    );
-
-    useEventsInfiniteQuery({
-      eventHandler: (event) => {
-        eventHandlers
-          .filter(({ filter }) => filter(event))
-          .forEach(({ handler }) => handler(event, queryClient));
-      },
-    });
 
     /**
      * in the event that we encounter an "invalid OAuth token" error from the API,
