@@ -437,26 +437,27 @@ export class LinodeCreate extends React.PureComponent<
       regionsError,
       regionsData,
       regionDisplayInfo,
-      regionsLoading,
-      typesData,
-      typeDisplayInfo,
-      typesError,
-      typesLoading,
-      label,
-      updateLabel,
-      tags,
-      updateTags,
-      errors,
-      backupsMonthlyPrice,
-      userCannotCreateLinode,
       accountBackupsEnabled,
-      showGeneralError,
-      showAgreement,
-      showApiAwarenessModal,
+      backupsMonthlyPrice,
+      errors,
       handleAgreementChange,
       handleShowApiAwarenessModal,
+      label,
+      regionsLoading,
+      selectedRegionID,
+      showAgreement,
+      showApiAwarenessModal,
+      showGeneralError,
       signedAgreement,
+      tags,
+      typeDisplayInfo,
+      typesData,
+      typesError,
+      typesLoading,
+      updateLabel,
+      updateTags,
       updateUserData,
+      userCannotCreateLinode,
       ...rest
     } = this.props;
 
@@ -707,17 +708,13 @@ export class LinodeCreate extends React.PureComponent<
             error={hasErrorFor.type}
             types={this.filterTypes()}
             onSelect={this.props.updateTypeID}
+            selectedRegionID={selectedRegionID}
             selectedID={this.props.selectedTypeID}
             linodeID={this.props.selectedLinodeID}
-            updateFor={[
-              this.props.selectedTypeID,
-              this.props.disabledClasses,
-              this.props.createType,
-              errors,
-            ]}
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
             isCreate
+            regionsData={regionsData!}
             showTransfer
             docsLink={
               <DocsLink

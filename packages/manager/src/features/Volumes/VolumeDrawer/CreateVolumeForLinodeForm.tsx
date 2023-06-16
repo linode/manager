@@ -32,11 +32,11 @@ import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
-import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
+import { ModeSelection } from './ModeSelection';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textWrapper: {
