@@ -134,7 +134,7 @@ const StyledSummarySection = styled(Paper, {
 })(({ theme }) => ({
   padding: theme.spacing(2.5),
   marginBottom: theme.spacing(2),
-  // minHeight: '160px',
+  minHeight: '160px',
   height: '93%',
 }));
 
