@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -11,6 +11,12 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
 } from './utils';
+
+const useStyles = makeStyles()(() => ({
+  root: {
+    padding: 0,
+  },
+}));
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
@@ -43,7 +49,7 @@ export const KubernetesPlansPanel = ({
   onSelect,
   selectedID,
 }: Props) => {
-  const theme = useTheme();
+  const { classes, cx } = useStyles();
 
   const plans = getPlanSelectionsByPlanType(types);
 
@@ -77,15 +83,12 @@ export const KubernetesPlansPanel = ({
 
   return (
     <TabbedPanel
+      rootClass={cx(classes.root)}
       copy={copy}
       error={error}
       handleTabChange={() => resetValues()}
       header={header || ' '}
       initTab={initialTab >= 0 ? initialTab : 0}
-      sx={{
-        padding: 0,
-        paddingTop: theme.spacing(3),
-      }}
       tabs={tabs}
     />
   );
