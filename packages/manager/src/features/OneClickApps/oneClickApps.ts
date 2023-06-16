@@ -202,7 +202,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Free internet radio station management and hosting.',
     categories: ['Media and Entertainment'],
     description: `All aspects of running a radio station in one web interface so you can start your own station. Manage media, create playlists, and interact with listeners on one free platform.`,
-    summary: 'Open source, self-hosted web radio tool',
+    summary: 'Open source, self-hosted web radio tool.',
     related_guides: [
       {
         title: 'Deploy AzuraCast through the Linode Marketplace',
@@ -268,7 +268,7 @@ export const oneClickApps: OCA[] = [
       'Application builder for forms, portals, admin panels, and more.',
     categories: ['Development'],
     description:
-      'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as; admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
+      'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as: admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
     summary: 'Low-code platform for building modern business applications.',
     related_guides: [
       {
@@ -428,7 +428,7 @@ export const oneClickApps: OCA[] = [
     categories: ['Media and Entertainment'],
     description: `Launch a sleek forum with robust integrations to popular tools like Slack and WordPress to start more conversations.`,
     summary:
-      'Open source community and discussion forum for customers, teams, fans, and more',
+      'Open source community and discussion forum for customers, teams, fans, and more.',
     related_guides: [
       {
         title: 'Deploy Discourse through the Linode Marketplace',
@@ -448,7 +448,7 @@ export const oneClickApps: OCA[] = [
     alt_name: 'Python framework',
     alt_description: 'Fast Python development with best practices.',
     categories: ['Development'],
-    description: `Django is a web development framework for the Python programing language. It enables rapid development, while favoring pragmatic and clean design.`,
+    description: `Django is a web development framework for the Python programming language. It enables rapid development, while favoring pragmatic and clean design.`,
     summary: `A framework for simplifying the process of building your web applications more quickly and with less code.`,
     related_guides: [
       {
@@ -535,7 +535,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'File storage alternative to Dropbox and Google Drive.',
     categories: ['Productivity'],
     description: `File synchronization across multiple users’ computers and other devices to keep everyone working without interruption.`,
-    summary: 'Enterprise file sharing to manage and sync from any device',
+    summary: 'Enterprise file sharing to manage and sync from any device.',
     related_guides: [
       {
         title: 'Deploy FileCloud through the Linode Marketplace',
@@ -619,7 +619,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Open source, self-hosted Git management tool.',
     categories: ['Development'],
     description: `Self-hosted Git service built and maintained by a large developer community.`,
-    summary: 'Git with a cup of tea - A painless self-hosted Git service',
+    summary: 'Git with a cup of tea - A painless self-hosted Git service.',
     related_guides: [
       {
         title: 'Deploy Gitea through the Linode Marketplace',
@@ -682,7 +682,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Grafana',
-    alt_name: 'Monitoring vizualization dashboards',
+    alt_name: 'Monitoring visualization dashboards',
     alt_description: 'Monitoring server.',
     categories: ['Monitoring'],
     description: `Grafana gives you the ability to create, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
@@ -728,7 +728,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Desktop cloud hosting.',
     categories: ['Development'],
     description: `Access your desktop from any device with a browser to keep your desktop hosted in the cloud.`,
-    summary: 'Free open source clientless remote desktop gateway',
+    summary: 'Free open source clientless remote desktop gateway.',
     related_guides: [
       {
         title: 'Deploy Apache Guacamole through the Linode Marketplace',
@@ -902,7 +902,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Open source video conferencing alternative to Zoom.',
     categories: ['Media and Entertainment'],
     description: `Secure, stable, and free alternative to popular video conferencing services. Use built-in features to limit meeting access with passwords or stream on YouTube so anyone can attend.`,
-    summary: 'Free, open source video conferencing and communication platform',
+    summary: 'Free, open source video conferencing and communication platform.',
     related_guides: [
       {
         title: 'Deploy Jitsi through the Linode Marketplace',
@@ -968,7 +968,7 @@ export const oneClickApps: OCA[] = [
     categories: ['Security'],
     description: `Kali Linux is an open source, Debian-based Linux distribution that has become an industry-standard tool for penetration testing and security audits. Kali includes hundreds of free tools for reverse engineering, penetration testing and more. Kali prioritizes simplicity, making security best practices more accessible to everyone from cybersecurity professionals to hobbyists.`,
     summary:
-      'Popular Linux distribution and tool suite for penetration testing and security research',
+      'Popular Linux distribution and tool suite for penetration testing and security research.',
     related_guides: [
       {
         title: 'Deploy Kali Linux through the Linode Marketplace',
@@ -989,7 +989,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Drag and drop website CMS.',
     categories: ['Website'],
     description: `Use Kepler Builder to easily design and build sites in WordPress - no coding or design knowledge necessary.`,
-    summary: 'Powerful drag & drop WordPress website builder',
+    summary: 'Powerful drag & drop WordPress website builder.',
     related_guides: [
       {
         title: 'Deploy Kepler through the Linode Marketplace',
@@ -1031,7 +1031,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Essential software stack for Linux applications.',
     categories: ['Stacks'],
     description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
-    summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.    `,
+    summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.`,
     related_guides: [
       {
         title: 'Deploy a LEMP Stack through the Linode Marketplace',
@@ -1137,7 +1137,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Angular and Node.js stack.',
     categories: ['Development'],
     description: `MEAN is a full-stack JavaScript-based framework which accelerates web application development much faster than other frameworks.  All involved technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
-    summary: `A MEAN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
+    summary: `A MEAN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications.`,
     related_guides: [
       {
         title: 'Deploy a MEAN Stack through the Linode Marketplace',
@@ -1225,7 +1225,7 @@ export const oneClickApps: OCA[] = [
     categories: ['Control Panels'],
     description: `Streamline infrastructure management in one UI or by using the Mist.io RESTful API.`,
     summary:
-      'Open source, unified interface and management platform for multi-cloud deployments',
+      'Open source, unified interface and management platform for multi-cloud deployments.',
     related_guides: [
       {
         title: 'Deploy Mist.io through the Linode Marketplace',
@@ -1506,7 +1506,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Popular website content management system.',
     categories: ['Website'],
     description: `Accelerated and scalable hosting for WordPress. Includes OpenLiteSpeed, PHP, MySQL Server, WordPress, and LiteSpeed Cache.`,
-    summary: 'Blazing fast, open source alternative to LiteSpeed Web Server',
+    summary: 'Blazing fast, open source alternative to LiteSpeed Web Server.',
     related_guides: [
       {
         title: 'Deploy OpenLiteSpeed Wordpress through the Linode Marketplace',
@@ -1571,7 +1571,7 @@ export const oneClickApps: OCA[] = [
     categories: ['Productivity'],
     description: `LAMP-stack-based server application that allows you to access your files from anywhere in a secure way.`,
     summary:
-      'DropBox and OneDrive alternative that lets you remain in control of your files.',
+      'Dropbox and OneDrive alternative that lets you remain in control of your files.',
     related_guides: [
       {
         title: 'Deploy ownCloud through the Linode Marketplace',
@@ -1659,7 +1659,7 @@ export const oneClickApps: OCA[] = [
       'Web interface for MySQL/MariaDB operations and server administration.',
     categories: ['Databases'],
     description: `Intuitive web interface for MySQL and MariaDB operations, including importing/exporting data, administering multiple servers, and global database search.`,
-    summary: 'Popular free administration tool for MySQL and MariaDB',
+    summary: 'Popular free administration tool for MySQL and MariaDB.',
     related_guides: [
       {
         title: 'Deploy phpMyAdmin through the Linode Marketplace',
@@ -1725,7 +1725,7 @@ export const oneClickApps: OCA[] = [
     categories: [],
     description: `Organize, stream, and share your media library with friends, in addition to free live TV in 220+ countries.`,
     summary:
-      'Media server and streaming service to stay entertained across devices',
+      'Media server and streaming service to stay entertained across devices.',
     related_guides: [
       {
         title: 'Deploy Plex Media Server through the Linode Marketplace',
@@ -1852,7 +1852,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Server work queue management.',
     categories: ['Development'],
     description: `Connect and scale applications with asynchronous messaging and highly available work queues, all controlled through an intuitive management UI.`,
-    summary: 'Most popular open source message broker',
+    summary: 'Most popular open source message broker.',
     related_guides: [
       {
         title: 'Deploy RabbitMQ through the Linode Marketplace',
@@ -1959,7 +1959,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Ruby web application framework with development tools.',
     categories: ['Development'],
     description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by giving every developer a number of common tools they need to get started. Ruby on Rails empowers you to accomplish more with less code.`,
-    summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
+    summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications.`,
     related_guides: [
       {
         title: 'Deploy Ruby on Rails through the Linode Marketplace',
@@ -2284,7 +2284,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Domain management and website control panel.',
     categories: ['Control Panels'],
     description: `Streamline domain management, included as part of Webmin. Choose between the standard free version or upgrade to their premium service to access more features.`,
-    summary: 'Domain hosting and website control panel',
+    summary: 'Domain hosting and website control panel.',
     related_guides: [
       {
         title: 'Deploy Virtualmin through the Linode Marketplace',
@@ -2305,7 +2305,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Fancy development text editor.',
     categories: ['Development'],
     description: `Launch a portable development environment to speed up tests, downloads, and more.`,
-    summary: 'Run VS code in the cloud, right from your browser',
+    summary: 'Run VS code in the cloud, right from your browser.',
     related_guides: [
       {
         title: 'Deploy VS Code through the Linode Marketplace',
@@ -2369,7 +2369,7 @@ export const oneClickApps: OCA[] = [
     alt_description: 'Unix management in the browser.',
     categories: ['Control Panels'],
     description: `Web interface for Unix to optimize system management, both from the console and remotely.`,
-    summary: 'Unix management in your browser',
+    summary: 'Unix management in your browser.',
     related_guides: [
       {
         title: 'Deploy Webmin through the Linode Marketplace',
