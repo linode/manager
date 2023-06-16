@@ -508,21 +508,6 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
-    MuiTabs: {
-      styleOverrides: {
-        root: {
-          boxShadow: 'inset 0 -1px 0 #222',
-        },
-        flexContainer: {
-          '& $scrollButtons:first-of-type': {
-            color: '#222',
-          },
-        },
-        scrollButtons: {
-          color: '#fff',
-        },
-      },
-    },
     MuiTableRow: {
       styleOverrides: {
         root: {

@@ -1208,40 +1208,21 @@ export const lightTheme: ThemeOptions = {
     MuiTab: {
       styleOverrides: {
         root: {
-          color: 'rgba(0, 0, 0, 0.54)',
-          minWidth: 50,
+          fontSize: '0.9rem',
           textTransform: 'inherit',
-          padding: '6px 16px',
-          position: 'relative',
+          padding: '0px 16px',
           overflow: 'hidden',
           maxWidth: '264',
-          boxSizing: 'border-box',
-          minHeight: 48,
-          flexShrink: 0,
-          display: 'inline-flex',
-          alignItems: 'center',
-          verticalAlign: 'middle',
-          justifyContent: 'center',
-          appearance: 'none',
-          margin: 1,
-          lineHeight: 1.3,
           [breakpoints.up('md')]: {
             minWidth: 75,
           },
-          '&$selected, &$selected:hover': {
+          '&.Mui-selected': {
             fontFamily: latoWeb.bold,
-            color: primaryColors.headline,
           },
           '&:hover': {
             color: primaryColors.main,
           },
         },
-        textColorPrimary: {
-          '&$selected': {
-            color: '#32363c',
-          },
-        },
-        selected: {},
       },
     },
     MuiTable: {
@@ -1270,48 +1251,17 @@ export const lightTheme: ThemeOptions = {
     },
     MuiTabs: {
       styleOverrides: {
-        root: {
-          margin: '16px 0',
-          boxShadow: 'inset 0 -1px 0 #c5c6c8',
-          minHeight: 48,
-          position: 'relative',
-          '& $scrollButtons:first-of-type': {
-            position: 'absolute',
-            bottom: 6,
-            zIndex: 2,
-            left: 0,
-            '& svg': {
-              backgroundColor: 'rgba(232, 232, 232, .9)',
-              height: 39,
-              width: 38,
-              padding: '7px 4px',
-              borderRadius: '50%',
-            },
-          },
-          '& $scrollButtons:last-child': {
-            '& svg': {
-              backgroundColor: 'rgba(232, 232, 232, .9)',
-              height: 39,
-              width: 38,
-              padding: '7px 4px',
-              borderRadius: '50%',
-            },
-          },
-        },
-        fixed: {
+        root: ({ theme }) => ({
+          marginBottom: theme.spacing(),
+          boxShadow: `inset 0 -1px 0 ${
+            theme.name === 'light' ? '#e3e5e8' : '#2e3238'
+          }`,
           overflowX: 'auto',
-        },
-        scrollButtons: {
-          flex: '0 0 40px',
-        },
-        indicator: {
-          primary: {
-            backgroundColor: primaryColors.main,
-          },
-          secondary: {
-            backgroundColor: primaryColors.main,
-          },
-        },
+        }),
+      },
+      defaultProps: {
+        scrollButtons: 'auto',
+        variant: 'scrollable',
       },
     },
     MuiTableRow: {
