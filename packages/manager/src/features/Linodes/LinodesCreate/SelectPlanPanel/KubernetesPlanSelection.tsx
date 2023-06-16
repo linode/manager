@@ -53,12 +53,13 @@ export const KubernetesPlanSelection = ({
         <EnhancedNumberInput
           value={count}
           setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
+          disabled={disabled}
         />
         {onAdd && (
           <Button
             buttonType="primary"
             onClick={() => onAdd(type.id, count)}
-            disabled={count < 1}
+            disabled={count < 1 || disabled}
             sx={{ minWidth: '85px', marginLeft: '10px' }}
           >
             Add
@@ -99,14 +100,15 @@ export const KubernetesPlanSelection = ({
                 disabled={
                   // When on the add pool flow, we only want the current input to be active,
                   // unless we've just landed on the form or all the inputs are empty.
-                  !onAdd && Boolean(selectedID) && type.id !== selectedID
+                  (!onAdd && Boolean(selectedID) && type.id !== selectedID) ||
+                  disabled
                 }
               />
               {onAdd && (
                 <Button
                   buttonType="primary"
                   onClick={() => onAdd(type.id, count)}
-                  disabled={count < 1}
+                  disabled={count < 1 || disabled}
                   sx={{ minWidth: '85px', marginLeft: '10px' }}
                 >
                   Add

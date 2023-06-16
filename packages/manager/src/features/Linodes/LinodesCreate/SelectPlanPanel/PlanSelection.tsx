@@ -120,7 +120,9 @@ export const PlanSelection = ({
           disabled={isSamePlan || planTooSmall || isDisabledClass}
           key={type.id}
           onClick={() =>
-            !isSamePlan && !isDisabledClass ? onSelect(type.id) : undefined
+            !isSamePlan && !disabled && !isDisabledClass
+              ? onSelect(type.id)
+              : undefined
           }
         >
           <TableCell className={cx(classes.radioCell)}>
@@ -131,7 +133,11 @@ export const PlanSelection = ({
                 label={type.heading}
                 control={
                   <Radio
-                    checked={!planTooSmall && type.id === String(selectedID)}
+                    checked={
+                      !disabled &&
+                      !planTooSmall &&
+                      type.id === String(selectedID)
+                    }
                     disabled={planTooSmall || disabled || isDisabledClass}
                     id={type.id}
                     onChange={() => onSelect(type.id)}
