@@ -63,14 +63,21 @@ describe('Database Create', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      queryClient,
-    });
+    const { getAllByText, getByTestId, getByText } = renderWithTheme(
+      <DatabaseCreate />,
+      {
+        queryClient,
+      }
+    );
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     // default to $0 if no plan is selected
     const nodeRadioBtns = getByTestId('database-nodes');
     expect(nodeRadioBtns).toHaveTextContent('$0/month $0/hr');
+
+    const sharedCPUTab = getByText('Shared CPU');
+
+    fireEvent.click(sharedCPUTab);
 
     // update node pricing if a plan is selected
     const radioBtn = getAllByText('Nanode 1 GB')[0];

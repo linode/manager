@@ -84,12 +84,6 @@ const styles = (theme: Theme) =>
     form: {
       width: '100%',
     },
-    stackScriptWrapper: {
-      '& [role="tablist"]': {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(),
-      },
-    },
     imageSelect: {
       '& .MuiPaper-root': {
         padding: 0,
@@ -611,14 +605,14 @@ export class LinodeCreate extends React.PureComponent<
             />
           </SafeTabPanel>
           <SafeTabPanel value={selectedTab} index={2}>
-            <Tabs value={stackScriptSelectedTab}>
-              {this.stackScriptTabs.map((t) => (
-                <Tab key={t.title} label={t.title} />
-              ))}
-            </Tabs>
             <Paper className={classes.stackScriptWrapper}>
               <Typography variant="h2">Create From:</Typography>
               <div className={classes.imageSelect}>
+                <Tabs value={stackScriptSelectedTab}>
+                  {this.stackScriptTabs.map((t) => (
+                    <Tab key={t.title} label={t.title} />
+                  ))}
+                </Tabs>
                 <SafeTabPanel value={stackScriptSelectedTab} index={0}>
                   <FromStackScriptContent
                     category="account"
