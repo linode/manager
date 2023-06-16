@@ -78,7 +78,7 @@ export const PlanContainer = ({
   selectedID,
   showTransfer,
 }: Props) => {
-  const { cx } = useStyles();
+  const { classes, cx } = useStyles();
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
     showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
@@ -127,10 +127,9 @@ export const PlanContainer = ({
                   return (
                     <TableCell
                       center={center}
-                      className={cx(
-                        { planHeaderCell: cellName === 'Plan' },
-                        { headerCell: true }
-                      )}
+                      className={cx(classes.headerCell, {
+                        planHeaderCell: cellName === 'Plan',
+                      })}
                       data-qa={attributeValue}
                       key={testId}
                       noWrap={noWrap}
