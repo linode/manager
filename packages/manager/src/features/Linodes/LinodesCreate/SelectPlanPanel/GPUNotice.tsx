@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
-import { usePlansPanelStyles } from './styles/plansPanelStyles';
+import { StyledTypography } from './styles';
 import { getRegionsWithCapability } from './utils';
 
 interface Props {
@@ -10,7 +10,6 @@ interface Props {
 }
 
 export const GPUNotice = ({ hasDisabledClass, dataTestId }: Props) => {
-  const { classes } = usePlansPanelStyles();
   const { data: regions } = useRegionsQuery();
 
   const programInfo = hasDisabledClass ? (
@@ -20,7 +19,7 @@ export const GPUNotice = ({ hasDisabledClass, dataTestId }: Props) => {
       {getRegionsWithCapability('GPU Linodes', regions ?? [])}.
     </>
   ) : (
-    <div className={classes.gpuGuideLink}>
+    <StyledTypography>
       Linode GPU plans have limited availability and may not be available at the
       time of your request. Some additional verification may be required to
       access these services.
@@ -33,7 +32,7 @@ export const GPUNotice = ({ hasDisabledClass, dataTestId }: Props) => {
         {` `}Here is a guide
       </a>{' '}
       with information on getting started.
-    </div>
+    </StyledTypography>
   );
   return (
     <Notice warning dataTestId={dataTestId}>

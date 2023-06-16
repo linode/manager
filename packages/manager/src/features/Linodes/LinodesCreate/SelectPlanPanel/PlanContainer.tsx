@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -8,7 +10,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
-import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
 
 const tableCells = [
@@ -27,6 +28,30 @@ const tableCells = [
     noWrap: true,
   },
 ];
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  headerCell: {
+    borderTop: `1px solid ${theme.borderColors.borderTable} !important`,
+    borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
+    '&.emptyCell': {
+      borderRight: 'none',
+    },
+    '&:not(.emptyCell)': {
+      borderLeft: 'none !important',
+    },
+    '&:last-child': {
+      paddingRight: 15,
+    },
+    '&.planHeaderCell': {
+      paddingLeft: 4,
+    },
+  },
+  table: {
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
+    overflowX: 'hidden',
+  },
+}));
 
 export interface Props {
   currentPlanHeading?: string;
@@ -53,7 +78,7 @@ export const PlanContainer = ({
   selectedID,
   showTransfer,
 }: Props) => {
-  const { classes, cx } = usePlansPanelStyles();
+  const { cx } = useStyles();
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
     showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
@@ -86,7 +111,7 @@ export const PlanContainer = ({
         <Grid xs={12}>
           <Table
             aria-label="List of Linode Plans"
-            className={classes.table}
+            className={cx({ table: true })}
             spacingBottom={16}
           >
             <TableHead>
@@ -104,7 +129,7 @@ export const PlanContainer = ({
                       center={center}
                       className={cx(
                         { planHeaderCell: cellName === 'Plan' },
-                        classes.headerCell
+                        { headerCell: true }
                       )}
                       data-qa={attributeValue}
                       key={testId}

@@ -1,15 +1,23 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme, styled } from '@mui/material/styles';
 import Button from 'src/components/Button';
-import classNames from 'classnames';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import Hidden from 'src/components/core/Hidden';
 import SelectionCard from 'src/components/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { usePlansPanelStyles } from './styles/plansPanelStyles';
+import { StyledDisabledTableRow } from './styles';
+
+const StyledInputOuter = styled('div')(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'flex-end',
+  [theme.breakpoints.down('md')]: {
+    justifyContent: 'flex-start',
+  },
+}));
 
 interface Props {
   disabled?: boolean;
@@ -32,7 +40,7 @@ export const KubernetesPlanSelection = ({
   type,
   updatePlanCount,
 }: Props) => {
-  const { classes } = usePlansPanelStyles();
+  const theme = useTheme();
 
   const count = getTypeCount(type.id);
 
@@ -41,7 +49,7 @@ export const KubernetesPlanSelection = ({
 
   const renderVariant = () => (
     <Grid xs={12}>
-      <div className={classes.enhancedInputOuter}>
+      <StyledInputOuter theme={theme}>
         <EnhancedNumberInput
           value={count}
           setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
@@ -56,23 +64,19 @@ export const KubernetesPlanSelection = ({
             Add
           </Button>
         )}
-      </div>
+      </StyledInputOuter>
     </Grid>
   );
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden mdDown>
-        <TableRow
+        <StyledDisabledTableRow
           data-qa-plan-row={type.formattedLabel}
           key={type.id}
-          className={classNames({
-            [classes.disabledRow]: disabled,
-          })}
+          disabled={disabled}
         >
-          <TableCell data-qa-plan-name>
-            <div className={classes.headingCellContainer}>{type.heading} </div>
-          </TableCell>
+          <TableCell data-qa-plan-name>{type.heading}</TableCell>
           <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
           <TableCell data-qa-hourly>{`$` + type.price.hourly}</TableCell>
           <TableCell center data-qa-ram>
@@ -85,7 +89,7 @@ export const KubernetesPlanSelection = ({
             {convertMegabytesTo(type.disk, true)}
           </TableCell>
           <TableCell>
-            <div className={classes.enhancedInputOuter}>
+            <StyledInputOuter theme={theme}>
               <EnhancedNumberInput
                 inputLabel={`edit-quantity-${type.id}`}
                 value={count}
@@ -108,9 +112,9 @@ export const KubernetesPlanSelection = ({
                   Add
                 </Button>
               )}
-            </div>
+            </StyledInputOuter>
           </TableCell>
-        </TableRow>
+        </StyledDisabledTableRow>
       </Hidden>
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
+import { useTheme } from '@mui/material/styles';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
-import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -43,7 +43,7 @@ export const KubernetesPlansPanel = ({
   onSelect,
   selectedID,
 }: Props) => {
-  const { classes } = usePlansPanelStyles();
+  const theme = useTheme();
 
   const plans = getPlanSelectionsByPlanType(types);
 
@@ -82,7 +82,10 @@ export const KubernetesPlansPanel = ({
       handleTabChange={() => resetValues()}
       header={header || ' '}
       initTab={initialTab >= 0 ? initialTab : 0}
-      rootClass={classes.root}
+      sx={{
+        padding: 0,
+        paddingTop: theme.spacing(3),
+      }}
       tabs={tabs}
     />
   );

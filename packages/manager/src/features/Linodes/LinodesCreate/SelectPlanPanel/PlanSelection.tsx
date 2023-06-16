@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -10,12 +11,31 @@ import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Radio } from 'src/components/Radio/Radio';
 import SelectionCard from 'src/components/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { ApplicationState } from 'src/store';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { usePlansPanelStyles } from './styles/plansPanelStyles';
+import { StyledDisabledTableRow } from './styles';
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  chip: {
+    backgroundColor: theme.color.green,
+    color: '#fff',
+    textTransform: 'uppercase',
+    marginLeft: theme.spacing(2),
+  },
+  focusedRow: {
+    '&:focus-within': {
+      backgroundColor: theme.bg.lightBlue1,
+    },
+  },
+  planCell: { paddingLeft: 4 },
+  radioCell: {
+    height: theme.spacing(6),
+    width: '3%',
+    paddingRight: 0,
+  },
+}));
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -73,7 +93,7 @@ export const PlanSelection = ({
   const shouldShowTransfer = showTransfer && type.transfer;
   const shouldShowNetwork = showTransfer && type.network_out;
 
-  const { classes } = usePlansPanelStyles();
+  const { classes, cx } = useStyles();
 
   const selectedLinodePlanType = useSelector((state: ApplicationState) => {
     if (linodeID) {
@@ -92,59 +112,55 @@ export const PlanSelection = ({
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
-        <TableRow
-          data-qa-plan-row={type.formattedLabel}
+        <StyledDisabledTableRow
+          aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
           aria-label={rowAriaLabel}
+          className={cx(classes.focusedRow)}
+          data-qa-plan-row={type.formattedLabel}
+          disabled={isSamePlan || planTooSmall || isDisabledClass}
           key={type.id}
           onClick={() =>
             !isSamePlan && !isDisabledClass ? onSelect(type.id) : undefined
           }
-          aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
-          className={classNames(classes.focusedRow, {
-            [classes.disabledRow]:
-              isSamePlan || planTooSmall || isDisabledClass,
-          })}
         >
-          <TableCell className={classes.radioCell}>
+          <TableCell className={cx(classes.radioCell)}>
             {!isSamePlan && (
               <FormControlLabel
-                label={type.heading}
                 aria-label={type.heading}
                 className={'label-visually-hidden'}
+                label={type.heading}
                 control={
                   <Radio
                     checked={!planTooSmall && type.id === String(selectedID)}
-                    onChange={() => onSelect(type.id)}
                     disabled={planTooSmall || disabled || isDisabledClass}
                     id={type.id}
+                    onChange={() => onSelect(type.id)}
                   />
                 }
               />
             )}
           </TableCell>
-          <TableCell data-qa-plan-name className={classes.planCell}>
-            <div className={classes.headingCellContainer}>
-              {type.heading}{' '}
-              {(isSamePlan || type.id === selectedLinodePlanType) && (
-                <Chip
-                  data-qa-current-plan
-                  label="Current Plan"
-                  aria-label="This is your current plan"
-                  className={classes.chip}
-                />
-              )}
-              {tooltip && (
-                <TooltipIcon
-                  text={tooltip}
-                  tooltipPosition="right-end"
-                  sxTooltipIcon={{
-                    paddingTop: '0px !important',
-                    paddingBottom: '0px !important',
-                  }}
-                  status="help"
-                />
-              )}
-            </div>
+          <TableCell data-qa-plan-name className={cx(classes.planCell)}>
+            {type.heading}{' '}
+            {(isSamePlan || type.id === selectedLinodePlanType) && (
+              <Chip
+                aria-label="This is your current plan"
+                className={cx(classes.chip)}
+                data-qa-current-plan
+                label="Current Plan"
+              />
+            )}
+            {tooltip && (
+              <TooltipIcon
+                status="help"
+                sxTooltipIcon={{
+                  paddingTop: '0px !important',
+                  paddingBottom: '0px !important',
+                }}
+                text={tooltip}
+                tooltipPosition="right-end"
+              />
+            )}
           </TableCell>
           <TableCell data-qa-monthly> ${type.price?.monthly}</TableCell>
           <TableCell data-qa-hourly>
@@ -175,18 +191,18 @@ export const PlanSelection = ({
               {type.network_out / 1000} Gbps
             </TableCell>
           ) : null}
-        </TableRow>
+        </StyledDisabledTableRow>
       </Hidden>
 
       {/* Displays SelectionCard for small screens */}
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         <SelectionCard
-          key={type.id}
           checked={type.id === String(selectedID)}
-          onClick={() => onSelect(type.id)}
-          heading={type.heading}
-          subheadings={type.subHeadings}
           disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
+          heading={type.heading}
+          key={type.id}
+          onClick={() => onSelect(type.id)}
+          subheadings={type.subHeadings}
           tooltip={tooltip}
         />
       </Hidden>

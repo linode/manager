@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import RenderGuard from 'src/components/RenderGuard';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -9,7 +11,6 @@ import {
   planTabInfoContent,
 } from './utils';
 import { PlanContainer } from './PlanContainer';
-import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
 
 export interface PlanSelectionType extends BaseType {
@@ -40,6 +41,13 @@ interface Props {
   types: PlanSelectionType[];
 }
 
+const useStyles = makeStyles()((theme: Theme) => ({
+  root: {
+    marginTop: theme.spacing(3),
+    width: '100%',
+  },
+}));
+
 export const PlansPanel = (props: Props) => {
   const {
     className,
@@ -56,7 +64,7 @@ export const PlansPanel = (props: Props) => {
     types,
   } = props;
 
-  const { classes } = usePlansPanelStyles();
+  const { classes, cx } = useStyles();
 
   const plans = getPlanSelectionsByPlanType(types);
 
@@ -96,7 +104,7 @@ export const PlansPanel = (props: Props) => {
 
   return (
     <TabbedPanel
-      rootClass={`${classes.root} ${className} tabbedPanel`}
+      rootClass={cx(classes.root, className, 'tabbedPanel')}
       innerClass={props.tabbedPanelInnerClass}
       error={error}
       header={header || 'Linode Plan'}

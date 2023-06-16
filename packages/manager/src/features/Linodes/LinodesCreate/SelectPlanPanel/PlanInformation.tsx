@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import { useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { usePlansPanelStyles } from './styles/plansPanelStyles';
 import { planTabInfoContent } from './utils';
 import { GPUNotice } from './GPUNotice';
 import { MetalNotice } from './MetalNotice';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const PlanInformation = ({ disabledClasses, planType }: Props) => {
-  const { classes } = usePlansPanelStyles();
+  const theme = useTheme();
 
   const getDisabledClass = (thisClass: LinodeTypeClass) => {
     return Boolean(disabledClasses?.includes(thisClass));
@@ -34,7 +34,10 @@ export const PlanInformation = ({ disabledClasses, planType }: Props) => {
         />
       ) : null}
       {planType === 'premium' ? <PremiumPlansAvailabilityNotice /> : null}
-      <Typography data-qa-prodedi className={classes.copy}>
+      <Typography
+        data-qa-prodedi
+        sx={{ marginTop: theme.spacing(1), marginBottom: theme.spacing(3) }}
+      >
         {planTabInfoContent[planType]?.typography}
       </Typography>
     </>
