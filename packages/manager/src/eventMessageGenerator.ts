@@ -4,8 +4,8 @@ import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import {
-  formatEventWithUsername,
   formatEventWithAppendedText,
+  formatEventWithUsername,
 } from './features/Events/Event.helpers';
 import { escapeRegExp } from './utilities/escapeRegExp';
 
