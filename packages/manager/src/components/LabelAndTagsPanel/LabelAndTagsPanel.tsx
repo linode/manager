@@ -1,60 +1,40 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { Notice } from 'src/components/Notice/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import { Notice } from 'src/components/Notice/Notice';
+import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
+import { useTheme } from '@mui/material/styles';
 
-type ClassNames = 'root' | 'inner' | 'expPanelButton';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      width: '100%',
-      marginTop: theme.spacing(3),
-      backgroundColor: theme.color.white,
-    },
-    expPanelButton: {
-      padding: 0,
-      marginTop: theme.spacing(2),
-    },
-  });
-
-const styled = withStyles(styles);
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
   tagsInputProps?: TagsInputProps;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const LabelAndTagsPanel = (props: Props) => {
+  const theme = useTheme();
+  const { error, labelFieldProps, tagsInputProps } = props;
 
-export class InfoPanel extends React.Component<CombinedProps> {
-  render() {
-    const { classes, error, labelFieldProps, tagsInputProps } = this.props;
-
-    return (
-      <Paper className={classes.root} data-qa-label-header>
-        {error && <Notice text={error} error />}
-        <TextField
-          {...(labelFieldProps || {
-            label: 'Label',
-            placeholder: 'Enter a label',
-          })}
-          data-qa-label-input
-          noMarginTop
-        />
-        {tagsInputProps && <TagsInput {...tagsInputProps} />}
-      </Paper>
-    );
-  }
-}
-
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  styled
-)(InfoPanel);
+  return (
+    <Paper
+      data-qa-label-header
+      sx={{
+        backgroundColor: 'red',
+        flexGrow: 1,
+        marginTop: theme.spacing(3),
+        width: '100%',
+      }}
+    >
+      {error && <Notice text={error} error />}
+      <TextField
+        {...(labelFieldProps || {
+          label: 'Label',
+          placeholder: 'Enter a label',
+        })}
+        data-qa-label-input
+        noMarginTop
+      />
+      {tagsInputProps && <TagsInput {...tagsInputProps} />}
+    </Paper>
+  );
+};
