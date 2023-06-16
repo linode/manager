@@ -1,3 +1,6 @@
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -100,6 +103,9 @@ const NodeBalancerCreate = () => {
   }>(defaultDeleteConfigConfirmDialogState);
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
+
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const disabled =
     Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
@@ -520,6 +526,7 @@ const NodeBalancerCreate = () => {
         buttonType="outlined"
         onClick={addNodeBalancer}
         disabled={disabled}
+        sx={matchesSmDown ? { marginLeft: theme.spacing(2) } : null}
       >
         Add another Configuration
       </Button>
@@ -553,6 +560,7 @@ const NodeBalancerCreate = () => {
           onClick={onCreate}
           loading={isLoading}
           data-qa-deploy-nodebalancer
+          sx={matchesSmDown ? { marginRight: theme.spacing(1) } : null}
         >
           Create NodeBalancer
         </Button>
