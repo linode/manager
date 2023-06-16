@@ -104,11 +104,11 @@ const NodeBalancerCreate = () => {
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
-  const disabled =
-    Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
-
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const disabled =
+    Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
 
   const addNodeBalancer = () => {
     if (disabled) {
