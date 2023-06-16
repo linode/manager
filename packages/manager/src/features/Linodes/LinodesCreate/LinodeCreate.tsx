@@ -14,8 +14,6 @@ import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary'
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import DocsLink from 'src/components/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -24,8 +22,6 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
-import type { Tab } from 'src/components/TabLinkList/TabLinkList';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
@@ -72,6 +68,7 @@ import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { extendType } from 'src/utilities/extendType';
 import { WithTypesProps } from 'src/containers/types.container';
 import { RegionsProps } from 'src/containers/regions.container';
+import { Tabs, Tab } from '@mui/material';
 
 type ClassNames =
   | 'form'
@@ -202,10 +199,6 @@ interface State {
   numberOfNodes: number;
 }
 
-interface CreateTab extends Tab {
-  type: CreateTypes;
-}
-
 export class LinodeCreate extends React.PureComponent<
   CombinedProps & DispatchProps,
   State
@@ -285,7 +278,7 @@ export class LinodeCreate extends React.PureComponent<
       : currentTypes;
   };
 
-  tabs: CreateTab[] = [
+  tabs = [
     {
       title: 'Distributions',
       type: 'fromImage',
@@ -316,9 +309,9 @@ export class LinodeCreate extends React.PureComponent<
       type: 'fromLinode',
       routeName: `${this.props.match.url}?type=Clone%20Linode`,
     },
-  ];
+  ] as const;
 
-  stackScriptTabs: CreateTab[] = [
+  stackScriptTabs = [
     {
       title: 'Account StackScripts',
       type: 'fromStackScript',
@@ -582,115 +575,117 @@ export class LinodeCreate extends React.PureComponent<
               important
             />
           )}
-          <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
-            <TabLinkList tabs={this.tabs} />
-            <TabPanels>
-              <SafeTabPanel index={0}>
-                <FromImageContent
-                  variant="public"
-                  imagePanelTitle="Choose a Distribution"
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  error={hasErrorFor.image}
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={1}>
-                <FromAppsContent
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  // error={hasErrorFor.image}
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  errors={errors}
-                  setNumberOfNodesForAppCluster={
-                    this.setNumberOfNodesForAppCluster
-                  }
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={2}>
-                <Tabs defaultIndex={stackScriptSelectedTab}>
-                  <Paper className={classes.stackScriptWrapper}>
-                    <Typography variant="h2">Create From:</Typography>
-                    <TabLinkList tabs={this.stackScriptTabs} />
-                    <TabPanels className={classes.imageSelect}>
-                      <SafeTabPanel index={0}>
-                        <FromStackScriptContent
-                          category="account"
-                          accountBackupsEnabled={accountBackupsEnabled}
-                          userCannotCreateLinode={userCannotCreateLinode}
-                          request={getMineAndAccountStackScripts}
-                          header={'Select a StackScript'}
-                          imagesData={imagesData!}
-                          regionsData={regionsData!}
-                          typesData={typesData!}
-                          errors={errors}
-                          {...rest}
-                        />
-                      </SafeTabPanel>
-                      <SafeTabPanel index={1}>
-                        <FromStackScriptContent
-                          category="community"
-                          accountBackupsEnabled={accountBackupsEnabled}
-                          userCannotCreateLinode={userCannotCreateLinode}
-                          request={getCommunityStackscripts}
-                          header={'Select a StackScript'}
-                          imagesData={imagesData!}
-                          regionsData={regionsData!}
-                          typesData={typesData!}
-                          errors={errors}
-                          {...rest}
-                        />
-                      </SafeTabPanel>
-                    </TabPanels>
-                  </Paper>
-                </Tabs>
-              </SafeTabPanel>
-              <SafeTabPanel index={3}>
-                <FromImageContent
-                  variant={'private'}
-                  imagePanelTitle="Choose an Image"
-                  imagesData={imagesData}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={4}>
-                <FromBackupsContent
-                  errors={errors}
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  linodesData={linodesData!}
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  {...restoreBackup}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={5}>
-                <FromLinodeContent
-                  errors={errors}
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  linodesData={linodesData!}
-                  accountBackupsEnabled={accountBackupsEnabled}
-                  userCannotCreateLinode={userCannotCreateLinode}
-                  {...rest}
-                />
-              </SafeTabPanel>
-            </TabPanels>
+          <Tabs
+            value={selectedTab}
+            onChange={(_, i) => this.handleTabChange(i)}
+          >
+            {this.tabs.map((tab) => (
+              <Tab key={tab.title} label={tab.title} />
+            ))}
           </Tabs>
-
+          <SafeTabPanel value={selectedTab} index={0}>
+            <FromImageContent
+              variant="public"
+              imagePanelTitle="Choose a Distribution"
+              imagesData={imagesData!}
+              regionsData={regionsData!}
+              typesData={typesData!}
+              error={hasErrorFor.image}
+              accountBackupsEnabled={accountBackupsEnabled}
+              userCannotCreateLinode={userCannotCreateLinode}
+              {...rest}
+            />
+          </SafeTabPanel>
+          <SafeTabPanel value={selectedTab} index={1}>
+            <FromAppsContent
+              imagesData={imagesData!}
+              regionsData={regionsData!}
+              typesData={typesData!}
+              // error={hasErrorFor.image}
+              accountBackupsEnabled={accountBackupsEnabled}
+              userCannotCreateLinode={userCannotCreateLinode}
+              errors={errors}
+              setNumberOfNodesForAppCluster={this.setNumberOfNodesForAppCluster}
+              {...rest}
+            />
+          </SafeTabPanel>
+          <SafeTabPanel value={selectedTab} index={2}>
+            <Tabs value={stackScriptSelectedTab}>
+              {this.stackScriptTabs.map((t) => (
+                <Tab key={t.title} label={t.title} />
+              ))}
+            </Tabs>
+            <Paper className={classes.stackScriptWrapper}>
+              <Typography variant="h2">Create From:</Typography>
+              <div className={classes.imageSelect}>
+                <SafeTabPanel value={stackScriptSelectedTab} index={0}>
+                  <FromStackScriptContent
+                    category="account"
+                    accountBackupsEnabled={accountBackupsEnabled}
+                    userCannotCreateLinode={userCannotCreateLinode}
+                    request={getMineAndAccountStackScripts}
+                    header={'Select a StackScript'}
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    errors={errors}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel value={stackScriptSelectedTab} index={1}>
+                  <FromStackScriptContent
+                    category="community"
+                    accountBackupsEnabled={accountBackupsEnabled}
+                    userCannotCreateLinode={userCannotCreateLinode}
+                    request={getCommunityStackscripts}
+                    header={'Select a StackScript'}
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    errors={errors}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+              </div>
+            </Paper>
+          </SafeTabPanel>
+          <SafeTabPanel value={selectedTab} index={3}>
+            <FromImageContent
+              variant={'private'}
+              imagePanelTitle="Choose an Image"
+              imagesData={imagesData}
+              regionsData={regionsData!}
+              typesData={typesData!}
+              accountBackupsEnabled={accountBackupsEnabled}
+              userCannotCreateLinode={userCannotCreateLinode}
+              {...rest}
+            />
+          </SafeTabPanel>
+          <SafeTabPanel value={selectedTab} index={4}>
+            <FromBackupsContent
+              errors={errors}
+              imagesData={imagesData!}
+              regionsData={regionsData!}
+              typesData={typesData!}
+              linodesData={linodesData!}
+              accountBackupsEnabled={accountBackupsEnabled}
+              userCannotCreateLinode={userCannotCreateLinode}
+              {...restoreBackup}
+              {...rest}
+            />
+          </SafeTabPanel>
+          <SafeTabPanel value={selectedTab} index={5}>
+            <FromLinodeContent
+              errors={errors}
+              imagesData={imagesData!}
+              regionsData={regionsData!}
+              typesData={typesData!}
+              linodesData={linodesData!}
+              accountBackupsEnabled={accountBackupsEnabled}
+              userCannotCreateLinode={userCannotCreateLinode}
+              {...rest}
+            />
+          </SafeTabPanel>
           {this.props.createType !== 'fromBackup' && (
             <SelectRegionPanel
               data-qa-select-region-panel

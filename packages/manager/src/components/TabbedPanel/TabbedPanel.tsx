@@ -1,14 +1,12 @@
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import Paper from 'src/components/core/Paper';
-import { Tab } from 'src/components/core/ReachTab';
-import { TabList } from 'src/components/core/ReachTabList';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
+import { SafeTabPanel } from '../SafeTabPanel/SafeTabPanel';
 
 export interface Tab {
   title: string;
@@ -31,7 +29,7 @@ interface TabbedPanelProps {
   docsLink?: JSX.Element;
 }
 
-const TabbedPanel = React.memo((props: TabbedPanelProps) => {
+export const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   const {
     header,
     error,
@@ -45,7 +43,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
     ...rest
   } = props;
 
-  const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
+  const [tabIndex, setTabIndex] = useState<number>(initTab ?? 0);
 
   const tabChangeHandler = (index: number) => {
     setTabIndex(index);
@@ -55,7 +53,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   };
 
   useEffect(() => {
-    if (tabIndex !== initTab) {
+    if (tabIndex !== initTab && initTab !== undefined) {
       setTabIndex(initTab);
     }
   }, [initTab]);
@@ -84,60 +82,29 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
 
         <Tabs
-          onChange={tabChangeHandler}
-          index={tabIndex}
+          onChange={(_, i) => tabChangeHandler(i)}
+          value={tabIndex}
           sx={{ position: 'relative' }}
         >
-          <StyledTabList>
-            {tabs.map((tab, idx) => (
-              <StyledTab key={`tabs-${tab.title}-${idx}`}>
-                {tab.title}
-              </StyledTab>
-            ))}
-          </StyledTabList>
-          <TabPanels>
-            {tabs.map((tab, idx) => (
-              <TabPanel key={`tabs-panel-${tab.title}-${idx}`}>
-                {tab.render(rest.children)}
-              </TabPanel>
-            ))}
-          </TabPanels>
+          {tabs.map((tab, idx) => (
+            <Tab key={`tabs-${tab.title}-${idx}`} label={tab.title} />
+          ))}
         </Tabs>
+        {tabs.map((tab, idx) => (
+          <SafeTabPanel
+            key={`tabs-panel-${tab.title}-${idx}`}
+            index={idx}
+            value={tabIndex}
+          >
+            {tab.render(rest.children)}
+          </SafeTabPanel>
+        ))}
       </div>
     </Paper>
   );
 });
 
-export { TabbedPanel };
-
 const StyledTypography = styled(Typography)(({ theme }) => ({
   fontSize: '0.875rem',
   marginTop: theme.spacing(1),
-}));
-
-const StyledTabList = styled(TabList)(({ theme }) => ({
-  'div &[data-reach-tab-list]': {
-    boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
-    marginTop: 22,
-    marginBottom: theme.spacing(3),
-    '&button': {
-      '&:focus': {
-        backgroundColor: theme.bg.tableHeader,
-      },
-      '&:hover': {
-        backgroundColor: `red !important`,
-      },
-    },
-  },
-}));
-
-const StyledTab = styled(Tab)(({ theme }) => ({
-  '&[data-reach-tab]': {
-    '&:focus': {
-      backgroundColor: theme.bg.tableHeader,
-    },
-    '&:hover': {
-      backgroundColor: theme.bg.tableHeader,
-    },
-  },
 }));

@@ -1,10 +1,9 @@
 import * as React from 'react';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import { useTabsContext } from '@reach/tabs';
 
 interface SafeTabPanelProps {
   children: React.ReactNode | null;
   index: number | null;
+  value: number;
 }
 
 /**
@@ -13,12 +12,13 @@ interface SafeTabPanelProps {
  * avoid mounting the component until the tab is actually selected/visible.
  */
 export const SafeTabPanel = (props: SafeTabPanelProps) => {
-  const { index, ...tabPanelProps } = props;
+  const { index, value, children } = props;
 
-  const { selectedIndex } = useTabsContext();
-  const isSelected = selectedIndex === index;
+  const isSelected = value === index;
 
-  return (
-    <TabPanel {...tabPanelProps}>{isSelected ? props.children : null}</TabPanel>
-  );
+  if (!isSelected) {
+    return null;
+  }
+
+  return <>{children}</>;
 };

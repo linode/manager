@@ -25,9 +25,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -47,6 +44,8 @@ import {
   curriedCloneLandingReducer,
   defaultState,
 } from './utilities';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
@@ -291,6 +290,12 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
     (eachLinode) => eachLinode.id === state.selectedLinodeId
   );
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
+
+  const index = Math.max(
+    tabs.findIndex((tab) => matches(tab.routeName)),
+    0
+  );
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
@@ -309,48 +314,39 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
             >
               Clone
             </Typography>
-
-            <Tabs
-              index={Math.max(
-                tabs.findIndex((tab) => matches(tab.routeName)),
-                0
-              )}
-              onChange={navToURL}
-            >
-              <TabLinkList tabs={tabs} />
-              <TabPanels>
-                <SafeTabPanel index={0}>
-                  <div className={classes.outerContainer}>
-                    <Configs
-                      configs={configsInState}
-                      // Cast the results of the Immer state to a mutable data structure.
-                      configSelection={castDraft(state.configSelection)}
-                      handleSelect={toggleConfig}
-                    />
-                  </div>
-                </SafeTabPanel>
-
-                <SafeTabPanel index={1}>
-                  <div className={classes.outerContainer}>
-                    <Typography>
-                      You can make a copy of a disk to the same or different
-                      Linode. We recommend you power off your Linode first, and
-                      keep it powered off until the disk has finished being
-                      cloned.
-                    </Typography>
-                    <div className={classes.diskContainer}>
-                      <Disks
-                        disks={disksInState}
-                        // Cast the results of the Immer state to a mutable data structure.
-                        diskSelection={castDraft(state.diskSelection)}
-                        selectedConfigIds={selectedConfigIds}
-                        handleSelect={toggleDisk}
-                      />
-                    </div>
-                  </div>
-                </SafeTabPanel>
-              </TabPanels>
+            <Tabs value={index} onChange={(_, i) => navToURL(i)}>
+              {tabs.map((t) => (
+                <Tab key={t.title} label={t.title} />
+              ))}
             </Tabs>
+            <SafeTabPanel value={index} index={0}>
+              <div className={classes.outerContainer}>
+                <Configs
+                  configs={configsInState}
+                  // Cast the results of the Immer state to a mutable data structure.
+                  configSelection={castDraft(state.configSelection)}
+                  handleSelect={toggleConfig}
+                />
+              </div>
+            </SafeTabPanel>
+            <SafeTabPanel value={index} index={1}>
+              <div className={classes.outerContainer}>
+                <Typography>
+                  You can make a copy of a disk to the same or different Linode.
+                  We recommend you power off your Linode first, and keep it
+                  powered off until the disk has finished being cloned.
+                </Typography>
+                <div className={classes.diskContainer}>
+                  <Disks
+                    disks={disksInState}
+                    // Cast the results of the Immer state to a mutable data structure.
+                    diskSelection={castDraft(state.diskSelection)}
+                    selectedConfigIds={selectedConfigIds}
+                    handleSelect={toggleDisk}
+                  />
+                </div>
+              </div>
+            </SafeTabPanel>
           </Paper>
         </Grid>
         <Grid xs={12} md={4} lg={3}>

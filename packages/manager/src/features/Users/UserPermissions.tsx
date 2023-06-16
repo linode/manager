@@ -32,17 +32,15 @@ import {
   entityNameMap,
   UserPermissionsEntitySection,
 } from './UserPermissionsEntitySection';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { Tab } from 'src/components/core/ReachTab';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabList } from 'src/components/core/ReachTabList';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import {
   withQueryClient,
   WithQueryClientProps,
 } from 'src/containers/withQueryClient.container';
 import { compose as recompose } from 'recompose';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 type ClassNames =
   | 'title'
@@ -124,6 +122,7 @@ interface State {
   /* Large Account Support */
   showTabs?: boolean;
   tabs?: string[];
+  selectedTabIndex: number;
 }
 
 type CombinedProps = Props & WithSnackbarProps & WithQueryClientProps;
@@ -135,6 +134,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     setAllPerm: 'null',
     isSavingGlobal: false,
     isSavingEntity: false,
+    selectedTabIndex: 0,
   };
 
   globalBooleanPerms = [
@@ -632,26 +632,31 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         </Grid>
         <div className={classes.section}>
           {this.state.showTabs ? (
-            <Tabs>
-              <TabList>
+            <>
+              <Tabs
+                value={this.state.selectedTabIndex}
+                onChange={(_, i) => this.setState({ selectedTabIndex: i })}
+              >
                 {this.state.tabs?.map((entity) => (
-                  <Tab key={`${entity}-tab`}>{entityNameMap[entity]}</Tab>
+                  <Tab key={`${entity}-tab`} label={entityNameMap[entity]} />
                 ))}
-              </TabList>
-              <TabPanels>
-                {this.state.tabs?.map((entity: GrantType, idx) => (
-                  <SafeTabPanel key={`${entity}-tab-content`} index={idx}>
-                    <UserPermissionsEntitySection
-                      key={entity}
-                      grants={this.state.grants?.[entity]}
-                      entity={entity}
-                      setGrantTo={this.setGrantTo}
-                      entitySetAllTo={this.entitySetAllTo}
-                    />
-                  </SafeTabPanel>
-                ))}
-              </TabPanels>
-            </Tabs>
+              </Tabs>
+              {this.state.tabs?.map((entity: GrantType, idx) => (
+                <SafeTabPanel
+                  key={`${entity}-tab-content`}
+                  value={this.state.selectedTabIndex}
+                  index={idx}
+                >
+                  <UserPermissionsEntitySection
+                    key={entity}
+                    grants={this.state.grants?.[entity]}
+                    entity={entity}
+                    setGrantTo={this.setGrantTo}
+                    entitySetAllTo={this.entitySetAllTo}
+                  />
+                </SafeTabPanel>
+              ))}
+            </>
           ) : (
             grants &&
             this.entityPerms.map((entity: GrantType) => (

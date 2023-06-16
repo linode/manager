@@ -5,19 +5,18 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
@@ -109,6 +108,8 @@ const LinodesDetailNavigation = () => {
     return <CircleProgress />;
   }
 
+  const index = getIndex();
+
   return (
     <>
       <DocumentTitleSegment
@@ -130,42 +131,42 @@ const LinodesDetailNavigation = () => {
         }
       </SMTPRestrictionText>
       <div style={{ marginTop: 8 }}>
-        <Tabs index={getIndex()} onChange={navToURL}>
-          <TabLinkList tabs={tabs} />
-          <React.Suspense fallback={<SuspenseLoader />}>
-            <TabPanels>
-              <SafeTabPanel index={idx++}>
-                <LinodeSummary
-                  isBareMetalInstance={isBareMetalInstance}
-                  linodeCreated={linode?.created}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={idx++}>
-                <LinodeNetworking />
-              </SafeTabPanel>
-              {isBareMetalInstance ? null : (
-                <>
-                  <SafeTabPanel index={idx++}>
-                    <LinodeStorage />
-                  </SafeTabPanel>
-                  <SafeTabPanel index={idx++}>
-                    <LinodeConfigurations />
-                  </SafeTabPanel>
-
-                  <SafeTabPanel index={idx++}>
-                    <LinodeBackup />
-                  </SafeTabPanel>
-                </>
-              )}
-              <SafeTabPanel index={idx++}>
-                <LinodeActivity />
-              </SafeTabPanel>
-              <SafeTabPanel index={idx++}>
-                <LinodeSettings />
-              </SafeTabPanel>
-            </TabPanels>
-          </React.Suspense>
+        <Tabs value={index} onChange={(_, i) => navToURL(i)}>
+          {tabs.map((t) => (
+            <Tab key={t.title} label={t.title} />
+          ))}
         </Tabs>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <SafeTabPanel value={index} index={idx++}>
+            <LinodeSummary
+              isBareMetalInstance={isBareMetalInstance}
+              linodeCreated={linode?.created}
+            />
+          </SafeTabPanel>
+          <SafeTabPanel value={index} index={idx++}>
+            <LinodeNetworking />
+          </SafeTabPanel>
+          {isBareMetalInstance ? null : (
+            <>
+              <SafeTabPanel value={index} index={idx++}>
+                <LinodeStorage />
+              </SafeTabPanel>
+              <SafeTabPanel value={index} index={idx++}>
+                <LinodeConfigurations />
+              </SafeTabPanel>
+
+              <SafeTabPanel value={index} index={idx++}>
+                <LinodeBackup />
+              </SafeTabPanel>
+            </>
+          )}
+          <SafeTabPanel value={index} index={idx++}>
+            <LinodeActivity />
+          </SafeTabPanel>
+          <SafeTabPanel value={index} index={idx++}>
+            <LinodeSettings />
+          </SafeTabPanel>
+        </React.Suspense>
       </div>
     </>
   );

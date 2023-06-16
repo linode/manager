@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/menu-button/styles.css';
-import '@reach/tabs/styles.css';
 import 'highlight.js/styles/a11y-dark.css';
 import 'highlight.js/styles/a11y-light.css';
 import { useSnackbar } from 'notistack';

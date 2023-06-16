@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
@@ -21,6 +18,7 @@ import {
   useLocation,
   useParams,
 } from 'react-router-dom';
+import { Tab, Tabs } from '@mui/material';
 
 export const NodeBalancerDetail = () => {
   const history = useHistory();
@@ -87,6 +85,11 @@ export const NodeBalancerDetail = () => {
     history.push(tabs[index].routeName);
   };
 
+  const index = Math.max(
+    tabs.findIndex((tab) => matches(tab.routeName)),
+    0
+  );
+
   return (
     <React.Fragment>
       <LandingHeader
@@ -105,30 +108,23 @@ export const NodeBalancerDetail = () => {
         }}
       />
       {errorMap.none && <Notice error text={errorMap.none} />}
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
-
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <NodeBalancerSummary />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <NodeBalancerConfigurations
-              nodeBalancerLabel={nodebalancer.label}
-              nodeBalancerRegion={nodebalancer.region}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <NodeBalancerSettings />
-          </SafeTabPanel>
-        </TabPanels>
+      <Tabs value={index} onChange={(_, i) => navToURL(i)}>
+        {tabs.map((tab) => (
+          <Tab key={tab.title} label={tab.title} />
+        ))}
       </Tabs>
+      <SafeTabPanel value={index} index={0}>
+        <NodeBalancerSummary />
+      </SafeTabPanel>
+      <SafeTabPanel value={index} index={1}>
+        <NodeBalancerConfigurations
+          nodeBalancerLabel={nodebalancer.label}
+          nodeBalancerRegion={nodebalancer.region}
+        />
+      </SafeTabPanel>
+      <SafeTabPanel value={index} index={2}>
+        <NodeBalancerSettings />
+      </SafeTabPanel>
     </React.Fragment>
   );
 };

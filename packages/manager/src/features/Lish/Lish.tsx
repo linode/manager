@@ -1,20 +1,18 @@
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import { Tab } from 'src/components/TabLinkList/TabLinkList';
 import {
   useLinodeLishTokenQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import Glish from './Glish';
 import Weblish from './Weblish';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
@@ -108,13 +106,14 @@ const Lish = () => {
       title: 'Weblish',
       routeName: `/linodes/${id}/lish/weblish`,
     },
-    !isBareMetal
-      ? {
-          title: 'Glish',
-          routeName: `/linodes/${id}/lish/glish`,
-        }
-      : null,
-  ].filter(Boolean) as Tab[];
+  ];
+
+  if (!isBareMetal) {
+    tabs.push({
+      title: 'Glish',
+      routeName: `/linodes/${id}/lish/glish`,
+    });
+  }
 
   const navToURL = (index: number) => {
     history.replace(`/linodes/${id}/lish/${tabs[index].title.toLowerCase()}`);
@@ -147,41 +146,43 @@ const Lish = () => {
     );
   }
 
+  const index =
+    type &&
+    tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type) !== -1
+      ? tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type)
+      : 0;
+
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <React.Fragment>
       {linode && token && (
-        <Tabs
-          className={classes.tabs}
-          onChange={navToURL}
-          index={
-            type &&
-            tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type) !==
-              -1
-              ? tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type)
-              : 0
-          }
-        >
-          <TabLinkList tabs={tabs} />
-          <TabPanels>
-            <SafeTabPanel index={0} data-qa-tab="Weblish">
-              <Weblish
+        <>
+          <Tabs
+            className={classes.tabs}
+            onChange={(_, i) => navToURL(i)}
+            value={index}
+          >
+            {tabs.map((t) => (
+              <Tab key={t.title} label={t.title} />
+            ))}
+          </Tabs>
+          <SafeTabPanel index={0} value={index} data-qa-tab="Weblish">
+            <Weblish
+              token={token}
+              linode={linode}
+              refreshToken={refreshToken}
+            />
+          </SafeTabPanel>
+          {!isBareMetal && (
+            <SafeTabPanel index={1} value={index} data-qa-tab="Glish">
+              <Glish
                 token={token}
                 linode={linode}
                 refreshToken={refreshToken}
               />
             </SafeTabPanel>
-            {!isBareMetal && (
-              <SafeTabPanel index={1} data-qa-tab="Glish">
-                <Glish
-                  token={token}
-                  linode={linode}
-                  refreshToken={refreshToken}
-                />
-              </SafeTabPanel>
-            )}
-          </TabPanels>
-        </Tabs>
+          )}
+        </>
       )}
     </React.Fragment>
   );

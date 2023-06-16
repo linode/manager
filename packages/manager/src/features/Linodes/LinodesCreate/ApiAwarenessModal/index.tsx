@@ -6,20 +6,17 @@ import Button from 'src/components/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Tabs from 'src/components/core/ReachTabs';
-import TabPanels from 'src/components/core/ReachTabPanels';
 import { sendEvent } from 'src/utilities/ga';
 import generateCurlCommand from 'src/utilities/generate-cURL';
 import generateCLICommand from 'src/utilities/generate-cli';
-
 import useEvents from 'src/hooks/useEvents';
-
 import CodeBlock from '../CodeBlock';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const useStyles = makeStyles((theme: Theme) => ({
   guides: {
@@ -34,9 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tabsStyles: {
     marginTop: '14px',
-  },
-  tabsContainer: {
-    paddingTop: theme.spacing(),
   },
   actionPanelStyles: {
     marginTop: '18px !important',
@@ -73,6 +67,8 @@ const ApiAwarenessModal = (props: Props) => {
   const classes = useStyles();
   const history = useHistory();
   const { events } = useEvents();
+
+  const [tabIndex, setTabIndex] = React.useState(0);
 
   const createdLinode = events.filter(
     (event) =>
@@ -135,75 +131,74 @@ const ApiAwarenessModal = (props: Props) => {
         the Cloud Manager create form.
       </Typography>
       <Tabs
-        defaultIndex={0}
-        onChange={handleTabChange}
-        className={classes.tabsContainer}
+        value={tabIndex}
+        onChange={(_, i) => {
+          setTabIndex(i);
+          handleTabChange(i);
+        }}
       >
-        <TabLinkList tabs={tabs} />
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <Typography variant="body1" className={classes.tabDescription}>
-              Most Linode API requests need to be authenticated with a valid{' '}
-              <ExternalLink
-                text="personal access token"
-                link="/profile/tokens"
-                onClick={() => fireGAEvent('personal access token')}
-                hideIcon
-              />
-              . The command below assumes that your personal access token has
-              been stored within the TOKEN shell variable. For more information,
-              see{' '}
-              <ExternalLink
-                text="Get Started with the Linode API"
-                link="https://www.linode.com/docs/products/tools/api/get-started/"
-                onClick={() => fireGAEvent('Get Started with the Linode API')}
-                hideIcon
-              />{' '}
-              and{' '}
-              <ExternalLink
-                text="Linode API Guides"
-                link="https://www.linode.com/docs/products/tools/api/guides/"
-                onClick={() => fireGAEvent('Linode API Guides')}
-                hideIcon
-              />
-              .
-            </Typography>
-            <CodeBlock
-              command={curlCommand}
-              language={'bash'}
-              commandType={tabs[0].title}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <Typography variant="body1">
-              Before running the command below, the Linode CLI needs to be
-              installed and configured on your system. See the{' '}
-              <ExternalLink
-                text="Install and Configure the Linode CLI"
-                link="https://www.linode.com/docs/products/tools/cli/guides/install/"
-                onClick={() =>
-                  fireGAEvent('Install and Configure the Linode CLI')
-                }
-                hideIcon
-              />{' '}
-              guide for instructions. To learn more and to use the Linode CLI
-              for tasks, review additional{' '}
-              <ExternalLink
-                text="Linode CLI Guides"
-                link="https://www.linode.com/docs/products/tools/cli/guides/"
-                onClick={() => fireGAEvent('Linode CLI Guides')}
-                hideIcon
-              />
-              .
-            </Typography>
-            <CodeBlock
-              command={cliCommand}
-              language={'bash'}
-              commandType={tabs[1].title}
-            />
-          </SafeTabPanel>
-        </TabPanels>
+        {tabs.map((t) => (
+          <Tab key={t.title} label={t.title} />
+        ))}
       </Tabs>
+      <SafeTabPanel value={tabIndex} index={0}>
+        <Typography variant="body1" className={classes.tabDescription}>
+          Most Linode API requests need to be authenticated with a valid{' '}
+          <ExternalLink
+            text="personal access token"
+            link="/profile/tokens"
+            onClick={() => fireGAEvent('personal access token')}
+            hideIcon
+          />
+          . The command below assumes that your personal access token has been
+          stored within the TOKEN shell variable. For more information, see{' '}
+          <ExternalLink
+            text="Get Started with the Linode API"
+            link="https://www.linode.com/docs/products/tools/api/get-started/"
+            onClick={() => fireGAEvent('Get Started with the Linode API')}
+            hideIcon
+          />{' '}
+          and{' '}
+          <ExternalLink
+            text="Linode API Guides"
+            link="https://www.linode.com/docs/products/tools/api/guides/"
+            onClick={() => fireGAEvent('Linode API Guides')}
+            hideIcon
+          />
+          .
+        </Typography>
+        <CodeBlock
+          command={curlCommand}
+          language={'bash'}
+          commandType={tabs[0].title}
+        />
+      </SafeTabPanel>
+      <SafeTabPanel value={tabIndex} index={1}>
+        <Typography variant="body1">
+          Before running the command below, the Linode CLI needs to be installed
+          and configured on your system. See the{' '}
+          <ExternalLink
+            text="Install and Configure the Linode CLI"
+            link="https://www.linode.com/docs/products/tools/cli/guides/install/"
+            onClick={() => fireGAEvent('Install and Configure the Linode CLI')}
+            hideIcon
+          />{' '}
+          guide for instructions. To learn more and to use the Linode CLI for
+          tasks, review additional{' '}
+          <ExternalLink
+            text="Linode CLI Guides"
+            link="https://www.linode.com/docs/products/tools/cli/guides/"
+            onClick={() => fireGAEvent('Linode CLI Guides')}
+            hideIcon
+          />
+          .
+        </Typography>
+        <CodeBlock
+          command={cliCommand}
+          language={'bash'}
+          commandType={tabs[1].title}
+        />
+      </SafeTabPanel>
       <Notice marketing spacingBottom={0} spacingTop={24}>
         <Typography className={classes.otherTools}>
           Deploy and manage your infrastructure with the{' '}

@@ -5,9 +5,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
@@ -24,6 +21,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { Tab, Tabs } from '@mui/material';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -111,6 +109,11 @@ export const ObjectStorageLanding = () => {
     history.replace('/object-storage/buckets/create');
   };
 
+  const index =
+    realTabs.findIndex((t) => t === tab) !== -1
+      ? realTabs.findIndex((t) => t === tab)
+      : 0;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
@@ -125,45 +128,37 @@ export const ObjectStorageLanding = () => {
         shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
         title="Object Storage"
       />
-      <Tabs
-        index={
-          realTabs.findIndex((t) => t === tab) !== -1
-            ? realTabs.findIndex((t) => t === tab)
-            : 0
-        }
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
-
-        {objPromotionalOffers.map((promotionalOffer) => (
-          <StyledPromotionalOfferCard
-            key={promotionalOffer.name}
-            {...promotionalOffer}
-            fullWidth
-          />
+      <Tabs value={index} onChange={(_, i) => navToURL(i)}>
+        {tabs.map((tab) => (
+          <Tab key={tab.title} label={tab.title} />
         ))}
-        {shouldDisplayBillingNotice && <BillingNotice />}
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <BucketLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={1}>
-              <AccessKeyLanding
-                isRestrictedUser={_isRestrictedUser}
-                accessDrawerOpen={createOrEditDrawer.isOpen}
-                openAccessDrawer={openDrawer}
-                closeAccessDrawer={createOrEditDrawer.close}
-                mode={mode}
-              />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
-        <CreateBucketDrawer
-          isOpen={isCreateBucketOpen}
-          onClose={() => history.replace('/object-storage/buckets')}
-        />
       </Tabs>
+      {objPromotionalOffers.map((promotionalOffer) => (
+        <StyledPromotionalOfferCard
+          key={promotionalOffer.name}
+          {...promotionalOffer}
+          fullWidth
+        />
+      ))}
+      {shouldDisplayBillingNotice && <BillingNotice />}
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <SafeTabPanel value={index} index={0}>
+          <BucketLanding />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={1}>
+          <AccessKeyLanding
+            isRestrictedUser={_isRestrictedUser}
+            accessDrawerOpen={createOrEditDrawer.isOpen}
+            openAccessDrawer={openDrawer}
+            closeAccessDrawer={createOrEditDrawer.close}
+            mode={mode}
+          />
+        </SafeTabPanel>
+      </React.Suspense>
+      <CreateBucketDrawer
+        isOpen={isCreateBucketOpen}
+        onClose={() => history.replace('/object-storage/buckets')}
+      />
     </React.Fragment>
   );
 };

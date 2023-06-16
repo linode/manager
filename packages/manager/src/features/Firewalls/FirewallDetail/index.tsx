@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NotFound from 'src/components/NotFound';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useProfile, useGrants } from 'src/queries/profile';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -18,6 +15,8 @@ import {
   useRouteMatch,
   useParams,
 } from 'react-router-dom';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 
 const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
 const FirewallRulesLanding = React.lazy(
@@ -93,6 +92,11 @@ export const FirewallDetail = () => {
     return firewall.label;
   };
 
+  const index = Math.max(
+    tabs.findIndex((tab) => matches(tab.routeName)),
+    0
+  );
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={firewall.label} />
@@ -110,32 +114,25 @@ export const FirewallDetail = () => {
           },
         }}
       />
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
-
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <FirewallRulesLanding
-              firewallID={firewallId}
-              rules={firewall.rules}
-              disabled={!userCanModifyFirewall}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <FirewallLinodesLanding
-              firewallID={firewallId}
-              firewallLabel={firewall.label}
-              disabled={!userCanModifyFirewall}
-            />
-          </SafeTabPanel>
-        </TabPanels>
+      <Tabs value={index} onChange={(_, i) => navToURL(i)}>
+        {tabs.map((tab) => (
+          <Tab key={tab.title} label={tab.title} />
+        ))}
       </Tabs>
+      <SafeTabPanel value={index} index={0}>
+        <FirewallRulesLanding
+          firewallID={firewallId}
+          rules={firewall.rules}
+          disabled={!userCanModifyFirewall}
+        />
+      </SafeTabPanel>
+      <SafeTabPanel value={index} index={1}>
+        <FirewallLinodesLanding
+          firewallID={firewallId}
+          firewallLabel={firewall.label}
+          disabled={!userCanModifyFirewall}
+        />
+      </SafeTabPanel>
     </React.Fragment>
   );
 };

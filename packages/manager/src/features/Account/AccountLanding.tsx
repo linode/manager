@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { matchPath, useHistory, useLocation } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import { useHistory, useLocation } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader, {
   LandingHeaderProps,
 } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useAccount } from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
 import AccountLogins from './AccountLogins';
+import Tabs from '@mui/material/Tabs';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import Tab from '@mui/material/Tab';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(
@@ -60,36 +59,12 @@ const AccountLanding = () => {
     },
   ];
 
-  const overrideWhitelist = [
-    '/account/billing/make-payment',
-    '/account/billing/add-payment-method',
-    '/account/billing/edit',
-  ];
-
-  const getDefaultTabIndex = () => {
-    const tabChoice = tabs.findIndex((tab) =>
-      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+  const getTabIndex = () => {
+    const index = tabs.findIndex((tab) =>
+      location.pathname.endsWith(tab.routeName)
     );
-
-    if (tabChoice < 0) {
-      // Prevent redirect from overriding the URL change for `/account/billing/make-payment`, `/account/billing/add-payment-method`,
-      // and `/account/billing/edit`
-      if (!overrideWhitelist.includes(location.pathname)) {
-        history.push('/account/billing');
-      }
-
-      // Redirect to the landing page if the path does not exist
-      return 0;
-    } else {
-      return tabChoice;
-    }
+    return index === -1 ? 0 : index;
   };
-
-  const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
-  let idx = 0;
 
   const isBillingTabSelected = location.pathname.match(/billing/);
 
@@ -112,37 +87,37 @@ const AccountLanding = () => {
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
   }
 
+  const index = getTabIndex();
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
-
-      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
-
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={idx}>
-              <Billing />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <Users />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <AccountLogins />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <EntityTransfersLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <MaintenanceLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <GlobalSettings />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
+      <Tabs value={index} onChange={(_, i) => history.push(tabs[i].routeName)}>
+        {tabs.map((tab) => (
+          <Tab key={tab.title} label={tab.title} />
+        ))}
       </Tabs>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <SafeTabPanel value={index} index={0}>
+          <Billing />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={1}>
+          <Users />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={2}>
+          <AccountLogins />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={3}>
+          <EntityTransfersLanding />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={4}>
+          <MaintenanceLanding />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={5}>
+          <GlobalSettings />
+        </SafeTabPanel>
+      </React.Suspense>
     </React.Fragment>
   );
 };

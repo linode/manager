@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Tab } from 'src/components/core/ReachTab';
-import { TabList } from 'src/components/core/ReachTabList';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 import LandingHeader from 'src/components/LandingHeader';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 
 const tabs = ['open', 'closed'];
 
@@ -61,6 +59,8 @@ const SupportTicketsLanding = () => {
 
   const tabIndex = tabs.indexOf(parsedParams.type);
 
+  const index = tabIndex === -1 ? 0 : tabIndex;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Support Tickets" />
@@ -73,24 +73,20 @@ const SupportTicketsLanding = () => {
         buttonDataAttrs={{ 'data-qa-open-ticket-link': true }}
       />
       <Tabs
-        index={tabIndex === -1 ? 0 : tabIndex}
-        onChange={(index) => {
-          history.push(`/support/tickets?type=${tabs[index]}`);
+        value={index}
+        onChange={(_, i) => {
+          history.push(`/support/tickets?type=${tabs[i]}`);
         }}
       >
-        <TabList>
-          <Tab data-qa-tab="Open Tickets">Open Tickets</Tab>
-          <Tab data-qa-tab="Closed Tickets">Closed Tickets</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <TicketList filterStatus="open" />
-          </TabPanel>
-          <TabPanel>
-            <TicketList filterStatus="closed" />
-          </TabPanel>
-        </TabPanels>
+        <Tab data-qa-tab="Open Tickets" label="Open Tickets" />
+        <Tab data-qa-tab="Closed Tickets" label="Closed Tickets" />
       </Tabs>
+      <SafeTabPanel value={index} index={0}>
+        <TicketList filterStatus="open" />
+      </SafeTabPanel>
+      <SafeTabPanel value={index} index={1}>
+        <TicketList filterStatus="closed" />
+      </SafeTabPanel>
       <SupportTicketDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}

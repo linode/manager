@@ -11,12 +11,9 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import LandingHeader from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
@@ -24,6 +21,8 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import SubscriptionDialog from './SubscriptionDialog';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
@@ -123,6 +122,11 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
     props.history.push('/longview/plan-details');
   };
 
+  const index = Math.max(
+    tabs.findIndex((tab) => matches(tab.routeName)),
+    0
+  );
+
   return (
     <>
       <LandingHeader
@@ -135,34 +139,27 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
         removeCrumbX={1}
       />
       <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
+        value={index}
+        onChange={(_, i) => navToURL(i)}
         style={{ marginTop: 0 }}
       >
-        <TabLinkList tabs={tabs} />
-
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <LongviewClients
-                activeSubscription={activeSubscriptionRequestHook.data}
-                handleAddClient={handleAddClient}
-                newClientLoading={newClientLoading}
-                {...props}
-              />
-            </SafeTabPanel>
-
-            <SafeTabPanel index={1}>
-              <LongviewPlans
-                subscriptionRequestHook={subscriptionsRequestHook}
-              />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
+        {tabs.map((t) => (
+          <Tab key={t.title} label={t.title} />
+        ))}
       </Tabs>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <SafeTabPanel value={index} index={0}>
+          <LongviewClients
+            activeSubscription={activeSubscriptionRequestHook.data}
+            handleAddClient={handleAddClient}
+            newClientLoading={newClientLoading}
+            {...props}
+          />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={1}>
+          <LongviewPlans subscriptionRequestHook={subscriptionsRequestHook} />
+        </SafeTabPanel>
+      </React.Suspense>
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
         isManaged={isManaged}

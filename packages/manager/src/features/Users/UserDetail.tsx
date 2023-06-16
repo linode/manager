@@ -9,12 +9,9 @@ import {
   useLocation,
   useParams,
 } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { queryKey } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -22,6 +19,8 @@ import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 import LandingHeader from 'src/components/LandingHeader';
 import { useQueryClient } from 'react-query';
+import Tabs from '@mui/material/Tabs';
+import { Tab } from '@mui/material';
 
 const UserDetail: React.FC = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
@@ -196,6 +195,11 @@ const UserDetail: React.FC = () => {
     );
   }
 
+  const index = Math.max(
+    tabs.findIndex((tab) => matches(tab.routeName)),
+    0
+  );
+
   return (
     <>
       <LandingHeader
@@ -208,49 +212,39 @@ const UserDetail: React.FC = () => {
           },
         }}
       />
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
-
-        {createdUsername && (
-          <Notice
-            success
-            text={`User ${createdUsername} created successfully`}
-          />
-        )}
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <UserProfile
-              username={username}
-              email={email}
-              changeUsername={onChangeUsername}
-              changeEmail={onChangeEmail}
-              saveAccount={onSaveAccount}
-              accountSaving={accountSaving}
-              accountSuccess={accountSuccess || false}
-              accountErrors={accountErrors}
-              saveProfile={onSaveProfile}
-              profileSaving={profileSaving}
-              profileSuccess={profileSuccess || false}
-              profileErrors={profileErrors}
-              originalUsername={originalUsername}
-              originalEmail={originalEmail}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <UserPermissions
-              currentUser={profile?.username}
-              username={username}
-              clearNewUser={clearNewUser}
-            />
-          </SafeTabPanel>
-        </TabPanels>
+      <Tabs value={index} onChange={(_, i) => navToURL(i)}>
+        {tabs.map((t) => (
+          <Tab key={t.title} label={t.title} />
+        ))}
       </Tabs>
+      {createdUsername && (
+        <Notice success text={`User ${createdUsername} created successfully`} />
+      )}
+      <SafeTabPanel value={index} index={0}>
+        <UserProfile
+          username={username}
+          email={email}
+          changeUsername={onChangeUsername}
+          changeEmail={onChangeEmail}
+          saveAccount={onSaveAccount}
+          accountSaving={accountSaving}
+          accountSuccess={accountSuccess || false}
+          accountErrors={accountErrors}
+          saveProfile={onSaveProfile}
+          profileSaving={profileSaving}
+          profileSuccess={profileSuccess || false}
+          profileErrors={profileErrors}
+          originalUsername={originalUsername}
+          originalEmail={originalEmail}
+        />
+      </SafeTabPanel>
+      <SafeTabPanel value={index} index={1}>
+        <UserPermissions
+          currentUser={profile?.username}
+          username={username}
+          clearNewUser={clearNewUser}
+        />
+      </SafeTabPanel>
     </>
   );
 };

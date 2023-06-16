@@ -5,8 +5,6 @@ import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -14,7 +12,6 @@ import NotFound from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import withLongviewClients, {
   DispatchProps,
   Props as LVProps,
@@ -36,6 +33,8 @@ import NetworkLanding from './DetailTabs/Network';
 import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 import LandingHeader from 'src/components/LandingHeader';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabList: {
@@ -204,6 +203,11 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   // Determining true tab count for indexing based on tab display
   const displayedTabs = tabs.filter((tab) => tab.display === true);
 
+  const index = Math.max(
+    tabs.findIndex((tab) => matches(tab.routeName)),
+    0
+  );
+
   return (
     <React.Fragment>
       <LandingHeader
@@ -226,108 +230,107 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
         />
       ))}
       <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
+        value={index}
+        onChange={(_, i) => navToURL(i)}
         className={classes.tabList}
       >
-        <TabLinkList tabs={tabs} />
-
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <Overview
-                client={client.label}
-                clientID={client.id}
-                clientAPIKey={client.api_key}
-                longviewClientData={longviewClientData}
-                timezone={timezone}
-                topProcessesData={topProcesses.data}
-                topProcessesLoading={topProcesses.loading}
-                topProcessesError={topProcesses.error}
-                listeningPortsData={listeningPorts.data}
-                listeningPortsError={listeningPorts.error}
-                listeningPortsLoading={listeningPorts.loading}
-                lastUpdatedError={lastUpdatedError}
-                lastUpdated={lastUpdated}
-              />
-            </SafeTabPanel>
-            <SafeTabPanel index={1}>
-              <ProcessesLanding
-                clientID={client.id}
-                clientAPIKey={client.api_key}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-                timezone={timezone}
-              />
-            </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <NetworkLanding
-                clientAPIKey={client.api_key}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-                timezone={timezone}
-              />
-            </SafeTabPanel>
-            <SafeTabPanel index={3}>
-              <Disks
-                clientID={client.id}
-                clientAPIKey={client.api_key}
-                lastUpdated={lastUpdated}
-                clientLastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-                timezone={timezone}
-              />
-            </SafeTabPanel>
-
-            {client && client.apps.apache && (
-              <SafeTabPanel index={4}>
-                <Apache
-                  timezone={timezone}
-                  clientAPIKey={clientAPIKey}
-                  lastUpdated={lastUpdated}
-                  lastUpdatedError={lastUpdatedError}
-                />
-              </SafeTabPanel>
-            )}
-
-            {client && client.apps.nginx && (
-              <SafeTabPanel index={client.apps.apache ? 5 : 4}>
-                <NGINX
-                  timezone={timezone}
-                  clientAPIKey={clientAPIKey}
-                  lastUpdated={lastUpdated}
-                  lastUpdatedError={lastUpdatedError}
-                />
-              </SafeTabPanel>
-            )}
-
-            {client && client.apps.mysql && (
-              <SafeTabPanel
-                index={
-                  4 + (client.apps.nginx ? 1 : 0) + (client.apps.apache ? 1 : 0)
-                }
-              >
-                <MySQLLanding
-                  timezone={timezone}
-                  clientAPIKey={clientAPIKey}
-                  lastUpdated={lastUpdated}
-                  lastUpdatedError={lastUpdatedError}
-                />
-              </SafeTabPanel>
-            )}
-
-            <SafeTabPanel index={Number(displayedTabs.length - 1)}>
-              <Installation
-                clientInstallationKey={client.install_code}
-                clientAPIKey={client.api_key}
-              />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
+        {tabs
+          .filter((t) => t.display)
+          .map((t) => (
+            <Tab key={t.title} label={t.title} />
+          ))}
       </Tabs>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <SafeTabPanel value={index} index={0}>
+          <Overview
+            client={client.label}
+            clientID={client.id}
+            clientAPIKey={client.api_key}
+            longviewClientData={longviewClientData}
+            timezone={timezone}
+            topProcessesData={topProcesses.data}
+            topProcessesLoading={topProcesses.loading}
+            topProcessesError={topProcesses.error}
+            listeningPortsData={listeningPorts.data}
+            listeningPortsError={listeningPorts.error}
+            listeningPortsLoading={listeningPorts.loading}
+            lastUpdatedError={lastUpdatedError}
+            lastUpdated={lastUpdated}
+          />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={1}>
+          <ProcessesLanding
+            clientID={client.id}
+            clientAPIKey={client.api_key}
+            lastUpdated={lastUpdated}
+            lastUpdatedError={lastUpdatedError}
+            timezone={timezone}
+          />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={2}>
+          <NetworkLanding
+            clientAPIKey={client.api_key}
+            lastUpdated={lastUpdated}
+            lastUpdatedError={lastUpdatedError}
+            timezone={timezone}
+          />
+        </SafeTabPanel>
+        <SafeTabPanel value={index} index={3}>
+          <Disks
+            clientID={client.id}
+            clientAPIKey={client.api_key}
+            lastUpdated={lastUpdated}
+            clientLastUpdated={lastUpdated}
+            lastUpdatedError={lastUpdatedError}
+            timezone={timezone}
+          />
+        </SafeTabPanel>
+
+        {client && client.apps.apache && (
+          <SafeTabPanel value={index} index={4}>
+            <Apache
+              timezone={timezone}
+              clientAPIKey={clientAPIKey}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+            />
+          </SafeTabPanel>
+        )}
+
+        {client && client.apps.nginx && (
+          <SafeTabPanel value={index} index={client.apps.apache ? 5 : 4}>
+            <NGINX
+              timezone={timezone}
+              clientAPIKey={clientAPIKey}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+            />
+          </SafeTabPanel>
+        )}
+
+        {client && client.apps.mysql && (
+          <SafeTabPanel
+            value={index}
+            index={
+              4 + (client.apps.nginx ? 1 : 0) + (client.apps.apache ? 1 : 0)
+            }
+          >
+            <MySQLLanding
+              timezone={timezone}
+              clientAPIKey={clientAPIKey}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+            />
+          </SafeTabPanel>
+        )}
+
+        <SafeTabPanel value={index} index={Number(displayedTabs.length - 1)}>
+          <Installation
+            clientInstallationKey={client.install_code}
+            clientAPIKey={client.api_key}
+          />
+        </SafeTabPanel>
+      </React.Suspense>
     </React.Fragment>
   );
 };

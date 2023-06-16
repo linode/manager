@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { matchPath, Redirect, useHistory, useLocation } from 'react-router-dom';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import ReachTabs from 'src/components/core/ReachTabs';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import { TabLinkList } from '../TabLinkList/TabLinkList';
+import Tabs from '@mui/material/Tabs';
+import { Tab } from '@mui/material';
 
 export interface NavTab {
   title: string;
@@ -53,35 +50,34 @@ export const NavTabs = React.memo((props: NavTabsProps) => {
   }
 
   return (
-    <ReachTabs
-      index={Math.max(tabMatch.idx, 0)}
-      onChange={_navToTabRouteOnChange ? navToURL : undefined}
-    >
-      <TabLinkList tabs={tabs} noLink />
+    <>
+      <Tabs
+        value={Math.max(tabMatch.idx, 0)}
+        onChange={(_, i) => (_navToTabRouteOnChange ? navToURL(i) : undefined)}
+        aria-label="basic tabs example"
+      >
+        {tabs.map((tab) => (
+          <Tab key={tab.title} label={tab.title} />
+        ))}
+      </Tabs>
       <React.Suspense fallback={<SuspenseLoader />}>
-        <TabPanels>
-          {tabs.map((thisTab, i) => {
-            if (!thisTab.render && !thisTab.component) {
-              return null;
-            }
-
-            const _TabPanelComponent = thisTab.backgroundRendering
-              ? TabPanel
-              : SafeTabPanel;
-
-            return (
-              <_TabPanelComponent key={thisTab.routeName} index={i}>
-                {thisTab.component ? (
-                  <thisTab.component />
-                ) : thisTab.render ? (
-                  thisTab.render
-                ) : null}
-              </_TabPanelComponent>
-            );
-          })}
-        </TabPanels>
+        {tabs.map((thisTab, i) => {
+          if (!thisTab.render && !thisTab.component) {
+            return null;
+          }
+          if (i !== Math.max(tabMatch.idx, 0)) {
+            return null;
+          }
+          if (thisTab.component) {
+            return <thisTab.component key={`tab-body-${i}-${thisTab.title}`} />;
+          }
+          if (thisTab.render) {
+            return thisTab.render;
+          }
+          return null;
+        })}
       </React.Suspense>
-    </ReachTabs>
+    </>
   );
 });
 

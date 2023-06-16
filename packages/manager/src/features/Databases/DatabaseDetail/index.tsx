@@ -3,12 +3,9 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import {
   useDatabaseMutation,
@@ -17,6 +14,8 @@ import {
 } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LandingHeader from 'src/components/LandingHeader';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -114,6 +113,8 @@ export const DatabaseDetail = () => {
       });
   };
 
+  const index = getTabIndex();
+
   return (
     <>
       <DocumentTitleSegment segment={database.label} />
@@ -137,20 +138,20 @@ export const DatabaseDetail = () => {
           },
         }}
       />
-      <Tabs index={getTabIndex()} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <DatabaseSummary database={database} />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <DatabaseBackups />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <DatabaseSettings database={database} />
-          </SafeTabPanel>
-        </TabPanels>
+      <Tabs value={index} onChange={(_, i) => handleTabChange(i)}>
+        {tabs.map((t) => (
+          <Tab key={t.title} label={t.title} />
+        ))}
       </Tabs>
+      <SafeTabPanel value={index} index={0}>
+        <DatabaseSummary database={database} />
+      </SafeTabPanel>
+      <SafeTabPanel value={index} index={1}>
+        <DatabaseBackups />
+      </SafeTabPanel>
+      <SafeTabPanel value={index} index={2}>
+        <DatabaseSettings database={database} />
+      </SafeTabPanel>
     </>
   );
 };
