@@ -38,7 +38,8 @@ import {
 } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets, updateInPaginatedStore } from './base';
-import { EventWithStore } from 'src/events';
+import { Event } from '@linode/api-v4';
+import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'databases';
 
@@ -205,11 +206,8 @@ export const useRestoreFromBackupMutation = (
   );
 };
 
-export const databaseEventsHandler = (event: EventWithStore) => {
-  const {
-    event: { action, status, entity },
-    queryClient,
-  } = event;
+export const databaseEventsHandler: AppEventHandler = (event, queryClient) => {
+  const { action, status, entity } = event;
 
   switch (action) {
     case 'database_create':

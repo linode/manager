@@ -21,6 +21,7 @@ import type {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import { AppEventHandler } from 'src/App';
 
 const queryKey = `tickets`;
 
@@ -68,6 +69,6 @@ export const useSupportTicketCloseMutation = (id: number) => {
   });
 };
 
-export const supportTicketEventHandler = ({ queryClient }: EventWithStore) => {
+export const supportTicketEventHandler: AppEventHandler = (_, queryClient) => {
   queryClient.invalidateQueries([queryKey]);
 };

@@ -7,7 +7,12 @@ import {
   updatePersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
 import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { updateInPaginatedStore } from './base';
 import { queryKey } from './profile';
 import {
@@ -17,6 +22,7 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import { EventWithStore } from 'src/events';
+import { AppEventHandler } from 'src/App';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
@@ -93,6 +99,6 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
   });
 };
 
-export function tokenEventHandler({ queryClient }: EventWithStore) {
+export const tokenEventHandler: AppEventHandler = (_, queryClient) => {
   queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
-}
+};

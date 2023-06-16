@@ -24,6 +24,7 @@ import {
 } from '@linode/api-v4/lib/firewalls';
 import { itemInListCreationHandler, updateInPaginatedStore } from './base';
 import { EventWithStore } from 'src/events';
+import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'firewall';
 
@@ -170,7 +171,7 @@ const getAllFirewallsRequest = () =>
     getFirewalls(passedParams, passedFilter)
   )().then((data) => data.data);
 
-export const firewallEventsHandler = ({ queryClient }: EventWithStore) => {
+export const firewallEventsHandler: AppEventHandler = (_, queryClient) => {
   // We will over-fetch a little bit, bit this ensures Cloud firewalls are *always* up to date
   queryClient.invalidateQueries([queryKey]);
 };

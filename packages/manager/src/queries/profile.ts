@@ -33,6 +33,7 @@ import { Grants } from '../../../api-v4/lib';
 import { queryPresets } from './base';
 import { queryKey as accountQueryKey } from './account';
 import { EventWithStore } from 'src/events';
+import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'profile';
 
@@ -111,11 +112,7 @@ export const useCreateSSHKeyMutation = () => {
   return useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>(
     createSSHKey,
     {
-      onSuccess() {
-        queryClient.invalidateQueries([queryKey, 'ssh-keys']);
-        // also invalidate the /account/users data because that endpoint returns some SSH key data
-        queryClient.invalidateQueries([accountQueryKey, 'users']);
-      },
+      onSuccess: () => invalidateSSHKeyQueries(queryClient),
     }
   );
 };
@@ -145,14 +142,17 @@ export const useDeleteSSHKeyMutation = (id: number) => {
   });
 };
 
-export const sshKeyEventHandler = (event: EventWithStore) => {
-  // This event handler is a bit agressive and will over-fetch, but UX will
+const invalidateSSHKeyQueries = (queryClient: QueryClient) => {
+  // This event handler is a bit aggressive and will over-fetch, but UX will
   // be great because this will ensure Cloud has up to date data all the time.
 
-  event.queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+  queryClient.invalidateQueries([queryKey, 'ssh-keys']);
   // also invalidate the /account/users data because that endpoint returns some SSH key data
-  event.queryClient.invalidateQueries([accountQueryKey, 'users']);
+  queryClient.invalidateQueries([accountQueryKey, 'users']);
 };
+
+export const sshKeyEventHandler: AppEventHandler = (_, queryClient) =>
+  invalidateSSHKeyQueries(queryClient);
 
 export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
   useQuery<ResourcePage<TrustedDevice>, APIError[]>(

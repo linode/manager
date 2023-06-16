@@ -1,9 +1,9 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { Filter, Params } from '@linode/api-v4/src/types';
-import { EventWithStore } from 'src/events';
 import { getAll } from 'src/utilities/getAll';
 import { updateInPaginatedStore } from './base';
 import {
+  QueryClient,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -25,7 +25,9 @@ import {
   VolumeRequestPayload,
   createVolume,
   getLinodeVolumes,
+  Event,
 } from '@linode/api-v4';
+import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'volumes';
 
@@ -172,7 +174,7 @@ export const useAttachVolumeMutation = () => {
 export const useDetachVolumeMutation = () =>
   useMutation<{}, APIError[], { id: number }>(({ id }) => detachVolume(id));
 
-export const volumeEventsHandler = ({ event, queryClient }: EventWithStore) => {
+export const volumeEventsHandler: AppEventHandler = (event, queryClient) => {
   if (['finished', 'failed', 'notification'].includes(event.status)) {
     queryClient.invalidateQueries([queryKey]);
   }

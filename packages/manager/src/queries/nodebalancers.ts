@@ -32,6 +32,7 @@ import {
 } from '@linode/api-v4/lib/types';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
 import { EventWithStore } from 'src/events';
+import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'nodebalancers';
 
@@ -195,10 +196,10 @@ export const useInfiniteNodebalancersQuery = (filter: Filter) =>
     }
   );
 
-export const nodebalanacerEventHandler = ({
+export const nodebalanacerEventHandler: AppEventHandler = (
   event,
-  queryClient,
-}: EventWithStore) => {
+  queryClient
+) => {
   if (event.action.startsWith('nodebalancer_config')) {
     queryClient.invalidateQueries([
       queryKey,

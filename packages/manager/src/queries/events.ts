@@ -175,7 +175,7 @@ type EventLocation = { pageIdx: number; eventIdx: number };
 const locateEvent = (
   eventsCache: InfiniteData<ResourcePage<Event>>,
   eventId: number
-): EventLocation | void => {
+): EventLocation | undefined => {
   for (let pageIdx = 0; pageIdx < eventsCache.pages.length; pageIdx++) {
     const page = eventsCache.pages[pageIdx];
     for (let eventIdx = 0; eventIdx < page.data.length; eventIdx++) {
@@ -184,6 +184,7 @@ const locateEvent = (
       }
     }
   }
+  return undefined;
 };
 
 const incompleteEvent = (event: Event) =>

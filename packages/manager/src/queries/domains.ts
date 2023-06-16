@@ -5,7 +5,12 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import {
   cloneDomain,
   createDomain,
@@ -23,6 +28,7 @@ import {
   DomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { EventWithStore } from 'src/events';
+import { AppEventHandler } from 'src/App';
 
 export const queryKey = 'domains';
 
@@ -112,8 +118,8 @@ export const useUpdateDomainMutation = () => {
   );
 };
 
-export const domainEventsHandler = ({ queryClient }: EventWithStore) => {
-  // Invalidation is agressive beacuse it will invalidate on every domain event, but
+export const domainEventsHandler: AppEventHandler = (_, queryClient) => {
+  // Invalidation is aggressive because it will invalidate on every domain event, but
   // it is worth it for the UX benefits. We can fine tune this later if we need to.
   queryClient.invalidateQueries([queryKey]);
 };
