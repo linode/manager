@@ -10,14 +10,22 @@ import { rotate360 } from '../../styles/keyframes';
 export type ButtonType = 'primary' | 'secondary' | 'outlined';
 
 export interface Props extends ButtonProps {
+  /** The button variant to render */
   buttonType?: ButtonType;
+  /** Additional css class to pass to the component */
   className?: string;
+  /** The `sx` prop can be either object or function */
   sx?: SxProps;
+  /** Reduce the padding on the x-axis */
   compactX?: boolean;
+  /** Reduce the padding on the y-axis */
   compactY?: boolean;
+  /** Show a loading indicator */
   loading?: boolean;
+  /** Tooltip text */
   tooltipText?: string;
-  tooltipGAEvent?: () => void;
+  /** Tooltip analytics event */
+  tooltipAnalyticsEvent?: () => void;
 }
 
 const StyledButton = styled(_Button, {
@@ -73,7 +81,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
       loading,
       sx,
       tooltipText,
-      tooltipGAEvent,
+      tooltipAnalyticsEvent,
       ...rest
     }: Props,
     ref
@@ -112,7 +120,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
           <TooltipIcon
             sxTooltipIcon={sxTooltipIcon}
             text={tooltipText}
-            tooltipGAEvent={tooltipGAEvent}
+            tooltipAnalyticsEvent={tooltipAnalyticsEvent}
             status="help"
           />
         )}
