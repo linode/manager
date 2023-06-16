@@ -1,10 +1,6 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import withLinodes, {
-  Props as LinodeProps,
-} from 'src/containers/withLinodes.container';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Props {
   linodeId: number;
@@ -14,22 +10,10 @@ interface Props {
   errorText?: string;
 }
 
-interface WithLinodesProps
-  extends Pick<LinodeProps, 'linodesLoading' | 'linodesError'> {
-  linode?: Linode;
-}
+export const IPSelect = (props: Props) => {
+  const { linodeId, value, handleChange, customizeOptions } = props;
 
-type CombinedProps = Props & WithLinodesProps;
-
-const IPSelect: React.FC<CombinedProps> = (props) => {
-  const {
-    linode,
-    value,
-    handleChange,
-    linodesLoading,
-    linodesError,
-    customizeOptions,
-  } = props;
+  const { data: linode, isLoading, error } = useLinodeQuery(linodeId);
 
   const ips: string[] = [];
 
@@ -55,7 +39,7 @@ const IPSelect: React.FC<CombinedProps> = (props) => {
 
   if (props.errorText) {
     errorText = props.errorText;
-  } else if (linodesError) {
+  } else if (error) {
     errorText =
       'There was an error retrieving this Linode\u{2019}s IP addresses.';
   }
@@ -65,25 +49,11 @@ const IPSelect: React.FC<CombinedProps> = (props) => {
       value={options.find((option) => option.value === value.value)}
       label="IP Address"
       options={options}
-      isLoading={linodesLoading}
-      onChange={(selected: Item<string>) => handleChange(selected.value)}
+      isLoading={isLoading}
+      onChange={(selected) => handleChange(selected.value)}
       errorText={errorText}
       isClearable={false}
       placeholder="Select an IP Address..."
     />
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(
-  withLinodes<WithLinodesProps, Props>(
-    (ownProps, linodesData, linodesLoading, linodesError) => ({
-      ...ownProps,
-      // Find the Linode in Redux that corresponds with the given ID.
-      linode: linodesData.find((linode) => linode.id === ownProps.linodeId),
-      linodesLoading,
-      linodesError,
-    })
-  )
-);
-
-export default enhanced(IPSelect);
