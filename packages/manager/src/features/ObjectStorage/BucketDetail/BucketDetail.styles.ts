@@ -1,6 +1,6 @@
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
-import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { styled } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';
 
@@ -16,7 +16,7 @@ export const StyledSizeColumn = styled(TableCell, {
   width: '10%',
 }));
 
-export const StyledTryAgainButton = styled(LinkStyledButton, {
+export const StyledTryAgainButton = styled(StyledLinkButton, {
   label: 'StyledTryAgain',
 })(() => ({
   width: '10%',
