@@ -14,10 +14,11 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
 
   // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
   if ((window as any)._satellite) {
+    // Just don't allow pipes in strings for Adobe Analytics processing.
     (window as any)._satellite.track('custom event', {
-      category: eventPayload.category,
-      action: eventPayload.action,
-      label: eventPayload.label,
+      category: eventPayload.category.replace('|', ''),
+      action: eventPayload.action.replace('|', ''),
+      label: eventPayload.label?.replace('|', ''),
       value: eventPayload.value,
     });
   }
