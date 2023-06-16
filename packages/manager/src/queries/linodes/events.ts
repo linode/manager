@@ -9,7 +9,10 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
 export const diskEventHandler = ({ event, queryClient }: EventWithStore) => {
   const linodeId = event.entity?.id;
 
-  if (!linodeId) {
+  if (
+    !linodeId ||
+    !['finished', 'failed', 'notification'].includes(event.status)
+  ) {
     return;
   }
 
