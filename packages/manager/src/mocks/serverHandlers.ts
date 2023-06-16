@@ -383,6 +383,7 @@ export const handlers = [
       })
   ),
   rest.get('*/linode/instances', async (req, res, ctx) => {
+    linodeFactory.resetSequenceNumber();
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -764,7 +765,7 @@ export const handlers = [
       headers.status === 'completed'
         ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-            ...accountMaintenanceFactory.buildList(2, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
             ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
           ];
 
@@ -1246,6 +1247,7 @@ export const mockDataHandlers: Record<
 > = {
   linode: (count) =>
     rest.get('*/linode/instances', async (req, res, ctx) => {
+      linodeFactory.resetSequenceNumber();
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     }),
