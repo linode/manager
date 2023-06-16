@@ -1,5 +1,5 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
-import { Doc } from './features/OneClickApps/FakeSpec';
+import { Doc } from './features/OneClickApps/oneClickApps';
 // These flags should correspond with active features flags in LD
 
 export interface TaxDetail {
