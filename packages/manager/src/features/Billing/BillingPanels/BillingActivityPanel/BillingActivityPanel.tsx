@@ -203,23 +203,22 @@ export const BillingActivityPanel = (props: Props) => {
     setSelectedTransactionDate,
   ] = React.useState<DateRange>(defaultDateRange);
 
+  const endDate =
+    selectedTransactionDate !== 'All Time'
+      ? getCutoffFromDateRange(selectedTransactionDate)
+      : undefined;
+
   const {
     data: payments,
     isLoading: accountPaymentsLoading,
     error: accountPaymentsError,
-  } = useAllAccountPayments(
-    {},
-    makeFilter(getCutoffFromDateRange(selectedTransactionDate))
-  );
+  } = useAllAccountPayments({}, makeFilter(endDate));
 
   const {
     data: invoices,
     isLoading: accountInvoicesLoading,
     error: accountInvoicesError,
-  } = useAllAccountInvoices(
-    {},
-    makeFilter(getCutoffFromDateRange(selectedTransactionDate))
-  );
+  } = useAllAccountInvoices({}, makeFilter(endDate));
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
