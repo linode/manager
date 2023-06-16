@@ -71,7 +71,7 @@ const BaseApp = withFeatureFlagProvider(
     const keyboardListener = React.useCallback(
       (event: KeyboardEvent) => {
         const isOSMac = navigator.userAgent.includes('Mac');
-        const letterForThemeShortcut = 'D';
+        const letterForThemeShortcut = 'L';
         const letterForGoToOpen = 'K';
         const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
         if (event[modifierKey] && event.shiftKey) {
@@ -84,6 +84,9 @@ const BaseApp = withFeatureFlagProvider(
               break;
             case letterForGoToOpen:
               setGoToOpen(!goToOpen);
+              break;
+            default:
+              console.log(event.key);
               break;
           }
         }
