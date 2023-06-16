@@ -225,6 +225,10 @@ describe('Migrate Linode With Firewall', () => {
         .should('be.visible')
         .click();
 
+      cy.get('[data-testid="textfield-input"]:last')
+        .should('be.visible')
+        .click();
+
       cy.findByText(linode.label).should('be.visible');
 
       getClick('[data-qa-submit="true"]');
@@ -284,6 +288,10 @@ describe('Migrate Linode With Firewall', () => {
 
       cy.get('[data-qa-autocomplete-popper]')
         .findByText(linode.label)
+        .should('be.visible')
+        .click();
+
+      cy.get('[data-testid="textfield-input"]:last')
         .should('be.visible')
         .click();
 

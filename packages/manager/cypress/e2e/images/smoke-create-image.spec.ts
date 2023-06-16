@@ -70,7 +70,9 @@ describe('create image', () => {
 
       cy.wait('@getImages');
       cy.findByText('Create Image').click();
-      cy.findByText('Select a Linode').click().type(`${linode.label}{enter}`);
+      cy.get('input[placeholder="Select a Linode"]').click();
+      cy.findByText(linode.label).click();
+      cy.get('input[placeholder="Select a Linode"]').click();
       cy.wait('@getDisks');
       cy.contains('Select a Disk').click().type(`${diskLabel}{enter}`);
       cy.findAllByLabelText('Label', { exact: false }).type(
