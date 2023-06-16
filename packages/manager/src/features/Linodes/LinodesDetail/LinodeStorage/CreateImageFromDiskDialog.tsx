@@ -36,10 +36,10 @@ export const CreateImageFromDiskDialog = (props: Props) => {
     await createImage({
       diskID: disk?.id ?? -1,
     });
-
     enqueueSnackbar('Image scheduled for creation.', {
       variant: 'info',
     });
+    onClose();
   };
 
   const ticketDescription = error
