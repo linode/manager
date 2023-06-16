@@ -526,7 +526,7 @@ const NodeBalancerCreate = () => {
         buttonType="outlined"
         onClick={addNodeBalancer}
         disabled={disabled}
-        sx={matchesSmDown ? { marginLeft: '16px' } : null}
+        sx={matchesSmDown ? { marginLeft: theme.spacing(2) } : null}
       >
         Add another Configuration
       </Button>
@@ -560,7 +560,7 @@ const NodeBalancerCreate = () => {
           onClick={onCreate}
           loading={isLoading}
           data-qa-deploy-nodebalancer
-          sx={matchesSmDown ? { marginRight: '8px' } : null}
+          sx={matchesSmDown ? { marginRight: theme.spacing(1) } : null}
         >
           Create NodeBalancer
         </Button>
