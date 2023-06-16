@@ -39,7 +39,7 @@ import {
   useAllAccountInvoices,
   useAllAccountPayments,
 } from 'src/queries/accountBilling';
-import { isAfter, parseAPIDate } from 'src/utilities/date';
+import { parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
@@ -317,23 +317,12 @@ export const BillingActivityPanel = (props: Props) => {
     [invoices, payments]
   );
 
-  // Filter on transaction type and transaction date.
+  // Filter on transaction type
   const filteredData = React.useMemo(() => {
-    return combinedData.filter((thisBillingItem) => {
-      const matchesType =
-        selectedTransactionType !== 'all'
-          ? thisBillingItem.type === selectedTransactionType
-          : true;
-
-      const dateCutoff = getCutoffFromDateRange(selectedTransactionDate);
-
-      const matchesDate = dateCutoff
-        ? isAfter(thisBillingItem.date, dateCutoff)
-        : true;
-
-      return matchesType && matchesDate;
-    });
-  }, [selectedTransactionType, selectedTransactionDate, combinedData]);
+    return combinedData.filter(
+      (thisBillingItem) => thisBillingItem.type === selectedTransactionType
+    );
+  }, [selectedTransactionType, combinedData]);
 
   return (
     <Grid xs={12}>
@@ -399,7 +388,11 @@ export const BillingActivityPanel = (props: Props) => {
             </div>
           </div>
         </div>
-        <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
+        <OrderBy
+          data={selectedTransactionType === 'all' ? combinedData : filteredData}
+          orderBy={'date'}
+          order={'desc'}
+        >
           {React.useCallback(
             ({ data: orderedData }) => (
               <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
