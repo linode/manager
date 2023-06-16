@@ -25,7 +25,7 @@ interface ImageItem extends Item<string> {
   isCloudInitCompatible: boolean;
 }
 
-interface Props {
+interface ImageSelectProps {
   title: string;
   selectedImageID?: string;
   images: Image[];
@@ -124,7 +124,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
     }, []);
 };
 
-export const ImageSelect: React.FC<Props> = (props) => {
+export const ImageSelect = (props: ImageSelectProps) => {
   const {
     disabled,
     handleSelectImage,
@@ -207,10 +207,10 @@ export const ImageSelect: React.FC<Props> = (props) => {
   );
 };
 
-const isMemo = (prevProps: Props, nextProps: Props) => {
+const isMemo = (prevProps: ImageSelectProps, nextProps: ImageSelectProps) => {
   return (
     equals(prevProps.images, nextProps.images) &&
-    arePropsEqual<Props>(
+    arePropsEqual<ImageSelectProps>(
       ['selectedImageID', 'error', 'disabled', 'handleSelectImage'],
       prevProps,
       nextProps
