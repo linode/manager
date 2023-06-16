@@ -1,3 +1,6 @@
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -103,6 +106,9 @@ const NodeBalancerCreate = () => {
 
   const disabled =
     Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
+
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const addNodeBalancer = () => {
     if (disabled) {
@@ -520,6 +526,7 @@ const NodeBalancerCreate = () => {
         buttonType="outlined"
         onClick={addNodeBalancer}
         disabled={disabled}
+        sx={matchesSmDown ? { marginLeft: '16px' } : null}
       >
         Add another Configuration
       </Button>
@@ -553,6 +560,7 @@ const NodeBalancerCreate = () => {
           onClick={onCreate}
           loading={isLoading}
           data-qa-deploy-nodebalancer
+          sx={matchesSmDown ? { marginRight: '8px' } : null}
         >
           Create NodeBalancer
         </Button>
