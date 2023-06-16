@@ -2,10 +2,7 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import { compose } from 'ramda';
 import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
-import { IconButton } from 'src/components/IconButton';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import GridView from 'src/assets/icons/grid-view.svg';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import Tooltip from 'src/components/core/Tooltip';
@@ -13,6 +10,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
+import Box from 'src/components/core/Box';
 import {
   MIN_PAGE_SIZE,
   PaginationFooter,
@@ -27,51 +25,13 @@ import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { RenderLinodesProps } from './DisplayLinodes';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  tagGridRow: {
-    marginBottom: 20,
-  },
-  tagHeaderRow: {
-    backgroundColor: theme.bg.main,
-    height: 'auto',
-    '& td': {
-      // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: `calc(${theme.spacing(2)} + 4px) 0 2px`,
-      borderBottom: 'none',
-      borderTop: 'none',
-    },
-  },
-  groupContainer: {
-    [theme.breakpoints.up('md')]: {
-      '& $tagHeaderRow > td': {
-        padding: '10px 0 2px',
-        borderTop: 'none',
-      },
-    },
-  },
-  tagHeader: {
-    marginBottom: 2,
-    marginLeft: theme.spacing(),
-  },
-  paginationCell: {
-    padding: 0,
-  },
-  controlHeader: {
-    marginBottom: 28,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    backgroundColor: theme.bg.tableHeader,
-  },
-  toggleButton: {
-    color: '#d2d3d4',
-    padding: 10,
-    '&:focus': {
-      // Browser default until we get styling direction for focus states
-      outline: '1px dotted #999',
-    },
-  },
-}));
+import {
+  StyledControlHeader,
+  StyledGroupContainer,
+  StyledTagHeader,
+  StyledTagHeaderRow,
+  StyledToggleButton,
+} from './DisplayLinodes.styles';
 
 interface Props {
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
@@ -94,9 +54,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
 
-const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+export const DisplayGroupedLinodes = (props: CombinedProps) => {
   const {
     data,
     display,
@@ -136,21 +94,21 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
     return (
       <>
         <Grid xs={12} className={'px0'}>
-          <div className={classes.controlHeader}>
+          <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
             <div id="displayViewDescription" className="visually-hidden">
               Currently in {linodeViewPreference} view
             </div>
             <Tooltip placement="top" title="List view">
-              <IconButton
+              <StyledToggleButton
                 aria-label="Toggle display"
                 aria-describedby={'displayViewDescription'}
                 onClick={toggleLinodeView}
                 disableRipple
-                className={classes.toggleButton}
+                isActive={linodesAreGrouped}
                 size="large"
               >
-                <TableView />
-              </IconButton>
+                <GridView />
+              </StyledToggleButton>
             </Tooltip>
 
             <div id="groupByDescription" className="visually-hidden">
@@ -159,18 +117,18 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                 : 'group by tag is currently disabled'}
             </div>
             <Tooltip placement="top-end" title="Ungroup by tag">
-              <IconButton
+              <StyledToggleButton
                 aria-label={`Toggle group by tag`}
                 aria-describedby={'groupByDescription'}
                 onClick={toggleGroupLinodes}
                 disableRipple
-                className={classes.toggleButton}
+                isActive={linodesAreGrouped}
                 size="large"
               >
                 <GroupByTag />
-              </IconButton>
+              </StyledToggleButton>
             </Tooltip>
-          </div>
+          </StyledControlHeader>
         </Grid>
         {orderedGroupedLinodes.length === 0 ? (
           <Typography style={{ textAlign: 'center' }}>
@@ -179,20 +137,10 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
         ) : null}
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
-            <div
-              key={tag}
-              className={classes.tagGridRow}
-              data-qa-tag-header={tag}
-            >
+            <Box key={tag} sx={{ marginBottom: 2 }} data-qa-tag-header={tag}>
               <Grid container>
                 <Grid xs={12}>
-                  <Typography
-                    variant="h2"
-                    component="h3"
-                    className={classes.tagHeader}
-                  >
-                    {tag}
-                  </Typography>
+                  <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
                 </Grid>
               </Grid>
               <Paginate
@@ -247,7 +195,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                   );
                 }}
               </Paginate>
-            </div>
+            </Box>
           );
         })}
       </>
@@ -298,28 +246,16 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                     count,
                   };
                   return (
-                    <TableBody
-                      className={classes.groupContainer}
-                      data-qa-tag-header={tag}
-                    >
-                      <TableRow className={classes.tagHeaderRow}>
+                    <StyledGroupContainer data-qa-tag-header={tag}>
+                      <StyledTagHeaderRow>
                         <TableCell colSpan={7}>
-                          <Typography
-                            variant="h2"
-                            component="h3"
-                            className={classes.tagHeader}
-                          >
-                            {tag}
-                          </Typography>
+                          <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
                         </TableCell>
-                      </TableRow>
+                      </StyledTagHeaderRow>
                       <Component {...finalProps} />
                       {count > MIN_PAGE_SIZE && (
                         <TableRow>
-                          <TableCell
-                            colSpan={7}
-                            className={classes.paginationCell}
-                          >
+                          <TableCell colSpan={7} sx={{ padding: 0 }}>
                             <PaginationFooter
                               count={count}
                               handlePageChange={handlePageChange}
@@ -333,7 +269,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                           </TableCell>
                         </TableRow>
                       )}
-                    </TableBody>
+                    </StyledGroupContainer>
                   );
                 }}
               </Paginate>
