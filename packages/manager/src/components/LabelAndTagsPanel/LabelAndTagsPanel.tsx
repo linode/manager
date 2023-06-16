@@ -19,7 +19,7 @@ export const LabelAndTagsPanel = (props: Props) => {
     <Paper
       data-qa-label-header
       sx={{
-        backgroundColor: 'red',
+        backgroundColor: theme.color.white,
         flexGrow: 1,
         marginTop: theme.spacing(3),
         width: '100%',
