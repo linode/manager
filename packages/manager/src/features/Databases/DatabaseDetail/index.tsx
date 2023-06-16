@@ -138,7 +138,7 @@ export const DatabaseDetail = () => {
           },
         }}
       />
-      <Tabs value={index} onChange={(_, i) => handleTabChange(i)}>
+      <Tabs value={index} onChange={(_, i) => handleTabChange(i)} data-tab-list>
         {tabs.map((t) => (
           <Tab key={t.title} label={t.title} />
         ))}

@@ -250,7 +250,7 @@ export class LinodeCreate extends React.PureComponent<
 
   handleTabChange = (index: number) => {
     this.props.resetCreationState();
-
+    this.props.history.push(this.tabs[index].routeName);
     /** set the tab in redux state */
     this.props.setTab(this.tabs[index].type);
 
@@ -578,6 +578,7 @@ export class LinodeCreate extends React.PureComponent<
           <Tabs
             value={selectedTab}
             onChange={(_, i) => this.handleTabChange(i)}
+            data-qa-tabs
           >
             {this.tabs.map((tab) => (
               <Tab key={tab.title} label={tab.title} />

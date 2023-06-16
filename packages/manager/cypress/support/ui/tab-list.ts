@@ -8,7 +8,7 @@ export const tabList = {
    * @returns Cypress chainable.
    */
   find: (): Cypress.Chainable => {
-    return cy.get('[data-reach-tab-list]');
+    return cy.get('[data-tab-list]');
   },
 
   /**
@@ -19,6 +19,6 @@ export const tabList = {
    * @returns Cypress chainable.
    */
   findTabByTitle: (tabTitle: string): Cypress.Chainable => {
-    return cy.get('[data-reach-tab-list]').findByText(tabTitle);
+    return cy.get('[data-tab-list]').findByText(tabTitle);
   },
 };

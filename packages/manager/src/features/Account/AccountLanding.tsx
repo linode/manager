@@ -93,7 +93,11 @@ const AccountLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
-      <Tabs value={index} onChange={(_, i) => history.push(tabs[i].routeName)}>
+      <Tabs
+        value={index}
+        onChange={(_, i) => history.push(tabs[i].routeName)}
+        data-qa-tabs
+      >
         {tabs.map((tab) => (
           <Tab key={tab.title} label={tab.title} />
         ))}

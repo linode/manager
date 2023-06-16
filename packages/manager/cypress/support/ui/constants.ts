@@ -56,7 +56,7 @@ export const pages = [
         name: 'Tab',
         go: () => {
           loadAppNoLogin(routes.createLinode);
-          cy.get('[data-reach-tab]').contains('Marketplace').click();
+          cy.get('[data-qa-tabs]').contains('Marketplace').click();
         },
       },
       {
@@ -272,7 +272,7 @@ export const pages = [
           loadAppNoLogin(`${routes.account}/billing`);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
-          cy.get('[data-reach-tab]').contains('Users').click();
+          cy.get('[data-qa-tabs]').contains('Users').click();
         },
       },
     ],

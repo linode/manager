@@ -114,7 +114,7 @@ export const FirewallDetail = () => {
           },
         }}
       />
-      <Tabs value={index} onChange={(_, i) => navToURL(i)}>
+      <Tabs value={index} onChange={(_, i) => navToURL(i)} data-tab-list>
         {tabs.map((tab) => (
           <Tab key={tab.title} label={tab.title} />
         ))}
