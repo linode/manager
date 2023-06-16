@@ -203,22 +203,20 @@ export const BillingActivityPanel = (props: Props) => {
     setSelectedTransactionDate,
   ] = React.useState<DateRange>(defaultDateRange);
 
-  const endDate =
-    selectedTransactionDate !== 'All Time'
-      ? getCutoffFromDateRange(selectedTransactionDate)
-      : undefined;
+  const endDate = getCutoffFromDateRange(selectedTransactionDate);
+  const filter = makeFilter(endDate);
 
   const {
     data: payments,
     isLoading: accountPaymentsLoading,
     error: accountPaymentsError,
-  } = useAllAccountPayments({}, makeFilter(endDate));
+  } = useAllAccountPayments({}, filter);
 
   const {
     data: invoices,
     isLoading: accountInvoicesLoading,
     error: accountInvoicesError,
-  } = useAllAccountInvoices({}, makeFilter(endDate));
+  } = useAllAccountInvoices({}, filter);
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
@@ -329,7 +327,9 @@ export const BillingActivityPanel = (props: Props) => {
 
       const dateCutoff = getCutoffFromDateRange(selectedTransactionDate);
 
-      const matchesDate = isAfter(thisBillingItem.date, dateCutoff);
+      const matchesDate = dateCutoff
+        ? isAfter(thisBillingItem.date, dateCutoff)
+        : true;
 
       return matchesType && matchesDate;
     });
@@ -608,7 +608,11 @@ export const paymentToActivityFeedItem = (
 export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
-): string => {
+): string | undefined => {
+  if (range === 'All Time') {
+    return undefined;
+  }
+
   const date = currentDatetime ? parseAPIDate(currentDatetime) : DateTime.utc();
 
   let outputDate: DateTime;
