@@ -30,7 +30,7 @@ import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { getQueryParam } from 'src/utilities/queryParams';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 import ResultGroup from './ResultGroup';
 import './searchLanding.css';
@@ -175,7 +175,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   let query = '';
   let queryError = false;
   try {
-    query = getQueryParam(props.location.search, 'query');
+    query = getQueryParamFromQueryString(props.location.search, 'query');
   } catch {
     queryError = true;
   }

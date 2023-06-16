@@ -28,7 +28,7 @@ interface Props
   status: TooltipIconStatus;
   leaveDelay?: boolean;
   tooltipPosition?: TooltipProps['placement'];
-  tooltipGAEvent?: () => void;
+  tooltipAnalyticsEvent?: () => void;
 }
 
 export const TooltipIcon = (props: Props) => {
@@ -42,14 +42,14 @@ export const TooltipIcon = (props: Props) => {
     interactive,
     status,
     leaveDelay,
-    tooltipGAEvent,
+    tooltipAnalyticsEvent,
     sx,
     sxTooltipIcon,
   } = props;
 
   const handleOpenTooltip = () => {
-    if (tooltipGAEvent) {
-      tooltipGAEvent();
+    if (tooltipAnalyticsEvent) {
+      tooltipAnalyticsEvent();
     }
   };
 

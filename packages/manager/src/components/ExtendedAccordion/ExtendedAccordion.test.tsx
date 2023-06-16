@@ -1,12 +1,11 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import { Provider } from 'react-redux';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Provider } from 'react-redux';
-import ExtendedAccordion from './ExtendedAccordion';
-import { storeFactory } from 'src/store';
+import { ExtendedAccordion } from 'src/components/ExtendedAccordion/ExtendedAccordion';
 import { queryClientFactory } from 'src/queries/base';
+import { storeFactory } from 'src/store';
 
 const store = storeFactory(queryClientFactory());
 
