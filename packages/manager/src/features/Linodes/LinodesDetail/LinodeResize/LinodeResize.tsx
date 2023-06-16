@@ -363,7 +363,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId ?? undefined}
             disabled={tableDisabled}
-            updateFor={[this.state.selectedId, currentTypes]}
           />
         </div>
         <Typography variant="h2" className={classes.resizeTitle}>

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
-import RenderGuard from 'src/components/RenderGuard';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
@@ -11,6 +10,8 @@ import {
 import { PlanContainer } from './PlanContainer';
 import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
+import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
+import type { Region } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -33,8 +34,10 @@ interface Props {
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
+  regionsData?: Region[];
   selectedDiskSize?: number;
   selectedID?: string;
+  selectedRegionID?: string;
   showTransfer?: boolean;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
@@ -51,14 +54,24 @@ export const PlansPanel = (props: Props) => {
     header,
     isCreate,
     linodeID,
+    onSelect,
+    regionsData,
     selectedID,
+    selectedRegionID,
     showTransfer,
     types,
   } = props;
 
   const { classes } = useSelectPlanPanelStyles();
-
   const plans = getPlanSelectionsByPlanType(types);
+  const {
+    hasSelectedRegion,
+    isPremiumPlanPanelDisabled,
+    isSelectedRegionPremium,
+  } = usePremiumPlansUtils({
+    selectedRegionID,
+    regionsData,
+  });
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     return {
@@ -67,19 +80,22 @@ export const PlansPanel = (props: Props) => {
           <>
             <PlanInformation
               disabledClasses={props.disabledClasses}
+              hasSelectedRegion={hasSelectedRegion}
+              isSelectedRegionPremium={isSelectedRegionPremium}
               planType={plan}
+              regionsData={regionsData || []}
             />
             <PlanContainer
-              isCreate={isCreate}
-              plans={plans[plan]}
-              showTransfer={showTransfer}
-              selectedDiskSize={props.selectedDiskSize}
               currentPlanHeading={currentPlanHeading}
+              disabled={disabled || isPremiumPlanPanelDisabled(plan)}
               disabledClasses={props.disabledClasses}
-              disabled={disabled}
-              selectedID={selectedID}
+              isCreate={isCreate}
               linodeID={linodeID}
-              onSelect={props.onSelect}
+              onSelect={onSelect}
+              plans={plans[plan]}
+              selectedDiskSize={props.selectedDiskSize}
+              selectedID={selectedID}
+              showTransfer={showTransfer}
             />
           </>
         );
@@ -109,4 +125,4 @@ export const PlansPanel = (props: Props) => {
   );
 };
 
-export default RenderGuard(PlansPanel);
+export default PlansPanel;

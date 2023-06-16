@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import { CreateNodePoolData } from '@linode/api-v4';
 import { ExtendedType } from 'src/utilities/extendType';
 import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
@@ -11,6 +9,8 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
 } from './utils';
+import type { CreateNodePoolData, Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
@@ -19,10 +19,14 @@ interface Props {
   disabled?: boolean;
   error?: string;
   getTypeCount: (planId: string) => number;
+  hasSelectedRegion: boolean;
   header?: string;
+  isPremiumPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
+  isSelectedRegionPremium: boolean;
   isSubmitting?: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
+  regionsData: Region[];
   resetValues: () => void;
   selectedID?: string;
   types: ExtendedType[];
@@ -33,8 +37,12 @@ export const KubernetesPlansPanel = ({
   copy,
   disabled,
   error,
+  hasSelectedRegion,
   header,
+  isPremiumPlanPanelDisabled,
+  isSelectedRegionPremium,
   onAdd,
+  regionsData,
   updatePlanCount,
   types,
   resetValues,
@@ -52,9 +60,14 @@ export const KubernetesPlansPanel = ({
       render: () => {
         return (
           <>
-            <PlanInformation planType={plan} />
+            <PlanInformation
+              planType={plan}
+              hasSelectedRegion={hasSelectedRegion}
+              isSelectedRegionPremium={isSelectedRegionPremium}
+              regionsData={regionsData}
+            />
             <KubernetesPlanContainer
-              disabled={disabled}
+              disabled={disabled || isPremiumPlanPanelDisabled(plan)}
               getTypeCount={getTypeCount}
               onAdd={onAdd}
               onSelect={onSelect}

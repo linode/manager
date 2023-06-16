@@ -97,12 +97,14 @@ export const PlanSelection = ({
           aria-label={rowAriaLabel}
           key={type.id}
           onClick={() =>
-            !isSamePlan && !isDisabledClass ? onSelect(type.id) : undefined
+            !isSamePlan && !disabled && !isDisabledClass
+              ? onSelect(type.id)
+              : undefined
           }
           aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
           className={classNames(classes.focusedRow, {
             [classes.disabledRow]:
-              isSamePlan || planTooSmall || isDisabledClass,
+              isSamePlan || planTooSmall || isDisabledClass || disabled,
           })}
         >
           <TableCell className={classes.radioCell}>
@@ -113,7 +115,11 @@ export const PlanSelection = ({
                 className={'label-visually-hidden'}
                 control={
                   <Radio
-                    checked={!planTooSmall && type.id === String(selectedID)}
+                    checked={
+                      !disabled &&
+                      !planTooSmall &&
+                      type.id === String(selectedID)
+                    }
                     onChange={() => onSelect(type.id)}
                     disabled={planTooSmall || disabled || isDisabledClass}
                     id={type.id}
