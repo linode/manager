@@ -352,7 +352,6 @@ export const MaintenanceWindow = (props: Props) => {
           loading={isSubmitting}
           type="submit"
           buttonType="primary"
-          compactX
         >
           Save Changes
         </Button>

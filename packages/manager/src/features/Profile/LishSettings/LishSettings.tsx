@@ -167,7 +167,6 @@ export const LishSettings = () => {
                 idx > 0 ? (
                   <Button
                     buttonType="outlined"
-                    compactX
                     data-qa-remove
                     onClick={onPublicKeyRemove(idx)}
                     sx={{ marginTop: theme.spacing() }}
@@ -182,7 +181,6 @@ export const LishSettings = () => {
             </Typography>
             <Button
               buttonType="outlined"
-              compactX
               onClick={addSSHPublicKeyField}
               sx={{ marginTop: theme.spacing() }}
             >
