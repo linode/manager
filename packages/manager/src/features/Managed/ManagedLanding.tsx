@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { NavTab } from 'src/components/NavTabs/NavTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
-import NavTabs from 'src/components/NavTabs';
+import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
 

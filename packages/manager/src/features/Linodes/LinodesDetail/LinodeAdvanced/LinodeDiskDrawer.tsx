@@ -18,7 +18,7 @@ import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'src/components/Link';
-import ModeSelect, { Mode } from 'src/components/ModeSelect';
+import { ModeSelect, Mode } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
@@ -26,7 +26,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendEvent } from 'src/utilities/ga';
+import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
 
@@ -113,11 +113,7 @@ const getTitle = (v: DrawerMode) => {
 };
 
 const handleLinkClick = (label: string) => {
-  sendEvent({
-    category: 'Disk Resize Flow',
-    action: `Click:link`,
-    label,
-  });
+  sendLinodeDiskEvent('Resize', 'Click:link', label);
 };
 
 export const DiskDrawer: React.FC<CombinedProps> = (props) => {
