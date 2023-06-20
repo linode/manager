@@ -5,7 +5,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { useTheme } from '@mui/material/styles';
 
-interface Props {
+interface LabelAndTagsProps {
   error?: string;
   labelFieldProps?: TextFieldProps;
   tagsInputProps?: TagsInputProps;
