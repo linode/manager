@@ -5,10 +5,11 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LineGraph, {
+import {
   DataSet,
-  Props as LineGraphProps,
-} from 'src/components/LineGraph';
+  LineGraph,
+  LineGraphProps,
+} from 'src/components/LineGraph/LineGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
