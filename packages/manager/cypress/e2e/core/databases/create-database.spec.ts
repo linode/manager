@@ -64,7 +64,7 @@ describe('create a database cluster, mocked data', () => {
           .type(`${configuration.engine} v${configuration.version} {enter}`);
         cy.contains('Select a Region')
           .click()
-          .type(`${configuration.region.name} {enter}`);
+          .type(`${configuration.region.label} {enter}`);
 
         // Database Linode type selection.
         if (configuration.linodeType.indexOf('-dedicated-') !== -1) {
@@ -93,7 +93,7 @@ describe('create a database cluster, mocked data', () => {
             cy.findByText(`${configuration.engine} v${configuration.version}`, {
               exact: false,
             }).should('be.visible');
-            cy.findByText(configuration.region.name, {
+            cy.findByText(configuration.region.label, {
               exact: false,
             }).should('be.visible');
           }

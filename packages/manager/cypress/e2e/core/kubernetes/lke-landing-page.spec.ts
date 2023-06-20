@@ -29,7 +29,7 @@ describe('LKE landing page', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText(getRegionById(cluster.region).name).should(
+          cy.findByText(getRegionById(cluster.region).label).should(
             'be.visible'
           );
           cy.findByText(cluster.k8s_version).should('be.visible');

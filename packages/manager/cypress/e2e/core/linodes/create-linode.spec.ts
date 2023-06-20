@@ -20,7 +20,7 @@ describe('create linode', () => {
     cy.get('[data-qa-deploy-linode]');
     cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    containsClick(selectRegionString).type(`${chooseRegion().name} {enter}`);
+    containsClick(selectRegionString).type(`${chooseRegion().label} {enter}`);
     fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
     getClick('#linode-label').clear().type(linodeLabel);
