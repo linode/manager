@@ -44,7 +44,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
         subType: 'Cluster',
         action: 'deletion',
         name: clusterLabel,
-        primaryBtnText: 'Delete',
+        primaryBtnText: 'Delete Cluster',
       }}
       open={open}
       onClose={onClose}

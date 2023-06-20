@@ -54,7 +54,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
         subType: 'Cluster',
         action: 'deletion',
         name: databaseLabel,
-        primaryBtnText: 'Delete',
+        primaryBtnText: 'Delete Cluster',
       }}
       open={open}
       onClose={onClose}
