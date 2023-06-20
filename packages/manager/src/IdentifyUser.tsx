@@ -1,7 +1,6 @@
-import md5 from 'md5';
 import * as React from 'react';
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
-import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
+import { useLDClient } from 'launchdarkly-react-client-sdk';
 import { configureErrorReportingUser } from './exceptionReporting';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 import { useAccount } from './queries/account';
@@ -58,17 +57,16 @@ export const IdentifyUser = () => {
         : account?.tax_id === ''
         ? 'Unknown'
         : account?.tax_id;
-
+      // console.log(client && userID && country && username && _taxID);
       if (client && userID && country && username && _taxID) {
         client
           .identify({
-            key: md5(String(userID)),
-            name: username,
+            kind: 'user',
+            anonymous: true,
             country,
             custom: {
               taxID: _taxID,
             },
-            privateAttributeNames: ['country', 'taxID'],
           })
           .then(() => setFeatureFlagsLoaded())
           /**
