@@ -6,7 +6,7 @@ import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 
 const useStyles = makeStyles(() => ({
   root: {

@@ -371,3 +371,9 @@ export interface LinodeDiskCreationData {
   stackscript_id?: number;
   stackscript_data?: any;
 }
+
+export interface ResizeLinodePayload {
+  type: string;
+  /** @default true */
+  allow_auto_disk_resize?: boolean;
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter, useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
+import { NavTabs, NavTab } from 'src/components/NavTabs/NavTabs';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 type CombinedProps = RouteComponentProps<{}>;

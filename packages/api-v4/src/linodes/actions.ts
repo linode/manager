@@ -7,6 +7,7 @@ import {
   LinodeCloneData,
   RebuildRequest,
   RescueRequestObject,
+  ResizeLinodePayload,
 } from './types';
 
 /**
@@ -81,20 +82,13 @@ export const linodeShutdown = (linodeId: number | string) =>
  * the Linode is resized? NOTE: Unless the user has 1 ext disk or 1 ext disk and
  * 1 swap disk, this flag does nothing, regardless of whether it's true or false
  */
-export const resizeLinode = (
-  linodeId: number,
-  type: string,
-  allow_auto_disk_resize: boolean = true
-) =>
+export const resizeLinode = (linodeId: number, data: ResizeLinodePayload) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/resize`
     ),
     setMethod('POST'),
-    setData({
-      type,
-      allow_auto_disk_resize,
-    })
+    setData(data)
   );
 
 /**

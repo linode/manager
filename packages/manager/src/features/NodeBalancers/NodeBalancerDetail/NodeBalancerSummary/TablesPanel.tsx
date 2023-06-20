@@ -3,7 +3,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LineGraph from 'src/components/LineGraph';
+import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 import PendingIcon from 'src/assets/icons/pending.svg';

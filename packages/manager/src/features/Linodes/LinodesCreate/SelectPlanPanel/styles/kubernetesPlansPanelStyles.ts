@@ -13,6 +13,7 @@ export const useSelectPlanQuantityStyles = makeStyles()((theme: Theme) => ({
   disabledRow: {
     backgroundColor: theme.bg.tableHeader,
     cursor: 'not-allowed',
+    opacity: 0.5,
   },
   headingCellContainer: {
     display: 'flex',

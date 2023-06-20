@@ -9,7 +9,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendEntityTransferCreateEvent } from 'src/utilities/ga';
+import { sendEntityTransferCreateEvent } from 'src/utilities/analytics';
 import { countByEntity } from '../utilities';
 import LinodeTransferTable from './LinodeTransferTable';
 import TransferCheckoutBar from './TransferCheckoutBar';

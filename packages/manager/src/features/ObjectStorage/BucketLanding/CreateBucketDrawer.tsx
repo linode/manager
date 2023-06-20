@@ -22,6 +22,7 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { sendCreateBucketEvent } from 'src/utilities/analytics';
 
 interface Props {
   isOpen: boolean;
@@ -67,6 +68,7 @@ export const CreateBucketDrawer = (props: Props) => {
     },
     async onSubmit(values) {
       await createBucket(values);
+      sendCreateBucketEvent(values.cluster);
       onClose();
     },
   });

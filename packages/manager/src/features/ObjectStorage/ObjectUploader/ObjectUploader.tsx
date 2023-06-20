@@ -4,7 +4,7 @@ import { debounce } from 'throttle-debounce';
 import { FileUpload } from './FileUpload';
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
+import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics';
 import { updateBucket } from 'src/queries/objectStorage';
 import { uploadObject } from '../requests';
 import { useDropzone, FileRejection } from 'react-dropzone';

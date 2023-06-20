@@ -1,4 +1,4 @@
-import isPast from './isPast';
+import { isPast } from './isPast';
 
 /** @see http://krl.io/510e5 */
 describe('isPastNow', () => {

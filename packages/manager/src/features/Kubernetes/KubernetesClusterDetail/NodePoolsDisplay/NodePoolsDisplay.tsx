@@ -20,6 +20,7 @@ import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import classNames from 'classnames';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
+import type { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -54,10 +55,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   clusterID: number;
   clusterLabel: string;
+  clusterRegionId: string;
+  regionsData: Region[];
 }
 
 export const NodePoolsDisplay = (props: Props) => {
-  const { clusterID, clusterLabel } = props;
+  const { clusterID, clusterLabel, clusterRegionId, regionsData } = props;
   const classes = useStyles();
 
   const {
@@ -198,6 +201,8 @@ export const NodePoolsDisplay = (props: Props) => {
             <AddNodePoolDrawer
               clusterId={clusterID}
               clusterLabel={clusterLabel}
+              clusterRegionId={clusterRegionId}
+              regionsData={regionsData}
               open={addDrawerOpen}
               onClose={() => setAddDrawerOpen(false)}
             />

@@ -17,14 +17,14 @@ import {
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendEvent } from 'src/utilities/ga';
+import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
-import LinodeResize from '../LinodeResize/LinodeResize';
+import { LinodeResize } from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
@@ -220,11 +220,7 @@ const LinodeDetailHeader = () => {
           },
         }}
         onDocsClick={() => {
-          sendEvent({
-            category: 'Linode Create Flow',
-            action: 'Click:link',
-            label: 'Getting Started',
-          });
+          sendLinodeCreateFlowDocsClickEvent('Getting Started');
         }}
       />
       <LinodeEntityDetail

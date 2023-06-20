@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import isPast from 'src/utilities/isPast';
+import { isPast } from 'src/utilities/isPast';
 
 export type Permission = [string, number];
 
