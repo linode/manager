@@ -4,7 +4,7 @@ import { Table } from 'src/components/Table';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { TableCell, TableCellProps } from 'src/components/TableCell';
 
-const StyledTable = styled(Table)(() => {
+const StyledTable = styled(Table, { label: 'StyledTable' })(() => {
   const theme = useTheme();
   return {
     borderLeft: `1px solid ${theme.borderColors.borderTable}`,

@@ -4,22 +4,24 @@ import { isPropValid } from 'src/utilities/isPropValid';
 import { TableRow, TableRowProps } from 'src/components/TableRow';
 import Typography from 'src/components/core/Typography';
 
-const StyledTypography = styled(Typography)(() => {
-  const theme = useTheme();
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
+  () => {
+    const theme = useTheme();
 
-  return {
-    fontSize: '0.9em',
-    '& a': {
-      color: theme.textColors.linkActiveLight,
-    },
-    '& a:hover': {
-      color: '#3683dc',
-    },
-    '& p': {
-      fontFamily: '"LatoWebBold", sans-serif',
-    },
-  };
-});
+    return {
+      fontSize: '0.9em',
+      '& a': {
+        color: theme.textColors.linkActiveLight,
+      },
+      '& a:hover': {
+        color: '#3683dc',
+      },
+      '& p': {
+        fontFamily: '"LatoWebBold", sans-serif',
+      },
+    };
+  }
+);
 
 export interface StyledDisabledTableRowProps extends TableRowProps {
   disabled?: boolean;
@@ -38,9 +40,6 @@ const StyledDisabledTableRow = styled(TableRow, {
     }),
     '&:focus-within': {
       backgroundColor: theme.bg.lightBlue1,
-    },
-    '&.emptyCell': {
-      borderRight: 'none',
     },
   };
 });

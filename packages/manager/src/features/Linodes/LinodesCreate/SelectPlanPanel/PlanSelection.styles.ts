@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/system';
 import { TableCell } from 'src/components/TableCell';
 
-const StyledChip = styled(Chip)(() => {
+const StyledChip = styled(Chip, { label: 'StyledChip' })(() => {
   const theme = useTheme();
   return {
     backgroundColor: theme.color.green,
@@ -13,7 +13,7 @@ const StyledChip = styled(Chip)(() => {
   };
 });
 
-const StyledRadioCell = styled(TableCell)(() => {
+const StyledRadioCell = styled(TableCell, { label: 'StyledRadioCell' })(() => {
   const theme = useTheme();
   return {
     height: theme.spacing(6),
