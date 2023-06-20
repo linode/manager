@@ -178,7 +178,7 @@ describe('Update database clusters', () => {
           cy.wait('@getDatabase');
 
           cy.get('[data-qa-cluster-config]').within(() => {
-            cy.findByText(configuration.region.name).should('be.visible');
+            cy.findByText(configuration.region.label).should('be.visible');
           });
 
           cy.get('[data-qa-connection-details]').within(() => {

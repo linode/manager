@@ -68,7 +68,7 @@ describe('LKE Create Cluster', () => {
     cy.findByLabelText('Region')
       .should('be.visible')
       .focus()
-      .type(`${chooseRegion().name}{enter}`);
+      .type(`${chooseRegion().label}{enter}`);
     cy.get('[id="kubernetes-version"]').type('{enter}');
     cy.findByText('Shared CPU').should('be.visible').click();
 

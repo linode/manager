@@ -50,7 +50,7 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
-  containsClick(region.name);
+  containsClick(region.label);
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
   cy.get('[id="root-password"]').type(randomString(32));
@@ -60,7 +60,7 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
   cy.wait('@mockLinodeResponse');
 
   fbtVisible(mockLinode.label);
-  fbtVisible(region.name);
+  fbtVisible(region.label);
   fbtVisible(mockLinode.id);
 };
 
