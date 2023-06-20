@@ -20,7 +20,7 @@ import Typography from 'src/components/core/Typography';
 import DocsLink from 'src/components/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
@@ -740,7 +740,6 @@ export class LinodeCreate extends React.PureComponent<
                 ? tagsInputProps
                 : undefined
             }
-            updateFor={[tags, label, errors]}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
