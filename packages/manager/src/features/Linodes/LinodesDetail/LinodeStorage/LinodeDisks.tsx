@@ -18,7 +18,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { LinodeDiskRow } from './LinodeDiskRow';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useParams } from 'react-router-dom';

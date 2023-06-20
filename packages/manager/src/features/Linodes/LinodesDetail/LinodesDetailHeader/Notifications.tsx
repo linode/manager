@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Notification } from '@linode/api-v4/lib/account';
-import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import { ProductNotification } from 'src/components/ProductNotification/ProductNotification';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';

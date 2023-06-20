@@ -43,7 +43,10 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { sendEvent } from 'src/utilities/ga';
+import {
+  sendApiAwarenessClickEvent,
+  sendLinodeCreateFlowDocsClickEvent,
+} from 'src/utilities/analytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
 import { AddonsPanel } from './AddonsPanel';
@@ -414,11 +417,7 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_id: this.props.selectedStackScriptID,
       stackscript_data: this.props.selectedUDFs,
     };
-    sendEvent({
-      category: 'Linode Create API CLI Awareness Modal',
-      action: 'Click:Button',
-      label: 'Create Using Command Line',
-    });
+    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
     this.props.checkValidation(payload);
   };
 
@@ -438,26 +437,27 @@ export class LinodeCreate extends React.PureComponent<
       regionsError,
       regionsData,
       regionDisplayInfo,
-      regionsLoading,
-      typesData,
-      typeDisplayInfo,
-      typesError,
-      typesLoading,
-      label,
-      updateLabel,
-      tags,
-      updateTags,
-      errors,
-      backupsMonthlyPrice,
-      userCannotCreateLinode,
       accountBackupsEnabled,
-      showGeneralError,
-      showAgreement,
-      showApiAwarenessModal,
+      backupsMonthlyPrice,
+      errors,
       handleAgreementChange,
       handleShowApiAwarenessModal,
+      label,
+      regionsLoading,
+      selectedRegionID,
+      showAgreement,
+      showApiAwarenessModal,
+      showGeneralError,
       signedAgreement,
+      tags,
+      typeDisplayInfo,
+      typesData,
+      typesError,
+      typesLoading,
+      updateLabel,
+      updateTags,
       updateUserData,
+      userCannotCreateLinode,
       ...rest
     } = this.props;
 
@@ -708,28 +708,20 @@ export class LinodeCreate extends React.PureComponent<
             error={hasErrorFor.type}
             types={this.filterTypes()}
             onSelect={this.props.updateTypeID}
+            selectedRegionID={selectedRegionID}
             selectedID={this.props.selectedTypeID}
             linodeID={this.props.selectedLinodeID}
-            updateFor={[
-              this.props.selectedTypeID,
-              this.props.disabledClasses,
-              this.props.createType,
-              errors,
-            ]}
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
             isCreate
+            regionsData={regionsData!}
             showTransfer
             docsLink={
               <DocsLink
                 href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
                 label="Choosing a Plan"
                 onClick={() => {
-                  sendEvent({
-                    category: 'Linode Create Flow',
-                    action: 'Click:link',
-                    label: 'Choosing a Plan',
-                  });
+                  sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
                 }}
               />
             }

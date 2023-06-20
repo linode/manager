@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
 import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './VolumesLandingEmptyStateData';
 
@@ -19,7 +19,7 @@ export const VolumesLandingEmptyState = () => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create Volume',
             });
@@ -31,7 +31,7 @@ export const VolumesLandingEmptyState = () => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={StyledVolumeIcon}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />
   );

@@ -5,8 +5,8 @@ import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import { sendEvent } from 'src/utilities/ga';
 import Box from 'src/components/core/Box';
+import { sendEvent } from 'src/utilities/analytics';
 
 interface Props {
   linodeStatus: string;

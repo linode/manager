@@ -13,7 +13,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { useSnackbar } from 'notistack';
 import { calculateDiskFree } from './CreateDiskDrawer';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';

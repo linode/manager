@@ -26,7 +26,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateVolumeEvent } from 'src/utilities/ga';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';
@@ -116,7 +116,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               filesystem_path,
               `Volume scheduled for creation.`
             );
-            // GA Event
+            // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {

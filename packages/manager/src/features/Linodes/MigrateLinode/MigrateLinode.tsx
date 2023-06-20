@@ -23,7 +23,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
+import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
