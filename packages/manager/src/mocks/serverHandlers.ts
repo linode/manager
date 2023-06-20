@@ -877,6 +877,8 @@ export const handlers = [
         label: 'Ticket name with special characters... (?)',
         id: 10,
       },
+      message: 'Ticket name with special characters... (?)',
+      percent_complete: 100,
     });
     return res.once(
       ctx.json(
