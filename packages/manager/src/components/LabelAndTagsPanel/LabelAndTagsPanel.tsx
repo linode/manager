@@ -11,7 +11,7 @@ interface LabelAndTagsProps {
   tagsInputProps?: TagsInputProps;
 }
 
-export const LabelAndTagsPanel = (props: Props) => {
+export const LabelAndTagsPanel = (props: LabelAndTagsProps) => {
   const theme = useTheme();
   const { error, labelFieldProps, tagsInputProps } = props;
 
