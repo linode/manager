@@ -13,9 +13,9 @@ export interface NodePoolPanelProps {
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
-  isPremiumPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
+  isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   hasSelectedRegion: boolean;
-  isSelectedRegionPremium: boolean;
+  isSelectedRegionEligible: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
 }
@@ -48,8 +48,8 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     apiError,
     types,
     hasSelectedRegion,
-    isSelectedRegionPremium,
-    isPremiumPlanPanelDisabled,
+    isSelectedRegionEligible,
+    isPlanPanelDisabled,
     regionsData,
   } = props;
 
@@ -90,10 +90,10 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
           }
           selectedID={selectedType}
           hasSelectedRegion={hasSelectedRegion}
-          isSelectedRegionPremium={isSelectedRegionPremium}
+          isSelectedRegionEligible={isSelectedRegionEligible}
           onSelect={(newType: string) => setSelectedType(newType)}
           error={apiError}
-          isPremiumPlanPanelDisabled={isPremiumPlanPanelDisabled}
+          isPlanPanelDisabled={isPlanPanelDisabled}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
           regionsData={regionsData}

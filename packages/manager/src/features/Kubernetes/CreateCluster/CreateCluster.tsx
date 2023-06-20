@@ -37,7 +37,7 @@ import KubeCheckoutBar from '../KubeCheckoutBar';
 import { NodePoolPanel } from './NodePoolPanel';
 import LandingHeader from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
+import { usePlansNotices } from 'src/hooks/usePlansNotices';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -237,9 +237,9 @@ export const CreateCluster = () => {
 
   const {
     hasSelectedRegion,
-    isPremiumPlanPanelDisabled,
-    isSelectedRegionPremium,
-  } = usePremiumPlansUtils({
+    isPlanPanelDisabled,
+    isSelectedRegionEligible,
+  } = usePlansNotices({
     selectedRegionID,
     regionsData,
   });
@@ -320,9 +320,9 @@ export const CreateCluster = () => {
                   : undefined
               }
               regionsData={regionsData}
-              isPremiumPlanPanelDisabled={isPremiumPlanPanelDisabled}
+              isPlanPanelDisabled={isPlanPanelDisabled}
               hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionPremium={isSelectedRegionPremium}
+              isSelectedRegionEligible={isSelectedRegionEligible}
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
             />
           </Box>

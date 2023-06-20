@@ -1,17 +1,16 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { GPUNotice } from './GPUNotice';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';
-import { PremiumPlansAvailabilityNotice } from '../PremiumPlansAvailabilityNotice';
+import { PlansAvailabilityNotice } from '../PlansAvailabilityNotice';
 import type { Region } from '@linode/api-v4';
 import { useTheme } from '@mui/material/styles';
 
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
   hasSelectedRegion: boolean;
-  isSelectedRegionPremium: boolean;
+  isSelectedRegionEligible: boolean;
   planType: LinodeTypeClass;
   regionsData?: Region[];
 }
@@ -21,7 +20,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
   const {
     disabledClasses,
     hasSelectedRegion,
-    isSelectedRegionPremium,
+    isSelectedRegionEligible,
     planType,
     regionsData,
   } = props;
@@ -33,9 +32,11 @@ export const PlanInformation = (props: PlanInformationProps) => {
   return (
     <>
       {planType === 'gpu' ? (
-        <GPUNotice
-          hasDisabledClass={getDisabledClass('gpu')}
-          dataTestId={'gpu-notice'}
+        <PlansAvailabilityNotice
+          isSelectedRegionEligible={isSelectedRegionEligible}
+          hasSelectedRegion={hasSelectedRegion}
+          regionsData={regionsData || []}
+          planType={planType}
         />
       ) : null}
       {planType === 'metal' ? (
@@ -45,10 +46,11 @@ export const PlanInformation = (props: PlanInformationProps) => {
         />
       ) : null}
       {planType === 'premium' ? (
-        <PremiumPlansAvailabilityNotice
-          isSelectedRegionPremium={isSelectedRegionPremium}
+        <PlansAvailabilityNotice
+          isSelectedRegionEligible={isSelectedRegionEligible}
           hasSelectedRegion={hasSelectedRegion}
           regionsData={regionsData || []}
+          planType={planType}
         />
       ) : null}
       <Typography

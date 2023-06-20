@@ -1,8 +1,8 @@
 import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { PremiumPlansAvailabilityNotice } from './PremiumPlansAvailabilityNotice';
+import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
 import { regionFactory } from 'src/factories/regions';
-import type { PremiumPlansAvailabilityNoticeProps } from './PremiumPlansAvailabilityNotice';
+import type { PlansAvailabilityNoticeProps } from './PlansAvailabilityNotice';
 import type { Region } from '@linode/api-v4';
 
 const mockedRegionData: Region[] = [
@@ -10,16 +10,17 @@ const mockedRegionData: Region[] = [
   ...regionFactory.buildList(1, { capabilities: ['Premium Plans'] }),
 ];
 
-describe('PremiumPlansAvailabilityNotice', () => {
-  it('renders an error premium notice when isSelectedRegionPremium is false and hasSelectedRegion is true', async () => {
-    const props: PremiumPlansAvailabilityNoticeProps = {
-      isSelectedRegionPremium: false,
+describe('PlansAvailabilityNotice', () => {
+  it('renders an error premium notice when isSelectedRegionEligible is false and hasSelectedRegion is true', async () => {
+    const props: PlansAvailabilityNoticeProps = {
+      isSelectedRegionEligible: false,
       hasSelectedRegion: true,
       regionsData: mockedRegionData,
+      planType: 'premium',
     };
 
     const { getByTestId } = renderWithTheme(
-      <PremiumPlansAvailabilityNotice {...props} />
+      <PlansAvailabilityNotice {...props} />
     );
 
     expect(getByTestId('premium-notice-error')).toBeInTheDocument();
@@ -33,14 +34,15 @@ describe('PremiumPlansAvailabilityNotice', () => {
   });
 
   it('renders an error premium notice when isSelectedRegionPremium is false and hasSelectedRegion is false', () => {
-    const props = {
-      isSelectedRegionPremium: false,
+    const props: PlansAvailabilityNoticeProps = {
+      isSelectedRegionEligible: false,
       hasSelectedRegion: false,
       regionsData: mockedRegionData,
+      planType: 'premium',
     };
 
     const { getByTestId } = renderWithTheme(
-      <PremiumPlansAvailabilityNotice {...props} />
+      <PlansAvailabilityNotice {...props} />
     );
 
     expect(getByTestId('premium-notice-warning')).toBeInTheDocument();
@@ -49,19 +51,20 @@ describe('PremiumPlansAvailabilityNotice', () => {
       'premium-notice-warning'
     );
     expect(getByTestId('premium-notice-warning')).toHaveTextContent(
-      'Premium Plans are currently available in'
+      'premium Plans are currently available in'
     );
   });
 
   it('renders no notice when isSelectedRegionPremium is true', () => {
-    const props = {
-      isSelectedRegionPremium: true,
+    const props: PlansAvailabilityNoticeProps = {
+      isSelectedRegionEligible: true,
       hasSelectedRegion: true,
       regionsData: mockedRegionData,
+      planType: 'premium',
     };
 
     const { queryByTestId } = renderWithTheme(
-      <PremiumPlansAvailabilityNotice {...props} />
+      <PlansAvailabilityNotice {...props} />
     );
 
     expect(queryByTestId(/premium-notice/)).not.toBeInTheDocument();
