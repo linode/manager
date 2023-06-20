@@ -4,7 +4,7 @@ import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Volume } from '@linode/api-v4/lib/volumes';
-import { displayType } from 'src/features/linodes/presentation';
+import { displayType } from 'src/features/Linodes/presentation';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
@@ -38,7 +38,7 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 export const formatLinode = (
   linode: Linode,
   types: ExtendedType[],
-  images: Record<string, Image>
+  imageLabel: string | null
 ): SearchableItem => ({
   label: linode.label,
   value: linode.id,
@@ -50,8 +50,7 @@ export const formatLinode = (
       linode.specs.memory,
       linode.specs.disk,
       linode.specs.vcpus,
-      linode.image,
-      images
+      imageLabel
     ),
     icon: 'linode',
     path: `/linodes/${linode.id}`,

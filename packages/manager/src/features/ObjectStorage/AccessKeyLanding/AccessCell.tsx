@@ -1,67 +1,63 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import * as React from 'react';
 import Check from 'src/assets/icons/monitor-ok.svg';
-import Radio from 'src/components/Radio';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles(() => ({
-  checkIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '& svg': {
-      height: 25,
-      width: 25,
-    },
-  },
-}));
+import { Radio } from 'src/components/Radio/Radio';
+import { styled } from '@mui/material/styles';
 
 interface RadioButton extends HTMLInputElement {
   name: string;
 }
 
 interface AccessCellProps {
-  disabled: boolean;
   active: boolean;
-  viewOnly: boolean;
+  disabled: boolean;
+  onChange: (e: React.SyntheticEvent<RadioButton>) => void;
   scope: string;
   scopeDisplay: string;
-  onChange: (e: React.SyntheticEvent<RadioButton>) => void;
+  viewOnly: boolean;
 }
 
-export const AccessCell: React.FC<AccessCellProps> = (props) => {
+export const AccessCell = React.memo((props: AccessCellProps) => {
   const { active, disabled, onChange, scope, scopeDisplay, viewOnly } = props;
-  const classes = useStyles();
 
   if (viewOnly) {
     if (!active) {
       return null;
     }
     return (
-      <span
-        className={classes.checkIcon}
+      <StyledCheckIcon
         aria-label={`This token has ${scope} access for ${scopeDisplay}`}
         data-testid={`perm-${scopeDisplay}`}
         tabIndex={0}
       >
         <Check />
-      </span>
+      </StyledCheckIcon>
     );
   }
 
   return (
     <Radio
-      name={scopeDisplay}
-      disabled={disabled}
       checked={active}
-      value={scope}
-      onChange={onChange}
       data-testid={`perm-${scopeDisplay}-radio`}
+      disabled={disabled}
       inputProps={{
         'aria-label': `${scope} for ${scopeDisplay}`,
       }}
+      name={scopeDisplay}
+      onChange={onChange}
+      value={scope}
     />
   );
-};
+});
 
-export default React.memo(AccessCell);
+const StyledCheckIcon = styled('span', {
+  label: 'StyledCheckIcon',
+})(() => ({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'center',
+  '& svg': {
+    height: 25,
+    width: 25,
+  },
+}));

@@ -7,7 +7,7 @@ import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -25,7 +25,7 @@ interface ImageItem extends Item<string> {
   isCloudInitCompatible: boolean;
 }
 
-interface Props {
+interface ImageSelectProps {
   title: string;
   selectedImageID?: string;
   images: Image[];
@@ -124,7 +124,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
     }, []);
 };
 
-export const ImageSelect: React.FC<Props> = (props) => {
+export const ImageSelect = (props: ImageSelectProps) => {
   const {
     disabled,
     handleSelectImage,
@@ -197,7 +197,7 @@ export const ImageSelect: React.FC<Props> = (props) => {
               options
             )}
             errorText={imageError}
-            components={{ Option: ImageOption, SingleValue }}
+            components={{ Option: ImageOption, SingleValue: _SingleValue }}
             {...reactSelectProps}
             className={classNames}
           />
@@ -207,10 +207,10 @@ export const ImageSelect: React.FC<Props> = (props) => {
   );
 };
 
-const isMemo = (prevProps: Props, nextProps: Props) => {
+const isMemo = (prevProps: ImageSelectProps, nextProps: ImageSelectProps) => {
   return (
     equals(prevProps.images, nextProps.images) &&
-    arePropsEqual<Props>(
+    arePropsEqual<ImageSelectProps>(
       ['selectedImageID', 'error', 'disabled', 'handleSelectImage'],
       prevProps,
       nextProps

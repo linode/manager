@@ -18,7 +18,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import LinodeSelect from 'src/features/Linodes/LinodeSelect';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -35,7 +35,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateVolumeEvent } from 'src/utilities/ga';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import ConfigSelect, {
@@ -212,7 +212,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               `Volume scheduled for creation.`
             );
             history.push('/volumes');
-            // GA Event
+            // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {

@@ -29,7 +29,10 @@ import {
  * @param volumeId { number } The ID of the volume to be retrieved.
  */
 export const getVolume = (volumeId: number) =>
-  Request<Volume>(setURL(`${API_ROOT}/volumes/${volumeId}`), setMethod('GET'));
+  Request<Volume>(
+    setURL(`${API_ROOT}/volumes/${encodeURIComponent(volumeId)}`),
+    setMethod('GET')
+  );
 
 /**
  * getVolumes
@@ -60,7 +63,7 @@ export const getVolumes = (params?: Params, filters?: Filter) =>
 
 export const attachVolume = (volumeId: number, payload: AttachVolumePayload) =>
   Request<Volume>(
-    setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
+    setURL(`${API_ROOT}/volumes/${encodeURIComponent(volumeId)}/attach`),
     setMethod('POST'),
     setData(payload)
   );
@@ -75,7 +78,7 @@ export const attachVolume = (volumeId: number, payload: AttachVolumePayload) =>
  */
 export const detachVolume = (volumeId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/volumes/${volumeId}/detach`),
+    setURL(`${API_ROOT}/volumes/${encodeURIComponent(volumeId)}/detach`),
     setMethod('POST')
   );
 
@@ -89,7 +92,10 @@ export const detachVolume = (volumeId: number) =>
  *
  */
 export const deleteVolume = (volumeId: number) =>
-  Request<{}>(setURL(`${API_ROOT}/volumes/${volumeId}`), setMethod('DELETE'));
+  Request<{}>(
+    setURL(`${API_ROOT}/volumes/${encodeURIComponent(volumeId)}`),
+    setMethod('DELETE')
+  );
 
 /**
  * cloneVolume
@@ -104,7 +110,7 @@ export const deleteVolume = (volumeId: number) =>
  */
 export const cloneVolume = (volumeId: number, data: CloneVolumePayload) =>
   Request<Volume>(
-    setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
+    setURL(`${API_ROOT}/volumes/${encodeURIComponent(volumeId)}/clone`),
     setMethod('POST'),
     setData(data, CloneVolumeSchema)
   );
@@ -120,7 +126,7 @@ export const cloneVolume = (volumeId: number, data: CloneVolumePayload) =>
  */
 export const resizeVolume = (volumeId: number, data: ResizeVolumePayload) =>
   Request<Volume>(
-    setURL(`${API_ROOT}/volumes/${volumeId}/resize`),
+    setURL(`${API_ROOT}/volumes/${encodeURIComponent(volumeId)}/resize`),
     setMethod('POST'),
 
     /**
@@ -146,7 +152,7 @@ export interface UpdateVolumeRequest {
  */
 export const updateVolume = (volumeId: number, data: UpdateVolumeRequest) =>
   Request<Volume>(
-    setURL(`${API_ROOT}/volumes/${volumeId}`),
+    setURL(`${API_ROOT}/volumes/${encodeURIComponent(volumeId)}`),
     setMethod('PUT'),
     setData(data, UpdateVolumeSchema)
   );

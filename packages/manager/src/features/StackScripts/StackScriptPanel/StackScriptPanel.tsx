@@ -3,8 +3,7 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import NavTabs from 'src/components/NavTabs';
-import { NavTab } from 'src/components/NavTabs/NavTabs';
+import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import RenderGuard from 'src/components/RenderGuard';
 import { useProfile } from 'src/queries/profile';
 import {

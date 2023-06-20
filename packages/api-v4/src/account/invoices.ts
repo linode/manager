@@ -27,7 +27,7 @@ export const getInvoices = (params?: Params, filter?: Filter) =>
  */
 export const getInvoice = (invoiceId: number) =>
   Request<Invoice>(
-    setURL(`${API_ROOT}/account/invoices/${invoiceId}`),
+    setURL(`${API_ROOT}/account/invoices/${encodeURIComponent(invoiceId)}`),
     setMethod('GET')
   );
 
@@ -46,7 +46,9 @@ export const getInvoiceItems = (
   filter?: Filter
 ) =>
   Request<ResourcePage<InvoiceItem>>(
-    setURL(`${API_ROOT}/account/invoices/${invoiceId}/items`),
+    setURL(
+      `${API_ROOT}/account/invoices/${encodeURIComponent(invoiceId)}/items`
+    ),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)

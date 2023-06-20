@@ -179,46 +179,6 @@ export const requestGenerator = <T>(...fns: Function[]): Promise<T> => {
     );
   }
   return baseRequest(config).then((response) => response.data);
-
-  /*
-   * If in the future, we want to hook into every single
-   * async action for the purpose of sending the request data
-   * to Google Tag Manager, we can uncomment out the following
-   * .then() and .catch() on return Axios(config)
-   */
-
-  // .then(response => {
-  //   /*
-  //    * This is sending an event to the Google Tag Manager
-  //    * data layer. This is important because it lets us track
-  //    * async actions as custom events
-  //    */
-  //   if ((window as any).dataLayer) {
-  //     (window as any).dataLayer = (window as any).dataLayer || [];
-  //     (window as any).dataLayer.push({
-  //       'event': 'asyncActionSuccess',
-  //       'url': response.config.url,
-  //       'method': response.config.method,
-  //     });
-  //   };
-  //   return response;
-  // })
-  // .catch(e => {
-  //   /*
-  //    * This is sending an event to the Google Tag Manager
-  //    * data layer. This is important because it lets us track
-  //    * async actions as custom events
-  //    */
-  //   if ((window as any).dataLayer) {
-  //     (window as any).dataLayer = (window as any).dataLayer || [];
-  //     (window as any).dataLayer.push({
-  //       'event': 'asyncActionFailure',
-  //       'url': e.response.config.url,
-  //       'method': e.response.config.method,
-  //     });
-  //   };
-  //   return Promise.reject(e);
-  // });
 };
 
 /**

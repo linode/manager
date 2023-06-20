@@ -3,7 +3,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
-import Radio from 'src/components/Radio';
+import { Radio } from 'src/components/Radio/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Select from 'src/components/EnhancedSelect';
 import TextField from 'src/components/TextField';

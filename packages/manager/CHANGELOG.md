@@ -4,19 +4,183 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-06-14] - v1.95.1
+
+### Fixed:
+- New Marketplace apps display and toggle ([#9259])
+
+## [2023-06-12] - v1.95.0
+
+### Added:
+
+- June 2023 Marketplace Release ([#9114])
+- Metadata beta updates ([#9222])
+- Kubernetes product information banner ([#9226])
+
+### Changed:
+
+- Improve failed Image creation and upload error messages ([#9184])
+
+### Fixed:
+
+- Tooltip console errors and top menu icon hover ([#9206])
+- Disable Marketplace app search until loading complete ([#9207])
+- Prevent rendering of purple content within Buttons without a buttonType prop ([#9209])
+- VLANs configuration not showing for restricted users ([#9214])
+- Linode Settings Disk I/O notification threshold value unable to be changed ([#9247])
+- Linode Details crashing for Linodes with no `type` ([#9249])
+
+### Tech Stories:
+
+- Move dismissibleButton to DismissibleBanner component ([#9142])
+- Resolve yaml dependabot alert for CVE-2023-2251 ([#9156])
+- Simplify SelectPlanPanel and SelectPlanQuantityPanel ([#9165])
+- React Query - Object Storage - Bucket SSL ([#9167])
+- React Query - Linode Migrate Dialog ([#9195])
+- React Query - Linode Configurations ([#9198])
+- Added REACT_APP_MAINTENANCE_MODE env var to explicitly enable maintenance mode ([#9171])
+- Update Storybook to 7.0.18 and add measure addon ([#9181])
+- Update to vite@4.3.9 for CVE-2023-34092 ([#9212])
+- MUI v5 - `Components > Tag` ([#9164])
+- MUI v5 Migration - `Components > ShowMore` ([#9169])
+- MUI v5 - `Components > PreferenceToggle` ([#9172])
+- MUI v5 - `Components > SelectRegionPanel` ([#9173])
+- MUI v5 - `Components > Linear Progress` ([#9177])
+- MUI v5 Migration - `Features > ObjectStorage` ([#9180])
+- MUI v5 Migration - `Components > TagCell, Tags, AddTag` ([#9186])
+- MUI v5 Migration - `Components > TabbedPanel, ReachTab, ReachTabList` ([#9191])
+- MUI v5 Migration - Features > Profile ([#9197])
+- MUI v5 Migration - `Components > PasswordInput` ([#9202])
+- MUI v5 - `Components > TableContentWrapper` ([#9208])
+- MUI v5 - `Components > ProductNotification` ([#9211])
+- MUI v5 Migration - `Components > TabLink` and `Components > TabLinkList` ([#9159])
+- MUI v5 Migration - `Components > EditableText` ([#9179])
+- MUI v5 Migration - `Components > EnhancedSelect` ([#9194])
+- Rename `features/linodes` to `features/Linodes` ([#9201])
+
+## [2023-05-30] - v1.94.0
+
+### Added:
+
+- Resource links to Object Storage empty state landing page #9098
+- Resource links to Images empty state landing page #9095
+
+### Fixed:
+
+- Required fields for Firewall rules drawer form #9127
+- Cloud Manager maintenance mode #9130
+- Error handling for loadScript and Adobe Analytics #9161
+
+### Removed:
+
+- Unifi Marketplace app #9145
+
+### Tech Stories:
+
+- Automate the changelog with changeset generation #9104
+- Upgrade Cypress to v12.11 #9038
+- React Query for Linode Details - General Details #9099
+- React Query Linode Details - Network Tab #9097
+- React Query for Linode Details Settings Tab #9121
+- React Query for Support Tickets - Ticket Details #9105
+- MUI v5 Migration - `Components > EditableEntityLabel` #9129
+- MUI v5 Migration - `Components > EnhancedNumberInput` #9152
+- MUI v5 Migration - `Components > EntityDetail` #9123
+- MUI v5 Migration - `Components > EntityHeader` #9109
+- MUI v5 Migration - `Components > EntityIcon` #9125
+- MUI v5 Migration - `Components > ErrorState` #9128
+- MUI v5 Migration - `Components > IconButton` #9102
+- MUI v5 Migration - `Components > Placeholder & Components > H1 Header` #9131
+- MUI v5 Migration - `Components > TransferDisplay` #9107
+- MUI v5 Migration - `Components > TypeToConfirm` & `Components > TypeToConfirmDialog` #9124
+- MUI v5 Migration - `Features > CancelLanding` #9113
+- MUI v5 Migration - `Features > NodeBalancers` #9139
+- MUI v5 Migration - `Features > NotificationCenter` #9162
+
+## [2023-05-22] - v1.93.3
+
+### Fixed:
+
+- LISH Console via SSH containing `none` as the username #9148
+- Ability to add a Linode to a Firewall when the Firewall contains a large number of Linodes #9151
+- Inability of restricted users with NodeBalancer creation permissions to add NodeBalancers #9150
+- Bucket Access unnecessarily refreshing #9140
+
+## [2023-05-22] - v1.93.2
+
+### Fixed:
+
+- Issue where linode "Reboot" button was disabled #9143
+
+## [2023-05-18] - v1.93.1
+
+### Fixed:
+
+- Initialize linode before referencing #9133
+- Revert linode landing changes #9136
+
+## [2023-05-15] - v1.93.0
+
+### Added:
+
+- Resource links to empty state Volumes landing page #9065
+- Resource links to empty state Firewalls landing page #9078
+- Resource links to empty state StackScripts landing page #9091
+- Resource links to empty state Domains landing page #9092
+- Ability download DNS zone file #9075
+- New flag to deliver DC availability notice for premium plans #9066
+- Accessible graph data for LineGraphs #9045
+
+### Changed:
+
+- Banner text size and spacing to improve readability #9064
+- Updated ClusterControl description #9081
+- Highlighted Marketplace apps and button card height on empty state Linodes landing page #9083
+
+### Fixed:
+
+- Ability to search Linodes by IPv6 #9073
+- Surface general errors in the Object Storage Bucket Create Drawer #9067
+- Large file size for invoices due to uncompressed JPG logo #9069
+- Phone Verification error does not reset #9059
+- Show error for PayPal payments #9058
+- Send Adobe Analytics page views #9108
+
+### Tech Stories:
+
+- MUI v5 Migration - `Components > CheckoutSummary` #9100
+- MUI v5 Migration - `Components > CopyableTextField` #9018
+- MUI v5 Migration - `Components > DialogTitle` #9050
+- MUI v5 Migration - `Components > DownloadCSV` #9084
+- MUI v5 Migration - `Components > Notice` #9094
+- MUI v5 Migration - `Components > PrimaryNav` #9090
+- MUI v5 Migration - `Components > ShowMoreExpansion` #9096
+- MUI v5 Migration - `Components > Table` #9082
+- MUI v5 Migration - `Components > TableBody` #9082
+- MUI v5 Migration - `Components > TableCell` #9082
+- MUI v5 Migration - `Components > TableHead` #9082
+- MUI v5 Migration - `Components > TableRow` #9082
+- MUI v5 Migration - `Components > TableSortCell` #9082
+- React Query - Linodes - Prepare for React Query for Linodes #9049
+- React Query - Linodes - Landing #9062
+- React Query - Linodes - Detail - Backups #9079
+- Add Adobe Analytics custom event tracking #9004
 
 ## [2023-05-01] - v1.92.0
 
 ### Added:
+
 - No Results section for Marketplace Search #8999
 - Private IP checkbox when cloning a Linode #9039
 - Metadata migrate warning #9033
 
 ### Changed:
+
 - Region Select will dynamically get country flags and group all countries based on API data #8996
 - Removed MongoDB Marketplace Apps #9071
 
 ### Fixed:
+
 - Kubernetes Delete Dialog clears when it is re-opened #9000
 - HTML showing up in event messages #9003
 - Inability to edit and save Linode Configurations #9053
@@ -27,6 +191,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Blank Kubernetes Node Pool plan selection #9009
 
 ### Tech Stories:
+
 - MUI v5 Migration - `Components > CircleProgress` #9028
 - MUI v5 Migration - `Components > StatusIcon` #9014
 - MUI v5 Migration - `Components > TagsInput, TagsPanel` #8995
@@ -61,27 +226,32 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-04-18] - v1.91.1
 
 ### Fixed:
+
 - Add Premium plans to LKE #9021
 
 ## [2023-04-17] - v1.91.0
 
 ### Added:
+
 - Cross Data Center Clone warning #8937
 - `Plan` column header to plan select table #8943
 
 ### Changed:
+
 - Use Akamai logo for TPA provider screen #8982
 - Use Akamai logo for the favicon #8988
 - Only fetch grants when the user is restricted #8941
 - Improve the StackScript user defined fields (UDF) forms #8973
 
 ### Fixed:
+
 - Styling of Linode Details Add Configurations modal header #8981
 - Alignment issues with Kubernetes Node Pool table and buttons #8967
 - Domain Records not updating when navigating #8957
 - Notification menu displaying empty menu on secondary status click #8902
 
 ### Tech Story:
+
 - React Query for NodeBalancers #8964
 - React Query for Profile - Trusted Devices #8942
 - React Query for OAuth Apps #8938

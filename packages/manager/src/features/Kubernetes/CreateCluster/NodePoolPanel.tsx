@@ -1,32 +1,32 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
+import { KubeNodePoolResponse, LinodeTypeClass, Region } from '@linode/api-v4';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import SelectPlanQuantityPanel from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
+import { KubernetesPlansPanel } from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/KubernetesPlansPanel';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 const DEFAULT_PLAN_COUNT = 3;
 
-interface Props {
+export interface NodePoolPanelProps {
   types: ExtendedType[];
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
+  isPremiumPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
+  hasSelectedRegion: boolean;
+  isSelectedRegionPremium: boolean;
+  regionsData: Region[];
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
 }
 
-type CombinedProps = Props;
-
-export const NodePoolPanel: React.FunctionComponent<CombinedProps> = (
+export const NodePoolPanel: React.FunctionComponent<NodePoolPanelProps> = (
   props
 ) => {
   return <RenderLoadingOrContent {...props} />;
 };
 
-const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (
+const RenderLoadingOrContent: React.FunctionComponent<NodePoolPanelProps> = (
   props
 ) => {
   const { typesError, typesLoading } = props;
@@ -42,8 +42,16 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (
   return <Panel {...props} />;
 };
 
-const Panel: React.FunctionComponent<CombinedProps> = (props) => {
-  const { addNodePool, apiError, types } = props;
+const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
+  const {
+    addNodePool,
+    apiError,
+    types,
+    hasSelectedRegion,
+    isSelectedRegionPremium,
+    isPremiumPlanPanelDisabled,
+    regionsData,
+  } = props;
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
     new Map()
@@ -73,7 +81,7 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
   return (
     <Grid container direction="column">
       <Grid>
-        <SelectPlanQuantityPanel
+        <KubernetesPlansPanel
           types={extendedTypes.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'
           )} // No Nanodes or GPUs in clusters
@@ -81,10 +89,14 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
           selectedID={selectedType}
+          hasSelectedRegion={hasSelectedRegion}
+          isSelectedRegionPremium={isSelectedRegionPremium}
           onSelect={(newType: string) => setSelectedType(newType)}
           error={apiError}
+          isPremiumPlanPanelDisabled={isPremiumPlanPanelDisabled}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
+          regionsData={regionsData}
           updatePlanCount={updatePlanCount}
           onAdd={submitForm}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
@@ -93,7 +105,3 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
     </Grid>
   );
 };
-
-const enhanced = compose<CombinedProps, Props & RenderGuardProps>(renderGuard);
-
-export default enhanced(NodePoolPanel);

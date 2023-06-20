@@ -8,15 +8,16 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { FileUploader } from 'src/components/FileUploader/FileUploader';
+import Link from 'src/components/Link';
+import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
+import { Notice } from 'src/components/Notice/Notice';
+import { Prompt } from 'src/components/Prompt/Prompt';
+import TextField from 'src/components/TextField';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import FileUploader from 'src/components/FileUploader/FileUploader';
-import Link from 'src/components/Link';
-import LinodeCLIModal from 'src/components/LinodeCLIModal';
-import { Notice } from 'src/components/Notice/Notice';
-import Prompt from 'src/components/Prompt';
-import TextField from 'src/components/TextField';
+import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import useFlags from 'src/hooks/useFlags';
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     marginTop: theme.spacing(2),
-    width: '80%',
+    width: '90%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
@@ -71,6 +72,15 @@ const cloudInitTooltipMessage = (
     service. <Link to="/">Learn how.</Link>
   </Typography>
 );
+
+const imageSizeLimitsMessage = (
+  <Typography>
+    Image files must be raw disk images (.img) compressed using gzip (.gz). The
+    maximum file size is 5 GB (compressed) and maximum image size is 6 GB
+    (uncompressed).
+  </Typography>
+);
+
 export interface Props {
   label: string;
   description: string;
@@ -100,6 +110,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
   const flags = useFlags();
+  const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
@@ -238,7 +249,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             errorText={errorMap.description}
             disabled={!canCreateImage}
           />
-          {flags.metadata ? (
+          {flags.metadata && hasMetadataCustomerTag ? (
             <div className={classes.cloudInitCheckboxWrapper}>
               <CheckBox
                 checked={isCloudInit}
@@ -271,11 +282,11 @@ export const ImageUpload: React.FC<Props> = (props) => {
             />
           ) : null}
 
+          <Notice warning spacingTop={24} sx={{ fontSize: '0.875rem' }}>
+            {imageSizeLimitsMessage}
+          </Notice>
+
           <Typography className={classes.helperText}>
-            Image files must be raw disk images (.img) compressed using gzip
-            (.gz). The maximum file size is 5 GB (compressed).
-            <br />
-            <br />
             Custom Images are billed at $0.10/GB per month based on the
             uncompressed image size.
           </Typography>
