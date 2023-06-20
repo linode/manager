@@ -4,7 +4,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import LineGraph from 'src/components/LineGraph';
+import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import {
   convertNetworkToUnit,
   formatBitsPerSecond,
@@ -168,7 +168,7 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
   };
 
   return (
-    <Grid container className={`${classes.graphGrids} p0`} spacing={4}>
+    <Grid container className={`${classes.graphGrids} p0`} xs={12} spacing={4}>
       <Grid className={classes.grid} xs={12}>
         <StatsPanel
           title={`Network — IPv4 (${v4Unit}/s)`}

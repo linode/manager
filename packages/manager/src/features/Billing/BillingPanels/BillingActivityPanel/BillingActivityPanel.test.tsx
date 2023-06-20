@@ -179,9 +179,7 @@ describe('paymentToActivityFeedItem', () => {
       expect(getCutoffFromDateRange('12 Months', testDateISO)).toBe(
         testDate.minus({ months: 12 }).toISO()
       );
-      expect(getCutoffFromDateRange('All Time', testDateISO)).toBe(
-        DateTime.fromMillis(0, { zone: 'utc' }).toISO()
-      );
+      expect(getCutoffFromDateRange('All Time', testDateISO)).toBeUndefined();
     });
   });
 

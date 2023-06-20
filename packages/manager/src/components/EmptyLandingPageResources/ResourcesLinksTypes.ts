@@ -4,7 +4,7 @@ interface ResourcesLink {
   external?: boolean;
 }
 
-export interface LinkGAEvent {
+export interface linkAnalyticsEvent {
   category: string;
   action: string;
 }
@@ -17,7 +17,7 @@ export interface ResourcesHeaders {
 
 export interface ResourcesLinks {
   links: ResourcesLink[];
-  linkGAEvent: LinkGAEvent;
+  linkAnalyticsEvent: linkAnalyticsEvent;
 }
 
 export interface ResourcesLinkSection {

@@ -18,7 +18,7 @@ const meta: Meta<typeof Button> = {
   component: Button,
   argTypes: {
     tooltipAnalyticsEvent: {
-      action: 'GA Event Action',
+      action: 'Analytics Event Action',
     },
   },
   args: {
