@@ -36,6 +36,12 @@ const StyledDisabledTableRow = styled(TableRow, {
       cursor: 'not-allowed',
       opacity: 0.4,
     }),
+    '&:focus-within': {
+      backgroundColor: theme.bg.lightBlue1,
+    },
+    '&.emptyCell': {
+      borderRight: 'none',
+    },
   };
 });
 

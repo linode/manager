@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import { Currency } from 'src/components/Currency';
@@ -16,26 +13,7 @@ import { LINODE_NETWORK_IN } from 'src/constants';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
 import { StyledDisabledTableRow } from './styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  chip: {
-    backgroundColor: theme.color.green,
-    color: '#fff',
-    textTransform: 'uppercase',
-    marginLeft: theme.spacing(2),
-  },
-  focusedRow: {
-    '&:focus-within': {
-      backgroundColor: theme.bg.lightBlue1,
-    },
-  },
-  planCell: { paddingLeft: 4 },
-  radioCell: {
-    height: theme.spacing(6),
-    width: '3%',
-    paddingRight: 0,
-  },
-}));
+import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -93,8 +71,6 @@ export const PlanSelection = ({
   const shouldShowTransfer = showTransfer && type.transfer;
   const shouldShowNetwork = showTransfer && type.network_out;
 
-  const { classes, cx } = useStyles();
-
   const selectedLinodePlanType = useSelector((state: ApplicationState) => {
     if (linodeID) {
       return state?.__resources.linodes.itemsById[linodeID]?.type;
@@ -115,7 +91,6 @@ export const PlanSelection = ({
         <StyledDisabledTableRow
           aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
           aria-label={rowAriaLabel}
-          className={cx(classes.focusedRow)}
           data-qa-plan-row={type.formattedLabel}
           disabled={isSamePlan || planTooSmall || isDisabledClass}
           key={type.id}
@@ -125,7 +100,7 @@ export const PlanSelection = ({
               : undefined
           }
         >
-          <TableCell className={cx(classes.radioCell)}>
+          <StyledRadioCell>
             {!isSamePlan && (
               <FormControlLabel
                 aria-label={type.heading}
@@ -145,13 +120,12 @@ export const PlanSelection = ({
                 }
               />
             )}
-          </TableCell>
-          <TableCell data-qa-plan-name className={cx(classes.planCell)}>
+          </StyledRadioCell>
+          <TableCell data-qa-plan-name>
             {type.heading}{' '}
             {(isSamePlan || type.id === selectedLinodePlanType) && (
-              <Chip
+              <StyledChip
                 aria-label="This is your current plan"
-                className={cx(classes.chip)}
                 data-qa-current-plan
                 label="Current Plan"
               />

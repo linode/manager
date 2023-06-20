@@ -10,13 +10,6 @@ import {
 } from './utils';
 import type { CreateNodePoolData, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import { makeStyles } from 'tss-react/mui';
-
-const useStyles = makeStyles()(() => ({
-  root: {
-    padding: 0,
-  },
-}));
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
@@ -57,8 +50,6 @@ export const KubernetesPlansPanel = ({
   onSelect,
   selectedID,
 }: Props) => {
-  const { classes, cx } = useStyles();
-
   const plans = getPlanSelectionsByPlanType(types);
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
@@ -96,7 +87,7 @@ export const KubernetesPlansPanel = ({
 
   return (
     <TabbedPanel
-      rootClass={cx(classes.root)}
+      sx={{ padding: 0 }}
       copy={copy}
       error={error}
       handleTabChange={() => resetValues()}

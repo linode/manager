@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
+import { StyledTableCell, StyledTable } from './PlanContainer.styles';
 
 const tableCells = [
   { cellName: '', testId: '', center: false, noWrap: false },
@@ -28,30 +25,6 @@ const tableCells = [
     noWrap: true,
   },
 ];
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  headerCell: {
-    borderTop: `1px solid ${theme.borderColors.borderTable} !important`,
-    borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-    '&.emptyCell': {
-      borderRight: 'none',
-    },
-    '&:not(.emptyCell)': {
-      borderLeft: 'none !important',
-    },
-    '&:last-child': {
-      paddingRight: 15,
-    },
-    '&.planHeaderCell': {
-      paddingLeft: 4,
-    },
-  },
-  table: {
-    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-    borderRight: `1px solid ${theme.borderColors.borderTable}`,
-    overflowX: 'hidden',
-  },
-}));
 
 export interface Props {
   currentPlanHeading?: string;
@@ -78,7 +51,6 @@ export const PlanContainer = ({
   selectedID,
   showTransfer,
 }: Props) => {
-  const { classes, cx } = useStyles();
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
     showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
@@ -117,11 +89,7 @@ export const PlanContainer = ({
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
-          <Table
-            aria-label="List of Linode Plans"
-            className={cx({ table: true })}
-            spacingBottom={16}
-          >
+          <StyledTable aria-label="List of Linode Plans" spacingBottom={16}>
             <TableHead>
               <TableRow>
                 {tableCells.map(({ cellName, testId, center, noWrap }) => {
@@ -133,17 +101,15 @@ export const PlanContainer = ({
                     return null;
                   }
                   return (
-                    <TableCell
+                    <StyledTableCell
                       center={center}
-                      className={cx(classes.headerCell, {
-                        planHeaderCell: cellName === 'Plan',
-                      })}
                       data-qa={attributeValue}
+                      isPlanCell={cellName === 'Plan'}
                       key={testId}
                       noWrap={noWrap}
                     >
                       {cellName}
-                    </TableCell>
+                    </StyledTableCell>
                   );
                 })}
               </TableRow>
@@ -166,7 +132,7 @@ export const PlanContainer = ({
                 />
               ))}
             </TableBody>
-          </Table>
+          </StyledTable>
         </Grid>
       </Hidden>
     </Grid>

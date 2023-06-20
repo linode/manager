@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Button from 'src/components/Button';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import Hidden from 'src/components/core/Hidden';
@@ -9,15 +9,6 @@ import { TableCell } from 'src/components/TableCell';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
 import { StyledDisabledTableRow } from './styles';
-
-const StyledInputOuter = styled('div')(({ theme }) => ({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'flex-end',
-  [theme.breakpoints.down('md')]: {
-    justifyContent: 'flex-start',
-  },
-}));
 
 interface Props {
   disabled?: boolean;
@@ -40,8 +31,6 @@ export const KubernetesPlanSelection = ({
   type,
   updatePlanCount,
 }: Props) => {
-  const theme = useTheme();
-
   const count = getTypeCount(type.id);
 
   // We don't want network information for LKE so we remove the last two elements.
@@ -49,7 +38,7 @@ export const KubernetesPlanSelection = ({
 
   const renderVariant = () => (
     <Grid xs={12}>
-      <StyledInputOuter theme={theme}>
+      <StyledInputOuter>
         <EnhancedNumberInput
           value={count}
           setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
@@ -90,7 +79,7 @@ export const KubernetesPlanSelection = ({
             {convertMegabytesTo(type.disk, true)}
           </TableCell>
           <TableCell>
-            <StyledInputOuter theme={theme}>
+            <StyledInputOuter>
               <EnhancedNumberInput
                 inputLabel={`edit-quantity-${type.id}`}
                 value={count}
@@ -133,3 +122,14 @@ export const KubernetesPlanSelection = ({
     </React.Fragment>
   );
 };
+
+const StyledInputOuter = styled('div', { label: 'StyledInputOuter' })(
+  ({ theme }) => ({
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start',
+    },
+  })
+);
