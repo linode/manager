@@ -1,8 +1,6 @@
-import { useLDClient, withLDProvider } from 'launchdarkly-react-client-sdk';
+import { withLDProvider } from 'launchdarkly-react-client-sdk';
 
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
-
-export { useLDClient };
 
 /**
  * only wrap the component in the HOC if we've passed

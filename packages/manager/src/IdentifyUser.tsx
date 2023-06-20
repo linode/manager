@@ -57,7 +57,6 @@ export const IdentifyUser = () => {
         : account?.tax_id === ''
         ? 'Unknown'
         : account?.tax_id;
-      // console.log(client && userID && country && username && _taxID);
       if (client && userID && country && username && _taxID) {
         client
           .identify({
