@@ -15,7 +15,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { nodeWarning } from '../../kubeUtils';
-import { usePlansNotices } from 'src/hooks/usePlansNotices';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import type { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -145,7 +145,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     hasSelectedRegion,
     isPlanPanelDisabled,
     isSelectedRegionEligible,
-  } = usePlansNotices({
+  } = plansNoticesUtils({
     selectedRegionID: clusterRegionId,
     regionsData,
   });

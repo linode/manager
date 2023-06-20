@@ -37,7 +37,7 @@ import KubeCheckoutBar from '../KubeCheckoutBar';
 import { NodePoolPanel } from './NodePoolPanel';
 import LandingHeader from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { usePlansNotices } from 'src/hooks/usePlansNotices';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -239,7 +239,7 @@ export const CreateCluster = () => {
     hasSelectedRegion,
     isPlanPanelDisabled,
     isSelectedRegionEligible,
-  } = usePlansNotices({
+  } = plansNoticesUtils({
     selectedRegionID,
     regionsData,
   });

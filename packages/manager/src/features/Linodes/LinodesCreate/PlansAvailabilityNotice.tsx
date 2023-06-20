@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
-import { getCapabilityFromPlanType } from 'src/hooks/usePlansNotices';
+import { formatPlanTypes } from 'src/utilities/planNotices';
+import { getCapabilityFromPlanType } from 'src/utilities/planNotices';
 import { Notice } from 'src/components/Notice/Notice';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import {
@@ -38,6 +39,7 @@ export const PlansAvailabilityNotice = React.memo(
       <PlansAvailabilityNoticeMessage
         hasSelectedRegion={hasSelectedRegion}
         isSelectedRegionEligible={isSelectedRegionEligible}
+        planType={planType}
         regionList={getEligibleRegionList()}
       />
     );
@@ -47,13 +49,19 @@ export const PlansAvailabilityNotice = React.memo(
 interface PlansAvailabilityNoticeMessageProps {
   hasSelectedRegion: boolean;
   isSelectedRegionEligible: boolean;
+  planType: LinodeTypeClass;
   regionList: Region[];
 }
 
 const PlansAvailabilityNoticeMessage = (
   props: PlansAvailabilityNoticeMessageProps
 ) => {
-  const { hasSelectedRegion, isSelectedRegionEligible, regionList } = props;
+  const {
+    hasSelectedRegion,
+    isSelectedRegionEligible,
+    planType,
+    regionList,
+  } = props;
 
   const FormattedRegionList = () => (
     <StyledFormattedRegionList>
@@ -68,10 +76,13 @@ const PlansAvailabilityNoticeMessage = (
     </StyledFormattedRegionList>
   );
 
+  const formattedPlanType = formatPlanTypes(planType);
+
   return hasSelectedRegion && !isSelectedRegionEligible ? (
-    <Notice error dataTestId="premium-notice-error">
+    <Notice error dataTestId={`${planType}-notice-error`}>
       <StyledNoticeTypography>
-        Premium Plans are not currently available in this region.&nbsp;
+        {formattedPlanType} Plans are not currently available in this
+        region.&nbsp;
         <StyledTextTooltip
           displayText="See global availability"
           tooltipText={<FormattedRegionList />}
@@ -80,9 +91,9 @@ const PlansAvailabilityNoticeMessage = (
       </StyledNoticeTypography>
     </Notice>
   ) : !hasSelectedRegion ? (
-    <Notice warning dataTestId="premium-notice-warning">
+    <Notice warning dataTestId={`${planType}-notice-warning`}>
       <StyledNoticeTypography>
-        Premium Plans are currently available in&nbsp;
+        {formattedPlanType} Plans are currently available in&nbsp;
         <StyledTextTooltip
           displayText="select regions"
           tooltipText={<FormattedRegionList />}

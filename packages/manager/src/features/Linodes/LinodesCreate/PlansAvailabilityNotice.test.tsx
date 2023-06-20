@@ -1,72 +1,85 @@
 import React from 'react';
+import { formatPlanTypes } from 'src/utilities/planNotices';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
 import { regionFactory } from 'src/factories/regions';
 import type { PlansAvailabilityNoticeProps } from './PlansAvailabilityNotice';
-import type { Region } from '@linode/api-v4';
+import type { LinodeTypeClass, Region } from '@linode/api-v4';
 
 const mockedRegionData: Region[] = [
   ...regionFactory.buildList(2, {}),
   ...regionFactory.buildList(1, { capabilities: ['Premium Plans'] }),
 ];
 
+const planTypes: LinodeTypeClass[] = ['premium', 'gpu'];
+
 describe('PlansAvailabilityNotice', () => {
-  it('renders an error premium notice when isSelectedRegionEligible is false and hasSelectedRegion is true', async () => {
-    const props: PlansAvailabilityNoticeProps = {
-      isSelectedRegionEligible: false,
-      hasSelectedRegion: true,
-      regionsData: mockedRegionData,
-      planType: 'premium',
-    };
+  planTypes.forEach((planType) => {
+    const formattedPlanType = formatPlanTypes(planType);
 
-    const { getByTestId } = renderWithTheme(
-      <PlansAvailabilityNotice {...props} />
-    );
+    it(`renders a ${planType} error notice when isSelectedRegionEligible is false and hasSelectedRegion is true`, async () => {
+      const props: PlansAvailabilityNoticeProps = {
+        isSelectedRegionEligible: false,
+        hasSelectedRegion: true,
+        regionsData: mockedRegionData,
+        planType,
+      };
 
-    expect(getByTestId('premium-notice-error')).toBeInTheDocument();
-    expect(getByTestId('premium-notice-error')).toHaveAttribute(
-      'data-testid',
-      'premium-notice-error'
-    );
-    expect(getByTestId('premium-notice-error')).toHaveTextContent(
-      'Premium Plans are not currently available in this region.'
-    );
+      const { getByTestId } = renderWithTheme(
+        <PlansAvailabilityNotice {...props} />
+      );
+
+      expect(getByTestId(`${planType}-notice-error`)).toBeInTheDocument();
+      expect(getByTestId(`${planType}-notice-error`)).toHaveAttribute(
+        'data-testid',
+        `${planType}-notice-error`
+      );
+      expect(getByTestId(`${planType}-notice-error`)).toHaveTextContent(
+        `${formattedPlanType} Plans are not currently available in this region.`
+      );
+    });
   });
 
-  it('renders an error premium notice when isSelectedRegionPremium is false and hasSelectedRegion is false', () => {
-    const props: PlansAvailabilityNoticeProps = {
-      isSelectedRegionEligible: false,
-      hasSelectedRegion: false,
-      regionsData: mockedRegionData,
-      planType: 'premium',
-    };
+  planTypes.forEach((planType) => {
+    const formattedPlanType = formatPlanTypes(planType);
 
-    const { getByTestId } = renderWithTheme(
-      <PlansAvailabilityNotice {...props} />
-    );
+    it(`renders a ${planType} warning notice when isSelectedRegionPremium is false and hasSelectedRegion is false`, () => {
+      const props: PlansAvailabilityNoticeProps = {
+        isSelectedRegionEligible: false,
+        hasSelectedRegion: false,
+        regionsData: mockedRegionData,
+        planType,
+      };
 
-    expect(getByTestId('premium-notice-warning')).toBeInTheDocument();
-    expect(getByTestId('premium-notice-warning')).toHaveAttribute(
-      'data-testid',
-      'premium-notice-warning'
-    );
-    expect(getByTestId('premium-notice-warning')).toHaveTextContent(
-      'premium Plans are currently available in'
-    );
+      const { getByTestId } = renderWithTheme(
+        <PlansAvailabilityNotice {...props} />
+      );
+
+      expect(getByTestId(`${planType}-notice-warning`)).toBeInTheDocument();
+      expect(getByTestId(`${planType}-notice-warning`)).toHaveAttribute(
+        'data-testid',
+        `${planType}-notice-warning`
+      );
+      expect(getByTestId(`${planType}-notice-warning`)).toHaveTextContent(
+        `${formattedPlanType} Plans are currently available in`
+      );
+    });
   });
 
-  it('renders no notice when isSelectedRegionPremium is true', () => {
-    const props: PlansAvailabilityNoticeProps = {
-      isSelectedRegionEligible: true,
-      hasSelectedRegion: true,
-      regionsData: mockedRegionData,
-      planType: 'premium',
-    };
+  planTypes.forEach((planType) => {
+    it(`renders no ${planType} notice when isSelectedRegionPremium is true`, () => {
+      const props: PlansAvailabilityNoticeProps = {
+        isSelectedRegionEligible: true,
+        hasSelectedRegion: true,
+        regionsData: mockedRegionData,
+        planType,
+      };
 
-    const { queryByTestId } = renderWithTheme(
-      <PlansAvailabilityNotice {...props} />
-    );
+      const { queryByTestId } = renderWithTheme(
+        <PlansAvailabilityNotice {...props} />
+      );
 
-    expect(queryByTestId(/premium-notice/)).not.toBeInTheDocument();
+      expect(queryByTestId(/premium-notice/)).not.toBeInTheDocument();
+    });
   });
 });

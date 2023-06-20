@@ -10,7 +10,7 @@ interface PremiumPlanInfoProps {
  * @param {string} selectedRegionID
  * @returns {object} { hasSelectedRegion, isPlanPanelDisabled, isSelectedRegionEligible }
  */
-export const usePlansNotices = (props: PremiumPlanInfoProps) => {
+export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
   const { regionsData, selectedRegionID } = props;
 
   /**
@@ -73,3 +73,13 @@ export const getCapabilityFromPlanType = (
     }
   }
 };
+
+/**
+ * Formats the plan type for display
+ * @param planType
+ * @returns {string} the formatted plan type
+ */
+export const formatPlanTypes = (planType: LinodeTypeClass) =>
+  planType === 'gpu'
+    ? 'GPU'
+    : planType.charAt(0).toUpperCase() + planType.slice(1);

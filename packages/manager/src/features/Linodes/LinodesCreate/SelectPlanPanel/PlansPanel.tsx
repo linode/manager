@@ -10,7 +10,7 @@ import {
 } from './utils';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
-import { usePlansNotices } from 'src/hooks/usePlansNotices';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import type { Region } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
@@ -69,7 +69,7 @@ export const PlansPanel = (props: Props) => {
     hasSelectedRegion,
     isPlanPanelDisabled,
     isSelectedRegionEligible,
-  } = usePlansNotices({
+  } = plansNoticesUtils({
     selectedRegionID,
     regionsData,
   });
