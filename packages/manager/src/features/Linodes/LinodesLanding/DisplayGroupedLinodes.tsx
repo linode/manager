@@ -27,7 +27,6 @@ import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { RenderLinodesProps } from './DisplayLinodes';
 import {
   StyledControlHeader,
-  StyledGroupContainer,
   StyledTagHeader,
   StyledTagHeaderRow,
   StyledToggleButton,
@@ -246,7 +245,7 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
                     count,
                   };
                   return (
-                    <StyledGroupContainer data-qa-tag-header={tag}>
+                    <TableBody data-qa-tag-header={tag}>
                       <StyledTagHeaderRow>
                         <TableCell colSpan={7}>
                           <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
@@ -269,7 +268,7 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
                           </TableCell>
                         </TableRow>
                       )}
-                    </StyledGroupContainer>
+                    </TableBody>
                   );
                 }}
               </Paginate>

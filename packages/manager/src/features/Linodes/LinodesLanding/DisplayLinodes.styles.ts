@@ -1,7 +1,7 @@
 import Typography from 'src/components/core/Typography';
 import { IconButton } from 'src/components/IconButton';
+import { isPropValid } from 'src/utilities/isPropValid';
 import { styled } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
 import { TableRow } from 'src/components/TableRow';
 
 export const StyledTagHeaderRow = styled(TableRow, {
@@ -17,17 +17,6 @@ export const StyledTagHeaderRow = styled(TableRow, {
   },
 }));
 
-export const StyledGroupContainer = styled(TableBody, {
-  label: 'StyledGroupContainer',
-})(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    '& $tagHeaderRow > td': {
-      padding: '10px 0 2px',
-      borderTop: 'none',
-    },
-  },
-}));
-
 export const StyledTagHeader = styled(Typography, {
   label: 'StyledTagHeader',
 })(({ theme }) => ({
@@ -37,6 +26,7 @@ export const StyledTagHeader = styled(Typography, {
 
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
+  shouldForwardProp: (prop) => isPropValid(['isGroupedByTag'], prop),
 })<{ isGroupedByTag: boolean }>(({ theme, isGroupedByTag }) => ({
   height: 46,
   marginBottom: isGroupedByTag ? theme.spacing(4) : 0,
@@ -48,6 +38,7 @@ export const StyledControlHeader = styled('div', {
 
 export const StyledToggleButton = styled(IconButton, {
   label: 'StyledToggleButton',
+  shouldForwardProp: (prop) => isPropValid(['isActive'], prop),
 })<{ isActive: boolean }>(({ theme, isActive }) => ({
   color: isActive ? theme.palette.primary.main : theme.palette.grey[400],
   padding: 10,
