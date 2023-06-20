@@ -51,7 +51,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
         subType: 'Cluster',
         action: 'restoration',
         name: database.label,
-        primaryBtnText: 'Restore',
+        primaryBtnText: 'Restore Database',
       }}
       open={open}
       onClose={onClose}

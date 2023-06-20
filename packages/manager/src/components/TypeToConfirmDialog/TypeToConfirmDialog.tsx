@@ -24,12 +24,7 @@ interface EntityInfo {
   subType?: 'Cluster' | 'ObjectStorage' | 'CloseAccount';
   action?: 'deletion' | 'detachment' | 'restoration' | 'cancellation';
   name?: string | undefined;
-  primaryBtnText:
-    | 'Delete'
-    | 'Detach'
-    | 'Restore'
-    | 'Confirm Cancellation'
-    | 'Close Account';
+  primaryBtnText: string;
 }
 
 interface TypeToConfirmDialogProps {
