@@ -22,7 +22,7 @@ describe('PlanInformation', () => {
 
   it('should render GPUNotice when planType is "gpu"', () => {
     renderWithTheme(<PlanInformation {...mockProps} planType="gpu" />);
-    const element = screen.getByTestId('gpu-notice');
+    const element = screen.getByTestId('gpu-notice-error');
     expect(element).toBeInTheDocument();
   });
 
