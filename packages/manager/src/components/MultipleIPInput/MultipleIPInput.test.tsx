@@ -1,9 +1,7 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
-
 import { renderWithTheme } from 'src/utilities/testHelpers';
-
-import MultipleIPInput, { Props } from './MultipleIPInput';
+import { MultipleIPInput, Props } from './MultipleIPInput';
 
 const baseProps: Props = {
   title: 'My Input',
