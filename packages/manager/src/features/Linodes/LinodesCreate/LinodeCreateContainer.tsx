@@ -756,24 +756,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const userCannotCreateLinode =
       Boolean(profile.data?.restricted) && !grants.data?.global.add_linodes;
 
-    // If the selected type is a GPU plan, only display region
-    // options that support GPUs.
-    const selectedType = extendedTypeData?.find(
-      (thisType) => thisType.id === this.state.selectedTypeID
-    );
-
-    const filteredRegions =
-      selectedType?.class === 'gpu'
-        ? regionsData?.filter((thisRegion) => {
-            return thisRegion.capabilities.includes('GPU Linodes');
-          })
-        : regionsData;
-
-    const regionHelperText =
-      (filteredRegions?.length ?? 0) !== (regionsData?.length ?? 0)
-        ? 'Only regions that support your selected plan are displayed.'
-        : undefined;
-
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
@@ -809,8 +791,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             checkValidation={this.checkValidation}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
-            regionsData={filteredRegions!}
-            regionHelperText={regionHelperText}
+            regionsData={regionsData}
             typesData={extendedTypeData}
             vlanLabel={this.state.attachedVLANLabel}
             ipamAddress={this.state.vlanIPAMAddress}
