@@ -7,8 +7,9 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import Link from 'src/components/Link';
+import { SupportLink } from 'src/components/SupportLink';
 import { events$ } from 'src/events';
-import { sendEvent } from 'src/utilities/ga';
+import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 
 interface ToastOptions {
   enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'];
@@ -17,7 +18,6 @@ interface ToastOptions {
   persistFailureMessage?: boolean;
   successMessage?: string;
   failureMessage?: string;
-  includesLink?: boolean;
   link?: JSX.Element;
 }
 
@@ -29,10 +29,9 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
     persistFailureMessage,
     successMessage,
     failureMessage,
-    includesLink,
     link,
   } = options;
-  let linkedMessage;
+  let formattedFailureMessage;
 
   if (
     ['finished', 'notification'].includes(eventStatus) &&
@@ -43,15 +42,21 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
       persist: persistSuccessMessage,
     });
   } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
-    if (includesLink) {
-      linkedMessage = (
-        <>
-          {failureMessage}&nbsp;
-          {link}
-        </>
-      );
-    }
-    return enqueueSnackbar(linkedMessage ?? failureMessage, {
+    const hasSupportLink = failureMessage?.includes('contact Support') ?? false;
+    formattedFailureMessage = (
+      <>
+        {failureMessage?.replace(/ contact Support/i, '') ?? failureMessage}
+        {hasSupportLink ? (
+          <>
+            &nbsp;
+            <SupportLink text="contact Support" title={failureMessage} />.
+          </>
+        ) : null}
+        {link ? <>&nbsp;{link}</> : null}
+      </>
+    );
+
+    return enqueueSnackbar(formattedFailureMessage ?? failureMessage, {
       variant: 'error',
       persist: persistFailureMessage,
     });
@@ -107,8 +112,13 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return toastSuccessAndFailure({
               enqueueSnackbar,
               eventStatus: event.status,
+              persistFailureMessage: true,
               successMessage: `Image ${secondaryLabel} created successfully.`,
-              failureMessage: `Error creating Image ${secondaryLabel}.`,
+              failureMessage: `There was a problem creating Image ${secondaryLabel}.`,
+              link: formatLink(
+                'Learn more about image technical specifications.',
+                'https://www.linode.com/docs/products/tools/images/#technical-specifications'
+              ),
             });
           case 'disk_resize':
             return toastSuccessAndFailure({
@@ -117,15 +127,15 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               persistFailureMessage: true,
               successMessage: `Disk ${secondaryLabel} resized successfully.`,
               failureMessage: `Disk resize failed.`,
-              includesLink: true,
               link: formatLink(
                 'Learn more about resizing restrictions.',
                 'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/',
-                sendEvent({
-                  category: 'Disk Resize Flow',
-                  action: `Click:link`,
-                  label: 'Disk resize failed toast',
-                })
+                () =>
+                  sendLinodeDiskEvent(
+                    'Resize',
+                    'Click:link',
+                    'Disk resize failed toast'
+                  )
               ),
             });
           case 'image_upload':
@@ -137,10 +147,9 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               successMessage: `Image ${label} is now available.`,
               failureMessage: isDeletion
                 ? undefined
-                : `There was a problem processing image ${label}: ${event.message?.replace(
-                    'cancelled',
-                    'canceled'
-                  )}`,
+                : `There was a problem uploading image ${label}: ${event.message
+                    ?.replace('cancelled', 'canceled')
+                    .replace(/(\d+)/g, '$1 MB')}`,
             });
           case 'image_delete':
             return toastSuccessAndFailure({
@@ -269,9 +278,9 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
 
 export default withSnackbar(ToastNotifications);
 
-const formatLink = (text: string, link: string, handleClick: any) => {
+const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
-    <Link to={link} onClick={() => handleClick}>
+    <Link to={link} onClick={handleClick}>
       {text}
     </Link>
   );

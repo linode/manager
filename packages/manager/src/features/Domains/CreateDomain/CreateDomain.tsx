@@ -1,34 +1,35 @@
+import { Linode } from '@linode/api-v4';
 import {
   CreateDomainPayload,
   Domain,
   DomainType,
 } from '@linode/api-v4/lib/domains';
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
-import Grid from '@mui/material/Unstable_Grid2';
-import Paper from 'src/components/core/Paper';
-import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import LandingHeader from 'src/components/LandingHeader';
 import MultipleIPInput from 'src/components/MultipleIPInput';
-import Notice from 'src/components/Notice';
-import Radio from 'src/components/Radio';
+import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
 import TextField from 'src/components/TextField';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
+import Paper from 'src/components/core/Paper';
+import RadioGroup from 'src/components/core/RadioGroup';
 import { reportException } from 'src/exceptionReporting';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -36,7 +37,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateDomainEvent } from 'src/utilities/ga';
+import { sendCreateDomainEvent } from 'src/utilities/analytics';
 import {
   ExtendedIP,
   extendedIPToString,
@@ -44,7 +45,6 @@ import {
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { generateDefaultDomainRecords } from '../domainUtils';
-import LandingHeader from 'src/components/LandingHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -278,12 +278,6 @@ export const CreateDomain = () => {
       });
   };
 
-  const updateSelectedLinode = (linode: Linode) =>
-    setSelectedDefaultLinode(linode);
-
-  const updateInsertDefaultRecords = (value: Item<DefaultRecordsType>) =>
-    setDefaultRecordsSetting(value);
-
   const updateType = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: 'master' | 'slave'
@@ -397,7 +391,7 @@ export const CreateDomain = () => {
                 <Select
                   isClearable={false}
                   onChange={(value: Item<DefaultRecordsType>) =>
-                    updateInsertDefaultRecords(value)
+                    setDefaultRecordsSetting(value)
                   }
                   value={defaultRecordsSetting}
                   label="Insert Default Records"
@@ -428,12 +422,12 @@ export const CreateDomain = () => {
             {isCreatingPrimaryDomain &&
               defaultRecordsSetting.value === 'linode' && (
                 <React.Fragment>
-                  <LinodeSelect
-                    linodeError={errorMap.defaultLinode}
-                    handleChange={updateSelectedLinode}
-                    selectedLinode={
-                      selectedDefaultLinode ? selectedDefaultLinode.id : null
+                  <LinodeSelectV2
+                    errorText={errorMap.defaultLinode}
+                    onSelectionChange={(value) =>
+                      setSelectedDefaultLinode(value ?? undefined)
                     }
+                    value={selectedDefaultLinode?.id ?? null}
                     disabled={disabled}
                   />
                   {!errorMap.defaultLinode && (

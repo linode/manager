@@ -4,7 +4,7 @@ import WarningOutline from '@mui/icons-material/WarningAmberOutlined';
 import InfoOutline from '@mui/icons-material/InfoOutlined';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
-import IconButton from 'src/components/core/IconButton';
+import { IconButton } from 'src/components/IconButton';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 import { SxProps } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
@@ -28,7 +28,7 @@ interface Props
   status: TooltipIconStatus;
   leaveDelay?: boolean;
   tooltipPosition?: TooltipProps['placement'];
-  tooltipGAEvent?: () => void;
+  tooltipAnalyticsEvent?: () => void;
 }
 
 export const TooltipIcon = (props: Props) => {
@@ -42,14 +42,14 @@ export const TooltipIcon = (props: Props) => {
     interactive,
     status,
     leaveDelay,
-    tooltipGAEvent,
+    tooltipAnalyticsEvent,
     sx,
     sxTooltipIcon,
   } = props;
 
   const handleOpenTooltip = () => {
-    if (tooltipGAEvent) {
-      tooltipGAEvent();
+    if (tooltipAnalyticsEvent) {
+      tooltipAnalyticsEvent();
     }
   };
 

@@ -3,6 +3,7 @@ import {
   CreateLinodeRequest,
   Linode,
   LinodeAlerts,
+  LinodeBackup,
   LinodeBackups,
   LinodeIPsResponse,
   LinodeSpecs,
@@ -197,7 +198,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   image: 'linode/debian10',
   watchdog_enabled: true,
   status: 'running',
-  ipv4: ['192.168.0.0'],
+  ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   group: '',
   alerts: linodeAlertsFactory.build(),
@@ -216,3 +217,28 @@ export const createLinodeRequestFactory = Factory.Sync.makeFactory<CreateLinodeR
     booted: true,
   }
 );
+
+export const backupFactory = Factory.Sync.makeFactory<LinodeBackup>({
+  id: Factory.each((i) => i),
+  region: 'us-central',
+  type: 'auto',
+  status: 'successful',
+  available: true,
+  created: '2023-05-03T04:00:47',
+  updated: '2023-05-03T04:04:07',
+  finished: '2023-05-03T04:02:11',
+  label: null,
+  configs: ['Restore 319718 - My Alpine 3.17 Disk Profile'],
+  disks: [
+    {
+      label: 'Restore 319718 - Alpine 3.17 Disk',
+      size: 25088,
+      filesystem: 'ext4',
+    },
+    {
+      label: 'Restore 319718 - 512 MB Swap Image',
+      size: 512,
+      filesystem: 'swap',
+    },
+  ],
+});

@@ -2,18 +2,11 @@ import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider as ReduxStoreProvider } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Route,
-  RouteComponentProps,
-  Switch,
-} from 'react-router-dom';
-import { initAnalytics, initTagManager } from 'src/analytics';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import SnackBar from 'src/components/SnackBar';
 import SplashScreen from 'src/components/SplashScreen';
-import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
@@ -23,7 +16,7 @@ import LinodeThemeWrapper from './LinodeThemeWrapper';
 import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import App from './App';
+import { App } from './App';
 import { queryClientFactory } from './queries/base';
 
 const queryClient = queryClientFactory();
@@ -32,24 +25,19 @@ const store = storeFactory(queryClient);
 setupInterceptors(store);
 
 const Lish = React.lazy(() => import('src/features/Lish'));
-const Cancel = React.lazy(() => import('src/features/CancelLanding'));
+const CancelLanding = React.lazy(
+  () => import('src/features/CancelLanding/CancelLanding')
+);
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 
-/*
- * Initialize Analytic and Google Tag Manager
- */
-initAnalytics(isProductionBuild, GA_ID);
-
-initTagManager(GTM_ID);
-
 const NullAuth = () => <span>null auth route</span>;
 
 const Null = () => <span>null route</span>;
 
-const AppWrapper = (props: RouteComponentProps) => (
+const AppWrapper = () => (
   <>
     <SplashScreen />
     <SnackBar
@@ -59,7 +47,7 @@ const AppWrapper = (props: RouteComponentProps) => (
       data-qa-toast
       hideIconVariant={true}
     >
-      <App location={props.location} history={props.history} />
+      <App />
     </SnackBar>
   </>
 );
@@ -79,7 +67,7 @@ const ContextWrapper = () => (
             {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
             <Route exact path="/nullauth" component={NullAuth} />
             <Route exact path="/logout" component={Logout} />
-            <Route exact path="/cancel" component={Cancel} />
+            <Route exact path="/cancel" component={CancelLanding} />
             <AuthenticationWrapper>
               <Switch>
                 <Route path="/linodes/:linodeId/lish/:type" component={Lish} />

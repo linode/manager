@@ -1,4 +1,32 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
+import Accordion from 'src/components/Accordion';
+import Paper from 'src/components/core/Paper';
+import LandingHeader from 'src/components/LandingHeader';
+import TextField from 'src/components/TextField';
+import Typography from 'src/components/core/Typography';
+import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
+import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
+import { Notice } from 'src/components/Notice/Notice';
+import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
+import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { useHistory } from 'react-router-dom';
+import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
+import { useRegionsQuery } from 'src/queries/regions';
 import {
   append,
   clone,
@@ -8,42 +36,17 @@ import {
   over,
   pathOr,
 } from 'ramda';
-import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Notice from 'src/components/Notice';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
-import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
-import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest,
 } from './utils';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import LandingHeader from 'src/components/LandingHeader';
-import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
-import Box from 'src/components/core/Box';
-import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
-import Accordion from 'src/components/Accordion';
-import Paper from 'src/components/core/Paper';
-import TextField from 'src/components/TextField';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { NodeBalancerConfigFieldsWithStatus } from './types';
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -101,7 +104,11 @@ const NodeBalancerCreate = () => {
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
-  const disabled = Boolean(profile?.restricted) && !grants?.global.add_domains;
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const disabled =
+    Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
 
   const addNodeBalancer = () => {
     if (disabled) {
@@ -256,7 +263,7 @@ const NodeBalancerCreate = () => {
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
-        // GA Event
+        // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
       .catch((errorResponse) => {
@@ -519,6 +526,7 @@ const NodeBalancerCreate = () => {
         buttonType="outlined"
         onClick={addNodeBalancer}
         disabled={disabled}
+        sx={matchesSmDown ? { marginLeft: theme.spacing(2) } : null}
       >
         Add another Configuration
       </Button>
@@ -552,6 +560,7 @@ const NodeBalancerCreate = () => {
           onClick={onCreate}
           loading={isLoading}
           data-qa-deploy-nodebalancer
+          sx={matchesSmDown ? { marginRight: theme.spacing(1) } : null}
         >
           Create NodeBalancer
         </Button>

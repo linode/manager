@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import AccessSelect, { Props } from './AccessSelect';
+import { AccessSelect, Props } from './AccessSelect';
 
 vi.mock('src/components/EnhancedSelect/Select');
 

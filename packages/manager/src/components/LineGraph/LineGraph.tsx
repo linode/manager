@@ -9,21 +9,26 @@ import {
 import 'chartjs-adapter-luxon';
 import { curry } from 'ramda';
 import * as React from 'react';
-import Button from 'src/components/Button';
-import { makeStyles, useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { useTheme, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AccessibleGraphData from './AccessibleGraphData';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableRow } from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
 import { setUpCharts } from 'src/utilities/charts';
 import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
-import MetricDisplayStyles from './NewMetricDisplay.styles';
+import {
+  StyledButton,
+  StyledButtonElement,
+  StyledCanvasContainer,
+  StyledContainer,
+  StyledTable,
+  StyledTableBody,
+  StyledTableCell,
+  StyledTableHead,
+  StyledWrapper,
+} from './LineGraph.styles';
 
 setUpCharts();
 
@@ -38,7 +43,7 @@ export interface DataSet {
   backgroundColor?: string;
   data: [number, number | null][];
 }
-export interface Props {
+export interface LineGraphProps {
   chartHeight?: number;
   showToday: boolean;
   suggestedMax?: number;
@@ -60,16 +65,6 @@ export interface Props {
   tabIndex?: number;
 }
 
-type CombinedProps = Props;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  ...MetricDisplayStyles(theme),
-  canvasContainer: {
-    position: 'relative',
-    width: '80%',
-  },
-}));
-
 const lineOptions: ChartDataSets = {
   borderWidth: 1,
   borderJoinStyle: 'miter',
@@ -88,8 +83,7 @@ const humanizeLargeData = (value: number) => {
   return value;
 };
 
-const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
-  const classes = useStyles();
+export const LineGraph = (props: LineGraphProps) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -289,6 +283,21 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     }
   });
 
+  const sxTypography = {
+    fontSize: '0.75rem',
+  };
+
+  const sxTypographyHeader = {
+    ...sxTypography,
+    color: theme.textColors.tableHeader,
+  };
+
+  const sxLegend = {
+    [theme.breakpoints.up('md')]: {
+      width: '38%',
+    },
+  };
+
   return (
     // Allow `tabIndex` on `<div>` because it represents an interactive element.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
@@ -297,26 +306,21 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     // Screen readers read from top to bottom, so the legend should be read before the data tables, esp considering their size
     // and the fact that the legend can filter them.
     // Meanwhile the CSS uses column-reverse to visually retain the original order
-    <div className={classes.wrapper} tabIndex={tabIndex ?? 0}>
+    <StyledWrapper tabIndex={tabIndex ?? 0}>
       {legendRendered && legendRows && (
-        <div className={classes.container}>
-          <Table
+        <StyledContainer>
+          <StyledTable
             aria-label={`Controls for ${ariaLabel || 'Stats and metrics'}`}
-            className={classes.root}
             noBorder
           >
-            <TableHead className={classes.tableHead}>
+            <StyledTableHead>
               {/* Repeat legend for each data set for mobile */}
               {matchesSmDown ? (
                 data.map((section) => (
                   <TableRow key={section.label}>
                     {finalRowHeaders.map((section, i) => (
-                      <TableCell
-                        key={i}
-                        data-qa-header-cell
-                        className={classes.tableHeadInner}
-                      >
-                        <Typography variant="body1" className={classes.text}>
+                      <TableCell key={i} data-qa-header-cell>
+                        <Typography variant="body1" sx={sxTypographyHeader}>
                           {section}
                         </Typography>
                       </TableCell>
@@ -325,22 +329,26 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell style={{ height: 26 }} />
+                  <TableCell
+                    sx={{
+                      /**
+                       * TODO: TableCell needs to be refactored before
+                       * we can remove this !important
+                       */
+                      height: '26px !important',
+                    }}
+                  />
                   {finalRowHeaders.map((section, i) => (
-                    <TableCell
-                      key={i}
-                      data-qa-header-cell
-                      className={classes.tableHeadInner}
-                    >
-                      <Typography variant="body1" className={classes.text}>
+                    <TableCell key={i} data-qa-header-cell>
+                      <Typography variant="body1" sx={sxTypographyHeader}>
                         {section}
                       </Typography>
                     </TableCell>
                   ))}
                 </TableRow>
               )}
-            </TableHead>
-            <TableBody>
+            </StyledTableHead>
+            <StyledTableBody>
               {legendRows?.map((_tick: any, idx: number) => {
                 const bgColor = data[idx].backgroundColor;
                 const title = data[idx].label;
@@ -348,31 +356,33 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                 const { data: metricsData, format } = legendRows[idx];
                 return (
                   <TableRow key={idx}>
-                    <TableCell className={classes.legend} noWrap>
-                      <Button
+                    <StyledTableCell sx={sxLegend} noWrap>
+                      <StyledButton
                         onClick={() => handleLegendClick(idx)}
                         data-qa-legend-title
                         aria-label={`Toggle ${title} visibility`}
-                        className={classes.toggleButton}
                       >
-                        <div
-                          className={`${classes.legendIcon} ${
-                            hidden && classes.crossedOut
-                          }`}
-                          style={{
+                        <StyledButtonElement
+                          hidden={hidden}
+                          sx={{
                             background: bgColor,
                             borderColor: bgColor,
+                            borderStyle: 'solid',
+                            borderWidth: '1px',
+                            height: '18px',
+                            marginRight: theme.spacing(1),
+                            width: '18px',
                           }}
                         />
-                        <span className={hidden ? classes.crossedOut : ''}>
+                        <StyledButtonElement hidden={hidden}>
                           {title}
-                        </span>
-                      </Button>
-                    </TableCell>
+                        </StyledButtonElement>
+                      </StyledButton>
+                    </StyledTableCell>
                     {metricsData &&
                       metricsBySection(metricsData).map((section, i) => {
                         return (
-                          <TableCell
+                          <StyledTableCell
                             key={i}
                             parentColumn={
                               rowHeaders ? rowHeaders[idx] : undefined
@@ -381,28 +391,28 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                           >
                             <Typography
                               variant="body1"
-                              className={classes.text}
+                              sx={{ ...sxTypography, color: theme.color.black }}
                             >
                               {format(section)}
                             </Typography>
-                          </TableCell>
+                          </StyledTableCell>
                         );
                       })}
                   </TableRow>
                 );
               })}
-            </TableBody>
-          </Table>
-        </div>
+            </StyledTableBody>
+          </StyledTable>
+        </StyledContainer>
       )}
-      <div className={classes.canvasContainer}>
+      <StyledCanvasContainer>
         <canvas
           height={chartHeight || 300}
           ref={inputEl}
           role="img"
           aria-label={ariaLabel || 'Stats and metrics'}
         />
-      </div>
+      </StyledCanvasContainer>
       {accessibleDataTable?.unit && (
         <AccessibleGraphData
           chartInstance={chartInstance.current}
@@ -411,7 +421,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           accessibleUnit={accessibleDataTable.unit}
         />
       )}
-    </div>
+    </StyledWrapper>
   );
 };
 
@@ -443,5 +453,3 @@ export const _formatTooltip = curry(
     return `${label}: ${value}${unit ? unit : ''}`;
   }
 );
-
-export default LineGraph;

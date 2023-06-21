@@ -101,6 +101,7 @@ export interface LinodeBackup {
   finished: string;
   configs: string[];
   disks: LinodeBackupDisk[];
+  available: boolean;
 }
 
 export type LinodeBackupType = 'auto' | 'snapshot';
@@ -369,4 +370,10 @@ export interface LinodeDiskCreationData {
   root_pass?: string;
   stackscript_id?: number;
   stackscript_data?: any;
+}
+
+export interface ResizeLinodePayload {
+  type: string;
+  /** @default true */
+  allow_auto_disk_resize?: boolean;
 }

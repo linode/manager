@@ -2,17 +2,16 @@ import * as React from 'react';
 import Box from 'src/components/core/Box';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import TableSortCell from 'src/components/TableSortCell';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableSortCell } from 'src/components/TableSortCell';
 import ActionMenu from './OAuthClientActionMenu';
-import SecretTokenDialog from '../SecretTokenDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useOAuthClientsQuery } from 'src/queries/accountOAuth';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
@@ -22,18 +21,19 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
 import { EditOAuthClientDrawer } from './EditOAuthClientDrawer';
+import { SecretTokenDialog } from '../SecretTokenDialog/SecretTokenDialog';
 
-const preferenceKey = 'oauth-clients';
+const PREFERENCE_KEY = 'oauth-clients';
 
 const OAuthClients = () => {
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'status',
       order: 'desc',
     },
-    preferenceKey
+    PREFERENCE_KEY
   );
 
   const { data, error, isLoading } = useOAuthClientsQuery(
@@ -84,7 +84,7 @@ const OAuthClients = () => {
     }
 
     if (data?.results === 0) {
-      return <TableRowEmptyState colSpan={6} />;
+      return <TableRowEmpty colSpan={6} />;
     }
 
     return data?.data.map(({ id, label, redirect_uri, public: isPublic }) => (

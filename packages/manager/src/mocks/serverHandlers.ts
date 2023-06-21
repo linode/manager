@@ -175,8 +175,13 @@ const databases = [
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });
+    const premiumTypes = databaseTypeFactory.buildList(7, {
+      class: 'premium',
+    });
     return res(
-      ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+      ctx.json(
+        makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
+      )
     );
   }),
 
@@ -378,6 +383,7 @@ export const handlers = [
       })
   ),
   rest.get('*/linode/instances', async (req, res, ctx) => {
+    linodeFactory.resetSequenceNumber();
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -445,6 +451,10 @@ export const handlers = [
       multipleIPLinode,
     ];
     return res(ctx.json(makeResourcePage(linodes)));
+  }),
+  rest.get('*/linode/instances/:id', async (req, res, ctx) => {
+    const id = Number(req.params.id);
+    return res(ctx.json(linodeFactory.build({ id })));
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
@@ -568,6 +578,18 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({ ssl: false }));
+  }),
+  rest.post('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({ ssl: true }));
+  }),
+  rest.delete('*object-storage/buckets/*/*/ssl', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
   rest.get('*/object-storage/buckets/*/*/object-list', (req, res, ctx) => {
     const pageSize = Number(req.url.searchParams.get('page_size') || 100);
     const marker = req.url.searchParams.get('marker');
@@ -647,6 +669,7 @@ export const handlers = [
       ctx.json(makeResourcePage(objectStorageKeyFactory.buildList(3)))
     );
   }),
+
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(10);
     return res(ctx.json(makeResourcePage(domains)));
@@ -742,7 +765,7 @@ export const handlers = [
       headers.status === 'completed'
         ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-            ...accountMaintenanceFactory.buildList(2, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
             ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
           ];
 
@@ -1224,6 +1247,7 @@ export const mockDataHandlers: Record<
 > = {
   linode: (count) =>
     rest.get('*/linode/instances', async (req, res, ctx) => {
+      linodeFactory.resetSequenceNumber();
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     }),

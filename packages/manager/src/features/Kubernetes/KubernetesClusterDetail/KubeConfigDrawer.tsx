@@ -8,7 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
 import { downloadFile } from 'src/utilities/downloadFile';
-import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 
 const useStyles = makeStyles((theme: Theme) => ({

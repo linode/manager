@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account';
 import {
@@ -16,6 +16,8 @@ import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 import LandingHeader from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { useRegionsQuery } from 'src/queries/regions';
 
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
@@ -24,6 +26,8 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
 
   const { data: cluster, isLoading, error } = useKubernetesClusterQuery(id);
+
+  const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
     id
@@ -73,6 +77,7 @@ export const KubernetesClusterDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
+      <ProductInformationBanner bannerLocation="Kubernetes" warning important />
       <Grid>
         <UpgradeKubernetesVersionBanner
           clusterID={cluster?.id}
@@ -106,7 +111,12 @@ export const KubernetesClusterDetail = () => {
         <KubeSummaryPanel cluster={cluster} />
       </Grid>
       <Grid>
-        <NodePoolsDisplay clusterID={cluster.id} clusterLabel={cluster.label} />
+        <NodePoolsDisplay
+          clusterID={cluster.id}
+          clusterLabel={cluster.label}
+          clusterRegionId={cluster.region}
+          regionsData={regionsData || []}
+        />
       </Grid>
       <UpgradeKubernetesClusterToHADialog
         open={isUpgradeToHAOpen}

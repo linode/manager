@@ -2,7 +2,6 @@ import md5 from 'md5';
 import * as React from 'react';
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
-import { initGTMUser } from './analytics';
 import { configureErrorReportingUser } from './exceptionReporting';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 import { useAccount } from './queries/account';
@@ -15,7 +14,7 @@ import { useProfile } from './queries/profile';
  * and this is a good side-effect usage of useEffect().
  */
 
-export const IdentifyUser: React.FC<{}> = () => {
+export const IdentifyUser = () => {
   const { data: account, error: accountError } = useAccount();
   const { data: profile } = useProfile();
 
@@ -23,7 +22,6 @@ export const IdentifyUser: React.FC<{}> = () => {
 
   const { setFeatureFlagsLoaded } = useFeatureFlagsLoad();
 
-  const euuid = account?.euuid;
   const userID = profile?.uid;
   const username = profile?.username;
 
@@ -33,13 +31,6 @@ export const IdentifyUser: React.FC<{}> = () => {
       configureErrorReportingUser(String(userID), username);
     }
   }, [userID, username]);
-
-  // Configure user for GTM once we have the info we need.
-  React.useEffect(() => {
-    if (euuid) {
-      initGTMUser(euuid);
-    }
-  }, [euuid]);
 
   React.useEffect(() => {
     if (!LAUNCH_DARKLY_API_KEY) {
@@ -86,6 +77,14 @@ export const IdentifyUser: React.FC<{}> = () => {
            */
 
           .catch(() => setFeatureFlagsLoaded());
+      } else {
+        // We "setFeatureFlagsLoaded" here because if the API is
+        // in maintenance mode, we can't fetch the user's username.
+        // Therefore, the `if` above won't "setFeatureFlagsLoaded".
+
+        // If we're being honest, featureFlagsLoading shouldn't be tracked by Redux
+        // and this code should go away eventually.
+        setFeatureFlagsLoaded();
       }
     }
   }, [client, userID, username, account, accountError]);

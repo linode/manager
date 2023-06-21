@@ -3,9 +3,9 @@ import { matchPath, Redirect, useHistory, useLocation } from 'react-router-dom';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import ReachTabs from 'src/components/core/ReachTabs';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from '../TabLinkList/TabLinkList';
+import { TabLinkList } from '../TabLinkList/TabLinkList';
 
 export interface NavTab {
   title: string;
@@ -25,9 +25,7 @@ export interface NavTabsProps {
   navToTabRouteOnChange?: boolean;
 }
 
-type CombinedProps = NavTabsProps;
-
-const NavTabs: React.FC<CombinedProps> = (props) => {
+export const NavTabs = React.memo((props: NavTabsProps) => {
   const history = useHistory();
   const reactRouterLocation = useLocation();
 
@@ -85,9 +83,7 @@ const NavTabs: React.FC<CombinedProps> = (props) => {
       </React.Suspense>
     </ReachTabs>
   );
-};
-
-export default React.memo(NavTabs);
+});
 
 // Given tabs and a pathname, return the index of the matched tab, and whether
 // or not it's an exact match. If no match is found, the returned index is -1.

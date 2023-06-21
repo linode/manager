@@ -4,7 +4,7 @@ import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Toggle } from 'src/components/Toggle';
 import Typography from 'src/components/core/Typography';
@@ -61,7 +61,7 @@ const AutoBackups = (props: Props) => {
             rate noted on the&nbsp;
             <a
               data-qa-backups-price
-              href="https://linode.com/backups"
+              href="https://www.linode.com/products/backups/"
               target="_blank"
               aria-describedby="external-site"
               rel="noopener noreferrer"

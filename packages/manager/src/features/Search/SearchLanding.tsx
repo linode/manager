@@ -9,13 +9,12 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import H1Header from 'src/components/H1Header';
-import Notice from 'src/components/Notice';
+import { H1Header } from 'src/components/H1Header/H1Header';
+import { Notice } from 'src/components/Notice/Notice';
 import { REFRESH_INTERVAL } from 'src/constants';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import { listToItemsByID } from 'src/queries/base';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
@@ -31,7 +30,7 @@ import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { getQueryParam } from 'src/utilities/queryParams';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 import ResultGroup from './ResultGroup';
 import './searchLanding.css';
@@ -40,6 +39,7 @@ import withStoreSearch, { SearchProps } from './withStoreSearch';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { getImageLabelForLinode } from '../Images/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -146,7 +146,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     error: imagesError,
   } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
 
-  const { data: _publicImages } = useAllImagesQuery(
+  const { data: publicImages } = useAllImagesQuery(
     {},
     { is_public: true },
     !_isLargeAccount
@@ -163,9 +163,10 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   );
   const types = extendTypesQueryResult(typesQuery);
 
-  const searchableLinodes = linodes.map((linode) =>
-    formatLinode(linode, types, listToItemsByID(_publicImages ?? []))
-  );
+  const searchableLinodes = linodes.map((linode) => {
+    const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
+    return formatLinode(linode, types, imageLabel);
+  });
 
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);
@@ -174,7 +175,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   let query = '';
   let queryError = false;
   try {
-    query = getQueryParam(props.location.search, 'query');
+    query = getQueryParamFromQueryString(props.location.search, 'query');
   } catch {
     queryError = true;
   }

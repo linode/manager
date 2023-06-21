@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Accordion, { AccordionProps } from 'src/components/Accordion';
 import { CircleProgress } from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
-interface Props extends Omit<AccordionProps, 'children'> {
+interface ExtendedAccordionProps extends Omit<AccordionProps, 'children'> {
   height?: number;
   renderMainContent: () => JSX.Element;
   headingNumberCount?: number;
@@ -48,7 +48,7 @@ const renderContent = (
   return renderMainContent();
 };
 
-const ExtendedAccordion: React.FC<Props> = (props) => {
+export const ExtendedAccordion = (props: ExtendedAccordionProps) => {
   const {
     error,
     heading,
@@ -71,5 +71,3 @@ const ExtendedAccordion: React.FC<Props> = (props) => {
     </Accordion>
   );
 };
-
-export default ExtendedAccordion;

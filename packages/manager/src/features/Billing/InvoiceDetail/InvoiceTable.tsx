@@ -3,17 +3,17 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
 
@@ -160,7 +160,7 @@ const MaybeRenderContent = (props: {
     return <RenderData items={items} />;
   }
 
-  return <TableRowEmptyState colSpan={8} />;
+  return <TableRowEmpty colSpan={8} />;
 };
 
 export default InvoiceTable;

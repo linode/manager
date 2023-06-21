@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 
 import { AutoEnroll } from './AutoEnroll';
 

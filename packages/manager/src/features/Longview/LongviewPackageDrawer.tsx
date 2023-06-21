@@ -3,19 +3,19 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import Drawer from 'src/components/Drawer';
-import Table from 'src/components/Table';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { Table } from 'src/components/Table';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import withLongviewStats, {
   DispatchProps,
   LVClientData,
 } from 'src/containers/longview.stats.container';
 import LongviewPackageRow from './LongviewPackageRow';
 import { LongviewPackage } from './request.types';
+import { TableCell } from 'src/components/TableCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
   new: {
@@ -79,7 +79,7 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
              * not be open-able, so no explicit logic
              * is included here.
              */
-            <TableRowEmptyState colSpan={12} />
+            <TableRowEmpty colSpan={12} />
           )}
         </TableBody>
       </Table>

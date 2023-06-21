@@ -7,15 +7,25 @@ import { SxProps } from '@mui/system';
 import { isPropValid } from '../../utilities/isPropValid';
 import { rotate360 } from '../../styles/keyframes';
 
+export type ButtonType = 'primary' | 'secondary' | 'outlined';
+
 export interface Props extends ButtonProps {
-  buttonType?: 'primary' | 'secondary' | 'outlined';
+  /** The button variant to render */
+  buttonType?: ButtonType;
+  /** Additional css class to pass to the component */
   className?: string;
+  /** The `sx` prop can be either object or function */
   sx?: SxProps;
+  /** Reduce the padding on the x-axis */
   compactX?: boolean;
+  /** Reduce the padding on the y-axis */
   compactY?: boolean;
+  /** Show a loading indicator */
   loading?: boolean;
+  /** Tooltip text */
   tooltipText?: string;
-  tooltipGAEvent?: () => void;
+  /** Tooltip analytics event */
+  tooltipAnalyticsEvent?: () => void;
 }
 
 const StyledButton = styled(_Button, {
@@ -60,7 +70,10 @@ const Span = styled('span')({
 const Button = React.forwardRef<HTMLButtonElement, Props>(
   (
     {
-      buttonType,
+      // default to secondary as some components never define a buttonType (usually buttons with icons)
+      // and we end up with the wrong styles (purple color, see #6455)
+      // It would be nice to remove this default and require the prop but this fixes the issue for now.
+      buttonType = 'secondary',
       children,
       className,
       compactX,
@@ -69,7 +82,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
       loading,
       sx,
       tooltipText,
-      tooltipGAEvent,
+      tooltipAnalyticsEvent,
       ...rest
     }: Props,
     ref
@@ -108,7 +121,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
           <TooltipIcon
             sxTooltipIcon={sxTooltipIcon}
             text={tooltipText}
-            tooltipGAEvent={tooltipGAEvent}
+            tooltipAnalyticsEvent={tooltipAnalyticsEvent}
             status="help"
           />
         )}

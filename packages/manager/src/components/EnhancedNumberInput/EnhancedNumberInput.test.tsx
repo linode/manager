@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import EnhancedNumberInput from './EnhancedNumberInput';
+import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 
 const setValue = vi.fn();
 

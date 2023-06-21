@@ -26,17 +26,17 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateVolumeEvent } from 'src/utilities/ga';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
-import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
+import { ModeSelection } from './ModeSelection';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textWrapper: {
@@ -116,7 +116,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               filesystem_path,
               `Volume scheduled for creation.`
             );
-            // GA Event
+            // Analytics Event
             sendCreateVolumeEvent(`Size: ${size}GB`, origin);
           })
           .catch((errorResponse) => {

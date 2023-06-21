@@ -1,12 +1,12 @@
 import * as React from 'react';
 import _Dialog, { DialogProps as _DialogProps } from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import DialogContent from 'src/components/core/DialogContent';
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { styled, useTheme } from '@mui/material/styles';
-import { convertForAria } from 'src/components/TabLink/TabLink';
+import { convertForAria } from 'src/utilities/stringUtils';
 
 export interface DialogProps extends _DialogProps {
   className?: string;
@@ -84,9 +84,6 @@ const StyledDialog = styled(_Dialog, {
     display: 'flex',
     justifyContent: 'flex-end',
     marginTop: theme.spacing(2),
-  },
-  '& .MuiBackdrop-root': {
-    backgroundColor: 'rgba(0, 0, 0, .3)',
   },
 }));
 

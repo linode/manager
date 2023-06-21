@@ -1,108 +1,108 @@
+import * as React from 'react';
+import Divider from 'src/components/core/Divider';
+import Drawer from 'src/components/Drawer';
+import ExternalLink from 'src/components/ExternalLink';
+import formatDate from 'src/utilities/formatDate';
+import Typography from 'src/components/core/Typography';
+import { AccessSelect } from './AccessSelect';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { readableBytes } from 'src/utilities/unitConversions';
+import { styled } from '@mui/material/styles';
+import { truncateMiddle } from 'src/utilities/truncate';
+import { useProfile } from 'src/queries/profile';
 import {
   ACLType,
   getObjectACL,
   updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
-import * as React from 'react';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
-import Drawer from 'src/components/Drawer';
-import ExternalLink from 'src/components/ExternalLink';
-import formatDate from 'src/utilities/formatDate';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { readableBytes } from 'src/utilities/unitConversions';
-import AccessSelect from './AccessSelect';
-import { useProfile } from 'src/queries/profile';
 
-const useStyles = makeStyles(() => ({
-  copy: {
-    marginLeft: '1em',
-    padding: 0,
-  },
-  link: {
-    display: 'flex',
-  },
-}));
-
-export interface Props {
-  open: boolean;
-  onClose: () => void;
-  name?: string;
-  displayName?: string;
-  size?: number | null;
-  lastModified?: string | null;
-  url?: string;
+export interface ObjectDetailsDrawerProps {
   bucketName: string;
   clusterId: string;
+  displayName?: string;
+  lastModified?: string | null;
+  name?: string;
+  onClose: () => void;
+  open: boolean;
+  size?: number | null;
+  url?: string;
 }
 
-const ObjectDetailsDrawer: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const ObjectDetailsDrawer = React.memo(
+  (props: ObjectDetailsDrawerProps) => {
+    const { data: profile } = useProfile();
+    const {
+      bucketName,
+      clusterId,
+      displayName,
+      lastModified,
+      name,
+      onClose,
+      open,
+      size,
+      url,
+    } = props;
+    let formattedLastModified;
 
-  const { data: profile } = useProfile();
+    try {
+      if (lastModified) {
+        formattedLastModified = formatDate(lastModified, {
+          timezone: profile?.timezone,
+        });
+      }
+    } catch {}
 
-  const {
-    open,
-    onClose,
-    name,
-    displayName,
-    size,
-    lastModified,
-    url,
-    bucketName,
-    clusterId,
-  } = props;
+    return (
+      <Drawer
+        open={open}
+        onClose={onClose}
+        title={truncateMiddle(displayName ?? 'Object Detail')}
+      >
+        {size ? (
+          <Typography variant="subtitle2">
+            {readableBytes(size).formatted}
+          </Typography>
+        ) : null}
+        {formattedLastModified && Boolean(profile) ? (
+          <Typography variant="subtitle2" data-testid="lastModified">
+            Last modified: {formattedLastModified}
+          </Typography>
+        ) : null}
 
-  let formattedLastModified;
-  try {
-    if (lastModified) {
-      formattedLastModified = formatDate(lastModified, {
-        timezone: profile?.timezone,
-      });
-    }
-  } catch {}
+        {url ? (
+          <StyledLinkContainer>
+            <ExternalLink hideIcon link={url} text={truncateMiddle(url, 50)} />
+            <StyledCopyTooltip text={url} />
+          </StyledLinkContainer>
+        ) : null}
 
-  return (
-    <Drawer
-      open={open}
-      onClose={onClose}
-      title={truncateMiddle(displayName ?? 'Object Detail')}
-    >
-      {size ? (
-        <Typography variant="subtitle2">
-          {readableBytes(size).formatted}
-        </Typography>
-      ) : null}
-      {formattedLastModified && Boolean(profile) ? (
-        <Typography variant="subtitle2" data-testid="lastModified">
-          Last modified: {formattedLastModified}
-        </Typography>
-      ) : null}
+        {open && name ? (
+          <>
+            <Divider spacingTop={16} spacingBottom={16} />
+            <AccessSelect
+              variant="object"
+              name={name}
+              getAccess={() => getObjectACL(clusterId, bucketName, name)}
+              updateAccess={(acl: ACLType) =>
+                updateObjectACL(clusterId, bucketName, name, acl)
+              }
+            />
+          </>
+        ) : null}
+      </Drawer>
+    );
+  }
+);
 
-      {url ? (
-        <div className={classes.link}>
-          <ExternalLink hideIcon link={url} text={truncateMiddle(url, 50)} />
-          <CopyTooltip className={classes.copy} text={url} />
-        </div>
-      ) : null}
+const StyledCopyTooltip = styled(CopyTooltip, {
+  label: 'StyledCopyTooltip',
+})(() => ({
+  marginLeft: '1em',
+  padding: 0,
+}));
 
-      {open && name ? (
-        <>
-          <Divider spacingTop={16} spacingBottom={16} />
-          <AccessSelect
-            variant="object"
-            name={name}
-            getAccess={() => getObjectACL(clusterId, bucketName, name)}
-            updateAccess={(acl: ACLType) =>
-              updateObjectACL(clusterId, bucketName, name, acl)
-            }
-          />
-        </>
-      ) : null}
-    </Drawer>
-  );
-};
-
-export default React.memo(ObjectDetailsDrawer);
+const StyledLinkContainer = styled('div', {
+  label: 'StyledLinkContainer',
+})(() => ({
+  display: 'flex',
+}));

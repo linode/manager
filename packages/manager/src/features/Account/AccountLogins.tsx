@@ -4,16 +4,16 @@ import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell';
+import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountLoginsQuery } from 'src/queries/accountLogins';
@@ -77,7 +77,7 @@ const AccountLogins = () => {
       return <TableRowError colSpan={5} message={error[0].reason} />;
     }
     if (data?.results == 0) {
-      return <TableRowEmptyState message="No account logins" colSpan={5} />;
+      return <TableRowEmpty message="No account logins" colSpan={5} />;
     }
     if (data) {
       return data.data.map((item: AccountLogin) => (

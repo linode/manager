@@ -42,7 +42,7 @@ export const getIPs = (params?: Params, filters?: Filter) =>
  */
 export const getIP = (address: string) =>
   Request<IPAddress>(
-    setURL(`${API_ROOT}/networking/ips/${address}`),
+    setURL(`${API_ROOT}/networking/ips/${encodeURIComponent(address)}`),
     setMethod('GET')
   );
 
@@ -58,7 +58,7 @@ export const getIP = (address: string) =>
  */
 export const updateIP = (address: string, rdns: string | null = null) =>
   Request<IPAddress>(
-    setURL(`${API_ROOT}/networking/ips/${address}`),
+    setURL(`${API_ROOT}/networking/ips/${encodeURIComponent(address)}`),
     setData({ rdns }, updateIPSchema),
     setMethod('PUT')
   );
@@ -160,11 +160,12 @@ export const getIPv6Pools = (params?: Params) =>
  * View IPv6 range information.
  *
  */
-export const getIPv6Ranges = (params?: Params) =>
+export const getIPv6Ranges = (params?: Params, filter?: Filter) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**
@@ -174,7 +175,7 @@ export const getIPv6Ranges = (params?: Params) =>
  */
 export const getIPv6RangeInfo = (range: string, params?: Params) =>
   Request<IPRangeInformation>(
-    setURL(`${API_ROOT}/networking/ipv6/ranges/${range}`),
+    setURL(`${API_ROOT}/networking/ipv6/ranges/${encodeURIComponent(range)}`),
     setMethod('GET'),
     setParams(params)
   );

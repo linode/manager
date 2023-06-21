@@ -1,22 +1,22 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useParams } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
-import LinodeMultiSelect from 'src/components/LinodeMultiSelect/LinodeMultiSelect';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { getEntityIdsByPermission } from 'src/utilities/grants';
-import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
-import { useParams } from 'react-router-dom';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallDevicesQuery,
   useFirewallQuery,
 } from 'src/queries/firewalls';
-import { useTheme } from '@mui/material/styles';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
 
 interface Props {
   open: boolean;
@@ -33,7 +33,10 @@ export const AddDeviceDrawer = (props: Props) => {
   const isRestrictedUser = Boolean(profile?.restricted);
 
   const { data: firewall } = useFirewallQuery(Number(id));
-  const { data: currentDevices } = useAllFirewallDevicesQuery(Number(id));
+  const {
+    data: currentDevices,
+    isLoading: currentDevicesLoading,
+  } = useAllFirewallDevicesQuery(Number(id));
 
   const currentLinodeIds =
     currentDevices
@@ -47,16 +50,16 @@ export const AddDeviceDrawer = (props: Props) => {
   } = useAddFirewallDeviceMutation(Number(id));
   const theme = useTheme();
 
-  const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
+  const [selectedLinodeIds, setSelectedLinodeIds] = React.useState<number[]>(
+    []
+  );
 
   const handleSubmit = async () => {
     await Promise.all(
-      selectedLinodes.map((thisLinode) =>
-        addDevice({ type: 'linode', id: thisLinode })
-      )
+      selectedLinodeIds.map((id) => addDevice({ type: 'linode', id }))
     );
     onClose();
-    setSelectedLinodes([]);
+    setSelectedLinodeIds([]);
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
@@ -121,13 +124,21 @@ export const AddDeviceDrawer = (props: Props) => {
         }}
       >
         {errorMessage ? errorNotice(errorMessage) : null}
-        <LinodeMultiSelect
-          onChange={(selected) => setSelectedLinodes(selected)}
-          value={selectedLinodes}
+        <LinodeSelectV2
+          multiple
+          onSelectionChange={(linodes) =>
+            setSelectedLinodeIds(linodes.map((linode) => linode.id))
+          }
+          value={selectedLinodeIds}
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
             linodeSelectGuidance ? linodeSelectGuidance : ''
           }`}
-          filteredLinodes={[...currentLinodeIds, ...readOnlyLinodeIds]}
+          optionsFilter={(linode) =>
+            ![...readOnlyLinodeIds, ...currentLinodeIds].includes(linode.id)
+          }
+          noOptionsMessage="No Linodes available to add"
+          disabled={currentDevicesLoading}
+          loading={currentDevicesLoading}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
@@ -136,7 +147,7 @@ export const AddDeviceDrawer = (props: Props) => {
           <Button
             buttonType="primary"
             onClick={handleSubmit}
-            disabled={selectedLinodes.length === 0}
+            disabled={selectedLinodeIds.length === 0}
             loading={isLoading}
             data-qa-submit
           >

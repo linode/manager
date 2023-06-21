@@ -6,8 +6,10 @@ import { AddNodePoolDrawer, Props } from './AddNodePoolDrawer';
 const props: Props = {
   clusterId: 0,
   clusterLabel: 'test',
+  clusterRegionId: 'us-east',
   open: true,
   onClose: vi.fn(),
+  regionsData: [],
 };
 
 describe('AddNodePoolDrawer', () => {

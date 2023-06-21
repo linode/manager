@@ -5,8 +5,8 @@ import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import MenuItem from 'src/components/MenuItem';
-import Notice from 'src/components/Notice';
-import Radio from 'src/components/Radio';
+import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({

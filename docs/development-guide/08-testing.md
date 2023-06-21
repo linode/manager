@@ -168,6 +168,34 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
 2. In another terminal window, run all of the tests with `yarn cy:run`.
     * Alternatively, use Cypress's interactive interface with `yarn cy:debug` if you're focused on a single test suite.
 
+#### Configuring End-to-End Tests
+
+Cloud Manager UI tests can be configured using environment variables, which can be defined in `packages/manager/.env` or specified when running Cypress.
+
+##### Cypress Environment Variables
+These environment variables are used by Cypress out-of-the-box to override the default configuration. Cypress exposes many other options that can be configured with environment variables, but the items listed below are particularly relevant for Cloud Manager testing. More information can be found at [docs.cypress.io](https://docs.cypress.io/guides/guides/environment-variables).
+
+| Environment Variable | Description                                | Example                    | Default                 |
+|----------------------|--------------------------------------------|----------------------------|-------------------------|
+| `CYPRESS_BASE_URL`   | URL to Cloud Manager environment for tests | `https://cloud.linode.com` | `http://localhost:3000` |
+
+##### Cloud Manager-specific Environment Variables
+These environment variables are specific to Cloud Manager UI tests. They can be distinguished from out-of-the-box Cypress environment variables by their `CY_TEST_` prefix.
+
+###### General
+Environment variables related to the general operation of the Cloud Manager Cypress tests.
+
+| Environment Variable | Description                                                                                           | Example  | Default                         |
+|----------------------|-------------------------------------------------------------------------------------------------------|----------|---------------------------------|
+| `CY_TEST_SUITE`      | Name of the Cloud Manager UI test suite to run. Possible values are `core`, `region`, or `synthetic`. | `region` | Unset; defaults to `core` suite |
+
+###### Regions
+These environment variables are used by Cloud Manager's UI tests to override region selection behavior. This can be useful for testing Cloud Manager functionality against a specific region.
+
+| Environment Variable | Description                                     | Example   | Default                               |
+|----------------------|-------------------------------------------------|-----------|---------------------------------------|
+| `CY_TEST_REGION`     | ID of region to test (as used by Linode APIv4). | `us-east` | Unset; regions are selected at random |
+
 ### Writing End-to-End Tests
 
 1. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)

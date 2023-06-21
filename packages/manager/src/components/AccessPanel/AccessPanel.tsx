@@ -1,13 +1,15 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { makeStyles } from 'tss-react/mui';
 import Divider from '../core/Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
-const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
+const PasswordInput = React.lazy(
+  () => import('src/components/PasswordInput/PasswordInput')
+);
 
 const useStyles = makeStyles<void, 'passwordInputOuter'>()(
   (theme: Theme, _params, classes) => ({

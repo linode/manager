@@ -2,16 +2,16 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import OrderBy from 'src/components/OrderBy';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import TableSortCell from 'src/components/TableSortCell';
+import { TableSortCell } from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -177,7 +177,7 @@ const renderLoadingErrorData = (
     return <TableRowLoading columns={6} />;
   }
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={12} />;
+    return <TableRowEmpty colSpan={12} />;
   }
 
   return data.map((thisProcess, idx) => (

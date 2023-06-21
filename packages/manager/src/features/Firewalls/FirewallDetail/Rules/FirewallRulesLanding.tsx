@@ -1,30 +1,32 @@
-import {
+import type {
   FirewallPolicyType,
-  FirewallRules,
   FirewallRuleType,
+  FirewallRules,
 } from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { Notice } from 'src/components/Notice/Notice';
+import { Prompt } from 'src/components/Prompt/Prompt';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
-import Prompt from 'src/components/Prompt';
+import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
+import { FirewallRuleDrawer } from './FirewallRuleDrawer';
+import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
+import { FirewallRuleTable } from './FirewallRuleTable';
 import curriedFirewallRuleEditorReducer, {
-  editorStateToRules,
   hasModified as _hasModified,
+  editorStateToRules,
   initRuleEditorState,
   prepareRules,
   stripExtendedFields,
 } from './firewallRuleEditor';
-import FirewallRuleTable from './FirewallRuleTable';
-import { Category, parseFirewallRuleError } from './shared';
-import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
+import type { Category } from './shared';
+import { parseFirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -54,7 +56,7 @@ interface Props {
 }
 
 interface Drawer {
-  mode: Mode;
+  mode: FirewallRuleDrawerMode;
   category: Category;
   isOpen: boolean;
   ruleIdx?: number;
@@ -106,7 +108,11 @@ const FirewallRulesLanding = (props: Props) => {
     setDiscardChangesModalOpen,
   ] = React.useState<boolean>(false);
 
-  const openRuleDrawer = (category: Category, mode: Mode, idx?: number) =>
+  const openRuleDrawer = (
+    category: Category,
+    mode: FirewallRuleDrawerMode,
+    idx?: number
+  ) =>
     setRuleDrawer({
       mode,
       ruleIdx: idx,

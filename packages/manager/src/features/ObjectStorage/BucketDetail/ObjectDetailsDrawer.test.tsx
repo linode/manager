@@ -2,10 +2,11 @@ import { vi } from 'vitest';
 import * as React from 'react';
 import { act, waitFor } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import ObjectDetailsDrawer, { Props } from './ObjectDetailsDrawer';
+import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 import { rest, server } from 'src/mocks/testServer';
 import { profileFactory } from 'src/factories';
 import { QueryClient } from 'react-query';
+import type { ObjectDetailsDrawerProps } from './ObjectDetailsDrawer';
 
 vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
   const actual = await vi.importActual<any>(
@@ -23,7 +24,7 @@ vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
 
 vi.mock('src/components/EnhancedSelect/Select');
 
-const props: Props = {
+const props: ObjectDetailsDrawerProps = {
   onClose: vi.fn(),
   open: true,
   lastModified: '2019-12-31T23:59:59Z',

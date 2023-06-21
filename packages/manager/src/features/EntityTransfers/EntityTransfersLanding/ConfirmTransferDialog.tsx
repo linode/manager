@@ -13,8 +13,8 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Notice } from 'src/components/Notice/Notice';
 import {
   queryKey,
   TRANSFER_FILTERS,
@@ -24,7 +24,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { sendEntityTransferReceiveEvent } from 'src/utilities/ga';
+import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics';
 import { pluralize } from 'src/utilities/pluralize';
 import { countByEntity } from '../utilities';
 import { useQueryClient } from 'react-query';

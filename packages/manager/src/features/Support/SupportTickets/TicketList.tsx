@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { SupportTicket } from '@linode/api-v4/lib/support';
 import Hidden from 'src/components/core/Hidden';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import TableSortCell from 'src/components/TableSortCell';
-import TicketRow from './TicketRow';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { TicketRow } from './TicketRow';
 import { useSupportTicketsQuery } from 'src/queries/support';
 import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
@@ -83,7 +83,7 @@ export const TicketList = (props: Props) => {
       ));
     }
 
-    return <TableRowEmptyState colSpan={8} />;
+    return <TableRowEmpty colSpan={8} />;
   };
 
   const isActive = (label: string) => label === orderBy;
@@ -161,7 +161,6 @@ export const TicketList = (props: Props) => {
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         eventCategory="ticket list"
-        padded
       />
     </>
   );

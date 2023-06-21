@@ -1,10 +1,11 @@
 import { vi } from 'vitest';
 import React from 'react';
-import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { LOGIN_ROOT } from 'src/constants';
-import TPADialog, { Props } from './TPADialog';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { screen } from '@testing-library/react';
+import { TPADialog } from './TPADialog';
+import type { TPADialogProps } from './TPADialog';
 
 vi.mock('src/hooks/useFlags', () => ({
   __esModule: true,
@@ -26,7 +27,7 @@ vi.mock('src/hooks/useFlags', () => ({
   }),
 }));
 
-const props: Props = {
+const props: TPADialogProps = {
   currentProvider: {
     displayName: 'Google',
     href: 'https://google.com',
@@ -45,7 +46,7 @@ describe('TPADialog', () => {
     expect(title).toBeInTheDocument();
   });
   it('Should render TPADialog change to Google login', () => {
-    const newProps: Props = {
+    const newProps: TPADialogProps = {
       ...props,
       currentProvider: {
         displayName: 'Linode',
@@ -60,7 +61,7 @@ describe('TPADialog', () => {
     expect(title).toBeInTheDocument();
   });
   it('Should render TPADialog change to GitHub login', () => {
-    const newProps: Props = {
+    const newProps: TPADialogProps = {
       ...props,
       currentProvider: {
         displayName: 'Linode',
@@ -92,7 +93,7 @@ describe('TPADialog', () => {
     expect(mockWindow).toHaveBeenCalledWith(expectedUrl, '_blank', 'noopener');
   });
   it('Should redirect to TPA(Google) login', async () => {
-    const newProps: Props = {
+    const newProps: TPADialogProps = {
       ...props,
       currentProvider: {
         displayName: 'Linode',
@@ -113,7 +114,7 @@ describe('TPADialog', () => {
     expect(mockWindow).toHaveBeenCalledWith(expectedUrl, '_blank', 'noopener');
   });
   it('Should redirect to TPA(Github) login', async () => {
-    const newProps: Props = {
+    const newProps: TPADialogProps = {
       ...props,
       currentProvider: {
         displayName: 'Linode',

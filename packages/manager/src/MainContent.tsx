@@ -1,17 +1,16 @@
-import classNames from 'classnames';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import Box from 'src/components/core/Box';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
@@ -35,8 +34,10 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import { ENABLE_MAINTENANCE_MODE } from './constants';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
@@ -44,15 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     backgroundColor: theme.bg.app,
     zIndex: 1,
-  },
-  wrapper: {
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('md')]: {
-      paddingTop: theme.spacing(2),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
@@ -135,16 +127,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  location: RouteComponentProps['location'];
-  history: RouteComponentProps['history'];
   appIsLoading: boolean;
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props & GlobalErrorProps & WithTheme;
+type CombinedProps = Props & GlobalErrorProps;
 
 const Account = React.lazy(() => import('src/features/Account'));
-const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
+const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
 const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() => import('src/features/Domains'));
 const Images = React.lazy(() => import('src/features/Images'));
@@ -175,8 +165,8 @@ const AccountActivationLanding = React.lazy(
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
-const MainContent: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+const MainContent = (props: CombinedProps) => {
+  const { classes, cx } = useStyles();
   const flags = useFlags();
   const { data: preferences } = usePreferences();
 
@@ -250,7 +240,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
   }
 
   // If the API is in maintenance mode, return a Maintenance screen
-  if (props.globalErrors.api_maintenance_mode) {
+  if (props.globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
 
@@ -259,7 +249,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
    */
   return (
     <div
-      className={classNames({
+      className={cx({
         [classes.appFrame]: true,
         /**
          * hidden to prevent some jankiness with the app loading before the splash screen
@@ -274,7 +264,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
         {({
           preference: desktopMenuIsOpen,
           togglePreference: desktopMenuToggle,
-        }: ToggleProps<boolean>) => (
+        }: PreferenceToggleProps<boolean>) => (
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
               <>
@@ -293,15 +283,11 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                   closeMenu={() => toggleMenu(false)}
                 />
                 <div
-                  className={`
-                    ${classes.content}
-                    ${
+                  className={cx(classes.content, {
+                    [classes.fullWidthContent]:
                       desktopMenuIsOpen ||
-                      (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                        ? classes.fullWidthContent
-                        : ''
-                    }
-                  `}
+                      (desktopMenuIsOpen && desktopMenuIsOpen === true),
+                  })}
                 >
                   <TopMenu
                     isSideMenuOpen={!desktopMenuIsOpen}
@@ -316,7 +302,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                     role="main"
                   >
                     <Grid container spacing={0} className={classes.grid}>
-                      <Grid className={`${classes.switchWrapper} p0`}>
+                      <Grid className={cx(classes.switchWrapper, 'p0')}>
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
@@ -380,8 +366,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withGlobalErrors(),
-  withTheme
+  withGlobalErrors()
 )(MainContent);
 
 // =============================================================================

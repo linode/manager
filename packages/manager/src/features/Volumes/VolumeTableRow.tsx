@@ -7,8 +7,8 @@ import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import Box from '@mui/material/Box';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -62,7 +62,7 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   offline: 'inactive',
 };
 
-export const VolumeTableRow = (props: CombinedProps) => {
+export const VolumeTableRow = React.memo((props: CombinedProps) => {
   const classes = useStyles();
   const { data: regions } = useRegionsQuery();
   const {
@@ -171,6 +171,4 @@ export const VolumeTableRow = (props: CombinedProps) => {
       </TableCell>
     </TableRow>
   );
-};
-
-export default React.memo(VolumeTableRow);
+});

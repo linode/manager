@@ -1,19 +1,18 @@
+import * as React from 'react';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
+import { AccessSelect } from './AccessSelect';
+import { styled } from '@mui/material/styles';
 import {
   ACLType,
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import AccessSelect from './AccessSelect';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(3),
-  },
+export const StyledRootContainer = styled(Paper, {
+  label: 'StyledRootContainer',
+})(({ theme }) => ({
+  padding: theme.spacing(3),
 }));
 
 interface Props {
@@ -21,13 +20,11 @@ interface Props {
   clusterId: string;
 }
 
-export const BucketAccess: React.FC<Props> = (props) => {
-  const classes = useStyles();
-
+export const BucketAccess = React.memo((props: Props) => {
   const { bucketName, clusterId } = props;
 
   return (
-    <Paper className={classes.root}>
+    <StyledRootContainer>
       <Typography variant="h2">Bucket Access</Typography>
       <AccessSelect
         variant="bucket"
@@ -42,8 +39,6 @@ export const BucketAccess: React.FC<Props> = (props) => {
           return updateBucketAccess(clusterId, bucketName, payload);
         }}
       />
-    </Paper>
+    </StyledRootContainer>
   );
-};
-
-export default React.memo(BucketAccess);
+});

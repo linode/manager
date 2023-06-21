@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-// import { fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
@@ -74,21 +74,24 @@ describe('Payment Info Panel', () => {
     expect(queryByText('Add Payment Method')).toBeNull();
   });
 
-  // @TODO: Restore `PaymentInformation.test.tsx` tests. See M3-5768 for more information.
-  // it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', () => {
-  //   const { getByTestId } = renderWithTheme(
-  //     <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-  //       <PaymentInformation loading={false} paymentMethods={paymentMethods} />
-  //     </PayPalScriptProvider>
-  //   );
+  it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', () => {
+    const { getByTestId } = renderWithTheme(
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <PaymentInformation
+          loading={false}
+          paymentMethods={paymentMethods}
+          isAkamaiCustomer={false}
+        />
+      </PayPalScriptProvider>
+    );
 
-  //   const addPaymentMethodButton = getByTestId(
-  //     'payment-info-add-payment-method'
-  //   );
+    const addPaymentMethodButton = getByTestId(
+      'payment-info-add-payment-method'
+    );
 
-  //   fireEvent.click(addPaymentMethodButton);
-  //   expect(getByTestId('drawer')).toBeVisible();
-  // });
+    fireEvent.click(addPaymentMethodButton);
+    expect(getByTestId('drawer')).toBeVisible();
+  });
 
   it('Lists all payment methods for Linode customers', () => {
     const { getByTestId } = renderWithTheme(

@@ -15,15 +15,15 @@ import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import Table from 'src/components/Table';
+import { Table } from 'src/components/Table';
 import {
   withProfile,
   WithProfileProps,
 } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
-import { getParamFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncate } from 'src/utilities/truncate';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
@@ -111,7 +111,10 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   componentDidMount() {
-    const selected = +getParamFromUrl(location.search, 'stackScriptID');
+    const selected = +getQueryParamFromQueryString(
+      location.search,
+      'stackScriptID'
+    );
     /** '' converted to a number is 0 */
     if (!isNaN(selected) && selected !== 0) {
       this.setState({ stackScriptLoading: true });

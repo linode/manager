@@ -12,8 +12,6 @@ interface ImportMetaEnv {
   REACT_APP_DISABLE_EVENT_THROTTLE?: boolean;
   REACT_APP_LOG_PERFORMANCE_METRICS?: string;
   REACT_APP_ACCESS_TOKEN?: string;
-  REACT_APP_GTM_ID?: string;
-  REACT_APP_GA_ID?: string;
   REACT_APP_ADOBE_ANALYTICS_URL?: string;
   REACT_APP_SENTRY_URL?: string;
   REACT_APP_GPAY_ENV?: 'TEST' | 'PRODUCTION';
@@ -32,6 +30,7 @@ interface ImportMetaEnv {
   REACT_APP_APP_ROOT?: string;
   REACT_APP_ENABLE_DEV_TOOLS?: boolean;
   REACT_APP_DISABLE_NEW_RELIC?: boolean;
+  REACT_APP_ENABLE_MAINTENANCE_MODE?: string;
 }
 
 interface ImportMeta {

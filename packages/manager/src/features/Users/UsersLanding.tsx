@@ -5,17 +5,17 @@ import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
-import Notice from 'src/components/Notice';
+import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
@@ -187,7 +187,7 @@ const UsersLanding = () => {
     }
 
     if (!users || users.results === 0) {
-      return <TableRowEmptyState colSpan={4} />;
+      return <TableRowEmpty colSpan={4} />;
     }
 
     return users.data.map((user) => renderUserRow(user));

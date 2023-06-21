@@ -3,18 +3,18 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import { makeStyles } from '@mui/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import TableSortCell from 'src/components/TableSortCell';
+import { TableSortCell } from 'src/components/TableSortCell';
 import {
   LongviewTopProcesses,
   TopProcessStat,
@@ -132,7 +132,7 @@ const renderLoadingErrorData = (
     return <TableRowLoading columns={4} />;
   }
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={4} />;
+    return <TableRowEmpty colSpan={4} />;
   }
 
   return (

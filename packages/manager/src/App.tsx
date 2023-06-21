@@ -1,179 +1,150 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, pathOr } from 'ramda';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'redux';
-import { Subscription } from 'rxjs/Subscription';
-import {
-  DocumentTitleSegment,
-  withDocumentTitleProvider,
-} from 'src/components/DocumentTitle';
-import 'highlight.js/styles/a11y-light.css';
 import 'highlight.js/styles/a11y-dark.css';
+import 'highlight.js/styles/a11y-light.css';
+import { useSnackbar } from 'notistack';
+import { pathOr } from 'ramda';
+import * as React from 'react';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
-import { events$ } from 'src/events';
+import { EventWithStore, events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
-import composeState from 'src/utilities/composeState';
-import { MapState } from './store/types';
+import GoTo from './GoTo';
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
-import GoTo from './GoTo';
+import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
+import { reportException } from './exceptionReporting';
+import { useAuthentication } from './hooks/useAuthentication';
+import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
+import useLinodes from './hooks/useLinodes';
+import { loadScript } from './hooks/useScript';
+import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
-import { volumeEventsHandler } from './queries/volumes';
-import { imageEventsHandler } from './queries/images';
-import { tokenEventHandler } from './queries/tokens';
-import withPreferences, {
-  PreferencesActionsProps,
-  PreferencesStateProps,
-} from './containers/preferences.container';
-import { loadScript } from './hooks/useScript';
-import { getNextThemeValue } from './utilities/theme';
-import { sshKeyEventHandler } from './queries/profile';
 import { firewallEventsHandler } from './queries/firewalls';
-import { nodebalanacerEventHandler } from './queries/nodebalancers';
-import { oauthClientsEventHandler } from './queries/accountOAuth';
-import { ADOBE_ANALYTICS_URL } from './constants';
+import { imageEventsHandler } from './queries/images';
 import { linodeEventsHandler } from './queries/linodes/events';
+import { nodebalanacerEventHandler } from './queries/nodebalancers';
+import { useMutatePreferences, usePreferences } from './queries/preferences';
+import { sshKeyEventHandler } from './queries/profile';
+import { supportTicketEventHandler } from './queries/support';
+import { tokenEventHandler } from './queries/tokens';
+import { volumeEventsHandler } from './queries/volumes';
+import { ApplicationState } from './store';
+import { getNextThemeValue } from './utilities/theme';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
-interface Props {
-  location: RouteComponentProps['location'];
-  history: RouteComponentProps['history'];
-}
+// Ensure component's display name is 'App'
+export const App = () => <BaseApp />;
 
-interface State {
-  menuOpen: boolean;
-  welcomeBanner: boolean;
-  hasError: boolean;
-  goToOpen: boolean;
-}
+const BaseApp = withFeatureFlagProvider(
+  withFeatureFlagConsumer(() => {
+    const history = useHistory();
 
-type CombinedProps = Props &
-  StateProps &
-  RouteComponentProps &
-  WithSnackbarProps &
-  FeatureFlagConsumerProps &
-  PreferencesStateProps &
-  PreferencesActionsProps;
+    const { data: preferences } = usePreferences();
+    const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
-export class App extends React.Component<CombinedProps, State> {
-  composeState = composeState;
+    const { featureFlagsLoading } = useFeatureFlagsLoad();
+    const appIsLoading = useSelector(
+      (state: ApplicationState) => state.initialLoad.appIsLoading
+    );
+    const { loggedInAsCustomer } = useAuthentication();
 
-  eventsSub: Subscription;
+    const { enqueueSnackbar } = useSnackbar();
 
-  state: State = {
-    menuOpen: false,
-    welcomeBanner: false,
-    hasError: false,
-    goToOpen: false,
-  };
+    const {
+      linodes: {
+        error: { read: linodesError },
+      },
+    } = useLinodes();
 
-  componentDidCatch() {
-    this.setState({ hasError: true });
-  }
+    const [goToOpen, setGoToOpen] = React.useState(false);
 
-  componentDidMount() {
-    if (import.meta.env.PROD && !import.meta.env.REACT_APP_DISABLE_NEW_RELIC) {
-      loadScript('/new-relic.js');
-    }
+    const theme = preferences?.theme;
+    const keyboardListener = React.useCallback(
+      (event: KeyboardEvent) => {
+        const isOSMac = navigator.userAgent.includes('Mac');
+        const letterForThemeShortcut = 'D';
+        const letterForGoToOpen = 'K';
+        const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
+        if (event[modifierKey] && event.shiftKey) {
+          switch (event.key) {
+            case letterForThemeShortcut:
+              const currentTheme = theme;
+              const newTheme = getNextThemeValue(currentTheme);
 
-    // Load Adobe Analytics Launch Script
-    if (!!ADOBE_ANALYTICS_URL) {
-      loadScript(ADOBE_ANALYTICS_URL, { location: 'head' });
-    }
+              updateUserPreferences({ theme: newTheme });
+              break;
+            case letterForGoToOpen:
+              setGoToOpen(!goToOpen);
+              break;
+          }
+        }
+      },
+      [goToOpen, theme, updateUserPreferences]
+    );
 
-    /**
-     * Send pageviews unless blocklisted.
-     */
-    this.props.history.listen(({ pathname }) => {
-      if ((window as any).ga) {
-        (window as any).ga('send', 'pageview', pathname);
+    React.useEffect(() => {
+      if (
+        import.meta.env.PROD &&
+        !import.meta.env.REACT_APP_DISABLE_NEW_RELIC
+      ) {
+        loadScript('/new-relic.js');
       }
-    });
 
-    /**
-     * Allow an Easter egg for toggling the theme with
-     * a key combination
-     */
-    // eslint-disable-next-line
-    document.addEventListener('keydown', this.keyboardListener);
+      // Load Adobe Analytics Launch Script
+      if (!!ADOBE_ANALYTICS_URL) {
+        loadScript(ADOBE_ANALYTICS_URL, { location: 'head' })
+          .then((data) => {
+            const adobeScriptTags = document.querySelectorAll(
+              'script[src^="https://assets.adobedtm.com/"]'
+            );
+            // Log an error; if the promise resolved, the _satellite object and 3 Adobe scripts should be present in the DOM.
+            if (
+              data.status !== 'ready' ||
+              !(window as any)._satellite ||
+              adobeScriptTags.length !== NUM_ADOBE_SCRIPTS
+            ) {
+              reportException(
+                'Adobe Analytics error: Not all Adobe Launch scripts and extensions were loaded correctly; analytics cannot be sent.'
+              );
+            }
+          })
+          .catch(() => {
+            // Do nothing; a user may have analytics script requests blocked.
+          });
+      }
+    }, []);
 
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('database') && !event._initial
-      )
-      .subscribe(databaseEventsHandler);
+    React.useEffect(() => {
+      /**
+       * Send pageviews
+       */
+      return history.listen(({ pathname }) => {
+        // Send Adobe Analytics page view events
+        if ((window as any)._satellite) {
+          (window as any)._satellite.track('page view', {
+            url: pathname,
+          });
+        }
+      });
+    }, [history]);
 
-    events$
-      .filter(
-        ({ event }) =>
-          event.action.startsWith('domain') &&
-          !event._initial &&
-          event.entity !== null
-      )
-      .subscribe(domainEventsHandler);
-
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('volume') && !event._initial
-      )
-      .subscribe(volumeEventsHandler);
-
-    events$
-      .filter(
-        ({ event }) =>
-          (event.action.startsWith('image') ||
-            event.action === 'disk_imagize') &&
-          !event._initial
-      )
-      .subscribe(imageEventsHandler);
-
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('token') && !event._initial
-      )
-      .subscribe(tokenEventHandler);
-
-    events$
-      .filter(
-        ({ event }) =>
-          event.action.startsWith('user_ssh_key') && !event._initial
-      )
-      .subscribe(sshKeyEventHandler);
-
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('firewall') && !event._initial
-      )
-      .subscribe(firewallEventsHandler);
-
-    events$
-      .filter(
-        ({ event }) =>
-          event.action.startsWith('nodebalancer') && !event._initial
-      )
-      .subscribe(nodebalanacerEventHandler);
-
-    events$
-      .filter(
-        ({ event }) =>
-          event.action.startsWith('oauth_client') && !event._initial
-      )
-      .subscribe(oauthClientsEventHandler);
-
-    events$
-      .filter(
-        ({ event }) => event.action.startsWith('linode') && !event._initial
-      )
-      .subscribe(linodeEventsHandler);
+    React.useEffect(() => {
+      /**
+       * Allow an Easter egg for toggling the theme with
+       * a key combination
+       */
+      // eslint-disable-next-line
+      document.addEventListener('keydown', keyboardListener);
+      return () => {
+        document.removeEventListener('keydown', keyboardListener);
+      };
+    }, [keyboardListener]);
 
     /*
      * We want to listen for migration events side-wide
@@ -181,15 +152,11 @@ export class App extends React.Component<CombinedProps, State> {
      * hours and it could take days. We want to notify to the user when it happens
      * and then update the Linodes in LinodesDetail and LinodesLanding
      */
-    this.eventsSub = events$
-      .filter(
-        ({ event }) =>
-          !event._initial && ['linode_migrate'].includes(event.action)
-      )
-      .subscribe(({ event }) => {
+    const handleMigrationEvent = React.useCallback(
+      ({ event }: EventWithStore) => {
         const { entity: migratedLinode } = event;
         if (event.action === 'linode_migrate' && event.status === 'finished') {
-          this.props.enqueueSnackbar(
+          enqueueSnackbar(
             `Linode ${migratedLinode!.label} migrated successfully.`,
             {
               variant: 'success',
@@ -198,65 +165,107 @@ export class App extends React.Component<CombinedProps, State> {
         }
 
         if (event.action === 'linode_migrate' && event.status === 'failed') {
-          this.props.enqueueSnackbar(
-            `Linode ${migratedLinode!.label} migration failed.`,
-            {
-              variant: 'error',
-            }
-          );
+          enqueueSnackbar(`Linode ${migratedLinode!.label} migration failed.`, {
+            variant: 'error',
+          });
         }
-      });
-  }
-  componentWillUnmount(): void {
-    document.removeEventListener('keydown', this.keyboardListener);
-  }
+      },
+      [enqueueSnackbar]
+    );
 
-  keyboardListener = (event: KeyboardEvent) => {
-    const isOSMac = navigator.userAgent.includes('Mac');
-    const letterForThemeShortcut = 'D';
-    const letterForGoToOpen = 'K';
-    const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
-    if (event[modifierKey] && event.shiftKey) {
-      switch (event.key) {
-        case letterForThemeShortcut:
-          const currentTheme = this.props.preferences?.theme;
-          const newTheme = getNextThemeValue(currentTheme);
+    React.useEffect(() => {
+      const eventHandlers: {
+        filter: (event: EventWithStore) => boolean;
+        handler: (event: EventWithStore) => void;
+      }[] = [
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('database') && !event._initial,
+          handler: databaseEventsHandler,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('domain') &&
+            !event._initial &&
+            event.entity !== null,
+          handler: domainEventsHandler,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('volume') && !event._initial,
+          handler: volumeEventsHandler,
+        },
+        {
+          filter: ({ event }) =>
+            (event.action.startsWith('image') ||
+              event.action === 'disk_imagize') &&
+            !event._initial,
+          handler: imageEventsHandler,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('token') && !event._initial,
+          handler: tokenEventHandler,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('user_ssh_key') && !event._initial,
+          handler: sshKeyEventHandler,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('firewall') && !event._initial,
+          handler: firewallEventsHandler,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('nodebalancer') && !event._initial,
+          handler: nodebalanacerEventHandler,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('oauth_client') && !event._initial,
+          handler: oauthClientsEventHandler,
+        },
+        {
+          filter: ({ event }) =>
+            (event.action.startsWith('linode') ||
+              event.action.startsWith('backups')) &&
+            !event._initial,
+          handler: linodeEventsHandler,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('ticket') && !event._initial,
+          handler: supportTicketEventHandler,
+        },
+        {
+          filter: ({ event }) =>
+            !event._initial && ['linode_migrate'].includes(event.action),
+          handler: handleMigrationEvent,
+        },
+      ];
 
-          this.props.updateUserPreferences({ theme: newTheme });
-          break;
-        case letterForGoToOpen:
-          this.setState((prevState) => ({
-            ...prevState,
-            goToOpen: !prevState.goToOpen,
-          }));
-          break;
-      }
-    }
-  };
+      const subscriptions = eventHandlers.map(({ filter, handler }) =>
+        events$.filter(filter).subscribe(handler)
+      );
 
-  goToClose = () => {
-    this.setState({ goToOpen: false });
-  };
-
-  render() {
-    const { hasError } = this.state;
-    const { linodesError } = this.props;
-
-    if (hasError) {
-      return <TheApplicationIsOnFire />;
-    }
+      return () => {
+        subscriptions.forEach((sub) => sub.unsubscribe());
+      };
+    }, [handleMigrationEvent]);
 
     /**
-     * basically, if we get an "invalid oauth token"
-     * error from the API, just render nothing because the user is
-     * about to get shot off to login
+     * in the event that we encounter an "invalid OAuth token" error from the API,
+     * we can simply refrain from rendering any content since the user will
+     * imminently be redirected to the login page.
      */
     if (hasOauthError(linodesError)) {
       return null;
     }
 
     return (
-      <React.Fragment>
+      <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
         {/** Accessibility helper */}
         <a href="#main-content" className="skip-link">
           Skip to main content
@@ -268,57 +277,20 @@ export class App extends React.Component<CombinedProps, State> {
             Opens an external site in a new window
           </span>
         </div>
-        <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
+        <GoTo open={goToOpen} onClose={() => setGoToOpen(false)} />
         {/** Update the LD client with the user's id as soon as we know it */}
         <IdentifyUser />
         <DocumentTitleSegment segment="Linode Manager" />
-        {this.props.featureFlagsLoading ? null : (
+        {featureFlagsLoading ? null : (
           <MainContent
-            history={this.props.history}
-            location={this.props.location}
-            appIsLoading={this.props.appIsLoading}
-            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+            appIsLoading={appIsLoading}
+            isLoggedInAsCustomer={loggedInAsCustomer}
           />
         )}
-      </React.Fragment>
+      </ErrorBoundary>
     );
-  }
-}
-
-interface StateProps {
-  linodes: Linode[];
-  isLoggedInAsCustomer: boolean;
-  linodesLoading: boolean;
-  linodesError?: APIError[];
-  bucketsError?: APIError[];
-  appIsLoading: boolean;
-  euuid?: string;
-  featureFlagsLoading: boolean;
-}
-
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  linodes: Object.values(state.__resources.linodes.itemsById),
-  linodesError: path(['read'], state.__resources.linodes.error),
-  isLoggedInAsCustomer: pathOr(
-    false,
-    ['authentication', 'loggedInAsCustomer'],
-    state
-  ),
-  linodesLoading: state.__resources.linodes.loading,
-  appIsLoading: state.initialLoad.appIsLoading,
-  featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
-});
-
-const connected = connect(mapStateToProps);
-
-export default compose(
-  connected,
-  withDocumentTitleProvider,
-  withSnackbar,
-  withFeatureFlagProvider,
-  withFeatureFlagConsumer,
-  withPreferences
-)(App);
+  })
+);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
   return args.some((eachError) => {

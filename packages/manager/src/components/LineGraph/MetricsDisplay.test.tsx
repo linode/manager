@@ -5,7 +5,7 @@ import {
   metricsBySection,
   MetricsDisplay,
 } from 'src/components/LineGraph/MetricsDisplay';
-import { light } from 'src/themes';
+import { light } from 'src/foundations/themes';
 import { formatPercentage } from 'src/utilities/statMetrics';
 
 describe('CPUMetrics', () => {
@@ -44,7 +44,7 @@ describe('CPUMetrics', () => {
   );
 
   it('renders a table', () => {
-    expect(wrapper.find('WrappedTable')).toHaveLength(1);
+    expect(wrapper.find('Table')).toHaveLength(1);
   });
 
   it('renders Max, Avg, and Last table headers', () => {

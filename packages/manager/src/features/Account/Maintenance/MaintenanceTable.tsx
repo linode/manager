@@ -2,25 +2,25 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import Table from 'src/components/Table/Table';
-import TableCell from 'src/components/TableCell/TableCell';
-import TableRow from 'src/components/TableRow/TableRow';
+import { TableBody } from 'src/components/TableBody';
+import { TableHead } from 'src/components/TableHead';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import TableRowError from 'src/components/TableRowError';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import Typography from 'src/components/core/Typography';
 import { usePagination } from 'src/hooks/usePagination';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
-import { CSVLink } from 'react-csv';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import { useOrder } from 'src/hooks/useOrder';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
@@ -39,13 +39,6 @@ const headersForCSVDownload = [
 ];
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  csvLink: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-    color: theme.textColors.tableHeader,
-    fontSize: '.9rem',
-  },
   cell: {
     width: '12%',
   },
@@ -67,6 +60,7 @@ const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const { classes } = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
+  const formattedDate = useFormattedDate();
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
@@ -122,9 +116,7 @@ const MaintenanceTable = ({ type }: Props) => {
     }
 
     if (data?.results === 0) {
-      return (
-        <TableRowEmptyState message={`No ${type} maintenance.`} colSpan={7} />
-      );
+      return <TableRowEmpty message={`No ${type} maintenance.`} colSpan={7} />;
     }
 
     if (data) {
@@ -151,28 +143,14 @@ const MaintenanceTable = ({ type }: Props) => {
         <Typography variant="h3" style={{ textTransform: 'capitalize' }}>
           {type}
         </Typography>
-        {/*
-            We are using a hidden CSVLink and an <a> to allow us to lazy load the
-            entire maintenance list for the CSV download. The <a> is what shows up
-            to the user and the onClick fetches the full user data and then
-            uses a ref to 'click' the real CSVLink.
-            This adds some complexity but gives us the benefit of lazy loading a potentially
-            large set of maintenance events on mount for the CSV download.
-          */}
         <Box>
-          <CSVLink
-            ref={csvRef}
+          <DownloadCSV
+            csvRef={csvRef}
+            data={csv || []}
+            filename={`${type}-maintenance-${formattedDate}.csv`}
             headers={headersForCSVDownload}
-            filename={`${type}-maintenance-${Date.now()}.csv`}
-            data={cleanCSVData(csv || [])}
-          />
-          <a
-            className={classes.csvLink}
             onClick={downloadCSV}
-            aria-hidden="true"
-          >
-            Download CSV
-          </a>
+          />
         </Box>
       </Box>
       <Table>

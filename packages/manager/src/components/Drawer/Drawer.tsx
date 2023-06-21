@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import { convertForAria } from 'src/components/TabLink/TabLink';
+import { convertForAria } from 'src/utilities/stringUtils';
 
 export interface Props extends DrawerProps {
   title: string;
@@ -56,9 +56,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       backgroundColor: theme.palette.primary.main,
     },
   },
-  backDrop: {
-    backgroundColor: theme.color.drawerBackdrop,
-  },
 }));
 
 const Drawer = (props: Props) => {
@@ -78,11 +75,6 @@ const Drawer = (props: Props) => {
         }
       }}
       {...rest}
-      ModalProps={{
-        BackdropProps: {
-          className: classes.backDrop,
-        },
-      }}
       aria-labelledby={titleID}
       data-qa-drawer
       data-testid="drawer"

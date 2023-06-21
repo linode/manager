@@ -8,6 +8,7 @@ import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from '../base';
 import {
   APIError,
+  DeepPartial,
   Filter,
   Params,
   ResourcePage,
@@ -19,11 +20,20 @@ import {
   getLinodeLishToken,
   getLinodeConfigs,
   Config,
+  updateLinode,
   deleteLinode,
   linodeBoot,
   linodeReboot,
   linodeShutdown,
+  changeLinodePassword,
+  scheduleOrQueueMigration,
+  getLinodeKernels,
+  Kernel,
+  getLinodeKernel,
+  resizeLinode,
+  ResizeLinodePayload,
 } from '@linode/api-v4/lib/linodes';
+import { queryKey as accountQueryKey } from '../account';
 
 export const queryKey = 'linodes';
 
@@ -51,7 +61,7 @@ export const useAllLinodesQuery = (
   );
 };
 
-export const useInfiniteLinodesQuery = (filter: Filter) =>
+export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
   useInfiniteQuery<ResourcePage<Linode>, APIError[]>(
     [queryKey, 'infinite', filter],
     ({ pageParam }) => getLinodes({ page: pageParam, page_size: 25 }, filter),
@@ -75,11 +85,43 @@ export const useLinodeQuery = (id: number, enabled = true) => {
   );
 };
 
+export const useLinodeUpdateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Linode, APIError[], DeepPartial<Linode>>(
+    (data) => updateLinode(id, data),
+    {
+      onSuccess(linode) {
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData([queryKey, 'linode', id], linode);
+      },
+    }
+  );
+};
+
 export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   return useQuery<Config[], APIError[]>(
     [queryKey, 'linode', id, 'configs'],
     () => getAllLinodeConfigs(id),
     { enabled }
+  );
+};
+
+export const useAllLinodeKernelsQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled = true
+) => {
+  return useQuery<Kernel[], APIError[]>(
+    [queryKey, 'linode', 'kernels', params, filter],
+    () => getAllLinodeKernelsRequest(params, filter),
+    { enabled }
+  );
+};
+
+export const useLinodeKernelQuery = (kernel: string) => {
+  return useQuery<Kernel, APIError[]>(
+    [queryKey, 'linode', 'kernels', 'kernel', kernel],
+    () => getLinodeKernel(kernel)
   );
 };
 
@@ -98,6 +140,17 @@ const getAllLinodesRequest = (
 ) =>
   getAll<Linode>((params, filter) =>
     getLinodes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+  )().then((data) => data.data);
+
+const getAllLinodeKernelsRequest = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
+  getAll<Kernel>((params, filter) =>
+    getLinodeKernels(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter }
+    )
   )().then((data) => data.data);
 
 const getAllLinodeConfigs = (id: number) =>
@@ -145,4 +198,43 @@ export const useShutdownLinodeMutation = (id: number) => {
       queryClient.invalidateQueries([queryKey]);
     },
   });
+};
+
+export const useLinodeChangePasswordMutation = (id: number) =>
+  useMutation<{}, APIError[], { root_pass: string }>(({ root_pass }) =>
+    changeLinodePassword(id, root_pass)
+  );
+
+export const useLinodeDeleteMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteLinode(id), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
+
+export const useLinodeMigrateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { region: string } | undefined>(
+    (data) => scheduleOrQueueMigration(id, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
+};
+
+export const useLinodeResizeMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], ResizeLinodePayload>(
+    (data) => resizeLinode(id, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries([accountQueryKey, 'notifications']);
+      },
+    }
+  );
 };

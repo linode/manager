@@ -6,9 +6,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader, {
   LandingHeaderProps,
 } from 'src/components/LandingHeader';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useAccount } from 'src/queries/account';
 import { useGrants } from 'src/queries/profile';
 import AccountLogins from './AccountLogins';
