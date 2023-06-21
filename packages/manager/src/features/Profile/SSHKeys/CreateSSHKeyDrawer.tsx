@@ -14,7 +14,7 @@ interface Props {
   onClose: () => void;
 }
 
-const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
+export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     mutateAsync: createSSHKey,
@@ -81,6 +81,4 @@ const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
       </form>
     </Drawer>
   );
-};
-
-export default React.memo(CreateSSHKeyDrawer);
+});
