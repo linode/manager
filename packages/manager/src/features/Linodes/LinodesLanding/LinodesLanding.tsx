@@ -37,7 +37,7 @@ import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
-import DisplayLinodes from './DisplayLinodes';
+import { DisplayLinodes } from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
