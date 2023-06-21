@@ -13,6 +13,7 @@ import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 const featureFlagProvider = LAUNCH_DARKLY_API_KEY
   ? withLDProvider({
       clientSideID: LAUNCH_DARKLY_API_KEY,
+      options: { allAttributesPrivate: true },
     })
   : (component: React.ComponentType) => component;
 
