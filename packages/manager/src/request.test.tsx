@@ -3,9 +3,8 @@ import { handleStartSession } from 'src/store/authentication/authentication.acti
 import { profileFactory } from './factories';
 import { handleError, getURL, injectEuuidToProfile } from './request';
 import { storeFactory } from './store';
-import { queryClientFactory } from './queries/base';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 
 const baseErrorConfig: AxiosRequestConfig = {
   method: 'POST',

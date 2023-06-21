@@ -199,6 +199,14 @@ export const useToastNotifications = () => {
             failureMessage: `Error creating Longview Client ${label}.`,
           });
           break;
+        case 'linode_migrate':
+          toastSuccessAndFailure({
+            enqueueSnackbar,
+            eventStatus: event.status,
+            successMessage: `Linode ${label} migrated successfully.`,
+            failureMessage: `Linode ${label} migration failed.`,
+          });
+          break;
       }
     },
   });

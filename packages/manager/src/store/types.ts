@@ -1,14 +1,8 @@
-import { Entity as EventEntity, Event } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { QueryClient } from 'react-query';
 import { MapStateToProps as _MapStateToProps } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { Action } from 'redux';
 import { ThunkAction, ThunkDispatch as _ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
-
-interface EntityEvent extends Omit<Event, 'entity'> {
-  entity: EventEntity;
-}
 
 export type ThunkResult<T> = ThunkAction<
   T,
@@ -99,13 +93,6 @@ export interface RequestableDataWithEntityError<D> {
 export interface RequestableRequiredData<D> extends RequestableData<D> {
   data: D;
 }
-
-export type EventHandler = (
-  event: EntityEvent,
-  dispatch: Dispatch<any>,
-  getState: () => ApplicationState,
-  queryClient: QueryClient
-) => void;
 
 export interface EntitiesAsObjectState<T> {
   error: EntityError;

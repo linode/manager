@@ -1,21 +1,24 @@
 import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
+import type { QueryClient } from 'react-query';
 import { Dispatch } from 'redux';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
-import { EventHandler } from 'src/store/types';
-import { deleteLinode } from './linodes.actions';
-import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
+import { isEntityEvent } from '../events/event.helpers';
 import { EntityEvent } from '../events/event.types';
-import type { QueryClient } from 'react-query';
+import { deleteLinode } from './linodes.actions';
 
-const linodeEventsHandler: EventHandler = (
+export const linodeStoreEventsHandler: AppEventHandler = (
   event,
-  dispatch,
-  getState,
-  queryClient
+  queryClient,
+  store
 ) => {
+  if (!isEntityEvent(event)) {
+    return;
+  }
   const { action, entity, percent_complete, status, id: eventID } = event;
   const { id } = entity;
 
@@ -25,9 +28,9 @@ const linodeEventsHandler: EventHandler = (
     queryClient.invalidateQueries(accountNotificationsQueryKey);
   }
 
-  const eventFromStore = getState().events.events.find(
-    (thisEvent) => thisEvent.id === eventID
-  );
+  const eventFromStore = store
+    .getState()
+    .events.events.find((thisEvent) => thisEvent.id === eventID);
 
   const prevStatus = eventFromStore?.status;
 
@@ -36,7 +39,13 @@ const linodeEventsHandler: EventHandler = (
     case 'linode_migrate':
     case 'linode_migrate_datacenter':
     case 'linode_resize':
-      return handleLinodeMigrate(dispatch, status, id, queryClient, prevStatus);
+      return handleLinodeMigrate(
+        store.dispatch,
+        status,
+        id,
+        queryClient,
+        prevStatus
+      );
     case 'linode_reboot':
     case 'linode_shutdown':
     case 'linode_snapshot':
@@ -46,19 +55,19 @@ const linodeEventsHandler: EventHandler = (
     case 'backups_cancel':
     case 'disk_imagize':
     case 'linode_clone':
-      return handleLinodeUpdate(dispatch, status, id, prevStatus);
+      return handleLinodeUpdate(store.dispatch, status, id, prevStatus);
 
     case 'linode_rebuild':
     case 'backups_restore':
-      return handleLinodeRebuild(dispatch, status, id, percent_complete);
+      return handleLinodeRebuild(store.dispatch, status, id, percent_complete);
 
     /** Remove Linode */
     case 'linode_delete':
-      return handleLinodeDelete(dispatch, status, id, getState());
+      return handleLinodeDelete(store.dispatch, status, id, store.getState());
 
     /** Create Linode */
     case 'linode_create':
-      return handleLinodeCreation(dispatch, status, id, prevStatus);
+      return handleLinodeCreation(store.dispatch, status, id, prevStatus);
 
     /**
      * Config actions
@@ -68,7 +77,7 @@ const linodeEventsHandler: EventHandler = (
      */
     case 'linode_config_create':
     case 'linode_config_delete':
-      return handleConfigEvent(dispatch, status, id);
+      return handleConfigEvent(store.dispatch, status, id);
 
     case 'disk_delete':
       if (status === 'failed') {
@@ -77,15 +86,13 @@ const linodeEventsHandler: EventHandler = (
          * a configuration profile that is in use on a running Linode)
          * the disk menu needs to be refreshed to return the disk to it.
          */
-        dispatch(getAllLinodeDisks({ linodeId: id }));
+        store.dispatch(getAllLinodeDisks({ linodeId: id }));
       }
 
     default:
       return;
   }
 };
-
-export default linodeEventsHandler;
 
 const handleLinodeRebuild = (
   dispatch: Dispatch<any>,

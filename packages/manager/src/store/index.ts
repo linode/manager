@@ -1,4 +1,3 @@
-import { QueryClient } from 'react-query';
 import { useStore } from 'react-redux';
 import {
   applyMiddleware,
@@ -32,7 +31,6 @@ import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
   State as LinodeCreateState,
 } from 'src/store/linodeCreate/linodeCreate.reducer';
-import linodeConfigEvents from 'src/store/linodes/config/config.events';
 import linodeConfigs, {
   defaultState as defaultLinodeConfigsState,
   State as LinodeConfigsState,
@@ -41,12 +39,10 @@ import linodeDisks, {
   defaultState as defaultLinodeDisksState,
   State as LinodeDisksState,
 } from 'src/store/linodes/disk/disk.reducer';
-import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
   State as LinodesState,
 } from 'src/store/linodes/linodes.reducer';
-import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   defaultState as defaultLongviewState,
   State as LongviewState,
@@ -71,8 +67,6 @@ import initialLoad, {
   defaultState as initialLoadState,
   State as InitialLoadState,
 } from './initialLoad/initialLoad.reducer';
-import diskEvents from './linodes/disk/disk.events';
-import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import mockFeatureFlags, {
   defaultMockFeatureFlagState,
   MockFeatureFlagState,
@@ -164,23 +158,17 @@ const reducers = combineReducers<ApplicationState>({
   mockFeatureFlags,
 });
 
-const enhancersFactory = (queryClient: QueryClient) =>
+const enhancersFactory = () =>
   compose(
-    applyMiddleware(
-      thunk,
-      combineEventsMiddleware(
-        [linodeEvents, longviewEvents, diskEvents, linodeConfigEvents],
-        queryClient
-      )
-    ),
+    applyMiddleware(thunk),
     reduxDevTools ? reduxDevTools() : (f: any) => f
   ) as any;
 
 // We need an instance of the query client for some event event handlers
-export const storeFactory = (queryClient: QueryClient) =>
-  createStore(reducers, defaultState, enhancersFactory(queryClient));
+export const storeFactory = () =>
+  createStore(reducers, defaultState, enhancersFactory());
 
-export type ApplicationStore = Store<ApplicationState>;
+export type ApplicationStore = Store<ApplicationState, any>;
 
 export const useApplicationStore = (): ApplicationStore =>
   useStore<ApplicationState>();

@@ -20,7 +20,7 @@ import type {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { AppEventHandler } from 'src/App';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 const queryKey = `tickets`;
 

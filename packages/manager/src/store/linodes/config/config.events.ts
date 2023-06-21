@@ -1,9 +1,13 @@
 import { EventStatus } from '@linode/api-v4/lib/account';
 import { Dispatch } from 'redux';
-import { EventHandler } from 'src/store/types';
 import { getAllLinodeConfigs } from './config.requests';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { isEntityEvent } from 'src/store/events/event.helpers';
 
-const configEventHandler: EventHandler = (event, dispatch) => {
+export const configEventHandler: AppEventHandler = (event, _, store) => {
+  if (!isEntityEvent(event)) {
+    return;
+  }
   const { action, entity, status } = event;
   const { id } = entity;
 
@@ -11,14 +15,12 @@ const configEventHandler: EventHandler = (event, dispatch) => {
     case 'linode_config_create':
     case 'linode_config_delete':
     case 'linode_config_update':
-      return handleConfigChange(dispatch, status, id);
+      return handleConfigChange(store.dispatch, status, id);
 
     default:
       return;
   }
 };
-
-export default configEventHandler;
 
 const handleConfigChange = (
   dispatch: Dispatch<any>,

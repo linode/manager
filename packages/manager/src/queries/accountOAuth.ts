@@ -1,18 +1,18 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { queryKey as accountQueryKey } from './account';
 import {
   APIError,
-  createOAuthClient,
-  deleteOAuthClient,
   Filter,
-  getOAuthClients,
   OAuthClient,
   OAuthClientRequest,
   Params,
+  createOAuthClient,
+  deleteOAuthClient,
+  getOAuthClients,
   resetOAuthClientSecret,
   updateOAuthClient,
 } from '@linode/api-v4';
-import { AppEventHandler } from 'src/App';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
+import { queryKey as accountQueryKey } from './account';
 
 const queryKey = [accountQueryKey, 'oauth'];
 

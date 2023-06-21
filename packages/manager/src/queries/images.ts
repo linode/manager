@@ -24,7 +24,7 @@ import {
 } from 'react-query';
 import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
 import { getAll } from 'src/utilities/getAll';
-import { AppEventHandler } from 'src/App';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 export const queryKey = 'images';
 

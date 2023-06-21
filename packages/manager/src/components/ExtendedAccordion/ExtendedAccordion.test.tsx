@@ -4,10 +4,9 @@ import { Provider } from 'react-redux';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { ExtendedAccordion } from 'src/components/ExtendedAccordion/ExtendedAccordion';
-import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 
 const onChange = jest.fn();
 const renderMainContent = jest.fn();

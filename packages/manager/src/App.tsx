@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
@@ -6,7 +5,6 @@ import 'highlight.js/styles/a11y-dark.css';
 import 'highlight.js/styles/a11y-light.css';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -19,8 +17,8 @@ import MainContent from './MainContent';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
+import { useAppEventHandlers } from './hooks/useAppEventHandlers';
 import { useAuthentication } from './hooks/useAuthentication';
-import { useEventHandlers } from './hooks/useEventHandlers';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 import useLinodes from './hooks/useLinodes';
 import { loadScript } from './hooks/useScript';
@@ -28,8 +26,6 @@ import { useToastNotifications } from './hooks/useToastNotifications';
 import { useMutatePreferences, usePreferences } from './queries/preferences';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
-
-export type AppEventHandler = (event: Event, queryClient: QueryClient) => void;
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -47,8 +43,8 @@ const BaseApp = withFeatureFlagProvider(
     );
     const { loggedInAsCustomer } = useAuthentication();
 
+    useAppEventHandlers();
     useToastNotifications();
-    useEventHandlers();
 
     const {
       linodes: {

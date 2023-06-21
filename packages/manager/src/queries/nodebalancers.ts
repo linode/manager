@@ -31,7 +31,7 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
-import { AppEventHandler } from 'src/App';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 export const queryKey = 'nodebalancers';
 

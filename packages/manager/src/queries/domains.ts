@@ -22,7 +22,7 @@ import {
   getDomainRecords,
   DomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { AppEventHandler } from 'src/App';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 export const queryKey = 'domains';
 

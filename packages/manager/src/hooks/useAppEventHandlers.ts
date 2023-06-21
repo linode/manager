@@ -1,8 +1,6 @@
 import { Event } from '@linode/api-v4';
-import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useQueryClient } from 'react-query';
-import { AppEventHandler } from 'src/App';
+import { QueryClient, useQueryClient } from 'react-query';
 import { oauthClientsEventHandler } from 'src/queries/accountOAuth';
 import { databaseEventsHandler } from 'src/queries/databases';
 import { domainEventsHandler } from 'src/queries/domains';
@@ -15,37 +13,21 @@ import { sshKeyEventHandler } from 'src/queries/profile';
 import { supportTicketEventHandler } from 'src/queries/support';
 import { tokenEventHandler } from 'src/queries/tokens';
 import { volumeEventsHandler } from 'src/queries/volumes';
+import { ApplicationStore, useApplicationStore } from 'src/store';
+import { configEventHandler } from 'src/store/linodes/config/config.events';
+import { diskEventHandler } from 'src/store/linodes/disk/disk.events';
+import { linodeStoreEventsHandler } from 'src/store/linodes/linodes.events';
+import { longviewEventHandler } from 'src/store/longview/longview.events';
 
-export const useEventHandlers = () => {
-  const { enqueueSnackbar } = useSnackbar();
+export type AppEventHandler = (
+  event: Event,
+  queryClient: QueryClient,
+  store: ApplicationStore
+) => void;
+
+export const useAppEventHandlers = () => {
   const queryClient = useQueryClient();
-
-  /*
-   * We want to listen for migration events side-wide
-   * It's unpredictable when a migration is going to happen. It could take
-   * hours and it could take days. We want to notify to the user when it happens
-   * and then update the Linodes in LinodesDetail and LinodesLanding
-   */
-  const handleMigrationEvent = React.useCallback<AppEventHandler>(
-    (event) => {
-      const { entity: migratedLinode } = event;
-      if (event.action === 'linode_migrate' && event.status === 'finished') {
-        enqueueSnackbar(
-          `Linode ${migratedLinode!.label} migrated successfully.`,
-          {
-            variant: 'success',
-          }
-        );
-      }
-
-      if (event.action === 'linode_migrate' && event.status === 'failed') {
-        enqueueSnackbar(`Linode ${migratedLinode!.label} migration failed.`, {
-          variant: 'error',
-        });
-      }
-    },
-    [enqueueSnackbar]
-  );
+  const store = useApplicationStore();
 
   const eventHandlers = React.useMemo<
     {
@@ -99,22 +81,36 @@ export const useEventHandlers = () => {
         handler: linodeEventsHandler,
       },
       {
+        filter: (event) =>
+          event.action.startsWith('linode') ||
+          event.action.startsWith('backups'),
+        handler: linodeStoreEventsHandler,
+      },
+      {
         filter: (event) => event.action.startsWith('ticket'),
         handler: supportTicketEventHandler,
       },
       {
-        filter: (event) => ['linode_migrate'].includes(event.action),
-        handler: handleMigrationEvent,
+        filter: (event) => event.action.startsWith('longviewclient'),
+        handler: longviewEventHandler,
+      },
+      {
+        filter: (event) => event.action.startsWith('disk'),
+        handler: diskEventHandler,
+      },
+      {
+        filter: (event) => event.action.startsWith('linode_config'),
+        handler: configEventHandler,
       },
     ],
-    [handleMigrationEvent]
+    []
   );
 
   useEventsInfiniteQuery({
     eventHandler: (event) => {
       eventHandlers
         .filter(({ filter }) => filter(event))
-        .forEach(({ handler }) => handler(event, queryClient));
+        .forEach(({ handler }) => handler(event, queryClient, store));
     },
   });
 };

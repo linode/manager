@@ -16,7 +16,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { AppEventHandler } from 'src/App';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({

@@ -23,7 +23,7 @@ import {
   updateFirewallRules,
 } from '@linode/api-v4/lib/firewalls';
 import { itemInListCreationHandler, updateInPaginatedStore } from './base';
-import { AppEventHandler } from 'src/App';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 export const queryKey = 'firewall';
 

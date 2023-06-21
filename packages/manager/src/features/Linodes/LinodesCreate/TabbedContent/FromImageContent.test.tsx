@@ -4,9 +4,8 @@ import { CombinedProps, FromImageContent } from './FromImageContent';
 import { Provider } from 'react-redux';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { storeFactory } from 'src/store';
-import { queryClientFactory } from 'src/queries/base';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 
 const mockProps: CombinedProps = {
   updateImageID: jest.fn(),

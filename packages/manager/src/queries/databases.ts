@@ -38,7 +38,7 @@ import {
 } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets, updateInPaginatedStore } from './base';
-import { AppEventHandler } from 'src/App';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 export const queryKey = 'databases';
 

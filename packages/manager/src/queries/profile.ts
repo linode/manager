@@ -32,7 +32,7 @@ import {
 import { Grants } from '../../../api-v4/lib';
 import { queryPresets } from './base';
 import { queryKey as accountQueryKey } from './account';
-import { AppEventHandler } from 'src/App';
+import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 
 export const queryKey = 'profile';
 
