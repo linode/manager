@@ -12,7 +12,7 @@ import { ApplicationState } from 'src/store';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { StyledDisabledTableRow } from './styles';
+import { StyledDisabledTableRow } from './PlansPanel.styles';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 
 export interface PlanSelectionType extends BaseType {

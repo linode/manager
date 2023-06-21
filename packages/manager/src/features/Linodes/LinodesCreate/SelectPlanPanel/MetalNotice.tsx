@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
-import { StyledTypography } from './styles';
+import { StyledTypography } from './PlansPanel.styles';
 import { getRegionsWithCapability } from './utils';
 
 interface Props {

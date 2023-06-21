@@ -8,7 +8,7 @@ import SelectionCard from 'src/components/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { StyledDisabledTableRow } from './styles';
+import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 interface Props {
   disabled?: boolean;
