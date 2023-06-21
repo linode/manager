@@ -42,7 +42,11 @@ export const StyledToggleButton = styled(IconButton, {
 })<{ isActive: boolean }>(({ theme, isActive }) => ({
   color: isActive ? theme.palette.primary.main : theme.palette.grey[400],
   padding: 10,
-  height: 20,
+  borderRadius: '100%',
+  '&:hover': {
+    backgroundColor: theme.palette.grey[300],
+    color: isActive ? theme.palette.primary.main : theme.palette.grey[600],
+  },
   '&:focus': {
     // Browser default until we get styling direction for focus states
     outline: '1px dotted #999',

@@ -167,7 +167,7 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
             </Hidden>
           </>
         )}
-        <TableCell>
+        <TableCell sx={{ padding: '0 !important' }}>
           <div className={classes.controlHeader}>
             <div id="displayViewDescription" className="visually-hidden">
               Currently in {linodeViewPreference} view
