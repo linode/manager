@@ -3,13 +3,13 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
@@ -29,22 +29,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props {
-  label: string;
+interface Props extends TextFieldProps {
   fieldName?: string;
   submitForm: (value: string) => Promise<any>;
   initialValue?: string;
-  disabled?: boolean;
-  tooltipText?: string;
   successMessage?: string;
   errorMessage?: string;
   successCallback?: () => void;
 }
 
-export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
-  props
-) => {
-  const classes = useStyles();
+export const SingleTextFieldForm = React.memo((props: Props) => {
+  const { classes } = useStyles();
 
   const {
     label,
@@ -133,6 +128,4 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
       ) : null}
     </>
   );
-};
-
-export default React.memo(SingleTextFieldForm);
+});
