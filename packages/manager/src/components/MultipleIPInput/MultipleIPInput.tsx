@@ -55,7 +55,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export interface Props {
+interface Props {
   title: string;
   helperText?: string;
   tooltip?: string;
