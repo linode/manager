@@ -150,7 +150,7 @@ const entityIdToNameMap: Record<EntityType, string> = {
   domain_id: 'Domain',
   nodebalancer_id: 'NodeBalancer',
   lkecluster_id: 'Kubernetes Cluster',
-  database_id: 'Database',
+  database_id: 'Database Cluster',
   firewall_id: 'Firewall',
   none: '',
   general: '',
