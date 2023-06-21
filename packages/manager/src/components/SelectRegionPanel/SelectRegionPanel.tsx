@@ -8,7 +8,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Region } from '@linode/api-v4/lib/regions';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import { useLocation } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 

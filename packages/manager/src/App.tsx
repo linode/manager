@@ -125,11 +125,6 @@ const BaseApp = withFeatureFlagProvider(
        * Send pageviews
        */
       return history.listen(({ pathname }) => {
-        // Send Google Analytics page view events
-        if ((window as any).ga) {
-          (window as any).ga('send', 'pageview', pathname);
-        }
-
         // Send Adobe Analytics page view events
         if ((window as any)._satellite) {
           (window as any)._satellite.track('page view', {

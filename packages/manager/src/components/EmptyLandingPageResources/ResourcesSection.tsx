@@ -18,7 +18,7 @@ import {
 } from 'src/utilities/emptyStateLandingUtils';
 import type {
   ResourcesHeaders,
-  LinkGAEvent,
+  linkAnalyticsEvent,
   ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
@@ -56,7 +56,7 @@ interface ResourcesSectionProps {
   /**
    * The event data to be sent when the call to action is clicked
    */
-  linkGAEvent: LinkGAEvent;
+  linkAnalyticsEvent: linkAnalyticsEvent;
   /**
    * If true, the transfer display will be shown at the bottom
    * */
@@ -74,14 +74,22 @@ interface ResourcesSectionProps {
   wide?: boolean;
 }
 
-const GuideLinks = (guides: ResourcesLinkSection, linkGAEvent: LinkGAEvent) => (
-  <ResourceLinks links={guides.links} linkGAEvent={linkGAEvent} />
+const GuideLinks = (
+  guides: ResourcesLinkSection,
+  linkAnalyticsEvent: linkAnalyticsEvent
+) => (
+  <ResourceLinks links={guides.links} linkAnalyticsEvent={linkAnalyticsEvent} />
 );
 
 const YoutubeLinks = (
   youtube: ResourcesLinkSection,
-  linkGAEvent: LinkGAEvent
-) => <ResourceLinks links={youtube.links} linkGAEvent={linkGAEvent} />;
+  linkAnalyticsEvent: linkAnalyticsEvent
+) => (
+  <ResourceLinks
+    links={youtube.links}
+    linkAnalyticsEvent={linkAnalyticsEvent}
+  />
+);
 
 export const ResourcesSection = (props: ResourcesSectionProps) => {
   const {
@@ -91,7 +99,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
     gettingStartedGuidesData,
     headers,
     icon,
-    linkGAEvent,
+    linkAnalyticsEvent,
     showTransferDisplay,
     youtubeLinkData,
     wide = false,
@@ -112,7 +120,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
             MoreLink={(props) => (
               <ResourcesMoreLink
                 onClick={getLinkOnClick(
-                  linkGAEvent,
+                  linkAnalyticsEvent,
                   gettingStartedGuidesData.moreInfo.text
                 )}
                 to={gettingStartedGuidesData.moreInfo.to}
@@ -124,7 +132,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
             )}
             title={gettingStartedGuidesData.title}
           >
-            {GuideLinks(gettingStartedGuidesData, linkGAEvent)}
+            {GuideLinks(gettingStartedGuidesData, linkAnalyticsEvent)}
           </ResourcesLinksSubSection>
           {CustomResource && <CustomResource />}
           <ResourcesLinksSubSection
@@ -132,7 +140,10 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
             MoreLink={(props) => (
               <ResourcesMoreLink
                 external
-                onClick={getLinkOnClick(linkGAEvent, youtubeMoreLinkLabel)}
+                onClick={getLinkOnClick(
+                  linkAnalyticsEvent,
+                  youtubeMoreLinkLabel
+                )}
                 to={youtubeChannelLink}
                 {...props}
               >
@@ -145,7 +156,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
             )}
             title={youtubeLinkData.title}
           >
-            {YoutubeLinks(youtubeLinkData, linkGAEvent)}
+            {YoutubeLinks(youtubeLinkData, linkAnalyticsEvent)}
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }
