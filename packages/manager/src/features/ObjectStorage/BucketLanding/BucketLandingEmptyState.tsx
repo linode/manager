@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { StyledBucketIcon } from './StylesBucketIcon';
 import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './BucketLandingEmptyResourcesData';
 
@@ -19,7 +19,7 @@ export const BucketLandingEmptyState = () => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create Bucket',
             });
@@ -32,7 +32,7 @@ export const BucketLandingEmptyState = () => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={StyledBucketIcon}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       showTransferDisplay
       youtubeLinkData={youtubeLinkData}
     />

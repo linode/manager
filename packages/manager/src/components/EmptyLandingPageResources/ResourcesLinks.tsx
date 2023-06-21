@@ -8,7 +8,7 @@ import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/Reso
 import type { ResourcesLinks } from './ResourcesLinksTypes';
 
 export const ResourceLinks = (props: ResourcesLinks) => {
-  const { linkGAEvent, links } = props;
+  const { linkAnalyticsEvent, links } = props;
 
   return (
     <List>
@@ -16,7 +16,7 @@ export const ResourceLinks = (props: ResourcesLinks) => {
         <ListItem key={linkData.to}>
           <Link
             to={linkData.to}
-            onClick={getLinkOnClick(linkGAEvent, linkData.text)}
+            onClick={getLinkOnClick(linkAnalyticsEvent, linkData.text)}
           >
             {linkData.text}
             {linkData.external && (

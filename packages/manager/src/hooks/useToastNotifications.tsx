@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { SupportLink } from 'src/components/SupportLink';
 import { useEventsInfiniteQuery } from 'src/queries/events';
-import { sendEvent } from 'src/utilities/ga';
+import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 
 export const useToastNotifications = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -65,11 +65,12 @@ export const useToastNotifications = () => {
             link: formatLink(
               'Learn more about resizing restrictions.',
               'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/',
-              sendEvent({
-                category: 'Disk Resize Flow',
-                action: `Click:link`,
-                label: 'Disk resize failed toast',
-              })
+              () =>
+                sendLinodeDiskEvent(
+                  'Resize',
+                  'Click:link',
+                  'Disk resize failed toast'
+                )
             ),
           });
         case 'image_upload':
@@ -263,7 +264,7 @@ export const getSecondaryLabel = (event: Event) =>
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
-    <Link to={link} onClick={() => handleClick}>
+    <Link to={link} onClick={handleClick}>
       {text}
     </Link>
   );

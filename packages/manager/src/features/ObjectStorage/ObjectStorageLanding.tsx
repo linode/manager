@@ -2,7 +2,7 @@ import * as React from 'react';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import LandingHeader from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
+import { PromotionalOfferCard } from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';

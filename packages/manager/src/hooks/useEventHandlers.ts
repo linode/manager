@@ -55,66 +55,55 @@ export const useEventHandlers = () => {
   >(
     () => [
       {
-        filter: (event) =>
-          event.action.startsWith('database') && !event._initial,
+        filter: (event) => event.action.startsWith('database'),
         handler: databaseEventsHandler,
       },
       {
         filter: (event) =>
-          event.action.startsWith('domain') &&
-          !event._initial &&
-          event.entity !== null,
+          event.action.startsWith('domain') && event.entity !== null,
         handler: domainEventsHandler,
       },
       {
-        filter: (event) => event.action.startsWith('volume') && !event._initial,
+        filter: (event) => event.action.startsWith('volume'),
         handler: volumeEventsHandler,
       },
       {
         filter: (event) =>
-          (event.action.startsWith('image') ||
-            event.action === 'disk_imagize') &&
-          !event._initial,
+          event.action.startsWith('image') || event.action === 'disk_imagize',
         handler: imageEventsHandler,
       },
       {
-        filter: (event) => event.action.startsWith('token') && !event._initial,
+        filter: (event) => event.action.startsWith('token'),
         handler: tokenEventHandler,
       },
       {
-        filter: (event) =>
-          event.action.startsWith('user_ssh_key') && !event._initial,
+        filter: (event) => event.action.startsWith('user_ssh_key'),
         handler: sshKeyEventHandler,
       },
       {
-        filter: (event) =>
-          event.action.startsWith('firewall') && !event._initial,
+        filter: (event) => event.action.startsWith('firewall'),
         handler: firewallEventsHandler,
       },
       {
-        filter: (event) =>
-          event.action.startsWith('nodebalancer') && !event._initial,
+        filter: (event) => event.action.startsWith('nodebalancer'),
         handler: nodebalanacerEventHandler,
       },
       {
-        filter: (event) =>
-          event.action.startsWith('oauth_client') && !event._initial,
+        filter: (event) => event.action.startsWith('oauth_client'),
         handler: oauthClientsEventHandler,
       },
       {
         filter: (event) =>
-          (event.action.startsWith('linode') ||
-            event.action.startsWith('backups')) &&
-          !event._initial,
+          event.action.startsWith('linode') ||
+          event.action.startsWith('backups'),
         handler: linodeEventsHandler,
       },
       {
-        filter: (event) => event.action.startsWith('ticket') && !event._initial,
+        filter: (event) => event.action.startsWith('ticket'),
         handler: supportTicketEventHandler,
       },
       {
-        filter: (event) =>
-          !event._initial && ['linode_migrate'].includes(event.action),
+        filter: (event) => ['linode_migrate'].includes(event.action),
         handler: handleMigrationEvent,
       },
     ],

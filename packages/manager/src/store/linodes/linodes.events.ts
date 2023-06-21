@@ -258,7 +258,6 @@ const handleConfigEvent = (
 export const shouldRequestNotifications = (event: EntityEvent) => {
   return (
     eventsWithRelevantNotifications.includes(event.action) &&
-    !event._initial &&
     ['notification', 'finished', 'error'].includes(event.status)
   );
 };
