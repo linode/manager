@@ -8,7 +8,7 @@ import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleVal
 import { Region } from '@linode/api-v4/lib/regions';
 import { RegionOption, RegionItem } from './RegionOption';
 import { Flag } from 'src/components/Flag';
-import { ContinentNames } from './utils';
+import { ContinentNames, Country } from './utils';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 interface Props<IsClearable extends boolean>
@@ -49,7 +49,7 @@ export const getRegionOptions = (regions: Region[]) => {
     groups[group].push({
       label: `${region.label} (${region.id})`,
       value: region.id,
-      flag: <Flag country={region.country} />,
+      flag: <Flag country={region.country as Country} />,
       country: region.country,
     });
   }

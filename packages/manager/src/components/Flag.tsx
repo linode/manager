@@ -1,21 +1,45 @@
 import React from 'react';
+import { makeStyles } from 'tss-react/mui';
 import 'flag-icons/css/flag-icons.min.css';
+import { Country } from './EnhancedSelect/variants/RegionSelect/utils';
 
-const countryFlagOverrides = {
+const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',
 };
 
+const COUNTRIES_TO_OUTLINE = ['jp', 'id', 'sg'];
+
 interface Props {
-  /** expects a iso code of a country - `us`, `ca`, etc... */
-  country: string;
+  country: Country;
 }
 
+const useStyles = makeStyles()((theme) => ({
+  root: {
+    fontSize: '1.5rem',
+    verticalAlign: 'top',
+    width: '1.41rem',
+  },
+  outline: {
+    outline: `1px solid ${theme.color.border3}`,
+  },
+}));
+
+/**
+ * Flag icons are provided by the [flag-icons](https://www.npmjs.com/package/flag-icon) package
+ */
 export const Flag = (props: Props) => {
+  const { classes, cx } = useStyles();
   const country = props.country.toLowerCase();
+
   return (
     <div
-      className={`fi fi-${countryFlagOverrides[country] ?? country} fi-xx`}
-      style={{ fontSize: '1.5rem', verticalAlign: 'top' }}
+      className={cx(
+        `fi fi-${COUNTRY_FLAG_OVERRIDES[country] ?? country} fi-xx`,
+        classes.root,
+        {
+          [classes.outline]: COUNTRIES_TO_OUTLINE.includes(country),
+        }
+      )}
     />
   );
 };

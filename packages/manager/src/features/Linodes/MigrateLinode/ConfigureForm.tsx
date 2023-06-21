@@ -7,6 +7,7 @@ import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelec
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { Flag } from 'src/components/Flag';
+import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,7 +54,7 @@ const ConfigureForm = (props: Props) => {
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region</Typography>
       <div className={classes.currentRegion}>
-        <Flag country={country} />
+        <Flag country={country as Country} />
         <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
           currentActualRegion?.label ?? currentRegion
         }`}</Typography>
