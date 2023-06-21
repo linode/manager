@@ -467,6 +467,13 @@ export const handlers = [
     const disks = linodeDiskFactory.buildList(3);
     return res(ctx.json(makeResourcePage(disks)));
   }),
+  rest.put('*/instances/*/disks/:id', async (req, res, ctx) => {
+    const id = Number(req.params.id);
+    const disk = linodeDiskFactory.build({ id });
+    // If you want to mock an error
+    // return res(ctx.status(400), ctx.json({ errors: [{ field: 'label', reason: 'OMG!' }] }));
+    return res(ctx.json(disk));
+  }),
   rest.get('*/instances/*/transfer', async (req, res, ctx) => {
     const transfer = linodeTransferFactory.build();
     return res(ctx.json(transfer));

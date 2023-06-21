@@ -87,11 +87,25 @@ interface DispatchProps {
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      openForEdit,
+      openForResize,
+      openForClone,
+      openForCreating,
+      openForConfig,
+    },
+    dispatch
+  );
+
+const connected = connect(undefined, mapDispatchToProps);
+
 type Props = DispatchProps;
 
 export const preferenceKey = 'linode-volumes';
 
-export const LinodeVolumes = (props: Props) => {
+export const LinodeVolumes = connected((props: Props) => {
   const {
     openForConfig,
     openForClone,
@@ -348,20 +362,4 @@ export const LinodeVolumes = (props: Props) => {
       />
     </div>
   );
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      openForEdit,
-      openForResize,
-      openForClone,
-      openForCreating,
-      openForConfig,
-    },
-    dispatch
-  );
-
-const connected = connect(undefined, mapDispatchToProps);
-
-export default connected(LinodeVolumes);
+});

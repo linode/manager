@@ -7,8 +7,8 @@ import { Theme } from '@mui/material/styles';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import useEvents from 'src/hooks/useEvents';
-import LinodeDiskActionMenu from './LinodeDiskActionMenu';
+import { useEvents } from 'src/hooks/useEvents';
+import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   diskLabel: {
@@ -45,39 +45,46 @@ interface Props {
   onDelete: () => void;
 }
 
-export const LinodeDiskRow: React.FC<Props> = (props) => {
+export const LinodeDiskRow = React.memo((props: Props) => {
   const classes = useStyles();
   const { inProgressEvents } = useEvents();
   const {
     disk,
     linodeId,
+    linodeStatus,
+    readOnly,
     onDelete,
     onImagize,
     onRename,
     onResize,
-    linodeStatus,
-    readOnly,
   } = props;
 
-  const resizeEvent = inProgressEvents.find(
-    (thisEvent) =>
-      thisEvent.secondary_entity?.id === disk.id &&
-      ['disk_create', 'disk_resize'].includes(thisEvent.action)
+  const diskEventLabelMap = {
+    disk_create: 'Creating',
+    disk_resize: 'Resizing',
+    disk_delete: 'Deleting',
+  };
+
+  const diskEventsToShowProgressFor = Object.keys(diskEventLabelMap);
+
+  const event = inProgressEvents.find(
+    (event) =>
+      event.secondary_entity?.id === disk.id &&
+      diskEventsToShowProgressFor.includes(event.action)
   );
 
   return (
     <TableRow data-qa-disk={disk.label}>
       <TableCell className={classes.diskLabel}>{disk.label}</TableCell>
       <TableCell className={classes.diskType}>{disk.filesystem}</TableCell>
-
       <TableCell className={classes.diskSize}>
-        {Boolean(resizeEvent) ? (
+        {event ? (
           <div className={classes.progressBar}>
-            Resizing ({resizeEvent?.percent_complete}%)
+            {diskEventLabelMap[event.action]} ({event.percent_complete}%)
             <BarPercent
               className={classes.bar}
               max={100}
-              value={resizeEvent?.percent_complete ?? 0}
+              value={event?.percent_complete ?? 0}
               rounded
               narrow
             />
@@ -106,6 +113,4 @@ export const LinodeDiskRow: React.FC<Props> = (props) => {
       </TableCell>
     </TableRow>
   );
-};
-
-export default React.memo(LinodeDiskRow);
+});
