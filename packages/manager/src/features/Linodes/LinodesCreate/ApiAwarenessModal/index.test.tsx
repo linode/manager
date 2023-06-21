@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -33,6 +33,6 @@ describe('ApiAwarenessModal', () => {
   it('Should invoke onClose handler upon cliking close button', async () => {
     renderComponent({ isOpen: true });
     userEvent.click(await screen.findByTestId('close-button'));
-    expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(defaultProps.onClose).toHaveBeenCalledTimes(1));
   });
 });
