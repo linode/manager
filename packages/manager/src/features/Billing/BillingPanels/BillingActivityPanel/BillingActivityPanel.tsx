@@ -39,7 +39,7 @@ import {
   useAllAccountInvoices,
   useAllAccountPayments,
 } from 'src/queries/accountBilling';
-import { isAfter, parseAPIDate } from 'src/utilities/date';
+import { parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
@@ -203,23 +203,20 @@ export const BillingActivityPanel = (props: Props) => {
     setSelectedTransactionDate,
   ] = React.useState<DateRange>(defaultDateRange);
 
+  const endDate = getCutoffFromDateRange(selectedTransactionDate);
+  const filter = makeFilter(endDate);
+
   const {
     data: payments,
     isLoading: accountPaymentsLoading,
     error: accountPaymentsError,
-  } = useAllAccountPayments(
-    {},
-    makeFilter(getCutoffFromDateRange(selectedTransactionDate))
-  );
+  } = useAllAccountPayments({}, filter);
 
   const {
     data: invoices,
     isLoading: accountInvoicesLoading,
     error: accountInvoicesError,
-  } = useAllAccountInvoices(
-    {},
-    makeFilter(getCutoffFromDateRange(selectedTransactionDate))
-  );
+  } = useAllAccountInvoices({}, filter);
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
@@ -320,21 +317,12 @@ export const BillingActivityPanel = (props: Props) => {
     [invoices, payments]
   );
 
-  // Filter on transaction type and transaction date.
+  // Filter on transaction type
   const filteredData = React.useMemo(() => {
-    return combinedData.filter((thisBillingItem) => {
-      const matchesType =
-        selectedTransactionType !== 'all'
-          ? thisBillingItem.type === selectedTransactionType
-          : true;
-
-      const dateCutoff = getCutoffFromDateRange(selectedTransactionDate);
-
-      const matchesDate = isAfter(thisBillingItem.date, dateCutoff);
-
-      return matchesType && matchesDate;
-    });
-  }, [selectedTransactionType, selectedTransactionDate, combinedData]);
+    return combinedData.filter(
+      (thisBillingItem) => thisBillingItem.type === selectedTransactionType
+    );
+  }, [selectedTransactionType, combinedData]);
 
   return (
     <Grid xs={12}>
@@ -400,7 +388,11 @@ export const BillingActivityPanel = (props: Props) => {
             </div>
           </div>
         </div>
-        <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
+        <OrderBy
+          data={selectedTransactionType === 'all' ? combinedData : filteredData}
+          orderBy={'date'}
+          order={'desc'}
+        >
           {React.useCallback(
             ({ data: orderedData }) => (
               <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
@@ -609,7 +601,11 @@ export const paymentToActivityFeedItem = (
 export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
-): string => {
+): string | undefined => {
+  if (range === 'All Time') {
+    return undefined;
+  }
+
   const date = currentDatetime ? parseAPIDate(currentDatetime) : DateTime.utc();
 
   let outputDate: DateTime;
@@ -633,7 +629,7 @@ export const getCutoffFromDateRange = (
       outputDate = DateTime.fromMillis(0, { zone: 'utc' });
       break;
   }
-  return outputDate.toISO();
+  return outputDate.startOf('day').toISO();
 };
 
 /**

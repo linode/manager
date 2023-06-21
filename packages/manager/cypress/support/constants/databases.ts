@@ -1,6 +1,5 @@
-import { ClusterSize, Engine } from '@linode/api-v4/types';
+import { ClusterSize, Engine, Region } from '@linode/api-v4/types';
 import { randomLabel } from 'support/util/random';
-import type { CloudRegion } from 'support/util/regions';
 import { chooseRegion } from 'support/util/regions';
 
 interface databaseClusterConfiguration {
@@ -8,7 +7,7 @@ interface databaseClusterConfiguration {
   linodeType: string;
   clusterSize: ClusterSize;
   dbType: Engine;
-  region: CloudRegion;
+  region: Region;
   engine: string;
   version: string;
 }

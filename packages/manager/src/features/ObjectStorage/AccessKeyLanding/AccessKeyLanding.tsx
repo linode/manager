@@ -25,7 +25,7 @@ import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 
 interface Props {
   accessDrawerOpen: boolean;

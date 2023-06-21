@@ -34,7 +34,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
-import MultipleIPInput from 'src/components/MultipleIPInput';
+import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Radio } from 'src/components/Radio/Radio';
@@ -517,7 +517,6 @@ const DatabaseCreate = () => {
               setFieldValue('type', selected);
             }}
             selectedID={values.type}
-            updateFor={[values.type, selectedEngine, errors]}
             header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate

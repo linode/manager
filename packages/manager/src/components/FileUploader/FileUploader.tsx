@@ -27,7 +27,7 @@ import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { queryKey, useUploadImageQuery } from 'src/queries/images';
 import { redirectToLogin } from 'src/session';
 import { setPendingUpload } from 'src/store/pendingUpload';
-import { sendImageUploadEvent } from 'src/utilities/ga';
+import { sendImageUploadEvent } from 'src/utilities/analytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 interface FileUploaderProps {

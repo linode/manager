@@ -73,7 +73,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
   title: 'Video Playlist',
 };
 
-export const linkGAEvent: ResourcesLinks['linkGAEvent'] = {
+export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
   action: 'Click:link',
   category: 'Object Storage landing page empty',
 };

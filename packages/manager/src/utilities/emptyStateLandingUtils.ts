@@ -1,4 +1,4 @@
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 
 export const guidesMoreLinkText = 'Check out all our Docs';
 export const docsLink = 'https://www.linode.com/docs/';
@@ -9,17 +9,17 @@ export const youtubeChannelLink =
 // retaining the old label for tracking
 export const youtubeMoreLinkLabel = 'View the complete playlist';
 
-interface GAEventTemplate {
+interface AnalyticsEventTemplate {
   category: string;
   action: string;
 }
 
 export const getLinkOnClick = (
-  linkGAEventTemplate: GAEventTemplate,
+  linkAnalyticsEventTemplate: AnalyticsEventTemplate,
   linkText: string
 ) => () => {
   sendEvent({
-    ...linkGAEventTemplate,
+    ...linkAnalyticsEventTemplate,
     label: linkText,
   });
 };

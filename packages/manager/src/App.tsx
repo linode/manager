@@ -26,9 +26,8 @@ import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
 import { firewallEventsHandler } from './queries/firewalls';
-import { imageEventsHandler } from './queries/images';
-import { linodeEventsHandler } from './queries/linodes/events';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
+import { imageEventsHandler } from './queries/images';
 import { useMutatePreferences, usePreferences } from './queries/preferences';
 import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
@@ -37,6 +36,10 @@ import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import {
+  diskEventHandler,
+  linodeEventsHandler,
+} from './queries/linodes/events';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -125,11 +128,6 @@ const BaseApp = withFeatureFlagProvider(
        * Send pageviews
        */
       return history.listen(({ pathname }) => {
-        // Send Google Analytics page view events
-        if ((window as any).ga) {
-          (window as any).ga('send', 'pageview', pathname);
-        }
-
         // Send Adobe Analytics page view events
         if ((window as any)._satellite) {
           (window as any)._satellite.track('page view', {
@@ -248,6 +246,11 @@ const BaseApp = withFeatureFlagProvider(
           filter: ({ event }) =>
             !event._initial && ['linode_migrate'].includes(event.action),
           handler: handleMigrationEvent,
+        },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('disk') && !event._initial,
+          handler: diskEventHandler,
         },
       ];
 
