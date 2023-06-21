@@ -155,7 +155,7 @@ export const planTabInfoContent = {
   },
   premium: {
     typography:
-      'Premium CPU instances guarantee a minimum processor generation, of AMD EPYC(TM) 7713 or higher, to ensure consistent high performance for more demanding workloads.',
+      'Premium CPU instances guarantee a minimum processor generation of AMD EPYC\u2122 Milan or newer, to ensure consistent high performance for more demanding workloads.',
     title: 'Premium',
     key: 'premium',
     dataId: 'data-qa-premium',
