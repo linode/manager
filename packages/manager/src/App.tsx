@@ -149,10 +149,6 @@ const BaseApp = withFeatureFlagProvider(
       };
     }, [keyboardListener]);
 
-    events$
-      .filter(({ event }) => event.action.startsWith('disk') && !event._initial)
-      .subscribe(diskEventHandler);
-
     /*
      * We want to listen for migration events side-wide
      * It's unpredictable when a migration is going to happen. It could take
