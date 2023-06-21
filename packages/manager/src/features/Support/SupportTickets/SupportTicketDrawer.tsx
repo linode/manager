@@ -145,13 +145,13 @@ const entityMap: Record<string, EntityType> = {
 };
 
 const entityIdToNameMap: Record<EntityType, string> = {
-  linode_id: 'Linodes',
-  volume_id: 'Volumes',
-  domain_id: 'Domains',
-  nodebalancer_id: 'NodeBalancers',
-  lkecluster_id: 'Kubernetes Clusters',
-  database_id: 'Databases',
-  firewall_id: 'Firewalls',
+  linode_id: 'Linode',
+  volume_id: 'Volume',
+  domain_id: 'Domain',
+  nodebalancer_id: 'NodeBalancer',
+  lkecluster_id: 'Kubernetes Cluster',
+  database_id: 'Database',
+  firewall_id: 'Firewall',
   none: '',
   general: '',
 };
