@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 
-const DEFAULT_DELAY = 1000;
+export const DEFAULT_DELAY = 1000;
 
 interface LandingLoadingProps {
   /** If true, the loading indicator will not be rendered for 1 second which may give user's with fast connections a more fluid experience. */
@@ -48,5 +48,7 @@ export const LandingLoading = ({
     };
   }, [shouldDelay, delayInMS]);
 
-  return showLoading ? children || <CircleProgress /> : null;
+  return showLoading
+    ? children || <CircleProgress data-testid="circle-progress" />
+    : null;
 };
