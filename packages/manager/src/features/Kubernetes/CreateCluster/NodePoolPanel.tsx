@@ -15,7 +15,7 @@ export interface NodePoolPanelProps {
   apiError?: string;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   hasSelectedRegion: boolean;
-  isSelectedRegionEligible: (planType?: LinodeTypeClass) => boolean;
+  isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
 }
@@ -48,7 +48,7 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     apiError,
     types,
     hasSelectedRegion,
-    isSelectedRegionEligible,
+    isSelectedRegionEligibleForPlan,
     isPlanPanelDisabled,
     regionsData,
   } = props;
@@ -90,7 +90,7 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
           }
           selectedID={selectedType}
           hasSelectedRegion={hasSelectedRegion}
-          isSelectedRegionEligible={isSelectedRegionEligible}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           onSelect={(newType: string) => setSelectedType(newType)}
           error={apiError}
           isPlanPanelDisabled={isPlanPanelDisabled}

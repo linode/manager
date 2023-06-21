@@ -12,14 +12,16 @@ const mockedRegionData: Region[] = [
 ];
 
 const planTypes: LinodeTypeClass[] = ['premium', 'gpu'];
+const planType = '%p' as LinodeTypeClass;
 
 describe('PlansAvailabilityNotice', () => {
-  planTypes.forEach((planType) => {
-    const formattedPlanType = formatPlanTypes(planType);
+  it.each(planTypes)(
+    `renders a ${planType} error notice when isSelectedRegionEligibleForPlan is false and hasSelectedRegion is true`,
+    async () => {
+      const formattedPlanType = formatPlanTypes(planType);
 
-    it(`renders a ${planType} error notice when isSelectedRegionEligible is false and hasSelectedRegion is true`, async () => {
       const props: PlansAvailabilityNoticeProps = {
-        isSelectedRegionEligible: false,
+        isSelectedRegionEligibleForPlan: false,
         hasSelectedRegion: true,
         regionsData: mockedRegionData,
         planType,
@@ -37,15 +39,15 @@ describe('PlansAvailabilityNotice', () => {
       expect(getByTestId(`${planType}-notice-error`)).toHaveTextContent(
         `${formattedPlanType} Plans are not currently available in this region.`
       );
-    });
-  });
+    }
+  );
 
-  planTypes.forEach((planType) => {
-    const formattedPlanType = formatPlanTypes(planType);
-
-    it(`renders a ${planType} warning notice when isSelectedRegionPremium is false and hasSelectedRegion is false`, () => {
+  it.each(planTypes)(
+    `renders a ${planType} warning notice when isSelectedRegionPremium is false and hasSelectedRegion is false`,
+    () => {
+      const formattedPlanType = formatPlanTypes(planType);
       const props: PlansAvailabilityNoticeProps = {
-        isSelectedRegionEligible: false,
+        isSelectedRegionEligibleForPlan: false,
         hasSelectedRegion: false,
         regionsData: mockedRegionData,
         planType,
@@ -63,13 +65,14 @@ describe('PlansAvailabilityNotice', () => {
       expect(getByTestId(`${planType}-notice-warning`)).toHaveTextContent(
         `${formattedPlanType} Plans are currently available in`
       );
-    });
-  });
+    }
+  );
 
-  planTypes.forEach((planType) => {
-    it(`renders no ${planType} notice when isSelectedRegionPremium is true`, () => {
+  it.each(planTypes)(
+    `renders no ${planType} notice when isSelectedRegionPremium is true`,
+    () => {
       const props: PlansAvailabilityNoticeProps = {
-        isSelectedRegionEligible: true,
+        isSelectedRegionEligibleForPlan: true,
         hasSelectedRegion: true,
         regionsData: mockedRegionData,
         planType,
@@ -80,6 +83,6 @@ describe('PlansAvailabilityNotice', () => {
       );
 
       expect(queryByTestId(/premium-notice/)).not.toBeInTheDocument();
-    });
-  });
+    }
+  );
 });

@@ -11,7 +11,7 @@ import {
 } from './PlansAvailabilityNotice.styles';
 
 export interface PlansAvailabilityNoticeProps {
-  isSelectedRegionEligible: boolean;
+  isSelectedRegionEligibleForPlan: boolean;
   hasSelectedRegion: boolean;
   regionsData: Region[];
   planType: LinodeTypeClass;
@@ -21,7 +21,7 @@ export const PlansAvailabilityNotice = React.memo(
   (props: PlansAvailabilityNoticeProps) => {
     const {
       hasSelectedRegion,
-      isSelectedRegionEligible,
+      isSelectedRegionEligibleForPlan,
       planType,
       regionsData,
     } = props;
@@ -38,7 +38,7 @@ export const PlansAvailabilityNotice = React.memo(
     return (
       <PlansAvailabilityNoticeMessage
         hasSelectedRegion={hasSelectedRegion}
-        isSelectedRegionEligible={isSelectedRegionEligible}
+        isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
         planType={planType}
         regionList={getEligibleRegionList()}
       />
@@ -48,7 +48,7 @@ export const PlansAvailabilityNotice = React.memo(
 
 interface PlansAvailabilityNoticeMessageProps {
   hasSelectedRegion: boolean;
-  isSelectedRegionEligible: boolean;
+  isSelectedRegionEligibleForPlan: boolean;
   planType: LinodeTypeClass;
   regionList: Region[];
 }
@@ -58,7 +58,7 @@ const PlansAvailabilityNoticeMessage = (
 ) => {
   const {
     hasSelectedRegion,
-    isSelectedRegionEligible,
+    isSelectedRegionEligibleForPlan,
     planType,
     regionList,
   } = props;
@@ -78,7 +78,7 @@ const PlansAvailabilityNoticeMessage = (
 
   const formattedPlanType = formatPlanTypes(planType);
 
-  return hasSelectedRegion && !isSelectedRegionEligible ? (
+  return hasSelectedRegion && !isSelectedRegionEligibleForPlan ? (
     <Notice error dataTestId={`${planType}-notice-error`}>
       <StyledNoticeTypography>
         {formattedPlanType} Plans are not currently available in this

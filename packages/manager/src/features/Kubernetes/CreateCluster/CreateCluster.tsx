@@ -238,7 +238,7 @@ export const CreateCluster = () => {
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,
-    isSelectedRegionEligible,
+    isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
     selectedRegionID,
     regionsData,
@@ -322,7 +322,7 @@ export const CreateCluster = () => {
               regionsData={regionsData}
               isPlanPanelDisabled={isPlanPanelDisabled}
               hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionEligible={isSelectedRegionEligible}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
             />
           </Box>

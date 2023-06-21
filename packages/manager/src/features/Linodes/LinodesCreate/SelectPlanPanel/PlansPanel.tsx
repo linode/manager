@@ -68,7 +68,7 @@ export const PlansPanel = (props: Props) => {
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,
-    isSelectedRegionEligible,
+    isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
     selectedRegionID,
     regionsData,
@@ -82,7 +82,9 @@ export const PlansPanel = (props: Props) => {
             <PlanInformation
               disabledClasses={props.disabledClasses}
               hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionEligible={isSelectedRegionEligible(plan)}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                plan
+              )}
               planType={plan}
               regionsData={regionsData || []}
             />

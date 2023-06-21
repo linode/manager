@@ -144,7 +144,7 @@ export const AddNodePoolDrawer = (props: Props) => {
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,
-    isSelectedRegionEligible,
+    isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
     selectedRegionID: clusterRegionId,
     regionsData,
@@ -175,7 +175,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           }}
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
-          isSelectedRegionEligible={isSelectedRegionEligible}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           regionsData={regionsData}
           updatePlanCount={updatePlanCount}
           addPool={handleAdd}

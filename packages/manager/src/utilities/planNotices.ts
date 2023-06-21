@@ -8,7 +8,7 @@ interface PremiumPlanInfoProps {
 /**
  * @param {Region[]} regionsData
  * @param {string} selectedRegionID
- * @returns {object} { hasSelectedRegion, isPlanPanelDisabled, isSelectedRegionEligible }
+ * @returns {object} { hasSelectedRegion, isPlanPanelDisabled, isSelectedRegionEligibleForPlan }
  */
 export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
   const { regionsData, selectedRegionID } = props;
@@ -31,7 +31,7 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
    * If the user has selected a region and that region has Premium Plans
    * @returns {boolean}
    */
-  const isSelectedRegionEligible = (planType: LinodeTypeClass) =>
+  const isSelectedRegionEligibleForPlan = (planType: LinodeTypeClass) =>
     Boolean(
       selectedRegion?.capabilities.includes(getCapabilityFromPlanType(planType))
     );
@@ -43,12 +43,12 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
    * @returns {boolean}
    */
   const isPlanPanelDisabled = (planType: LinodeTypeClass) =>
-    hasSelectedRegion && !isSelectedRegionEligible(planType);
+    hasSelectedRegion && !isSelectedRegionEligibleForPlan(planType);
 
   return {
     hasSelectedRegion,
     isPlanPanelDisabled,
-    isSelectedRegionEligible,
+    isSelectedRegionEligibleForPlan,
   };
 };
 

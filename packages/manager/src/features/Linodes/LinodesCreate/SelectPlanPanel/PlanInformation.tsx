@@ -10,7 +10,7 @@ import { useTheme } from '@mui/material/styles';
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
   hasSelectedRegion: boolean;
-  isSelectedRegionEligible: boolean;
+  isSelectedRegionEligibleForPlan: boolean;
   planType: LinodeTypeClass;
   regionsData?: Region[];
 }
@@ -20,7 +20,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
   const {
     disabledClasses,
     hasSelectedRegion,
-    isSelectedRegionEligible,
+    isSelectedRegionEligibleForPlan,
     planType,
     regionsData,
   } = props;
@@ -33,7 +33,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     <>
       {planType === 'gpu' ? (
         <PlansAvailabilityNotice
-          isSelectedRegionEligible={isSelectedRegionEligible}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           hasSelectedRegion={hasSelectedRegion}
           regionsData={regionsData || []}
           planType={planType}
@@ -47,7 +47,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
       ) : null}
       {planType === 'premium' ? (
         <PlansAvailabilityNotice
-          isSelectedRegionEligible={isSelectedRegionEligible}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           hasSelectedRegion={hasSelectedRegion}
           regionsData={regionsData || []}
           planType={planType}

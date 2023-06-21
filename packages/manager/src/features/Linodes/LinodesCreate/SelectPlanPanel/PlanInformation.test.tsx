@@ -12,7 +12,7 @@ jest.mock('src/hooks/useFlags', () => ({
 const mockProps: PlanInformationProps = {
   planType: 'standard',
   hasSelectedRegion: true,
-  isSelectedRegionEligible: false,
+  isSelectedRegionEligibleForPlan: false,
 };
 
 describe('PlanInformation', () => {

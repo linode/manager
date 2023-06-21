@@ -21,7 +21,7 @@ interface Props {
   hasSelectedRegion: boolean;
   header?: string;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
-  isSelectedRegionEligible: (planType?: LinodeTypeClass) => boolean;
+  isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
@@ -39,7 +39,7 @@ export const KubernetesPlansPanel = ({
   hasSelectedRegion,
   header,
   isPlanPanelDisabled,
-  isSelectedRegionEligible,
+  isSelectedRegionEligibleForPlan,
   onAdd,
   regionsData,
   updatePlanCount,
@@ -60,7 +60,9 @@ export const KubernetesPlansPanel = ({
             <PlanInformation
               planType={plan}
               hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionEligible={isSelectedRegionEligible(plan)}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                plan
+              )}
               regionsData={regionsData}
             />
             <KubernetesPlanContainer
