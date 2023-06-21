@@ -1,4 +1,8 @@
-import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
+import {
+  EntityEvent,
+  EventAction,
+  EventStatus,
+} from '@linode/api-v4/lib/account';
 import type { QueryClient } from 'react-query';
 import { Dispatch } from 'redux';
 import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
@@ -7,8 +11,7 @@ import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
-import { isEntityEvent } from '../events/event.helpers';
-import { EntityEvent } from '../events/event.types';
+import { isEntityEvent } from 'src/utilities/eventUtils';
 import { deleteLinode } from './linodes.actions';
 
 export const linodeStoreEventsHandler: AppEventHandler = (
@@ -19,8 +22,12 @@ export const linodeStoreEventsHandler: AppEventHandler = (
   if (!isEntityEvent(event)) {
     return;
   }
-  const { action, entity, percent_complete, status, id: eventID } = event;
-  const { id } = entity;
+  const {
+    action,
+    entity: { id },
+    percent_complete,
+    status,
+  } = event;
 
   // We may want to request notifications here, depending on the event
   // action.
@@ -28,24 +35,12 @@ export const linodeStoreEventsHandler: AppEventHandler = (
     queryClient.invalidateQueries(accountNotificationsQueryKey);
   }
 
-  const eventFromStore = store
-    .getState()
-    .events.events.find((thisEvent) => thisEvent.id === eventID);
-
-  const prevStatus = eventFromStore?.status;
-
   switch (action) {
     /** Update Linode */
     case 'linode_migrate':
     case 'linode_migrate_datacenter':
     case 'linode_resize':
-      return handleLinodeMigrate(
-        store.dispatch,
-        status,
-        id,
-        queryClient,
-        prevStatus
-      );
+      return handleLinodeMigrate(store.dispatch, status, id, queryClient);
     case 'linode_reboot':
     case 'linode_shutdown':
     case 'linode_snapshot':
@@ -55,7 +50,7 @@ export const linodeStoreEventsHandler: AppEventHandler = (
     case 'backups_cancel':
     case 'disk_imagize':
     case 'linode_clone':
-      return handleLinodeUpdate(store.dispatch, status, id, prevStatus);
+      return handleLinodeUpdate(store.dispatch, status, id);
 
     case 'linode_rebuild':
     case 'backups_restore':
@@ -67,7 +62,7 @@ export const linodeStoreEventsHandler: AppEventHandler = (
 
     /** Create Linode */
     case 'linode_create':
-      return handleLinodeCreation(store.dispatch, status, id, prevStatus);
+      return handleLinodeCreation(store.dispatch, status, id);
 
     /**
      * Config actions
@@ -136,10 +131,9 @@ const handleLinodeMigrate = (
   dispatch: Dispatch<any>,
   status: EventStatus,
   id: number,
-  queryClient: QueryClient,
-  prevStatus?: EventStatus
+  queryClient: QueryClient
 ) => {
-  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
+  dispatch(requestLinodeForStore(id, true));
 
   switch (status) {
     case 'failed':
@@ -169,10 +163,9 @@ const handleLinodeMigrate = (
 const handleLinodeUpdate = (
   dispatch: Dispatch<any>,
   status: EventStatus,
-  id: number,
-  prevStatus?: EventStatus
+  id: number
 ) => {
-  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
+  dispatch(requestLinodeForStore(id, true));
 
   switch (status) {
     case 'failed':
@@ -212,10 +205,9 @@ const handleLinodeDelete = (
 const handleLinodeCreation = (
   dispatch: Dispatch<any>,
   status: EventStatus,
-  id: number,
-  prevStatus?: EventStatus
+  id: number
 ) => {
-  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
+  dispatch(requestLinodeForStore(id, true));
 
   switch (status) {
     case 'failed':
@@ -278,16 +270,3 @@ const eventsWithRelevantNotifications: EventAction[] = [
   'linode_migrate_datacenter_create',
   'linode_migrate_datacenter',
 ];
-
-// If this is the first event coming in for the Linode, or if it's the first
-// "started" event, request the Linode from the API to update its status.
-export const updateLinodeOnFirstRelevantEvent = (
-  dispatch: Dispatch<any>,
-  linodeID: number,
-  status: EventStatus,
-  prevStatus?: EventStatus
-) => {
-  if (!prevStatus || (status === 'started' && prevStatus === 'scheduled')) {
-    dispatch(requestLinodeForStore(linodeID, true));
-  }
-};

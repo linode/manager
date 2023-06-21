@@ -25,7 +25,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { resetEventsPolling } from 'src/eventsPolling';
 import ImagesDrawer, { DrawerMode } from 'src/features/Images/ImagesDrawer';
 import {
   CreateLinodeDisk,
@@ -38,6 +37,10 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
+import {
+  withEventsInfiniteQuery,
+  WithEventsInfiniteQueryProps,
+} from 'src/containers/events.container';
 
 type ClassNames =
   | 'root'
@@ -109,7 +112,8 @@ interface Props {
 type CombinedProps = Props &
   LinodeContextProps &
   WithStyles<ClassNames> &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  WithEventsInfiniteQueryProps;
 
 const defaultDrawerState: DrawerState = {
   open: false,
@@ -482,7 +486,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   resizeDisk = (size: number) => {
-    const { linodeId, resizeLinodeDisk } = this.props;
+    const { linodeId, resizeLinodeDisk, resetEventsPolling } = this.props;
     const { diskId } = this.state.drawer;
     if (!linodeId || !diskId) {
       // Safety check; should never happen.
@@ -498,7 +502,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   createDisk = (values: any) => {
-    const { linodeId, createLinodeDisk } = this.props;
+    const { linodeId, createLinodeDisk, resetEventsPolling } = this.props;
     const { label, size, filesystem, image, root_pass } = values;
     if (!linodeId) {
       // Safety check; should never happen.
@@ -639,7 +643,8 @@ const linodeContext = withLinodeDetailContext(
 const enhanced = compose<CombinedProps, {}>(
   styled,
   linodeContext,
-  withSnackbar
+  withSnackbar,
+  withEventsInfiniteQuery({ enabled: false })
 );
 
 export default enhanced(LinodeDisks);

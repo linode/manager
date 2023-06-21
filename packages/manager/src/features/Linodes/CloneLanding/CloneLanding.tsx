@@ -33,7 +33,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import withLinodes from 'src/containers/withLinodes.container';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -47,6 +46,7 @@ import {
   curriedCloneLandingReducer,
   defaultState,
 } from './utilities';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
@@ -102,6 +102,8 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   /**
    * ROUTING
@@ -414,7 +416,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   region: linode.region,
   label: linode.label,
   linodeStatus: linode.status,
-  linodeEvents: linode._events,
 }));
 
 interface DispatchProps {

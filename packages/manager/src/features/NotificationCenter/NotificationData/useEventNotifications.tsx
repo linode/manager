@@ -2,9 +2,10 @@ import { Event, EventAction } from '@linode/api-v4';
 import { partition } from 'ramda';
 import * as React from 'react';
 import { useEventsInfiniteQuery } from 'src/queries/events';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
-import { ExtendedEvent } from 'src/store/events/event.types';
-import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
+import {
+  isInProgressEvent,
+  removeBlocklistedEvents,
+} from 'src/utilities/eventUtils';
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { RenderEvent } from './RenderEvent';
@@ -46,7 +47,7 @@ export const useEventNotifications = () => {
 };
 
 const formatEventForDisplay = (
-  event: ExtendedEvent,
+  event: Event,
   onClose: () => void
 ): NotificationItem => ({
   originalId: event.id,
@@ -56,7 +57,7 @@ const formatEventForDisplay = (
 });
 
 const formatProgressEventForDisplay = (
-  event: ExtendedEvent,
+  event: Event,
   onClose: () => void
 ): NotificationItem => ({
   originalId: event.id,

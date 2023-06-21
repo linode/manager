@@ -19,10 +19,6 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState,
 } from 'src/store/backupDrawer';
-import events, {
-  defaultState as eventsDefaultState,
-  State as EventsState,
-} from 'src/store/events/event.reducer';
 import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
@@ -101,7 +97,6 @@ export interface ApplicationState {
   __resources: ResourcesState;
   authentication: AuthState;
   backups: BackupDrawerState;
-  events: EventsState;
   stackScriptDialog: StackScriptDialogState;
   volumeDrawer: VolumeDrawerState;
   createLinode: LinodeCreateState;
@@ -118,7 +113,6 @@ export const defaultState: ApplicationState = {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
-  events: eventsDefaultState,
   stackScriptDialog: stackScriptDialogDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
@@ -147,7 +141,6 @@ const reducers = combineReducers<ApplicationState>({
   backups,
   stackScriptDialog,
   volumeDrawer,
-  events,
   createLinode: linodeCreateReducer,
   pendingUpload,
   initialLoad,

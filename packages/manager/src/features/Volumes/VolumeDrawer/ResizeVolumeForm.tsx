@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 import Form from 'src/components/core/Form';
 import { Notice } from 'src/components/Notice/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {
   handleFieldErrors,
@@ -13,6 +12,7 @@ import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   onClose: () => void;
@@ -37,6 +37,8 @@ export const ResizeVolumeForm = (props: Props) => {
 
   const initialValues = { size: volumeSize };
   const validationSchema = ResizeVolumeSchema(volumeSize);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   return (
     <Formik

@@ -14,12 +14,7 @@ import { FlagSet } from 'src/featureFlags';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
-import {
-  storeFactory,
-  ApplicationState,
-  defaultState,
-  ApplicationStore,
-} from 'src/store';
+import { ApplicationState, defaultState, storeFactory } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = jest.fn().mockImplementation((query) => {
@@ -81,27 +76,6 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       </QueryClientProvider>
     </Provider>
   );
-};
-
-/**
- * Wraps children with just the Redux Store. This is
- * useful for testing React hooks that need to access
- * the Redux store.
- * @example
- * ```ts
- * const { result } = renderHook(() => useOrder(defaultOrder), {
- *   wrapper: wrapWithStore,
- * });
- * ```
- * @param param {object} contains children to render
- * @returns {JSX.Element} wrapped component with Redux available for use
- */
-export const wrapWithStore = (props: {
-  children: React.ReactNode;
-  store?: ApplicationStore;
-}) => {
-  const store = props.store ?? storeFactory();
-  return <Provider store={store}>{props.children}</Provider>;
 };
 
 // When wrapping a TableRow component to test, we'll get an invalid DOM nesting

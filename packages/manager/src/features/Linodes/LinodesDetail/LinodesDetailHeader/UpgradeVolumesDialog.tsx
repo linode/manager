@@ -10,9 +10,9 @@ import { Theme } from '@mui/material/styles';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedLinode } from '../types';
 import { useQueryClient } from 'react-query';
 import { queryKey } from 'src/queries/accountNotifications';
+import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
 
 interface Props {
   open: boolean;

@@ -29,8 +29,8 @@ import { useStyles } from './LinodeRow.style';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
 
 type Props = Linode & { handlers: LinodeHandlers };
 

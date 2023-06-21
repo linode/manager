@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
 import { ApplicationState, useApplicationStore } from 'src/store';
-import { getEvents } from 'src/store/events/event.request';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
 
@@ -12,13 +11,12 @@ interface UseReduxPreload {
   _loading: boolean;
 }
 
-export type ReduxEntity = 'linodes' | 'events' | 'longview';
+export type ReduxEntity = 'linodes' | 'longview';
 
 type RequestMap = Record<ReduxEntity, any>;
 
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
-  events: getEvents,
   longview: getAllLongviewClients,
 };
 

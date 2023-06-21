@@ -10,7 +10,6 @@ import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { MBpsInterDC } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { addUsedDiskSpace } from 'src/features/Linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import useFlags from 'src/hooks/useFlags';
@@ -34,10 +33,10 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import useEvents from 'src/hooks/useEvents';
-import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { useImageQuery } from 'src/queries/images';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { useEventsInfiniteQuery } from 'src/queries/events';
+import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -103,11 +102,9 @@ export const MigrateLinode = React.memo((props: Props) => {
     linodeId !== undefined && open
   );
 
-  const { events } = useEvents();
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
-  const eventsForLinode = linodeId
-    ? events.filter((event) => isEventRelevantToLinode(event, linodeId))
-    : [];
+  const recentEvent = useRecentEventForLinode(linodeId ?? -1);
 
   const {
     mutateAsync: migrateLinode,
@@ -218,11 +215,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     image?.label ?? linode.image ?? 'Unknown Image'
   );
 
-  const disabledText = getDisabledReason(
-    eventsForLinode,
-    linode.status,
-    linodeId ?? -1
-  );
+  const disabledText = getDisabledReason(recentEvent);
 
   /** how long will this take to migrate when the migration starts */
   const migrationTimeInMinutes = Math.ceil(
@@ -296,14 +289,10 @@ export const MigrateLinode = React.memo((props: Props) => {
   );
 });
 
-const getDisabledReason = (
-  events: Event[],
-  linodeStatus: string,
-  linodeID: number
-) => {
+const getDisabledReason = (recentEvent: Event | undefined) => {
   if (
-    events[0]?.action === 'linode_migrate_datacenter' &&
-    events[0]?.percent_complete !== 100
+    recentEvent?.action === 'linode_migrate_datacenter' &&
+    recentEvent?.percent_complete !== 100
   ) {
     return `Your Linode is currently being migrated.`;
   }

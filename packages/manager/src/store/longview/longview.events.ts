@@ -1,8 +1,8 @@
 import { EventStatus } from '@linode/api-v4/lib/account';
 import { Dispatch } from 'redux';
 import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
-import { isEntityEvent } from '../events/event.helpers';
 import { getAllLongviewClients } from './longview.requests';
+import { isEntityEvent } from 'src/utilities/eventUtils';
 
 export const longviewEventHandler: AppEventHandler = (event, _, store) => {
   if (!isEntityEvent(event)) {

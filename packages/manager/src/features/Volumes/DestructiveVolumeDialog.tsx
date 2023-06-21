@@ -5,13 +5,13 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { resetEventsPolling } from 'src/eventsPolling';
 import useLinodes from 'src/hooks/useLinodes';
 import {
   useDeleteVolumeMutation,
   useDetachVolumeMutation,
 } from 'src/queries/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   warningCopy: {
@@ -52,6 +52,8 @@ export const DestructiveVolumeDialog = (props: Props) => {
     error: deleteError,
     isLoading: deleteLoading,
   } = useDeleteVolumeMutation();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const onDetach = () => {
     detachVolume({ id: volumeId }).then(() => {

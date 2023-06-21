@@ -45,8 +45,8 @@ import { TableCell } from 'src/components/TableCell';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];

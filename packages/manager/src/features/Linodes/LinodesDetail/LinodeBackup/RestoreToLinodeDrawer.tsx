@@ -11,13 +11,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { useFormik } from 'formik';
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { useSnackbar } from 'notistack';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
   useAllLinodesQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   open: boolean;
@@ -30,6 +30,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   const { linodeId, backup, open, onClose } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: linode } = useLinodeQuery(linodeId, open);
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const {
     data: linodes,

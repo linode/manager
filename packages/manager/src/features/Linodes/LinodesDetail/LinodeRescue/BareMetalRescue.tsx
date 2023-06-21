@@ -4,10 +4,10 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import RescueDescription from './RescueDescription';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   linodeId: number | undefined;
@@ -24,6 +24,7 @@ export const BareMetalRescue = (props: Props) => {
     linodeId ?? -1,
     linodeId !== undefined && isOpen
   );
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   React.useEffect(() => {
     if (isOpen) {

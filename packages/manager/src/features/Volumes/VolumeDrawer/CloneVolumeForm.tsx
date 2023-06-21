@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 import Form from 'src/components/core/Form';
 import Typography from 'src/components/core/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useCloneVolumeMutation } from 'src/queries/volumes';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -14,6 +13,7 @@ import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import VolumesActionsPanel from './VolumesActionsPanel';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   onClose: () => void;
@@ -29,6 +29,8 @@ export const CloneVolumeForm = (props: Props) => {
   const { onClose, volumeId, volumeRegion, volumeLabel, volumeSize } = props;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   return (
     <Formik

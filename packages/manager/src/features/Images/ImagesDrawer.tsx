@@ -15,7 +15,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
 import LinodeSelect from 'src/features/Linodes/LinodeSelect';
 import { useImageAndLinodeGrantCheck } from './utils';
@@ -25,6 +24,7 @@ import {
 } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -112,6 +112,8 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
   const { mutateAsync: createImage } = useCreateImageMutation();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   React.useEffect(() => {
     setMounted(true);

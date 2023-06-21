@@ -11,8 +11,8 @@ import { useFormik } from 'formik';
 import TextField from 'src/components/TextField';
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
 import Button from 'src/components/Button';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   linodeId: number;
@@ -47,6 +47,8 @@ export const CaptureSnapshot = ({ linodeId, isReadOnly }: Props) => {
     error: snapshotError,
     isLoading: isSnapshotLoading,
   } = useLinodeBackupSnapshotMutation(linodeId);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const [
     isSnapshotConfirmationDialogOpen,

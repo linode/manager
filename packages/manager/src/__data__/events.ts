@@ -1,5 +1,4 @@
 import { Event } from '@linode/api-v4/lib/account';
-import { ExtendedEvent } from 'src/store/events/event.types';
 
 export const events: Event[] = [
   {
@@ -574,8 +573,7 @@ export const uniqueEvents: Event[] = [
   },
 ];
 
-export const reduxEvent: ExtendedEvent = {
-  _initial: false,
+export const reduxEvent: Event = {
   id: 123551234,
   secondary_entity: null,
   time_remaining: null,

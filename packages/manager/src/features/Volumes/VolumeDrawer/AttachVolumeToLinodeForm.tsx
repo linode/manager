@@ -4,7 +4,6 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { openForCreating } from 'src/store/volumeForm';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -21,6 +20,7 @@ import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import { useGrants } from 'src/queries/profile';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   onClose: () => void;
@@ -62,6 +62,8 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
     readOnly || (linodeGrant && linodeGrant.permissions !== 'read_write');
 
   const { mutateAsync: attachVolume } = useAttachVolumeMutation();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   return (
     <Formik

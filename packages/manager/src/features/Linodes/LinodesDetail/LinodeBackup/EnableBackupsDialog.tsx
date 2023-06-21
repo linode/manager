@@ -4,11 +4,11 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { useSnackbar } from 'notistack';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   linodeId: number | undefined;
@@ -37,6 +37,8 @@ export const EnableBackupsDialog = (props: Props) => {
   );
 
   const price = type?.addons?.backups?.price?.monthly ?? 0;
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { enqueueSnackbar } = useSnackbar();
 

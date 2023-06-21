@@ -21,7 +21,6 @@ import {
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -147,8 +146,6 @@ const createLink = (title: string, handler: () => void) => (
 );
 
 class DomainRecords extends React.Component<CombinedProps, State> {
-  eventsSubscription$: Subscription;
-
   static defaultDrawerState: DrawerState = {
     open: false,
     mode: 'create',

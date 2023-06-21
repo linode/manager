@@ -16,7 +16,11 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { INTERVAL, ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import {
+  DISABLE_EVENT_THROTTLE,
+  INTERVAL,
+  ISO_DATETIME_NO_TZ_FORMAT,
+} from 'src/constants';
 import { isInProgressEvent } from 'src/utilities/eventUtils';
 import { generateInFilter } from 'src/utilities/requestFilters';
 
@@ -64,28 +68,30 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
   };
 
   // Poll for new events
-  useEventsPolling({
+  const { resetEventsPolling: resetNewEventsPolling } = useEventsPolling({
     enabled,
     eventHandler: pollingEventHandler,
     filter,
   });
 
   // Poll in-progress events for updates
-  useEventsPolling({
-    enabled: enabled && incompleteEvents && incompleteEvents.length > 0,
-    eventHandler: pollingEventHandler,
-    filter: {
-      created: undefined,
-      '+or': [
-        ...generateInFilter(
-          'id',
-          incompleteEvents?.map((event) => event.id) ?? []
-        ),
-      ],
-    },
-  });
+  const { resetEventsPolling: resetInProgressEventsPolling } = useEventsPolling(
+    {
+      enabled: enabled && incompleteEvents && incompleteEvents.length > 0,
+      eventHandler: pollingEventHandler,
+      filter: {
+        created: undefined,
+        '+or': [
+          ...generateInFilter(
+            'id',
+            incompleteEvents?.map((event) => event.id) ?? []
+          ),
+        ],
+      },
+    }
+  );
 
-  return useInfiniteQuery<ResourcePage<Event>, APIError[]>(
+  const queryResult = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     queryKey,
     ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }, filter),
     {
@@ -93,6 +99,18 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
         page < pages ? page + 1 : undefined,
     }
   );
+
+  return {
+    ...queryResult,
+    events: queryResult.data?.pages.reduce(
+      (events, page) => [...events, ...page.data],
+      []
+    ),
+    resetEventsPolling: () => {
+      resetNewEventsPolling();
+      resetInProgressEventsPolling();
+    },
+  };
 };
 
 export const useMarkEventsAsSeen = () => {
@@ -133,7 +151,9 @@ const useEventsPolling = (options: EventsQueryOptions = {}) => {
     },
     {
       enabled,
-      refetchInterval: INTERVAL * intervalMultiplier,
+      refetchInterval: DISABLE_EVENT_THROTTLE
+        ? 500
+        : INTERVAL * intervalMultiplier,
       retryDelay: 5000,
       refetchOnMount: false,
       refetchOnWindowFocus: false,

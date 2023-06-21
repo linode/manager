@@ -34,7 +34,7 @@ import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackups
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
 import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
-import { linodesInTransition as _linodesInTransition } from '../transitions';
+import { linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
@@ -49,6 +49,10 @@ import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import {
+  withEventsInfiniteQuery,
+  WithEventsInfiniteQueryProps,
+} from 'src/containers/events.container';
 
 interface State {
   powerDialogOpen: boolean;
@@ -95,7 +99,8 @@ type CombinedProps = Props &
   RouteProps &
   StyleProps &
   WithSnackbarProps &
-  WithProfileProps;
+  WithProfileProps &
+  WithEventsInfiniteQueryProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
@@ -206,7 +211,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesCount,
       linodesData,
       classes,
-      linodesInTransition,
+      events,
     } = this.props;
 
     const params = new URLSearchParams(this.props.location.search);
@@ -344,7 +349,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           let _status: ExtendedStatus = linode.status;
                           if (linode.maintenance) {
                             _status = 'maintenance';
-                          } else if (linodesInTransition.has(linode.id)) {
+                          } else if (
+                            linodesInTransition(events ?? []).has(linode.id)
+                          ) {
                             _status = 'busy';
                           }
 
@@ -452,13 +459,11 @@ const sendGroupByAnalytic = (value: boolean) => {
 
 interface StateProps {
   linodesCount: number;
-  linodesInTransition: Set<number>;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
     linodesCount: state.__resources.linodes.results,
-    linodesInTransition: _linodesInTransition(state.events.events),
   };
 };
 
@@ -484,7 +489,8 @@ export const enhanced = compose<CombinedProps, Props>(
   connected,
   styled,
   withFeatureFlagConsumer,
-  withProfile
+  withProfile,
+  withEventsInfiniteQuery()
 );
 
 export default enhanced(ListLinodes);

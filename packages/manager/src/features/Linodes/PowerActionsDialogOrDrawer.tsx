@@ -16,7 +16,7 @@ import {
   useRebootLinodeMutation,
   useShutdownLinodeMutation,
 } from 'src/queries/linodes/linodes';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
@@ -93,6 +93,8 @@ export const PowerActionsDialog = (props: Props) => {
     isLoading: isShuttingDown,
     error: shutdownError,
   } = useShutdownLinodeMutation(linodeId ?? -1);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const [selectedConfigID, setSelectConfigID] = React.useState<number | null>(
     null

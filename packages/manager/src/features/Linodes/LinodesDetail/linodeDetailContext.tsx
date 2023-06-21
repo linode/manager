@@ -1,5 +1,6 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { ExtendedLinode } from 'src/hooks/useExtendedLinode';
 import { createHOCForConsumer } from 'src/requestableContext';
 import {
   CreateLinodeConfigResponse,
@@ -37,7 +38,6 @@ import {
 } from 'src/store/linodes/disk/disk.requests';
 import { updateLinode as _updateLinode } from 'src/store/linodes/linode.requests';
 import { ThunkDispatch } from 'src/store/types';
-import { ExtendedLinode } from './types';
 
 export type CreateLinodeConfig = (
   data: LinodeConfigCreateFields

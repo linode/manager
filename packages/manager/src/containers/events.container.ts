@@ -4,23 +4,30 @@ import React from 'react';
 import { InfiniteData } from 'react-query';
 import { EventsQueryOptions, useEventsInfiniteQuery } from 'src/queries/events';
 
-interface EventsInfiniteQueryProps {
+export interface WithEventsInfiniteQueryProps {
+  events?: Event[];
   eventsData?: InfiniteData<ResourcePage<Event>>;
   eventsLoading: boolean;
+  resetEventsPolling: () => void;
 }
 
 export const withEventsInfiniteQuery = <Props>(
   options?: EventsQueryOptions
-) => (Component: React.ComponentType<Props & EventsInfiniteQueryProps>) => (
+) => (Component: React.ComponentType<Props & WithEventsInfiniteQueryProps>) => (
   props: Props
 ) => {
-  const { data: eventsData, isLoading: eventsLoading } = useEventsInfiniteQuery(
-    options
-  );
+  const {
+    events,
+    data: eventsData,
+    isLoading: eventsLoading,
+    resetEventsPolling,
+  } = useEventsInfiniteQuery(options);
 
   return React.createElement(Component, {
     ...props,
+    events,
     eventsData,
     eventsLoading,
+    resetEventsPolling,
   });
 };

@@ -6,7 +6,7 @@ import { Config } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   open: boolean;
@@ -18,6 +18,8 @@ interface Props {
 export const BootConfigDialog = (props: Props) => {
   const { open, onClose, linodeId, config } = props;
   const { enqueueSnackbar } = useSnackbar();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { mutateAsync, isLoading, error } = useRebootLinodeMutation(linodeId);
 

@@ -5,13 +5,13 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { MBpsIntraDC } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useTypeQuery } from 'src/queries/types';
 import MutateDrawer from '../MutateDrawer';
 import { makeStyles } from 'tss-react/mui';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useStartLinodeMutationMutation } from 'src/queries/linodes/actions';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   pendingMutationLink: {
@@ -44,6 +44,8 @@ export const MutationNotification = (props: Props) => {
     linodeId,
     successorTypeInfo !== undefined
   );
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const [isMutationDrawerOpen, setIsMutationDrawerOpen] = React.useState(false);
 

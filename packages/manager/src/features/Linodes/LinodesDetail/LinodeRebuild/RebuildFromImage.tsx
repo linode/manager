@@ -20,7 +20,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 
-import { resetEventsPolling } from 'src/eventsPolling';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import useFlags from 'src/hooks/useFlags';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -33,6 +32,7 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { StyledNotice } from './RebuildFromImage.styles';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -91,6 +91,8 @@ export const RebuildFromImage = (props: Props) => {
   const flags = useFlags();
 
   const { data: _imagesData, error: imagesError } = useAllImagesQuery();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 

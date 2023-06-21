@@ -1,8 +1,8 @@
 import { EventStatus } from '@linode/api-v4/lib/account';
 import { Dispatch } from 'redux';
 import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
-import { isEntityEvent } from 'src/store/events/event.helpers';
 import { getAllLinodeDisks } from './disk.requests';
+import { isEntityEvent } from 'src/utilities/eventUtils';
 
 export const diskEventHandler: AppEventHandler = (event, _, store) => {
   if (!isEntityEvent(event)) {

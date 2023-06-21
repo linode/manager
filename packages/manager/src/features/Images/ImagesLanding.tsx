@@ -3,7 +3,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Hidden from 'src/components/core/Hidden';
-import imageEvents from 'src/store/selectors/imageEvents';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 import LandingHeader from 'src/components/LandingHeader';
@@ -12,7 +11,6 @@ import produce from 'immer';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import Typography from 'src/components/core/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
-import { ApplicationState } from 'src/store';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -35,7 +33,6 @@ import { useHistory } from 'react-router-dom';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import {
   queryKey,
@@ -43,6 +40,11 @@ import {
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
+import { useEventsInfiniteQuery } from 'src/queries/events';
+import {
+  isEventImageUpload,
+  isEventInProgressDiskImagize,
+} from 'src/utilities/eventUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -184,19 +186,23 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
-  const eventState = useSelector((state: ApplicationState) => state.events);
-  const events = imageEvents(eventState);
+  const { events } = useEventsInfiniteQuery();
+  const imageEvents =
+    events?.filter(
+      (thisEvent: Event) =>
+        isEventInProgressDiskImagize(thisEvent) || isEventImageUpload(thisEvent)
+    ) ?? [];
 
   // Private images with the associated events tied in.
   const manualImagesData = getImagesWithEvents(
     manualImages?.data ?? [],
-    events
+    imageEvents
   );
 
   // Automatic images with the associated events tied in.
   const automaticImagesData = getImagesWithEvents(
     automaticImages?.data ?? [],
-    events
+    imageEvents
   );
 
   const [drawer, setDrawer] = React.useState<ImageDrawerState>(

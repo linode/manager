@@ -33,7 +33,6 @@ import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import withLinodes from 'src/containers/withLinodes.container';
-import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
@@ -82,6 +81,10 @@ import {
   withAccountSettings,
   WithAccountSettingsProps,
 } from 'src/containers/accountSettings.container';
+import {
+  WithEventsInfiniteQueryProps,
+  withEventsInfiniteQuery,
+} from 'src/containers/events.container';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -132,7 +135,8 @@ type CombinedProps = WithSnackbarProps &
   WithProfileProps &
   AgreementsProps &
   WithQueryClientProps &
-  WithAccountSettingsProps;
+  WithAccountSettingsProps &
+  WithEventsInfiniteQueryProps;
 
 const defaultState: State = {
   privateIPEnabled: false,
@@ -645,7 +649,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         );
 
         /** reset the Events polling */
-        resetEventsPolling();
+        this.props.resetEventsPolling();
 
         /** send the user to the Linode detail page */
         this.props.history.push(`/linodes/${response.id}`);
@@ -863,7 +867,8 @@ export default recompose<CombinedProps, {}>(
   withProfile,
   withAgreements,
   withQueryClient,
-  withAccountSettings
+  withAccountSettings,
+  withEventsInfiniteQuery({ enabled: false })
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {

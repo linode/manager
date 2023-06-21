@@ -870,7 +870,7 @@ export const handlers = [
       seen: true,
       percent_complete: 100,
     });
-    return res.once(ctx.json(makeResourcePage([...events, ...oldEvents])));
+    return res(ctx.json(makeResourcePage([...events, ...oldEvents])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });

@@ -12,7 +12,6 @@ import ExternalLink from 'src/components/ExternalLink';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { resetEventsPolling } from 'src/eventsPolling';
 import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
@@ -30,6 +29,7 @@ import { useAllTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { usePreferences } from 'src/queries/preferences';
 import Box from 'src/components/core/Box';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   resizeTitle: {
@@ -71,6 +71,8 @@ export const LinodeResize = (props: Props) => {
 
   const { data: grants } = useGrants();
   const { data: preferences } = usePreferences(open);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { enqueueSnackbar } = useSnackbar();
 

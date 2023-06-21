@@ -23,8 +23,8 @@ import { transitionText } from 'src/features/Linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import NodeActionMenu from './NodeActionMenu';
+import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
 
 const useStyles = makeStyles((theme: Theme) => ({
   table: {

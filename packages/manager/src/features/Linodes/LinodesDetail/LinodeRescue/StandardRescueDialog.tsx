@@ -11,7 +11,6 @@ import { Theme } from '@mui/material/styles';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
 import usePrevious from 'src/hooks/usePrevious';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import createDevicesFromStrings, {
@@ -23,6 +22,7 @@ import RescueDescription from './RescueDescription';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -101,6 +101,8 @@ export const StandardRescueDialog = (props: Props) => {
     { region: linode?.region },
     open
   );
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();

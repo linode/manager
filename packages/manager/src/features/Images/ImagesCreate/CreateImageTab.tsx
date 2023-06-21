@@ -14,11 +14,11 @@ import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
 import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import useFlags from 'src/hooks/useFlags';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -100,6 +100,8 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
   const { mutateAsync: createImage } = useCreateImageMutation();
   const hasMetadataCustomerTag = useMetadataCustomerTag();
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');

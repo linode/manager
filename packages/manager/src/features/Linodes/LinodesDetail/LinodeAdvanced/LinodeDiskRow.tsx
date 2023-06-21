@@ -7,8 +7,9 @@ import { Theme } from '@mui/material/styles';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import useEvents from 'src/hooks/useEvents';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
+import { useEventsInfiniteQuery } from 'src/queries/events';
+import { isInProgressEvent } from 'src/utilities/eventUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   diskLabel: {
@@ -46,8 +47,6 @@ interface Props {
 }
 
 export const LinodeDiskRow: React.FC<Props> = (props) => {
-  const classes = useStyles();
-  const { inProgressEvents } = useEvents();
   const {
     disk,
     linodeId,
@@ -59,11 +58,21 @@ export const LinodeDiskRow: React.FC<Props> = (props) => {
     readOnly,
   } = props;
 
-  const resizeEvent = inProgressEvents.find(
-    (thisEvent) =>
-      thisEvent.secondary_entity?.id === disk.id &&
-      ['disk_create', 'disk_resize'].includes(thisEvent.action)
-  );
+  const classes = useStyles();
+  const { data: eventsData } = useEventsInfiniteQuery({
+    filter: {
+      'secondary_entity.id': disk.id,
+    },
+  });
+
+  const resizeEvent = eventsData?.pages
+    .reduce((events, page) => [...events, ...page.data], [])
+    .find(
+      (event) =>
+        isInProgressEvent(event) &&
+        event.secondary_entity?.id === disk.id &&
+        ['disk_create', 'disk_resize'].includes(event.action)
+    );
 
   return (
     <TableRow data-qa-disk={disk.label}>

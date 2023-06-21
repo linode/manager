@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useSnackbar } from 'notistack';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
 import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
 import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button/Button';
+import { useEventsInfiniteQuery } from 'src/queries/events';
 
 interface Props {
   isOpen: boolean;
@@ -23,6 +23,8 @@ export const CancelBackupsDialog = (props: Props) => {
     error,
     isLoading,
   } = useLinodeBackupsCancelMutation(linodeId);
+
+  const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
   const onCancelBackups = async () => {
     await cancelBackups();

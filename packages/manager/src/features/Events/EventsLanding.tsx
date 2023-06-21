@@ -19,7 +19,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { ApplicationState } from 'src/store';
-import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 import EventRow from './EventRow';
@@ -72,18 +71,13 @@ export const EventsLanding = (props: CombinedProps) => {
   const classes = useStyles();
 
   const {
-    data: eventsData,
+    events,
     isLoading,
     error,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
   } = useEventsInfiniteQuery({ filter });
-
-  const events = eventsData?.pages.reduce(
-    (events, page) => [...events, ...page.data],
-    []
-  );
 
   const loading = isLoading || isFetchingNextPage || entitiesLoading;
 
@@ -195,16 +189,10 @@ export const renderTableBody = (
 
 interface StateProps {
   entitiesLoading: boolean;
-  inProgressEvents: Record<number, number>;
-  eventsFromRedux: ExtendedEvent[];
-  mostRecentEventTime: string;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
   entitiesLoading: areEntitiesLoading(state.__resources),
-  inProgressEvents: state.events.inProgressEvents,
-  eventsFromRedux: state.events.events,
-  mostRecentEventTime: state.events.mostRecentEventTime,
 });
 
 const connected = connect(mapStateToProps);
