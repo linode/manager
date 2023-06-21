@@ -49,7 +49,7 @@ export const getRegionOptions = (regions: Region[]) => {
     groups[group].push({
       label: `${region.label} (${region.id})`,
       value: region.id,
-      flag: <Flag country={region.country as Country} />,
+      flag: <Flag country={region.country as Lowercase<Country>} />,
       country: region.country,
     });
   }

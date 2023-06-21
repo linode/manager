@@ -12,7 +12,7 @@ type Story = StoryObj<typeof Flag>;
 export const Default: Story = {
   render: (args) => <Flag {...args} />,
   args: {
-    country: 'US',
+    country: 'us',
   },
 };
 

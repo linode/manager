@@ -54,7 +54,7 @@ const ConfigureForm = (props: Props) => {
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region</Typography>
       <div className={classes.currentRegion}>
-        <Flag country={country as Country} />
+        <Flag country={country as Lowercase<Country>} />
         <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
           currentActualRegion?.label ?? currentRegion
         }`}</Typography>

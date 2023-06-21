@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import 'flag-icons/css/flag-icons.min.css';
 import { Country } from './EnhancedSelect/variants/RegionSelect/utils';
+import 'flag-icons/css/flag-icons.min.css';
 
 const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',
@@ -10,7 +10,7 @@ const COUNTRY_FLAG_OVERRIDES = {
 const COUNTRIES_TO_OUTLINE = ['jp', 'id', 'sg'];
 
 interface Props {
-  country: Country;
+  country: Lowercase<Country>;
 }
 
 const useStyles = makeStyles()((theme) => ({
