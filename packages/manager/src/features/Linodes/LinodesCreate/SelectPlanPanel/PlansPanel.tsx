@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
+import { useTheme } from '@mui/material/styles';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
@@ -8,7 +9,6 @@ import {
   planTabInfoContent,
 } from './utils';
 import { PlanContainer } from './PlanContainer';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
 import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
 import type { Region } from '@linode/api-v4';
@@ -62,7 +62,8 @@ export const PlansPanel = (props: Props) => {
     types,
   } = props;
 
-  const { classes } = useSelectPlanPanelStyles();
+  const theme = useTheme();
+
   const plans = getPlanSelectionsByPlanType(types);
   const {
     hasSelectedRegion,
@@ -112,7 +113,8 @@ export const PlansPanel = (props: Props) => {
 
   return (
     <TabbedPanel
-      rootClass={`${classes.root} ${className} tabbedPanel`}
+      rootClass={`${className} tabbedPanel`}
+      sx={{ marginTop: theme.spacing(3), width: '100%' }}
       innerClass={props.tabbedPanelInnerClass}
       error={error}
       header={header || 'Linode Plan'}

@@ -5,8 +5,8 @@ import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';
 import { PremiumPlansAvailabilityNotice } from '../PremiumPlansAvailabilityNotice';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import type { Region } from '@linode/api-v4';
+import { useTheme } from '@mui/material/styles';
 
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
@@ -17,7 +17,7 @@ export interface PlanInformationProps {
 }
 
 export const PlanInformation = (props: PlanInformationProps) => {
-  const { classes } = useSelectPlanPanelStyles();
+  const theme = useTheme();
   const {
     disabledClasses,
     hasSelectedRegion,
@@ -51,7 +51,10 @@ export const PlanInformation = (props: PlanInformationProps) => {
           regionsData={regionsData || []}
         />
       ) : null}
-      <Typography data-qa-prodedi className={classes.copy}>
+      <Typography
+        data-qa-prodedi
+        sx={{ marginTop: theme.spacing(1), marginBottom: theme.spacing(3) }}
+      >
         {planTabInfoContent[planType]?.typography}
       </Typography>
     </>
