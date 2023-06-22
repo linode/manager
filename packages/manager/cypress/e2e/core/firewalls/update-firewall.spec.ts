@@ -123,7 +123,7 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
     .should('be.visible')
     .within(() => {
       // Fill out and submit firewall edit form.
-      cy.get('[data-testid="textfield-input"]:last')
+      cy.findByLabelText('Linodes')
         .should('be.visible')
         .click()
         .type(linode.label);
@@ -133,9 +133,7 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
         .should('be.visible')
         .click();
 
-      cy.get('[data-testid="textfield-input"]:last')
-        .should('be.visible')
-        .click();
+      cy.findByLabelText('Linodes').should('be.visible').click();
 
       ui.button.findByTitle('Add').should('be.visible').click();
     });
