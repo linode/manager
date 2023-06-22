@@ -13,7 +13,11 @@ import {
 } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import { containsClick, getClick } from 'support/helpers';
-import { interceptCreateFirewall } from 'support/intercepts/firewalls';
+import {
+  interceptCreateFirewall,
+  interceptUpdateFirewallLinodes,
+  interceptUpdateFirewallRules,
+} from 'support/intercepts/firewalls';
 import { randomItem, randomString, randomLabel } from 'support/util/random';
 import { fbtVisible, fbtClick } from 'support/helpers';
 import { ui } from 'support/ui';
@@ -228,6 +232,7 @@ describe('update firewall', () => {
           });
 
         // Save configuration
+        interceptUpdateFirewallRules(firewall.id).as('updateFirewallRules');
         ui.button
           .findByTitle('Save Changes')
           .should('be.visible')
@@ -235,7 +240,7 @@ describe('update firewall', () => {
           .click();
 
         // Go back to landing page and check rules are added to the firewall
-        cy.wait(100);
+        cy.wait('@updateFirewallRules');
         cy.visitWithLogin('/firewalls');
         cy.findByText(firewall.label)
           .closest('tr')
@@ -253,6 +258,7 @@ describe('update firewall', () => {
         removeFirewallRules(outboundRule.label);
 
         // Save configuration
+        interceptUpdateFirewallRules(firewall.id).as('updateFirewallRules');
         ui.button
           .findByTitle('Save Changes')
           .should('be.visible')
@@ -260,7 +266,7 @@ describe('update firewall', () => {
           .click();
 
         // Go back to landing page and check rules are removed to the firewall
-        cy.wait(100);
+        cy.wait('@updateFirewallRules');
         cy.visitWithLogin('/firewalls');
         cy.findByText(firewall.label)
           .closest('tr')
@@ -272,7 +278,9 @@ describe('update firewall', () => {
         cy.findByText(firewall.label).click();
 
         // Confirm that the firewall can be assigned to the linode
+        interceptUpdateFirewallLinodes(firewall.id).as('updateFirewallLinodes');
         addLinodesToFirewall(firewall, linode);
+        cy.wait('@updateFirewallLinodes');
         cy.visitWithLogin('/firewalls');
         cy.findByText(firewall.label)
           .closest('tr')
