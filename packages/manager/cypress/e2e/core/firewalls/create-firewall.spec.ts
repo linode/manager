@@ -33,8 +33,13 @@ describe('create firewall', () => {
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
         containsClick('Label').type(firewall.label);
-        getClick('[data-testid="create-firewall-submit"]');
+        ui.buttonGroup
+          .findButtonByTitle('Create Firewall')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
+    cy.wait('@createFirewall');
 
     // Confirm that firewall is listed on landing page with expected configuration.
     cy.findByText(firewall.label)
@@ -93,6 +98,8 @@ describe('create firewall', () => {
             .should('be.enabled')
             .click();
         });
+
+      cy.wait('@createFirewall');
 
       // Confirm that firewall is listed on landing page with expected configuration.
       cy.findByText(firewall.label)

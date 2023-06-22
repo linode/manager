@@ -10,5 +10,5 @@ import { apiMatcher } from 'support/util/intercepts';
  * @returns Cypress chainable.
  */
 export const interceptCreateFirewall = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('firewalls'));
+  return cy.intercept('POST', apiMatcher('networking/firewalls'));
 };
