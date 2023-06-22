@@ -3,31 +3,9 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-  input: {
-    minWidth: 415,
-    [theme.breakpoints.down('md')]: {
-      minWidth: 'auto',
-    },
-  },
-  button: {
-    minWidth: 180,
-    [theme.breakpoints.up('md')]: {
-      marginTop: 16,
-    },
-  },
-}));
 
 interface Props extends TextFieldProps {
   fieldName?: string;
@@ -39,8 +17,6 @@ interface Props extends TextFieldProps {
 }
 
 export const SingleTextFieldForm = React.memo((props: Props) => {
-  const { classes } = useStyles();
-
   const {
     label,
     fieldName,
@@ -91,11 +67,20 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
       <Box
         display="flex"
         justifyContent="space-between"
-        className={classes.root}
+        sx={(theme) => ({
+          [theme.breakpoints.down('md')]: {
+            flexDirection: 'column',
+          },
+        })}
       >
         <TextField
           {...textFieldProps}
-          className={classes.input}
+          sx={(theme) => ({
+            minWidth: 415,
+            [theme.breakpoints.down('md')]: {
+              minWidth: 'auto',
+            },
+          })}
           label={label}
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -105,7 +90,12 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
         />
         <ActionsPanel>
           <Button
-            className={classes.button}
+            sx={(theme) => ({
+              minWidth: 180,
+              [theme.breakpoints.up('md')]: {
+                marginTop: 2,
+              },
+            })}
             buttonType="primary"
             onClick={handleSubmit}
             disabled={disabled || value === initialValue}
