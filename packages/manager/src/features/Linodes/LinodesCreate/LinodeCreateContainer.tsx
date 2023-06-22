@@ -51,10 +51,6 @@ import {
 import { simpleMutationHandlers } from 'src/queries/base';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import {
-  LinodeActionsProps,
-  withLinodeActions,
-} from 'src/store/linodes/linode.containers';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -117,7 +113,6 @@ interface State {
 
 type CombinedProps = WithSnackbarProps &
   CreateType &
-  LinodeActionsProps &
   ImagesProps &
   WithTypesProps &
   WithLinodesProps &
@@ -848,7 +843,6 @@ export default recompose<CombinedProps, {}>(
   withLinodes,
   withRegions,
   withTypes,
-  withLinodeActions,
   connected,
   withSnackbar,
   withLabelGenerator,
