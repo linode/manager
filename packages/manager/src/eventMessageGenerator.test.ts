@@ -125,5 +125,21 @@ describe('Event message generation', () => {
 
       expect(result).toEqual('created `foo`');
     });
+
+    it('should escape regex special characters', () => {
+      const mockEvent = eventFactory.build({
+        entity: entityFactory.build({
+          id: 10,
+          label: 'Weird label with special characters.(?)',
+        }),
+      });
+      const message = 'created entity Weird label with special characters.(?)';
+      const result = applyLinking(mockEvent, message);
+
+      // eslint-disable-next-line xss/no-mixed-html
+      expect(result).toEqual(
+        'created entity <a href="/linodes/10">Weird label with special characters.(?)</a> '
+      );
+    });
   });
 });
