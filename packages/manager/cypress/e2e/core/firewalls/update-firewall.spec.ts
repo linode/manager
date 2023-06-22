@@ -1,9 +1,18 @@
-import { createLinode } from '@linode/api-v4/lib/linodes';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
+import {
+  createLinode,
+  createFirewall,
+  Linode,
+  Firewall,
+  FirewallRuleType,
+} from '@linode/api-v4';
+import {
+  createLinodeRequestFactory,
+  firewallFactory,
+  firewallRuleFactory,
+  linodeFactory,
+} from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import { containsClick, getClick } from 'support/helpers';
-import { Linode, Firewall, FirewallRuleType } from '@linode/api-v4/types';
-import { firewallFactory, firewallRuleFactory } from 'src/factories/firewalls';
 import { interceptCreateFirewall } from 'support/intercepts/firewalls';
 import { randomItem, randomString, randomLabel } from 'support/util/random';
 import { fbtVisible, fbtClick } from 'support/helpers';
@@ -139,6 +148,16 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
     });
 };
 
+const createLinodeAndFirewall = async (
+  linodeRequestPayload,
+  firewallRequestPayload
+) => {
+  return Promise.all([
+    createLinode(linodeRequestPayload),
+    createFirewall(firewallRequestPayload),
+  ]);
+};
+
 authenticate();
 describe('update firewall', () => {
   /*
@@ -156,207 +175,205 @@ describe('update firewall', () => {
       root_pass: randomString(16),
     });
 
-    firewall.label = randomLabel();
-
-    cy.defer(createLinode(linodeRequest)).then((linode) => {
-      interceptCreateFirewall().as('createFirewall');
-      cy.visitWithLogin('/firewalls/create');
-
-      ui.drawer
-        .findByTitle('Create Firewall')
-        .should('be.visible')
-        .within(() => {
-          // Fill out and submit firewall create form.
-          containsClick('Label').type(firewall.label);
-          getClick('[data-testid="create-firewall-submit"]');
-        });
-
-      // Confirm that firewall is listed on landing page with expected configuration.
-      cy.findByText(firewall.label)
-        .closest('tr')
-        .within(() => {
-          cy.findByText(firewall.label).should('be.visible');
-          cy.findByText('Enabled').should('be.visible');
-          cy.findByText('No rules').should('be.visible');
-          cy.findByText('None assigned').should('be.visible');
-        });
-
-      // Go to the firewalls edit page
-      cy.findByText(firewall.label).click();
-
-      // In Rules tab, add inbound rules
-      addFirewallRules(inboundRule, 'inbound');
-
-      // Confirm that the inbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="0"]')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText(inboundRule.label).should('be.visible');
-          cy.findByText(inboundRule.protocol).should('be.visible');
-          cy.findByText(inboundRule.ports).should('be.visible');
-          cy.findByText(inboundRule.action).should('be.visible');
-        });
-
-      // Add outbound rules
-      addFirewallRules(outboundRule, 'outbound');
-
-      // Confirm that the outbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="1"]')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText(outboundRule.label).should('be.visible');
-          cy.findByText(outboundRule.protocol).should('be.visible');
-          cy.findByText(outboundRule.ports).should('be.visible');
-          cy.findByText(outboundRule.action).should('be.visible');
-        });
-
-      // Save configuration
-      ui.button
-        .findByTitle('Save Changes')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-
-      // Go back to landing page and check rules are added to the firewall
-      cy.wait(100);
-      cy.visitWithLogin('/firewalls');
-      cy.findByText(firewall.label)
-        .closest('tr')
-        .within(() => {
-          cy.findByText('1 Inbound / 1 Outbound').should('be.visible');
-        });
-
-      // Go to the firewalls edit page
-      cy.findByText(firewall.label).click();
-
-      // Remove inbound rules
-      removeFirewallRules(inboundRule.label);
-
-      // Remove outbound rules
-      removeFirewallRules(outboundRule.label);
-
-      // Save configuration
-      ui.button
-        .findByTitle('Save Changes')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-
-      // Go back to landing page and check rules are removed to the firewall
-      cy.wait(100);
-      cy.visitWithLogin('/firewalls');
-      cy.findByText(firewall.label)
-        .closest('tr')
-        .within(() => {
-          cy.findByText('No rules').should('be.visible');
-        });
-
-      // Go to the firewalls edit page
-      cy.findByText(firewall.label).click();
-
-      // Confirm that the firewall can be assigned to the linode
-      addLinodesToFirewall(firewall, linode);
-      cy.visitWithLogin('/firewalls');
-      cy.findByText(firewall.label)
-        .closest('tr')
-        .within(() => {
-          cy.findByText(linode.label).should('be.visible');
-        });
+    const firewallRequest = firewallFactory.build({
+      label: randomLabel(),
+      region: region.id,
+      rules: firewallRuleFactory.build({
+        inbound: [],
+        outbound: [],
+      }),
     });
+
+    cy.defer(createLinodeAndFirewall(linodeRequest, firewallRequest)).then(
+      ([linode, firewall]) => {
+        cy.visitWithLogin('/firewalls');
+
+        // Confirm that firewall is listed on landing page with expected configuration.
+        cy.findByText(firewall.label)
+          .closest('tr')
+          .within(() => {
+            cy.findByText(firewall.label).should('be.visible');
+            cy.findByText('Enabled').should('be.visible');
+            cy.findByText('No rules').should('be.visible');
+            cy.findByText('None assigned').should('be.visible');
+          });
+
+        // Go to the firewalls edit page
+        cy.findByText(firewall.label).click();
+
+        // In Rules tab, add inbound rules
+        addFirewallRules(inboundRule, 'inbound');
+
+        // Confirm that the inbound rules are listed on edit page with expected configuration
+        cy.get('[data-rbd-droppable-context-id="0"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText(inboundRule.label).should('be.visible');
+            cy.findByText(inboundRule.protocol).should('be.visible');
+            cy.findByText(inboundRule.ports).should('be.visible');
+            cy.findByText(inboundRule.action).should('be.visible');
+          });
+
+        // Add outbound rules
+        addFirewallRules(outboundRule, 'outbound');
+
+        // Confirm that the outbound rules are listed on edit page with expected configuration
+        cy.get('[data-rbd-droppable-context-id="1"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText(outboundRule.label).should('be.visible');
+            cy.findByText(outboundRule.protocol).should('be.visible');
+            cy.findByText(outboundRule.ports).should('be.visible');
+            cy.findByText(outboundRule.action).should('be.visible');
+          });
+
+        // Save configuration
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Go back to landing page and check rules are added to the firewall
+        cy.wait(100);
+        cy.visitWithLogin('/firewalls');
+        cy.findByText(firewall.label)
+          .closest('tr')
+          .within(() => {
+            cy.findByText('1 Inbound / 1 Outbound').should('be.visible');
+          });
+
+        // Go to the firewalls edit page
+        cy.findByText(firewall.label).click();
+
+        // Remove inbound rules
+        removeFirewallRules(inboundRule.label);
+
+        // Remove outbound rules
+        removeFirewallRules(outboundRule.label);
+
+        // Save configuration
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Go back to landing page and check rules are removed to the firewall
+        cy.wait(100);
+        cy.visitWithLogin('/firewalls');
+        cy.findByText(firewall.label)
+          .closest('tr')
+          .within(() => {
+            cy.findByText('No rules').should('be.visible');
+          });
+
+        // Go to the firewalls edit page
+        cy.findByText(firewall.label).click();
+
+        // Confirm that the firewall can be assigned to the linode
+        addLinodesToFirewall(firewall, linode);
+        cy.visitWithLogin('/firewalls');
+        cy.findByText(firewall.label)
+          .closest('tr')
+          .within(() => {
+            cy.findByText(linode.label).should('be.visible');
+          });
+      }
+    );
   });
 
   /*
    * - Confirms that firewall shows the correct status when it is disabled.
    */
   it("updates a firewall's status", () => {
-    const firewall = {
+    const region = chooseRegion();
+
+    const linodeRequest = linodeFactory.build({
       label: randomLabel(),
-      region: chooseRegion().id,
-    };
+      region: region.id,
+      root_pass: randomString(16),
+    });
 
-    interceptCreateFirewall().as('createFirewall');
-    cy.visitWithLogin('/firewalls/create');
+    const firewallRequest = firewallFactory.build({
+      label: randomLabel(),
+      region: region.id,
+      rules: {
+        inbound: [],
+        outbound: [],
+      },
+    });
 
-    ui.drawer
-      .findByTitle('Create Firewall')
-      .should('be.visible')
-      .within(() => {
-        // An error message appears when attempting to create a Firewall without a label
-        getClick('[data-testid="create-firewall-submit"]');
-        cy.findByText('Label is required.');
-        // Fill out and submit firewall create form.
-        containsClick('Label').type(firewall.label);
-        getClick('[data-testid="create-firewall-submit"]');
-      });
+    cy.defer(createLinodeAndFirewall(linodeRequest, firewallRequest)).then(
+      ([_linode, firewall]) => {
+        cy.visitWithLogin('/firewalls');
 
-    cy.visitWithLogin('/firewalls');
+        // Confirm that firewall is listed on landing page with expected configuration.
+        cy.findByText(firewall.label)
+          .closest('tr')
+          .within(() => {
+            cy.findByText(firewall.label).should('be.visible');
+            cy.findByText('Enabled').should('be.visible');
+            cy.findByText('No rules').should('be.visible');
+            cy.findByText('None assigned').should('be.visible');
+          });
 
-    // Confirm that firewall is listed on landing page with expected configuration.
-    cy.findByText(firewall.label)
-      .closest('tr')
-      .within(() => {
-        cy.findByText(firewall.label).should('be.visible');
-        cy.findByText('Enabled').should('be.visible');
-        cy.findByText('No rules').should('be.visible');
-        cy.findByText('None assigned').should('be.visible');
-      });
-
-    // Click 'disable' button and confirms
-    cy.findByText(firewall.label)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        fbtVisible('Disable');
-        fbtClick('Disable');
-      });
-
-    // Confirm disabling.
-    ui.dialog
-      .findByTitle(`Disable Firewall ${firewall.label}?`)
-      .should('be.visible')
-      .within(() => {
-        ui.buttonGroup
-          .findButtonByTitle('Disable Firewall')
+        // Click 'Disable' button and confirm action.
+        cy.findByText(firewall.label)
           .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
+          .closest('tr')
+          .within(() => {
+            fbtVisible('Disable');
+            fbtClick('Disable');
+          });
 
-    // The firewall status changes to 'Disabled'
-    cy.findByText(firewall.label)
-      .closest('tr')
-      .within(() => {
-        cy.findByText('Disabled').should('be.visible');
-      });
-
-    cy.visitWithLogin('/firewalls');
-
-    // Click 'enable' button and confirms
-    cy.findByText(firewall.label)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        fbtVisible('Enable');
-        fbtClick('Enable');
-      });
-
-    // Confirm enabing.
-    ui.dialog
-      .findByTitle(`Enable Firewall ${firewall.label}?`)
-      .should('be.visible')
-      .within(() => {
-        ui.buttonGroup
-          .findButtonByTitle('Enable Firewall')
+        ui.dialog
+          .findByTitle(`Disable Firewall ${firewall.label}?`)
           .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
+          .within(() => {
+            ui.buttonGroup
+              .findButtonByTitle('Disable Firewall')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
 
-    // The firewall status changes to 'Enabled'
-    cy.findByText(firewall.label)
-      .closest('tr')
-      .within(() => {
-        cy.findByText('Enabled').should('be.visible');
-      });
+        // Confirm status is updated on landing page.
+        cy.findByText(firewall.label)
+          .closest('tr')
+          .within(() => {
+            cy.findByText('Disabled').should('be.visible');
+          });
+
+        cy.visitWithLogin('/firewalls');
+
+        // Click 'Enable' button and confirm action.
+        cy.findByText(firewall.label)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            fbtVisible('Enable');
+            fbtClick('Enable');
+          });
+
+        ui.dialog
+          .findByTitle(`Enable Firewall ${firewall.label}?`)
+          .should('be.visible')
+          .within(() => {
+            ui.buttonGroup
+              .findButtonByTitle('Enable Firewall')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm status is updated on landing page.
+        cy.findByText(firewall.label)
+          .closest('tr')
+          .within(() => {
+            cy.findByText('Enabled').should('be.visible');
+          });
+      }
+    );
   });
 });
