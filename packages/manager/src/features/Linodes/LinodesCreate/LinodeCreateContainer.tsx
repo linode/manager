@@ -32,7 +32,10 @@ import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withLinodes from 'src/containers/withLinodes.container';
+import {
+  WithLinodesProps,
+  withLinodes,
+} from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
   AgreementsProps,
@@ -64,13 +67,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
-import {
-  HandleSubmit,
-  LinodeCreateValidation,
-  Info,
-  TypeInfo,
-  WithLinodesProps,
-} from './types';
+import { HandleSubmit, LinodeCreateValidation, Info, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import LandingHeader from 'src/components/LandingHeader';
@@ -848,11 +845,7 @@ const connected = connect(mapStateToProps, { upsertLinode });
 
 export default recompose<CombinedProps, {}>(
   withImages,
-  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    linodesData,
-    linodesLoading,
-    linodesError,
-  })),
+  withLinodes,
   withRegions,
   withTypes,
   withLinodeActions,
