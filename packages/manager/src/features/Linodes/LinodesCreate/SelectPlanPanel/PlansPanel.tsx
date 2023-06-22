@@ -10,7 +10,7 @@ import {
 } from './utils';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
-import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import type { Region } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
@@ -67,9 +67,9 @@ export const PlansPanel = (props: Props) => {
   const plans = getPlanSelectionsByPlanType(types);
   const {
     hasSelectedRegion,
-    isPremiumPlanPanelDisabled,
-    isSelectedRegionPremium,
-  } = usePremiumPlansUtils({
+    isPlanPanelDisabled,
+    isSelectedRegionEligibleForPlan,
+  } = plansNoticesUtils({
     selectedRegionID,
     regionsData,
   });
@@ -82,13 +82,15 @@ export const PlansPanel = (props: Props) => {
             <PlanInformation
               disabledClasses={props.disabledClasses}
               hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionPremium={isSelectedRegionPremium}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                plan
+              )}
               planType={plan}
               regionsData={regionsData || []}
             />
             <PlanContainer
               currentPlanHeading={currentPlanHeading}
-              disabled={disabled || isPremiumPlanPanelDisabled(plan)}
+              disabled={disabled || isPlanPanelDisabled(plan)}
               disabledClasses={props.disabledClasses}
               isCreate={isCreate}
               linodeID={linodeID}
