@@ -1,20 +1,14 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import { handleOpen } from 'src/store/backupDrawer';
-import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
-import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AutoBackups from './AutoBackups';
 import { EnableManaged } from './EnableManaged';
@@ -25,10 +19,7 @@ import {
   useAccountSettings,
   useMutateAccountSettings,
 } from 'src/queries/accountSettings';
-
-interface StateProps {
-  linodesWithoutBackups: Linode[];
-}
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 interface DispatchProps {
   actions: {
@@ -36,12 +27,11 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
+type Props = DispatchProps;
 
-const GlobalSettings = (props: CombinedProps) => {
+const GlobalSettings = (props: Props) => {
   const {
     actions: { openBackupsDrawer },
-    linodesWithoutBackups,
   } = props;
 
   const {
@@ -50,11 +40,14 @@ const GlobalSettings = (props: CombinedProps) => {
     error: accountSettingsError,
   } = useAccountSettings();
 
+  const { data: linodes } = useAllLinodesQuery();
+
+  const linodesWithoutBackups =
+    linodes?.filter((linode) => !linode.backups.enabled) ?? [];
+
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: updateAccount } = useMutateAccountSettings();
-
-  const { _loading } = useReduxLoad(['linodes']);
 
   const displayError = (errors: APIError[] | undefined) => {
     if (!errors) {
@@ -70,9 +63,10 @@ const GlobalSettings = (props: CombinedProps) => {
     });
   };
 
-  if (accountSettingsLoading || _loading) {
+  if (accountSettingsLoading) {
     return <CircleProgress />;
   }
+
   if (accountSettingsError) {
     return (
       <ErrorState
@@ -119,9 +113,6 @@ const GlobalSettings = (props: CombinedProps) => {
     </div>
   );
 };
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
-});
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
@@ -133,8 +124,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(connected)(GlobalSettings);
-
-export default enhanced;
+export default connected(GlobalSettings);
