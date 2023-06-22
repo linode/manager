@@ -78,28 +78,36 @@ const PlansAvailabilityNoticeMessage = (
 
   const formattedPlanType = formatPlanTypes(planType);
 
-  return hasSelectedRegion && !isSelectedRegionEligibleForPlan ? (
-    <Notice error dataTestId={`${planType}-notice-error`}>
-      <StyledNoticeTypography>
-        {formattedPlanType} Plans are not currently available in this
-        region.&nbsp;
-        <StyledTextTooltip
-          displayText="See global availability"
-          tooltipText={<FormattedRegionList />}
-        />
-        .
-      </StyledNoticeTypography>
-    </Notice>
-  ) : !hasSelectedRegion ? (
-    <Notice warning dataTestId={`${planType}-notice-warning`}>
-      <StyledNoticeTypography>
-        {formattedPlanType} Plans are currently available in&nbsp;
-        <StyledTextTooltip
-          displayText="select regions"
-          tooltipText={<FormattedRegionList />}
-        />
-        .
-      </StyledNoticeTypography>
-    </Notice>
-  ) : null;
+  if (!hasSelectedRegion) {
+    return (
+      <Notice warning dataTestId={`${planType}-notice-warning`}>
+        <StyledNoticeTypography>
+          {formattedPlanType} Plans are currently available in&nbsp;
+          <StyledTextTooltip
+            displayText="select regions"
+            tooltipText={<FormattedRegionList />}
+          />
+          .
+        </StyledNoticeTypography>
+      </Notice>
+    );
+  }
+
+  if (hasSelectedRegion && !isSelectedRegionEligibleForPlan) {
+    return (
+      <Notice error dataTestId={`${planType}-notice-error`}>
+        <StyledNoticeTypography>
+          {formattedPlanType} Plans are not currently available in this
+          region.&nbsp;
+          <StyledTextTooltip
+            displayText="See global availability"
+            tooltipText={<FormattedRegionList />}
+          />
+          .
+        </StyledNoticeTypography>
+      </Notice>
+    );
+  }
+
+  return null;
 };
