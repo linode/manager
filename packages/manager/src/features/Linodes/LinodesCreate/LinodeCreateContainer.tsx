@@ -160,6 +160,7 @@ const defaultState: State = {
   vlanIPAMAddress: null,
   showApiAwarenessModal: false,
   userData: undefined,
+  disabledClasses: [],
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {

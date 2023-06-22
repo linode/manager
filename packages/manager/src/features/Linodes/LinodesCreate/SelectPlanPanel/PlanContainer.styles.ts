@@ -8,11 +8,12 @@ type StyledTableCellPropsProps = TableCellProps & {
 };
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
-  shouldForwardProp: (prop) => isPropValid(['isPlanCell'], prop),
+  shouldForwardProp: (prop) => isPropValid(['isDisabled'], prop),
 })<{ isDisabled?: boolean }>(({ theme, isDisabled }) => ({
   borderLeft: `1px solid ${theme.borderColors.borderTable}`,
   borderRight: `1px solid ${theme.borderColors.borderTable}`,
   opacity: isDisabled ? 0.5 : 1,
+  cursor: isDisabled ? 'not-allowed' : 'inherit',
   overflowX: 'hidden',
   '& tr ': {
     opacity: isDisabled ? 0.4 : 1,
