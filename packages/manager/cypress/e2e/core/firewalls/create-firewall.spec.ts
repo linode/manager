@@ -87,8 +87,8 @@ describe('create firewall', () => {
 
           cy.findByLabelText('Linodes').should('be.visible').click();
 
-          ui.button
-            .findByTitle('Create Firewall')
+          ui.buttonGroup
+            .findButtonByTitle('Create Firewall')
             .should('be.visible')
             .should('be.enabled')
             .click();
