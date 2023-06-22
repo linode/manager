@@ -2,9 +2,11 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import Link from 'src/components/Link';
+import TextField from 'src/components/TextField';
+import { Notice } from 'src/components/Notice/Notice';
+import { styled } from '@mui/material/styles';
 import { useCreateSSHKeyMutation } from 'src/queries/profile';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -45,6 +47,17 @@ export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
 
   const generalError = hasErrorFor('none');
 
+  const sshTextArea = (
+    <>
+      <Link to="https://www.linode.com/docs/guides/use-public-key-authentication-with-ssh/">
+        Learn about
+      </Link>{' '}
+      uploading an SSH key or generating a new key pair. Note that the public
+      key begins with <StyledInlineCode>ssh-rsa</StyledInlineCode> and ends with{' '}
+      <StyledInlineCode>your_username@hostname</StyledInlineCode>
+    </>
+  );
+
   return (
     <Drawer open={open} title="Add SSH Key" onClose={onClose}>
       {generalError && <Notice error text={generalError} />}
@@ -64,6 +77,12 @@ export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
           value={formik.values.ssh_key}
           multiline
           rows={1.75}
+          helperText={sshTextArea}
+          onBlur={(e) => {
+            const trimmedValue = e.target.value.trim();
+            formik.setFieldValue('ssh_key', trimmedValue);
+            formik.handleBlur(e);
+          }}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose}>
@@ -82,3 +101,13 @@ export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
     </Drawer>
   );
 });
+
+const StyledInlineCode = styled('span', {
+  label: 'StyledInlineCode',
+})(({ theme }) => ({
+  display: 'inline',
+  fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+  margin: '0 2px',
+  backgroundColor: theme.color.grey5,
+  padding: '0 4px',
+}));
