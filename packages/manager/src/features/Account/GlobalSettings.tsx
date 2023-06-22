@@ -17,7 +17,7 @@ import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBack
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AutoBackups from './AutoBackups';
-import EnableManaged from './EnableManaged';
+import { EnableManaged } from './EnableManaged';
 import EnableObjectStorage from './EnableObjectStorage';
 import NetworkHelper from './NetworkHelper';
 import CloseAccountSetting from './CloseAccountSetting';
