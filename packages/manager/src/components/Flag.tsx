@@ -33,7 +33,10 @@ const StyledFlag = styled('div', {
   shouldForwardProp: (prop) => isPropValid(['hasOutline'], prop),
 })<{ hasOutline: boolean }>(({ theme, ...props }) => ({
   fontSize: '1.5rem',
-  outline: props.hasOutline ? `1px solid ${theme.color.border3}` : 'none',
+  outline:
+    props.hasOutline && theme.palette.mode === 'light'
+      ? `1px solid ${theme.color.border3}`
+      : 'none',
   verticalAlign: 'top',
   width: '1.41rem',
 }));
