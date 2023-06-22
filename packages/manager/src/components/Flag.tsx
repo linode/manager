@@ -2,13 +2,10 @@ import React from 'react';
 import 'flag-icons/css/flag-icons.min.css';
 import { Country } from './EnhancedSelect/variants/RegionSelect/utils';
 import { styled } from '@mui/material/styles';
-import { isPropValid } from 'src/utilities/isPropValid';
 
 const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',
 };
-
-const COUNTRIES_TO_OUTLINE = ['jp', 'id', 'sg'];
 
 interface Props {
   country: Lowercase<Country>;
@@ -23,20 +20,14 @@ export const Flag = (props: Props) => {
   return (
     <StyledFlag
       className={`fi fi-${COUNTRY_FLAG_OVERRIDES[country] ?? country} fi-xx`}
-      hasOutline={COUNTRIES_TO_OUTLINE.includes(country)}
     />
   );
 };
 
-const StyledFlag = styled('div', {
-  label: 'StyledFlag',
-  shouldForwardProp: (prop) => isPropValid(['hasOutline'], prop),
-})<{ hasOutline: boolean }>(({ theme, ...props }) => ({
+const StyledFlag = styled('div', { label: 'StyledFlag' })(({ theme }) => ({
   fontSize: '1.5rem',
-  outline:
-    props.hasOutline && theme.palette.mode === 'light'
-      ? `1px solid ${theme.color.border3}`
-      : 'none',
+  boxShadow:
+    theme.palette.mode === 'light' ? `0px 0px 0px 1px #00000010` : undefined,
   verticalAlign: 'top',
   width: '1.41rem',
 }));
