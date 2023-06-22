@@ -79,6 +79,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     data: objectStorageClusters,
     isLoading: areClustersLoading,
   } = useObjectStorageClusters();
+
   const {
     data: objectStorageBucketsResponse,
     isLoading: areBucketsLoading,
@@ -133,7 +134,12 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   };
 
   return (
-    <Drawer title={title} open={open} onClose={onClose} wide={createMode}>
+    <Drawer
+      title={title}
+      open={open}
+      onClose={onClose}
+      wide={createMode && buckets?.length > 0}
+    >
       {areBucketsLoading || areClustersLoading ? (
         <CircleProgress />
       ) : (
