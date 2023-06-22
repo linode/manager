@@ -75,22 +75,23 @@ describe('create firewall', () => {
         .within(() => {
           // Fill out and submit firewall create form.
           containsClick('Label').type(firewall.label);
-          cy.get('[data-testid="textfield-input"]:last')
+          cy.findByLabelText('Linodes')
             .should('be.visible')
             .click()
             .type(linode.label);
-        });
 
-      ui.autocompletePopper
-        .findByTitle(linode.label)
-        .should('be.visible')
-        .click();
+          ui.autocompletePopper
+            .findByTitle(linode.label)
+            .should('be.visible')
+            .click();
 
-      ui.drawer
-        .findByTitle('Create Firewall')
-        .should('be.visible')
-        .within(() => {
-          getClick('[data-testid="create-firewall-submit"]');
+          cy.findByLabelText('Linodes').should('be.visible').click();
+
+          ui.button
+            .findByTitle('Create Firewall')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
       // Confirm that firewall is listed on landing page with expected configuration.
