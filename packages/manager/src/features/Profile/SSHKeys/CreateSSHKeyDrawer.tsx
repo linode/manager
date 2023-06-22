@@ -47,7 +47,7 @@ export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
 
   const generalError = hasErrorFor('none');
 
-  const sshTextArea = (
+  const SSHTextAreaHelperText = () => (
     <>
       <Link to="https://www.linode.com/docs/guides/use-public-key-authentication-with-ssh/">
         Learn about
@@ -77,7 +77,7 @@ export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
           value={formik.values.ssh_key}
           multiline
           rows={1.75}
-          helperText={sshTextArea}
+          helperText={<SSHTextAreaHelperText />}
           onBlur={(e) => {
             const trimmedValue = e.target.value.trim();
             formik.setFieldValue('ssh_key', trimmedValue);
