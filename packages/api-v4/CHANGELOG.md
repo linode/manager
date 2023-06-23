@@ -1,3 +1,15 @@
+## [2023-06-23] - v0.94.1
+
+
+### Added:
+
+- New Region Capability (Premium Plans) ([#9253](https://github.com/linode/manager/pull/9253))
+- Database API-V4 types to support Premium plans ([#9257](https://github.com/linode/manager/pull/9257))
+
+### Removed:
+
+- References to deprecated Google Tag Manager ([#9266](https://github.com/linode/manager/pull/9266))
+
 ## [2023-06-12] - v0.94.0
 
 ### Changed:
