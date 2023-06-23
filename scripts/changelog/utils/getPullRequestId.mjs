@@ -1,5 +1,7 @@
-import { execSync } from 'child_process';
+import simpleGit from 'simple-git';
 import { logger } from './logger.mjs';
+
+const git = simpleGit();
 
 /**
  * Utility to get the pull request number for the current branch.
@@ -11,12 +13,9 @@ export const getPullRequestId = async () => {
     const branchName =
       process.env.GITHUB_HEAD_REF ||
       process.env.GITHUB_REF ||
-      // for a local run (not in GitHub Actions)
-      execSync('git branch --show-current').toString().trim();
-    const prListOutput = execSync(`gh pr list --head ${branchName}`)
-      .toString()
-      .trim();
-    const prNumberMatch = prListOutput.match(/^\s*(\d+)/);
+      (await git.branchLocal()).current;
+    const prListOutput = await git.raw(['pr', 'list', '--head', branchName]);
+    const prNumberMatch = prListOutput.trim().match(/^\s*(\d+)/);
 
     if (prNumberMatch) {
       return parseInt(prNumberMatch[1], 10);
