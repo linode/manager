@@ -2,7 +2,7 @@ import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
 import _Button, { ButtonProps } from '@mui/material/Button';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { useTheme, styled } from '@mui/material/styles';
+import { useTheme, styled, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { isPropValid } from '../../utilities/isPropValid';
 import { rotate360 } from '../../styles/keyframes';
@@ -15,7 +15,7 @@ export interface Props extends ButtonProps {
   /** Additional css class to pass to the component */
   className?: string;
   /** The `sx` prop can be either object or function */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   /** Reduce the padding on the x-axis */
   compactX?: boolean;
   /** Reduce the padding on the y-axis */

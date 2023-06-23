@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
+import { StyledTableCell, StyledTable } from './PlanContainer.styles';
 
 const tableCells = [
   { cellName: '', testId: '', center: false, noWrap: false },
@@ -53,7 +51,6 @@ export const PlanContainer = ({
   selectedID,
   showTransfer,
 }: Props) => {
-  const { classes } = useSelectPlanPanelStyles();
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
     showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
@@ -61,14 +58,6 @@ export const PlanContainer = ({
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const shouldShowNetwork =
     showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
-
-  // Edge Case: if the user has selected a premium eligible plan, but changes the region to a non eligible premium region,
-  // we need to clear the plan selection to to keep our error handling consistent on submit.
-  React.useEffect(() => {
-    if (disabled) {
-      onSelect('');
-    }
-  }, [disabled, onSelect]);
 
   return (
     <Grid container spacing={2}>
@@ -92,10 +81,10 @@ export const PlanContainer = ({
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
-          <Table
+          <StyledTable
             aria-label="List of Linode Plans"
-            className={classes.table}
             spacingBottom={16}
+            isDisabled={disabled}
           >
             <TableHead>
               <TableRow>
@@ -108,15 +97,15 @@ export const PlanContainer = ({
                     return null;
                   }
                   return (
-                    <TableCell
+                    <StyledTableCell
                       center={center}
-                      className={classes.headerCell}
                       data-qa={attributeValue}
+                      isPlanCell={cellName === 'Plan'}
                       key={testId}
                       noWrap={noWrap}
                     >
                       {cellName}
-                    </TableCell>
+                    </StyledTableCell>
                   );
                 })}
               </TableRow>
@@ -139,7 +128,7 @@ export const PlanContainer = ({
                 />
               ))}
             </TableBody>
-          </Table>
+          </StyledTable>
         </Grid>
       </Hidden>
     </Grid>
