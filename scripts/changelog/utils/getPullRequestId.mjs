@@ -1,12 +1,13 @@
-import simpleGit from 'simple-git';
-import { logger } from './logger.mjs';
+import simpleGit from "simple-git";
+import { execSync } from "child_process";
+import { logger } from "./logger.mjs";
 
 const git = simpleGit();
 
 /**
  * Utility to get the pull request number for the current branch.
  *
- * @requires gh
+ * @requires GitHub CLI tool
  */
 export const getPullRequestId = async () => {
   try {
@@ -14,13 +15,15 @@ export const getPullRequestId = async () => {
       process.env.GITHUB_HEAD_REF ||
       process.env.GITHUB_REF ||
       (await git.branchLocal()).current;
-    const prListOutput = await git.raw(['pr', 'list', '--head', branchName]);
-    const prNumberMatch = prListOutput.trim().match(/^\s*(\d+)/);
+    const prListOutput = execSync(`gh pr list --head ${branchName}`)
+      .toString()
+      .trim();
+    const prNumberMatch = prListOutput.match(/^\s*(\d+)/);
 
     if (prNumberMatch) {
       return parseInt(prNumberMatch[1], 10);
     } else {
-      throw new Error('Pull request number not found.');
+      throw new Error("Pull request number not found.");
     }
   } catch (error) {
     logger.error({
