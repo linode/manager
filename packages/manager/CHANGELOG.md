@@ -4,68 +4,6 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2023-06-23] - v1.95.2
-
-
-### Added:
-
-- Dynamic Premium Plans support for Linode creation flows ([#9253](https://github.com/linode/manager/pull/9253))
-- Dynamic GPU Plans support for Linode creation flows ([#9284](https://github.com/linode/manager/pull/9284))
-- Outline to some country flags ([#9288](https://github.com/linode/manager/pull/9288))
-
-### Changed:
-
-- MUI v5 migration for LinodeCLIModal ([#9220](https://github.com/linode/manager/pull/9220))
-- Improve Linode Power confirmation dialog layout and UX copy ([#9240](https://github.com/linode/manager/pull/9240))
-- MUI v5 Migration – `Components > ScriptCode` ([#9243](https://github.com/linode/manager/pull/9243))
-- Renamed LinkStyledButton to StyledLinkButton ([#9248](https://github.com/linode/manager/pull/9248))
-- Improve Premium plans Tab copy ([#9287](https://github.com/linode/manager/pull/9287))
-
-### Fixed:
-
-- Timestamps for finished events show time of completion instead of start ([#9215](https://github.com/linode/manager/pull/9215))
-- Corrected typos in Marketplace app summaries & descriptions ([#9260](https://github.com/linode/manager/pull/9260))
-- Button alignment on Nodebalancer Create page  ([#9272](https://github.com/linode/manager/pull/9272))
-- Linodes Landing Grid/Tag views and toggle button styling ([#9273](https://github.com/linode/manager/pull/9273))
-- Fixed crash caused by un-escaped RegEx ([#9280](https://github.com/linode/manager/pull/9280))
-- Show accurate Notification Threshold values when toggling in Linode Settings ([#9281](https://github.com/linode/manager/pull/9281))
-- Fix confirmation modal overflow on mobile ([#9289](https://github.com/linode/manager/pull/9289))
-- Fix LinodeSelectV2 label association ([#9298](https://github.com/linode/manager/pull/9298))
-
-### Removed:
-
-- Deprecate Google Analytics and clean up unused custom events ([#9266](https://github.com/linode/manager/pull/9266))
-
-### Tech Stories:
-
-- React Query - Linodes - LinodeSelect and refactor ([#9193](https://github.com/linode/manager/pull/9193))
-- MUI v5 - Components > ProductInformationBanner ([#9213](https://github.com/linode/manager/pull/9213))
-- React Query - Linode Volumes continued ([#9218](https://github.com/linode/manager/pull/9218))
-- Refactored AddNewMenu to use a MUI Menu ([#9224](https://github.com/linode/manager/pull/9224))
-- Remove url-parse in factor of native Javascript ([#9228](https://github.com/linode/manager/pull/9228))
-- Help Landing: remove banner icon and refactor class components  ([#9230](https://github.com/linode/manager/pull/9230))
-- MUI v5 Migration - `Components > TableRowEmpty, TableRowError, TableRowLoading` ([#9232](https://github.com/linode/manager/pull/9232))
-- MUI v5 Migration - Pagination ([#9237](https://github.com/linode/manager/pull/9237))
-- Plan selection—reduce space ([#9238](https://github.com/linode/manager/pull/9238))
-- MUI v5 - Components > PromotionalOfferCard ([#9239](https://github.com/linode/manager/pull/9239))
-- MUI v5 - Components > PromotionalOfferCard ([#9239](https://github.com/linode/manager/pull/9239))
-- Update ExtendedAccordion, Prompt, and SafeTabPanel components ([#9241](https://github.com/linode/manager/pull/9241))
-- React Query - Linode Resize Dialog ([#9242](https://github.com/linode/manager/pull/9242))
-- MUI v5 Migration – Components > HighlightedMarkdown ([#9244](https://github.com/linode/manager/pull/9244))
-- MUI v5 Migration - `Components > FileUploader` ([#9254](https://github.com/linode/manager/pull/9254))
-- React Query - Linode Disks ([#9255](https://github.com/linode/manager/pull/9255))
-- Migrate <App /> to functional component ([#9256](https://github.com/linode/manager/pull/9256))
-- Refactor <IPSelect /> ([#9263](https://github.com/linode/manager/pull/9263))
-- MUI v5 Migration - `SRC > ImageSelect` ([#9267](https://github.com/linode/manager/pull/9267))
-- MUI v5 Migration - `Components > LabelAndTagsPanel` ([#9270](https://github.com/linode/manager/pull/9270))
-- Refactor billing activity filters to improve caching ([#9271](https://github.com/linode/manager/pull/9271))
-- Fixed Github Actions build-manager step ([#9274](https://github.com/linode/manager/pull/9274))
-- MUI v5 Migration - `Components > LineGraph` ([#9276](https://github.com/linode/manager/pull/9276))
-- MUI v5 Migration - Components > MaintenanceBanner ([#9278](https://github.com/linode/manager/pull/9278))
-- MUI v5 Migration - Components > MultipleIPInput ([#9283](https://github.com/linode/manager/pull/9283))
-- MUI v5 Migration - Components > SingleTextFieldForm ([#9292](https://github.com/linode/manager/pull/9292))
-- Made yarn up:expose actually expose Cloud Manager on all interfaces ([#9297](https://github.com/linode/manager/pull/9297))
-
 ## [2023-06-14] - v1.95.1
 
 ### Fixed:
