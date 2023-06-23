@@ -1,9 +1,9 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { styled } from '@mui/material/styles';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 
 const meta: Meta<typeof EntityIcon> = {
   title: 'Components/EntityIcon',

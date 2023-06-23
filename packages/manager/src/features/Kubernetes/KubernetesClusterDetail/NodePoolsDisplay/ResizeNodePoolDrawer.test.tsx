@@ -2,7 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { ResizeNodePoolDrawer, Props } from './ResizeNodePoolDrawer';
+import { Props, ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
 const pool = nodePoolFactory.build({
   type: 'g6-standard-1',

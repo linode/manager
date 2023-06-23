@@ -1,4 +1,3 @@
-import * as Factory from 'factory.ts';
 import {
   Firewall,
   FirewallDevice,
@@ -6,6 +5,7 @@ import {
   FirewallRules,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls/types';
+import * as Factory from 'factory.ts';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   label: Factory.each((i) => `firewall-rule-${i}`),

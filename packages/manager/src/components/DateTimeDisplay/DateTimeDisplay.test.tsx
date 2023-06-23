@@ -1,8 +1,8 @@
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { DateTimeDisplay, DateTimeDisplayProps } from './DateTimeDisplay';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { DateTimeDisplay, DateTimeDisplayProps } from './DateTimeDisplay';
 jest.mock('../../utilities/getUserTimezone');
 
 const APIDate = '2018-07-20T04:23:17';

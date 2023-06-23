@@ -1,36 +1,3 @@
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
-import Hidden from 'src/components/core/Hidden';
-import ObjectTableContent from './ObjectTableContent';
-import produce from 'immer';
-import { BucketBreadcrumb } from './BucketBreadcrumb';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { CreateFolderDrawer } from './CreateFolderDrawer';
-import { debounce } from 'throttle-debounce';
-import { deleteObject as _deleteObject } from '../requests';
-import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
-import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
-import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
-import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
-import { sendDownloadObjectEvent } from 'src/utilities/analytics';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { useQueryClient } from 'react-query';
-import { useSnackbar } from 'notistack';
-import { Waypoint } from 'react-waypoint';
-import {
-  displayName,
-  generateObjectUrl,
-  isEmptyObjectForFolder,
-  tableUpdateAction,
-} from '../utilities';
 import {
   getObjectList,
   getObjectURL,
@@ -38,12 +5,42 @@ import {
   ObjectStorageObject,
   ObjectStorageObjectListResponse,
 } from '@linode/api-v4/lib/object-storage';
+import produce from 'immer';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { Waypoint } from 'react-waypoint';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Box from 'src/components/core/Box';
+import Hidden from 'src/components/core/Hidden';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import {
   prefixToQueryKey,
   queryKey,
   updateBucket,
   useObjectBucketDetailsInfiniteQuery,
 } from 'src/queries/objectStorage';
+import { sendDownloadObjectEvent } from 'src/utilities/analytics';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
+import { truncateMiddle } from 'src/utilities/truncate';
+import { debounce } from 'throttle-debounce';
+import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
+import { deleteObject as _deleteObject } from '../requests';
+import {
+  displayName,
+  generateObjectUrl,
+  isEmptyObjectForFolder,
+  tableUpdateAction,
+} from '../utilities';
+import { BucketBreadcrumb } from './BucketBreadcrumb';
 import {
   StyledCreateFolderButton,
   StyledFooter,
@@ -51,6 +48,9 @@ import {
   StyledSizeColumn,
   StyledTryAgainButton,
 } from './BucketDetail.styles';
+import { CreateFolderDrawer } from './CreateFolderDrawer';
+import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
+import ObjectTableContent from './ObjectTableContent';
 
 interface MatchParams {
   clusterId: ObjectStorageClusterID;
@@ -77,27 +77,18 @@ export const BucketDetail = () => {
     isFetching,
     isFetchingNextPage,
   } = useObjectBucketDetailsInfiniteQuery(clusterId, bucketName, prefix);
-  const [
-    isCreateFolderDrawerOpen,
-    setIsCreateFolderDrawerOpen,
-  ] = React.useState(false);
+  const [isCreateFolderDrawerOpen, setIsCreateFolderDrawerOpen] =
+    React.useState(false);
   const [objectToDelete, setObjectToDelete] = React.useState<string>();
   const [deleteObjectError, setDeleteObjectError] = React.useState<string>();
-  const [
-    deleteObjectDialogOpen,
-    setDeleteObjectDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    selectedObject,
-    setSelectedObject,
-  ] = React.useState<ObjectStorageObject>();
-  const [
-    objectDetailDrawerOpen,
-    setObjectDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
-  const [deleteObjectLoading, setDeleteObjectLoading] = React.useState<boolean>(
-    false
-  );
+  const [deleteObjectDialogOpen, setDeleteObjectDialogOpen] =
+    React.useState<boolean>(false);
+  const [selectedObject, setSelectedObject] =
+    React.useState<ObjectStorageObject>();
+  const [objectDetailDrawerOpen, setObjectDetailDrawerOpen] =
+    React.useState<boolean>(false);
+  const [deleteObjectLoading, setDeleteObjectLoading] =
+    React.useState<boolean>(false);
 
   const handleDownload = async (objectName: string) => {
     try {

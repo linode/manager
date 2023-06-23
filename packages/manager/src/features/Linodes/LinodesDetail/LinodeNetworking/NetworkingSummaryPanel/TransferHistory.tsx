@@ -1,11 +1,11 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Theme } from '@mui/material/styles';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
+import PendingIcon from 'src/assets/icons/pending.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
@@ -23,7 +23,7 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
-import PendingIcon from 'src/assets/icons/pending.svg';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   arrowIconOuter: {
@@ -124,14 +124,18 @@ export const TransferHistory: React.FC<Props> = (props) => {
   const decrementOffset = () =>
     setMonthOffset((prevOffset) => Math.max(prevOffset - 1, maxMonthOffset));
 
-  const decrementLabel = parseMonthOffset(monthOffset - 1, now)
-    .longHumanizedDate;
+  const decrementLabel = parseMonthOffset(
+    monthOffset - 1,
+    now
+  ).longHumanizedDate;
 
   const incrementOffset = () =>
     setMonthOffset((prevOffset) => Math.min(prevOffset + 1, minMonthOffset));
 
-  const incrementLabel = parseMonthOffset(monthOffset + 1, now)
-    .longHumanizedDate;
+  const incrementLabel = parseMonthOffset(
+    monthOffset + 1,
+    now
+  ).longHumanizedDate;
 
   // In/Out totals from the /transfer endpoint are per-month (to align with billing cycle).
   // Graph data from the /stats endpoint works a bit differently: when you request data for the

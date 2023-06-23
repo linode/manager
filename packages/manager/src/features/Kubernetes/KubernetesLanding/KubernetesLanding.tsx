@@ -1,29 +1,29 @@
 import * as React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Hidden from 'src/components/core/Hidden';
-import LandingHeader from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import UpgradeVersionModal from '../UpgradeVersionModal';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { KubeNodePoolResponse } from '@linode/api-v4';
-import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
-import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
+import { useHistory } from 'react-router-dom';
+import { CircleProgress } from 'src/components/CircleProgress';
+import Hidden from 'src/components/core/Hidden';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useHistory } from 'react-router-dom';
-import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
+import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';
+import UpgradeVersionModal from '../UpgradeVersionModal';
+import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
 
 interface ClusterDialogState {
   open: boolean;
@@ -62,14 +62,11 @@ export const KubernetesLanding = () => {
   const { push } = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
-  const [dialog, setDialogState] = React.useState<ClusterDialogState>(
-    defaultDialogState
-  );
+  const [dialog, setDialogState] =
+    React.useState<ClusterDialogState>(defaultDialogState);
 
-  const [
-    upgradeDialog,
-    setUpgradeDialogState,
-  ] = React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
+  const [upgradeDialog, setUpgradeDialogState] =
+    React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {

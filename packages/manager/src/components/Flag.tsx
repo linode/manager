@@ -1,7 +1,7 @@
-import React from 'react';
-import 'flag-icons/css/flag-icons.min.css';
-import { Country } from './EnhancedSelect/variants/RegionSelect/utils';
 import { styled } from '@mui/material/styles';
+import 'flag-icons/css/flag-icons.min.css';
+import React from 'react';
+import { Country } from './EnhancedSelect/variants/RegionSelect/utils';
 
 const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',

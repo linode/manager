@@ -1,29 +1,29 @@
+import Popper from '@mui/material/Popper';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
-import { useTheme, styled } from '@mui/material/styles';
-import TopMenuIcon, { StyledTopMenuIconWrapper } from '../TopMenuIcon';
-import Notifications from 'src/features/NotificationCenter/Notifications';
-import {
-  menuId,
-  menuButtonId,
-  notificationContext as _notificationContext,
-} from 'src/features/NotificationCenter/NotificationContext';
-import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
-import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
-import MenuItem from 'src/components/MenuItem';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
-import Popper from '@mui/material/Popper';
+import MenuItem from 'src/components/MenuItem';
 import Events from 'src/features/NotificationCenter/Events';
+import {
+  menuButtonId,
+  menuId,
+  notificationContext as _notificationContext,
+} from 'src/features/NotificationCenter/NotificationContext';
+import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
+import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
+import Notifications from 'src/features/NotificationCenter/Notifications';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import usePrevious from 'src/hooks/usePrevious';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import usePrevious from 'src/hooks/usePrevious';
 import { isPropValid } from 'src/utilities/isPropValid';
+import TopMenuIcon, { StyledTopMenuIconWrapper } from '../TopMenuIcon';
 
 const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
   label: 'NotificationIconWrapper',

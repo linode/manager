@@ -1,9 +1,9 @@
+import type { Disk } from '@linode/api-v4';
 import React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useLinodeDeleteDiskMutation } from 'src/queries/linodes/disks';
-import type { Disk } from '@linode/api-v4';
 
 interface Props {
   open: boolean;

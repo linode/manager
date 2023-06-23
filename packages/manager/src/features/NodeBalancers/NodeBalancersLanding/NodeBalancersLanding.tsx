@@ -2,15 +2,15 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Hidden from 'src/components/core/Hidden';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { useOrder } from 'src/hooks/useOrder';
@@ -23,13 +23,10 @@ import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
-  const [
-    selectedNodeBalancerId,
-    setSelectedNodeBalancerId,
-  ] = React.useState<number>(-1);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] =
+    React.useState<boolean>(false);
+  const [selectedNodeBalancerId, setSelectedNodeBalancerId] =
+    React.useState<number>(-1);
 
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);

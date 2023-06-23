@@ -1,15 +1,15 @@
-import React from 'react';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Typography from 'src/components/core/Typography';
 import { Token } from '@linode/api-v4/lib/profile/types';
+import { useSnackbar } from 'notistack';
+import React from 'react';
+import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { APITokenType } from './APITokenTable';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 import {
   useRevokeAppAccessTokenMutation,
   useRevokePersonalAccessTokenMutation,
 } from 'src/queries/tokens';
-import { useSnackbar } from 'notistack';
+import { APITokenType } from './APITokenTable';
 
 export interface Props {
   open: boolean;

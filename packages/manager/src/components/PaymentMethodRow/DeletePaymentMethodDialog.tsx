@@ -1,13 +1,13 @@
+import { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ActionsPanel from '../ActionsPanel';
 import Button from '../Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import ThirdPartyPayment from './ThirdPartyPayment';
 import Grid from '../Grid';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import ThirdPartyPayment from './ThirdPartyPayment';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   item: {

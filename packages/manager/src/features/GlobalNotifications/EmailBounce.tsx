@@ -1,16 +1,16 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles, useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
-import { makeStyles, useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import { useAccount, useMutateAccount } from 'src/queries/account';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
 
 // =============================================================================
 // <EmailBounceNotificationSection />

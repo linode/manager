@@ -1,3 +1,6 @@
+import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -8,16 +11,13 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Drawer from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import { useFormik } from 'formik';
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import { useSnackbar } from 'notistack';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
   useAllLinodesQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
   open: boolean;

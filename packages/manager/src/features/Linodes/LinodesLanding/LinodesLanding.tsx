@@ -1,5 +1,6 @@
 import { Config } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -11,20 +12,23 @@ import { ThunkDispatch } from 'redux-thunk';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
   withProfile,
   WithProfileProps,
 } from 'src/containers/profile.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups';
+import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
 import {
   sendGroupByTagEnabledEvent,
@@ -32,23 +36,19 @@ import {
 } from 'src/utilities/analytics';
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
-import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
-import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
+import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
+import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
+import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
+import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import { DisplayLinodes } from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
+import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
 import { ExtendedStatus, statusToPriority } from './utils';
-import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
-import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
-import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
-import { DeleteLinodeDialog } from './DeleteLinodeDialog';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
-import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 interface State {
   powerDialogOpen: boolean;
@@ -218,8 +218,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     const componentProps = {
       count: linodesCount,
-      someLinodesHaveMaintenance: this.props
-        .someLinodesHaveScheduledMaintenance,
+      someLinodesHaveMaintenance:
+        this.props.someLinodesHaveScheduledMaintenance,
       openPowerActionDialog: this.openPowerDialog,
       openDialog: this.openDialog,
     };

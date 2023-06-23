@@ -1,11 +1,11 @@
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import { useHistory } from 'react-router-dom';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 
 interface Props {
   nodeBalancerId: number;

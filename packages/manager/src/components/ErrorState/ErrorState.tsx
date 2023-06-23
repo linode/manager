@@ -1,9 +1,9 @@
-import * as React from 'react';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+import { styled, useTheme } from '@mui/material/styles';
 import { SvgIconProps } from '@mui/material/SvgIcon';
-import { useTheme, styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import Typography from 'src/components/core/Typography';
 
 interface ErrorStateProps {
   compact?: boolean;

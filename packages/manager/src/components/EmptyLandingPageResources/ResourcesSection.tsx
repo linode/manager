@@ -1,26 +1,26 @@
 import * as React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import PointerIcon from 'src/assets/icons/pointer.svg';
-import Typography from 'src/components/core/Typography';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
+import Typography from 'src/components/core/Typography';
 import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
+import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
+import type {
+  linkAnalyticsEvent,
+  ResourcesHeaders,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import {
   getLinkOnClick,
   youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  linkAnalyticsEvent,
-  ResourcesLinkSection,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 interface ButtonProps {
   onClick: () => void;

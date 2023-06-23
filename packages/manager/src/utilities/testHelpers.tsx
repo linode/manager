@@ -15,10 +15,10 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
 import {
-  storeFactory,
   ApplicationState,
-  defaultState,
   ApplicationStore,
+  defaultState,
+  storeFactory,
 } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
@@ -59,9 +59,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
 
   // we have to call setupInterceptors so that our API error normalization works as expected
   // I'm sorry that it makes us pass it the "ApplicationStore"
-  setupInterceptors(
-    configureStore<ApplicationState>([thunk])(defaultState)
-  );
+  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
 
   return (
     <Provider store={storeToPass}>
@@ -160,7 +158,8 @@ export const toPassAxeCheck = {
       let hrefAtt = e.getAttribute('href');
       if (hrefAtt == null) {
         return {
-          message: () => `anchors has bad href - specify a non null value for href
+          message:
+            () => `anchors has bad href - specify a non null value for href
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
           e
         )}`,
@@ -170,7 +169,8 @@ export const toPassAxeCheck = {
       hrefAtt = hrefAtt as string;
       if (['#', ''].includes(hrefAtt) || hrefAtt.includes('javascript')) {
         return {
-          message: () => `anchors has invalid href - specify a valid value not #,'' or javascript(void)
+          message:
+            () => `anchors has invalid href - specify a valid value not #,'' or javascript(void)
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
           e
         )}`,
@@ -199,14 +199,16 @@ export const includesActions = (
 type Query = (f: MatcherFunction) => HTMLElement;
 
 /** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
-export const withMarkup = (query: Query) => (text: string): HTMLElement =>
-  query((content: string, node: HTMLElement) => {
-    const hasText = (node: HTMLElement) => node.textContent === text;
-    const childrenDontHaveText = Array.from(node.children).every(
-      (child) => !hasText(child as HTMLElement)
-    );
-    return hasText(node) && childrenDontHaveText;
-  });
+export const withMarkup =
+  (query: Query) =>
+  (text: string): HTMLElement =>
+    query((content: string, node: HTMLElement) => {
+      const hasText = (node: HTMLElement) => node.textContent === text;
+      const childrenDontHaveText = Array.from(node.children).every(
+        (child) => !hasText(child as HTMLElement)
+      );
+      return hasText(node) && childrenDontHaveText;
+    });
 
 /**
  * Assert that HTML elements appear in a specific order. `selectorAttribute` must select the parent

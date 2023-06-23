@@ -1,7 +1,9 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-import { components as reactSelectComponents } from 'react-select';
-import { MultiValueProps } from 'react-select';
+import {
+  components as reactSelectComponents,
+  MultiValueProps,
+} from 'react-select';
 
 interface Props extends MultiValueProps<any> {}
 

@@ -1,10 +1,10 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { CombinedProps, FromImageContent } from './FromImageContent';
 import { Provider } from 'react-redux';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { storeFactory } from 'src/store';
 import { queryClientFactory } from 'src/queries/base';
+import { storeFactory } from 'src/store';
+import { CombinedProps, FromImageContent } from './FromImageContent';
 
 const store = storeFactory(queryClientFactory());
 

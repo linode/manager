@@ -1,13 +1,13 @@
+import { TPAProvider } from '@linode/api-v4/lib/profile';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
-import useFlags from 'src/hooks/useFlags';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 import { Provider } from 'src/featureFlags';
-import { styled } from '@mui/material/styles';
-import { TPAProvider } from '@linode/api-v4/lib/profile';
+import useFlags from 'src/hooks/useFlags';
 export interface TPADialogProps {
   currentProvider: Provider;
   newProvider: TPAProvider;

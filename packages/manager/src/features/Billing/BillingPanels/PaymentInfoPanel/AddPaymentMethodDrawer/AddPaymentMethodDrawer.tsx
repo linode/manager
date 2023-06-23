@@ -1,19 +1,19 @@
-import * as React from 'react';
 import { PaymentMethod } from '@linode/api-v4/lib/account';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Unstable_Grid2';
 import { VariantType } from 'notistack';
+import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import Grid from '@mui/material/Unstable_Grid2';
 import { LinearProgress } from 'src/components/LinearProgress';
-import GooglePayChip from '../GooglePayChip';
-import AddCreditCardForm from './AddCreditCardForm';
 import { Notice } from 'src/components/Notice/Notice';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
+import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Box from '@mui/material/Box';
+import AddCreditCardForm from './AddCreditCardForm';
 
 interface Props {
   open: boolean;

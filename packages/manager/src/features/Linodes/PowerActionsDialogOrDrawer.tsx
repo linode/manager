@@ -1,14 +1,15 @@
+import { Config } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import Select from 'src/components/EnhancedSelect/Select';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import Select from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/ExternalLink';
 import { Notice } from 'src/components/Notice/Notice';
-import { Config } from '@linode/api-v4/lib/linodes';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeConfigsQuery,
   useBootLinodeMutation,
@@ -16,7 +17,6 @@ import {
   useRebootLinodeMutation,
   useShutdownLinodeMutation,
 } from 'src/queries/linodes/linodes';
-import { resetEventsPolling } from 'src/eventsPolling';
 
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
 

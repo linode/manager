@@ -1,10 +1,9 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
 import Button from 'src/components/core/Button';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { PromotionalOffer } from 'src/featureFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
@@ -12,6 +11,7 @@ import {
   offSiteURL,
   onSiteURL,
 } from 'src/utilities/sanitize-html/sanitizeHTML';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

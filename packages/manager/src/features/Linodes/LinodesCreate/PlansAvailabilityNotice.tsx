@@ -1,9 +1,11 @@
+import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
-import { formatPlanTypes } from 'src/utilities/planNotices';
-import { getCapabilityFromPlanType } from 'src/utilities/planNotices';
 import { Notice } from 'src/components/Notice/Notice';
-import type { LinodeTypeClass, Region } from '@linode/api-v4';
+import {
+  formatPlanTypes,
+  getCapabilityFromPlanType,
+} from 'src/utilities/planNotices';
 import {
   StyledFormattedRegionList,
   StyledNoticeTypography,

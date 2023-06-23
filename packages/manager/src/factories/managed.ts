@@ -1,4 +1,3 @@
-import * as Factory from 'factory.ts';
 import {
   DataSeries,
   ManagedContact,
@@ -10,6 +9,7 @@ import {
   ManagedSSHSetting,
   ManagedStats,
 } from '@linode/api-v4/lib/managed/types';
+import * as Factory from 'factory.ts';
 
 export const contactFactory = Factory.Sync.makeFactory<ManagedContact>({
   email: Factory.each((i) => `john.doe.${i}@example.com`),
@@ -78,27 +78,24 @@ export const managedIssueFactory = Factory.Sync.makeFactory<ManagedIssue>({
   services: [],
 });
 
-export const managedSSHSettingFactory = Factory.Sync.makeFactory<ManagedSSHSetting>(
-  {
+export const managedSSHSettingFactory =
+  Factory.Sync.makeFactory<ManagedSSHSetting>({
     access: true,
     user: 'root',
     ip: 'any',
     port: 22,
-  }
-);
+  });
 
-export const managedLinodeSettingFactory = Factory.Sync.makeFactory<ManagedLinodeSetting>(
-  {
+export const managedLinodeSettingFactory =
+  Factory.Sync.makeFactory<ManagedLinodeSetting>({
     id: Factory.each((i) => i),
     label: Factory.each((i) => `Managed Linode ${i}`),
     group: 'linodes',
     ssh: managedSSHSettingFactory.build(),
-  }
-);
+  });
 
-export const managedSSHPubKeyFactory = Factory.Sync.makeFactory<ManagedSSHPubKey>(
-  {
+export const managedSSHPubKeyFactory =
+  Factory.Sync.makeFactory<ManagedSSHPubKey>({
     ssh_key:
       'ssh-rsa MOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEY managedservices@linode',
-  }
-);
+  });

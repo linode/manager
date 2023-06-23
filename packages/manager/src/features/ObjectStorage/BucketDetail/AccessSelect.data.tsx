@@ -1,6 +1,6 @@
+import type { ACLType } from '@linode/api-v4';
 import * as React from 'react';
 import ExternalLink from 'src/components/ExternalLink';
-import type { ACLType } from '@linode/api-v4';
 
 export const copy: Record<
   'bucket' | 'object',

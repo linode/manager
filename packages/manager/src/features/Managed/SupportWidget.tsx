@@ -1,9 +1,9 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 import { AttachmentError } from '../Support/SupportTicketDetail/SupportTicketDetail';
 

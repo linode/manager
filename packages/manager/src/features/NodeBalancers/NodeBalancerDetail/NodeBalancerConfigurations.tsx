@@ -11,6 +11,8 @@ import {
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import {
   append,
   clone,
@@ -30,20 +32,23 @@ import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Box from '@mui/material/Box';
 import PromiseLoader, {
   PromiseLoaderResponse,
 } from 'src/components/PromiseLoader/PromiseLoader';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
+import { queryKey } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { NodeBalancerConfigPanel } from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
 import type {
-  NodeBalancerConfigNodeFields,
   NodeBalancerConfigFieldsWithStatus,
+  NodeBalancerConfigNodeFields,
 } from '../types';
 import {
   clampNumericString,
@@ -54,11 +59,6 @@ import {
   parseAddresses,
   transformConfigsForRequest,
 } from '../utils';
-import { queryKey } from 'src/queries/nodebalancers';
-import {
-  withQueryClient,
-  WithQueryClientProps,
-} from 'src/containers/withQueryClient.container';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',
@@ -529,9 +529,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   saveConfig = (idx: number) => {
     const config = this.state.configs[idx];
 
-    const configPayload: NodeBalancerConfigFieldsWithStatus = transformConfigsForRequest(
-      [config]
-    )[0];
+    const configPayload: NodeBalancerConfigFieldsWithStatus =
+      transformConfigsForRequest([config])[0];
 
     // clear node errors for this config if there are any
     this.clearNodeErrors(idx);
@@ -851,25 +850,21 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   onNodeLabelChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'label', value);
 
-  onNodeAddressChange = (configIdx: number) => (
-    nodeIdx: number,
-    value: string
-  ) => this.setNodeValue(configIdx, nodeIdx, 'address', value);
+  onNodeAddressChange =
+    (configIdx: number) => (nodeIdx: number, value: string) =>
+      this.setNodeValue(configIdx, nodeIdx, 'address', value);
 
   onNodePortChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'port', value);
 
-  onNodeWeightChange = (configIdx: number) => (
-    nodeIdx: number,
-    value: string
-  ) => this.setNodeValue(configIdx, nodeIdx, 'weight', value);
+  onNodeWeightChange =
+    (configIdx: number) => (nodeIdx: number, value: string) =>
+      this.setNodeValue(configIdx, nodeIdx, 'weight', value);
 
-  onNodeModeChange = (configIdx: number) => (
-    nodeIdx: number,
-    value: string
-  ) => {
-    this.setNodeValue(configIdx, nodeIdx, 'mode', value);
-  };
+  onNodeModeChange =
+    (configIdx: number) => (nodeIdx: number, value: string) => {
+      this.setNodeValue(configIdx, nodeIdx, 'mode', value);
+    };
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
@@ -919,23 +914,30 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .map((e) => e.reason)
       .join(',');
 
-  updateState = (
-    lens: Lens,
-    L?: { [key: string]: Lens },
-    callback?: (L: { [key: string]: Lens }) => () => void
-  ) => (value: any) => {
-    this.clearMessages();
-    this.setState(set(lens, value), L && callback ? callback(L) : undefined);
-  };
+  updateState =
+    (
+      lens: Lens,
+      L?: { [key: string]: Lens },
+      callback?: (L: { [key: string]: Lens }) => () => void
+    ) =>
+    (value: any) => {
+      this.clearMessages();
+      this.setState(set(lens, value), L && callback ? callback(L) : undefined);
+    };
 
-  updateStateWithClamp = (
-    lens: Lens,
-    L?: { [key: string]: Lens },
-    callback?: (L: { [key: string]: Lens }) => () => void
-  ) => (value: any) => {
-    const clampedValue = clampNumericString(0, Number.MAX_SAFE_INTEGER)(value);
-    this.updateState(lens, L, callback)(clampedValue);
-  };
+  updateStateWithClamp =
+    (
+      lens: Lens,
+      L?: { [key: string]: Lens },
+      callback?: (L: { [key: string]: Lens }) => () => void
+    ) =>
+    (value: any) => {
+      const clampedValue = clampNumericString(
+        0,
+        Number.MAX_SAFE_INTEGER
+      )(value);
+      this.updateState(lens, L, callback)(clampedValue);
+    };
 
   onSaveConfig = (idx: number) => () => this.saveConfig(idx);
 
@@ -952,132 +954,132 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     });
   };
 
-  renderConfig = (
-    panelMessages: string[],
-    configErrors: any[],
-    configSubmitting: any[]
-  ) => (
-    config: NodeBalancerConfig & {
-      nodes: NodeBalancerConfigNode[];
-    },
-    idx: number
-  ) => {
-    const isNewConfig =
-      this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
-    const { panelNodeMessages } = this.state;
+  renderConfig =
+    (panelMessages: string[], configErrors: any[], configSubmitting: any[]) =>
+    (
+      config: NodeBalancerConfig & {
+        nodes: NodeBalancerConfigNode[];
+      },
+      idx: number
+    ) => {
+      const isNewConfig =
+        this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
+      const { panelNodeMessages } = this.state;
 
-    const lensTo = lensFrom(['configs', idx]);
+      const lensTo = lensFrom(['configs', idx]);
 
-    // Check whether config is expended based on the URL
-    const expandedConfigId = this.props.match.params.configId;
-    const isExpanded = expandedConfigId
-      ? parseInt(expandedConfigId, 10) === config.id
-      : false;
+      // Check whether config is expended based on the URL
+      const expandedConfigId = this.props.match.params.configId;
+      const isExpanded = expandedConfigId
+        ? parseInt(expandedConfigId, 10) === config.id
+        : false;
 
-    const L = {
-      algorithmLens: lensTo(['algorithm']),
-      checkPassiveLens: lensTo(['check_passive']),
-      checkBodyLens: lensTo(['check_body']),
-      checkPathLens: lensTo(['check_path']),
-      portLens: lensTo(['port']),
-      protocolLens: lensTo(['protocol']),
-      proxyProtocolLens: lensTo(['proxy_protocol']),
-      healthCheckTypeLens: lensTo(['check']),
-      healthCheckAttemptsLens: lensTo(['check_attempts']),
-      healthCheckIntervalLens: lensTo(['check_interval']),
-      healthCheckTimeoutLens: lensTo(['check_timeout']),
-      sessionStickinessLens: lensTo(['stickiness']),
-      sslCertificateLens: lensTo(['ssl_cert']),
-      privateKeyLens: lensTo(['ssl_key']),
+      const L = {
+        algorithmLens: lensTo(['algorithm']),
+        checkPassiveLens: lensTo(['check_passive']),
+        checkBodyLens: lensTo(['check_body']),
+        checkPathLens: lensTo(['check_path']),
+        portLens: lensTo(['port']),
+        protocolLens: lensTo(['protocol']),
+        proxyProtocolLens: lensTo(['proxy_protocol']),
+        healthCheckTypeLens: lensTo(['check']),
+        healthCheckAttemptsLens: lensTo(['check_attempts']),
+        healthCheckIntervalLens: lensTo(['check_interval']),
+        healthCheckTimeoutLens: lensTo(['check_timeout']),
+        sessionStickinessLens: lensTo(['stickiness']),
+        sslCertificateLens: lensTo(['ssl_cert']),
+        privateKeyLens: lensTo(['ssl_key']),
+      };
+
+      return (
+        <Accordion
+          key={`nb-config-${idx}`}
+          updateFor={[
+            idx,
+            config,
+            configSubmitting[idx],
+            configErrors[idx],
+            panelMessages[idx],
+            panelNodeMessages[idx],
+          ]}
+          defaultExpanded={isNewConfig || isExpanded}
+          success={panelMessages[idx]}
+          heading={
+            <React.Fragment>
+              <StyledPortsSpan>
+                Port {config.port !== undefined ? config.port : ''}
+              </StyledPortsSpan>
+              <StyledNBStatusesTypography>
+                {formatNodesStatus(config.nodes)}
+              </StyledNBStatusesTypography>
+            </React.Fragment>
+          }
+        >
+          <NodeBalancerConfigPanel
+            nodeBalancerRegion={this.props.nodeBalancerRegion}
+            forEdit
+            configIdx={idx}
+            onSave={this.onSaveConfig(idx)}
+            submitting={configSubmitting[idx]}
+            onDelete={this.onDeleteConfig(idx, config.port)}
+            errors={configErrors[idx]}
+            nodeMessage={panelNodeMessages[idx]}
+            algorithm={view(L.algorithmLens, this.state)}
+            onAlgorithmChange={this.updateState(L.algorithmLens)}
+            checkPassive={view(L.checkPassiveLens, this.state)}
+            onCheckPassiveChange={this.updateState(L.checkPassiveLens)}
+            checkBody={view(L.checkBodyLens, this.state)}
+            onCheckBodyChange={this.updateState(L.checkBodyLens)}
+            checkPath={view(L.checkPathLens, this.state)}
+            onCheckPathChange={this.updateState(L.checkPathLens)}
+            port={view(L.portLens, this.state)}
+            onPortChange={this.updateState(L.portLens)}
+            protocol={view(L.protocolLens, this.state)}
+            proxyProtocol={view(L.proxyProtocolLens, this.state)}
+            onProtocolChange={this.updateState(
+              L.protocolLens,
+              L,
+              this.afterProtocolUpdate
+            )}
+            onProxyProtocolChange={this.updateState(L.proxyProtocolLens)}
+            healthCheckType={view(L.healthCheckTypeLens, this.state)}
+            onHealthCheckTypeChange={this.updateState(
+              L.healthCheckTypeLens,
+              L,
+              this.afterHealthCheckTypeUpdate
+            )}
+            healthCheckAttempts={view(L.healthCheckAttemptsLens, this.state)}
+            onHealthCheckAttemptsChange={this.updateStateWithClamp(
+              L.healthCheckAttemptsLens
+            )}
+            healthCheckInterval={view(L.healthCheckIntervalLens, this.state)}
+            onHealthCheckIntervalChange={this.updateStateWithClamp(
+              L.healthCheckIntervalLens
+            )}
+            healthCheckTimeout={view(L.healthCheckTimeoutLens, this.state)}
+            onHealthCheckTimeoutChange={this.updateStateWithClamp(
+              L.healthCheckTimeoutLens
+            )}
+            sessionStickiness={view(L.sessionStickinessLens, this.state)}
+            onSessionStickinessChange={this.updateState(
+              L.sessionStickinessLens
+            )}
+            sslCertificate={view(L.sslCertificateLens, this.state)}
+            onSslCertificateChange={this.updateState(L.sslCertificateLens)}
+            privateKey={view(L.privateKeyLens, this.state)}
+            onPrivateKeyChange={this.updateState(L.privateKeyLens)}
+            nodes={config.nodes}
+            addNode={this.addNode(idx)}
+            removeNode={this.removeNode(idx)}
+            onNodeLabelChange={this.onNodeLabelChange(idx)}
+            onNodeAddressChange={this.onNodeAddressChange(idx)}
+            onNodePortChange={this.onNodePortChange(idx)}
+            onNodeWeightChange={this.onNodeWeightChange(idx)}
+            onNodeModeChange={this.onNodeModeChange(idx)}
+          />
+        </Accordion>
+      );
     };
-
-    return (
-      <Accordion
-        key={`nb-config-${idx}`}
-        updateFor={[
-          idx,
-          config,
-          configSubmitting[idx],
-          configErrors[idx],
-          panelMessages[idx],
-          panelNodeMessages[idx],
-        ]}
-        defaultExpanded={isNewConfig || isExpanded}
-        success={panelMessages[idx]}
-        heading={
-          <React.Fragment>
-            <StyledPortsSpan>
-              Port {config.port !== undefined ? config.port : ''}
-            </StyledPortsSpan>
-            <StyledNBStatusesTypography>
-              {formatNodesStatus(config.nodes)}
-            </StyledNBStatusesTypography>
-          </React.Fragment>
-        }
-      >
-        <NodeBalancerConfigPanel
-          nodeBalancerRegion={this.props.nodeBalancerRegion}
-          forEdit
-          configIdx={idx}
-          onSave={this.onSaveConfig(idx)}
-          submitting={configSubmitting[idx]}
-          onDelete={this.onDeleteConfig(idx, config.port)}
-          errors={configErrors[idx]}
-          nodeMessage={panelNodeMessages[idx]}
-          algorithm={view(L.algorithmLens, this.state)}
-          onAlgorithmChange={this.updateState(L.algorithmLens)}
-          checkPassive={view(L.checkPassiveLens, this.state)}
-          onCheckPassiveChange={this.updateState(L.checkPassiveLens)}
-          checkBody={view(L.checkBodyLens, this.state)}
-          onCheckBodyChange={this.updateState(L.checkBodyLens)}
-          checkPath={view(L.checkPathLens, this.state)}
-          onCheckPathChange={this.updateState(L.checkPathLens)}
-          port={view(L.portLens, this.state)}
-          onPortChange={this.updateState(L.portLens)}
-          protocol={view(L.protocolLens, this.state)}
-          proxyProtocol={view(L.proxyProtocolLens, this.state)}
-          onProtocolChange={this.updateState(
-            L.protocolLens,
-            L,
-            this.afterProtocolUpdate
-          )}
-          onProxyProtocolChange={this.updateState(L.proxyProtocolLens)}
-          healthCheckType={view(L.healthCheckTypeLens, this.state)}
-          onHealthCheckTypeChange={this.updateState(
-            L.healthCheckTypeLens,
-            L,
-            this.afterHealthCheckTypeUpdate
-          )}
-          healthCheckAttempts={view(L.healthCheckAttemptsLens, this.state)}
-          onHealthCheckAttemptsChange={this.updateStateWithClamp(
-            L.healthCheckAttemptsLens
-          )}
-          healthCheckInterval={view(L.healthCheckIntervalLens, this.state)}
-          onHealthCheckIntervalChange={this.updateStateWithClamp(
-            L.healthCheckIntervalLens
-          )}
-          healthCheckTimeout={view(L.healthCheckTimeoutLens, this.state)}
-          onHealthCheckTimeoutChange={this.updateStateWithClamp(
-            L.healthCheckTimeoutLens
-          )}
-          sessionStickiness={view(L.sessionStickinessLens, this.state)}
-          onSessionStickinessChange={this.updateState(L.sessionStickinessLens)}
-          sslCertificate={view(L.sslCertificateLens, this.state)}
-          onSslCertificateChange={this.updateState(L.sslCertificateLens)}
-          privateKey={view(L.privateKeyLens, this.state)}
-          onPrivateKeyChange={this.updateState(L.privateKeyLens)}
-          nodes={config.nodes}
-          addNode={this.addNode(idx)}
-          removeNode={this.removeNode(idx)}
-          onNodeLabelChange={this.onNodeLabelChange(idx)}
-          onNodeAddressChange={this.onNodeAddressChange(idx)}
-          onNodePortChange={this.onNodePortChange(idx)}
-          onNodeWeightChange={this.onNodeWeightChange(idx)}
-          onNodeModeChange={this.onNodeModeChange(idx)}
-        />
-      </Accordion>
-    );
-  };
 
   renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>

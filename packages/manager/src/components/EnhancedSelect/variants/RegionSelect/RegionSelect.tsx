@@ -1,15 +1,15 @@
+import { Region } from '@linode/api-v4/lib/regions';
+import * as React from 'react';
+import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
   GroupType,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import * as React from 'react';
-import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import { Region } from '@linode/api-v4/lib/regions';
-import { RegionOption, RegionItem } from './RegionOption';
 import { Flag } from 'src/components/Flag';
-import { ContinentNames, Country } from './utils';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+import { RegionItem, RegionOption } from './RegionOption';
+import { ContinentNames, Country } from './utils';
 
 interface Props<IsClearable extends boolean>
   extends Omit<

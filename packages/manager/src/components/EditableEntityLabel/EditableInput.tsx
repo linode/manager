@@ -1,12 +1,12 @@
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';

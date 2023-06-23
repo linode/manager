@@ -1,26 +1,24 @@
-import * as React from 'react';
-import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
-import { Link } from 'src/components/Link';
-import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import { SecurityQuestionsData } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
-import { useFormik, FormikConfig } from 'formik';
+import { FormikConfig, useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import Button from 'src/components/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
+import { Link } from 'src/components/Link';
 import {
-  useSecurityQuestions,
   useMutateSecurityQuestions,
+  useSecurityQuestions,
 } from 'src/queries/securityQuestions';
+import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
+import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
 
 export const SecurityQuestions = () => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
-  const {
-    mutateAsync: updateSecurityQuestions,
-    isLoading: isUpdating,
-  } = useMutateSecurityQuestions();
+  const { mutateAsync: updateSecurityQuestions, isLoading: isUpdating } =
+    useMutateSecurityQuestions();
   const { enqueueSnackbar } = useSnackbar();
 
   const answeredQuestions = getAnsweredQuestions(securityQuestionsData);

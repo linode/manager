@@ -282,8 +282,7 @@ describe('utilities', () => {
       const allDisks = getAllDisks([extendedConfig], disks);
       expect(allDisks).toHaveLength(2);
       expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
-        19040623,
-        19040624,
+        19040623, 19040624,
       ]);
     });
 
@@ -291,8 +290,7 @@ describe('utilities', () => {
       const allDisks = getAllDisks([extendedConfig], [...disks, extDiskCopy]);
       expect(allDisks).toHaveLength(2);
       expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
-        19040623,
-        19040624,
+        19040623, 19040624,
       ]);
     });
 
@@ -300,9 +298,7 @@ describe('utilities', () => {
       const allDisks = getAllDisks([extendedConfig], [...disks, extDisk2]);
       expect(allDisks).toHaveLength(3);
       expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
-        19040623,
-        19040624,
-        19040625,
+        19040623, 19040624, 19040625,
       ]);
     });
   });

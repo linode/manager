@@ -1,19 +1,19 @@
-import * as Bluebird from 'bluebird';
+import { updateAccountSettings } from '@linode/api-v4/lib';
 import { enableBackups, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as Bluebird from 'bluebird';
 import { isEmpty } from 'ramda';
+import { QueryClient } from 'react-query';
 import { Reducer } from 'redux';
-import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
-import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { sendBackupsEnabledEvent } from 'src/utilities/analytics';
-import { ThunkActionCreator } from '../types';
 import {
   queryKey,
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
-import { updateAccountSettings } from '@linode/api-v4/lib';
-import { QueryClient } from 'react-query';
+import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
+import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
+import { sendBackupsEnabledEvent } from 'src/utilities/analytics';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { ThunkActionCreator } from '../types';
 
 export interface BackupError {
   linodeId: number;
@@ -253,39 +253,37 @@ export const gatherResponsesAndErrors = (
  *  on whether or not any errors occurred.
  */
 type EnableAllBackupsThunk = ThunkActionCreator<void>;
-export const enableAllBackups: EnableAllBackupsThunk = () => (
-  dispatch,
-  getState
-) => {
-  const linodesWithoutBackups = getLinodesWithoutBackups(
-    getState().__resources
-  );
-
-  dispatch(handleEnable());
-  Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, {
-    success: [],
-    errors: [],
-  })
-    .then((response) => {
-      if (response.errors && !isEmpty(response.errors)) {
-        dispatch(handleEnableError(response));
-      } else {
-        dispatch(handleEnableSuccess(response.success));
-      }
-      dispatch(updateMultipleLinodes(response.success));
-      // Analytics Event
-      sendBackupsEnabledEvent(
-        `Enabled backups for ${response.success.length} Linodes`
-      );
-    })
-    .catch(() =>
-      dispatch(
-        handleEnableError([
-          { linodeId: 0, reason: 'There was an error enabling backups.' },
-        ])
-      )
+export const enableAllBackups: EnableAllBackupsThunk =
+  () => (dispatch, getState) => {
+    const linodesWithoutBackups = getLinodesWithoutBackups(
+      getState().__resources
     );
-};
+
+    dispatch(handleEnable());
+    Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, {
+      success: [],
+      errors: [],
+    })
+      .then((response) => {
+        if (response.errors && !isEmpty(response.errors)) {
+          dispatch(handleEnableError(response));
+        } else {
+          dispatch(handleEnableSuccess(response.success));
+        }
+        dispatch(updateMultipleLinodes(response.success));
+        // Analytics Event
+        sendBackupsEnabledEvent(
+          `Enabled backups for ${response.success.length} Linodes`
+        );
+      })
+      .catch(() =>
+        dispatch(
+          handleEnableError([
+            { linodeId: 0, reason: 'There was an error enabling backups.' },
+          ])
+        )
+      );
+  };
 
 /* Dispatches an async action that will set the backups_enabled account setting.
  *  When complete, it will dispatch appropriate actions to handle the result, including
@@ -295,39 +293,38 @@ type EnableAutoEnrollThunk = ThunkActionCreator<
   void,
   { backupsEnabled: boolean; queryClient: QueryClient }
 >;
-export const enableAutoEnroll: EnableAutoEnrollThunk = ({
-  backupsEnabled,
-  queryClient,
-}) => (dispatch, getState) => {
-  const state = getState();
-  const { backups } = state;
-  const shouldEnableBackups = Boolean(backups.autoEnroll);
+export const enableAutoEnroll: EnableAutoEnrollThunk =
+  ({ backupsEnabled, queryClient }) =>
+  (dispatch, getState) => {
+    const state = getState();
+    const { backups } = state;
+    const shouldEnableBackups = Boolean(backups.autoEnroll);
 
-  /** If the selected toggle setting matches the setting already on the user's account,
-   * don't bother the API.
-   */
-  if (backupsEnabled === shouldEnableBackups) {
-    dispatch(enableAllBackups());
-    return;
-  }
-
-  dispatch(handleAutoEnroll());
-
-  queryClient.executeMutation({
-    mutationFn: updateAccountSettings,
-    mutationKey: queryKey,
-    variables: { backups_enabled: shouldEnableBackups },
-    onSuccess: (data) => {
-      updateAccountSettingsData(data, queryClient);
-      dispatch(handleAutoEnrollSuccess());
+    /** If the selected toggle setting matches the setting already on the user's account,
+     * don't bother the API.
+     */
+    if (backupsEnabled === shouldEnableBackups) {
       dispatch(enableAllBackups());
-    },
-    onError: (errors: APIError[]) => {
-      const finalError = getErrorStringOrDefault(
-        errors,
-        'Your account settings could not be updated. Please try again.'
-      );
-      dispatch(handleAutoEnrollError(finalError));
-    },
-  });
-};
+      return;
+    }
+
+    dispatch(handleAutoEnroll());
+
+    queryClient.executeMutation({
+      mutationFn: updateAccountSettings,
+      mutationKey: queryKey,
+      variables: { backups_enabled: shouldEnableBackups },
+      onSuccess: (data) => {
+        updateAccountSettingsData(data, queryClient);
+        dispatch(handleAutoEnrollSuccess());
+        dispatch(enableAllBackups());
+      },
+      onError: (errors: APIError[]) => {
+        const finalError = getErrorStringOrDefault(
+          errors,
+          'Your account settings could not be updated. Please try again.'
+        );
+        dispatch(handleAutoEnrollError(finalError));
+      },
+    });
+  };

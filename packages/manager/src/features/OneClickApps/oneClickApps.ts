@@ -48,8 +48,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy aaPanel through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/aapanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/aapanel/',
       },
     ],
     website: 'https://www.aapanel.com/reference.html',
@@ -71,8 +70,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Akaunting through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/akaunting/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/akaunting/',
       },
     ],
     website: 'https://akaunting.com',
@@ -93,8 +91,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Ant Media Server through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaserver/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaserver/',
       },
     ],
     website: 'https://antmedia.io/',
@@ -116,8 +113,7 @@ export const oneClickApps: OCA[] = [
       {
         title:
           'Deploy Ant Media Enterprise Edition through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseserver/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseserver/',
       },
     ],
     website: 'https://antmedia.io/',
@@ -139,8 +135,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Apache Airflow through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-airflow/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/apache-airflow/',
       },
     ],
     website: 'https://airflow.apache.org/',
@@ -162,8 +157,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Appwrite through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/appwrite/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/appwrite/',
       },
     ],
     website: 'https://appwrite.io/',
@@ -185,8 +179,7 @@ export const oneClickApps: OCA[] = [
       {
         title:
           'Deploy an ARK Survival Evolved Server through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/ark-survival-evolved/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/ark-survival-evolved/',
       },
     ],
     website: 'https://survivetheark.com/',
@@ -206,8 +199,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy AzuraCast through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/azuracast/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/azuracast/',
       },
     ],
     website: 'https://www.azuracast.com/',
@@ -228,8 +220,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy BeEF through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/beef/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/beef/',
       },
     ],
     website: 'https://github.com/beefproject/beef',
@@ -250,8 +241,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy BitNinja through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/bitninja/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/bitninja/',
       },
     ],
     website: 'https://doc.bitninja.io/',
@@ -273,8 +263,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Budibase through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/budibase/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/budibase/',
       },
     ],
     website: 'https://docs.budibase.com/docs',
@@ -296,8 +285,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Chevereto through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/chevereto/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/chevereto/',
       },
     ],
     website: 'https://v3-docs.chevereto.com/',
@@ -319,8 +307,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Cloudron through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/cloudron/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cloudron/',
       },
     ],
     website: 'https://docs.cloudron.io',
@@ -342,8 +329,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy ClusterControl through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/clustercontrol/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/clustercontrol/',
       },
     ],
     website: 'https://docs.severalnines.com/docs/clustercontrol/',
@@ -365,8 +351,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy cPanel through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/cpanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cpanel/',
       },
     ],
     website: 'https://www.cpanel.net/',
@@ -388,8 +373,7 @@ export const oneClickApps: OCA[] = [
       {
         title:
           'Deploy Counter-Strike Global Offensive through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/counter-strike-go/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/counter-strike-go/',
       },
     ],
     website: 'https://blog.counter-strike.net/index.php/about/',
@@ -410,8 +394,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy CyberPanel through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/cyberpanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cyberpanel/',
       },
     ],
     website: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
@@ -432,8 +415,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Discourse through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/discourse/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/discourse/',
       },
     ],
     website: 'https://www.discourse.org/',
@@ -453,8 +435,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Django through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/django/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/django/',
       },
     ],
     website: 'https://www.djangoproject.com/',
@@ -475,8 +456,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Docker through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/docker/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/docker/',
       },
     ],
     website: 'https://www.docker.com/',
@@ -496,8 +476,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Drupal through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/drupal/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/drupal/',
       },
     ],
     website: 'https://www.drupal.org/',
@@ -518,8 +497,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Easypanel through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel/',
       },
     ],
     website: 'https://easypanel.io/',
@@ -539,8 +517,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy FileCloud through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/filecloud/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/filecloud/',
       },
     ],
     website: 'https://www.getfilecloud.com',
@@ -560,8 +537,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Flask through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/flask/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/flask/',
       },
     ],
     website: 'https://www.palletsprojects.com/p/flask/',
@@ -581,8 +557,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Focalboard through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/focalboard/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/focalboard/',
       },
     ],
     website: 'https://www.focalboard.com/',
@@ -602,8 +577,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Galera Cluster through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
       },
     ],
     website: 'https://galeracluster.com/',
@@ -623,8 +597,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Gitea through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/gitea/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/gitea/',
       },
     ],
     website: 'https://gitea.io/',
@@ -646,8 +619,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy GitLab through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/gitlab/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/gitlab/',
       },
     ],
     website: 'https://about.gitlab.com/',
@@ -669,8 +641,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Gopaddle through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/gopaddle/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/gopaddle/',
       },
     ],
     website: 'https://gopaddle.io/',
@@ -690,8 +661,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Grafana through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/grafana/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/grafana/',
       },
     ],
     website: 'https://grafana.com/',
@@ -711,8 +681,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Grav through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/grav/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/grav/',
       },
     ],
     website: 'https://getgrav.org/',
@@ -732,8 +701,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Apache Guacamole through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/guacamole/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/guacamole/',
       },
     ],
     website: 'https://guacamole.apache.org/',
@@ -753,8 +721,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Haltdos Community WAF through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/haltdos-community-waf/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/haltdos-community-waf/',
       },
     ],
     website: 'https://www.haltdos.com/',
@@ -774,8 +741,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Harbor through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/harbor/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/harbor/',
       },
     ],
     website: 'https://goharbor.io/docs',
@@ -797,8 +763,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy HashiCorp Nomad through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
       },
     ],
     website: 'https://www.nomadproject.io/docs',
@@ -819,8 +784,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy HashiCorp Vault through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
       },
     ],
     website: 'https://www.vaultproject.io/docs',
@@ -842,8 +806,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Illa Builder through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/illa-builder',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/illa-builder',
       },
     ],
     website: 'https://github.com/illacloud/illa-builder',
@@ -863,8 +826,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Jenkins through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/jenkins/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jenkins/',
       },
     ],
     website: 'https://jenkins.io/',
@@ -885,8 +847,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy JetBackup through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/jetbackup/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jetbackup/',
       },
     ],
     website: 'https://docs.jetapps.com/',
@@ -906,8 +867,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Jitsi through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi/',
       },
     ],
     website: 'https://jitsi.org/',
@@ -927,8 +887,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Joomla through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/joomla/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/joomla/',
       },
     ],
     website: 'https://www.joomla.org/',
@@ -949,8 +908,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Joplin through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/joplin/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/joplin/',
       },
     ],
     website: 'https://joplinapp.org/',
@@ -972,8 +930,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Kali Linux through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/kali-linux/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/kali-linux/',
       },
     ],
     website: 'https://www.kali.org/',
@@ -993,8 +950,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Kepler through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/kepler/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/kepler/',
       },
     ],
     website: 'https://kepler.app/',
@@ -1015,8 +971,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy a LAMP Stack through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/lamp-stack/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/lamp-stack/',
       },
     ],
     logo_url: 'lamp_flame.svg',
@@ -1035,8 +990,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy a LEMP Stack through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/lemp-stack/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/lemp-stack/',
       },
     ],
     logo_url: 'lemp.svg',
@@ -1055,8 +1009,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy LiteSpeed cPanel through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/litespeed-cpanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/litespeed-cpanel/',
       },
     ],
     website: 'https://docs.litespeedtech.com/cp/cpanel/',
@@ -1076,8 +1029,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy LiveSwitch through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch/',
       },
     ],
     website: 'https://www.liveswitch.io/',
@@ -1098,8 +1050,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Magicspam through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/magicspam/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/magicspam/',
       },
     ],
     website: 'https://www.magicspam.com/anti-spam-features.php',
@@ -1120,8 +1071,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Mastodon through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mastodon/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mastodon/',
       },
     ],
     website: 'https://docs.joinmastodon.org/',
@@ -1141,8 +1091,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy a MEAN Stack through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mean-stack/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mean-stack/',
       },
     ],
     website: 'http://meanjs.org/',
@@ -1164,8 +1113,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy a MERN Stack through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mern-stack/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mern-stack/',
       },
     ],
     logo_url: 'mern.svg',
@@ -1184,8 +1132,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Microweber through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/microweber/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/microweber/',
       },
     ],
     website: 'https://microweber.com/',
@@ -1207,8 +1154,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy a Minecraft Server through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/minecraft/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/minecraft/',
       },
     ],
     website: 'https://www.minecraft.net/',
@@ -1229,8 +1175,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Mist.io through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mistio/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mistio/',
       },
     ],
     website: 'https://mist.io/',
@@ -1250,8 +1195,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy MongoDB with Marketplace Apps',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb/',
       },
     ],
     website: 'https://www.mongodb.com/',
@@ -1271,8 +1215,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy MongoDB Cluster with Marketplace Apps',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb-cluster/',
       },
     ],
     website: 'https://www.mongodb.com/',
@@ -1293,8 +1236,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Moodle through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/moodle/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/moodle/',
       },
     ],
     website: 'https://docs.moodle.org/',
@@ -1314,8 +1256,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy MySQL/MariaDB through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mysql/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mysql/',
       },
     ],
     website: 'https://www.mysql.com/',
@@ -1336,8 +1277,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Nextcloud through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/nextcloud/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nextcloud/',
       },
     ],
     logo_url: 'nextcloud.svg',
@@ -1358,8 +1298,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy NirvaShare through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/nirvashare/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nirvashare/',
       },
     ],
     website: 'https://nirvashare.com/setup-guide/',
@@ -1381,8 +1320,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy NodeJS through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/nodejs/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nodejs/',
       },
     ],
     website: 'https://nodejs.org/',
@@ -1404,8 +1342,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Odoo through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/odoo/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/odoo/',
       },
     ],
     website: 'https://www.odoo.com/',
@@ -1425,8 +1362,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy ONLYOFFICE Docs through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/onlyoffice/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/onlyoffice/',
       },
     ],
     website: 'https://www.onlyoffice.com/',
@@ -1446,8 +1382,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy OpenLiteSpeed Django through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-django/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-django/',
       },
     ],
     website: 'https://docs.litespeedtech.com/cloud/images/django/',
@@ -1468,8 +1403,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy OpenLiteSpeed Node.js through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-nodejs/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-nodejs/',
       },
     ],
     website: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
@@ -1489,8 +1423,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy OpenLiteSpeed Rails through the Linode Marketplace ',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-rails/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-rails/',
       },
     ],
     website: 'https://docs.litespeedtech.com/cloud/images/rails/',
@@ -1510,8 +1443,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy OpenLiteSpeed Wordpress through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-wordpress/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-wordpress/',
       },
     ],
     website: 'https://openlitespeed.org/',
@@ -1531,8 +1463,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy OpenVPN through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openvpn/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openvpn/',
       },
     ],
     website: 'https://openvpn.net/',
@@ -1553,8 +1484,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Owncast through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/owncast/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/owncast/',
       },
     ],
     website: 'https://owncast.online/',
@@ -1575,8 +1505,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy ownCloud through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/owncloud/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/owncloud/',
       },
     ],
     website: 'https://doc.owncloud.com/docs/next/',
@@ -1596,8 +1525,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Passky through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/passky/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/passky/',
       },
     ],
     website: 'https://passky.org/',
@@ -1617,8 +1545,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Peppermint through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/peppermint/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/peppermint/',
       },
     ],
     website: 'https://peppermint.sh/',
@@ -1640,8 +1567,7 @@ export const oneClickApps: OCA[] = [
       {
         title:
           'Deploy Percona Monitoring and Management (PMM) through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/percona-monitoring-management/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/percona-monitoring-management/',
       },
     ],
     website:
@@ -1663,8 +1589,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy phpMyAdmin through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/phpmyadmin/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/phpmyadmin/',
       },
     ],
     website: 'https://www.phpmyadmin.net/',
@@ -1684,8 +1609,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Pi-hole through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/pihole/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/pihole/',
       },
     ],
     website: 'https://pi-hole.net/',
@@ -1706,8 +1630,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Plesk through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/plesk/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/plesk/',
       },
     ],
     website: 'https://www.plesk.com/',
@@ -1729,8 +1652,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Plex Media Server through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/plex/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/plex/',
       },
     ],
     website: 'https://www.plex.tv/',
@@ -1750,8 +1672,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy PostgreSQL through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql/',
       },
     ],
     website: 'https://www.postgresql.org/',
@@ -1771,8 +1692,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy PostgreSQL Cluster through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql-cluster/',
       },
     ],
     website: 'https://www.postgresql.org/',
@@ -1792,8 +1712,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Pritunl through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/pritunl/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/pritunl/',
       },
     ],
     website: 'https://docs.pritunl.com/docs',
@@ -1814,8 +1733,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Prometheus through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus/',
       },
     ],
     website: 'https://prometheus.io/',
@@ -1835,8 +1753,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Prometheus & Grafana through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus-grafana/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus-grafana/',
       },
     ],
     website: 'https://prometheus.io/docs/visualization/grafana/',
@@ -1856,8 +1773,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy RabbitMQ through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/rabbitmq/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/rabbitmq/',
       },
     ],
     website: 'https://www.rabbitmq.com/',
@@ -1878,8 +1794,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Redis through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
       },
     ],
     website: 'https://redis.io/',
@@ -1900,8 +1815,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Redis Sentinel Cluster through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
       },
     ],
     website: 'https://redis.io/',
@@ -1921,8 +1835,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Restyaboard through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/restyaboard/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/restyaboard/',
       },
     ],
     website: 'https://restya.com',
@@ -1942,8 +1855,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Rocket.Chat through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/rocketchat/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/rocketchat/',
       },
     ],
     website: 'https://docs.rocket.chat/',
@@ -1963,8 +1875,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Ruby on Rails through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/ruby-on-rails/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/ruby-on-rails/',
       },
     ],
     website: 'https://rubyonrails.org/',
@@ -1984,8 +1895,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Rust through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/rust/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/rust/',
       },
     ],
     website: 'https://rust.facepunch.com/',
@@ -2005,8 +1915,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Saltcorn through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/saltcorn/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/saltcorn/',
       },
     ],
     website: 'https://saltcorn.com/',
@@ -2028,8 +1937,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Seatable through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/seatable/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/seatable/',
       },
     ],
     website: 'https://seatable.io/docs/?lang=auto',
@@ -2069,8 +1977,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy ServerWand through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/serverwand/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/serverwand/',
       },
     ],
     website: 'https://serverwand.com/',
@@ -2092,8 +1999,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Shadowsocks through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/shadowsocks/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/shadowsocks/',
       },
     ],
     website: 'https://shadowsocks.org/',
@@ -2114,8 +2020,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Splunk through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/splunk/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/splunk/',
       },
     ],
     website: 'https://docs.splunk.com/Documentation/Splunk',
@@ -2136,8 +2041,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Superinsight through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/superinsight/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/superinsight/',
       },
     ],
     website: 'https://www.superinsight.ai/',
@@ -2157,8 +2061,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Terraria through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/terraria/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/terraria/',
       },
     ],
     website: 'https://terraria.org/',
@@ -2179,8 +2082,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy a Team Fortress 2 Server through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/team-fortress-2/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/team-fortress-2/',
       },
     ],
     website: 'http://www.teamfortress.com/',
@@ -2201,8 +2103,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Uptime Kuma through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/uptime-kuma/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/uptime-kuma/',
       },
     ],
     website: 'https://github.com/louislam/uptime-kuma',
@@ -2223,8 +2124,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy UTunnel VPN through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/utunnel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/utunnel/',
       },
     ],
     website: 'https://www.utunnel.io/linode-vpn-server.html',
@@ -2245,8 +2145,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Valheim through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/valheim/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/valheim/',
       },
     ],
     website: 'https://www.valheimgame.com/',
@@ -2267,8 +2166,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy VictoriaMetrics Single through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/victoriametrics-single/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/victoriametrics-single/',
       },
     ],
     website: 'https://victoriametrics.com/',
@@ -2288,8 +2186,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Virtualmin through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/virtualmin/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/virtualmin/',
       },
     ],
     website: 'https://www.virtualmin.com/',
@@ -2309,8 +2206,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy VS Code through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/vscode/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/vscode/',
       },
     ],
     website: 'https://github.com/cdr/code-server',
@@ -2330,8 +2226,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy WarpSpeed VPN through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/warpspeed/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/warpspeed/',
       },
     ],
     website: 'https://bunker.services/products/warpspeed',
@@ -2352,8 +2247,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Wazuh through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/wazuh/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wazuh/',
       },
     ],
     website: 'https://documentation.wazuh.com/current/index.html',
@@ -2373,8 +2267,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Webmin through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/webmin/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/webmin/',
       },
     ],
     website: 'http://www.webmin.com/',
@@ -2396,8 +2289,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Webuzo through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/webuzo/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/webuzo/',
       },
     ],
     website: 'http://www.webuzo.com/',
@@ -2418,8 +2310,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy WireGuard through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/wireguard/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wireguard/',
       },
     ],
     website: 'https://www.wireguard.com/',
@@ -2439,8 +2330,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy WooCommerce through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/woocommerce/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/woocommerce/',
       },
     ],
     website: 'https://woocommerce.com/features/',
@@ -2461,8 +2351,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy WordPress through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/wordpress/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wordpress/',
       },
     ],
     website: 'https://wordpress.org/',
@@ -2482,8 +2371,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Yacht through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/yacht/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/yacht/',
       },
     ],
     website: 'https://github.com/SelfhostedPro/Yacht/',
@@ -2503,8 +2391,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy Zabbix through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/zabbix/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/zabbix/',
       },
     ],
     website: 'https://www.zabbix.com',

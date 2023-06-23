@@ -1,11 +1,11 @@
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose, withHandlers } from 'recompose';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { LinearProgress } from 'src/components/LinearProgress';
 import TextField from 'src/components/TextField';
 import { FileAttachment } from './index';

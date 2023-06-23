@@ -1,29 +1,29 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import {
+  CreateLinodeDiskFromImageSchema,
+  CreateLinodeDiskSchema,
+} from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Drawer from 'src/components/Drawer';
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { ModeSelect, Mode } from 'src/components/ModeSelect/ModeSelect';
-import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
+import Drawer from 'src/components/Drawer';
+import { Item } from 'src/components/EnhancedSelect/Select';
+import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
+import { Notice } from 'src/components/Notice/Notice';
+import TextField from 'src/components/TextField';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskCreateMutation,
 } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
-import { resetEventsPolling } from 'src/eventsPolling';
-import {
-  CreateLinodeDiskFromImageSchema,
-  CreateLinodeDiskSchema,
-} from '@linode/validation';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
 type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
 
@@ -56,9 +56,8 @@ export const CreateDiskDrawer = (props: Props) => {
 
   const { data: disks } = useAllLinodeDisksQuery(linodeId, open);
 
-  const { mutateAsync: createDisk, reset } = useLinodeDiskCreateMutation(
-    linodeId
-  );
+  const { mutateAsync: createDisk, reset } =
+    useLinodeDiskCreateMutation(linodeId);
 
   const maximumSize = calculateDiskFree(linode, disks, 0);
 

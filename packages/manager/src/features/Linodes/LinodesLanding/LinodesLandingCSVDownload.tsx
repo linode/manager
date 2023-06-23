@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
+import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 export const LinodesLandingCSVDownload = () => {
   const csvRef = React.useRef<any>();

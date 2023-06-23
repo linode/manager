@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { backupFactory, linodeFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
-import { rest, server } from 'src/mocks/testServer';
-import { backupFactory, linodeFactory } from 'src/factories';
 
 describe('RestoreToLinodeDrawer', () => {
   it('renders without crashing', async () => {

@@ -1,25 +1,25 @@
-import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink';
 import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
+import AddNewLink from 'src/components/AddNewLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { LinodeConfigDialog } from './LinodeConfigDialog';
-import { ConfigRow } from './ConfigRow';
-import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
+import { makeStyles } from 'tss-react/mui';
 import { BootConfigDialog } from './BootConfigDialog';
+import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
+import { LinodeConfigDialog } from './LinodeConfigDialog';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   tableCell: {
@@ -59,17 +59,12 @@ const LinodeConfigs = () => {
 
   const { data: configs, isLoading, error } = useAllLinodeConfigsQuery(id);
 
-  const [
-    isLinodeConfigDialogOpen,
-    setIsLinodeConfigDialogOpen,
-  ] = React.useState(false);
-  const [
-    isDeleteConfigDialogOpen,
-    setIsDeleteConfigDialogOpen,
-  ] = React.useState(false);
-  const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] = React.useState(
-    false
-  );
+  const [isLinodeConfigDialogOpen, setIsLinodeConfigDialogOpen] =
+    React.useState(false);
+  const [isDeleteConfigDialogOpen, setIsDeleteConfigDialogOpen] =
+    React.useState(false);
+  const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] =
+    React.useState(false);
 
   const [selectedConfigId, setSelectedConfigId] = React.useState<number>();
 

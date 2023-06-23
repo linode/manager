@@ -1,11 +1,11 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Paginate from 'src/components/Paginate';

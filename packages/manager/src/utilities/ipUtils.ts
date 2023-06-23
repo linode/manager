@@ -10,7 +10,8 @@ export const removePrefixLength = (ip: string) => ip.replace(/\/\d+/, '');
 /**
  * Regex for determining if a string is a private IP Addresses
  */
-export const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+export const privateIPRegex =
+  /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
 
 export interface ExtendedIP {
   address: string;

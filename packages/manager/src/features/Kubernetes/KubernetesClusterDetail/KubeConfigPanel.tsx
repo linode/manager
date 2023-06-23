@@ -1,3 +1,5 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -5,8 +7,6 @@ import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';

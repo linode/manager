@@ -1,14 +1,14 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import AddDeviceDrawer from './AddDeviceDrawer';
 import FirewallDevicesTable from './FirewallDevicesTable';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -42,14 +42,14 @@ const FirewallLinodesLanding = (props: Props) => {
   const { firewallID, firewallLabel, disabled } = props;
   const classes = useStyles();
 
-  const { data: devices, isLoading, error } = useAllFirewallDevicesQuery(
-    firewallID
-  );
+  const {
+    data: devices,
+    isLoading,
+    error,
+  } = useAllFirewallDevicesQuery(firewallID);
 
-  const [
-    isRemoveDeviceDialogOpen,
-    setIsRemoveDeviceDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [isRemoveDeviceDialogOpen, setIsRemoveDeviceDialogOpen] =
+    React.useState<boolean>(false);
 
   const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(-1);
 
@@ -57,9 +57,8 @@ const FirewallLinodesLanding = (props: Props) => {
     (device) => device.id === selectedDeviceId
   );
 
-  const [addDeviceDrawerOpen, setDeviceDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [addDeviceDrawerOpen, setDeviceDrawerOpen] =
+    React.useState<boolean>(false);
 
   const handleClose = () => {
     setDeviceDrawerOpen(false);

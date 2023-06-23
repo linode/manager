@@ -1,8 +1,8 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import { makeStyles } from '@mui/styles';
+import { ChipProps as _ChipProps, default as _Chip } from '@mui/material/Chip';
 import { Theme } from '@mui/material/styles';
-import { default as _Chip, ChipProps as _ChipProps } from '@mui/material/Chip';
+import { makeStyles } from '@mui/styles';
+import classNames from 'classnames';
+import * as React from 'react';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inTable: {

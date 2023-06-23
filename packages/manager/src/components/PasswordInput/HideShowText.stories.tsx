@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
+import React, { useState } from 'react';
 import { HideShowText } from './HideShowText';
 
 const meta: Meta<typeof HideShowText> = {

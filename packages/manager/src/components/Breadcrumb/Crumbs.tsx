@@ -1,9 +1,9 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { FinalCrumb } from './FinalCrumb';
 import FinalCrumbPrefix from './FinalCrumbPrefix';

@@ -1,8 +1,8 @@
 import { LinodeDiskCreationData } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { GetAllData } from 'src/utilities/getAll';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { Entity } from './disk.types';
-import { GetAllData } from 'src/utilities/getAll';
 
 const actionCreator = actionCreatorFactory(`@@manager/linodeDisks`);
 

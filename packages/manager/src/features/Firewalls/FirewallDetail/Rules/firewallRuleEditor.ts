@@ -24,8 +24,8 @@
 // words, one instance of the reducer manages "inbound" rules, and another
 // instance manages "outbound" rules.
 
-import produce, { Draft, castDraft } from 'immer';
 import { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
+import produce, { castDraft, Draft } from 'immer';
 import { compose, last, omit } from 'ramda';
 import { FirewallRuleError } from './shared';
 

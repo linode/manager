@@ -1,6 +1,6 @@
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { fireEvent } from '@testing-library/react';
 import { TextTooltip } from './TextTooltip';
 
 describe('TextTooltip', () => {

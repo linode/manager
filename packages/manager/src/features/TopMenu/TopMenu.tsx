@@ -1,13 +1,13 @@
 import MenuIcon from '@mui/icons-material/Menu';
+import { Theme, useTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import clsx from 'clsx';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Hidden from 'src/components/core/Hidden';
-import { IconButton } from 'src/components/IconButton';
-import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
-import clsx from 'clsx';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
+import { IconButton } from 'src/components/IconButton';
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import Community from './Community';
 import Help from './Help';

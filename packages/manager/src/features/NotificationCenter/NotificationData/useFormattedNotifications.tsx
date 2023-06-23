@@ -1,28 +1,28 @@
-import * as React from 'react';
-import RenderNotification from './RenderNotification';
-import Typography from 'src/components/core/Typography';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import { checkIfMaintenanceNotification } from './notificationUtils';
-import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { DateTime } from 'luxon';
-import { formatDate } from 'src/utilities/formatDate';
-import { Link } from 'src/components/Link';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { notificationContext as _notificationContext } from '../NotificationContext';
-import { NotificationItem } from '../NotificationSection';
-import { path } from 'ramda';
 import { Profile } from '@linode/api-v4';
-import { Region } from '@linode/api-v4/lib/regions';
-import { reportException } from 'src/exceptionReporting';
-import { styled } from '@mui/material/styles';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
 import {
   Notification,
   NotificationSeverity,
   NotificationType,
 } from '@linode/api-v4/lib/account';
+import { Region } from '@linode/api-v4/lib/regions';
+import { styled } from '@mui/material/styles';
+import { DateTime } from 'luxon';
+import { path } from 'ramda';
+import * as React from 'react';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import Typography from 'src/components/core/Typography';
+import { Link } from 'src/components/Link';
+import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
+import { reportException } from 'src/exceptionReporting';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+import { formatDate } from 'src/utilities/formatDate';
+import { notificationContext as _notificationContext } from '../NotificationContext';
+import { NotificationItem } from '../NotificationSection';
+import { checkIfMaintenanceNotification } from './notificationUtils';
+import RenderNotification from './RenderNotification';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
@@ -30,10 +30,8 @@ export interface ExtendedNotification extends Notification {
 
 export const useFormattedNotifications = (): NotificationItem[] => {
   const notificationContext = React.useContext(_notificationContext);
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
+  const { dismissNotifications, hasDismissedNotifications } =
+    useDismissibleNotifications();
 
   const { data: regions } = useRegionsQuery();
   const { data: profile } = useProfile();

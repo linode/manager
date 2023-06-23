@@ -106,119 +106,118 @@ export const cleanDescription = (description: string): string => {
   return description.replace(/<r>|<t>/, '');
 };
 
-export default (options: SearchOptions) => (
-  Component: React.ComponentType<any>
-) => {
-  const { hitsPerPage, highlight } = options;
-  class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
-    client: SearchClient;
-    mounted: boolean = false;
+export default (options: SearchOptions) =>
+  (Component: React.ComponentType<any>) => {
+    const { hitsPerPage, highlight } = options;
+    class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
+      client: SearchClient;
+      mounted: boolean = false;
 
-    componentDidMount() {
-      this.mounted = true;
-      this.initializeSearchIndices();
-    }
-
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    initializeSearchIndices = () => {
-      try {
-        const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
-        this.client = client;
-        this.setState({ searchEnabled: true, searchError: undefined });
-      } catch {
-        // Credentials were incorrect or couldn't be found;
-        // Disable search functionality in the component.
-        this.setState({
-          searchEnabled: false,
-          searchError: 'Search could not be enabled.',
-        });
-        return;
-      }
-    };
-
-    searchAlgolia = async (inputValue: string) => {
-      if (!this.mounted) {
-        return;
-      }
-      if (!inputValue) {
-        this.setState({ searchResults: [[], []] });
-        return;
-      }
-      if (!this.client) {
-        this.setState({
-          searchResults: [[], []],
-          searchError: 'Search could not be enabled.',
-        });
-        return;
+      componentDidMount() {
+        this.mounted = true;
+        this.initializeSearchIndices();
       }
 
-      try {
-        const results = await this.client.search([
-          {
-            indexName: 'linode-docs',
-            query: inputValue,
-            params: {
-              hitsPerPage,
-              attributesToRetrieve: ['title', '_highlightResult', 'href'],
-            },
-          },
-          {
-            indexName: 'linode-community',
-            query: inputValue,
-            params: {
-              hitsPerPage,
-              distinct: true,
-              attributesToRetrieve: [
-                'title',
-                'description',
-                '_highlightResult',
-              ],
-            },
-          },
-        ]);
-        this.searchSuccess(results);
-      } catch (e) {
+      componentWillUnmount() {
+        this.mounted = false;
+      }
+
+      initializeSearchIndices = () => {
+        try {
+          const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
+          this.client = client;
+          this.setState({ searchEnabled: true, searchError: undefined });
+        } catch {
+          // Credentials were incorrect or couldn't be found;
+          // Disable search functionality in the component.
+          this.setState({
+            searchEnabled: false,
+            searchError: 'Search could not be enabled.',
+          });
+          return;
+        }
+      };
+
+      searchAlgolia = async (inputValue: string) => {
         if (!this.mounted) {
           return;
         }
+        if (!inputValue) {
+          this.setState({ searchResults: [[], []] });
+          return;
+        }
+        if (!this.client) {
+          this.setState({
+            searchResults: [[], []],
+            searchError: 'Search could not be enabled.',
+          });
+          return;
+        }
+
+        try {
+          const results = await this.client.search([
+            {
+              indexName: 'linode-docs',
+              query: inputValue,
+              params: {
+                hitsPerPage,
+                attributesToRetrieve: ['title', '_highlightResult', 'href'],
+              },
+            },
+            {
+              indexName: 'linode-community',
+              query: inputValue,
+              params: {
+                hitsPerPage,
+                distinct: true,
+                attributesToRetrieve: [
+                  'title',
+                  'description',
+                  '_highlightResult',
+                ],
+              },
+            },
+          ]);
+          this.searchSuccess(results);
+        } catch (e) {
+          if (!this.mounted) {
+            return;
+          }
+          this.setState({
+            searchError: 'There was an error retrieving your search results.',
+          });
+        }
+      };
+
+      searchSuccess = (content: AlgoliaContent) => {
+        if (!this.mounted) {
+          return;
+        }
+
+        /* If err is undefined, the shape of content is guaranteed, but better to be safe: */
+        const docs = pathOr([], ['results', 0, 'hits'], content);
+        const community = pathOr([], ['results', 1, 'hits'], content);
+        const docsResults = convertDocsToItems(highlight, docs);
+        const commResults = convertCommunityToItems(highlight, community);
         this.setState({
-          searchError: 'There was an error retrieving your search results.',
+          searchResults: [docsResults, commResults],
+          searchError: undefined,
+        });
+      };
+
+      state: AlgoliaState = {
+        searchAlgolia: this.searchAlgolia,
+        searchEnabled: false,
+        searchError: undefined,
+        searchResults: [[], []],
+      };
+
+      render() {
+        return React.createElement(Component, {
+          ...this.props,
+          ...this.state,
         });
       }
-    };
-
-    searchSuccess = (content: AlgoliaContent) => {
-      if (!this.mounted) {
-        return;
-      }
-
-      /* If err is undefined, the shape of content is guaranteed, but better to be safe: */
-      const docs = pathOr([], ['results', 0, 'hits'], content);
-      const community = pathOr([], ['results', 1, 'hits'], content);
-      const docsResults = convertDocsToItems(highlight, docs);
-      const commResults = convertCommunityToItems(highlight, community);
-      this.setState({
-        searchResults: [docsResults, commResults],
-        searchError: undefined,
-      });
-    };
-
-    state: AlgoliaState = {
-      searchAlgolia: this.searchAlgolia,
-      searchEnabled: false,
-      searchError: undefined,
-      searchResults: [[], []],
-    };
-
-    render() {
-      return React.createElement(Component, {
-        ...this.props,
-        ...this.state,
-      });
     }
-  }
-  return WrappedComponent;
-};
+    return WrappedComponent;
+  };

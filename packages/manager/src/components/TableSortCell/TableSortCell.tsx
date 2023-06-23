@@ -1,14 +1,14 @@
-import * as React from 'react';
-import SortUp from 'src/assets/icons/sort-up.svg';
-import Sort from 'src/assets/icons/unsorted.svg';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import {
   default as TableCell,
   TableCellProps as _TableCellProps,
 } from '@mui/material/TableCell';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import * as React from 'react';
+import SortUp from 'src/assets/icons/sort-up.svg';
+import Sort from 'src/assets/icons/unsorted.svg';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

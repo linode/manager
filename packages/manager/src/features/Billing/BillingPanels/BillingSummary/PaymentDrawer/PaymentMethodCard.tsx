@@ -1,7 +1,8 @@
 import { PaymentMethod, PaymentType } from '@linode/api-v4';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import Chip from 'src/components/core/Chip';
-import Grid from '@mui/material/Unstable_Grid2';
 import {
   getIcon as getTPPIcon,
   thirdPartyPaymentMap,
@@ -9,7 +10,6 @@ import {
 import SelectionCard from 'src/components/SelectionCard';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
-import { useTheme } from '@mui/material/styles';
 
 interface Props {
   paymentMethod: PaymentMethod;

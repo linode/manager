@@ -5,15 +5,15 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Loading from 'src/components/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
@@ -94,7 +94,11 @@ export const VolumesLanding = (props: CombinedProps) => {
     ['+order']: order,
   };
 
-  const { data: volumes, isLoading, error } = useVolumesQuery(
+  const {
+    data: volumes,
+    isLoading,
+    error,
+  } = useVolumesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

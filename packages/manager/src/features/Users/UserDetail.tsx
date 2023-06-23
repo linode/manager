@@ -3,6 +3,7 @@ import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { clone } from 'ramda';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import {
   matchPath,
   useHistory,
@@ -12,6 +13,7 @@ import {
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
@@ -20,8 +22,6 @@ import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
-import LandingHeader from 'src/components/LandingHeader';
-import { useQueryClient } from 'react-query';
 
 const UserDetail: React.FC = () => {
   const { username: usernameParam } = useParams<{ username: string }>();

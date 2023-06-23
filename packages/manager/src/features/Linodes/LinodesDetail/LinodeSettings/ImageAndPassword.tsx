@@ -1,9 +1,9 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { ImageSelect } from 'src/features/Images';
 import { useAllImagesQuery } from 'src/queries/images';

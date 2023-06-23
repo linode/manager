@@ -1,27 +1,23 @@
+import { Event, Image, ImageStatus } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import produce from 'immer';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Hidden from 'src/components/core/Hidden';
-import imageEvents from 'src/store/selectors/imageEvents';
-import ImageRow, { ImageWithEvent } from './ImageRow';
-import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import LandingHeader from 'src/components/LandingHeader';
-import Paper from 'src/components/core/Paper';
-import produce from 'immer';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import Typography from 'src/components/core/Typography';
-import { APIError } from '@linode/api-v4/lib/types';
-import { ApplicationState } from 'src/store';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Hidden from 'src/components/core/Hidden';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Event, Image, ImageStatus } from '@linode/api-v4';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { Handlers as ImageHandlers } from './ImagesActionMenu';
-import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
-import { listToItemsByID } from 'src/queries/base';
-import { makeStyles } from '@mui/styles';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -29,20 +25,24 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Theme } from '@mui/material/styles';
-import { useHistory } from 'react-router-dom';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
-import { useSnackbar } from 'notistack';
+import { listToItemsByID } from 'src/queries/base';
 import {
   queryKey,
   removeImageFromCache,
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
+import { ApplicationState } from 'src/store';
+import imageEvents from 'src/store/selectors/imageEvents';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import ImageRow, { ImageWithEvent } from './ImageRow';
+import { Handlers as ImageHandlers } from './ImagesActionMenu';
+import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
+import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -199,13 +199,11 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     events
   );
 
-  const [drawer, setDrawer] = React.useState<ImageDrawerState>(
-    defaultDrawerState
-  );
+  const [drawer, setDrawer] =
+    React.useState<ImageDrawerState>(defaultDrawerState);
 
-  const [dialog, setDialogState] = React.useState<ImageDialogState>(
-    defaultDialogState
-  );
+  const [dialog, setDialogState] =
+    React.useState<ImageDialogState>(defaultDialogState);
 
   const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
   const dialogMessage =

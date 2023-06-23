@@ -1,10 +1,10 @@
+import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { ipAddressFactory } from 'src/factories/networking';
 import {
   createType,
   ipResponseToDisplayRows,
   listIPv6InRange,
 } from './LinodeNetworking';
-import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 
 describe('listIPv6InRange utility function', () => {
   const ipv4List = ipAddressFactory.buildList(4);

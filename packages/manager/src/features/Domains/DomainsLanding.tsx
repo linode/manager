@@ -1,42 +1,42 @@
-import * as React from 'react';
 import { Domain } from '@linode/api-v4/lib/domains';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import Hidden from 'src/components/core/Hidden';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import DisableDomainDialog from './DisableDomainDialog';
-import { Handlers as DomainHandlers } from './DomainActionMenu';
-import DomainBanner from './DomainBanner';
-import DomainRow from './DomainTableRow';
-import DomainZoneImportDrawer from './DomainZoneImportDrawer';
-import { useProfile } from 'src/queries/profile';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import {
   useDeleteDomainMutation,
   useDomainsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
-import { usePagination } from 'src/hooks/usePagination';
-import { useOrder } from 'src/hooks/useOrder';
-import { Table } from 'src/components/Table';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableBody } from 'src/components/TableBody';
-import { TableSortCell } from 'src/components/TableSortCell';
-import { TableCell } from 'src/components/TableCell';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Hidden from 'src/components/core/Hidden';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { CloneDomainDrawer } from './CloneDomainDrawer';
-import { EditDomainDrawer } from './EditDomainDrawer';
+import DisableDomainDialog from './DisableDomainDialog';
+import { Handlers as DomainHandlers } from './DomainActionMenu';
+import DomainBanner from './DomainBanner';
 import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
+import DomainRow from './DomainTableRow';
+import DomainZoneImportDrawer from './DomainZoneImportDrawer';
+import { EditDomainDrawer } from './EditDomainDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
@@ -86,7 +86,11 @@ export const DomainsLanding: React.FC<Props> = (props) => {
     ['+order']: order,
   };
 
-  const { data: domains, error, isLoading } = useDomainsQuery(
+  const {
+    data: domains,
+    error,
+    isLoading,
+  } = useDomainsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

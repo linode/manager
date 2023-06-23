@@ -1,7 +1,7 @@
 import Close from '@mui/icons-material/Close';
-import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import * as React from 'react';
 import { IconButton } from 'src/components/IconButton';
 
 type ClassNames = 'icon';

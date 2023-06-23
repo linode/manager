@@ -1,6 +1,8 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Region } from '@linode/api-v4/lib/regions/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
+import { Theme, useTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { Formik } from 'formik';
 import * as React from 'react';
 import { connect, useSelector } from 'react-redux';
@@ -10,12 +12,10 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Form from 'src/components/core/Form';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import LinodeSelect from 'src/features/Linodes/LinodeSelect';
@@ -25,17 +25,18 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
-import { isEURegion } from 'src/utilities/formatRegion';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import ConfigSelect, {
@@ -44,7 +45,6 @@ import ConfigSelect, {
 import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
-import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {

@@ -1,10 +1,10 @@
+import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import React from 'react';
+import { regionFactory } from 'src/factories/regions';
 import { formatPlanTypes } from 'src/utilities/planNotices';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
-import { regionFactory } from 'src/factories/regions';
 import type { PlansAvailabilityNoticeProps } from './PlansAvailabilityNotice';
-import type { LinodeTypeClass, Region } from '@linode/api-v4';
+import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
 
 const mockedRegionData: Region[] = [
   ...regionFactory.buildList(2, {}),

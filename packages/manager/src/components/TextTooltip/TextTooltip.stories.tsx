@@ -1,8 +1,8 @@
+import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import Typography from 'src/components/core/Typography';
-import { TextTooltip } from './TextTooltip';
 import type { TextTooltipProps } from './TextTooltip';
-import type { Meta, StoryObj } from '@storybook/react';
+import { TextTooltip } from './TextTooltip';
 
 /** Default TextTooltip */
 export const Default: StoryObj<TextTooltipProps> = {

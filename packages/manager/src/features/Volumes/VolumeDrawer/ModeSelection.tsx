@@ -1,8 +1,8 @@
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Radio } from 'src/components/Radio/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from '@mui/styles';
+import { Radio } from 'src/components/Radio/Radio';
 
 const useStyles = makeStyles({
   label: {

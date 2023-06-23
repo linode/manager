@@ -1,6 +1,6 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { styled } from '@mui/material/styles';
 
 interface ResourcesLinksSubSectionProps {
   children?: JSX.Element[] | JSX.Element;

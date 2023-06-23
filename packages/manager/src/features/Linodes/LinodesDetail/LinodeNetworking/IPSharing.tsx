@@ -1,34 +1,34 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
-import Link from 'src/components/Link';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
+import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import useFlags from 'src/hooks/useFlags';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
+import useFlags from 'src/hooks/useFlags';
 import {
   useAllLinodesQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import {
   useAllDetailedIPv6RangesQuery,
   useLinodeIPsQuery,
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
+import { areArraysEqual } from 'src/utilities/areArraysEqual';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addNewButton: {
@@ -123,9 +123,8 @@ const IPSharingPanel = (props: Props) => {
 
   const linodeIPs = ips?.ipv4.public.map((i) => i.address) ?? [];
 
-  const availableRangesMap: AvailableRangesMap = formatAvailableRanges(
-    availableRanges
-  );
+  const availableRangesMap: AvailableRangesMap =
+    formatAvailableRanges(availableRanges);
 
   const { data: linodes, isLoading } = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },

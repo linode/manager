@@ -22,14 +22,8 @@ interface Props {
 export type CombinedProps = Props;
 
 export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
-  const {
-    contacts,
-    loading,
-    lastUpdated,
-    openDrawer,
-    openDialog,
-    error,
-  } = props;
+  const { contacts, loading, lastUpdated, openDrawer, openDialog, error } =
+    props;
 
   if (loading && lastUpdated === 0) {
     return <TableRowLoading columns={6} />;

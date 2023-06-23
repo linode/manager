@@ -1,3 +1,6 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -5,16 +8,13 @@ import CheckBox from 'src/components/CheckBox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
-import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { HACopy } from '../KubeCheckoutBar/HACheckbox';
-import { useSnackbar } from 'notistack';
 import {
   localStorageWarning,
   nodesDeletionWarning,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
+import { HACopy } from '../KubeCheckoutBar/HACheckbox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   noticeHeader: {
@@ -43,9 +43,8 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
 
   const toggleChecked = () => setChecked((isChecked) => !isChecked);
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterID
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterID);
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
   const classes = useStyles();

@@ -1,10 +1,10 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { entityFactory, eventFactory } from 'src/factories/events';
 import getEventMessage, {
+  applyLinking,
   eventMessageCreators,
   safeSecondaryEntityLabel,
 } from './eventMessageGenerator';
-import { applyLinking } from './eventMessageGenerator';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

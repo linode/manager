@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { appTokenFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { basePerms } from './utils';
+import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 
 const token = appTokenFactory.build({ label: 'my-token', scopes: '*' });
 

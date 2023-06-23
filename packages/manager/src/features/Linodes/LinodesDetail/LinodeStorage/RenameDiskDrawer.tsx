@@ -6,9 +6,9 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import { object, string } from 'yup';
 import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import { object, string } from 'yup';
 
 const RenameDiskSchema = object({
   label: string()

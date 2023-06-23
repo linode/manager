@@ -1,17 +1,17 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { Link, useParams } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { Link, useParams } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
-import { useRegionsQuery } from 'src/queries/regions';
+import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { useRegionsQuery } from 'src/queries/regions';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export const SummaryPanel = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();

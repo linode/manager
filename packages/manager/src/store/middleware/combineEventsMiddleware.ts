@@ -12,61 +12,62 @@ import { isType } from 'typescript-fsa';
 import { addEvents } from '../events/event.actions';
 import { ExtendedEvent } from '../events/event.types';
 
-const eventsMiddlewareFactory = (
-  eventHandlers: EventHandler[],
-  queryClient: QueryClient
-): Middleware => ({ dispatch, getState }) => (next) => (action: any) => {
-  if (isType(action, addEvents)) {
-    const { payload } = action;
-    /**
-     * We never want to dispatch actions for initial events, so filter them out.
-     * We also need to only deal with one event per entity at a time, so uniqueEntityEvents
-     * handles filtering for unique events. Notably linode_create/linode_boot and others.
-     */
-    const eventsToDispatch = compose(
-      uniqueEntityEvents,
-      filterInitial
-    )(payload);
-
-    /**
-     * The incoming events is an array, usually of one but potentially many, so we have
-     * to handle each one.
-     */
-    for (const event of eventsToDispatch) {
+const eventsMiddlewareFactory =
+  (eventHandlers: EventHandler[], queryClient: QueryClient): Middleware =>
+  ({ dispatch, getState }) =>
+  (next) =>
+  (action: any) => {
+    if (isType(action, addEvents)) {
+      const { payload } = action;
       /**
-       * We can bail immediately if there is no associated entity since we need an entity
-       * to update the store.
-       *
-       * but we still need to dispatch the action to add the event to the store
+       * We never want to dispatch actions for initial events, so filter them out.
+       * We also need to only deal with one event per entity at a time, so uniqueEntityEvents
+       * handles filtering for unique events. Notably linode_create/linode_boot and others.
        */
-      if (!isEntityEvent(event)) {
-        next(action);
-        return;
-      }
+      const eventsToDispatch = compose(
+        uniqueEntityEvents,
+        filterInitial
+      )(payload);
 
       /**
-       * Having an event we care about, we can call the handlers with the event and dispatch.
+       * The incoming events is an array, usually of one but potentially many, so we have
+       * to handle each one.
        */
-      for (const handler of eventHandlers) {
-        handler(event, dispatch, getState, queryClient);
-      }
+      for (const event of eventsToDispatch) {
+        /**
+         * We can bail immediately if there is no associated entity since we need an entity
+         * to update the store.
+         *
+         * but we still need to dispatch the action to add the event to the store
+         */
+        if (!isEntityEvent(event)) {
+          next(action);
+          return;
+        }
 
-      /**
-       * Finally, if any of these events were in-progress we want to reset the events polling
-       * interval to keep things moving quickly.
-       */
-      if (
-        isInProgressEvent(event) &&
-        // Don't poll aggressively on long-running progress events (like migration).
-        !isLongRunningProgressEventAction(event.action)
-      ) {
-        resetEventsPolling(1.5);
+        /**
+         * Having an event we care about, we can call the handlers with the event and dispatch.
+         */
+        for (const handler of eventHandlers) {
+          handler(event, dispatch, getState, queryClient);
+        }
+
+        /**
+         * Finally, if any of these events were in-progress we want to reset the events polling
+         * interval to keep things moving quickly.
+         */
+        if (
+          isInProgressEvent(event) &&
+          // Don't poll aggressively on long-running progress events (like migration).
+          !isLongRunningProgressEventAction(event.action)
+        ) {
+          resetEventsPolling(1.5);
+        }
       }
     }
-  }
 
-  next(action);
-};
+    next(action);
+  };
 
 export default eventsMiddlewareFactory;
 

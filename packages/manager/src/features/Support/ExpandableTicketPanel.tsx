@@ -1,15 +1,15 @@
 import { SupportReply, SupportTicket } from '@linode/api-v4';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import Avatar from '@mui/material/Avatar';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import UserIcon from 'src/assets/icons/account.svg';
+import Typography from 'src/components/core/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
-import UserIcon from 'src/assets/icons/account.svg';
-import Avatar from '@mui/material/Avatar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {

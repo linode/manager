@@ -94,13 +94,8 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const {
-      open,
-      handleClose,
-      loading,
-      error,
-      estimatedTimeToUpgradeInMins,
-    } = this.props;
+    const { open, handleClose, loading, error, estimatedTimeToUpgradeInMins } =
+      this.props;
 
     const { extendedUpgradeInfo } = this.state;
 
@@ -116,12 +111,8 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         ) : (
           <ul className="nonMUI-list">
             {Object.keys(extendedUpgradeInfo).map((newSpec) => {
-              const {
-                label,
-                currentAmount,
-                newAmount,
-                unit,
-              } = extendedUpgradeInfo[newSpec];
+              const { label, currentAmount, newAmount, unit } =
+                extendedUpgradeInfo[newSpec];
 
               if (newAmount === null) {
                 return null;

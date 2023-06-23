@@ -1,5 +1,5 @@
-import * as Factory from 'factory.ts';
 import { DNSResolvers, Region } from '@linode/api-v4/lib/regions/types';
+import * as Factory from 'factory.ts';
 
 export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
   ipv4: '1.1.1.1',

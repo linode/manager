@@ -1,20 +1,20 @@
-import * as React from 'react';
-import Divider from 'src/components/core/Divider';
-import Drawer from 'src/components/Drawer';
-import ExternalLink from 'src/components/ExternalLink';
-import formatDate from 'src/utilities/formatDate';
-import Typography from 'src/components/core/Typography';
-import { AccessSelect } from './AccessSelect';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { readableBytes } from 'src/utilities/unitConversions';
-import { styled } from '@mui/material/styles';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { useProfile } from 'src/queries/profile';
 import {
   ACLType,
   getObjectACL,
   updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import Divider from 'src/components/core/Divider';
+import Typography from 'src/components/core/Typography';
+import Drawer from 'src/components/Drawer';
+import ExternalLink from 'src/components/ExternalLink';
+import { useProfile } from 'src/queries/profile';
+import formatDate from 'src/utilities/formatDate';
+import { truncateMiddle } from 'src/utilities/truncate';
+import { readableBytes } from 'src/utilities/unitConversions';
+import { AccessSelect } from './AccessSelect';
 
 export interface ObjectDetailsDrawerProps {
   bucketName: string;

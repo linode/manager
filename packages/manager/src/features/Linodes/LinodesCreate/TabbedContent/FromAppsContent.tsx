@@ -1,16 +1,27 @@
-import compact from 'lodash/compact';
-import curry from 'lodash/curry';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { assocPath } from 'ramda';
-import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import compact from 'lodash/compact';
+import curry from 'lodash/curry';
+import { assocPath } from 'ramda';
+import * as React from 'react';
+import Box from 'src/components/core/Box';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import Select, { Item } from 'src/components/EnhancedSelect';
 import ImageSelect from 'src/components/ImageSelect';
+import { APP_ROOT } from 'src/constants';
 import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
+import {
+  AppCategory,
+  oneClickApps,
+} from 'src/features/OneClickApps/oneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectAppPanel from '../SelectAppPanel';
 import {
@@ -20,17 +31,6 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
-import { APP_ROOT } from 'src/constants';
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import Select, { Item } from 'src/components/EnhancedSelect';
-import Box from 'src/components/core/Box';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
-import {
-  oneClickApps,
-  AppCategory,
-} from 'src/features/OneClickApps/oneClickApps';
-import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
 
 type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
 
@@ -309,13 +309,8 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
     const appLogo = renderLogo(selectedStackScriptLabel, logoUrl);
 
-    const {
-      filteredApps,
-      isSearching,
-      query,
-      categoryFilter,
-      isFiltering,
-    } = this.state;
+    const { filteredApps, isSearching, query, categoryFilter, isFiltering } =
+      this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 

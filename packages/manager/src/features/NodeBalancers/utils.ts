@@ -1,13 +1,13 @@
+import type { APIError } from '@linode/api-v4';
+import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
 import { clamp, compose, filter, isNil, toString } from 'ramda';
 import { defaultNumeric } from 'src/utilities/defaultNumeric';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import type { APIError } from '@linode/api-v4';
-import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
 import type {
   ExtendedNodeBalancerConfigNode,
-  NodeBalancerConfigNodeFields,
   NodeBalancerConfigFields,
   NodeBalancerConfigFieldsWithStatus,
+  NodeBalancerConfigNodeFields,
 } from './types';
 
 export const clampNumericString = (low: number, hi: number) =>
@@ -15,14 +15,15 @@ export const clampNumericString = (low: number, hi: number) =>
     defaultNumeric(0, value)
   ) as (value: any) => string;
 
-export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
-  label: '',
-  address: '',
-  port: 80,
-  weight: 100,
-  mode: 'accept',
-  modifyStatus: 'new',
-});
+export const createNewNodeBalancerConfigNode =
+  (): NodeBalancerConfigNodeFields => ({
+    label: '',
+    address: '',
+    port: 80,
+    weight: 100,
+    mode: 'accept',
+    modifyStatus: 'new',
+  });
 
 export const createNewNodeBalancerConfig = (
   withDefaultPort?: boolean

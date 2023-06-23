@@ -1,9 +1,9 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

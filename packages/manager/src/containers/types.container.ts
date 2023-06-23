@@ -15,37 +15,41 @@ export interface WithSpecificTypesProps {
   requestedTypesData: LinodeType[];
 }
 
-export const withTypes = <Props>(
-  Component: React.ComponentType<Props & WithTypesProps>,
-  enabled = true
-) => (props: Props) => {
-  const {
-    data: typesData,
-    isLoading: typesLoading,
-    error: typesError,
-  } = useAllTypes(enabled);
+export const withTypes =
+  <Props>(
+    Component: React.ComponentType<Props & WithTypesProps>,
+    enabled = true
+  ) =>
+  (props: Props) => {
+    const {
+      data: typesData,
+      isLoading: typesLoading,
+      error: typesError,
+    } = useAllTypes(enabled);
 
-  return React.createElement(Component, {
-    ...props,
-    typesData,
-    typesLoading,
-    typesError: typesError ?? undefined,
-  });
-};
+    return React.createElement(Component, {
+      ...props,
+      typesData,
+      typesLoading,
+      typesError: typesError ?? undefined,
+    });
+  };
 
-export const withSpecificTypes = <Props>(
-  Component: React.ComponentType<Props & WithSpecificTypesProps>,
-  enabled = true
-) => (props: Props) => {
-  const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
-  const typesQuery = useSpecificTypes(requestedTypes, enabled);
-  const requestedTypesData = typesQuery
-    .map((result) => result.data)
-    .filter(isNotNullOrUndefined);
+export const withSpecificTypes =
+  <Props>(
+    Component: React.ComponentType<Props & WithSpecificTypesProps>,
+    enabled = true
+  ) =>
+  (props: Props) => {
+    const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
+    const typesQuery = useSpecificTypes(requestedTypes, enabled);
+    const requestedTypesData = typesQuery
+      .map((result) => result.data)
+      .filter(isNotNullOrUndefined);
 
-  return React.createElement(Component, {
-    ...props,
-    setRequestedTypes,
-    requestedTypesData,
-  });
-};
+    return React.createElement(Component, {
+      ...props,
+      setRequestedTypes,
+      requestedTypesData,
+    });
+  };

@@ -1,9 +1,9 @@
 import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import Close from '@mui/icons-material/Close';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { pluralize } from 'src/utilities/pluralize';
 import { TransferState } from './transferReducer';

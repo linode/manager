@@ -1,4 +1,4 @@
-import { queryClientFactory as queryClientFactory } from 'src/queries/base';
+import { queryClientFactory } from 'src/queries/base';
 import { authentication } from 'src/utilities/storage';
 import { storeFactory } from '..';
 import {

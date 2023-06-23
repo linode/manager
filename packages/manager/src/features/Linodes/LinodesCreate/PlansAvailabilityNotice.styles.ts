@@ -1,8 +1,8 @@
+import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import List from 'src/components/core/List';
 import Typography from 'src/components/core/Typography';
-import { styled } from '@mui/material/styles';
 import { TextTooltip } from 'src/components/TextTooltip';
-import type { Theme } from '@mui/material/styles';
 
 export const StyledNoticeTypography = styled(Typography, {
   label: 'StyledNoticeTypography',

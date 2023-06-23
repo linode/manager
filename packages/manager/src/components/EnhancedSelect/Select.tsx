@@ -11,7 +11,6 @@ import CreatableSelect, {
 } from 'react-select/creatable';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
-import { reactSelectStyles, useStyles } from './Select.styles';
 import { DropdownIndicator } from './components/DropdownIndicator';
 import Input from './components/Input';
 import { LoadingIndicator } from './components/LoadingIndicator';
@@ -22,6 +21,7 @@ import NoOptionsMessage from './components/NoOptionsMessage';
 import Option from './components/Option';
 import Control from './components/SelectControl';
 import { SelectPlaceholder as Placeholder } from './components/SelectPlaceholder';
+import { reactSelectStyles, useStyles } from './Select.styles';
 
 export interface Item<T = string | number, L = string> {
   value: T;

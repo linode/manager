@@ -13,12 +13,11 @@ export const topProcessFactory = Factory.Sync.makeFactory<TopProcess>({
   },
 });
 
-export const longviewTopProcessesFactory = Factory.Sync.makeFactory<LongviewTopProcesses>(
-  {
+export const longviewTopProcessesFactory =
+  Factory.Sync.makeFactory<LongviewTopProcesses>({
     Processes: {
       bash: topProcessFactory.build(),
       sshd: topProcessFactory.build(),
       systemd: topProcessFactory.build(),
     },
-  }
-);
+  });

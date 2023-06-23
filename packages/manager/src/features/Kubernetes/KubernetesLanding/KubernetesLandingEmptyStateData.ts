@@ -1,14 +1,14 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   docsLink,
   guidesMoreLinkText,
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description:
@@ -20,18 +20,15 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      to:
-        'https://www.linode.com/docs/products/compute/kubernetes/get-started/',
+      to: 'https://www.linode.com/docs/products/compute/kubernetes/get-started/',
       text: 'Get Started with the Linode Kubernetes Engine (LKE)',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/compute/kubernetes/guides/create-lke-cluster',
+      to: 'https://www.linode.com/docs/products/compute/kubernetes/guides/create-lke-cluster',
       text: 'Create and Administer a Kubernetes Cluster on LKE',
     },
     {
-      to:
-        'https://www.linode.com/docs/guides/using-the-kubernetes-dashboard-on-lke/',
+      to: 'https://www.linode.com/docs/guides/using-the-kubernetes-dashboard-on-lke/',
       text: 'Using the Kubernetes Dashboard',
     },
     {

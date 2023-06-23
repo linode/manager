@@ -1,5 +1,3 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { queryKey } from './linodes';
 import {
   APIError,
   cancelBackups,
@@ -9,6 +7,8 @@ import {
   restoreBackup,
   takeSnapshot,
 } from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { queryKey } from './linodes';
 
 export const useLinodeBackupsQuery = (id: number, enabled = true) => {
   return useQuery<LinodeBackupsResponse, APIError[]>(

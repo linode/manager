@@ -1,10 +1,10 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import classNames from 'classnames';
-import UserIcon from 'src/assets/icons/account.svg';
-import { getGravatarUrl } from 'src/utilities/gravatar';
 import { styled } from '@mui/material/styles';
+import classNames from 'classnames';
+import * as React from 'react';
+import UserIcon from 'src/assets/icons/account.svg';
 import { useAccountUser } from 'src/queries/accountUsers';
+import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface Props {
   username: string | null;

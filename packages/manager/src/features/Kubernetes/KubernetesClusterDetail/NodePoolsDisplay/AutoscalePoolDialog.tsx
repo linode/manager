@@ -1,22 +1,22 @@
+import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
-import { useFormik } from 'formik';
-import * as React from 'react';
-import classNames from 'classnames';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import classNames from 'classnames';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Grid from '@mui/material/Unstable_Grid2';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
-import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   clusterId: number;

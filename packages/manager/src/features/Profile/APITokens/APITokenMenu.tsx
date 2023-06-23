@@ -1,9 +1,9 @@
 import { Token } from '@linode/api-v4/lib/profile';
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
+import * as React from 'react';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {

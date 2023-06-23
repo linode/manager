@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { domainFactory } from 'src/factories/domain';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import { DomainActionMenu } from './DomainActionMenu';
-import { domainFactory } from 'src/factories/domain';
 
 const props = {
   onClone: jest.fn(),

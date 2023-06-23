@@ -3,17 +3,17 @@ import {
   TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
 import ConfirmTransferCancelDialog from './EntityTransfersLanding/ConfirmTransferCancelDialog';
@@ -71,9 +71,8 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
 
-  const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(
-    false
-  );
+  const [cancelPendingDialogOpen, setCancelPendingDialogOpen] =
+    React.useState(false);
   const [tokenBeingCanceled, setTokenBeingCanceled] = React.useState('');
   const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
   const [currentToken, setCurrentToken] = React.useState('');

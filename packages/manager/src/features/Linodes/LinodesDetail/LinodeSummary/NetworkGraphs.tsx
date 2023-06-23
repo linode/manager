@@ -1,9 +1,9 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
-import { map, pathOr } from 'ramda';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import { map, pathOr } from 'ramda';
+import * as React from 'react';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import {
   convertNetworkToUnit,

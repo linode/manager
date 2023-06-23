@@ -1,13 +1,13 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 import { path } from 'ramda';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import eventMessageGenerator from 'src/eventMessageGenerator';
+import { ApplicationStore } from 'src/store';
 import {
   EntityType,
   getEntityByIDFromStore,
 } from 'src/utilities/getEntityByIDFromStore';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
-import { ApplicationStore } from 'src/store';
 
 /**
  * Shared helper logic for rendering events

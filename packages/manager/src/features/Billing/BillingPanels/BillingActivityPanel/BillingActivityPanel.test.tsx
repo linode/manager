@@ -1,14 +1,14 @@
 import { fireEvent, waitFor } from '@testing-library/react';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BillingActivityPanel, {
-  invoiceToActivityFeedItem,
-  paymentToActivityFeedItem,
   getCutoffFromDateRange,
+  invoiceToActivityFeedItem,
   makeFilter,
+  paymentToActivityFeedItem,
 } from './BillingActivityPanel';
-import { DateTime } from 'luxon';
 jest.mock('../../../../utilities/getUserTimezone');
 
 // Mock global Date object so Transaction Date tests are deterministic.

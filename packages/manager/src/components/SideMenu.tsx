@@ -1,8 +1,8 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Drawer from 'src/components/core/Drawer';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import PrimaryNav from './PrimaryNav/PrimaryNav';
 
 const useStyles = makeStyles((theme: Theme) => ({

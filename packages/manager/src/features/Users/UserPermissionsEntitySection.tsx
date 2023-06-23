@@ -1,17 +1,17 @@
-import React from 'react';
 import { Grant, GrantLevel, GrantType } from '@linode/api-v4/lib/account';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import React from 'react';
+import Typography from 'src/components/core/Typography';
+import { createDisplayPage } from 'src/components/Paginate';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Radio } from 'src/components/Radio/Radio';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { TableCell } from 'src/components/TableCell';
-import { Radio } from 'src/components/Radio/Radio';
-import { TableBody } from 'src/components/TableBody';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { usePagination } from 'src/hooks/usePagination';
-import { createDisplayPage } from 'src/components/Paginate';
-import Typography from 'src/components/core/Typography';
 
 export const entityNameMap: Record<GrantType, string> = {
   linode: 'Linodes',

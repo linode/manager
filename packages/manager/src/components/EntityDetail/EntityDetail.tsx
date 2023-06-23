@@ -6,9 +6,9 @@
  * Provide a Header, Body, and Footer and this component provides the proper positioning for each.
  */
 
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
 
 export interface EntityDetailProps {
   header: JSX.Element;

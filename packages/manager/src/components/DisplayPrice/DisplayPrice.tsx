@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
+import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
 

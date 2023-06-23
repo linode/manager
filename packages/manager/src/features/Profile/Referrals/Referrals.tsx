@@ -1,17 +1,17 @@
-import * as React from 'react';
-import CircularProgress from 'src/components/core/CircularProgress';
 import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
-import Paper from 'src/components/core/Paper';
+import * as React from 'react';
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
-import Typography from 'src/components/core/Typography';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
+import CircularProgress from 'src/components/core/CircularProgress';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   StyledEarnedGrid,
   StyledImageCopy,

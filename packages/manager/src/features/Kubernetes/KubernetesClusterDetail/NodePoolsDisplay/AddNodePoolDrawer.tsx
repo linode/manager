@@ -1,9 +1,10 @@
+import type { Region } from '@linode/api-v4';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
@@ -12,11 +13,10 @@ import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { nodeWarning } from '../../kubeUtils';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
-import type { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {

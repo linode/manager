@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { act, waitFor } from '@testing-library/react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { rest, server } from 'src/mocks/testServer';
-import { appTokenFactory } from 'src/factories';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+import { appTokenFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 
 const props = {
   open: true,

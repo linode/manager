@@ -25,9 +25,8 @@ const AccountActivationLanding = () => {
   const { classes } = useStyles();
   const history = useHistory();
 
-  const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(
-    false
-  );
+  const [supportDrawerIsOpen, toggleSupportDrawer] =
+    React.useState<boolean>(false);
 
   const handleTicketSubmitSuccess = (
     ticketID: number,

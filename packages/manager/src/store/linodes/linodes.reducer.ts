@@ -6,8 +6,8 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onGetPageSuccess,
   onGetOneSuccess,
+  onGetPageSuccess,
   onStart,
 } from 'src/store/store.helpers.tmp';
 import { EntityError, MappedEntityState2 } from 'src/store/types';
@@ -16,9 +16,9 @@ import {
   createLinodeActions,
   deleteLinode,
   deleteLinodeActions,
+  getLinodeActions,
   getLinodesActions,
   getLinodesPageActions,
-  getLinodeActions,
   updateLinodeActions,
   updateMultipleLinodes,
   upsertLinode,

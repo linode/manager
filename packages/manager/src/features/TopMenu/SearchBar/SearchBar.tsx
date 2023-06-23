@@ -2,12 +2,14 @@ import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
 import { take } from 'ramda';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { components } from 'react-select';
 import { compose } from 'recompose';
-import { IconButton } from 'src/components/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import { IconButton } from 'src/components/IconButton';
 import { REFRESH_INTERVAL } from 'src/constants';
+import { getImageLabelForLinode } from 'src/features/Images/utils';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
@@ -16,26 +18,24 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
+import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { ApplicationState } from 'src/store';
+import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
-import { useSelector } from 'react-redux';
-import { ApplicationState } from 'src/store';
-import { formatLinode } from 'src/store/selectors/getSearchEntities';
-import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useSpecificTypes } from 'src/queries/types';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { useRegionsQuery } from 'src/queries/regions';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { getImageLabelForLinode } from 'src/features/Images/utils';
 
 type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 
@@ -95,9 +95,8 @@ export const SearchBar = (props: CombinedProps) => {
   // Only request things if the search bar is open/active.
   const shouldMakeRequests = searchActive && !_isLargeAccount;
 
-  const { data: objectStorageClusters } = useObjectStorageClusters(
-    shouldMakeRequests
-  );
+  const { data: objectStorageClusters } =
+    useObjectStorageClusters(shouldMakeRequests);
 
   const { data: objectStorageBuckets } = useObjectStorageBuckets(
     objectStorageClusters,

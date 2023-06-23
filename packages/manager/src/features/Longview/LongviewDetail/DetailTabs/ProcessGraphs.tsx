@@ -1,7 +1,7 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles, WithTheme, withTheme } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, WithTheme, withTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
@@ -46,9 +46,10 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
-  const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
-    data,
-  ]);
+  const _data = React.useMemo(
+    () => sumRelatedProcessesAcrossAllUsers(data),
+    [data]
+  );
 
   /**
    * These field names say kbytes, but Classic reports them

@@ -11,23 +11,28 @@ import { useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import { EventWithStore, events$ } from 'src/events';
+import { events$, EventWithStore } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
-import GoTo from './GoTo';
-import IdentifyUser from './IdentifyUser';
-import MainContent from './MainContent';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
+import GoTo from './GoTo';
 import { useAuthentication } from './hooks/useAuthentication';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 import useLinodes from './hooks/useLinodes';
 import { loadScript } from './hooks/useScript';
+import IdentifyUser from './IdentifyUser';
+import MainContent from './MainContent';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
 import { firewallEventsHandler } from './queries/firewalls';
-import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { imageEventsHandler } from './queries/images';
+import {
+  diskEventHandler,
+  linodeEventsHandler,
+} from './queries/linodes/events';
+import { nodebalanacerEventHandler } from './queries/nodebalancers';
 import { useMutatePreferences, usePreferences } from './queries/preferences';
 import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
@@ -35,11 +40,6 @@ import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import {
-  diskEventHandler,
-  linodeEventsHandler,
-} from './queries/linodes/events';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;

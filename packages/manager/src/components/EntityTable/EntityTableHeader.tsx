@@ -1,16 +1,16 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableHead } from 'src/components/TableHead';
 import Tooltip from 'src/components/core/Tooltip';
 import { OrderByProps } from 'src/components/OrderBy';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Entity, HeaderCell } from './types';
 import { StyledToggleButton } from 'src/features/Linodes/LinodesLanding/DisplayLinodes.styles';
+import { Entity, HeaderCell } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,

@@ -1,15 +1,15 @@
+import { SSHKey } from '@linode/api-v4';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useEffect } from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { useUpdateSSHKeyMutation } from 'src/queries/profile';
-import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
-import { SSHKey } from '@linode/api-v4';
-import { useEffect } from 'react';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   open: boolean;

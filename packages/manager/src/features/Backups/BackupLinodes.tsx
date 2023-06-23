@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import { TableCell } from 'src/components/TableCell';

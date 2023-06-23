@@ -1,4 +1,7 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import {
   Menu as ReachMenu,
   MenuButton,
@@ -9,10 +12,7 @@ import {
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Unstable_Grid2';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
@@ -243,11 +243,8 @@ const profileLinks: MenuLink[] = [
 export const UserMenu: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const {
-    profile,
-    _hasAccountAccess,
-    _isRestrictedUser,
-  } = useAccountManagement();
+  const { profile, _hasAccountAccess, _isRestrictedUser } =
+    useAccountManagement();
 
   const { data: grants } = useGrants();
 

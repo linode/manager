@@ -1,11 +1,11 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
-import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

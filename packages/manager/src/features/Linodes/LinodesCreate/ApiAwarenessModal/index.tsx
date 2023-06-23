@@ -1,21 +1,21 @@
-import React, { useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import React, { useEffect, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
+import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import Typography from 'src/components/core/Typography';
-import { Notice } from 'src/components/Notice/Notice';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Tabs from 'src/components/core/ReachTabs';
-import TabPanels from 'src/components/core/ReachTabPanels';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
-import generateCurlCommand from 'src/utilities/generate-cURL';
 import generateCLICommand from 'src/utilities/generate-cli';
+import generateCurlCommand from 'src/utilities/generate-cURL';
 
 import useEvents from 'src/hooks/useEvents';
 

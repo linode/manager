@@ -1,15 +1,21 @@
-import * as React from 'react';
-import Button from 'src/components/Button';
-import { debounce } from 'throttle-debounce';
-import { FileUpload } from './FileUpload';
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
-import { readableBytes } from 'src/utilities/unitConversions';
-import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics';
-import { updateBucket } from 'src/queries/objectStorage';
-import { uploadObject } from '../requests';
-import { useDropzone, FileRejection } from 'react-dropzone';
-import { useQueryClient } from 'react-query';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { FileRejection, useDropzone } from 'react-dropzone';
+import { useQueryClient } from 'react-query';
+import Button from 'src/components/Button';
+import { updateBucket } from 'src/queries/objectStorage';
+import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics';
+import { readableBytes } from 'src/utilities/unitConversions';
+import { debounce } from 'throttle-debounce';
+import { uploadObject } from '../requests';
+import { FileUpload } from './FileUpload';
+import {
+  StyledDropZoneContent,
+  StyledDropZoneCopy,
+  StyledFileUploadsContainer,
+  useStyles,
+} from './ObjectUploader.styles';
 import {
   curriedObjectUploaderReducer,
   defaultState,
@@ -19,12 +25,6 @@ import {
   ObjectUploaderAction,
   pathOrFileName,
 } from './reducer';
-import {
-  StyledDropZoneContent,
-  StyledDropZoneCopy,
-  StyledFileUploadsContainer,
-  useStyles,
-} from './ObjectUploader.styles';
 
 interface Props {
   clusterId: string;
@@ -280,15 +280,14 @@ export const ObjectUploader = React.memo((props: Props) => {
   );
 });
 
-export const onUploadProgressFactory = (
-  dispatch: (value: ObjectUploaderAction) => void,
-  fileName: string
-) => (progressEvent: ProgressEvent) => {
-  dispatch({
-    type: 'UPDATE_FILES',
-    filesToUpdate: [fileName],
-    data: {
-      percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
-    },
-  });
-};
+export const onUploadProgressFactory =
+  (dispatch: (value: ObjectUploaderAction) => void, fileName: string) =>
+  (progressEvent: ProgressEvent) => {
+    dispatch({
+      type: 'UPDATE_FILES',
+      filesToUpdate: [fileName],
+      data: {
+        percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
+      },
+    });
+  };

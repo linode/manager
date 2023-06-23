@@ -1,17 +1,16 @@
-import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
-import { Status } from 'src/components/StatusIcon/StatusIcon';
+import { Volume } from '@linode/api-v4/lib/volumes/types';
+import Box from '@mui/material/Box';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import Box from '@mui/material/Box';
+import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import { Volume } from '@linode/api-v4/lib/volumes/types';
 import { useRegionsQuery } from 'src/queries/regions';
+import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 // import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({

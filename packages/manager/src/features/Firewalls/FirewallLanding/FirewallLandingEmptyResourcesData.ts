@@ -1,12 +1,12 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description:
@@ -19,24 +19,20 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/',
+      to: 'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/',
       text: 'Getting Started with Cloud Firewalls',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/guides/manage-firewall-rules/',
+      to: 'https://www.linode.com/docs/products/networking/cloud-firewall/guides/manage-firewall-rules/',
       text: 'Manage Firewall Rules',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/guides/comparing-firewalls/',
+      to: 'https://www.linode.com/docs/products/networking/cloud-firewall/guides/comparing-firewalls/',
       text: 'Comparing Cloud Firewalls to Linux Firewall Software',
     },
   ],
   moreInfo: {
-    to:
-      'https://www.linode.com/docs/products/networking/cloud-firewall/guides/',
+    to: 'https://www.linode.com/docs/products/networking/cloud-firewall/guides/',
     text: 'View additional Firewalls guides',
   },
   title: 'Getting Started Guides',
@@ -46,8 +42,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
       to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
-      text:
-        'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
+      text: 'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
       external: true,
     },
     {

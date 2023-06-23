@@ -7,6 +7,9 @@ import {
   UpdateDomainPayload,
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import {
   compose,
   equals,
@@ -25,18 +28,15 @@ import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import withFeatureFlags, {

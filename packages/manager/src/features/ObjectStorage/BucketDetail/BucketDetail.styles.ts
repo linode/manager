@@ -1,7 +1,7 @@
-import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { styled } from '@mui/material/styles';
+import Button from 'src/components/Button';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import Typography from 'src/components/core/Typography';
 import { TableCell } from 'src/components/TableCell';
 
 export const StyledNameColumn = styled(TableCell, {

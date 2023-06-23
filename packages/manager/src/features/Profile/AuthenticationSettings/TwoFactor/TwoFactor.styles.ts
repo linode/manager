@@ -1,5 +1,5 @@
-import Typography from 'src/components/core/Typography';
 import { styled } from '@mui/material/styles';
+import Typography from 'src/components/core/Typography';
 import type { TwoFactorProps } from './TwoFactor';
 
 export const StyledRootContainer = styled('div', {

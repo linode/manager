@@ -1,12 +1,13 @@
 import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
+import { useSupportTicketReplyMutation } from 'src/queries/support';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
@@ -15,7 +16,6 @@ import { FileAttachment } from '../../index';
 import Reference from './MarkdownReference';
 import { ReplyActions } from './ReplyActions';
 import TabbedReply from './TabbedReply';
-import { useSupportTicketReplyMutation } from 'src/queries/support';
 
 const useStyles = makeStyles((theme: Theme) => ({
   replyContainer: {

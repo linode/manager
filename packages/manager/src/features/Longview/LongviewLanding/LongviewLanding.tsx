@@ -50,13 +50,10 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
 
   const isManaged = Boolean(accountSettings?.managed);
 
-  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
-    false
-  );
-  const [
-    subscriptionDialogOpen,
-    setSubscriptionDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [newClientLoading, setNewClientLoading] =
+    React.useState<boolean>(false);
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] =
+    React.useState<boolean>(false);
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */

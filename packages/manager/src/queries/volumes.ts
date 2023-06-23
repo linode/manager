@@ -1,31 +1,31 @@
+import {
+  attachVolume,
+  AttachVolumePayload,
+  cloneVolume,
+  CloneVolumePayload,
+  createVolume,
+  deleteVolume,
+  detachVolume,
+  getLinodeVolumes,
+  getVolumes,
+  resizeVolume,
+  ResizeVolumePayload,
+  updateVolume,
+  UpdateVolumeRequest,
+  Volume,
+  VolumeRequestPayload,
+} from '@linode/api-v4';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { Filter, Params } from '@linode/api-v4/src/types';
-import { EventWithStore } from 'src/events';
-import { getAll } from 'src/utilities/getAll';
-import { updateInPaginatedStore } from './base';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from 'react-query';
-import {
-  attachVolume,
-  AttachVolumePayload,
-  detachVolume,
-  getVolumes,
-  Volume,
-  UpdateVolumeRequest,
-  updateVolume,
-  ResizeVolumePayload,
-  resizeVolume,
-  cloneVolume,
-  CloneVolumePayload,
-  deleteVolume,
-  VolumeRequestPayload,
-  createVolume,
-  getLinodeVolumes,
-} from '@linode/api-v4';
+import { EventWithStore } from 'src/events';
+import { getAll } from 'src/utilities/getAll';
+import { updateInPaginatedStore } from './base';
 
 export const queryKey = 'volumes';
 

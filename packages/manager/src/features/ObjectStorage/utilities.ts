@@ -1,12 +1,12 @@
-import { FormikProps } from 'formik';
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
+  ACLType,
   ObjectStorageClusterID,
   ObjectStorageObject,
-  ACLType,
 } from '@linode/api-v4/lib/object-storage';
-import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
+import { FormikProps } from 'formik';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 
 export const generateObjectUrl = (
   clusterId: ObjectStorageClusterID,

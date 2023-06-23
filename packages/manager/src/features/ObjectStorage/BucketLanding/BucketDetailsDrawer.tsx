@@ -3,6 +3,7 @@ import {
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -11,14 +12,13 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { AccessSelect } from '../BucketDetail/AccessSelect';
-import { useProfile } from 'src/queries/profile';
-import { styled } from '@mui/material/styles';
 export interface BucketDetailsDrawerProps {
   bucketLabel?: string;
   cluster?: string;

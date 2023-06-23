@@ -1,4 +1,4 @@
-import { extractDiskOrVolumeId, adjustedErrorText } from './DeviceSelection';
+import { adjustedErrorText, extractDiskOrVolumeId } from './DeviceSelection';
 
 const errors = [
   { input: 'disk ID 2005 is referenced more than once', expected: 'disk-2005' },

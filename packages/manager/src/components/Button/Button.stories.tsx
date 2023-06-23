@@ -1,8 +1,8 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import Button from './Button';
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import Button from './Button';
 
 /**
  * Buttons allow users to take actions, and make choices, with a single tap.

@@ -1,10 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -23,9 +23,8 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
-    linodeId
-  );
+  const { mutateAsync: updateLinodeSettings } =
+    useUpdateLinodeSettingsMutation(linodeId);
 
   const handleError = (message: string, error: APIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);

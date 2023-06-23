@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
-  MenuListComponentProps,
   components as reactSelectComponents,
+  MenuListComponentProps,
 } from 'react-select';
 import { Guidance } from './Guidance';
 

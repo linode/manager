@@ -57,13 +57,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     ApplicationState
   >(
     (state, ownProps) => {
-      const {
-        loading,
-        error,
-        itemsById,
-        lastUpdated,
-        results,
-      } = state.__resources.linodes;
+      const { loading, error, itemsById, lastUpdated, results } =
+        state.__resources.linodes;
       const linodes = Object.values(itemsById);
       if (mapStateToProps) {
         return mapStateToProps(

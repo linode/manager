@@ -1,10 +1,10 @@
+import Grid from '@mui/material/Unstable_Grid2';
+import { withStyles, WithStyles } from '@mui/styles';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
-import { withStyles, WithStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Radio } from 'src/components/Radio/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';

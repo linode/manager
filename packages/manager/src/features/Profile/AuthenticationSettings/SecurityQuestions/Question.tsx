@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { SecurityQuestion } from '@linode/api-v4/lib/profile';
-import Select, { Item } from 'src/components/EnhancedSelect';
+import * as React from 'react';
 import InputLabel from 'src/components/core/InputLabel';
 import Typography from 'src/components/core/Typography';
+import Select, { Item } from 'src/components/EnhancedSelect';
 import { LinkButton } from 'src/components/LinkButton';
 
 interface Props {

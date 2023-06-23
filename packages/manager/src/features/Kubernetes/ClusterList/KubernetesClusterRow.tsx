@@ -1,26 +1,26 @@
+import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import Grid from '@mui/material/Unstable_Grid2';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import ActionMenu from './ClusterActionMenu';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
-import {
-  getNextVersion,
-  getTotalClusterMemoryCPUAndStorage,
-} from '../kubeUtils';
 import {
   useAllKubernetesNodePoolQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { useRegionsQuery } from 'src/queries/regions';
+import {
+  getNextVersion,
+  getTotalClusterMemoryCPUAndStorage,
+} from '../kubeUtils';
+import ActionMenu from './ClusterActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {

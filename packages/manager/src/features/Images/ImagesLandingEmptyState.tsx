@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics';
-import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,

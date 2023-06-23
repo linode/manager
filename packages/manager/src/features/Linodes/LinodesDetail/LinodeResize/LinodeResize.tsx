@@ -1,36 +1,36 @@
 import { Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Checkbox from 'src/components/CheckBox';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
-import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import HostMaintenanceError from '../HostMaintenanceError';
-import LinodePermissionsError from '../LinodePermissionsError';
-import { extendType } from 'src/utilities/extendType';
-import { useFormik } from 'formik';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeQuery,
   useLinodeResizeMutation,
 } from 'src/queries/linodes/linodes';
+import { usePreferences } from 'src/queries/preferences';
+import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
-import { useGrants } from 'src/queries/profile';
-import { usePreferences } from 'src/queries/preferences';
-import Box from 'src/components/core/Box';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
+import { extendType } from 'src/utilities/extendType';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import HostMaintenanceError from '../HostMaintenanceError';
+import LinodePermissionsError from '../LinodePermissionsError';
 
 const useStyles = makeStyles((theme: Theme) => ({
   resizeTitle: {
@@ -148,10 +148,8 @@ export const LinodeResize = (props: Props) => {
 
   const type = types?.find((t) => t.id === linode?.type);
 
-  const [
-    diskToResize,
-    _shouldEnableAutoResizeDiskOption,
-  ] = shouldEnableAutoResizeDiskOption(disks ?? []);
+  const [diskToResize, _shouldEnableAutoResizeDiskOption] =
+    shouldEnableAutoResizeDiskOption(disks ?? []);
 
   const isSmaller = isSmallerThanCurrentPlan(
     formik.values.type,

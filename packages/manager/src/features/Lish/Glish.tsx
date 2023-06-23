@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-expressions */
-import * as React from 'react';
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { VncScreen, VncScreenHandle } from 'react-vnc';
-import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { VncScreen, VncScreenHandle } from 'react-vnc';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 
 const useStyles = makeStyles(() => ({
   container: {

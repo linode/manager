@@ -1,7 +1,7 @@
-import React from 'react';
 import { render } from '@testing-library/react';
-import AccessibleGraphData from './AccessibleGraphData';
+import React from 'react';
 import type { GraphTabledDataProps } from './AccessibleGraphData';
+import AccessibleGraphData from './AccessibleGraphData';
 
 const chartInstance = {
   config: {
@@ -63,9 +63,8 @@ describe('AccessibleGraphData', () => {
     expect(tableBodyRows.length).toEqual(3);
 
     tableBodyRows.forEach((row, idx) => {
-      const value: any = chartInstance.config.data.datasets[0].data[
-        idx
-      ].y.toFixed(2);
+      const value: any =
+        chartInstance.config.data.datasets[0].data[idx].y.toFixed(2);
 
       expect(row.querySelector('td:nth-child(2)')).toHaveTextContent(
         value + '%'

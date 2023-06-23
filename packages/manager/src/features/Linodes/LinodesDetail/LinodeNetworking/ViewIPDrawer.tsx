@@ -1,12 +1,12 @@
 import { IPAddress } from '@linode/api-v4/lib/networking';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { useRegionsQuery } from 'src/queries/regions';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   section: {

@@ -2,8 +2,8 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import Grid from 'src/components/Grid';
 
 import CPUGauge from '../../LongviewLanding/Gauges/CPU';

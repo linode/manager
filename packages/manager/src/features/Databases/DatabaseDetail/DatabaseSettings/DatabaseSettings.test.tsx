@@ -1,8 +1,8 @@
 import * as React from 'react';
 
+import { databaseFactory } from 'src/factories/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import DatabaseSettings from './DatabaseSettings';
-import { databaseFactory } from 'src/factories/databases';
 
 describe('DatabaseSettings Component', () => {
   const database = databaseFactory.build();

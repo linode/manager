@@ -1,9 +1,9 @@
 import Close from '@mui/icons-material/Close';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';

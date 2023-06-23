@@ -1,8 +1,8 @@
-import React from 'react';
 import { screen } from '@testing-library/react';
+import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { PlanInformation } from './PlanInformation';
 import type { PlanInformationProps } from './PlanInformation';
+import { PlanInformation } from './PlanInformation';
 
 jest.mock('src/hooks/useFlags', () => ({
   __esModule: true,

@@ -1,6 +1,6 @@
+import { WithTheme, withTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { WithTheme, withTheme } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientData, {

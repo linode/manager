@@ -1,10 +1,10 @@
+import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
 import InlineAction from 'src/components/InlineMenuAction';
 import { OpenAccessDrawer } from './types';
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-import { styled } from '@mui/material/styles';
 
 interface Props {
   label: string;

@@ -2,14 +2,14 @@ import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
+import { QueryClient } from 'react-query';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { searchbarResult1 } from 'src/__data__/searchResults';
-import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps as Props, SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
-import { rest, server } from 'src/mocks/testServer';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { QueryClient } from 'react-query';
 
 const props: Props = {
   entities: [],

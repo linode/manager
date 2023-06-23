@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as React from 'react';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 
 export interface Requestable<T> {

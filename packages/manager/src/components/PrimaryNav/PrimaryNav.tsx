@@ -77,10 +77,8 @@ export const PrimaryNav = (props: Props) => {
 
   const [enableObjectPrefetch, setEnableObjectPrefetch] = React.useState(false);
 
-  const [
-    enableMarketplacePrefetch,
-    setEnableMarketplacePrefetch,
-  ] = React.useState(false);
+  const [enableMarketplacePrefetch, setEnableMarketplacePrefetch] =
+    React.useState(false);
 
   const { _isManagedAccount, account } = useAccountManagement();
 

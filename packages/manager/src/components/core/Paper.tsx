@@ -1,6 +1,6 @@
 import _Paper, { PaperProps } from '@mui/material/Paper';
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
 import FormHelperText from './FormHelperText';
 
 const StyledPaper = styled(_Paper)<Props>(({ theme, ...props }) => ({

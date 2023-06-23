@@ -1,13 +1,13 @@
 import { KubernetesCluster } from '@linode/api-v4';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import Typography from 'src/components/core/Typography';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { useRegionsQuery } from 'src/queries/regions';
 import { pluralize } from 'src/utilities/pluralize';
 import {
   getTotalClusterMemoryCPUAndStorage,

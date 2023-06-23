@@ -2,6 +2,9 @@ import { rebuildLinode } from '@linode/api-v4/lib/linodes';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
@@ -9,9 +12,6 @@ import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -23,10 +23,10 @@ import {
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { usePreferences } from 'src/queries/preferences';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
+import { usePreferences } from 'src/queries/preferences';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -111,14 +111,10 @@ export const RebuildFromStackScript = (props: Props) => {
   const submitButtonDisabled =
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
-  const [
-    ss,
-    handleSelectStackScript,
-    handleChangeUDF,
-    resetStackScript,
-  ] = useStackScript(
-    Object.keys(_imagesData).map((eachKey) => _imagesData[eachKey])
-  );
+  const [ss, handleSelectStackScript, handleChangeUDF, resetStackScript] =
+    useStackScript(
+      Object.keys(_imagesData).map((eachKey) => _imagesData[eachKey])
+    );
 
   // In this component, most errors are handled by Formik. This is not
   // possible with UDFs, since they are dynamic. Their errors need to

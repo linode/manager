@@ -1,8 +1,8 @@
 export * from './account';
-export * from './accountSettings';
 export * from './accountMaintenance';
 export * from './accountOAuth';
 export * from './accountPayment';
+export * from './accountSettings';
 export * from './billing';
 export * from './config';
 export * from './databases';
@@ -13,14 +13,14 @@ export * from './events';
 export * from './firewalls';
 export * from './images';
 export * from './kubernetesCluster';
-export * from './linodeConfigs';
 export * from './linodeConfigInterfaceFactory';
+export * from './linodeConfigs';
 export * from './linodes';
 export * from './longviewClient';
 export * from './longviewDisks';
 export * from './longviewProcess';
-export * from './longviewService';
 export * from './longviewResponse';
+export * from './longviewService';
 export * from './longviewSubscription';
 export * from './longviewTopProcesses';
 export * from './managed';
@@ -36,8 +36,8 @@ export * from './stackscripts';
 export * from './statusPage';
 export * from './support';
 export * from './tags';
-export * from './volume';
 export * from './vlans';
+export * from './volume';
 
 // Convert factory output to our itemsById pattern
 export const normalizeEntities = (entities: any[]) => {

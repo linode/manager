@@ -1,22 +1,22 @@
+import { updateUser } from '@linode/api-v4/lib/account';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import ExternalLink from 'src/components/ExternalLink';
-import Link from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { ApplicationState } from 'src/store';
+import ExternalLink from 'src/components/ExternalLink';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import Link from 'src/components/Link';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
-import { TimezoneForm } from './TimezoneForm';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { updateUser } from '@linode/api-v4/lib/account';
-import { useLocation } from 'react-router-dom';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useSelector } from 'react-redux';
-import { styled, useTheme } from '@mui/material/styles';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { ApplicationState } from 'src/store';
 import { v4 } from 'uuid';
+import { TimezoneForm } from './TimezoneForm';
 
 export const DisplaySettings = () => {
   const theme = useTheme();

@@ -1,19 +1,19 @@
 import { Interface, Linode } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CheckBox from 'src/components/CheckBox';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
-import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import AttachVLAN from './AttachVLAN';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
   vlan: {

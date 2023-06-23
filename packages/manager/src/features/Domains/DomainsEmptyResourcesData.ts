@@ -1,12 +1,12 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description:
@@ -23,13 +23,11 @@ export const gettingStartedGuides: ResourcesLinkSection = {
       text: 'Overview of DNS Manager',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/networking/dns-manager/get-started/',
+      to: 'https://www.linode.com/docs/products/networking/dns-manager/get-started/',
       text: 'Getting Started with DNS Manager',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/networking/dns-manager/guides/create-domain/',
+      to: 'https://www.linode.com/docs/products/networking/dns-manager/guides/create-domain/',
       text: 'Create a Domain Zone',
     },
   ],

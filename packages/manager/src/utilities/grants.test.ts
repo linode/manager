@@ -18,8 +18,7 @@ describe('getEntityIdsByPermission', () => {
   });
   it('should return read-only entity ids with read_only permission', () => {
     expect(getEntityIdsByPermission(grants, 'linode', 'read_only')).toEqual([
-      0,
-      2,
+      0, 2,
     ]);
   });
   it('should return all entity ids if a permission level is omitted', () => {

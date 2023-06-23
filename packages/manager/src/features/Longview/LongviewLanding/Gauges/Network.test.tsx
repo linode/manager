@@ -1,7 +1,7 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { network as mockNetworkData } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { network as mockNetworkData } from 'src/__data__/longview';
 import Network, { generateUsedNetworkAsBytes } from './Network';
 
 const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];

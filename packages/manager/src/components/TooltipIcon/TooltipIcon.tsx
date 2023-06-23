@@ -1,13 +1,13 @@
 import SuccessOutline from '@mui/icons-material/CheckCircleOutlined';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import WarningOutline from '@mui/icons-material/WarningAmberOutlined';
-import InfoOutline from '@mui/icons-material/InfoOutlined';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import * as React from 'react';
-import { IconButton } from 'src/components/IconButton';
-import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
-import { SxProps } from '@mui/system';
+import InfoOutline from '@mui/icons-material/InfoOutlined';
+import WarningOutline from '@mui/icons-material/WarningAmberOutlined';
 import { useTheme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
+import * as React from 'react';
+import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
+import { IconButton } from 'src/components/IconButton';
 
 type TooltipIconStatus =
   | 'success'

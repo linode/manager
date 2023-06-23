@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles({

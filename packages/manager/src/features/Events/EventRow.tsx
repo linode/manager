@@ -1,22 +1,22 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
+import { useApplicationStore } from 'src/store';
+import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import { GravatarByUsername } from '../../components/GravatarByUsername';
-import { useApplicationStore } from 'src/store';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
-import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   row: {

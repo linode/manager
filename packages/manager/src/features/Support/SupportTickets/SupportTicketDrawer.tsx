@@ -3,6 +3,8 @@ import {
   uploadAttachment,
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as Bluebird from 'bluebird';
 import { update } from 'ramda';
 import * as React from 'react';
@@ -11,8 +13,6 @@ import Accordion from 'src/components/Accordion';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -26,6 +26,7 @@ import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import {
   getAPIErrorOrDefault,
@@ -41,11 +42,10 @@ import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import SupportTicketSMTPFields, {
-  smtpDialogTitle,
   fieldNameToLabelMap,
+  smtpDialogTitle,
   smtpHelperText,
 } from './SupportTicketSMTPFields';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -255,15 +255,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const { data: domains, isLoading: domainsLoading } = useAllDomainsQuery(
     entityType === 'domain_id'
   );
-  const {
-    data: nodebalancers,
-    isLoading: nodebalancersLoading,
-  } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
+  const { data: nodebalancers, isLoading: nodebalancersLoading } =
+    useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
 
-  const {
-    data: clusters,
-    isLoading: clustersLoading,
-  } = useAllKubernetesClustersQuery(entityType === 'lkecluster_id');
+  const { data: clusters, isLoading: clustersLoading } =
+    useAllKubernetesClustersQuery(entityType === 'lkecluster_id');
 
   const { data: volumes, isLoading: volumesLoading } = useAllVolumesQuery(
     {},

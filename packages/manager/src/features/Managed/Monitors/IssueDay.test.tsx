@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { IssueDay, Props } from './IssueDay';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DateTime } from 'luxon';
+import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { IssueDay, Props } from './IssueDay';
 
 describe('IssueDay', () => {
   it('should include basic Monitor actions', () => {

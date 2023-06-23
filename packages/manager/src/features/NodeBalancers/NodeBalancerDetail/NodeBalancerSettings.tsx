@@ -1,17 +1,17 @@
+import { useTheme } from '@mui/material';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 import Accordion from 'src/components/Accordion';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import TextField from 'src/components/TextField';
-import { useTheme } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import TextField from 'src/components/TextField';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
@@ -32,9 +32,8 @@ export const NodeBalancerSettings = () => {
     isLoading: isUpdatingThrottle,
   } = useNodebalancerUpdateMutation(id);
 
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] =
+    React.useState<boolean>(false);
 
   const [label, setLabel] = React.useState(nodebalancer?.label);
 

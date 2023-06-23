@@ -1,4 +1,6 @@
 import { CardType, CreditCardData } from '@linode/api-v4/lib/account/types';
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import GenericCardIcon from 'src/assets/icons/credit-card.svg';
 import AmexIcon from 'src/assets/icons/payment/amex.svg';
@@ -6,11 +8,9 @@ import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
-import Box from '@mui/material/Box';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

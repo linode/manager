@@ -1,7 +1,7 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Grid from '@mui/material/Unstable_Grid2';
 import Typography from 'src/components/core/Typography';
 import { Toggle } from 'src/components/Toggle';
 import type { NodeBalancerConfigPanelProps } from './types';

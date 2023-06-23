@@ -1,17 +1,11 @@
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
-import EditSSHKeyDrawer from './EditSSHKeyDrawer';
-import Grid from '@mui/material/Unstable_Grid2';
 import Hidden from 'src/components/core/Hidden';
-import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
-import SSHKeyCreationDrawer from './CreateSSHKeyDrawer';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { parseAPIDate } from 'src/utilities/date';
-import { styled } from '@mui/material/styles';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -20,8 +14,14 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
+import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSSHKeysQuery } from 'src/queries/profile';
+import { parseAPIDate } from 'src/utilities/date';
+import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
+import SSHKeyCreationDrawer from './CreateSSHKeyDrawer';
+import EditSSHKeyDrawer from './EditSSHKeyDrawer';
 
 const PREFERENCE_KEY = 'ssh-keys';
 

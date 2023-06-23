@@ -8,41 +8,41 @@ import {
   updateUser,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { withStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { Tab } from 'src/components/core/ReachTab';
+import { TabList } from 'src/components/core/ReachTabList';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SelectionCard from 'src/components/SelectionCard';
 import { Toggle } from 'src/components/Toggle';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import {
-  entityNameMap,
-  UserPermissionsEntitySection,
-} from './UserPermissionsEntitySection';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { Tab } from 'src/components/core/ReachTab';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabList } from 'src/components/core/ReachTabList';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import {
   withQueryClient,
   WithQueryClientProps,
 } from 'src/containers/withQueryClient.container';
-import { compose as recompose } from 'recompose';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { withStyles } from 'tss-react/mui';
+import {
+  entityNameMap,
+  UserPermissionsEntitySection,
+} from './UserPermissionsEntitySection';
 
 type ClassNames =
   | 'title'
@@ -385,12 +385,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
   };
 
-  globalPermOnChange = (perm: string) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const lp = lensPath(['grants', 'global', perm]);
-    this.setState(set(lp, e.target.checked));
-  };
+  globalPermOnChange =
+    (perm: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const lp = lensPath(['grants', 'global', perm]);
+      this.setState(set(lp, e.target.checked));
+    };
 
   renderGlobalPerm = (perm: string, checked: boolean) => {
     const classes = withStyles.getClasses(this.props);

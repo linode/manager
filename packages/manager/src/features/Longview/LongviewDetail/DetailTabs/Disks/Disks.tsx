@@ -1,9 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingLoading from 'src/components/LandingLoading';
@@ -39,12 +39,8 @@ type CombinedProps = Props;
 const Disks: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const {
-    lastUpdated,
-    lastUpdatedError,
-    clientLastUpdated,
-    clientAPIKey,
-  } = props;
+  const { lastUpdated, lastUpdatedError, clientLastUpdated, clientAPIKey } =
+    props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,

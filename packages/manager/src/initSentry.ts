@@ -1,7 +1,7 @@
 import { BrowserOptions, Event as SentryEvent, init } from '@sentry/browser';
 import { SENTRY_URL } from 'src/constants';
-import redactAccessToken from 'src/utilities/redactAccessToken';
 import deepStringTransform from 'src/utilities/deepStringTransform';
+import redactAccessToken from 'src/utilities/redactAccessToken';
 import packageJson from '../package.json';
 
 export const initSentry = () => {

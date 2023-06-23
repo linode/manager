@@ -8,10 +8,13 @@ import {
 import { Domain } from '@linode/api-v4/lib/domains';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
+import { ApplicationState } from 'src/store';
 import entitiesErrors, {
   ErrorObject,
 } from 'src/store/selectors/entitiesErrors';
+import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import {
   bucketToSearchableItem,
   domainToSearchableItem,
@@ -27,9 +30,6 @@ import {
   SearchResultsByEntity,
 } from './search.interfaces';
 import { emptyResults, separateResultsByEntity } from './utils';
-import { connect } from 'react-redux';
-import entitiesLoading from 'src/store/selectors/entitiesLoading';
-import { ApplicationState } from 'src/store';
 
 interface HandlerProps {
   search: (
@@ -88,55 +88,57 @@ export default () => (Component: React.ComponentType<any>) => {
     withStateHandlers<any, any, any>(
       { searchResultsByEntity: emptyResults },
       {
-        search: (_) => (
-          query: string,
-          objectStorageBuckets: ObjectStorageBucket[],
-          domains: Domain[],
-          volumes: Volume[],
-          clusters: KubernetesCluster[],
-          images: Image[],
-          regions: Region[],
-          searchableLinodes: SearchableItem<string | number>[],
-          nodebalancers: NodeBalancer[]
-        ) => {
-          const searchableBuckets = objectStorageBuckets.map((bucket) =>
-            bucketToSearchableItem(bucket)
-          );
-          const searchableDomains = domains.map((domain) =>
-            domainToSearchableItem(domain)
-          );
-          const searchableVolumes = volumes.map((volume) =>
-            volumeToSearchableItem(volume)
-          );
-          const searchableImages = images.map((image) =>
-            imageToSearchableItem(image)
-          );
+        search:
+          (_) =>
+          (
+            query: string,
+            objectStorageBuckets: ObjectStorageBucket[],
+            domains: Domain[],
+            volumes: Volume[],
+            clusters: KubernetesCluster[],
+            images: Image[],
+            regions: Region[],
+            searchableLinodes: SearchableItem<string | number>[],
+            nodebalancers: NodeBalancer[]
+          ) => {
+            const searchableBuckets = objectStorageBuckets.map((bucket) =>
+              bucketToSearchableItem(bucket)
+            );
+            const searchableDomains = domains.map((domain) =>
+              domainToSearchableItem(domain)
+            );
+            const searchableVolumes = volumes.map((volume) =>
+              volumeToSearchableItem(volume)
+            );
+            const searchableImages = images.map((image) =>
+              imageToSearchableItem(image)
+            );
 
-          const searchableClusters = clusters.map((cluster) =>
-            kubernetesClusterToSearchableItem(cluster, regions)
-          );
+            const searchableClusters = clusters.map((cluster) =>
+              kubernetesClusterToSearchableItem(cluster, regions)
+            );
 
-          const searchableNodebalancers = nodebalancers.map((nodebalancer) =>
-            nodeBalToSearchableItem(nodebalancer)
-          );
-          const results = search(
-            [
-              ...searchableLinodes,
-              ...searchableImages,
-              ...searchableBuckets,
-              ...searchableDomains,
-              ...searchableVolumes,
-              ...searchableClusters,
-              ...searchableNodebalancers,
-            ],
-            query
-          );
-          const { searchResultsByEntity, combinedResults } = results;
-          return {
-            searchResultsByEntity,
-            combinedResults,
-          };
-        },
+            const searchableNodebalancers = nodebalancers.map((nodebalancer) =>
+              nodeBalToSearchableItem(nodebalancer)
+            );
+            const results = search(
+              [
+                ...searchableLinodes,
+                ...searchableImages,
+                ...searchableBuckets,
+                ...searchableDomains,
+                ...searchableVolumes,
+                ...searchableClusters,
+                ...searchableNodebalancers,
+              ],
+              query
+            );
+            const { searchResultsByEntity, combinedResults } = results;
+            return {
+              searchResultsByEntity,
+              combinedResults,
+            };
+          },
       }
     )
   )(WrappedComponent);

@@ -1,12 +1,12 @@
-import * as Factory from 'factory.ts';
 import {
-  KubernetesCluster,
-  KubernetesEndpointResponse,
   KubeNodePoolResponse,
-  PoolNodeResponse,
-  KubernetesVersion,
+  KubernetesCluster,
   KubernetesDashboardResponse,
+  KubernetesEndpointResponse,
+  KubernetesVersion,
+  PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes/types';
+import * as Factory from 'factory.ts';
 import { v4 } from 'uuid';
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
@@ -27,8 +27,8 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   },
 });
 
-export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesCluster>(
-  {
+export const kubernetesClusterFactory =
+  Factory.Sync.makeFactory<KubernetesCluster>({
     id: Factory.each((id) => id),
     created: '2020-04-08T16:58:21',
     updated: '2020-04-08T16:58:21',
@@ -38,23 +38,20 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesClust
     k8s_version: '1.21',
     tags: [],
     control_plane: { high_availability: true },
-  }
-);
+  });
 
-export const kubeEndpointFactory = Factory.Sync.makeFactory<KubernetesEndpointResponse>(
-  {
+export const kubeEndpointFactory =
+  Factory.Sync.makeFactory<KubernetesEndpointResponse>({
     endpoint: `https://${v4()}`,
-  }
-);
+  });
 
-export const kubernetesDashboardUrlFactory = Factory.Sync.makeFactory<KubernetesDashboardResponse>(
-  {
+export const kubernetesDashboardUrlFactory =
+  Factory.Sync.makeFactory<KubernetesDashboardResponse>({
     url: `https://${v4()}`,
-  }
-);
+  });
 
-export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>(
-  {
+export const kubernetesAPIResponse =
+  Factory.Sync.makeFactory<KubernetesCluster>({
     id: Factory.each((id) => id),
     created: '2020-04-08T16:58:21',
     updated: '2020-04-08T16:58:21',
@@ -64,11 +61,9 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
     k8s_version: '1.21',
     tags: [],
     control_plane: { high_availability: true },
-  }
-);
+  });
 
-export const kubernetesVersionFactory = Factory.Sync.makeFactory<KubernetesVersion>(
-  {
+export const kubernetesVersionFactory =
+  Factory.Sync.makeFactory<KubernetesVersion>({
     id: '1.24',
-  }
-);
+  });

@@ -1,19 +1,19 @@
+import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import { Currency } from 'src/components/Currency';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Radio } from 'src/components/Radio/Radio';
 import SelectionCard from 'src/components/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { ApplicationState } from 'src/store';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import { ApplicationState } from 'src/store';
 import { ExtendedType } from 'src/utilities/extendType';
-import { StyledDisabledTableRow } from './PlansPanel.styles';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
+import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];

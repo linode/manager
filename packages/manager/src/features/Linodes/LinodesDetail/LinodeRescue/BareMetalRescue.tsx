@@ -5,9 +5,9 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import RescueDescription from './RescueDescription';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Props {
   linodeId: number | undefined;

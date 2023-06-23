@@ -7,8 +7,8 @@ import {
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
@@ -16,6 +16,10 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
+import Paper from 'src/components/core/Paper';
+import RadioGroup from 'src/components/core/RadioGroup';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import LandingHeader from 'src/components/LandingHeader';
@@ -23,21 +27,17 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import TextField from 'src/components/TextField';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
-import Paper from 'src/components/core/Paper';
-import RadioGroup from 'src/components/core/RadioGroup';
 import { reportException } from 'src/exceptionReporting';
-import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
+import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { sendCreateDomainEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateDomainEvent } from 'src/utilities/analytics';
 import {
   ExtendedIP,
   extendedIPToString,
@@ -102,10 +102,8 @@ export const CreateDomain = () => {
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
     Linode | undefined
   >(undefined);
-  const [
-    selectedDefaultNodeBalancer,
-    setSelectedDefaultNodeBalancer,
-  ] = React.useState<NodeBalancer | undefined>(undefined);
+  const [selectedDefaultNodeBalancer, setSelectedDefaultNodeBalancer] =
+    React.useState<NodeBalancer | undefined>(undefined);
 
   const { values, ...formik } = useFormik({
     initialValues: {

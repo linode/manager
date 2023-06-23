@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { waitFor } from '@testing-library/react';
-import { linodeFactory } from 'src/factories/linodes';
-import { rest, server } from 'src/mocks/testServer';
-import { typeFactory } from 'src/factories/types';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { RescueDialog, Props } from './RescueDialog';
+import * as React from 'react';
 import { QueryClient } from 'react-query';
+import { linodeFactory } from 'src/factories/linodes';
+import { typeFactory } from 'src/factories/types';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { Props, RescueDialog } from './RescueDialog';
 
 const standard = typeFactory.build({ id: 'g6-standard-1' });
 const metal = typeFactory.build({ id: 'g6-metal-alpha-2', class: 'metal' });

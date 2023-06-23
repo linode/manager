@@ -33,10 +33,8 @@ export const AddDeviceDrawer = (props: Props) => {
   const isRestrictedUser = Boolean(profile?.restricted);
 
   const { data: firewall } = useFirewallQuery(Number(id));
-  const {
-    data: currentDevices,
-    isLoading: currentDevicesLoading,
-  } = useAllFirewallDevicesQuery(Number(id));
+  const { data: currentDevices, isLoading: currentDevicesLoading } =
+    useAllFirewallDevicesQuery(Number(id));
 
   const currentLinodeIds =
     currentDevices

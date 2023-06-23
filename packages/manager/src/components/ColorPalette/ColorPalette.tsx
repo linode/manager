@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { useTheme } from '@mui/material';
-import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import Typography from 'src/components/core/Typography';
+import { makeStyles } from 'tss-react/mui';
 
 interface Color {
   color: string;

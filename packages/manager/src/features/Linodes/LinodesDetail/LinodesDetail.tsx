@@ -7,16 +7,16 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   LinodeDetailContext,
   linodeDetailContextFactory as createLinodeDetailContext,
   LinodeDetailContextProvider,
 } from './linodeDetailContext';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { CircleProgress } from 'src/components/CircleProgress';
 
 const LinodesDetailHeader = React.lazy(
   () => import('./LinodesDetailHeader/LinodeDetailHeader')

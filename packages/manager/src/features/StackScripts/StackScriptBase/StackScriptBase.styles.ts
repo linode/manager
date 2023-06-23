@@ -1,5 +1,5 @@
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 
 type ClassNames =
   | 'loaderWrapper'

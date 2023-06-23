@@ -20,9 +20,8 @@ export const RecycleClusterDialog = (props: Props) => {
   const { open, onClose, clusterId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useRecycleClusterMutation(
-    clusterId
-  );
+  const { mutateAsync, isLoading, error } =
+    useRecycleClusterMutation(clusterId);
 
   const onSubmit = () => {
     mutateAsync().then(() => {

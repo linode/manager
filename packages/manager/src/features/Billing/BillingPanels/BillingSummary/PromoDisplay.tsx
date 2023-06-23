@@ -1,14 +1,14 @@
-import * as React from 'react';
-import Box from 'src/components/core/Box';
-import { Currency } from 'src/components/Currency';
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Typography from 'src/components/core/Typography';
-import { useTheme } from '@mui/material/styles';
 import {
   ActivePromotion,
   PromotionServiceType,
 } from '@linode/api-v4/lib/account/types';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
+import { Currency } from 'src/components/Currency';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 
 type PromoDisplayProps = ActivePromotion;
 

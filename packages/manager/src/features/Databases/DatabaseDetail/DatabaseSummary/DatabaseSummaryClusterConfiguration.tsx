@@ -6,13 +6,13 @@ import Typography from 'src/components/core/Typography';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { makeStyles } from 'tss-react/mui';
 import {
   databaseEngineMap,
   databaseStatusMap,
 } from '../../DatabaseLanding/DatabaseRow';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   header: {

@@ -1,9 +1,9 @@
-import * as Factory from 'factory.ts';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
+import * as Factory from 'factory.ts';
 import { pickRandom, randomDate } from 'src/utilities/random';
 
-export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMaintenance>(
-  {
+export const accountMaintenanceFactory =
+  Factory.Sync.makeFactory<AccountMaintenance>({
     type: Factory.each(() =>
       pickRandom(['cold_migration', 'live_migration', 'reboot'])
     ),
@@ -38,5 +38,4 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
         },
       ])
     ),
-  }
-);
+  });

@@ -1,7 +1,8 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from 'tss-react/mui';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import {
   gPay,
@@ -9,8 +10,7 @@ import {
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
-import { useQueryClient } from 'react-query';
-import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -51,9 +51,8 @@ export const GooglePayChip = (props: Props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const queryClient = useQueryClient();
-  const [initializationError, setInitializationError] = React.useState<boolean>(
-    false
-  );
+  const [initializationError, setInitializationError] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     const init = async () => {

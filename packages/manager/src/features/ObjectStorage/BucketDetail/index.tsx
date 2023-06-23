@@ -1,14 +1,14 @@
+import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
+import type { ComponentType, LazyExoticComponent } from 'react';
 import * as React from 'react';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import LandingHeader from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { BucketAccess } from './BucketAccess';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import type { ComponentType, LazyExoticComponent } from 'react';
+import { BucketAccess } from './BucketAccess';
 
 const ObjectList: LazyExoticComponent<ComponentType<any>> = React.lazy(() =>
   import('./BucketDetail').then((module) => ({ default: module.BucketDetail }))

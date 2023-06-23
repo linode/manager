@@ -1,12 +1,12 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description: '',
@@ -21,23 +21,19 @@ export const gettingStartedGuides: ResourcesLinkSection = {
       text: 'Overview of Object Storage',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/storage/object-storage/guides/linode-cli',
+      to: 'https://www.linode.com/docs/products/storage/object-storage/guides/linode-cli',
       text: 'Using the Linode CLI with Object Storage',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/storage/object-storage/guides/s3cmd',
+      to: 'https://www.linode.com/docs/products/storage/object-storage/guides/s3cmd',
       text: 'Use Object Storage with s3cmd',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/storage/object-storage/guides/s4cmd',
+      to: 'https://www.linode.com/docs/products/storage/object-storage/guides/s4cmd',
       text: 'Use Object Storage with s4cmd',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/storage/object-storage/guides/cyberduck',
+      to: 'https://www.linode.com/docs/products/storage/object-storage/guides/cyberduck',
       text: 'Use Object Storage with Cyberduck',
     },
   ],

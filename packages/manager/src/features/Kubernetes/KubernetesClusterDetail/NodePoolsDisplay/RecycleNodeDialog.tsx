@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -5,7 +6,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import Typography from 'src/components/core/Typography';
 import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
 import { useRecycleNodeMutation } from 'src/queries/kubernetes';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   open: boolean;

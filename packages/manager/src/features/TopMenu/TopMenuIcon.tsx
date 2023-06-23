@@ -1,6 +1,6 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Tooltip from 'src/components/core/Tooltip';
-import { styled } from '@mui/material/styles';
 
 interface Props {
   title: string;

@@ -1,7 +1,7 @@
-import { getTypeInfo } from './typesHelpers';
+import { LinodeType } from '@linode/api-v4';
 import types from 'src/utilities/types.json';
 import { extendType } from './extendType';
-import { LinodeType } from '@linode/api-v4';
+import { getTypeInfo } from './typesHelpers';
 
 const _types = (types.data as LinodeType[]).map(extendType);
 

@@ -1,10 +1,10 @@
+import { Scope } from '@linode/api-v4/lib/object-storage/types';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Typography from 'src/components/core/Typography';
-import { AccessTable } from './AccessTable';
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
-import { MODE } from './types';
 import { Toggle } from 'src/components/Toggle';
+import { AccessTable } from './AccessTable';
+import { MODE } from './types';
 
 interface Props {
   mode: MODE;

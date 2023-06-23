@@ -1,12 +1,12 @@
 import * as React from 'react';
-import LinodePermissionsError from '../LinodePermissionsError';
-import { LinodeSettingsAlertsPanel } from './LinodeSettingsAlertsPanel';
-import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
-import { LinodeSettingsPasswordPanel } from './LinodeSettingsPasswordPanel';
 import { useParams } from 'react-router-dom';
 import { useGrants } from 'src/queries/profile';
-import { LinodeWatchdogPanel } from './LinodeWatchdogPanel';
+import LinodePermissionsError from '../LinodePermissionsError';
+import { LinodeSettingsAlertsPanel } from './LinodeSettingsAlertsPanel';
 import { LinodeSettingsDeletePanel } from './LinodeSettingsDeletePanel';
+import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
+import { LinodeSettingsPasswordPanel } from './LinodeSettingsPasswordPanel';
+import { LinodeWatchdogPanel } from './LinodeWatchdogPanel';
 
 const LinodeSettings = () => {
   const { linodeId } = useParams<{ linodeId: string }>();

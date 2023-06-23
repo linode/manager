@@ -3,16 +3,16 @@ import { Image } from '@linode/api-v4/lib/images';
 import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import { Region } from '@linode/api-v4/lib/regions';
 import { Volume } from '@linode/api-v4/lib/volumes';
-import { displayType } from 'src/features/Linodes/presentation';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
+import { displayType } from 'src/features/Linodes/presentation';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
-import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { readableBytes } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { Region } from '@linode/api-v4/lib/regions';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 export type State = ApplicationState['__resources'];
 

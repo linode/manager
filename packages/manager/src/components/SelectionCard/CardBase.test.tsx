@@ -1,5 +1,5 @@
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import CardBase from './index';
 

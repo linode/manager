@@ -16,10 +16,10 @@ import { uploadImageFile } from 'src/features/Images/requests';
 import { FileUpload } from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 import {
-  MAX_FILE_SIZE_IN_BYTES,
-  MAX_PARALLEL_UPLOADS,
   curriedObjectUploaderReducer,
   defaultState,
+  MAX_FILE_SIZE_IN_BYTES,
+  MAX_PARALLEL_UPLOADS,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
 import { Dispatch } from 'src/hooks/types';

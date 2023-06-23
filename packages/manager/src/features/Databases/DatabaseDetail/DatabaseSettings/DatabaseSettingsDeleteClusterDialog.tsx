@@ -9,8 +9,8 @@ import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { useDeleteDatabaseMutation } from 'src/queries/databases';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { usePreferences } from 'src/queries/preferences';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   open: boolean;

@@ -1,9 +1,9 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import MenuItem from 'src/components/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';

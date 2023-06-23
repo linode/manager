@@ -1,11 +1,11 @@
+import type { Region } from '@linode/api-v4';
+import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import { PlansAvailabilityNotice } from '../PlansAvailabilityNotice';
 import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';
-import { PlansAvailabilityNotice } from '../PlansAvailabilityNotice';
-import type { Region } from '@linode/api-v4';
-import { useTheme } from '@mui/material/styles';
 
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];

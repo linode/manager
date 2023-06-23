@@ -1,8 +1,8 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {

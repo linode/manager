@@ -2,11 +2,11 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
@@ -57,9 +57,8 @@ const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const { disabled, setAuthorizedUsers, authorizedUsers } = props;
 
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
+    React.useState<boolean>(false);
 
   const pagination = usePagination(1);
 

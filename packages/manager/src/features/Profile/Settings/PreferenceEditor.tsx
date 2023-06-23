@@ -1,11 +1,11 @@
 import * as React from 'react';
+import Button from 'src/components/Button';
+import Typography from 'src/components/core/Typography';
 import {
   Dialog,
   DialogProps as _DialogProps,
 } from 'src/components/Dialog/Dialog';
-import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
-import Button from 'src/components/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 

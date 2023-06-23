@@ -29,12 +29,14 @@ const reduceEntitiesToTags = <T extends Tagged>(
 };
 
 /** Literally push a value on an array at a specificed key of an array. */
-const addToArrayAtKey = <T>(value: T) => (obj: any, key: string) => {
-  return {
-    ...obj,
-    [key]: addTo(obj[key], value),
+const addToArrayAtKey =
+  <T>(value: T) =>
+  (obj: any, key: string) => {
+    return {
+      ...obj,
+      [key]: addTo(obj[key], value),
+    };
   };
-};
 
 /** Create a group map based on tags. */
 export const groupByTags = <T extends Tagged>(arr: T[]): GroupedBy<T> => {

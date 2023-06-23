@@ -1,6 +1,6 @@
+import { useTabsContext } from '@reach/tabs';
 import * as React from 'react';
 import TabPanel from 'src/components/core/ReachTabPanel';
-import { useTabsContext } from '@reach/tabs';
 
 interface SafeTabPanelProps {
   children: React.ReactNode | null;

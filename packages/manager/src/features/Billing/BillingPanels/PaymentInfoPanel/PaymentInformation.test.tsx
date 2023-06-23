@@ -1,5 +1,5 @@
-import { fireEvent } from '@testing-library/react';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';

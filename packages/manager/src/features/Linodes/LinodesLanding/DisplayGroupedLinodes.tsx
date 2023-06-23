@@ -1,29 +1,28 @@
 import { Config } from '@linode/api-v4/lib/linodes';
+import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import GridView from 'src/assets/icons/grid-view.svg';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import Box from 'src/components/core/Box';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import Box from 'src/components/core/Box';
 import {
+  getMinimumPageSizeForNumberOfItems,
   MIN_PAGE_SIZE,
   PaginationFooter,
-  getMinimumPageSizeForNumberOfItems,
 } from 'src/components/PaginationFooter/PaginationFooter';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
-import TableWrapper from './TableWrapper';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import { RenderLinodesProps } from './DisplayLinodes';
 import {
   StyledControlHeader,
@@ -31,6 +30,7 @@ import {
   StyledTagHeaderRow,
   StyledToggleButton,
 } from './DisplayLinodes.styles';
+import TableWrapper from './TableWrapper';
 
 interface Props {
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;

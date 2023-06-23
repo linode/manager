@@ -1,13 +1,13 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';

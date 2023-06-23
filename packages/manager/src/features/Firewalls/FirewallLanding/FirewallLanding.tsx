@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
+import Hidden from 'src/components/core/Hidden';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import { useFirewallsQuery } from 'src/queries/firewalls';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import CreateFirewallDrawer from './CreateFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import FirewallDialog, { Mode } from './FirewallDialog';
 import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
 import FirewallRow from './FirewallRow';
-import { usePagination } from 'src/hooks/usePagination';
-import { useOrder } from 'src/hooks/useOrder';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { Table } from 'src/components/Table';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { TableCell } from 'src/components/TableCell';
-import { TableBody } from 'src/components/TableBody';
-import Hidden from 'src/components/core/Hidden';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 
 const preferenceKey = 'firewalls';
 
@@ -45,10 +45,8 @@ const FirewallLanding = () => {
 
   const { data, isLoading, error } = useFirewallsQuery(params, filter);
 
-  const [
-    isCreateFirewallDrawerOpen,
-    setIsCreateFirewallDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [isCreateFirewallDrawerOpen, setIsCreateFirewallDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');

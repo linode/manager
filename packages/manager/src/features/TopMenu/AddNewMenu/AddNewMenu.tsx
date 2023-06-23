@@ -1,18 +1,5 @@
-import * as React from 'react';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
-import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
-import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
-import Button from 'src/components/Button/Button';
-import Divider from 'src/components/core/Divider';
-import { Link } from 'react-router-dom';
 import {
   Box,
   ListItemIcon,
@@ -22,6 +9,19 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
+import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
+import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
+import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
+import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import Button from 'src/components/Button/Button';
+import Divider from 'src/components/core/Divider';
 
 export const AddNewMenu = () => {
   const theme = useTheme();

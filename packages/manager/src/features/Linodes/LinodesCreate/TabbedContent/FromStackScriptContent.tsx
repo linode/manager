@@ -1,11 +1,11 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import ImageEmptyState from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';

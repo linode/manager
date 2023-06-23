@@ -5,6 +5,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -16,7 +17,6 @@ import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 
@@ -97,9 +97,8 @@ export const RebuildFromImage = (props: Props) => {
   const [confirmationText, setConfirmationText] = React.useState<string>('');
 
   const [userData, setUserData] = React.useState<string | undefined>('');
-  const [shouldReuseUserData, setShouldReuseUserData] = React.useState<boolean>(
-    false
-  );
+  const [shouldReuseUserData, setShouldReuseUserData] =
+    React.useState<boolean>(false);
 
   const handleUserDataChange = (userData: string) => {
     setUserData(userData);

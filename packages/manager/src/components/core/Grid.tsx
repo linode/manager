@@ -9,12 +9,12 @@
 // Follow this flexbox Guide to better understand the underlying model:
 // - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
-import * as React from 'react';
-import clsx from 'clsx';
-import { withStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Breakpoint } from '@mui/material';
 import type { GridProps } from '@mui/material/Grid';
+import { Theme } from '@mui/material/styles';
+import { withStyles } from '@mui/styles';
+import clsx from 'clsx';
+import * as React from 'react';
 import { breakpoints } from 'src/foundations/breakpoints';
 
 const SPACINGS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

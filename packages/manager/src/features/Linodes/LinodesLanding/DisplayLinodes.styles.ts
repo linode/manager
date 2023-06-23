@@ -1,8 +1,8 @@
+import { styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { IconButton } from 'src/components/IconButton';
-import { isPropValid } from 'src/utilities/isPropValid';
-import { styled } from '@mui/material/styles';
 import { TableRow } from 'src/components/TableRow';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 export const StyledTagHeaderRow = styled(TableRow, {
   label: 'StyledTagHeaderRow',

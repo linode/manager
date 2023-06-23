@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import { useTheme } from '@mui/material/styles';
-import Paper from 'src/components/core/Paper';
-import Box from '@mui/material/Box';
-import Chip from 'src/components/core/Chip';
-import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import ThirdPartyPayment from './ThirdPartyPayment';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
+import { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
-import { queryKey } from 'src/queries/accountPayment';
+import * as React from 'react';
 import { useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import Chip from 'src/components/core/Chip';
+import Paper from 'src/components/core/Paper';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import { queryKey } from 'src/queries/accountPayment';
+import ThirdPartyPayment from './ThirdPartyPayment';
 
 interface Props {
   paymentMethod: PaymentMethod;

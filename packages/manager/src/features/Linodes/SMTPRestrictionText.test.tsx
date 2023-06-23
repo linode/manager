@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { accountCreatedAfterRestrictions } from './SMTPRestrictionText';
-import SMTPRestrictionText, { Props } from './SMTPRestrictionText';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { accountFactory } from 'src/factories/account';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import SMTPRestrictionText, {
+  accountCreatedAfterRestrictions,
+  Props,
+} from './SMTPRestrictionText';
 
 const defaultChildren = (props: { text: React.ReactNode }) => (
   <span>{props.text}</span>

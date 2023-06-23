@@ -1,26 +1,26 @@
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import NodeBalancerConfigurations from './NodeBalancerConfigurations';
-import NodeBalancerSettings from './NodeBalancerSettings';
-import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import LandingHeader from 'src/components/LandingHeader';
-import {
-  useNodeBalancerQuery,
-  useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
 import {
   matchPath,
   useHistory,
   useLocation,
   useParams,
 } from 'react-router-dom';
+import { CircleProgress } from 'src/components/CircleProgress';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
+import {
+  useNodeBalancerQuery,
+  useNodebalancerUpdateMutation,
+} from 'src/queries/nodebalancers';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import NodeBalancerConfigurations from './NodeBalancerConfigurations';
+import NodeBalancerSettings from './NodeBalancerSettings';
+import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 
 export const NodeBalancerDetail = () => {
   const history = useHistory();
@@ -29,10 +29,8 @@ export const NodeBalancerDetail = () => {
   const id = Number(nodeBalancerId);
   const [label, setLabel] = React.useState<string>();
 
-  const {
-    mutateAsync: updateNodeBalancer,
-    error: updateError,
-  } = useNodebalancerUpdateMutation(id);
+  const { mutateAsync: updateNodeBalancer, error: updateError } =
+    useNodebalancerUpdateMutation(id);
 
   const { data: nodebalancer, isLoading, error } = useNodeBalancerQuery(id);
 

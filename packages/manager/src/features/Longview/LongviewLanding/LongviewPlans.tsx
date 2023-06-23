@@ -4,29 +4,29 @@ import {
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { SupportLink } from 'src/components/SupportLink';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useGrants, useProfile } from 'src/queries/profile';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -331,8 +331,8 @@ interface LongviewPlansTableBodyProps {
   disabled: boolean;
 }
 
-export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = React.memo(
-  (props) => {
+export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> =
+  React.memo((props) => {
     const { loading, error, subscriptions, selectedSub, ...rest } = props;
 
     if (loading) {
@@ -375,8 +375,7 @@ export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = Rea
         ))}
       </>
     );
-  }
-);
+  });
 
 // =============================================================================
 // LongviewSubscriptionRow
@@ -395,8 +394,8 @@ interface LongviewSubscriptionRowProps {
   disabled: boolean;
 }
 
-export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = React.memo(
-  (props) => {
+export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> =
+  React.memo((props) => {
     const {
       id,
       plan,
@@ -477,8 +476,7 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
         </TableCell>
       </TableRow>
     );
-  }
-);
+  });
 
 // =============================================================================
 // Utilities

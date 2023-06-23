@@ -52,52 +52,51 @@ export const getAll: <T>(
   getter: GetFunction<T>,
   pageSize?: number,
   cb?: (results: number) => void
-) => (params?: Params, filter?: Filter) => Promise<GetAllData<T>> = (
-  getter,
-  pageSize = API_MAX_PAGE_SIZE,
-  cb
-) => (params?: Params, filter?: Filter) => {
-  const pagination = { ...params, page_size: pageSize };
-  return getter(pagination, filter).then(
-    ({ data: firstPageData, page, pages, results }) => {
-      // If we only have one page, return it.
-      if (page === pages) {
-        return {
-          data: firstPageData,
-          results,
-        };
-      }
+) => (params?: Params, filter?: Filter) => Promise<GetAllData<T>> =
+  (getter, pageSize = API_MAX_PAGE_SIZE, cb) =>
+  (params?: Params, filter?: Filter) => {
+    const pagination = { ...params, page_size: pageSize };
+    return getter(pagination, filter).then(
+      ({ data: firstPageData, page, pages, results }) => {
+        // If we only have one page, return it.
+        if (page === pages) {
+          return {
+            data: firstPageData,
+            results,
+          };
+        }
 
-      // If the number of results is over the threshold, use the callback
-      // to mark the account as large
-      if (cb) {
-        cb(results);
-      }
+        // If the number of results is over the threshold, use the callback
+        // to mark the account as large
+        if (cb) {
+          cb(results);
+        }
 
-      // Create an iterable list of the remaining pages.
-      const remainingPages = range(page + 1, pages + 1);
+        // Create an iterable list of the remaining pages.
+        const remainingPages = range(page + 1, pages + 1);
 
-      const promises: Promise<any>[] = [];
-      remainingPages.forEach((thisPage) => {
-        const promise = getter({ ...pagination, page: thisPage }, filter).then(
-          (response) => response.data
+        const promises: Promise<any>[] = [];
+        remainingPages.forEach((thisPage) => {
+          const promise = getter(
+            { ...pagination, page: thisPage },
+            filter
+          ).then((response) => response.data);
+          promises.push(promise);
+        });
+        //
+        return (
+          Promise.all(promises)
+            /** We're given data[][], so we flatten that, and append the first page response. */
+            .then((resultPages) => {
+              const combinedData = resultPages.reduce((result, nextPage) => {
+                return [...result, ...nextPage];
+              }, firstPageData);
+              return {
+                data: combinedData,
+                results,
+              };
+            })
         );
-        promises.push(promise);
-      });
-      //
-      return (
-        Promise.all(promises)
-          /** We're given data[][], so we flatten that, and append the first page response. */
-          .then((resultPages) => {
-            const combinedData = resultPages.reduce((result, nextPage) => {
-              return [...result, ...nextPage];
-            }, firstPageData);
-            return {
-              data: combinedData,
-              results,
-            };
-          })
-      );
-    }
-  );
-};
+      }
+    );
+  };

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Typography from 'src/components/core/Typography';

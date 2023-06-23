@@ -21,12 +21,8 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const {
-      getByTestId,
-      rerender,
-      queryByTestId,
-      findByTestId,
-    } = renderWithTheme(<PrimaryNav {...props} />, { queryClient });
+    const { getByTestId, rerender, queryByTestId, findByTestId } =
+      renderWithTheme(<PrimaryNav {...props} />, { queryClient });
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 
     server.use(

@@ -1,7 +1,7 @@
 import * as React from 'react';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import LandingHeader from './LandingHeader';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 describe('LandingHeader', () => {
   it('should render a title', () => {

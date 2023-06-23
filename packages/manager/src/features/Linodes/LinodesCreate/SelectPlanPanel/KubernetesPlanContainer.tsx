@@ -1,11 +1,11 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { TableCell } from 'src/components/TableCell';
-import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 

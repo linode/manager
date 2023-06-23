@@ -1,4 +1,3 @@
-import { castDraft } from 'immer';
 import { Event } from '@linode/api-v4/lib/account';
 import {
   cloneLinode,
@@ -9,6 +8,10 @@ import {
   LinodeStatus,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -22,16 +25,13 @@ import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';

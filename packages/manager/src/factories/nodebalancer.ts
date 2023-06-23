@@ -1,9 +1,9 @@
-import * as Factory from 'factory.ts';
 import {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers/types';
+import * as Factory from 'factory.ts';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   id: Factory.each((id) => id),
@@ -23,8 +23,8 @@ export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   tags: [],
 });
 
-export const nodeBalancerConfigFactory = Factory.Sync.makeFactory<NodeBalancerConfig>(
-  {
+export const nodeBalancerConfigFactory =
+  Factory.Sync.makeFactory<NodeBalancerConfig>({
     id: Factory.each((id) => id),
     algorithm: 'roundrobin',
     check: 'connection',
@@ -46,11 +46,10 @@ export const nodeBalancerConfigFactory = Factory.Sync.makeFactory<NodeBalancerCo
     ssl_fingerprint: '',
     ssl_key: '',
     stickiness: 'table',
-  }
-);
+  });
 
-export const nodeBalancerConfigNodeFactory = Factory.Sync.makeFactory<NodeBalancerConfigNode>(
-  {
+export const nodeBalancerConfigNodeFactory =
+  Factory.Sync.makeFactory<NodeBalancerConfigNode>({
     id: Factory.each((id) => id),
     address: '192.168.0.1:80',
     config_id: Factory.each((id) => id),
@@ -59,5 +58,4 @@ export const nodeBalancerConfigNodeFactory = Factory.Sync.makeFactory<NodeBalanc
     nodebalancer_id: Factory.each((id) => id),
     status: 'DOWN',
     weight: 100,
-  }
-);
+  });

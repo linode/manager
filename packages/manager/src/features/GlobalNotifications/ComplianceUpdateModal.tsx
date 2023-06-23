@@ -1,15 +1,15 @@
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { SupportLink } from 'src/components/SupportLink';
+import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
+import { queryKey } from 'src/queries/accountNotifications';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
-import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { useQueryClient } from 'react-query';
-import { queryKey } from 'src/queries/accountNotifications';
 
 const ComplianceUpdateModal = () => {
   const [error, setError] = React.useState('');
@@ -18,10 +18,8 @@ const ComplianceUpdateModal = () => {
 
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
-  const {
-    mutateAsync: updateAccountAgreements,
-    isLoading,
-  } = useMutateAccountAgreements();
+  const { mutateAsync: updateAccountAgreements, isLoading } =
+    useMutateAccountAgreements();
 
   const handleAgree = () => {
     setError('');

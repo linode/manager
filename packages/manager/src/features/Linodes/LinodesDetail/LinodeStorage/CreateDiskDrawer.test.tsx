@@ -1,9 +1,9 @@
 import React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { CreateDiskDrawer } from './CreateDiskDrawer';
-import { rest, server } from 'src/mocks/testServer';
 import { linodeDiskFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { CreateDiskDrawer } from './CreateDiskDrawer';
 
 describe('CreateDiskDrawer', () => {
   it('should render', async () => {

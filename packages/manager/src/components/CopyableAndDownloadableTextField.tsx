@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import snakeCase from 'lodash/snakeCase';
+import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import DownloadTooltip from 'src/components/DownloadTooltip';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({

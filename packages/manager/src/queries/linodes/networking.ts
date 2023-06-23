@@ -1,10 +1,14 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { queryKey } from './linodes';
-import { getAll } from 'src/utilities/getAll';
 import {
+  allocateIPAddress,
   APIError,
+  assignAddresses,
+  createIPv6Range,
   CreateIPv6RangePayload,
   Filter,
+  getIPs,
+  getIPv6RangeInfo,
+  getIPv6Ranges,
+  getLinodeIPs,
   IPAddress,
   IPAllocationRequest,
   IPAssignmentPayload,
@@ -13,18 +17,14 @@ import {
   IPSharingPayload,
   LinodeIPsResponse,
   Params,
-  allocateIPAddress,
-  assignAddresses,
-  createIPv6Range,
-  getIPs,
-  getIPv6RangeInfo,
-  getIPv6Ranges,
-  getLinodeIPs,
   removeIPAddress,
   removeIPv6Range,
   shareAddresses,
   updateIP,
 } from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { getAll } from 'src/utilities/getAll';
+import { queryKey } from './linodes';
 
 export const useLinodeIPsQuery = (
   linodeId: number,

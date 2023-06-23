@@ -1,15 +1,15 @@
 import * as React from 'react';
-import AppsSection from './AppsSection';
+import { useHistory } from 'react-router-dom';
 import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg';
 import MarketplaceIcon from 'src/assets/icons/marketplace.svg';
 import PointerIcon from 'src/assets/icons/pointer.svg';
-import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics';
-import { useHistory } from 'react-router-dom';
+import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
+import AppsSection from './AppsSection';
 import {
   gettingStartedGuides,
   headers,

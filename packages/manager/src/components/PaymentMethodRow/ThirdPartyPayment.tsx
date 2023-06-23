@@ -1,12 +1,12 @@
 import { PaymentMethod, ThirdPartyPayment } from '@linode/api-v4/lib/account';
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles, useTheme } from '@mui/styles';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
-import { makeStyles, useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from 'src/components/core/Typography';
-import Box from '@mui/material/Box';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({

@@ -1,15 +1,15 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Box from 'src/components/core/Box';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import Divider from 'src/components/core/Divider';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
@@ -174,12 +174,10 @@ const renderField = (
   );
 };
 
-const handleOpenDrawer = (
-  openDrawer: CombinedProps['openDrawer'],
-  selectedLabel: string
-) => () => {
-  openDrawer?.(selectedLabel);
-};
+const handleOpenDrawer =
+  (openDrawer: CombinedProps['openDrawer'], selectedLabel: string) => () => {
+    openDrawer?.(selectedLabel);
+  };
 
 const UserDefinedFieldsPanel = (props: CombinedProps) => {
   const classes = useStyles();

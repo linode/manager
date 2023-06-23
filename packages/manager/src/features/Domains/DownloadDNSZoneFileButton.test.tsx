@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
+import * as React from 'react';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
 
 jest.mock('@linode/api-v4/lib/domains', () => ({
   getDNSZoneFile: jest.fn().mockResolvedValue({

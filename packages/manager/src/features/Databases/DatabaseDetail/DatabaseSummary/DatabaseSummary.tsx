@@ -1,9 +1,9 @@
 import { Database } from '@linode/api-v4/lib/databases/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'src/components/Link';
 import AccessControls from '../AccessControls';
 import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';

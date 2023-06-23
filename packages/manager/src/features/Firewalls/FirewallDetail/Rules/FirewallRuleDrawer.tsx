@@ -1,28 +1,28 @@
-import * as React from 'react';
-import Drawer from 'src/components/Drawer';
-import Typography from 'src/components/core/Typography';
-import { capitalize } from 'src/utilities/capitalize';
-import { FirewallRuleForm } from './FirewallRuleForm';
+import type {
+  FirewallRuleProtocol,
+  FirewallRuleType,
+} from '@linode/api-v4/lib/firewalls';
 import { Formik } from 'formik';
-import {
-  getInitialFormValues,
-  getInitialIPs,
-  itemsToPortString,
-  formValueToIPs,
-  portStringToItems,
-  validateForm,
-  validateIPs,
-} from './FirewallRuleDrawer.utils';
+import * as React from 'react';
+import Typography from 'src/components/core/Typography';
+import Drawer from 'src/components/Drawer';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import { capitalize } from 'src/utilities/capitalize';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 import type {
   FirewallRuleDrawerProps,
   FormState,
 } from './FirewallRuleDrawer.types';
-import type {
-  FirewallRuleProtocol,
-  FirewallRuleType,
-} from '@linode/api-v4/lib/firewalls';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import {
+  formValueToIPs,
+  getInitialFormValues,
+  getInitialIPs,
+  itemsToPortString,
+  portStringToItems,
+  validateForm,
+  validateIPs,
+} from './FirewallRuleDrawer.utils';
+import { FirewallRuleForm } from './FirewallRuleForm';
 
 // =============================================================================
 // <FirewallRuleDrawer />

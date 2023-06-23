@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { BareMetalRescue } from './BareMetalRescue';
-import { StandardRescueDialog } from './StandardRescueDialog';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
+import { BareMetalRescue } from './BareMetalRescue';
+import { StandardRescueDialog } from './StandardRescueDialog';
 
 export interface Props {
   open: boolean;

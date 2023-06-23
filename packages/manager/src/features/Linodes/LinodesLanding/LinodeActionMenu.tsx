@@ -1,15 +1,15 @@
 import { LinodeBackups, LinodeType } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useSpecificTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import {
   sendLinodeActionEvent,
@@ -57,13 +57,8 @@ export const buildQueryStringForLinodeClone = (
 };
 
 export const LinodeActionMenu: React.FC<Props> = (props) => {
-  const {
-    linodeId,
-    linodeRegion,
-    linodeStatus,
-    linodeType,
-    inListView,
-  } = props;
+  const { linodeId, linodeRegion, linodeStatus, linodeType, inListView } =
+    props;
 
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));

@@ -7,15 +7,16 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { useParams } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
-import Grid from '@mui/material/Unstable_Grid2';
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { IconButton } from 'src/components/IconButton';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -26,7 +27,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import InvoiceTable from './InvoiceTable';
-import Box from '@mui/material/Box';
 
 export const InvoiceDetail = () => {
   const { invoiceId } = useParams<{ invoiceId: string }>();
@@ -42,9 +42,8 @@ export const InvoiceDetail = () => {
   );
   const [loading, setLoading] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [pdfGenerationError, setPDFGenerationError] = React.useState<any>(
-    undefined
-  );
+  const [pdfGenerationError, setPDFGenerationError] =
+    React.useState<any>(undefined);
 
   const flags = useFlags();
 

@@ -1,5 +1,5 @@
-import Chip from 'src/components/core/Chip';
 import { styled } from '@mui/material/styles';
+import Chip from 'src/components/core/Chip';
 import { TableCell } from 'src/components/TableCell';
 
 export const StyledChip = styled(Chip, { label: 'StyledChip' })(

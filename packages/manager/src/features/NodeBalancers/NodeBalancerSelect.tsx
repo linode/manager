@@ -1,8 +1,8 @@
+import { NodeBalancer } from '@linode/api-v4';
+import Autocomplete from '@mui/material/Autocomplete';
 import * as React from 'react';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
-import { NodeBalancer } from '@linode/api-v4';
 
 interface Props {
   error?: string;
@@ -26,17 +26,13 @@ export const NodeBalancerSelect = (props: Props) => {
       }
     : {};
 
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-  } = useInfiniteNodebalancersQuery({
-    ...searchFilter,
-    ...(region ? { region } : {}),
-    '+order_by': 'label',
-    '+order': 'asc',
-  });
+  const { data, isLoading, fetchNextPage, hasNextPage } =
+    useInfiniteNodebalancersQuery({
+      ...searchFilter,
+      ...(region ? { region } : {}),
+      '+order_by': 'label',
+      '+order': 'asc',
+    });
   const nodebalancers = data?.pages.flatMap((page) => page.data);
 
   const options = nodebalancers?.map(({ id, label }) => ({ id, label }));

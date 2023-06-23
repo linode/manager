@@ -1,14 +1,14 @@
-import JSPDF from 'jspdf';
-import autoTable, { CellHookData } from 'jspdf-autotable';
 import {
   Invoice,
   InvoiceItem,
   Payment,
   TaxSummary,
 } from '@linode/api-v4/lib/account';
+import JSPDF from 'jspdf';
+import autoTable, { CellHookData } from 'jspdf-autotable';
 import { pathOr } from 'ramda';
-import formatDate from 'src/utilities/formatDate';
 import { ADDRESSES } from 'src/constants';
+import formatDate from 'src/utilities/formatDate';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 
 /**

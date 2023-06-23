@@ -1,7 +1,7 @@
-import Button from 'src/components/Button';
 import { styled } from '@mui/material/styles';
-import { isPropValid } from 'src/utilities/isPropValid';
+import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 interface DropZoneClassProps {
   isDragActive: boolean;

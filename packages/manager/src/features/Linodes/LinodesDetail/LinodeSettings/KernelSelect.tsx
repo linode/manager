@@ -1,7 +1,7 @@
 import { Kernel } from '@linode/api-v4/lib/linodes/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-import Select, { Item, GroupType } from 'src/components/EnhancedSelect/Select';
+import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 
 export interface Props {
   kernels: Kernel[];

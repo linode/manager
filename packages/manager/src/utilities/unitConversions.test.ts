@@ -1,9 +1,9 @@
 import {
   convertBytesToTarget,
+  convertMegabytesTo,
+  convertStorageUnit,
   readableBytes,
   ReadableBytesOptions,
-  convertStorageUnit,
-  convertMegabytesTo,
 } from './unitConversions';
 
 describe('conversion helper functions', () => {

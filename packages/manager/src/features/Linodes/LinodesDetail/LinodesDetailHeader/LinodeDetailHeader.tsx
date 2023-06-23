@@ -16,8 +16,8 @@ import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
@@ -51,9 +51,8 @@ const LinodeDetailHeader = () => {
 
   const { data: linode, isLoading, error } = useLinodeQuery(matchedLinodeId);
 
-  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    matchedLinodeId
-  );
+  const { mutateAsync: updateLinode } =
+    useLinodeUpdateMutation(matchedLinodeId);
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -72,9 +71,8 @@ const LinodeDetailHeader = () => {
   const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
     queryParams.migrate === 'true'
   );
-  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
-    false
-  );
+  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] =
+    React.useState(false);
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -122,11 +120,8 @@ const LinodeDetailHeader = () => {
     });
   };
 
-  const {
-    editableLabelError,
-    setEditableLabelError,
-    resetEditableLabel,
-  } = useEditableLabelState();
+  const { editableLabelError, setEditableLabelError, resetEditableLabel } =
+    useEditableLabelState();
 
   const updateLinodeLabel = async (label: string) => {
     try {

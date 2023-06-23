@@ -266,4 +266,5 @@ export const CONTINENT_CODE_TO_CONTINENT = Object.freeze({
   AN: 'Antartica',
 });
 
-export type ContinentNames = typeof CONTINENT_CODE_TO_CONTINENT[keyof typeof CONTINENT_CODE_TO_CONTINENT];
+export type ContinentNames =
+  (typeof CONTINENT_CODE_TO_CONTINENT)[keyof typeof CONTINENT_CODE_TO_CONTINENT];

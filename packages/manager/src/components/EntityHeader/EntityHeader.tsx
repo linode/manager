@@ -1,7 +1,7 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import Typography, { TypographyProps } from 'src/components/core/Typography';
 
 export interface HeaderProps {
   children?: React.ReactNode;

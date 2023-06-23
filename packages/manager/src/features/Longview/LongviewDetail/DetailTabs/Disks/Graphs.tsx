@@ -1,8 +1,8 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles, withTheme, WithTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { isToday as _isToday } from 'src/utilities/isToday';
@@ -73,10 +73,10 @@ const Graphs: React.FC<CombinedProps> = (props) => {
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
 
   const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
-  const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
-    iFree,
-    iTotal,
-  ]);
+  const _inodes = React.useMemo(
+    () => formatINodes(iFree, iTotal),
+    [iFree, iTotal]
+  );
 
   if (childOf) {
     /** @todo document the why here. This comes from old Longview.JS */

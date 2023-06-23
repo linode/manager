@@ -1,3 +1,5 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -6,8 +8,6 @@ import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
 import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { IconTextLink } from 'src/components/IconTextLink/IconTextLink';

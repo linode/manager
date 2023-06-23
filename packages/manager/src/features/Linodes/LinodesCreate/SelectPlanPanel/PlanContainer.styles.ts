@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { Table } from 'src/components/Table';
-import { isPropValid } from 'src/utilities/isPropValid';
 import { TableCell, TableCellProps } from 'src/components/TableCell';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 type StyledTableCellPropsProps = TableCellProps & {
   isPlanCell?: boolean;

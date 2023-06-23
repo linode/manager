@@ -1,18 +1,18 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { useSnackbar } from 'notistack';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
+import { queryKey } from 'src/queries/accountNotifications';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedLinode } from '../types';
-import { useQueryClient } from 'react-query';
-import { queryKey } from 'src/queries/accountNotifications';
 
 interface Props {
   open: boolean;

@@ -1,7 +1,7 @@
+import { styled, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import RenderGuard from 'src/components/RenderGuard';
 import { makeStyles } from 'tss-react/mui';
-import { Theme, styled } from '@mui/material/styles';
 import Box, { BoxProps } from '../core/Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({

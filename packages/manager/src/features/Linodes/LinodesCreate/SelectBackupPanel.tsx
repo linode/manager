@@ -3,22 +3,22 @@ import {
   LinodeBackup,
   LinodeBackupsResponse,
 } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
-import { formatDate } from 'src/utilities/formatDate';
 import {
   withProfile,
   WithProfileProps,
 } from 'src/containers/profile.container';
+import { formatDate } from 'src/utilities/formatDate';
 
 export const aggregateBackups = (
   backups: LinodeBackupsResponse

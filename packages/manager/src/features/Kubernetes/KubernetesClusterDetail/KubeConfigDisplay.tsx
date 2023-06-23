@@ -1,20 +1,20 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import classNames from 'classnames';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
-import classNames from 'classnames';
+import Typography from 'src/components/core/Typography';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
   useKubenetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   clusterId: number;

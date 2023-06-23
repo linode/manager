@@ -14,9 +14,8 @@ interface Props {
 export const RevokeTrustedDeviceDialog = (props: Props) => {
   const { open, onClose, deviceId } = props;
 
-  const { mutateAsync, error, isLoading } = useRevokeTrustedDeviceMutation(
-    deviceId
-  );
+  const { mutateAsync, error, isLoading } =
+    useRevokeTrustedDeviceMutation(deviceId);
 
   const onRevoke = () => {
     mutateAsync().then(() => {

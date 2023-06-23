@@ -1,16 +1,16 @@
+import { Region } from '@linode/api-v4/lib/regions';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { Notice } from 'src/components/Notice/Notice';
-import { Region } from '@linode/api-v4/lib/regions';
-import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { Notice } from 'src/components/Notice/Notice';
+import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
-import { useLocation } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 interface SelectRegionPanelProps {
   disabled?: boolean;
@@ -22,14 +22,8 @@ interface SelectRegionPanelProps {
 }
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
-  const {
-    disabled,
-    error,
-    handleSelection,
-    helperText,
-    regions,
-    selectedID,
-  } = props;
+  const { disabled, error, handleSelection, helperText, regions, selectedID } =
+    props;
   const theme = useTheme();
   const location = useLocation();
   const params = getQueryParamsFromQueryString(location.search);

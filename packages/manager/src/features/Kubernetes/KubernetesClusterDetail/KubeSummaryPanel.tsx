@@ -1,5 +1,8 @@
 import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -7,21 +10,18 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import useFlags from 'src/hooks/useFlags';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { KubeConfigDisplay } from './KubeConfigDisplay';
-import { KubeConfigDrawer } from './KubeConfigDrawer';
-import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
   useResetKubeConfigMutation,
 } from 'src/queries/kubernetes';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
+import { KubeConfigDisplay } from './KubeConfigDisplay';
+import { KubeConfigDrawer } from './KubeConfigDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -114,10 +114,8 @@ export const KubeSummaryPanel = (props: Props) => {
     flags.kubernetesDashboardAvailability
   );
 
-  const {
-    data: dashboard,
-    error: dashboardError,
-  } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardFeatureEnabled);
+  const { data: dashboard, error: dashboardError } =
+    useKubernetesDashboardQuery(cluster.id, isKubeDashboardFeatureEnabled);
 
   const {
     mutateAsync: resetKubeConfig,
@@ -125,10 +123,8 @@ export const KubeSummaryPanel = (props: Props) => {
     error: resetKubeConfigError,
   } = useResetKubeConfigMutation();
 
-  const [
-    resetKubeConfigDialogOpen,
-    setResetKubeConfigDialogOpen,
-  ] = React.useState(false);
+  const [resetKubeConfigDialogOpen, setResetKubeConfigDialogOpen] =
+    React.useState(false);
 
   const handleResetKubeConfig = () => {
     return resetKubeConfig({ id: cluster.id }).then(() => {

@@ -12,9 +12,9 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { makeStyles } from 'tss-react/mui';
 
@@ -69,18 +69,15 @@ interface Props {
 export const MaintenanceWindow = (props: Props) => {
   const { database, timezone } = props;
 
-  const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<
-    APIError[]
-  >();
+  const [maintenanceUpdateError, setMaintenanceUpdateError] =
+    React.useState<APIError[]>();
 
   // This will be set to `true` once a form field has been touched. This is used to disable the
   // "Save Changes" button unless there have been changes to the form.
   const [formTouched, setFormTouched] = React.useState<boolean>(false);
 
-  const [
-    modifiedWeekSelectionMap,
-    setModifiedWeekSelectionMap,
-  ] = React.useState<Item<number>[]>([]);
+  const [modifiedWeekSelectionMap, setModifiedWeekSelectionMap] =
+    React.useState<Item<number>[]>([]);
 
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -153,23 +150,17 @@ export const MaintenanceWindow = (props: Props) => {
     return null;
   };
 
-  const {
-    values,
-    errors,
-    touched,
-    isSubmitting,
-    handleSubmit,
-    setFieldValue,
-  } = useFormik({
-    initialValues: {
-      frequency: database.updates?.frequency ?? 'weekly',
-      hour_of_day: database.updates?.hour_of_day ?? 20,
-      day_of_week: database.updates?.day_of_week ?? 1,
-      week_of_month: getInitialWeekOfMonth(),
-    },
-    // validationSchema: updateDatabaseSchema,
-    onSubmit: handleSaveMaintenanceWindow,
-  });
+  const { values, errors, touched, isSubmitting, handleSubmit, setFieldValue } =
+    useFormik({
+      initialValues: {
+        frequency: database.updates?.frequency ?? 'weekly',
+        hour_of_day: database.updates?.hour_of_day ?? 20,
+        day_of_week: database.updates?.day_of_week ?? 1,
+        week_of_month: getInitialWeekOfMonth(),
+      },
+      // validationSchema: updateDatabaseSchema,
+      onSubmit: handleSaveMaintenanceWindow,
+    });
 
   return (
     <form onSubmit={handleSubmit}>

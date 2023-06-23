@@ -1,6 +1,6 @@
+import { withTheme, WithTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { withTheme, WithTheme } from '@mui/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
   convertBytesToTarget,
@@ -49,12 +49,10 @@ export const MemoryGraph: React.FC<CombinedProps> = (props) => {
   const swap = pathOr<Stat[]>([], ['Memory', 'swap', 'used'], data);
 
   // Determine the unit based on the largest value
-  const unit = React.useMemo(() => getMaxUnit([buffers, cache, used, swap]), [
-    buffers,
-    cache,
-    used,
-    swap,
-  ]);
+  const unit = React.useMemo(
+    () => getMaxUnit([buffers, cache, used, swap]),
+    [buffers, cache, used, swap]
+  );
 
   return (
     <LongviewLineGraph

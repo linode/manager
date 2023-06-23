@@ -6,13 +6,12 @@ interface Props {
   onClick: () => void;
 }
 
-const getOnClickHandler = (openDrawer: Props['onClick']) => (
-  event: React.MouseEvent<any>
-) => {
-  event.stopPropagation();
-  event.preventDefault();
-  openDrawer();
-};
+const getOnClickHandler =
+  (openDrawer: Props['onClick']) => (event: React.MouseEvent<any>) => {
+    event.stopPropagation();
+    event.preventDefault();
+    openDrawer();
+  };
 
 const AppInfo = (props: Props) => {
   const { onClick } = props;

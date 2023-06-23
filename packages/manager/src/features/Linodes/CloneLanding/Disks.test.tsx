@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
-import { extDisk3, swapDisk } from 'src/__data__/disks';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { extDisk3, swapDisk } from 'src/__data__/disks';
 import { Disks, Props } from './Disks';
 
 const disks = [extDisk3, swapDisk];

@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
+import type { Region } from '@linode/api-v4';
+import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
+import { PlanContainer } from './PlanContainer';
+import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
   planTabInfoContent,
 } from './utils';
-import { PlanContainer } from './PlanContainer';
-import { PlanInformation } from './PlanInformation';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
-import type { Region } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];

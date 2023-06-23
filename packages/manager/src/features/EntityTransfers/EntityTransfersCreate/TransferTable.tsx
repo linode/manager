@@ -1,14 +1,14 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({

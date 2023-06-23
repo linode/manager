@@ -1,5 +1,5 @@
-import { createStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { createStyles, WithStyles } from '@mui/styles';
 
 type ClassNames =
   | 'region'

@@ -4,8 +4,8 @@ import { QueryClient } from 'react-query';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
-  Props,
   DeleteKubernetesClusterDialog,
+  Props,
 } from './DeleteKubernetesClusterDialog';
 
 const props: Props = {

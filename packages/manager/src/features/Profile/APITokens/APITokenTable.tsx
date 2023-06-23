@@ -1,16 +1,11 @@
+import { Token } from '@linode/api-v4/lib/profile';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Box from 'src/components/core/Box';
-import Grid from '@mui/material/Unstable_Grid2';
 import Typography from 'src/components/core/Typography';
-import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { EditAPITokenDrawer } from './EditAPITokenDrawer';
-import { isWayInTheFuture } from './utils';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { RevokeTokenDialog } from './RevokeTokenDialog';
-import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -18,22 +13,27 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { APITokenMenu } from './APITokenMenu';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { Token } from '@linode/api-v4/lib/profile';
+import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
+import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
+import {
+  useAppTokensQuery,
+  usePersonalAccessTokensQuery,
+} from 'src/queries/tokens';
+import { APITokenMenu } from './APITokenMenu';
 import {
   StyledAddNewWrapper,
   StyledHeadline,
   StyledRootContainer,
 } from './APITokenTable.styles';
-import {
-  useAppTokensQuery,
-  usePersonalAccessTokensQuery,
-} from 'src/queries/tokens';
+import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
+import { EditAPITokenDrawer } from './EditAPITokenDrawer';
+import { RevokeTokenDialog } from './RevokeTokenDialog';
+import { isWayInTheFuture } from './utils';
+import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
 

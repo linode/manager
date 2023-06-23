@@ -1,12 +1,12 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { ImageStatus } from '@linode/api-v4/lib/images/types';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Handlers {

@@ -1,4 +1,6 @@
 import { makePayment } from '@linode/api-v4/lib/account/payments';
+import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import {
   BraintreePayPalButtons,
   CreateOrderBraintreeActions,
@@ -8,19 +10,17 @@ import {
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
-import Tooltip from 'src/components/core/Tooltip';
+import { useQueryClient } from 'react-query';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Grid from '@mui/material/Unstable_Grid2';
+import Tooltip from 'src/components/core/Tooltip';
 import { reportException } from 'src/exceptionReporting';
+import { getPaymentLimits } from 'src/features/Billing/billingUtils';
+import { useAccount } from 'src/queries/account';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
-import { SetSuccess } from './types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useAccount } from 'src/queries/account';
-import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { useQueryClient } from 'react-query';
+import { makeStyles } from 'tss-react/mui';
+import { SetSuccess } from './types';
 
 const useStyles = makeStyles()(() => ({
   root: {

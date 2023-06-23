@@ -1,12 +1,12 @@
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
+import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { makeStyles } from 'tss-react/mui';
 

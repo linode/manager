@@ -1,12 +1,12 @@
-import React from 'react';
-import Typography from 'src/components/core/Typography';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import { Config } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
+import React from 'react';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
+import Typography from 'src/components/core/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
 
 interface Props {
   open: boolean;

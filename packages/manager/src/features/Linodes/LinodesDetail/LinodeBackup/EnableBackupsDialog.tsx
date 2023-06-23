@@ -1,14 +1,14 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 import { Currency } from 'src/components/Currency';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupsEnableMutation } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   linodeId: number | undefined;

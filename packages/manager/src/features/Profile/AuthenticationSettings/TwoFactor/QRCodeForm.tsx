@@ -1,8 +1,8 @@
-import * as React from 'react';
-import QRCode from 'qrcode.react';
-import Typography from 'src/components/core/Typography';
-import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { styled } from '@mui/material/styles';
+import QRCode from 'qrcode.react';
+import * as React from 'react';
+import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
+import Typography from 'src/components/core/Typography';
 
 interface Props {
   secret: string;

@@ -1,14 +1,14 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   docsLink,
   guidesMoreLinkText,
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description:
@@ -24,13 +24,11 @@ export const gettingStartedGuides: ResourcesLinkSection = {
       text: 'Overview of Managed Databases',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/databases/managed-databases/get-started/',
+      to: 'https://www.linode.com/docs/products/databases/managed-databases/get-started/',
       text: 'Get Started with Managed Databases',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/databases/managed-databases/guides/database-engines/',
+      to: 'https://www.linode.com/docs/products/databases/managed-databases/guides/database-engines/',
       text: 'Choosing a Database Engine',
     },
   ],
@@ -54,8 +52,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
       external: true,
     },
     {
-      to:
-        'https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC',
+      to: 'https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC',
       text: 'MySQL Beginner Series',
       external: true,
     },

@@ -1,13 +1,13 @@
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { makeStyles } from 'tss-react/mui';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import { makeStyles } from 'tss-react/mui';
 import { IPTypes } from './types';
 
 const useStyles = makeStyles()(() => ({

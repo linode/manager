@@ -1,3 +1,6 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
@@ -5,11 +8,8 @@ import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 

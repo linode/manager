@@ -65,11 +65,10 @@ describe('Database Table', () => {
       })
     );
 
-    const {
-      getAllByText,
-      getByTestId,
-      queryAllByText,
-    } = renderWithTheme(<DatabaseLanding />, { queryClient });
+    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
+      <DatabaseLanding />,
+      { queryClient }
+    );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();

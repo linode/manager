@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { act, waitFor } from '@testing-library/react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
-import { rest, server } from 'src/mocks/testServer';
-import { profileFactory } from 'src/factories';
+import * as React from 'react';
 import { QueryClient } from 'react-query';
+import { profileFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import type { ObjectDetailsDrawerProps } from './ObjectDetailsDrawer';
+import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 
 jest.mock('@linode/api-v4/lib/object-storage/objects', () => {
   return {

@@ -1,16 +1,15 @@
-import * as Factory from 'factory.ts';
 import {
   EntityTransfer,
   TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers/types';
-import { v4 } from 'uuid';
+import * as Factory from 'factory.ts';
 import { DateTime } from 'luxon';
+import { v4 } from 'uuid';
 
-export const transferEntitiesFactory = Factory.Sync.makeFactory<TransferEntities>(
-  {
+export const transferEntitiesFactory =
+  Factory.Sync.makeFactory<TransferEntities>({
     linodes: [0, 1, 2, 3],
-  }
-);
+  });
 
 export const entityTransferFactory = Factory.Sync.makeFactory<EntityTransfer>({
   token: Factory.each(() => v4()),

@@ -1,3 +1,6 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
@@ -5,10 +8,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Error from 'src/assets/icons/error.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';
 import { REFRESH_INTERVAL } from 'src/constants';
@@ -18,28 +18,28 @@ import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useSpecificTypes } from 'src/queries/types';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
+import { getImageLabelForLinode } from '../Images/utils';
 import ResultGroup from './ResultGroup';
 import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { getImageLabelForLinode } from '../Images/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -111,10 +111,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     error: objectStorageClustersError,
   } = useObjectStorageClusters(!_isLargeAccount);
 
-  const {
-    data: objectStorageBuckets,
-    isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets(objectStorageClusters, !_isLargeAccount);
+  const { data: objectStorageBuckets, isLoading: areBucketsLoading } =
+    useObjectStorageBuckets(objectStorageClusters, !_isLargeAccount);
 
   const {
     data: domains,

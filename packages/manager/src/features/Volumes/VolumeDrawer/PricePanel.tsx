@@ -1,7 +1,7 @@
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import Box from 'src/components/core/Box';
 
 const getPrice = (size: number) => {
   return size * 0.1;

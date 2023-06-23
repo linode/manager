@@ -1,7 +1,7 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { components, SingleValueProps } from 'react-select';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

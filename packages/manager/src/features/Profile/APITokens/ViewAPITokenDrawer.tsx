@@ -1,17 +1,17 @@
+import { Token } from '@linode/api-v4/lib/profile/types';
 import * as React from 'react';
 import Drawer from 'src/components/Drawer';
-import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
-import { scopeStringToPermTuples, basePermNameMap } from './utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Token } from '@linode/api-v4/lib/profile/types';
+import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import {
   StyledAccessCell,
   StyledPermissionsCell,
   StyledPermsTable,
 } from './APITokenDrawer.styles';
+import { basePermNameMap, scopeStringToPermTuples } from './utils';
 
 interface Props {
   open: boolean;

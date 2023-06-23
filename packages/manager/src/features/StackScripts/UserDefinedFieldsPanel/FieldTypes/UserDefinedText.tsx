@@ -1,8 +1,8 @@
-import classNames from 'classnames';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import classNames from 'classnames';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 

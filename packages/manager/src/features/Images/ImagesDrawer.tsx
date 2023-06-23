@@ -1,5 +1,7 @@
 import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
@@ -7,8 +9,6 @@ import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
@@ -18,13 +18,13 @@ import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
 import LinodeSelect from 'src/features/Linodes/LinodeSelect';
-import { useImageAndLinodeGrantCheck } from './utils';
 import {
   useCreateImageMutation,
   useUpdateImageMutation,
 } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { useImageAndLinodeGrantCheck } from './utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -98,10 +98,8 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
-  const {
-    canCreateImage,
-    permissionedLinodes: availableLinodes,
-  } = useImageAndLinodeGrantCheck();
+  const { canCreateImage, permissionedLinodes: availableLinodes } =
+    useImageAndLinodeGrantCheck();
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   const [notice, setNotice] = React.useState(undefined);

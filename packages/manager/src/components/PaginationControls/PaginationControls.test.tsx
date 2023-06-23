@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { PaginationControls } from './PaginationControls';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { PaginationControls } from './PaginationControls';
 
 const props = {
   count: 100,

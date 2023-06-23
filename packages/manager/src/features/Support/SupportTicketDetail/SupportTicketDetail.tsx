@@ -1,33 +1,33 @@
 import { SupportReply } from '@linode/api-v4/lib/support';
+import Stack from '@mui/material/Stack';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { Waypoint } from 'react-waypoint';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
-import formatDate from 'src/utilities/formatDate';
-import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
-import TicketAttachmentList from '../TicketAttachmentList';
-import AttachmentError from './AttachmentError';
-import { ReplyContainer } from './TabbedReply/ReplyContainer';
 import LandingHeader from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
+import { useProfile } from 'src/queries/profile';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,
 } from 'src/queries/support';
-import { useProfile } from 'src/queries/profile';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
-import { Waypoint } from 'react-waypoint';
-import Stack from '@mui/material/Stack';
-import { Notice } from 'src/components/Notice/Notice';
-import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { capitalize } from 'src/utilities/capitalize';
+import formatDate from 'src/utilities/formatDate';
+import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+import { makeStyles } from 'tss-react/mui';
+import { ExpandableTicketPanel } from '../ExpandableTicketPanel';
+import TicketAttachmentList from '../TicketAttachmentList';
+import AttachmentError from './AttachmentError';
+import { ReplyContainer } from './TabbedReply/ReplyContainer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   title: {

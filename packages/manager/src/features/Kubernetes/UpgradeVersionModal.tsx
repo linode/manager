@@ -1,18 +1,18 @@
+import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
-import { useSnackbar } from 'notistack';
-import {
-  useKubernetesClusterMutation,
-  useKubernetesVersionQuery,
-} from 'src/queries/kubernetes';
 import {
   getNextVersion,
   localStorageWarning,
 } from 'src/features/Kubernetes/kubeUtils';
+import {
+  useKubernetesClusterMutation,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 
 interface Props {
   clusterID: number;
@@ -28,15 +28,13 @@ export const UpgradeDialog = (props: Props) => {
   const { data: versions } = useKubernetesVersionQuery();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterID
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterID);
 
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
-  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] = React.useState(
-    false
-  );
+  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] =
+    React.useState(false);
 
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);

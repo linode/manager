@@ -13,9 +13,8 @@ const defaultContext = {
   closeMenu: () => null,
 };
 
-export const notificationContext = createContext<NotificationContextProps>(
-  defaultContext
-);
+export const notificationContext =
+  createContext<NotificationContextProps>(defaultContext);
 
 export const menuId = 'notification-events-menu';
 export const menuButtonId = 'menu-button--notification-events-menu';

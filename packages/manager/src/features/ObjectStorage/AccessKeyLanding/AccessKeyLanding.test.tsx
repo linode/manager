@@ -1,8 +1,8 @@
+import { screen } from '@testing-library/react';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { pageyProps } from 'src/__data__/pageyProps';
 import { AccessKeyLanding } from './AccessKeyLanding';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { screen } from '@testing-library/react';
 
 const props = {
   classes: {

@@ -1,29 +1,29 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
+import { ResizeLinodeDiskSchema } from '@linode/validation';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Code from 'src/components/Code';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Drawer from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { sendEvent } from 'src/utilities/analytics';
-import { useSnackbar } from 'notistack';
-import { calculateDiskFree } from './CreateDiskDrawer';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskResizeMutation,
 } from 'src/queries/linodes/disks';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { ResizeLinodeDiskSchema } from '@linode/validation';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { sendEvent } from 'src/utilities/analytics';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import { calculateDiskFree } from './CreateDiskDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formHelperTextLink: {

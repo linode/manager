@@ -1,7 +1,7 @@
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
 
 export const StyledResultsWrapper = styled('div', {
   label: 'StyledResultsWrapper',

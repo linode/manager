@@ -1,10 +1,10 @@
+import { typeFactory } from 'src/factories/types';
+import { extendedTypes } from 'src/__data__/ExtendedType';
 import {
   determineInitialPlanCategoryTab,
   getPlanSelectionsByPlanType,
   planTypeOrder,
 } from './utils';
-import { typeFactory } from 'src/factories/types';
-import { extendedTypes } from 'src/__data__/ExtendedType';
 
 const standard = typeFactory.build({ id: 'g6-standard-1', class: 'standard' });
 const metal = typeFactory.build({ id: 'g6-metal-alpha-2', class: 'metal' });

@@ -1,6 +1,6 @@
-import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import Typography from 'src/components/core/Typography';
 
 export const StyledHelperText = styled(Typography, {
   label: 'StyledHelperText',

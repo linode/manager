@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { StrengthIndicator, convertStrengthScore } from './StrengthIndicator';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { convertStrengthScore, StrengthIndicator } from './StrengthIndicator';
 
 describe('StrengthIndicator', () => {
   it('renders a StrengthIndicator', () => {

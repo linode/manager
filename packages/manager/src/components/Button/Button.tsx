@@ -1,11 +1,11 @@
+import _Button, { ButtonProps } from '@mui/material/Button';
+import { styled, Theme, useTheme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
-import _Button, { ButtonProps } from '@mui/material/Button';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { useTheme, styled, Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
-import { isPropValid } from '../../utilities/isPropValid';
 import { rotate360 } from '../../styles/keyframes';
+import { isPropValid } from '../../utilities/isPropValid';
 
 export type ButtonType = 'primary' | 'secondary' | 'outlined';
 

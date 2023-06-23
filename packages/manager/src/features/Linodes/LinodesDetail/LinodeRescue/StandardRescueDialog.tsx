@@ -1,18 +1,21 @@
 import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import usePrevious from 'src/hooks/usePrevious';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -20,9 +23,6 @@ import createDevicesFromStrings, {
 import LinodePermissionsError from '../LinodePermissionsError';
 import DeviceSelection, { ExtendedDisk } from './DeviceSelection';
 import RescueDescription from './RescueDescription';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -143,9 +143,8 @@ export const StandardRescueDialog = (props: Props) => {
   const prevDeviceMap = usePrevious(deviceMap);
 
   const [counter, setCounter] = React.useState<number>(initialCounter);
-  const [rescueDevices, setRescueDevices] = React.useState<DevicesAsStrings>(
-    deviceMap
-  );
+  const [rescueDevices, setRescueDevices] =
+    React.useState<DevicesAsStrings>(deviceMap);
 
   const { enqueueSnackbar } = useSnackbar();
 

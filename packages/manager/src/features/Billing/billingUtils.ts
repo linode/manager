@@ -41,9 +41,10 @@ export const getShouldUseAkamaiBilling = (date: string) => {
   return invoiceDate > akamaiDate;
 };
 
-export function getPaymentLimits(
-  balance: number | undefined
-): { min: number; max: number } {
+export function getPaymentLimits(balance: number | undefined): {
+  min: number;
+  max: number;
+} {
   if (balance === undefined) {
     return { min: PAYMENT_MIN, max: PAYMENT_HARD_MAX };
   }

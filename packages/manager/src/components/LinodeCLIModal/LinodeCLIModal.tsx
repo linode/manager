@@ -1,8 +1,8 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { sendCLIClickEvent } from 'src/utilities/analytics';
-import { styled } from '@mui/material/styles';
 
 export interface ImageUploadSuccessDialogProps {
   isOpen: boolean;

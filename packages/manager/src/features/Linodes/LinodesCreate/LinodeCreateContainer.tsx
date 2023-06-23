@@ -1,6 +1,4 @@
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
-import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
-import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -10,29 +8,40 @@ import {
   LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
+import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
+import Grid from '@mui/material/Unstable_Grid2';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
+import LandingHeader from 'src/components/LandingHeader';
 import { Tag } from 'src/components/TagsInput/TagsInput';
+import {
+  withAccountSettings,
+  WithAccountSettingsProps,
+} from 'src/containers/accountSettings.container';
+import withImages, {
+  DefaultProps as ImagesProps,
+} from 'src/containers/images.container';
 import {
   withProfile,
   WithProfileProps,
 } from 'src/containers/profile.container';
-import withImages, {
-  DefaultProps as ImagesProps,
-} from 'src/containers/images.container';
-import { withRegions, RegionsProps } from 'src/containers/regions.container';
+import { RegionsProps, withRegions } from 'src/containers/regions.container';
 import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import withLinodes from 'src/containers/withLinodes.container';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
   AgreementsProps,
@@ -54,34 +63,25 @@ import {
 } from 'src/store/linodes/linode.containers';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import {
   HandleSubmit,
-  LinodeCreateValidation,
   Info,
+  LinodeCreateValidation,
   TypeInfo,
   WithLinodesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
-import LandingHeader from 'src/components/LandingHeader';
-import {
-  withQueryClient,
-  WithQueryClientProps,
-} from 'src/containers/withQueryClient.container';
-import {
-  withAccountSettings,
-  WithAccountSettingsProps,
-} from 'src/containers/accountSettings.container';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -743,13 +743,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
-    const {
-      profile,
-      grants,
-      regionsData,
-      typesData,
-      ...restOfProps
-    } = this.props;
+    const { profile, grants, regionsData, typesData, ...restOfProps } =
+      this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
 
     const extendedTypeData = typesData?.map(extendType);

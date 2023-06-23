@@ -16,9 +16,8 @@ const getAllTypes = () =>
   getAll(getLinodeTypes)().then((results) => results.data);
 
 const getSingleType = async (type: string, queryClient: QueryClient) => {
-  const allTypesCache = queryClient.getQueryData<LinodeType[]>(
-    allTypesQueryKey
-  );
+  const allTypesCache =
+    queryClient.getQueryData<LinodeType[]>(allTypesQueryKey);
   return (
     allTypesCache?.find((cachedType) => cachedType.id === type) ?? getType(type)
   );

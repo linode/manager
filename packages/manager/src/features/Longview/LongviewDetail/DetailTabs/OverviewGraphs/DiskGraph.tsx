@@ -1,6 +1,6 @@
+import { withTheme, WithTheme } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { withTheme, WithTheme } from '@mui/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { appendStats } from 'src/features/Longview/shared/utilities';
 import { Disk, StatWithDummyPoint } from '../../../request.types';
@@ -22,12 +22,12 @@ export const DiskGraph: React.FC<CombinedProps> = (props) => {
     timezone,
   } = props;
 
-  const { data, loading, error: requestError, request } = useGraphs(
-    ['disk', 'sysinfo'],
-    clientAPIKey,
-    start,
-    end
-  );
+  const {
+    data,
+    loading,
+    error: requestError,
+    request,
+  } = useGraphs(['disk', 'sysinfo'], clientAPIKey, start, end);
 
   React.useEffect(() => {
     request();

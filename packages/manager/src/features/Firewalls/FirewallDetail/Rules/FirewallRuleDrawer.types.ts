@@ -1,12 +1,12 @@
-import type { ExtendedFirewallRule } from './firewallRuleEditor';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
-import type { FormikProps } from 'formik';
-import type { Category, FirewallRuleError } from './shared';
 import type {
   FirewallPolicyType,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import type { FormikProps } from 'formik';
 import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
+import type { ExtendedFirewallRule } from './firewallRuleEditor';
+import type { Category, FirewallRuleError } from './shared';
 
 export type FirewallRuleDrawerMode = 'create' | 'edit';
 

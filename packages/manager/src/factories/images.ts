@@ -1,5 +1,5 @@
-import * as Factory from 'factory.ts';
 import { Image } from '@linode/api-v4/lib/images/types';
+import * as Factory from 'factory.ts';
 
 export const imageFactory = Factory.Sync.makeFactory<Image>({
   eol: new Date().toISOString(),

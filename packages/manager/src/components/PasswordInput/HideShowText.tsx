@@ -1,8 +1,8 @@
-import * as React from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import TextField from '../TextField';
+import * as React from 'react';
 import { Props as TextFieldProps } from 'src/components/TextField';
+import TextField from '../TextField';
 
 export const HideShowText = (props: TextFieldProps) => {
   const [hidden, setHidden] = React.useState(true);

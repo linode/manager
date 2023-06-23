@@ -1,11 +1,11 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
-import * as React from 'react';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Linode } from '@linode/api-v4/lib/linodes';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import * as React from 'react';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Terminal } from 'xterm';
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 
 type ClassNames = 'errorState';
 

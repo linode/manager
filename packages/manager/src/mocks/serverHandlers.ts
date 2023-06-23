@@ -1,10 +1,10 @@
-import { DateTime } from 'luxon';
 import {
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
   VolumeStatus,
 } from '@linode/api-v4';
+import { DateTime } from 'luxon';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -22,6 +22,7 @@ import {
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
+  dedicatedTypeFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -34,17 +35,20 @@ import {
   invoiceItemFactory,
   kubeEndpointFactory,
   kubernetesAPIResponse,
+  kubernetesVersionFactory,
   linodeConfigFactory,
   linodeDiskFactory,
   linodeFactory,
   linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
+  linodeTypeFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
   maintenanceResponseFactory,
   makeObjectsPage,
+  managedIssueFactory,
   managedLinodeSettingFactory,
   managedSSHPubKeyFactory,
   managedStatsFactory,
@@ -57,9 +61,11 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
+  paymentFactory,
   paymentMethodFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
+  proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
   securityQuestionsFactory,
@@ -70,17 +76,11 @@ import {
   tagFactory,
   VLANFactory,
   volumeFactory,
-  managedIssueFactory,
-  linodeTypeFactory,
-  dedicatedTypeFactory,
-  proDedicatedTypeFactory,
-  kubernetesVersionFactory,
-  paymentFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
+import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
-import { accountUserFactory } from 'src/factories/accountUsers';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -1142,8 +1142,8 @@ export const handlers = [
       severity: 'major',
     });
 
-    const blockStorageMigrationScheduledNotification = notificationFactory.build(
-      {
+    const blockStorageMigrationScheduledNotification =
+      notificationFactory.build({
         type: 'volume_migration_scheduled' as NotificationType,
         entity: {
           type: 'volume',
@@ -1158,11 +1158,10 @@ export const handlers = [
         severity: 'critical',
         until: '2021-10-16T04:00:00',
         body: 'Your volumes in us-east will be upgraded to NVMe.',
-      }
-    );
+      });
 
-    const blockStorageMigrationScheduledNotificationUnattached = notificationFactory.build(
-      {
+    const blockStorageMigrationScheduledNotificationUnattached =
+      notificationFactory.build({
         type: 'volume_migration_scheduled' as NotificationType,
         entity: {
           type: 'volume',
@@ -1177,8 +1176,7 @@ export const handlers = [
         severity: 'critical',
         until: '2021-10-16T04:00:00',
         body: 'Your volume will be upgraded to NVMe.',
-      }
-    );
+      });
 
     const blockStorageMigrationImminentNotification = notificationFactory.build(
       {

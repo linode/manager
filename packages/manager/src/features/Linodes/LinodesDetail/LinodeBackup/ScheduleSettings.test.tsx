@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { profileFactory } from 'src/factories';
+import { linodeFactory } from 'src/factories/linodes';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ScheduleSettings } from './ScheduleSettings';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories/linodes';
-import { profileFactory } from 'src/factories';
 
 describe('ScheduleSettings', () => {
   it('renders heading and copy', async () => {

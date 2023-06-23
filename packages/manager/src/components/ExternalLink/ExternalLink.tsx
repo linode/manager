@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { sanitizeUrl } from '@braintree/sanitize-url';
 import OpenInNew from '@mui/icons-material/OpenInNew';
+import { Theme } from '@mui/material/styles';
+import * as React from 'react';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { sanitizeUrl } from '@braintree/sanitize-url';
 
 const useStyles = makeStyles<void, 'icon'>()(
   (theme: Theme, _params, classes) => ({

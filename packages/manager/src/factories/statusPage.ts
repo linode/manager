@@ -22,8 +22,7 @@ export const pageFactory = Factory.Sync.makeFactory<IncidentPage>({
 export const incidentUpdateFactory = Factory.Sync.makeFactory<IncidentUpdate>({
   id: Factory.each((i) => String(i)),
   status: 'investigating',
-  body:
-    'Our team is investigating an issue affecting the Linode Kubernetes Engine (LKE) in Newark. We will share additional updates as we have more information.',
+  body: 'Our team is investigating an issue affecting the Linode Kubernetes Engine (LKE) in Newark. We will share additional updates as we have more information.',
   incident_id: v4(),
   created_at: DATE,
   updated_at: DATE,
@@ -31,8 +30,7 @@ export const incidentUpdateFactory = Factory.Sync.makeFactory<IncidentUpdate>({
   affected_components: [
     {
       code: v4(),
-      name:
-        'Linode Kubernetes Engine - US-East (Newark) Linode Kubernetes Engine',
+      name: 'Linode Kubernetes Engine - US-East (Newark) Linode Kubernetes Engine',
       old_status: 'operational',
       new_status: 'major_outage',
     },
@@ -57,8 +55,8 @@ export const incidentFactory = Factory.Sync.makeFactory<Incident>({
   incident_updates: incidentUpdateFactory.buildList(5),
 });
 
-export const incidentResponseFactory = Factory.Sync.makeFactory<IncidentResponse>(
-  {
+export const incidentResponseFactory =
+  Factory.Sync.makeFactory<IncidentResponse>({
     page: pageFactory.build(),
     incidents: [
       incidentFactory.build({
@@ -73,8 +71,7 @@ export const incidentResponseFactory = Factory.Sync.makeFactory<IncidentResponse
       }),
       incidentFactory.build({ impact: 'critical' }),
     ],
-  }
-);
+  });
 
 export const maintenanceFactory = Factory.Sync.makeFactory<Maintenance>({
   id: Factory.each((i) => String(i)),
@@ -91,19 +88,17 @@ export const maintenanceFactory = Factory.Sync.makeFactory<Maintenance>({
   incident_updates: incidentUpdateFactory.buildList(2),
 });
 
-export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceResponse>(
-  {
+export const maintenanceResponseFactory =
+  Factory.Sync.makeFactory<MaintenanceResponse>({
     page: pageFactory.build(),
     scheduled_maintenances: [
       maintenanceFactory.build({
         id: 'test001',
-        name:
-          'Cloud Manager and API Downtime on September 23, 2021 for 3-hour window',
+        name: 'Cloud Manager and API Downtime on September 23, 2021 for 3-hour window',
         incident_updates: [
           incidentUpdateFactory.build({
             // eslint-disable-next-line xss/no-mixed-html
-            body:
-              'The Linode Cloud Manager, API, and CLI will be offline for internal upgrades and maintenance on Thursday, September 23rd, 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). During this window, running Linodes and related services will <b>not</b> be disrupted, but account management access and support tickets will be unavailable.',
+            body: 'The Linode Cloud Manager, API, and CLI will be offline for internal upgrades and maintenance on Thursday, September 23rd, 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). During this window, running Linodes and related services will <b>not</b> be disrupted, but account management access and support tickets will be unavailable.',
           }),
         ],
       }),
@@ -120,5 +115,4 @@ export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceRe
       //   ],
       // }),
     ],
-  }
-);
+  });

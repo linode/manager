@@ -1,11 +1,11 @@
-import * as Factory from 'factory.ts';
-import { APIWarning } from '@linode/api-v4/lib/types';
 import {
+  Invoice,
   InvoiceItem,
   Payment,
   PaymentResponse,
-  Invoice,
 } from '@linode/api-v4/lib/account';
+import { APIWarning } from '@linode/api-v4/lib/types';
+import * as Factory from 'factory.ts';
 
 export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   label: Factory.each((i) => `Nanode 1GB - my-linode-${i} (${i})`),
@@ -59,11 +59,10 @@ export const warningFactory = Factory.Sync.makeFactory<APIWarning>({
     'Object Storage could not be reactivated, please open a support ticket.',
 });
 
-export const creditPaymentResponseFactory = Factory.Sync.makeFactory<PaymentResponse>(
-  {
+export const creditPaymentResponseFactory =
+  Factory.Sync.makeFactory<PaymentResponse>({
     id: Factory.each((i) => i),
     usd: 10,
     date: '2020-01-01T12:00:00',
     warnings: warningFactory.buildList(1),
-  }
-);
+  });

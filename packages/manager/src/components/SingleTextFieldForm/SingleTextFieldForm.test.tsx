@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { SingleTextFieldForm } from './SingleTextFieldForm';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { SingleTextFieldForm } from './SingleTextFieldForm';
 
 describe('SingleTextFieldForm', () => {
   const props = {

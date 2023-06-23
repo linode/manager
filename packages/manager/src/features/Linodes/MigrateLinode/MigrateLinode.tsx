@@ -4,40 +4,40 @@ import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Box from 'src/components/core/Box';
-import Typography from 'src/components/core/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import useEvents from 'src/hooks/useEvents';
 import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
-import { useTypeQuery } from 'src/queries/types';
-import { formatDate } from 'src/utilities/formatDate';
-import { isEURegion } from 'src/utilities/formatRegion';
-import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
-import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import CautionNotice from './CautionNotice';
-import ConfigureForm from './ConfigureForm';
+import { useImageQuery } from 'src/queries/images';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
   useLinodeMigrateMutation,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import useEvents from 'src/hooks/useEvents';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+import { useTypeQuery } from 'src/queries/types';
 import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
-import { useImageQuery } from 'src/queries/images';
+import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
+import { formatDate } from 'src/utilities/formatDate';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
+import CautionNotice from './CautionNotice';
+import ConfigureForm from './ConfigureForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -127,9 +127,8 @@ export const MigrateLinode = React.memo((props: Props) => {
   );
 
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
   const showAgreement = Boolean(
     !profile?.restricted &&
@@ -162,9 +161,8 @@ export const MigrateLinode = React.memo((props: Props) => {
         ?.capabilities.includes('Metadata') ?? false;
 
     const currentRegionSupportsMetadata = regionSupportsMetadata(linode.region);
-    const selectedRegionSupportsMetadata = regionSupportsMetadata(
-      selectedRegion
-    );
+    const selectedRegionSupportsMetadata =
+      regionSupportsMetadata(selectedRegion);
 
     return currentRegionSupportsMetadata && !selectedRegionSupportsMetadata
       ? 'The selected Data Center does not support Metadata. If your Linode is rebuilt, it will boot without using any associated User Data.'

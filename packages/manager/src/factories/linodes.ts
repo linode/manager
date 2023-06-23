@@ -123,13 +123,12 @@ export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   last_successful: '2020-01-01',
 });
 
-export const linodeTransferFactory = Factory.Sync.makeFactory<NetworkUtilization>(
-  {
+export const linodeTransferFactory =
+  Factory.Sync.makeFactory<NetworkUtilization>({
     used: 13956637,
     quota: 1950,
     billable: 0,
-  }
-);
+  });
 
 export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   id: Factory.each((i) => `g6-standard-${i}`),
@@ -207,16 +206,15 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   backups: linodeBackupsFactory.build(),
 });
 
-export const createLinodeRequestFactory = Factory.Sync.makeFactory<CreateLinodeRequest>(
-  {
+export const createLinodeRequestFactory =
+  Factory.Sync.makeFactory<CreateLinodeRequest>({
     label: Factory.each((i) => `linode-${i}`),
     root_pass: 'linode-root-password',
     image: 'linode/debian10',
     type: 'g6-standard-1',
     region: 'us-southeast',
     booted: true,
-  }
-);
+  });
 
 export const backupFactory = Factory.Sync.makeFactory<LinodeBackup>({
   id: Factory.each((i) => i),

@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
-import SupportTicketDetail from './SupportTicketDetail';
 import {
   supportReplyFactory,
   supportTicketFactory,
 } from 'src/factories/support';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
+import SupportTicketDetail from './SupportTicketDetail';
 
 describe('Support Ticket Detail', () => {
   it('should display a loading spinner', () => {

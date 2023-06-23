@@ -3,10 +3,10 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
+import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
-import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 
 interface Props {
   /** please keep in mind here that it's possible the start time can be in the past */

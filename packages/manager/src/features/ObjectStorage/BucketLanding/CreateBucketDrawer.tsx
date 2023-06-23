@@ -1,28 +1,28 @@
+import { styled } from '@mui/material/styles';
+import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ClusterSelect from './ClusterSelect';
 import Drawer from 'src/components/Drawer';
-import EnableObjectStorageModal from '../EnableObjectStorageModal';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import TextField from 'src/components/TextField';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { useFormik } from 'formik';
-import { useProfile } from 'src/queries/profile';
+import TextField from 'src/components/TextField';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useProfile } from 'src/queries/profile';
 import { sendCreateBucketEvent } from 'src/utilities/analytics';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
+import EnableObjectStorageModal from '../EnableObjectStorageModal';
+import ClusterSelect from './ClusterSelect';
 
 interface Props {
   isOpen: boolean;
@@ -44,9 +44,8 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
-  const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] = React.useState(
-    false
-  );
+  const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] =
+    React.useState(false);
 
   const formik = useFormik({
     initialValues: {

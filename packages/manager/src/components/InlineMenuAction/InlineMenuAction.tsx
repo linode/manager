@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-no-useless-fragment */
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   btnRoot: {

@@ -1,7 +1,7 @@
 import type {
   FirewallPolicyType,
-  FirewallRuleType,
   FirewallRules,
+  FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
@@ -10,21 +10,21 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
-import Typography from 'src/components/core/Typography';
 import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
-import { FirewallRuleTable } from './FirewallRuleTable';
 import curriedFirewallRuleEditorReducer, {
-  hasModified as _hasModified,
   editorStateToRules,
+  hasModified as _hasModified,
   initRuleEditorState,
   prepareRules,
   stripExtendedFields,
 } from './firewallRuleEditor';
+import { FirewallRuleTable } from './FirewallRuleTable';
 import type { Category } from './shared';
 import { parseFirewallRuleError } from './shared';
 
@@ -65,9 +65,8 @@ interface Drawer {
 const FirewallRulesLanding = (props: Props) => {
   const classes = useStyles();
   const { firewallID, rules, disabled } = props;
-  const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
-    firewallID
-  );
+  const { mutateAsync: updateFirewallRules } =
+    useUpdateFirewallRulesMutation(firewallID);
 
   /**
    * inbound and outbound policy aren't part of any particular rule
@@ -103,10 +102,8 @@ const FirewallRulesLanding = (props: Props) => {
   const [generalErrors, setGeneralErrors] = React.useState<
     APIError[] | undefined
   >();
-  const [
-    discardChangesModalOpen,
-    setDiscardChangesModalOpen,
-  ] = React.useState<boolean>(false);
+  const [discardChangesModalOpen, setDiscardChangesModalOpen] =
+    React.useState<boolean>(false);
 
   const openRuleDrawer = (
     category: Category,
@@ -251,12 +248,14 @@ const FirewallRulesLanding = (props: Props) => {
     [inboundState, outboundState, policy, rules]
   );
 
-  const inboundRules = React.useMemo(() => editorStateToRules(inboundState), [
-    inboundState,
-  ]);
-  const outboundRules = React.useMemo(() => editorStateToRules(outboundState), [
-    outboundState,
-  ]);
+  const inboundRules = React.useMemo(
+    () => editorStateToRules(inboundState),
+    [inboundState]
+  );
+  const outboundRules = React.useMemo(
+    () => editorStateToRules(outboundState),
+    [outboundState]
+  );
 
   // This is for the Rule Drawer. If there is a rule to modify,
   // we need to pass it to the drawer to pre-populate the form fields.
@@ -405,8 +404,8 @@ interface DiscardChangesDialogProps {
   handleDiscard: () => void;
 }
 
-export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.memo(
-  (props) => {
+export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> =
+  React.memo((props) => {
     const { isOpen, handleClose, handleDiscard } = props;
 
     const actions = React.useCallback(
@@ -436,5 +435,4 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
         </Typography>
       </ConfirmationDialog>
     );
-  }
-);
+  });

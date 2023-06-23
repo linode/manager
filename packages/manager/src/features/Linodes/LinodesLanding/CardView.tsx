@@ -1,9 +1,9 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
-import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import Typography from 'src/components/core/Typography';
+import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';

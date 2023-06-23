@@ -1,11 +1,11 @@
 import {
   getSecurityQuestions,
-  updateSecurityQuestions,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
+  updateSecurityQuestions,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { queryPresets } from './base';
 
 export const queryKey = 'securityQuestions';
@@ -34,12 +34,11 @@ export const useMutateSecurityQuestions = () => {
               return undefined;
             }
 
-            const newQuestions: SecurityQuestionsData['security_questions'] = oldData.security_questions.map(
-              (item) => ({
+            const newQuestions: SecurityQuestionsData['security_questions'] =
+              oldData.security_questions.map((item) => ({
                 ...item,
                 response: null,
-              })
-            );
+              }));
 
             for (let i = 0; i < response.security_questions.length; i++) {
               const index = oldData.security_questions.findIndex(

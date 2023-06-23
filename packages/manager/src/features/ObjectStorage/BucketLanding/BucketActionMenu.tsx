@@ -1,9 +1,9 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu/';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import { styled } from '@mui/material/styles';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface BucketActionMenuProps {
   cluster: string;

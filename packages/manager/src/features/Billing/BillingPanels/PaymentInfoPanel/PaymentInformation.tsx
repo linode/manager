@@ -1,20 +1,20 @@
-import * as React from 'react';
-import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
-import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from 'src/components/core/Typography';
-import { APIError } from '@linode/api-v4/lib/types';
 import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import Typography from 'src/components/core/Typography';
+import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { queryKey } from 'src/queries/accountPayment';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   BillingActionButton,
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
-import { useQueryClient } from 'react-query';
+import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
 interface Props {
   error?: APIError[] | null;
@@ -27,15 +27,12 @@ const PaymentInformation = (props: Props) => {
   const { loading, error, paymentMethods, isAkamaiCustomer } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [deleteDialogOpen, setDeleteDialogOpen] =
+    React.useState<boolean>(false);
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
-  const [
-    deletePaymentMethodSelection,
-    setDeletePaymentMethodSelection,
-  ] = React.useState<PaymentMethod | undefined>();
+  const [deletePaymentMethodSelection, setDeletePaymentMethodSelection] =
+    React.useState<PaymentMethod | undefined>();
   const { replace } = useHistory();
   const queryClient = useQueryClient();
 

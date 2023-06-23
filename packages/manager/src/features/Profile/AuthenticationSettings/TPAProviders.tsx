@@ -1,18 +1,18 @@
-import * as React from 'react';
-import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
-import Box from 'src/components/core/Box';
-import Divider from 'src/components/core/Divider';
-import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
-import ExternalLink from 'src/components/ExternalLink';
-import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
-import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
-import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
-import useFlags from 'src/hooks/useFlags';
-import { TPADialog } from './TPADialog';
 import { TPAProvider } from '@linode/api-v4/lib/profile';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
+import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
+import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
+import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
+import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
+import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
+import Link from 'src/components/Link';
+import useFlags from 'src/hooks/useFlags';
+import { TPADialog } from './TPADialog';
 import {
   StyledButton,
   StyledCopy,

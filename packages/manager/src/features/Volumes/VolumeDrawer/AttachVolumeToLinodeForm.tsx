@@ -1,10 +1,13 @@
-import { Formik } from 'formik';
 import { Grant } from '@linode/api-v4/lib/account';
+import { Formik } from 'formik';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
+import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useGrants } from 'src/queries/profile';
+import { useAttachVolumeMutation } from 'src/queries/volumes';
 import { openForCreating } from 'src/store/volumeForm';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -16,11 +19,8 @@ import ConfigSelect from './ConfigSelect';
 import { modes } from './modes';
 import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
-import { Notice } from 'src/components/Notice/Notice';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
-import { useAttachVolumeMutation } from 'src/queries/volumes';
-import { useGrants } from 'src/queries/profile';
 
 interface Props {
   onClose: () => void;

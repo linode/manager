@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { longviewLoad, systemInfo } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { longviewLoad, systemInfo } from 'src/__data__/longview';
 import Load from './Load';
 
 const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { linodeFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 import { extDisk, swapDisk } from 'src/__data__/disks';
 import { extendedTypes } from 'src/__data__/ExtendedType';
@@ -7,8 +9,6 @@ import {
   LinodeResize,
   shouldEnableAutoResizeDiskOption,
 } from './LinodeResize';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories';
 
 beforeAll(() => {
   mockMatchMedia();

@@ -1,23 +1,23 @@
+import { useFormik } from 'formik';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Drawer from 'src/components/Drawer';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
+import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import TextField from 'src/components/TextField';
-import { DateTime } from 'luxon';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import TextField from 'src/components/TextField';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
-import { useFormik } from 'formik';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   StyledAccessCell,
   StyledPermissionsCell,
@@ -25,11 +25,11 @@ import {
   StyledSelectCell,
 } from './APITokenDrawer.styles';
 import {
+  allScopesAreTheSame,
+  basePermNameMap,
   Permission,
   permTuplesToScopeString,
   scopeStringToPermTuples,
-  allScopesAreTheSame,
-  basePermNameMap,
 } from './utils';
 
 type Expiry = [string, string];

@@ -1,14 +1,14 @@
+import { Event, EventAction } from '@linode/api-v4/lib/account/types';
+import { partition } from 'ramda';
 import * as React from 'react';
 import useEvents from 'src/hooks/useEvents';
-import RenderProgressEvent from './RenderProgressEvent';
-import { Event, EventAction } from '@linode/api-v4/lib/account/types';
-import { ExtendedEvent } from 'src/store/events/event.types';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
+import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
-import { partition } from 'ramda';
-import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 import { RenderEvent } from './RenderEvent';
+import RenderProgressEvent from './RenderProgressEvent';
 
 const unwantedEvents: EventAction[] = [
   'account_update',

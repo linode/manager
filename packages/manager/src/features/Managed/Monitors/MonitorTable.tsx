@@ -1,21 +1,21 @@
 import { ManagedServicePayload } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
@@ -89,27 +89,19 @@ export const MonitorTable = () => {
 
   const monitors = data || [];
 
-  const {
-    dialog,
-    openDialog,
-    closeDialog,
-    submitDialog,
-    handleError,
-  } = useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
+  const { dialog, openDialog, closeDialog, submitDialog, handleError } =
+    useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
 
-  const [historyDrawerOpen, setHistoryDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [historyDrawerOpen, setHistoryDrawerOpen] =
+    React.useState<boolean>(false);
 
-  const [monitorDrawerOpen, setMonitorDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [monitorDrawerOpen, setMonitorDrawerOpen] =
+    React.useState<boolean>(false);
   const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
   const [editID, setEditID] = React.useState<number>(0);
 
-  const { mutateAsync: updateServiceMonitor } = useUpdateMonitorMutation(
-    editID
-  );
+  const { mutateAsync: updateServiceMonitor } =
+    useUpdateMonitorMutation(editID);
   const { mutateAsync: createServiceMonitor } = useCreateMonitorMutation();
 
   const [editLabel, setEditLabel] = React.useState<string>('');

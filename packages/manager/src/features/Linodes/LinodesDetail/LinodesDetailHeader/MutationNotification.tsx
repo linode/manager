@@ -1,17 +1,17 @@
+import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { MBpsIntraDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { useTypeQuery } from 'src/queries/types';
-import MutateDrawer from '../MutateDrawer';
-import { makeStyles } from 'tss-react/mui';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useStartLinodeMutationMutation } from 'src/queries/linodes/actions';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useTypeQuery } from 'src/queries/types';
+import { makeStyles } from 'tss-react/mui';
 import { addUsedDiskSpace } from '../LinodeStorage/LinodeDisks';
+import MutateDrawer from '../MutateDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   pendingMutationLink: {

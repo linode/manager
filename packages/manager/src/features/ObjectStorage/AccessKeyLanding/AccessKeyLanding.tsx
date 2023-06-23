@@ -1,19 +1,3 @@
-import * as React from 'react';
-import ViewPermissionsDrawer from './ViewPermissionsDrawer';
-import { AccessKeyDrawer } from './AccessKeyDrawer';
-import { AccessKeyTable } from './AccessKeyTable';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormikBag } from 'formik';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { MODE, OpenAccessDrawer } from './types';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
-import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { useErrors } from 'src/hooks/useErrors';
-import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
-import { useOpenClose } from 'src/hooks/useOpenClose';
-import { usePagination } from 'src/hooks/usePagination';
 import {
   createObjectStorageKeys,
   ObjectStorageKey,
@@ -21,11 +5,27 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
+import { FormikBag } from 'formik';
+import * as React from 'react';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
+import { useErrors } from 'src/hooks/useErrors';
+import { useOpenClose } from 'src/hooks/useOpenClose';
+import { usePagination } from 'src/hooks/usePagination';
+import { useAccountSettings } from 'src/queries/accountSettings';
+import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
 } from 'src/utilities/analytics';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { AccessKeyDrawer } from './AccessKeyDrawer';
+import { AccessKeyTable } from './AccessKeyTable';
+import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
+import { MODE, OpenAccessDrawer } from './types';
+import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 
 interface Props {
   accessDrawerOpen: boolean;
@@ -53,16 +53,12 @@ export const AccessKeyLanding = (props: Props) => {
     page_size: pagination.pageSize,
   });
 
-  const {
-    data: accountSettings,
-    refetch: requestAccountSettings,
-  } = useAccountSettings();
+  const { data: accountSettings, refetch: requestAccountSettings } =
+    useAccountSettings();
 
   // Key to display in Confirmation Modal upon creation
-  const [
-    keyToDisplay,
-    setKeyToDisplay,
-  ] = React.useState<ObjectStorageKey | null>(null);
+  const [keyToDisplay, setKeyToDisplay] =
+    React.useState<ObjectStorageKey | null>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
   const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(

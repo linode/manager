@@ -1,16 +1,16 @@
-import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
-import Link from 'src/components/Link';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
-import formatDate from 'src/utilities/formatDate';
-import { StatusIcon, Status } from 'src/components/StatusIcon/StatusIcon';
-import { capitalize } from 'src/utilities/capitalize';
 import {
   AccountLogin,
   AccountLoginStatus,
 } from '@linode/api-v4/lib/account/types';
+import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
+import Link from 'src/components/Link';
+import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';
+import { capitalize } from 'src/utilities/capitalize';
+import formatDate from 'src/utilities/formatDate';
 
 const accessIconMap: Record<AccountLoginStatus, Status> = {
   failed: 'other',

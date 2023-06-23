@@ -1,13 +1,13 @@
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles, withTheme, WithTheme } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
 import MonitorOK from 'src/assets/icons/monitor-ok.svg';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {

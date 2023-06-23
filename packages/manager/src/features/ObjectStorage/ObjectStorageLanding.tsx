@@ -1,29 +1,29 @@
+import { styled } from '@mui/material/styles';
+import { DateTime } from 'luxon';
 import * as React from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { PromotionalOfferCard } from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
-import { DateTime } from 'luxon';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Link } from 'src/components/Link';
-import { MODE } from './AccessKeyLanding/types';
-import { styled } from '@mui/material/styles';
-import { useHistory, useParams } from 'react-router-dom';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { MODE } from './AccessKeyLanding/types';
+import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -79,10 +79,8 @@ export const ObjectStorageLanding = () => {
 
   const flags = useFlags();
 
-  const objPromotionalOffers = (
-    flags.promotionalOffers ?? []
-  ).filter((promotionalOffer) =>
-    promotionalOffer.features.includes('Object Storage')
+  const objPromotionalOffers = (flags.promotionalOffers ?? []).filter(
+    (promotionalOffer) => promotionalOffer.features.includes('Object Storage')
   );
 
   // A user needs to explicitly cancel Object Storage in their Account Settings in order to stop

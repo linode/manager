@@ -1,8 +1,8 @@
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import Box from '../core/Box';
 import Select from '../EnhancedSelect/Select';
 import { PaginationControls } from '../PaginationControls/PaginationControls';
-import { styled, useTheme } from '@mui/material/styles';
 
 export const MIN_PAGE_SIZE = 25;
 

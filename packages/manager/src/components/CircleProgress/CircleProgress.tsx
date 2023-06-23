@@ -16,15 +16,8 @@ interface CircleProgressProps extends CircularProgressProps {
 }
 
 const CircleProgress = (props: CircleProgressProps) => {
-  const {
-    className,
-    children,
-    mini,
-    noInner,
-    noPadding,
-    size,
-    ...rest
-  } = props;
+  const { className, children, mini, noInner, noPadding, size, ...rest } =
+    props;
 
   const variant =
     typeof props.value === 'number' ? 'determinate' : 'indeterminate';

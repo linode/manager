@@ -1,14 +1,14 @@
+import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Notice } from 'src/components/Notice/Notice';
-import { usePreferences } from 'src/queries/preferences';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { KubeNodePoolResponse } from '@linode/api-v4';
-import { useHistory } from 'react-router-dom';
+import { usePreferences } from 'src/queries/preferences';
 
 export interface Props {
   open: boolean;

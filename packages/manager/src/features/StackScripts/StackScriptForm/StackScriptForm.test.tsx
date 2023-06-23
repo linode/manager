@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { StackScriptForm } from './StackScriptForm';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { StackScriptForm } from './StackScriptForm';
 
 const props = {
   images: {

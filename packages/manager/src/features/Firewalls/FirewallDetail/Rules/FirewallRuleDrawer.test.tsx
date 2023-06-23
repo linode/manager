@@ -5,21 +5,21 @@ import * as React from 'react';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { FirewallRuleDrawer } from './FirewallRuleDrawer';
+import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
 import {
   classifyIPs,
   deriveTypeFromValuesAndIPs,
   formValueToIPs,
   getInitialIPs,
+  IP_ERROR_MESSAGE,
   itemsToPortString,
   portStringToItems,
-  IP_ERROR_MESSAGE,
   validateForm,
   validateIPs,
 } from './FirewallRuleDrawer.utils';
-import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
 import { FirewallRuleError, PORT_PRESETS } from './shared';
-import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
 
 const mockOnClose = jest.fn();
 const mockOnSubmit = jest.fn();

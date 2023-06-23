@@ -1,11 +1,11 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { QueryClient, useQueryClient } from 'react-query';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
-import Grid from '@mui/material/Unstable_Grid2';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import {
@@ -15,8 +15,8 @@ import {
 import { useScript } from 'src/hooks/useScript';
 import { useAccount } from 'src/queries/account';
 import { useClientToken } from 'src/queries/accountPayment';
+import { makeStyles } from 'tss-react/mui';
 import { SetSuccess } from './types';
-import { QueryClient, useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -76,9 +76,8 @@ export const GooglePayButton = (props: Props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const queryClient = useQueryClient();
-  const [initializationError, setInitializationError] = React.useState<boolean>(
-    false
-  );
+  const [initializationError, setInitializationError] =
+    React.useState<boolean>(false);
   const { data: account } = useAccount();
 
   const {

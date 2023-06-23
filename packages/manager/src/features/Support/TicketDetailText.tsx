@@ -1,8 +1,8 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { IconButton } from 'src/components/IconButton';
 import { truncate } from 'src/utilities/truncate';

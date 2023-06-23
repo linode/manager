@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import MUIDialog from 'src/components/core/Dialog';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import MUIDialog from 'src/components/core/Dialog';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import useAccountManagement from './hooks/useAccountManagement';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -150,9 +150,10 @@ const GoTo: React.FC<CombinedProps> = (props) => {
     [links]
   );
 
-  const dialogClasses = React.useMemo(() => ({ paper: classes.paper }), [
-    classes,
-  ]);
+  const dialogClasses = React.useMemo(
+    () => ({ paper: classes.paper }),
+    [classes]
+  );
 
   return (
     <MUIDialog

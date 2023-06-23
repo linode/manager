@@ -1,6 +1,6 @@
+import { styled } from '@mui/material/styles';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
-import { styled } from '@mui/material/styles';
 
 export const StyledPermsTable = styled(Table, {
   label: 'StyledPermsTable',

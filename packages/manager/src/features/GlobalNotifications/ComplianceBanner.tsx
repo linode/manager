@@ -1,9 +1,9 @@
 import { styled } from '@mui/system';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';

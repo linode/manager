@@ -1,8 +1,8 @@
+import { Theme } from '@mui/material/styles';
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import Button from 'src/components/Button';

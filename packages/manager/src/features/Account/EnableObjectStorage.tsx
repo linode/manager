@@ -1,22 +1,22 @@
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { Link } from 'react-router-dom';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Notice } from 'src/components/Notice/Notice';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import { queryKey } from 'src/queries/objectStorage';
 import { usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';
-import { queryKey } from 'src/queries/objectStorage';
-import { useQueryClient } from 'react-query';
 
 interface Props {
   object_storage: AccountSettings['object_storage'];

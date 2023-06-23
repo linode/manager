@@ -1,38 +1,38 @@
-import * as React from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
-import OrderBy from 'src/components/OrderBy';
-import Typography from 'src/components/core/Typography';
-import useOpenClose from 'src/hooks/useOpenClose';
+import {
+  ObjectStorageBucket,
+  ObjectStorageCluster,
+} from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
-import { BucketDetailsDrawer } from './BucketDetailsDrawer';
-import { BucketLandingEmptyState } from './BucketLandingEmptyState';
-import { BucketTable } from './BucketTable';
-import { CancelNotice } from '../CancelNotice';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { makeStyles } from 'tss-react/mui';
 import { Notice } from 'src/components/Notice/Notice';
-import { readableBytes } from 'src/utilities/unitConversions';
-import { Theme } from '@mui/material/styles';
+import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import useOpenClose from 'src/hooks/useOpenClose';
 import {
   BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics';
+import { readableBytes } from 'src/utilities/unitConversions';
+import { makeStyles } from 'tss-react/mui';
+import { CancelNotice } from '../CancelNotice';
+import { BucketDetailsDrawer } from './BucketDetailsDrawer';
+import { BucketLandingEmptyState } from './BucketLandingEmptyState';
+import { BucketTable } from './BucketTable';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -67,10 +67,8 @@ export const BucketLanding = () => {
   >(undefined);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
-  const [
-    bucketDetailDrawerOpen,
-    setBucketDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] =
+    React.useState<boolean>(false);
   const [bucketForDetails, setBucketForDetails] = React.useState<
     ObjectStorageBucket | undefined
   >(undefined);

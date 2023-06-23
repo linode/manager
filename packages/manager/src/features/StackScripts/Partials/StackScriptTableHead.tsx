@@ -1,10 +1,10 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableHead } from 'src/components/TableHead';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 

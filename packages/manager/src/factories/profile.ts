@@ -1,10 +1,10 @@
-import * as Factory from 'factory.ts';
 import {
   Profile,
   SecurityQuestionsData,
   SSHKey,
   UserPreferences,
 } from '@linode/api-v4/lib/profile';
+import * as Factory from 'factory.ts';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
   uid: 9999,
@@ -29,8 +29,8 @@ export const profileFactory = Factory.Sync.makeFactory<Profile>({
   verified_phone_number: '+15555555555',
 });
 
-export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestionsData>(
-  {
+export const securityQuestionsFactory =
+  Factory.Sync.makeFactory<SecurityQuestionsData>({
     security_questions: [
       { id: 1, question: 'In what city were you born?', response: null },
       {
@@ -125,8 +125,7 @@ export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestio
         response: null,
       },
     ],
-  }
-);
+  });
 
 export const userPreferencesFactory = Factory.Sync.makeFactory<UserPreferences>(
   {

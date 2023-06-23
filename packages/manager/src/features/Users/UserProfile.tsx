@@ -1,5 +1,6 @@
 import { deleteUser } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme, useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,12 +9,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useProfile } from 'src/queries/profile';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -80,10 +80,8 @@ const UserProfile: React.FC<Props> = (props) => {
 
   const { data: profile } = useProfile();
 
-  const [
-    deleteConfirmDialogOpen,
-    setDeleteConfirmDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [deleteConfirmDialogOpen, setDeleteConfirmDialogOpen] =
+    React.useState<boolean>(false);
   const [userDeleteError, setUserDeleteError] = React.useState<boolean>(false);
 
   const renderProfileSection = () => {

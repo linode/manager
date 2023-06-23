@@ -4,9 +4,12 @@ import {
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -18,21 +21,27 @@ import FormGroup from 'src/components/core/FormGroup';
 import FormHelperText from 'src/components/core/FormHelperText';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from '@mui/material/Unstable_Grid2';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import TextField from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import DeviceSelection from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
+import {
+  useLinodeConfigCreateMutation,
+  useLinodeConfigUpdateMutation,
+} from 'src/queries/linodes/configs';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import {
+  useAllLinodeKernelsQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
@@ -46,20 +55,11 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { makeStyles } from 'tss-react/mui';
 import InterfaceSelect, {
   ExtendedInterface,
 } from '../LinodeSettings/InterfaceSelect';
 import KernelSelect from '../LinodeSettings/KernelSelect';
-import { useQueryClient } from 'react-query';
-import {
-  useAllLinodeKernelsQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeConfigCreateMutation,
-  useLinodeConfigUpdateMutation,
-} from 'src/queries/linodes/configs';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
@@ -244,9 +244,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const queryClient = useQueryClient();
 
-  const [deviceCounter, setDeviceCounter] = React.useState(
-    deviceCounterDefault
-  );
+  const [deviceCounter, setDeviceCounter] =
+    React.useState(deviceCounterDefault);
 
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 

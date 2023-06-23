@@ -1,7 +1,7 @@
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
 import { useRegionsQuery } from 'src/queries/regions';
 
 interface DNSResolversProps {

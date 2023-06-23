@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { AccessCell } from './AccessCell';
 import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
+import { update } from 'ramda';
+import * as React from 'react';
 import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { update } from 'ramda';
+import { AccessCell } from './AccessCell';
 import {
   StyledBucketCell,
   StyledClusterCell,

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import StatusBanners from './StatusBanners';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import StatusBanners from './StatusBanners';
 
 const HelpLanding = React.lazy(() =>
   import('./HelpLanding').then((module) => ({

@@ -7,40 +7,40 @@ import {
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
+import {
+  withProfile,
+  WithProfileProps,
+} from 'src/containers/profile.container';
+import {
+  withQueryClient,
+  WithQueryClientProps,
+} from 'src/containers/withQueryClient.container';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
+import { queryKey } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
-import { queryKey } from 'src/queries/profile';
-import {
-  withProfile,
-  WithProfileProps,
-} from 'src/containers/profile.container';
-import LandingHeader from 'src/components/LandingHeader';
-import {
-  withQueryClient,
-  WithQueryClientProps,
-} from 'src/containers/withQueryClient.container';
-import { QueryClient } from 'react-query';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -335,14 +335,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   hasUnsavedChanges = () => {
-    const {
-      apiResponse,
-      script,
-      label,
-      images,
-      description,
-      revisionNote,
-    } = this.state;
+    const { apiResponse, script, label, images, description, revisionNote } =
+      this.state;
     if (!apiResponse) {
       // Create flow; return true if there's any input anywhere
       return (

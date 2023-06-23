@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Metrics } from 'src/utilities/statMetrics';
 import styled, { StyleProps } from './MetricDisplay.styles';

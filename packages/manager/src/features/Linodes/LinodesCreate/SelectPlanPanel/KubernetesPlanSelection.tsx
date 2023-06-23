@@ -1,13 +1,13 @@
-import * as React from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
 import Button from 'src/components/Button';
-import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import Hidden from 'src/components/core/Hidden';
+import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import SelectionCard from 'src/components/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 interface Props {

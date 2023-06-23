@@ -1,21 +1,20 @@
 import { ManagedContact } from '@linode/api-v4/lib/managed';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
@@ -25,6 +24,7 @@ import {
   useDeleteContactMutation,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { makeStyles } from 'tss-react/mui';
 import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
@@ -57,12 +57,8 @@ const Contacts = () => {
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    data,
-    isLoading,
-    error,
-    dataUpdatedAt,
-  } = useAllManagedContactsQuery();
+  const { data, isLoading, error, dataUpdatedAt } =
+    useAllManagedContactsQuery();
 
   const contacts = data || [];
 
@@ -70,19 +66,13 @@ const Contacts = () => {
     number | null
   >(null);
 
-  const [contactDrawerMode, setContactDrawerMode] = React.useState<Mode>(
-    'create'
-  );
+  const [contactDrawerMode, setContactDrawerMode] =
+    React.useState<Mode>('create');
 
   const { mutateAsync: deleteContact } = useDeleteContactMutation();
 
-  const {
-    dialog,
-    openDialog,
-    closeDialog,
-    submitDialog,
-    handleError,
-  } = useDialog<number>((id) => deleteContact({ id: id || -1 }));
+  const { dialog, openDialog, closeDialog, submitDialog, handleError } =
+    useDialog<number>((id) => deleteContact({ id: id || -1 }));
 
   const handleDelete = () => {
     submitDialog(dialog.entityID)

@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { Tab as ReachTab, TabProps } from '@reach/tabs';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
+import { Tab as ReachTab, TabProps } from '@reach/tabs';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   tab: {

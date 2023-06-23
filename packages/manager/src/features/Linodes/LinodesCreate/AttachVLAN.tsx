@@ -1,10 +1,11 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
@@ -14,7 +15,6 @@ import {
   regionsWithFeature,
 } from 'src/utilities/doesRegionSupportFeature';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
-import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {

@@ -6,13 +6,12 @@ import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { Region } from '@linode/api-v4/lib/regions';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { flatten } from 'ramda';
-import React from 'react';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useSpecificTypes } from 'src/queries/types';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import {
   domainToSearchableItem,
   formatLinode,
@@ -23,10 +22,10 @@ import {
 } from 'src/store/selectors/getSearchEntities';
 import { ExtendedType, extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { getImageLabelForLinode } from '../Images/utils';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { emptyResults, separateResultsByEntity } from './utils';
-import { getImageLabelForLinode } from '../Images/utils';
 
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
@@ -131,10 +130,9 @@ const requestEntities = (
     getVolumes(params, generateFilter(searchText)).then((results) =>
       results.data.map(volumeToSearchableItem)
     ),
-    getNodeBalancers(
-      params,
-      generateFilter(searchText, 'label', true)
-    ).then((results) => results.data.map(nodeBalToSearchableItem)),
+    getNodeBalancers(params, generateFilter(searchText, 'label', true)).then(
+      (results) => results.data.map(nodeBalToSearchableItem)
+    ),
     // Restricted users always get a 403 when requesting clusters
     !isRestricted
       ? getKubernetesClusters().then((results) =>
@@ -147,7 +145,7 @@ const requestEntities = (
         )
       : Promise.resolve([]),
     // API filtering on Object Storage buckets does not work.
-  ]).then((results) => (flatten(results) as unknown) as SearchableItem[]);
+  ]).then((results) => flatten(results) as unknown as SearchableItem[]);
 };
 
 export default useAPISearch;

@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { withTheme, WithTheme } from '@mui/styles';
+import * as React from 'react';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';

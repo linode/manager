@@ -1,17 +1,17 @@
 import { cancelAccount } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { Notice } from 'src/components/Notice/Notice';
 import Typography from 'src/components/core/Typography';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { useProfile } from 'src/queries/profile';
+import { makeStyles } from 'tss-react/mui';
 
 interface Props {
   open: boolean;
@@ -25,9 +25,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 const CloseAccountDialog = ({ closeDialog, open }: Props) => {
-  const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
-    false
-  );
+  const [isClosingAccount, setIsClosingAccount] =
+    React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
   const [inputtedUsername, setUsername] = React.useState<string>('');

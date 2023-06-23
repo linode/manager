@@ -1,4 +1,6 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
@@ -7,9 +9,8 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import NotFound from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -35,7 +36,6 @@ import MySQLLanding from './DetailTabs/MySQL';
 import NetworkLanding from './DetailTabs/Network';
 import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
-import LandingHeader from 'src/components/LandingHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabList: {

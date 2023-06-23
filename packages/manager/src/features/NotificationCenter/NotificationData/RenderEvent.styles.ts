@@ -1,8 +1,7 @@
+import { styled, Theme } from '@mui/material/styles';
 import Box from 'src/components/core/Box';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import { makeStyles } from 'tss-react/mui';
-import { styled } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 
 export const RenderEventStyledBox = styled(Box, {
   label: 'StyledBox',

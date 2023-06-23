@@ -1,10 +1,10 @@
 import AttachFile from '@mui/icons-material/AttachFile';
+import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { equals, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import AttachFileListItem from './AttachFileListItem';
 import { FileAttachment } from './index';
 import { reshapeFiles } from './ticketUtils';

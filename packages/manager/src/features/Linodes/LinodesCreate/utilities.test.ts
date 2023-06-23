@@ -1,12 +1,12 @@
-import { extendedTypes } from 'src/__data__/ExtendedType';
 import { imageFactory, normalizeEntities } from 'src/factories';
+import { extendedTypes } from 'src/__data__/ExtendedType';
 import { linode1, linode2 } from 'src/__data__/linodes';
 
 import {
   extendLinodes,
   formatLinodeSubheading,
-  getRegionIDFromLinodeID,
   getMonthlyAndHourlyNodePricing,
+  getRegionIDFromLinodeID,
 } from './utilities';
 
 const linodeImage = imageFactory.build({

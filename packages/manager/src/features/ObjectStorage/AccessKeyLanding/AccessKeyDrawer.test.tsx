@@ -1,12 +1,12 @@
+import { Scope } from '@linode/api-v4/lib/object-storage/types';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
+import { objectStorageBucketFactory } from 'src/factories/objectStorage';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import type { AccessKeyDrawerProps } from './AccessKeyDrawer';
 import { AccessKeyDrawer, getDefaultScopes } from './AccessKeyDrawer';
 import { getUpdatedScopes } from './AccessTable';
 import { MODE } from './types';
-import { objectStorageBucketFactory } from 'src/factories/objectStorage';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
-import { screen } from '@testing-library/react';
-import type { AccessKeyDrawerProps } from './AccessKeyDrawer';
 
 describe('AccessKeyDrawer', () => {
   const props: AccessKeyDrawerProps = {

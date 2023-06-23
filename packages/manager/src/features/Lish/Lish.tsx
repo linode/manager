@@ -1,14 +1,13 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
-import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import { Tab } from 'src/components/TabLinkList/TabLinkList';
+import { Tab, TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import {
   useLinodeLishTokenQuery,
   useLinodeQuery,

@@ -136,9 +136,10 @@ class DomainRecordDrawer extends React.Component<Props, State> {
     fields: DomainRecordDrawer.defaultFieldsState(this.props),
   };
 
-  updateField = (
-    key: keyof EditableRecordFields | keyof EditableDomainFields
-  ) => (value: any) => this.setState(set(lensPath(['fields', key]), value));
+  updateField =
+    (key: keyof EditableRecordFields | keyof EditableDomainFields) =>
+    (value: any) =>
+      this.setState(set(lensPath(['fields', key]), value));
 
   setProtocol = this.updateField('protocol');
   setTag = this.updateField('tag');

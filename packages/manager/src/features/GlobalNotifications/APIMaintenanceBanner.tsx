@@ -1,5 +1,5 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
+import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';

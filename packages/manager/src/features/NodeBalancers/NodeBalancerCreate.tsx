@@ -1,32 +1,7 @@
+import type { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
-import Accordion from 'src/components/Accordion';
-import Paper from 'src/components/core/Paper';
-import LandingHeader from 'src/components/LandingHeader';
-import TextField from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
-import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { isEURegion } from 'src/utilities/formatRegion';
-import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
-import { Notice } from 'src/components/Notice/Notice';
-import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
-import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useHistory } from 'react-router-dom';
-import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
-import { useRegionsQuery } from 'src/queries/regions';
 import {
   append,
   clone,
@@ -36,17 +11,42 @@ import {
   over,
   pathOr,
 } from 'ramda';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+import Accordion from 'src/components/Accordion';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Box from 'src/components/core/Box';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import LandingHeader from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
+import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
+import TextField from 'src/components/TextField';
+import {
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
+import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions';
+import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
+import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
   transformConfigsForRequest,
 } from './utils';
-import {
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
-import type { APIError } from '@linode/api-v4/lib/types';
-import type { NodeBalancerConfigFieldsWithStatus } from './types';
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -87,20 +87,16 @@ const NodeBalancerCreate = () => {
 
   const history = useHistory();
 
-  const [
-    nodeBalancerFields,
-    setNodeBalancerFields,
-  ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+  const [nodeBalancerFields, setNodeBalancerFields] =
+    React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
 
-  const [
-    deleteConfigConfirmDialog,
-    setDeleteConfigConfirmDialog,
-  ] = React.useState<{
-    open: boolean;
-    submitting: boolean;
-    errors?: APIError[];
-    idxToDelete?: number;
-  }>(defaultDeleteConfigConfirmDialogState);
+  const [deleteConfigConfirmDialog, setDeleteConfigConfirmDialog] =
+    React.useState<{
+      open: boolean;
+      submitting: boolean;
+      errors?: APIError[];
+      idxToDelete?: number;
+    }>(defaultDeleteConfigConfirmDialogState);
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
@@ -130,16 +126,15 @@ const NodeBalancerCreate = () => {
       return { ...prev, configs: newConfigs };
     });
 
-  const removeNodeBalancerConfigNode = (configIdx: number) => (
-    nodeIdx: number
-  ) =>
-    setNodeBalancerFields((prev) => {
-      const newConfigs = [...prev.configs];
-      newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
-        (_, idx) => idx !== nodeIdx
-      );
-      return { ...prev, configs: newConfigs };
-    });
+  const removeNodeBalancerConfigNode =
+    (configIdx: number) => (nodeIdx: number) =>
+      setNodeBalancerFields((prev) => {
+        const newConfigs = [...prev.configs];
+        newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
+          (_, idx) => idx !== nodeIdx
+        );
+        return { ...prev, configs: newConfigs };
+      });
 
   const setNodeValue = (
     cidx: number,
@@ -382,8 +377,9 @@ const NodeBalancerCreate = () => {
       !agreements?.eu_model
   );
 
-  const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
-    ?.label;
+  const regionLabel = regions?.find(
+    (r) => r.id === nodeBalancerFields.region
+  )?.label;
 
   return (
     <React.Fragment>
@@ -444,9 +440,9 @@ const NodeBalancerCreate = () => {
       />
       <Box marginTop={2} marginBottom={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
-          const onChange = (key: keyof NodeBalancerConfigFieldsWithStatus) => (
-            value: any
-          ) => onConfigValueChange(idx, key, value);
+          const onChange =
+            (key: keyof NodeBalancerConfigFieldsWithStatus) => (value: any) =>
+              onConfigValueChange(idx, key, value);
 
           return (
             <Accordion
@@ -598,9 +594,9 @@ const NodeBalancerCreate = () => {
 };
 
 /* @todo: move to own file */
-export const lensFrom = (p1: (string | number)[]) => (
-  p2: (string | number)[]
-) => lensPath([...p1, ...p2]);
+export const lensFrom =
+  (p1: (string | number)[]) => (p2: (string | number)[]) =>
+    lensPath([...p1, ...p2]);
 
 const getPathAndFieldFromFieldString = (value: string) => {
   let field = value;

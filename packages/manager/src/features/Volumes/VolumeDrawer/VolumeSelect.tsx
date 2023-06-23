@@ -1,5 +1,5 @@
-import * as React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
+import * as React from 'react';
 import TextField from 'src/components/TextField';
 import { useInfiniteVolumesQuery } from 'src/queries/volumes';
 
@@ -26,18 +26,14 @@ const VolumeSelect = (props: Props) => {
       }
     : {};
 
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-  } = useInfiniteVolumesQuery({
-    ...searchFilter,
-    ...(region ? { region } : {}),
-    // linode_id: null,  <- if the API let us, we would do this
-    '+order_by': 'label',
-    '+order': 'asc',
-  });
+  const { data, isLoading, fetchNextPage, hasNextPage } =
+    useInfiniteVolumesQuery({
+      ...searchFilter,
+      ...(region ? { region } : {}),
+      // linode_id: null,  <- if the API let us, we would do this
+      '+order_by': 'label',
+      '+order': 'asc',
+    });
 
   const options = data?.pages
     .flatMap((page) => page.data)

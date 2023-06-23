@@ -1,7 +1,7 @@
-import React from 'react';
-import { BarPercent } from './BarPercent';
-import type { BarPercentProps } from './BarPercent';
 import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import type { BarPercentProps } from './BarPercent';
+import { BarPercent } from './BarPercent';
 
 /** Default BarPercent */
 export const Default: StoryObj<BarPercentProps> = {

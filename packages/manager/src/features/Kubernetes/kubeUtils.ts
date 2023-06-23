@@ -4,9 +4,9 @@ import {
   KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
-import { ExtendedType } from 'src/utilities/extendType';
 import { Region } from '@linode/api-v4/lib/regions';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import { ExtendedType } from 'src/utilities/extendType';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;

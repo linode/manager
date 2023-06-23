@@ -2,16 +2,16 @@ import {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
+import { Theme, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'src/components/TextField';
 import { useVlansQuery } from 'src/queries/vlans';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {

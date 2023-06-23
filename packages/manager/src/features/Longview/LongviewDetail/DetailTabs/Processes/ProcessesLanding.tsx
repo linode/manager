@@ -1,9 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import {
@@ -18,7 +19,6 @@ import { useGraphs } from '../OverviewGraphs/useGraphs';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
 import { Process } from './types';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

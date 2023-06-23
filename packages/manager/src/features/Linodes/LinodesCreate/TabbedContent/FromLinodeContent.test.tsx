@@ -3,11 +3,11 @@ import * as React from 'react';
 
 import { linodes } from 'src/__data__/linodes';
 
-import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
 import { Provider } from 'react-redux';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { storeFactory } from 'src/store';
 import { queryClientFactory } from 'src/queries/base';
+import { storeFactory } from 'src/store';
+import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
 
 const store = storeFactory(queryClientFactory());
 

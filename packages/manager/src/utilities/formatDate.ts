@@ -1,6 +1,6 @@
 import { DateTime, Duration } from 'luxon';
-import { reportException } from 'src/exceptionReporting';
 import { DATETIME_DISPLAY_FORMAT, ISO_DATE_FORMAT } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
 import { parseAPIDate } from 'src/utilities/date';
 import getUserTimezone from './getUserTimezone';
 

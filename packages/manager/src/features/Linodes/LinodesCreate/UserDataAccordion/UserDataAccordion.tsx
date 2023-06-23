@@ -1,13 +1,13 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
 import Accordion from 'src/components/Accordion';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import { UserDataAccordionHeading } from './UserDataAccordionHeading';
-import { useExpandIconStyles } from './UserDataAccordion.styles';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+import { useExpandIconStyles } from './UserDataAccordion.styles';
+import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 
 interface Props {
   createType?: CreateTypes;

@@ -1,7 +1,7 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { RebuildFromStackScript } from './RebuildFromStackScript';
 
 const props = {

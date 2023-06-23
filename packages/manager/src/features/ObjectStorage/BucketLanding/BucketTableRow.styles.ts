@@ -1,7 +1,7 @@
+import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { styled } from '@mui/material/styles';
 
 export const StyledBucketRow = styled(TableRow, {
   label: 'StyledBucketRow',

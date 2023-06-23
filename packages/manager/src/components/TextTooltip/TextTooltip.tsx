@@ -1,10 +1,10 @@
+import type { SxProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import type { TooltipProps } from '@mui/material/Tooltip';
 import * as React from 'react';
 import ToolTip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
-import { styled } from '@mui/material/styles';
-import type { SxProps } from '@mui/material';
-import type { TooltipProps } from '@mui/material/Tooltip';
 import type { TypographyProps } from 'src/components/core/Typography';
+import Typography from 'src/components/core/Typography';
 
 export interface TextTooltipProps {
   /** The text to hover on to display the tooltip */

@@ -4,19 +4,21 @@ import {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Grid from '@mui/material/Unstable_Grid2';
-import Box from '@mui/material/Box';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import TextField from 'src/components/TextField';
 import {
@@ -32,12 +34,10 @@ import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { NodePoolPanel } from './NodePoolPanel';
-import LandingHeader from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -116,9 +116,8 @@ export const CreateCluster = () => {
     error: typesError,
   } = useAllTypes();
 
-  const {
-    mutateAsync: createKubernetesCluster,
-  } = useCreateKubernetesClusterMutation();
+  const { mutateAsync: createKubernetesCluster } =
+    useCreateKubernetesClusterMutation();
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
@@ -138,18 +137,15 @@ export const CreateCluster = () => {
   const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
-  const [highAvailability, setHighAvailability] = React.useState<boolean>(
-    false
-  );
+  const [highAvailability, setHighAvailability] =
+    React.useState<boolean>(false);
   const [version, setVersion] = React.useState<Item<string> | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-  const {
-    data: versionData,
-    isError: versionLoadError,
-  } = useKubernetesVersionQuery();
+  const { data: versionData, isError: versionLoadError } =
+    useKubernetesVersionQuery();
   const versions = (versionData ?? []).map((thisVersion) => ({
     value: thisVersion.id,
     label: thisVersion.id,

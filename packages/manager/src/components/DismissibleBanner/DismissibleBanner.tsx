@@ -1,11 +1,11 @@
 import Close from '@mui/icons-material/Close';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import type { NoticeProps } from 'src/components/Notice/Notice';
 import { Notice } from 'src/components/Notice/Notice';
-import Box from 'src/components/core/Box';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';
@@ -22,14 +22,8 @@ interface Props {
 type CombinedProps = Props & Partial<NoticeProps>;
 
 export const DismissibleBanner = (props: CombinedProps) => {
-  const {
-    className,
-    preferenceKey,
-    options,
-    children,
-    actionButton,
-    ...rest
-  } = props;
+  const { className, preferenceKey, options, children, actionButton, ...rest } =
+    props;
 
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
     preferenceKey,
@@ -78,10 +72,8 @@ export const useDismissibleBanner = (
   preferenceKey: string,
   options?: DismissibleNotificationOptions
 ) => {
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
+  const { dismissNotifications, hasDismissedNotifications } =
+    useDismissibleNotifications();
 
   const hasDismissedBanner = hasDismissedNotifications([preferenceKey]);
 

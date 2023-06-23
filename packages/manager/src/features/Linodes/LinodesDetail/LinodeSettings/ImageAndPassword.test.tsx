@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { imageFactory, normalizeEntities } from 'src/factories';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 const normalizedImages = normalizeEntities(imageFactory.buildList(10));
 

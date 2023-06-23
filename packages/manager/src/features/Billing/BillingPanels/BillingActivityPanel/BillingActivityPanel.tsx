@@ -4,15 +4,12 @@ import {
   InvoiceItem,
   Payment,
 } from '@linode/api-v4/lib/account';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
-import { TextTooltip } from 'src/components/TextTooltip';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -22,10 +19,12 @@ import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import Grid from '@mui/material/Unstable_Grid2';
+import { TextTooltip } from 'src/components/TextTooltip';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {
@@ -39,11 +38,12 @@ import {
   useAllAccountInvoices,
   useAllAccountPayments,
 } from 'src/queries/accountBilling';
+import { useProfile } from 'src/queries/profile';
 import { parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
+import { makeStyles } from 'tss-react/mui';
 import { getTaxID } from '../../billingUtils';
-import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -193,15 +193,11 @@ export const BillingActivityPanel = (props: Props) => {
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
-  const [
-    selectedTransactionType,
-    setSelectedTransactionType,
-  ] = React.useState<TransactionTypes>('all');
+  const [selectedTransactionType, setSelectedTransactionType] =
+    React.useState<TransactionTypes>('all');
 
-  const [
-    selectedTransactionDate,
-    setSelectedTransactionDate,
-  ] = React.useState<DateRange>(defaultDateRange);
+  const [selectedTransactionDate, setSelectedTransactionDate] =
+    React.useState<DateRange>(defaultDateRange);
 
   const endDate = getCutoffFromDateRange(selectedTransactionDate);
   const filter = makeFilter(endDate);
@@ -507,16 +503,8 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
 export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   const { classes } = useStyles();
 
-  const {
-    date,
-    label,
-    total,
-    id,
-    type,
-    downloadPDF,
-    hasError,
-    isLoading,
-  } = props;
+  const { date, label, total, id, type, downloadPDF, hasError, isLoading } =
+    props;
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent) => {

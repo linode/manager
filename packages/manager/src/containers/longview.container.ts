@@ -60,13 +60,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     ApplicationState
   >(
     (state, ownProps) => {
-      const {
-        loading,
-        error,
-        data,
-        lastUpdated,
-        results,
-      } = state.longviewClients;
+      const { loading, error, data, lastUpdated, results } =
+        state.longviewClients;
       if (mapStateToProps) {
         return mapStateToProps(ownProps, {
           longviewClientsData: data,

@@ -32,10 +32,8 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     'Deleting a database cluster is permanent and cannot be undone.';
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [
-    isResetRootPasswordDialogOpen,
-    setIsResetRootPasswordDialogOpen,
-  ] = React.useState(false);
+  const [isResetRootPasswordDialogOpen, setIsResetRootPasswordDialogOpen] =
+    React.useState(false);
 
   const onResetRootPassword = () => {
     setIsResetRootPasswordDialogOpen(true);

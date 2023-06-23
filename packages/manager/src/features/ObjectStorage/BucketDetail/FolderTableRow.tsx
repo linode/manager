@@ -1,12 +1,12 @@
-import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { FolderActionMenu } from './FolderActionMenu';
-import { Link } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { FolderActionMenu } from './FolderActionMenu';
 
 interface Props {
   displayName: string;

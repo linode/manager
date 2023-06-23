@@ -1,10 +1,10 @@
+import { ManagedIssue } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import IssueDay from './IssueDay';
-import { parseAPIDate } from 'src/utilities/date';
 import { useProfile } from 'src/queries/profile';
+import { parseAPIDate } from 'src/utilities/date';
 import getUserTimezone from 'src/utilities/getUserTimezone';
-import { ManagedIssue } from '@linode/api-v4';
+import IssueDay from './IssueDay';
 
 const TOTAL_DAYS = 10;
 

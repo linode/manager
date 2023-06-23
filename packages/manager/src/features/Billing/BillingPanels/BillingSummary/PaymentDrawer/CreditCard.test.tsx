@@ -1,7 +1,7 @@
-import CreditCard from './CreditCard';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CreditCardData } from '@linode/api-v4';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import CreditCard from './CreditCard';
 
 it('Displays credit card type and last four digits', () => {
   const creditCardData: CreditCardData = {

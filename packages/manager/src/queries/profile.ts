@@ -1,38 +1,38 @@
 import {
+  createSSHKey,
+  deleteSSHKey,
+  deleteTrustedDevice,
   getProfile,
+  getSSHKeys,
+  getTrustedDevices,
   listGrants,
   Profile,
-  smsOptOut,
   sendCodeToPhoneNumber,
   SendPhoneVerificationCodePayload,
+  smsOptOut,
+  SSHKey,
+  TrustedDevice,
   updateProfile,
+  updateSSHKey,
   verifyPhoneNumberCode,
   VerifyVerificationCodePayload,
-  getSSHKeys,
-  createSSHKey,
-  SSHKey,
-  deleteSSHKey,
-  updateSSHKey,
-  getTrustedDevices,
-  TrustedDevice,
-  deleteTrustedDevice,
 } from '@linode/api-v4/lib/profile';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
 import {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { Grants } from '../../../api-v4/lib';
-import { queryPresets } from './base';
-import { queryKey as accountQueryKey } from './account';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { EventWithStore } from 'src/events';
+import { Grants } from '../../../api-v4/lib';
+import { queryKey as accountQueryKey } from './account';
+import { queryPresets } from './base';
 
 export const queryKey = 'profile';
 

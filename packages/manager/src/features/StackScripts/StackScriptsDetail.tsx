@@ -5,7 +5,9 @@ import {
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
+import LandingHeader from 'src/components/LandingHeader';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -15,8 +17,6 @@ import {
   canUserModifyAccountStackScript,
   getStackScriptUrl,
 } from './stackScriptUtils';
-import LandingHeader from 'src/components/LandingHeader';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 export const StackScriptsDetail = () => {
   const { _isRestrictedUser, _hasGrant, profile } = useAccountManagement();

@@ -1,6 +1,5 @@
-import { string } from 'yup';
 import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
-import { object } from 'yup';
+import { object, string } from 'yup';
 import zxcvbn from 'zxcvbn';
 
 export const validatePassword = (password: string) => {

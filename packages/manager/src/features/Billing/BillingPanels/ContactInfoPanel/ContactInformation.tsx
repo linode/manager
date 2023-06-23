@@ -1,16 +1,16 @@
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import countryData from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-import BillingContactDrawer from './EditBillingContactDrawer';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import {
-  BillingPaper,
-  BillingBox,
   BillingActionButton,
+  BillingBox,
+  BillingPaper,
 } from '../../BillingDetail';
+import BillingContactDrawer from './EditBillingContactDrawer';
 
 interface Props {
   company: string;
@@ -61,10 +61,8 @@ const ContactInformation = (props: Props) => {
     focusEmail?: boolean;
   }>();
 
-  const [
-    editContactDrawerOpen,
-    setEditContactDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [editContactDrawerOpen, setEditContactDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 

@@ -1,3 +1,5 @@
+import type { CreateNodePoolData, Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -8,8 +10,6 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
 } from './utils';
-import type { CreateNodePoolData, Region } from '@linode/api-v4';
-import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;

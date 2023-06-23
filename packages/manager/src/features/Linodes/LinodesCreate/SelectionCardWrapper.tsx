@@ -1,8 +1,8 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import * as React from 'react';
-import Info from 'src/assets/icons/info.svg';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import Info from 'src/assets/icons/info.svg';
 import SelectionCard from 'src/components/SelectionCard';
 import { APP_ROOT } from 'src/constants';
 

@@ -1,24 +1,24 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
-import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
-import LandingHeader from 'src/components/LandingHeader';
-import Grid from '@mui/material/Unstable_Grid2';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
-import DomainRecords from '../DomainRecords';
-import DeleteDomain from '../DeleteDomain';
-import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
+import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
+import DeleteDomain from '../DeleteDomain';
+import DomainRecords from '../DomainRecords';
+import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),

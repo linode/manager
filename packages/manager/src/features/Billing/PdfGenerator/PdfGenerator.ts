@@ -219,7 +219,7 @@ export const printInvoice = (
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, "MEDIUM");
+      doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, 'MEDIUM');
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -277,7 +277,7 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, "MEDIUM");
+    doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, 'MEDIUM');
 
     const leftHeaderYPosition = addLeftHeader(
       doc,

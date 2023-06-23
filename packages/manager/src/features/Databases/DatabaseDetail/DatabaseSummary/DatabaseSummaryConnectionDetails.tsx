@@ -133,9 +133,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [showCredentials, setShowPassword] = React.useState<boolean>(false);
-  const [isCACertDownloading, setIsCACertDownloading] = React.useState<boolean>(
-    false
-  );
+  const [isCACertDownloading, setIsCACertDownloading] =
+    React.useState<boolean>(false);
 
   const {
     data: credentials,

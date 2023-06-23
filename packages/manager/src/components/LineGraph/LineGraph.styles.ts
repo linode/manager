@@ -1,9 +1,9 @@
+import { styled } from '@mui/material/styles';
 import Button from 'src/components/Button';
 import { Table } from 'src/components/Table';
-import { TableHead } from 'src/components/TableHead';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { styled } from '@mui/material/styles';
+import { TableHead } from 'src/components/TableHead';
 import { isPropValid } from 'src/utilities/isPropValid';
 
 export const StyledWrapper = styled('div')(() => ({

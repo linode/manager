@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import * as hljs from 'highlight.js/lib/core';
-import * as React from 'react';
 import { Theme, useTheme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import 'src/formatted-text.css';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
-import { unsafe_MarkdownIt } from 'src/utilities/markdown';
-import sanitize from 'sanitize-html';
+import * as hljs from 'highlight.js/lib/core';
 import apache from 'highlight.js/lib/languages/apache';
 import bash from 'highlight.js/lib/languages/bash';
 import javascript from 'highlight.js/lib/languages/javascript';
 import nginx from 'highlight.js/lib/languages/nginx';
 import yaml from 'highlight.js/lib/languages/yaml';
+import * as React from 'react';
+import sanitize from 'sanitize-html';
+import Typography from 'src/components/core/Typography';
+import 'src/formatted-text.css';
+import { unsafe_MarkdownIt } from 'src/utilities/markdown';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);

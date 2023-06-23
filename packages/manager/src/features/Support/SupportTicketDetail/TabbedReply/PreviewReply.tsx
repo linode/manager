@@ -1,7 +1,7 @@
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 
 type ClassNames = 'root';

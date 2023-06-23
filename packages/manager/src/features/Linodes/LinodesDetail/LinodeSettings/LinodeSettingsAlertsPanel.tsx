@@ -82,8 +82,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       textTitle: 'Usage Threshold',
       radioInputLabel: 'cpu_usage_state',
       textInputLabel: 'cpu_usage_threshold',
-      copy:
-        'Average CPU usage over 2 hours exceeding this value triggers this alert.',
+      copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
       state: formik.values.cpu > 0,
       value: formik.values.cpu,
       onStateChange: (
@@ -109,8 +108,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       textInputLabel: 'disk_io_threshold',
       textTitle: 'I/O Threshold',
       title: 'Disk I/O Rate',
-      copy:
-        'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
+      copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
       state: formik.values.io > 0,
       value: formik.values.io,
       onStateChange: (

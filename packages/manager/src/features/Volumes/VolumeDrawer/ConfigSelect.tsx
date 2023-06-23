@@ -21,22 +21,17 @@ type CombinedProps = Props;
 export const initialValueDefaultId = -1;
 
 const ConfigSelect: React.FC<CombinedProps> = (props) => {
-  const {
-    error,
-    onChange,
-    onBlur,
-    linodeId,
-    name,
-    value,
-    width,
-    ...rest
-  } = props;
+  const { error, onChange, onBlur, linodeId, name, value, width, ...rest } =
+    props;
 
-  const { lastUpdated, error: configsError, loading, itemsById } = useSelector(
-    (state: ApplicationState) => {
-      return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
-    }
-  );
+  const {
+    lastUpdated,
+    error: configsError,
+    loading,
+    itemsById,
+  } = useSelector((state: ApplicationState) => {
+    return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
+  });
 
   const configs = Object.values(itemsById ?? {});
 

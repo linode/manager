@@ -1,13 +1,5 @@
-import React, { useEffect } from 'react';
-import { useClientToken } from 'src/queries/accountPayment';
-import { makeStyles } from 'tss-react/mui';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
-import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { reportException } from 'src/exceptionReporting';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   BraintreePayPalButtons,
@@ -17,8 +9,18 @@ import {
   OnApproveBraintreeData,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
+import { useSnackbar } from 'notistack';
+import React, { useEffect } from 'react';
 import { QueryClient, useQueryClient } from 'react-query';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import {
+  queryKey as accountPaymentKey,
+  useClientToken,
+} from 'src/queries/accountPayment';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(() => ({
   disabled: {

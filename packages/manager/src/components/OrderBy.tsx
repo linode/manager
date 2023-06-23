@@ -1,10 +1,12 @@
 import { DateTime } from 'luxon';
 import { equals, pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Order } from 'src/components/Pagey';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import usePrevious from 'src/hooks/usePrevious';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import {
   sortByArrayLength,
   sortByNumber,
@@ -12,8 +14,6 @@ import {
   sortByUTFDate,
 } from 'src/utilities/sort-by';
 import { debounce } from 'throttle-debounce';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { useHistory, useLocation } from 'react-router-dom';
 
 export interface OrderByProps<T> extends State {
   handleOrderChange: (orderBy: string, order: Order) => void;

@@ -1,11 +1,11 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import Dialog, { DialogProps } from 'src/components/core/Dialog';
 import DialogActions from 'src/components/core/DialogActions';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

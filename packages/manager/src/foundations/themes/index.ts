@@ -6,13 +6,13 @@ import { darkTheme } from 'src/foundations/themes/dark';
 import { lightTheme } from 'src/foundations/themes/light';
 
 // Types & Interfaces
-import { customDarkModeOptions } from 'src/foundations/themes/dark';
 import { latoWeb } from 'src/foundations/fonts';
+import { customDarkModeOptions } from 'src/foundations/themes/dark';
 import {
-  color,
   bg,
-  textColors,
   borderColors,
+  color,
+  textColors,
 } from 'src/foundations/themes/light';
 
 export type ThemeName = 'light' | 'dark';
@@ -20,8 +20,7 @@ export type ThemeName = 'light' | 'dark';
 type Fonts = typeof latoWeb;
 
 type MergeTypes<A, B> = Omit<A, keyof B> &
-  Omit<B, keyof A> &
-  { [K in keyof A & keyof B]: A[K] | B[K] };
+  Omit<B, keyof A> & { [K in keyof A & keyof B]: A[K] | B[K] };
 
 type LightModeColors = typeof color;
 type DarkModeColors = typeof customDarkModeOptions.color;

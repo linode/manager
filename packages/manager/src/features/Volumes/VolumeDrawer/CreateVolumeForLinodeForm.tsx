@@ -3,15 +3,15 @@
  */
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { Formik } from 'formik';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
+import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -21,22 +21,22 @@ import {
   openForAttaching,
   Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getErrorMap, getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
+import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import { PricePanel } from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
-import { ModeSelection } from './ModeSelection';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textWrapper: {

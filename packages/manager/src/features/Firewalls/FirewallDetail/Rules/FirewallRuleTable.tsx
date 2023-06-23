@@ -1,4 +1,8 @@
 import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles, useTheme } from '@mui/styles';
 import classNames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
@@ -11,11 +15,7 @@ import {
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Button from 'src/components/Button';
-import Box from '@mui/material/Box';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import {
@@ -25,9 +25,9 @@ import {
 } from 'src/features/Firewalls/shared';
 import { capitalize } from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
+import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
-import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {

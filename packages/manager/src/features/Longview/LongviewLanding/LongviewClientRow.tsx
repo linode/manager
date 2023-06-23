@@ -1,9 +1,9 @@
 import { Grant } from '@linode/api-v4/lib/account';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import withLongviewClients, {
   DispatchProps,
@@ -61,12 +61,10 @@ const LongviewClientRow: React.FC<CombinedProps> = (props) => {
     updateLongviewClient,
   } = props;
 
-  const {
-    lastUpdated,
-    lastUpdatedError,
-    authed,
-  } = useClientLastUpdated(clientAPIKey, (_lastUpdated) =>
-    props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
+  const { lastUpdated, lastUpdatedError, authed } = useClientLastUpdated(
+    clientAPIKey,
+    (_lastUpdated) =>
+      props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
   );
 
   const { data: grants } = useGrants();

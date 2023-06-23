@@ -24,14 +24,8 @@ interface Props {
 }
 
 export const ResizeVolumeForm = (props: Props) => {
-  const {
-    volumeId,
-    volumeSize,
-    onClose,
-    volumeLabel,
-    onSuccess,
-    readOnly,
-  } = props;
+  const { volumeId, volumeSize, onClose, volumeLabel, onSuccess, readOnly } =
+    props;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
 

@@ -1,7 +1,7 @@
 import React from 'react';
+import { linodeDiskFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { RenameDiskDrawer } from './RenameDiskDrawer';
-import { linodeDiskFactory } from 'src/factories';
 
 describe('RenameDiskDrawer', () => {
   it('should render', () => {

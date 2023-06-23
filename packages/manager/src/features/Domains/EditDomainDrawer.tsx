@@ -1,3 +1,5 @@
+import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -9,17 +11,15 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import TextField from 'src/components/TextField';
-import { useFormik } from 'formik';
 import { useUpdateDomainMutation } from 'src/queries/domains';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import { transferHelperText as helperText } from './domainUtils';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   ExtendedIP,
   extendedIPToString,
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
+import { transferHelperText as helperText } from './domainUtils';
 
 interface Props {
   open: boolean;

@@ -1,8 +1,8 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
 import { getNextVersion } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';

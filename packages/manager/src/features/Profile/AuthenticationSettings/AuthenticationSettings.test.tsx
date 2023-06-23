@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AuthenticationSettings } from './AuthenticationSettings';
 

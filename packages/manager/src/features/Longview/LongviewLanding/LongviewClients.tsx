@@ -3,14 +3,14 @@ import {
   LongviewClient,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -19,8 +19,8 @@ import Grid from 'src/components/Grid';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
-import { useGrants, useProfile } from 'src/queries/profile';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
@@ -145,10 +145,8 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
    * available LV clients)
    */
 
-  const [
-    subscriptionDialogOpen,
-    setSubscriptionDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] =
+    React.useState<boolean>(false);
 
   const classes = useStyles();
 

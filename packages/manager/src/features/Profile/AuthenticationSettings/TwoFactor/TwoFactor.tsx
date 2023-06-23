@@ -1,23 +1,23 @@
-import * as React from 'react';
-import DisableTwoFactorDialog from './DisableTwoFactorDialog';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import ScratchDialog from './ScratchCodeDialog';
-import Typography from 'src/components/core/Typography';
-import { APIError } from '@linode/api-v4/lib/types';
-import { EnableTwoFactorForm } from './EnableTwoFactorForm';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getTFAToken } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
+import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { queryKey } from 'src/queries/profile';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { TwoFactorToggle } from './TwoFactorToggle';
-import { useQueryClient } from 'react-query';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import DisableTwoFactorDialog from './DisableTwoFactorDialog';
+import { EnableTwoFactorForm } from './EnableTwoFactorForm';
+import ScratchDialog from './ScratchCodeDialog';
 import {
-  StyledCTAWrapper,
   StyledCopy,
+  StyledCTAWrapper,
   StyledRootContainer,
 } from './TwoFactor.styles';
+import { TwoFactorToggle } from './TwoFactorToggle';
 
 export interface TwoFactorProps {
   disabled?: boolean;

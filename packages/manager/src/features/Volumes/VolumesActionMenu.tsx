@@ -1,9 +1,9 @@
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface ActionHandlers {
@@ -81,13 +81,8 @@ export const VolumesActionMenu = (props: Props) => {
   };
 
   const handleDetach = () => {
-    const {
-      handleDetach,
-      volumeId,
-      volumeLabel,
-      linodeLabel,
-      linodeId,
-    } = props;
+    const { handleDetach, volumeId, volumeLabel, linodeLabel, linodeId } =
+      props;
     handleDetach(volumeId, volumeLabel, linodeLabel, linodeId);
   };
 

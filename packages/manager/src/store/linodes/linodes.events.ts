@@ -1,14 +1,14 @@
 import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
+import type { QueryClient } from 'react-query';
 import { Dispatch } from 'redux';
+import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
-import { deleteLinode } from './linodes.actions';
-import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
 import { EntityEvent } from '../events/event.types';
-import type { QueryClient } from 'react-query';
+import { deleteLinode } from './linodes.actions';
 
 const linodeEventsHandler: EventHandler = (
   event,

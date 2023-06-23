@@ -1,9 +1,7 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
-import { oneClickApps } from './oneClickApps';
 import Close from '@mui/icons-material/Close';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 import Button from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import Drawer from 'src/components/core/Drawer';
@@ -11,6 +9,8 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import { OCA } from 'src/features/OneClickApps/oneClickApps';
 import useFlags from 'src/hooks/useFlags';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { oneClickApps } from './oneClickApps';
 
 const useStyles = makeStyles((theme: Theme) => ({
   logoContainer: {

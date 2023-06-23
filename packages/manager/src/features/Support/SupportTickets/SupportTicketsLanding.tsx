@@ -6,11 +6,11 @@ import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import LandingHeader from 'src/components/LandingHeader';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
-import LandingHeader from 'src/components/LandingHeader';
 
 const tabs = ['open', 'closed'];
 

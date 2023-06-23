@@ -32,15 +32,8 @@ interface Props {
 type CombinedProps = Props;
 
 const DeviceSelection: React.FC<CombinedProps> = (props) => {
-  const {
-    devices,
-    onChange,
-    getSelected,
-    slots,
-    rescue,
-    disabled,
-    errorText,
-  } = props;
+  const { devices, onChange, getSelected, slots, rescue, disabled, errorText } =
+    props;
 
   const counter = defaultTo(0, props.counter) as number;
 

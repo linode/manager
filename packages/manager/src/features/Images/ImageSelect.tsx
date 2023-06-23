@@ -1,8 +1,8 @@
 import { Image } from '@linode/api-v4/lib/images';
+import Box from '@mui/material/Box';
 import { clone, propOr } from 'ramda';
 import * as React from 'react';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
-import Box from '@mui/material/Box';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -46,19 +46,21 @@ export const ImageSelect = (props: Props | MultiProps) => {
     anyAllOption,
   } = props;
 
-  const { isLoading: imagesLoading, isError, error } = useAllImagesQuery(
-    {},
-    {}
-  );
+  const {
+    isLoading: imagesLoading,
+    isError,
+    error,
+  } = useAllImagesQuery({}, {});
 
   // Check for request errors in RQ
   const rqError = isError
     ? getAPIErrorOrDefault(error ?? [], 'Unable to load Images')[0].reason
     : undefined;
 
-  const renderedImages = React.useMemo(() => getImagesOptions(images), [
-    images,
-  ]);
+  const renderedImages = React.useMemo(
+    () => getImagesOptions(images),
+    [images]
+  );
 
   const imageSelectOptions = clone(renderedImages);
 

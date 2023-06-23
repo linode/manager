@@ -1,12 +1,12 @@
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import TicketAttachmentRow from './TicketAttachmentRow';
 
@@ -101,9 +101,11 @@ const enhanced = compose<CombinedProps, Props>(
   withStateHandlers(
     { showMoreAttachments: false },
     {
-      toggle: ({ showMoreAttachments }) => () => ({
-        showMoreAttachments: !showMoreAttachments,
-      }),
+      toggle:
+        ({ showMoreAttachments }) =>
+        () => ({
+          showMoreAttachments: !showMoreAttachments,
+        }),
     }
   ),
   styled

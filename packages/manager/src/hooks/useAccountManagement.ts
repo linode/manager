@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
-import { ApplicationState } from 'src/store';
-import { Profile } from '@linode/api-v4/lib/profile';
-import { useGrants, useProfile } from 'src/queries/profile';
 import { Account, GlobalGrantTypes } from '@linode/api-v4/lib/account';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { useSelector } from 'react-redux';
 import { useAccount } from 'src/queries/account';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { ApplicationState } from 'src/store';
 
 export interface AccountManagementProps {
   account: Account;

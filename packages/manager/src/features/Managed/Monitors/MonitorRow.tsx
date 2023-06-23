@@ -1,12 +1,12 @@
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import TicketIcon from 'src/assets/icons/ticket.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { ExtendedIssue } from 'src/queries/managed/types';
@@ -49,13 +49,8 @@ interface Props {
 export const MonitorRow: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const {
-    monitor,
-    issues,
-    openDialog,
-    openHistoryDrawer,
-    openMonitorDrawer,
-  } = props;
+  const { monitor, issues, openDialog, openHistoryDrawer, openMonitorDrawer } =
+    props;
 
   const Icon = statusIconMap[monitor.status];
 

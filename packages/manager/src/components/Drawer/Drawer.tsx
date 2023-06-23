@@ -1,12 +1,12 @@
 import Close from '@mui/icons-material/Close';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import { convertForAria } from 'src/utilities/stringUtils';
+import { makeStyles } from 'tss-react/mui';
 
 export interface Props extends DrawerProps {
   title: string;

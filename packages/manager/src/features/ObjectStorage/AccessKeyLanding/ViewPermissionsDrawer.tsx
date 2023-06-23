@@ -1,8 +1,8 @@
-import * as React from 'react';
-import Drawer from 'src/components/Drawer';
-import Typography from 'src/components/core/Typography';
-import { AccessTable } from './AccessTable';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import * as React from 'react';
+import Typography from 'src/components/core/Typography';
+import Drawer from 'src/components/Drawer';
+import { AccessTable } from './AccessTable';
 
 export interface Props {
   open: boolean;

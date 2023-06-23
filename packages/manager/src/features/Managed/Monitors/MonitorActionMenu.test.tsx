@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
-import { Props, MonitorActionMenu } from './MonitorActionMenu';
+import { MonitorActionMenu, Props } from './MonitorActionMenu';
 
 const props: Props = {
   status: 'disabled',

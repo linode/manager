@@ -1,3 +1,4 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import {
   matchPath,
@@ -5,19 +6,18 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
+import { CircleProgress } from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from '@mui/material/Unstable_Grid2';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(

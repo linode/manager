@@ -1,20 +1,20 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useProfile } from 'src/queries/profile';
 import { handleOpen } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
-import { useProfile } from 'src/queries/profile';
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

@@ -123,22 +123,17 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
     };
   };
 
-  const {
-    values,
-    isSubmitting,
-    handleSubmit,
-    setValues,
-    resetForm,
-  } = useFormik({
-    initialValues: {
-      _allowList: allowList,
-    },
-    enableReinitialize: true,
-    onSubmit: handleUpdateAccessControlsClick,
-    validateOnChange: false,
-    validateOnBlur: false,
-    validate: (values: Values) => onValidate(values),
-  });
+  const { values, isSubmitting, handleSubmit, setValues, resetForm } =
+    useFormik({
+      initialValues: {
+        _allowList: allowList,
+      },
+      enableReinitialize: true,
+      onSubmit: handleUpdateAccessControlsClick,
+      validateOnChange: false,
+      validateOnBlur: false,
+      validate: (values: Values) => onValidate(values),
+    });
 
   const handleIPChange = React.useCallback(
     (_ips: ExtendedIP[]) => {

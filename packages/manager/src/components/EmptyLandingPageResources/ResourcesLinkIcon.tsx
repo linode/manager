@@ -1,6 +1,6 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { isPropValid } from 'src/utilities/isPropValid';
-import { styled } from '@mui/material/styles';
 
 interface ResourcesLinkIconProps {
   /**

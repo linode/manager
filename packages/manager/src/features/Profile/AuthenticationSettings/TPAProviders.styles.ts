@@ -1,9 +1,9 @@
-import Button from 'src/components/Button';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',

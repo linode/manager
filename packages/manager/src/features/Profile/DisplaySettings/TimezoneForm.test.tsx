@@ -1,10 +1,10 @@
-import * as React from 'react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import * as React from 'react';
 import { profileFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
+import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { formatOffset, TimezoneForm } from './TimezoneForm';
-import { queryClientFactory } from 'src/queries/base';
 
 const queryClient = queryClientFactory();
 

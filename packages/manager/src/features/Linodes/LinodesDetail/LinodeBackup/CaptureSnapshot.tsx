@@ -1,18 +1,18 @@
+import { Theme } from '@mui/material/styles';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Notice } from 'src/components/Notice/Notice';
+import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
-import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
-import { useSnackbar } from 'notistack';
-import { useFormik } from 'formik';
+import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
-import Button from 'src/components/Button';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { makeStyles } from 'tss-react/mui';
+import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
 
 interface Props {
   linodeId: number;

@@ -1,13 +1,13 @@
 import { Config } from '@linode/api-v4/lib/linodes';
-import { splitAt } from 'ramda';
-import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useTheme } from '@mui/styles';
+import { splitAt } from 'ramda';
+import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Box from 'src/components/core/Box';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   onEdit: () => void;

@@ -1,11 +1,11 @@
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
+import { QueryClient } from 'react-query';
 import { regionFactory } from 'src/factories/regions';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { RegionStatusBanner } from './RegionStatusBanner';
-import { rest, server } from 'src/mocks/testServer';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { waitFor } from '@testing-library/react';
-import { QueryClient } from 'react-query';
 
 describe('Region status banner', () => {
   it('should render null if there are no warnings', () => {

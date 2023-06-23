@@ -1,14 +1,14 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   docsLink,
   guidesMoreLinkText,
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description:
@@ -28,8 +28,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
       text: 'Create and Manage Block Storage Volumes',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/storage/block-storage/guides/configure-volume/',
+      to: 'https://www.linode.com/docs/products/storage/block-storage/guides/configure-volume/',
       text: 'Configure a Volume on a Compute Instance',
     },
   ],
@@ -54,8 +53,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
     },
     {
       to: 'https://www.youtube.com/watch?v=Z9jZv_IHO2s',
-      text:
-        'How to use Block Storage to Increase Space on Your Nextcloud Instance',
+      text: 'How to use Block Storage to Increase Space on Your Nextcloud Instance',
       external: true,
     },
   ],

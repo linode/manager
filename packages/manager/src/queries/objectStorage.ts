@@ -1,5 +1,27 @@
+import {
+  createBucket,
+  deleteBucket,
+  deleteSSLCert,
+  getBucket,
+  getBuckets,
+  getBucketsInCluster,
+  getClusters,
+  getObjectList,
+  getObjectStorageKeys,
+  getObjectURL,
+  getSSLCert,
+  ObjectStorageBucket,
+  ObjectStorageBucketRequestPayload,
+  ObjectStorageBucketSSLRequest,
+  ObjectStorageBucketSSLResponse,
+  ObjectStorageCluster,
+  ObjectStorageKey,
+  ObjectStorageObjectListResponse,
+  ObjectStorageObjectURL,
+  ObjectStorageObjectURLOptions,
+  uploadSSLCert,
+} from '@linode/api-v4';
 import { APIError, Params, ResourcePage } from '@linode/api-v4/lib/types';
-import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import {
   QueryClient,
   useInfiniteQuery,
@@ -7,32 +29,10 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { queryPresets } from './base';
+import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getAll } from 'src/utilities/getAll';
-import {
-  createBucket,
-  deleteBucket,
-  getBuckets,
-  getClusters,
-  getObjectList,
-  getObjectStorageKeys,
-  ObjectStorageBucket,
-  ObjectStorageBucketRequestPayload,
-  ObjectStorageCluster,
-  ObjectStorageKey,
-  ObjectStorageObjectListResponse,
-  getBucketsInCluster,
-  getBucket,
-  getObjectURL,
-  ObjectStorageObjectURLOptions,
-  ObjectStorageObjectURL,
-  getSSLCert,
-  ObjectStorageBucketSSLResponse,
-  uploadSSLCert,
-  ObjectStorageBucketSSLRequest,
-  deleteSSLCert,
-} from '@linode/api-v4';
 import { queryKey as accountSettingsQueryKey } from './accountSettings';
+import { queryPresets } from './base';
 
 export interface BucketError {
   cluster: ObjectStorageCluster;

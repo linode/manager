@@ -6,11 +6,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { TableBody } from 'src/components/TableBody';
 import Typography from 'src/components/core/Typography';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useDatabaseMutation } from 'src/queries/databases';
@@ -93,22 +93,16 @@ export const AccessControls = (props: Props) => {
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 
-  const [
-    accessControlToBeRemoved,
-    setAccessControlToBeRemoved,
-  ] = React.useState<string | null>(null);
+  const [accessControlToBeRemoved, setAccessControlToBeRemoved] =
+    React.useState<string | null>(null);
 
-  const [
-    addAccessControlDrawerOpen,
-    setAddAccessControlDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [addAccessControlDrawerOpen, setAddAccessControlDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
 
-  const {
-    mutateAsync: updateDatabase,
-    isLoading: databaseUpdating,
-  } = useDatabaseMutation(engine, id);
+  const { mutateAsync: updateDatabase, isLoading: databaseUpdating } =
+    useDatabaseMutation(engine, id);
 
   React.useEffect(() => {
     if (allowList.length > 0) {

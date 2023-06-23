@@ -2,14 +2,14 @@ import {
   AutoscaleSettings,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import NodeTable from './NodeTable';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
+import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
+import NodeTable from './NodeTable';
 
 interface Props {
   poolId: number;

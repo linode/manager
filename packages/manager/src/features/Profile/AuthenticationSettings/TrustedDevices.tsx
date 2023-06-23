@@ -1,22 +1,22 @@
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableSortCell } from 'src/components/TableSortCell';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
-import { usePagination } from 'src/hooks/usePagination';
-import { useOrder } from 'src/hooks/useOrder';
-import { useTrustedDevicesQuery } from 'src/queries/profile';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { TableSortCell } from 'src/components/TableSortCell';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
+import { useTrustedDevicesQuery } from 'src/queries/profile';
+import { makeStyles } from 'tss-react/mui';
 import { RevokeTrustedDeviceDialog } from './RevokeTrustedDevicesDialog';
 
 const useStyles = makeStyles()((theme: Theme) => ({

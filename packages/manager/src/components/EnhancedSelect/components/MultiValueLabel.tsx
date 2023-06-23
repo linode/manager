@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { components as reactSelectComponents } from 'react-select';
-import { MultiValueProps } from 'react-select';
+import {
+  components as reactSelectComponents,
+  MultiValueProps,
+} from 'react-select';
 
 const MultiValueLabel: React.FC<MultiValueProps<any>> = (props) => {
   return (

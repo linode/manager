@@ -54,12 +54,8 @@ interface Props {
 }
 
 const BackupStatus = (props: Props) => {
-  const {
-    mostRecentBackup,
-    linodeId,
-    backupsEnabled,
-    isBareMetalInstance,
-  } = props;
+  const { mostRecentBackup, linodeId, backupsEnabled, isBareMetalInstance } =
+    props;
 
   const { classes } = useStyles();
 

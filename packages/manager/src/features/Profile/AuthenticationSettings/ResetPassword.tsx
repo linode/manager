@@ -1,9 +1,9 @@
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { LOGIN_ROOT } from 'src/constants';
-import { styled, useTheme } from '@mui/material/styles';
 
 interface Props {
   username?: string;

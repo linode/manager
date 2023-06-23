@@ -1,11 +1,11 @@
-import { fireEvent, waitFor } from '@testing-library/react';
 import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
-  longviewSubscriptionFactory,
   longviewClientFactory,
+  longviewSubscriptionFactory,
 } from 'src/factories';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
@@ -78,11 +78,7 @@ describe('Utility Functions', () => {
 
       it('should respect the optional order argument', () => {
         expect([4, 3, 5, 1, 2].sort((a, b) => sortFunc(a, b, 'asc'))).toEqual([
-          1,
-          2,
-          3,
-          4,
-          5,
+          1, 2, 3, 4, 5,
         ]);
 
         expect(

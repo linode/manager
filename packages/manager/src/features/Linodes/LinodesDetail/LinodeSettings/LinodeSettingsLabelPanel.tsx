@@ -6,11 +6,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField from 'src/components/TextField';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
   linodeId: number;

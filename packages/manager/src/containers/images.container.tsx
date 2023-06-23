@@ -28,21 +28,20 @@ export interface DefaultProps {
 type Wrapper = (
   Component: React.ComponentType<DefaultProps>
 ) => React.FC<unknown>;
-const imagesContainer: Wrapper = (
-  Component: React.ComponentType<DefaultProps>
-) => (props) => {
-  const { data, error, isLoading, dataUpdatedAt } = useAllImagesQuery();
+const imagesContainer: Wrapper =
+  (Component: React.ComponentType<DefaultProps>) => (props) => {
+    const { data, error, isLoading, dataUpdatedAt } = useAllImagesQuery();
 
-  const _imagesData = listToItemsByID(data ?? []);
-  return (
-    <Component
-      imagesData={_imagesData}
-      imagesLastUpdated={dataUpdatedAt}
-      imagesError={error ?? undefined}
-      imagesLoading={isLoading}
-      {...props}
-    />
-  );
-};
+    const _imagesData = listToItemsByID(data ?? []);
+    return (
+      <Component
+        imagesData={_imagesData}
+        imagesLastUpdated={dataUpdatedAt}
+        imagesError={error ?? undefined}
+        imagesLoading={isLoading}
+        {...props}
+      />
+    );
+  };
 
 export default imagesContainer;

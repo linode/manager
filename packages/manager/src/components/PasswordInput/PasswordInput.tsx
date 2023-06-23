@@ -1,8 +1,8 @@
-import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import { Props as TextFieldProps } from 'src/components/TextField';
 import zxcvbn from 'zxcvbn';
 import { StrengthIndicator } from '../PasswordInput/StrengthIndicator';
-import { Props as TextFieldProps } from 'src/components/TextField';
 import { HideShowText } from './HideShowText';
 
 interface Props extends TextFieldProps {

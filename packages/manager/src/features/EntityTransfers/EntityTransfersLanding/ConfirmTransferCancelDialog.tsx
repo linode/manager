@@ -3,18 +3,18 @@ import {
   TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { queryKey } from 'src/queries/entityTransfers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEntityTransferCancelEvent } from 'src/utilities/analytics';
-import { useQueryClient } from 'react-query';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles(() => ({
   actions: {

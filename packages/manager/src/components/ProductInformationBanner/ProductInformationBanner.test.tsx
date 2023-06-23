@@ -1,10 +1,10 @@
+import { screen } from '@testing-library/react';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { productInformationBannerFactory } from 'src/factories/featureFlags';
+import { ProductInformationBannerFlag } from 'src/featureFlags';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ProductInformationBanner } from './ProductInformationBanner';
-import { DateTime } from 'luxon';
-import { screen } from '@testing-library/react';
-import { ProductInformationBannerFlag } from 'src/featureFlags';
 
 const _render = (banner: ProductInformationBannerFlag) =>
   renderWithTheme(
@@ -13,7 +13,8 @@ const _render = (banner: ProductInformationBannerFlag) =>
   );
 
 const bannerBase = productInformationBannerFactory.extend({
-  bannerLocation: 'Object Storage' as ProductInformationBannerFlag['bannerLocation'],
+  bannerLocation:
+    'Object Storage' as ProductInformationBannerFlag['bannerLocation'],
   message: 'Test Banner Message' as any,
 });
 

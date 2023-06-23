@@ -1,8 +1,8 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import Link from 'src/components/Link';

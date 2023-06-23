@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { UseQueryResult } from 'react-query';
 import { AccountSettings } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as React from 'react';
+import { UseQueryResult } from 'react-query';
 import { useAccountSettings } from 'src/queries/accountSettings';
 
 export interface WithAccountSettingsProps {

@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import {
-  TableProps as _TableProps,
   default as _Table,
+  TableProps as _TableProps,
 } from '@mui/material/Table';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

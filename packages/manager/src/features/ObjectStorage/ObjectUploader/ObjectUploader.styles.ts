@@ -1,7 +1,7 @@
+import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { makeStyles } from 'tss-react/mui';
-import { styled } from '@mui/material/styles';
-import type { Theme } from '@mui/material/styles';
 
 export const StyledFileUploadsContainer = styled('div', {
   label: 'StyledFileUploadsContainer',

@@ -1,11 +1,4 @@
 import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
-import { EventWithStore } from 'src/events';
-import {
   closeSupportTicket,
   createReply,
   getTicket,
@@ -21,6 +14,13 @@ import type {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
+import { EventWithStore } from 'src/events';
 
 const queryKey = `tickets`;
 

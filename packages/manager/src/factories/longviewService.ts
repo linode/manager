@@ -21,11 +21,10 @@ export const longviewServiceFactory = Factory.Sync.makeFactory<LongviewService>(
   }
 );
 
-export const longviewPortsResponseFactory = Factory.Sync.makeFactory<LongviewPortsResponse>(
-  {
+export const longviewPortsResponseFactory =
+  Factory.Sync.makeFactory<LongviewPortsResponse>({
     Ports: {
       listening: longviewServiceFactory.buildList(2),
       active: longviewPortFactory.buildList(2),
     },
-  }
-);
+  });

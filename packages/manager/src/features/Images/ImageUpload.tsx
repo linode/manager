@@ -8,6 +8,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { FileUploader } from 'src/components/FileUploader/FileUploader';
 import Link from 'src/components/Link';
@@ -15,8 +17,6 @@ import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import TextField from 'src/components/TextField';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
@@ -112,15 +112,13 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const flags = useFlags();
   const hasMetadataCustomerTag = useMetadataCustomerTag();
 
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
   const [region, setRegion] = React.useState<string>('');
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
-    false
-  );
+  const [linodeCLIModalOpen, setLinodeCLIModalOpen] =
+    React.useState<boolean>(false);
 
   const showAgreement = Boolean(
     !profile?.restricted && agreements?.eu_model === false && isEURegion(region)

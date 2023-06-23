@@ -25,10 +25,12 @@ import {
 } from './disk.actions';
 import { Entity } from './disk.types';
 
-const addLinodeIdToDisk = (linodeId: number) => (disk: Disk): Entity => ({
-  ...disk,
-  linode_id: linodeId,
-});
+const addLinodeIdToDisk =
+  (linodeId: number) =>
+  (disk: Disk): Entity => ({
+    ...disk,
+    linode_id: linodeId,
+  });
 
 export const createLinodeDisk = createRequestThunk(
   createLinodeDiskActions,

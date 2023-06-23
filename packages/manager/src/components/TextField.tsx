@@ -1,4 +1,6 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import { Theme } from '@mui/material/styles';
+import { makeStyles, WithTheme } from '@mui/styles';
 import classNames from 'classnames';
 import { clamp } from 'ramda';
 import * as React from 'react';
@@ -7,8 +9,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles, WithTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import { TooltipProps as _TooltipProps } from 'src/components/core/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';

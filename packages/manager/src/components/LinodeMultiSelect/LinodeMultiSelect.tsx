@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import Autocomplete from '@mui/material/Autocomplete';
 import Popper from '@mui/material/Popper';
+import * as React from 'react';
 import TextField from 'src/components/TextField';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 export interface Props {
   allowedRegions?: string[];

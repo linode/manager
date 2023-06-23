@@ -1,8 +1,8 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

@@ -1,12 +1,12 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import Paper from 'src/components/core/Paper';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { makeStyles } from 'tss-react/mui';
 import DNSResolvers from './DNSResolvers';
 import NetworkTransfer from './NetworkTransfer';
 import TransferHistory from './TransferHistory';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

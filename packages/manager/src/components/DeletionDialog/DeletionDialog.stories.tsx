@@ -1,7 +1,7 @@
-import React from 'react';
-import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 
 const meta: Meta<typeof DeletionDialog> = {
   title: 'Components/Dialog/DeletionDialog',

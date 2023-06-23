@@ -1,12 +1,12 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description:
@@ -19,18 +19,15 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      to:
-        'https://www.linode.com/docs/products/tools/stackscripts/get-started/',
+      to: 'https://www.linode.com/docs/products/tools/stackscripts/get-started/',
       text: 'Getting Started with StackScripts',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/tools/stackscripts/guides/create/',
+      to: 'https://www.linode.com/docs/products/tools/stackscripts/guides/create/',
       text: 'Create a StackScript',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/tools/stackscripts/guides/write-a-custom-script/',
+      to: 'https://www.linode.com/docs/products/tools/stackscripts/guides/write-a-custom-script/',
       text: 'Write a Custom Script for Use with StackScripts',
     },
   ],

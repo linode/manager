@@ -1,21 +1,21 @@
 import { Image } from '@linode/api-v4/lib/images';
+import Grid from '@mui/material/Unstable_Grid2';
 import produce from 'immer';
 import { DateTime } from 'luxon';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';
-import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
+import { ImageOption } from 'src/components/ImageSelect/ImageOption';
+import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import { useAllImagesQuery } from 'src/queries/images';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
-import { ImageOption } from 'src/components/ImageSelect/ImageOption';
 
 export type Variant = 'public' | 'private' | 'all';
 
@@ -88,14 +88,8 @@ export const imagesToGroupedItems = (images: Image[]) => {
           label: thisGroup,
           options: group
             .reduce((acc: ImageItem[], thisImage) => {
-              const {
-                created,
-                eol,
-                id,
-                label,
-                vendor,
-                capabilities,
-              } = thisImage;
+              const { created, eol, id, label, vendor, capabilities } =
+                thisImage;
               const differenceInMonths = DateTime.now().diff(
                 DateTime.fromISO(eol!),
                 'months'

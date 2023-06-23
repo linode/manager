@@ -1,17 +1,17 @@
 import { FormLabel } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
-import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
-import { Radio } from 'src/components/Radio/Radio';
-import { Toggle } from 'src/components/Toggle';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { Radio } from 'src/components/Radio/Radio';
+import { Toggle } from 'src/components/Toggle';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
@@ -21,10 +21,8 @@ import PreferenceEditor from './PreferenceEditor';
 export const ProfileSettings = () => {
   const theme = useTheme();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [
-    preferenceEditorOpen,
-    setPreferenceEditorOpen,
-  ] = React.useState<boolean>(false);
+  const [preferenceEditorOpen, setPreferenceEditorOpen] =
+    React.useState<boolean>(false);
 
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();

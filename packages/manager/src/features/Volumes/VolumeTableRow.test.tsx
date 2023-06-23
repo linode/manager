@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { volumeFactory } from 'src/factories';
-import { VolumeTableRow } from './VolumeTableRow';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import { VolumeTableRow } from './VolumeTableRow';
 
 const attachedVolume = volumeFactory.build({
   region: 'us-east',

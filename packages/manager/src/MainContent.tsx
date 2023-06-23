@@ -1,15 +1,15 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import Box from 'src/components/core/Box';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import MainContentBanner from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -30,12 +30,12 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import { usePreferences } from 'src/queries/preferences';
+import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { makeStyles } from 'tss-react/mui';
+import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
-import { ENABLE_MAINTENANCE_MODE } from './constants';
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appFrame: {

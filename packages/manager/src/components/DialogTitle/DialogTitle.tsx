@@ -1,9 +1,9 @@
-import * as React from 'react';
-import _DialogTitle from '@mui/material/DialogTitle';
-import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
-import { IconButton } from 'src/components/IconButton';
+import Box from '@mui/material/Box';
+import _DialogTitle from '@mui/material/DialogTitle';
 import { SxProps } from '@mui/system';
+import * as React from 'react';
+import { IconButton } from 'src/components/IconButton';
 
 interface DialogTitleProps {
   className?: string;

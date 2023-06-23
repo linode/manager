@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type ScriptStatus = 'idle' | 'loading' | 'ready' | 'error';
 type ScriptLocation = 'head' | 'body';

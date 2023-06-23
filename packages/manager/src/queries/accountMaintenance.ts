@@ -1,14 +1,14 @@
 import { AccountMaintenance } from '@linode/api-v4/lib/account';
 import { getAccountMaintenance } from '@linode/api-v4/lib/account/maintenance';
-import { useQuery } from 'react-query';
-import { getAll } from 'src/utilities/getAll';
-import { queryPresets } from './base';
 import {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import { useQuery } from 'react-query';
+import { getAll } from 'src/utilities/getAll';
+import { queryPresets } from './base';
 
 export const queryKey = 'account-maintenance';
 

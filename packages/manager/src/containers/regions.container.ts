@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { APIError } from '@linode/api-v4/lib/types';
-import { useRegionsQuery } from 'src/queries/regions';
 import { Region } from '@linode/api-v4/lib/regions';
+import { APIError } from '@linode/api-v4/lib/types';
+import * as React from 'react';
+import { useRegionsQuery } from 'src/queries/regions';
 
 export interface RegionsProps {
   regionsData: Region[];
@@ -21,14 +21,14 @@ export interface RegionsProps {
  * component is needed, best practice is to include an FC container above it (the routing level often works well)
  * and pass regions through there.
  */
-export const withRegions = <Props>(
-  Component: React.ComponentType<Props & RegionsProps>
-) => (props: Props) => {
-  const { data, isLoading, error } = useRegionsQuery();
-  return React.createElement(Component, {
-    regionsData: data ?? [],
-    regionsLoading: isLoading,
-    regionsError: error ?? undefined,
-    ...props,
-  });
-};
+export const withRegions =
+  <Props>(Component: React.ComponentType<Props & RegionsProps>) =>
+  (props: Props) => {
+    const { data, isLoading, error } = useRegionsQuery();
+    return React.createElement(Component, {
+      regionsData: data ?? [],
+      regionsLoading: isLoading,
+      regionsError: error ?? undefined,
+      ...props,
+    });
+  };

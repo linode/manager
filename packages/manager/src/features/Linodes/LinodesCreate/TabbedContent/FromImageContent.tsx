@@ -1,14 +1,14 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import {
   BasicFromContentProps,
   ReduxStateProps,

@@ -1,26 +1,26 @@
+import type { Region } from '@linode/api-v4';
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
+import classNames from 'classnames';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
+import Button from 'src/components/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
-import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
-import { AddNodePoolDrawer } from './AddNodePoolDrawer';
-import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
-import { RecycleNodeDialog } from './RecycleNodeDialog';
-import NodePool from './NodePool';
-import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
-import { AutoscalePoolDialog } from './AutoscalePoolDialog';
-import Button from 'src/components/Button';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { RecycleClusterDialog } from '../RecycleClusterDialog';
-import classNames from 'classnames';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import type { Region } from '@linode/api-v4';
+import { RecycleClusterDialog } from '../RecycleClusterDialog';
+import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
+import { AddNodePoolDrawer } from './AddNodePoolDrawer';
+import { AutoscalePoolDialog } from './AutoscalePoolDialog';
+import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
+import NodePool from './NodePool';
+import { RecycleNodeDialog } from './RecycleNodeDialog';
+import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -76,9 +76,8 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
-  const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] = useState(
-    false
-  );
+  const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] =
+    useState(false);
   const [isRecycleNodeOpen, setIsRecycleNodeOpen] = useState(false);
   const [isRecycleClusterOpen, setIsRecycleClusterOpen] = useState(false);
 

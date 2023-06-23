@@ -1,12 +1,12 @@
-import React from 'react';
 import { Disk } from '@linode/api-v4';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useCreateImageMutation } from 'src/queries/images';
+import { Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button/Button';
-import { Typography } from '@mui/material';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink/SupportLink';
+import { useCreateImageMutation } from 'src/queries/images';
 
 interface Props {
   open: boolean;

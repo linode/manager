@@ -1,13 +1,13 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
-import { AccessSelect } from './AccessSelect';
-import { styled } from '@mui/material/styles';
 import {
   ACLType,
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
+import { AccessSelect } from './AccessSelect';
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',

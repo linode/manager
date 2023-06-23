@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
+import * as React from 'react';
 import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
 import { queryClientFactory } from 'src/queries/base';
 import { storeFactory } from 'src/store';

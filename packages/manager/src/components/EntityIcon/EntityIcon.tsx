@@ -1,5 +1,7 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import StorageIcon from 'src/assets/icons/entityIcons/bucket.svg';
+import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
@@ -12,9 +14,7 @@ import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import MarketplaceIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import LongviewIcon from 'src/assets/icons/longview.svg';
-import { styled } from '@mui/material/styles';
 
 export type EntityVariants =
   | 'managed'

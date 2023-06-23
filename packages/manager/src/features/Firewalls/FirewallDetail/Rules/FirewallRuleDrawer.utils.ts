@@ -1,7 +1,14 @@
+import type {
+  FirewallRuleProtocol,
+  FirewallRuleType,
+} from '@linode/api-v4/lib/firewalls';
+import {
+  CUSTOM_PORTS_ERROR_MESSAGE,
+  CUSTOM_PORTS_VALIDATION_REGEX,
+} from '@linode/validation';
 import { parse as parseIP, parseCIDR } from 'ipaddr.js';
-import { PORT_PRESETS, sortString } from './shared';
-import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { uniq } from 'ramda';
+import type { Item } from 'src/components/EnhancedSelect';
 import {
   allIPs,
   allIPv4,
@@ -11,18 +18,11 @@ import {
   allowsAllIPs,
   predefinedFirewallFromRule,
 } from 'src/features/Firewalls/shared';
-import {
-  CUSTOM_PORTS_VALIDATION_REGEX,
-  CUSTOM_PORTS_ERROR_MESSAGE,
-} from '@linode/validation';
-import type {
-  FirewallRuleProtocol,
-  FirewallRuleType,
-} from '@linode/api-v4/lib/firewalls';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import type { FormState } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
-import type { Item } from 'src/components/EnhancedSelect';
+import { PORT_PRESETS, sortString } from './shared';
 
 export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 

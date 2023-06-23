@@ -1,7 +1,7 @@
-import * as React from 'react';
+import { visuallyHidden } from '@mui/utils';
 import type { ChartData, ChartPoint } from 'chart.js';
 import { DateTime } from 'luxon';
-import { visuallyHidden } from '@mui/utils';
+import * as React from 'react';
 import Box from 'src/components/core/Box';
 
 export interface GraphTabledDataProps {

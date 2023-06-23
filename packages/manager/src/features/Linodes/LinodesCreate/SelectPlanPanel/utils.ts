@@ -1,8 +1,8 @@
 import type { LinodeTypeClass } from '@linode/api-v4';
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { Region } from '@linode/api-v4/lib/regions';
-import { ExtendedType } from 'src/utilities/extendType';
+import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
+import { ExtendedType } from 'src/utilities/extendType';
 import { PlanSelectionType } from './PlansPanel';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;

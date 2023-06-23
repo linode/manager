@@ -2,8 +2,8 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { LinodeType } from '@linode/api-v4';
-import types from 'src/utilities/types.json';
 import { displayPrice as _display } from 'src/components/DisplayPrice';
+import types from 'src/utilities/types.json';
 import * as linodes from 'src/__data__/linodes';
 
 import { ExtendedLinode } from './types';
@@ -20,8 +20,8 @@ const linode2: ExtendedLinode = {
   linodeError: { linodeId: linodes.linode2.id, reason: 'Error occurred' },
 };
 
-import { BackupLinodes, displayPrice } from './BackupLinodes';
 import { extendType } from 'src/utilities/extendType';
+import { BackupLinodes, displayPrice } from './BackupLinodes';
 
 const component = shallow(
   <BackupLinodes

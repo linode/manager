@@ -1,9 +1,9 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import ExternalLink from 'src/components/ExternalLink';
-import Grid from '@mui/material/Unstable_Grid2';
 import packageJson from '../../../package.json';
 
 interface Props {

@@ -1,13 +1,13 @@
 import {
-  ImageUploadPayload,
   createImage,
   CreateImagePayload,
   deleteImage,
-  uploadImage,
   getImage,
   getImages,
   Image,
+  ImageUploadPayload,
   updateImage,
+  uploadImage,
   UploadImageResponse,
 } from '@linode/api-v4';
 import {
@@ -22,9 +22,9 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
-import { getAll } from 'src/utilities/getAll';
 import { EventWithStore } from 'src/events';
+import { getAll } from 'src/utilities/getAll';
+import { doesItemExistInPaginatedStore, updateInPaginatedStore } from './base';
 
 export const queryKey = 'images';
 

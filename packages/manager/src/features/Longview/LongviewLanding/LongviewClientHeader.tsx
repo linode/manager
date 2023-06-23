@@ -1,10 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import Grid from 'src/components/Grid';
@@ -13,13 +13,13 @@ import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
+import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
 import RestrictedUserLabel from './RestrictedUserLabel';
-import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

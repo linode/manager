@@ -63,137 +63,138 @@ export interface PaginationProps<T> extends State<T> {
   onDelete: () => void;
 }
 
-export default (requestFn: PaginatedRequest, options: Options = {}) => (
-  Component: React.ComponentType<any>
-) => {
-  return class WrappedComponent extends React.PureComponent<any, State> {
-    state: State = {
-      count: 0,
-      loading: true,
-      isSorting: false,
-      page: 1,
-      pageSize: storage.pageSize.get() || 25,
-      error: undefined,
-      orderBy: options.orderBy,
-      order: options.order ?? ('asc' as Order),
-      filter: {},
-      searching: false,
-    };
+export default (requestFn: PaginatedRequest, options: Options = {}) =>
+  (Component: React.ComponentType<any>) => {
+    return class WrappedComponent extends React.PureComponent<any, State> {
+      state: State = {
+        count: 0,
+        loading: true,
+        isSorting: false,
+        page: 1,
+        pageSize: storage.pageSize.get() || 25,
+        error: undefined,
+        orderBy: options.orderBy,
+        order: options.order ?? ('asc' as Order),
+        filter: {},
+        searching: false,
+      };
 
-    mounted: boolean = false;
+      mounted: boolean = false;
 
-    componentDidMount() {
-      this.mounted = true;
-    }
-
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    private onDelete = () => {
-      const { page, data } = this.state;
-
-      /*
-       * Basically, if we're on page 2 and the user deletes the last entity
-       * on the page, send the user back to the previous page, AKA the max number
-       * of pages.
-       *
-       * This solves the issue where the user deletes the last entity
-       * on a page and then sees an empty state instead of going to the
-       * last page available
-       *
-       * Please note that if the deletion of an entity is instant and not
-       * initiated by the completetion of an event, we need to check that
-       * the data.length === 1 because we're not calling this.request() to update
-       * page and pages states
-       */
-      if (data && data.length === 1) {
-        return this.handlePageChange(page - 1);
+      componentDidMount() {
+        this.mounted = true;
       }
 
-      return this.request();
-    };
-
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    private request = (map?: Function) => {
-      /**
-       * we might potentially have a search term to filter by
-       */
-      const filters = clone(this.state.filter);
-
-      if (this.state.orderBy) {
-        filters['+order_by'] = this.state.orderBy;
-        filters['+order'] = this.state.order;
+      componentWillUnmount() {
+        this.mounted = false;
       }
-      return requestFn(
-        this.props,
-        { page: this.state.page, page_size: this.state.pageSize },
-        filters
-      )
-        .then((response) => {
-          if (options.cb) {
-            options.cb(this.props, response);
-          }
 
-          if (this.mounted) {
-            this.setState({
-              count: response.results,
-              page: response.page,
-              pages: response.pages,
-              data: map ? map(response.data) : response.data,
-              loading: false,
-              error: undefined,
-              isSorting: false,
-              searching: false,
-            });
-          }
-        })
-        .catch((response) => {
-          this.setState({ loading: false, error: response });
+      private onDelete = () => {
+        const { page, data } = this.state;
+
+        /*
+         * Basically, if we're on page 2 and the user deletes the last entity
+         * on the page, send the user back to the previous page, AKA the max number
+         * of pages.
+         *
+         * This solves the issue where the user deletes the last entity
+         * on a page and then sees an empty state instead of going to the
+         * last page available
+         *
+         * Please note that if the deletion of an entity is instant and not
+         * initiated by the completetion of an event, we need to check that
+         * the data.length === 1 because we're not calling this.request() to update
+         * page and pages states
+         */
+        if (data && data.length === 1) {
+          return this.handlePageChange(page - 1);
+        }
+
+        return this.request();
+      };
+
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      private request = (map?: Function) => {
+        /**
+         * we might potentially have a search term to filter by
+         */
+        const filters = clone(this.state.filter);
+
+        if (this.state.orderBy) {
+          filters['+order_by'] = this.state.orderBy;
+          filters['+order'] = this.state.order;
+        }
+        return requestFn(
+          this.props,
+          { page: this.state.page, page_size: this.state.pageSize },
+          filters
+        )
+          .then((response) => {
+            if (options.cb) {
+              options.cb(this.props, response);
+            }
+
+            if (this.mounted) {
+              this.setState({
+                count: response.results,
+                page: response.page,
+                pages: response.pages,
+                data: map ? map(response.data) : response.data,
+                loading: false,
+                error: undefined,
+                isSorting: false,
+                searching: false,
+              });
+            }
+          })
+          .catch((response) => {
+            this.setState({ loading: false, error: response });
+          });
+      };
+
+      public handlePageSizeChange = (pageSize: number) => {
+        this.setState({ pageSize, page: 1 }, () => {
+          this.request();
         });
-    };
+        storage.pageSize.set(pageSize);
+      };
 
-    public handlePageSizeChange = (pageSize: number) => {
-      this.setState({ pageSize, page: 1 }, () => {
-        this.request();
-      });
-      storage.pageSize.set(pageSize);
-    };
+      public handlePageChange = (page: number) => {
+        /**
+         * change the page, make the request
+         */
+        this.setState({ page }, () => {
+          this.request();
+        });
+      };
 
-    public handlePageChange = (page: number) => {
-      /**
-       * change the page, make the request
-       */
-      this.setState({ page }, () => {
-        this.request();
-      });
-    };
+      public handleOrderChange = (
+        orderBy: string,
+        order: Order = 'asc',
+        page: number = 1
+      ) => {
+        this.setState({ orderBy, order, page, isSorting: true }, () =>
+          this.request()
+        );
+      };
 
-    public handleOrderChange = (
-      orderBy: string,
-      order: Order = 'asc',
-      page: number = 1
-    ) => {
-      this.setState({ orderBy, order, page, isSorting: true }, () =>
-        this.request()
-      );
-    };
+      public handleSearch = (filter: Filter) => {
+        this.setState({ filter, page: 1, searching: true }, () =>
+          this.request()
+        );
+      };
 
-    public handleSearch = (filter: Filter) => {
-      this.setState({ filter, page: 1, searching: true }, () => this.request());
+      public render() {
+        return React.createElement(Component, {
+          ...this.props,
+          ...this.state,
+          handlePageChange: this.handlePageChange,
+          handlePageSizeChange: this.handlePageSizeChange,
+          request: this.request,
+          handleOrderChange: this.handleOrderChange,
+          handleSearch: this.handleSearch,
+          onDelete: this.onDelete,
+        });
+      }
     };
-
-    public render() {
-      return React.createElement(Component, {
-        ...this.props,
-        ...this.state,
-        handlePageChange: this.handlePageChange,
-        handlePageSizeChange: this.handlePageSizeChange,
-        request: this.request,
-        handleOrderChange: this.handleOrderChange,
-        handleSearch: this.handleSearch,
-        onDelete: this.onDelete,
-      });
-    }
   };
-};

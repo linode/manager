@@ -1,6 +1,8 @@
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
@@ -11,12 +13,10 @@ import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
+import { App } from './App';
+import loadDevTools from './dev-tools/load';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
-import loadDevTools from './dev-tools/load';
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { App } from './App';
 import { queryClientFactory } from './queries/base';
 
 const queryClient = queryClientFactory();

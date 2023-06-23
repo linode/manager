@@ -1,13 +1,13 @@
-import * as React from 'react';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import Hidden from 'src/components/core/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
+import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
-import { StyledTableCell, StyledTable } from './PlanContainer.styles';
 
 const tableCells = [
   { cellName: '', testId: '', center: false, noWrap: false },

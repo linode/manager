@@ -1,23 +1,23 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Grid from '@mui/material/Unstable_Grid2';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
-import LandingHeader from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { useRegionsQuery } from 'src/queries/regions';
 
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
@@ -29,18 +29,15 @@ export const KubernetesClusterDetail = () => {
 
   const { data: regionsData } = useRegionsQuery();
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    id
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(id);
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
 
   const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
 
-  const {
-    showHighAvailability,
-    isClusterHighlyAvailable,
-  } = getKubeHighAvailability(account, cluster);
+  const { showHighAvailability, isClusterHighlyAvailable } =
+    getKubeHighAvailability(account, cluster);
 
   if (error) {
     return (

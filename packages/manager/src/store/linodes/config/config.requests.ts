@@ -25,10 +25,12 @@ import {
 } from './config.actions';
 import { Entity } from './config.types';
 
-const addLinodeIdToConfig = (linodeId: number) => (config: Config): Entity => ({
-  ...config,
-  linode_id: linodeId,
-});
+const addLinodeIdToConfig =
+  (linodeId: number) =>
+  (config: Config): Entity => ({
+    ...config,
+    linode_id: linodeId,
+  });
 
 export const createLinodeConfig = createRequestThunk(
   createLinodeConfigActions,

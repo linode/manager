@@ -1,21 +1,21 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { useDialog } from 'src/hooks/useDialog';
+import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
@@ -45,15 +45,8 @@ const MigrationNotification: React.FC<Props> = (props) => {
 
   const { data: profile } = useProfile();
 
-  const {
-    dialog,
-    openDialog,
-    closeDialog,
-    submitDialog,
-    handleError,
-  } = useDialog<number>((linodeID: number) =>
-    scheduleOrQueueMigration(linodeID)
-  );
+  const { dialog, openDialog, closeDialog, submitDialog, handleError } =
+    useDialog<number>((linodeID: number) => scheduleOrQueueMigration(linodeID));
 
   const onSubmit = () => {
     submitDialog(linodeID)

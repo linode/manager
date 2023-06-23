@@ -14,12 +14,11 @@ interface AnalyticsEventTemplate {
   action: string;
 }
 
-export const getLinkOnClick = (
-  linkAnalyticsEventTemplate: AnalyticsEventTemplate,
-  linkText: string
-) => () => {
-  sendEvent({
-    ...linkAnalyticsEventTemplate,
-    label: linkText,
-  });
-};
+export const getLinkOnClick =
+  (linkAnalyticsEventTemplate: AnalyticsEventTemplate, linkText: string) =>
+  () => {
+    sendEvent({
+      ...linkAnalyticsEventTemplate,
+      label: linkText,
+    });
+  };

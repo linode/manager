@@ -1,12 +1,11 @@
+import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import DatabaseCreate from './DatabaseCreate';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { QueryClient } from 'react-query';
-import { waitForElementToBeRemoved, fireEvent } from '@testing-library/react';
-import { rest, server } from 'src/mocks/testServer';
 import { databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { mockMatchMedia } from 'src/utilities/testHelpers';
+import { rest, server } from 'src/mocks/testServer';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import DatabaseCreate from './DatabaseCreate';
 
 const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';

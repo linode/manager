@@ -1,7 +1,7 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { Row, RowProps } from './EventRow';
-import { DateTime } from 'luxon';
 
 const message = 'this is a message.';
 const props: RowProps = {

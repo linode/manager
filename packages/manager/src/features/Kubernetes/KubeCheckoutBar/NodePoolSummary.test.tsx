@@ -1,8 +1,8 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { extendedTypes } from 'src/__data__/ExtendedType';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { extendedTypes } from 'src/__data__/ExtendedType';
 import NodePoolSummary, { Props } from './NodePoolSummary';
 
 const props: Props = {

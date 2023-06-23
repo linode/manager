@@ -1,22 +1,22 @@
+import { Profile } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
+import { useTheme } from '@mui/material/styles';
+import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import FormControl from 'src/components/core/FormControl';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Paper from 'src/components/core/Paper';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
-import { APIError } from '@linode/api-v4/lib/types';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { equals, lensPath, remove, set } from 'ramda';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import { Profile } from '@linode/api-v4/lib/profile';
+import TextField from 'src/components/TextField';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { useTheme } from '@mui/material/styles';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 export const LishSettings = () => {
   const theme = useTheme();
@@ -105,11 +105,10 @@ export const LishSettings = () => {
   const onListAuthMethodChange = (e: Item<Profile['lish_auth_method']>) =>
     setLishAuthMethod(e.value);
 
-  const onPublicKeyChange = (idx: number) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setAuthorizedKeys(set(lensPath([idx]), e.target.value));
-  };
+  const onPublicKeyChange =
+    (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAuthorizedKeys(set(lensPath([idx]), e.target.value));
+    };
 
   const onPublicKeyRemove = (idx: number) => () => {
     setAuthorizedKeys(remove(idx, 1, authorizedKeys));

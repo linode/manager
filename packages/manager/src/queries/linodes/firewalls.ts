@@ -1,15 +1,15 @@
-import { useQuery } from 'react-query';
-import { queryKey } from './linodes';
-import { queryPresets } from '../base';
-import { getAll } from 'src/utilities/getAll';
 import {
   APIError,
   Filter,
   Firewall,
+  getLinodeFirewalls,
   Params,
   ResourcePage,
-  getLinodeFirewalls,
 } from '@linode/api-v4';
+import { useQuery } from 'react-query';
+import { getAll } from 'src/utilities/getAll';
+import { queryPresets } from '../base';
+import { queryKey } from './linodes';
 
 export const useLinodeFirewalls = (linodeID: number) =>
   useQuery<ResourcePage<Firewall>, APIError[]>(

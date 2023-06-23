@@ -1,3 +1,4 @@
+import { isEmpty } from '@linode/api-v4/lib/request';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
@@ -5,7 +6,6 @@ import {
   UseMutationOptions,
   UseQueryOptions,
 } from 'react-query';
-import { isEmpty } from '@linode/api-v4/lib/request';
 
 // =============================================================================
 // Config

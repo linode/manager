@@ -1,15 +1,14 @@
+import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { getFormattedNumber } from './PhoneVerification/helpers';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
-import { useProfile } from 'src/queries/profile';
-import { useSMSOptOutMutation } from 'src/queries/profile';
-import { useSnackbar } from 'notistack';
+import { useProfile, useSMSOptOutMutation } from 'src/queries/profile';
+import { getFormattedNumber } from './PhoneVerification/helpers';
 
 export const SMSMessaging = () => {
   const { enqueueSnackbar } = useSnackbar();

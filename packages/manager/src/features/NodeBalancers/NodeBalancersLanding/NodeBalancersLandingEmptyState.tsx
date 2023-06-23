@@ -1,7 +1,7 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import { styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Link from 'src/components/Link';

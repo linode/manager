@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
-import { BucketActionMenu } from './BucketActionMenu';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { readableBytes } from 'src/utilities/unitConversions';
 import { TableCell } from 'src/components/TableCell';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
+import { readableBytes } from 'src/utilities/unitConversions';
+import { BucketActionMenu } from './BucketActionMenu';
 import {
   StyledBucketLabelLink,
   StyledBucketNameWrapper,

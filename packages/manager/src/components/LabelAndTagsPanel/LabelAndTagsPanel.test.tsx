@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { LabelAndTagsPanel } from './LabelAndTagsPanel';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { LabelAndTagsPanel } from './LabelAndTagsPanel';
 
 const onLabelChange = jest.fn();
 const onTagsChange = jest.fn();

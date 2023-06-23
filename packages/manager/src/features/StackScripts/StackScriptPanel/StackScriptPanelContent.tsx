@@ -54,9 +54,8 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const { currentFilter } = props;
 
   const [mounted, setMounted] = React.useState<boolean>(false);
-  const [dialog, setDialogState] = React.useState<DialogState>(
-    defaultDialogState
-  );
+  const [dialog, setDialogState] =
+    React.useState<DialogState>(defaultDialogState);
 
   const { enqueueSnackbar } = useSnackbar();
 

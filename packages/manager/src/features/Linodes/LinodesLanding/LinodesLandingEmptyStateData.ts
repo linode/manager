@@ -1,14 +1,14 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   docsLink,
   guidesMoreLinkText,
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description:
@@ -28,8 +28,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
       text: 'Getting Started with Linode Compute Instances',
     },
     {
-      to:
-        'https://www.linode.com/docs/guides/understanding-billing-and-payments/',
+      to: 'https://www.linode.com/docs/guides/understanding-billing-and-payments/',
       text: 'Understanding Billing and Payment',
     },
     {
@@ -62,8 +61,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
       external: true,
     },
     {
-      to:
-        'https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2',
+      to: 'https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2',
       text: 'How to use SSH',
       external: true,
     },

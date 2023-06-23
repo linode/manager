@@ -7,13 +7,13 @@ import {
   UserDefinedField,
 } from '@linode/api-v4/lib/stackscripts';
 import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -145,14 +145,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const {
-      category,
-      classes,
-      request,
-      selectedId,
-      error,
-      profile,
-    } = this.props;
+    const { category, classes, request, selectedId, error, profile } =
+      this.props;
     const { stackScript, stackScriptLoading, stackScriptError } = this.state;
 
     if (selectedId) {

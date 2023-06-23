@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeFactory } from 'src/factories/linodes';
-import { CaptureSnapshot } from './CaptureSnapshot';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+import { linodeFactory } from 'src/factories/linodes';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { CaptureSnapshot } from './CaptureSnapshot';
 
 describe('CaptureSnapshot', () => {
   it('renders heading and copy', async () => {

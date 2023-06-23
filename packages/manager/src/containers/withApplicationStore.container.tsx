@@ -5,6 +5,9 @@ export interface WithApplicationStoreProps {
   store: ApplicationStore;
 }
 
-export const withApplicationStore = <Props extends {}>(
-  Component: React.ComponentType<Props & WithApplicationStoreProps>
-) => (props: Props) => <Component {...props} store={useApplicationStore()} />;
+export const withApplicationStore =
+  <Props extends {}>(
+    Component: React.ComponentType<Props & WithApplicationStoreProps>
+  ) =>
+  (props: Props) =>
+    <Component {...props} store={useApplicationStore()} />;

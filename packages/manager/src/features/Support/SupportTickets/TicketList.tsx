@@ -1,20 +1,20 @@
-import * as React from 'react';
 import { SupportTicket } from '@linode/api-v4/lib/support';
+import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TicketRow } from './TicketRow';
-import { useSupportTicketsQuery } from 'src/queries/support';
-import { usePagination } from 'src/hooks/usePagination';
 import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
+import { useSupportTicketsQuery } from 'src/queries/support';
+import { TicketRow } from './TicketRow';
 import { getStatusFilter } from './ticketUtils';
 
 export interface Props {

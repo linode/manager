@@ -1,15 +1,15 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Notice } from 'src/components/Notice/Notice';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { titlecase } from 'src/features/Linodes/presentation';
+import { usePreferences } from 'src/queries/preferences';
 import { capitalize } from 'src/utilities/capitalize';
 import { DialogProps } from '../Dialog/Dialog';
-import { usePreferences } from 'src/queries/preferences';
 
 interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   open: boolean;

@@ -1,10 +1,10 @@
 import {
   APIError,
-  NetworkTransfer,
-  Stats,
   getLinodeStats,
   getLinodeStatsByDate,
   getLinodeTransferByDate,
+  NetworkTransfer,
+  Stats,
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { useQuery } from 'react-query';

@@ -1,7 +1,7 @@
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import { Theme, useTheme } from '@mui/material/styles';
+import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import { SxProps } from '@mui/system';
 import classNames from 'classnames';
@@ -11,33 +11,33 @@ import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import Button from 'src/components/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import Box from 'src/components/core/Box';
+import Chip from 'src/components/core/Chip';
+import Hidden from 'src/components/core/Hidden';
+import Typography, { TypographyProps } from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { TableBody } from 'src/components/TableBody';
 import { TableRow } from 'src/components/TableRow';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import Box from 'src/components/core/Box';
-import Chip from 'src/components/core/Chip';
-import Hidden from 'src/components/core/Hidden';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
-import { lishLaunch } from 'src/features/Lish/lishUtils';
 import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import {
-  transitionText as _transitionText,
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
+  transitionText as _transitionText,
 } from './transitions';
 // This component was built asuming an unmodified MUI <Table />
 import Table from '@mui/material/Table';

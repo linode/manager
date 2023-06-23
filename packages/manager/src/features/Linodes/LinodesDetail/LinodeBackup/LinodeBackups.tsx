@@ -1,31 +1,31 @@
+import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import { Box, Stack } from '@mui/material';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { Table } from 'src/components/Table';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useHistory, useParams } from 'react-router-dom';
 import Button from 'src/components/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { useTypeQuery } from 'src/queries/types';
+import { makeStyles } from 'tss-react/mui';
 import LinodePermissionsError from '../LinodePermissionsError';
 import BackupsPlaceholder from './BackupsPlaceholder';
 import BackupTableRow from './BackupTableRow';
-import { Box, Stack } from '@mui/material';
-import { Theme } from '@mui/material/styles';
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import { useHistory, useParams } from 'react-router-dom';
-import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
-import { useTypeQuery } from 'src/queries/types';
-import { makeStyles } from 'tss-react/mui';
 import { CancelBackupsDialog } from './CancelBackupsDialog';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ScheduleSettings } from './ScheduleSettings';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { CaptureSnapshot } from './CaptureSnapshot';
+import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
+import { ScheduleSettings } from './ScheduleSettings';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -57,10 +57,11 @@ export const LinodeBackups = () => {
     linode?.type ?? '',
     Boolean(linode?.type)
   );
-  const { data: backups, error, isLoading } = useLinodeBackupsQuery(
-    id,
-    Boolean(linode?.backups.enabled)
-  );
+  const {
+    data: backups,
+    error,
+    isLoading,
+  } = useLinodeBackupsQuery(id, Boolean(linode?.backups.enabled));
 
   const doesNotHavePermission =
     Boolean(profile?.restricted) &&
@@ -70,10 +71,8 @@ export const LinodeBackups = () => {
 
   const [isRestoreDrawerOpen, setIsRestoreDrawerOpen] = React.useState(false);
 
-  const [
-    isCancelBackupsDialogOpen,
-    setIsCancelBackupsDialogOpen,
-  ] = React.useState(false);
+  const [isCancelBackupsDialogOpen, setIsCancelBackupsDialogOpen] =
+    React.useState(false);
 
   const [selectedBackup, setSelectedBackup] = React.useState<LinodeBackup>();
 

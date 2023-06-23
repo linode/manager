@@ -1,11 +1,11 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
-import { downloadFile } from 'src/utilities/downloadFile';
 import * as React from 'react';
 import FileDownload from 'src/assets/icons/download.svg';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
 import ToolTip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
+import { downloadFile } from 'src/utilities/downloadFile';
 
 interface Props {
   text: string;

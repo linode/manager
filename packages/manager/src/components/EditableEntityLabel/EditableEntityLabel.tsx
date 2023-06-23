@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { useTheme, styled } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
+import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import Typography from 'src/components/core/Typography';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
+import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import EditableInput from './EditableInput';
 
 interface EditableEntityLabelProps {

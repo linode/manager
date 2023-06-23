@@ -2,11 +2,16 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import data from 'src/utilities/types.json';
 import { linodeFactory } from 'src/factories/linodes';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+import data from 'src/utilities/types.json';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 
+import { AccountSettings, APIError, LinodeType } from '@linode/api-v4';
+import { UseQueryResult } from 'react-query';
+import { accountSettingsFactory } from 'src/factories';
+import { queryClientFactory } from 'src/queries/base';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 import {
   addErrors,
   addTypeInfo,
@@ -15,11 +20,6 @@ import {
   getTotalPrice,
 } from './BackupDrawer';
 import { ExtendedLinode } from './types';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { AccountSettings, APIError, LinodeType } from '@linode/api-v4';
-import { queryClientFactory } from 'src/queries/base';
-import { accountSettingsFactory } from 'src/factories';
-import { UseQueryResult } from 'react-query';
 
 const queryClient = queryClientFactory();
 

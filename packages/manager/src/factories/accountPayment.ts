@@ -1,5 +1,5 @@
-import * as Factory from 'factory.ts';
 import { PaymentMethod } from '@linode/api-v4';
+import * as Factory from 'factory.ts';
 
 export const paymentMethodFactory = Factory.Sync.makeFactory<PaymentMethod>({
   id: Factory.each((id) => id),

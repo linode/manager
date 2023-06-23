@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
 import { sshKeyFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';

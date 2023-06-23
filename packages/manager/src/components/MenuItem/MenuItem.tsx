@@ -1,10 +1,10 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
+import { Theme } from '@mui/material/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import * as React from 'react';
 import CircularProgress from 'src/components/core/CircularProgress';
-import { IconButton } from 'src/components/IconButton';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { IconButton } from 'src/components/IconButton';
 
 type CSSClasses =
   | 'root'

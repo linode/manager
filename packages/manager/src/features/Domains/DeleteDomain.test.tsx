@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
+import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { Props, DeleteDomain } from './DeleteDomain';
+import { DeleteDomain, Props } from './DeleteDomain';
 
 const domainId = 1;
 const domainLabel = 'example.com';

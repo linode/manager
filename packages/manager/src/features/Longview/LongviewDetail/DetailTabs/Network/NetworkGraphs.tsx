@@ -1,6 +1,6 @@
+import { withTheme, WithTheme } from '@mui/styles';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { withTheme, WithTheme } from '@mui/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
@@ -30,16 +30,8 @@ interface Props {
 type CombinedProps = Props & WithTheme;
 
 export const NetworkGraphs: React.FC<CombinedProps> = (props) => {
-  const {
-    end,
-    error,
-    isToday,
-    loading,
-    networkData,
-    start,
-    theme,
-    timezone,
-  } = props;
+  const { end, error, isToday, loading, networkData, start, theme, timezone } =
+    props;
 
   const _convertData = React.useCallback(convertData, [
     networkData,

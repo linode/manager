@@ -7,6 +7,7 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import useEditableLabelState from 'src/hooks/useEditableLabelState';
@@ -16,7 +17,6 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import LandingHeader from 'src/components/LandingHeader';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -37,11 +37,8 @@ export const DatabaseDetail = () => {
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
 
-  const {
-    editableLabelError,
-    setEditableLabelError,
-    resetEditableLabel,
-  } = useEditableLabelState();
+  const { editableLabelError, setEditableLabelError, resetEditableLabel } =
+    useEditableLabelState();
 
   if (error) {
     return (

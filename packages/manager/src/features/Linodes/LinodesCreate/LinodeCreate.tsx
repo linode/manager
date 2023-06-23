@@ -1,6 +1,7 @@
 import { InterfacePayload, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import classNames from 'classnames';
 import cloneDeep from 'lodash/cloneDeep';
@@ -19,7 +20,6 @@ import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import DocsLink from 'src/components/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
 import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -27,8 +27,11 @@ import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegion
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { DefaultProps as ImagesProps } from 'src/containers/images.container';
+import { RegionsProps } from 'src/containers/regions.container';
+import { WithTypesProps } from 'src/containers/types.container';
 import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import { getMonthlyAndHourlyNodePricing } from 'src/features/Linodes/LinodesCreate/utilities';
 import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
 import {
@@ -40,18 +43,18 @@ import {
   handleChangeCreateType,
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import {
   sendApiAwarenessClickEvent,
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics';
+import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import { extendType } from 'src/utilities/extendType';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
 import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
-import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/PlansPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
@@ -72,9 +75,6 @@ import {
   WithTypesRegionsAndImages,
 } from './types';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
-import { extendType } from 'src/utilities/extendType';
-import { WithTypesProps } from 'src/containers/types.container';
-import { RegionsProps } from 'src/containers/regions.container';
 
 type ClassNames =
   | 'form'

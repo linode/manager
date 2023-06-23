@@ -1,14 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getAll } from 'src/utilities/getAll';
-import { extendIssues } from './helpers';
-import { ExtendedIssue } from './types';
-import {
-  itemInListCreationHandler,
-  itemInListDeletionHandler,
-  itemInListMutationHandler,
-  queryPresets,
-} from '../base';
 import {
   ContactPayload,
   createContact,
@@ -44,6 +33,17 @@ import {
   UpdatePasswordPayload,
   updateServiceMonitor,
 } from '@linode/api-v4/lib/managed';
+import { APIError } from '@linode/api-v4/lib/types';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { getAll } from 'src/utilities/getAll';
+import {
+  itemInListCreationHandler,
+  itemInListDeletionHandler,
+  itemInListMutationHandler,
+  queryPresets,
+} from '../base';
+import { extendIssues } from './helpers';
+import { ExtendedIssue } from './types';
 
 export const queryKey = 'managed';
 

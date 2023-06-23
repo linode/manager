@@ -1,25 +1,24 @@
-import * as React from 'react';
-import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
-import { Currency } from 'src/components/Currency';
-import Divider from 'src/components/core/Divider';
+import { PaymentMethod } from '@linode/api-v4';
+import { ActivePromotion } from '@linode/api-v4/lib/account/types';
+import { GridSize } from '@mui/material/Grid';
+import { Breakpoint, styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
+import Typography from 'src/components/core/Typography';
+import { Currency } from 'src/components/Currency';
+import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useGrants } from 'src/queries/profile';
+import { isWithinDays } from 'src/utilities/date';
+import { BillingPaper } from '../../BillingDetail';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Typography from 'src/components/core/Typography';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import { ActivePromotion } from '@linode/api-v4/lib/account/types';
-import { BillingPaper } from '../../BillingDetail';
-import { Breakpoint } from '@mui/material/styles';
-import { GridSize } from '@mui/material/Grid';
-import { isWithinDays } from 'src/utilities/date';
-import { PaymentMethod } from '@linode/api-v4';
 import { PromoDisplay } from './PromoDisplay';
-import { styled, useTheme } from '@mui/material/styles';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { useGrants } from 'src/queries/profile';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
 
 const GridContainer = styled(Grid)({
   marginBottom: 0,
@@ -37,9 +36,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { data: notifications } = useNotificationsQuery();
   const { account, _isRestrictedUser } = useAccountManagement();
 
-  const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [isPromoDialogOpen, setIsPromoDialogOpen] =
+    React.useState<boolean>(false);
 
   const { data: grants } = useGrants();
   const accountAccessGrant = grants?.global?.account_access;
@@ -61,9 +59,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { replace } = useHistory();
   const location = useLocation<{ paymentMethod: PaymentMethod }>();
 
-  const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [paymentDrawerOpen, setPaymentDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<
     PaymentMethod | undefined

@@ -1,15 +1,15 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Download from 'src/assets/icons/download.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Grid from '@mui/material/Unstable_Grid2';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
-import { downloadFile } from 'src/utilities/downloadFile';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
+import { downloadFile } from 'src/utilities/downloadFile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -41,13 +41,8 @@ export const KubeConfigDrawer = (props: Props) => {
   const classes = useStyles();
   const { clusterLabel, clusterId, closeDrawer, open } = props;
 
-  const {
-    data,
-    error,
-    isLoading,
-    refetch,
-    isFetching,
-  } = useKubenetesKubeConfigQuery(clusterId, open);
+  const { data, error, isLoading, refetch, isFetching } =
+    useKubenetesKubeConfigQuery(clusterId, open);
 
   // refetchOnMount isnt good enough for this query because
   // it is already mounted in the rendered Drawer

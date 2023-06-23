@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Link from 'src/components/Link';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 import PointerIcon from 'src/assets/icons/pointer.svg';
+import Link from 'src/components/Link';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -64,33 +64,27 @@ const linkGAEventTemplate = {
 
 const appsLinkData = [
   {
-    to:
-      '/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress',
+    to: '/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress',
     text: 'Wordpress',
   },
   {
-    to:
-      '/linodes/create?type=One-Click&appID=912262&utm_source=marketplace&utm_medium=website&utm_campaign=Harbor',
+    to: '/linodes/create?type=One-Click&appID=912262&utm_source=marketplace&utm_medium=website&utm_campaign=Harbor',
     text: 'Harbor',
   },
   {
-    to:
-      '/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel',
+    to: '/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel',
     text: 'cPanel',
   },
   {
-    to:
-      '/linodes/create?type=One-Click&appID=1068726&utm_source=marketplace&utm_medium=website&utm_campaign=Postgres_Cluster',
+    to: '/linodes/create?type=One-Click&appID=1068726&utm_source=marketplace&utm_medium=website&utm_campaign=Postgres_Cluster',
     text: 'Postgres Cluster',
   },
   {
-    to:
-      '/linodes/create?type=One-Click&appID=985364&utm_source=marketplace&utm_medium=website&utm_campaign=Prometheus_Grafana',
+    to: '/linodes/create?type=One-Click&appID=985364&utm_source=marketplace&utm_medium=website&utm_campaign=Prometheus_Grafana',
     text: 'Prometheus & Grafana',
   },
   {
-    to:
-      '/linodes/create?type=One-Click&appID=1017300&utm_source=marketplace&utm_medium=website&utm_campaign=Kali',
+    to: '/linodes/create?type=One-Click&appID=1017300&utm_source=marketplace&utm_medium=website&utm_campaign=Kali',
     text: 'Kali',
   },
 ];

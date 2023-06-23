@@ -1,14 +1,14 @@
 import './dev-tools.css';
 
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FeatureFlagTool from './FeatureFlagTool';
-import EnvironmentToggleTool from './EnvironmentToggleTool';
 import { Provider } from 'react-redux';
-import MockDataTool from './MockDataTool';
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
-import Grid from '@mui/material/Unstable_Grid2';
 import { ApplicationStore } from 'src/store';
+import EnvironmentToggleTool from './EnvironmentToggleTool';
+import FeatureFlagTool from './FeatureFlagTool';
+import MockDataTool from './MockDataTool';
 
 function install(store: ApplicationStore) {
   (window as any).devToolsEnabled = true;

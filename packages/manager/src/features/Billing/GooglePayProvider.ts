@@ -60,14 +60,13 @@ const tokenizePaymentDataRequest = async (
     return Promise.reject(unableToOpenGPayError);
   }
 
-  const paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest(
-    {
+  const paymentDataRequest =
+    await googlePaymentInstance.createPaymentDataRequest({
       merchantInfo,
       // @ts-expect-error Braintree types are wrong
       transactionInfo,
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
-    }
-  );
+    });
 
   const googlePayClient = new google.payments.api.PaymentsClient({
     environment: GPAY_CLIENT_ENV as google.payments.api.Environment,

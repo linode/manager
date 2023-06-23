@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -17,10 +17,11 @@ export const DeleteIPDialog = (props: Props) => {
   const { open, onClose, linodeId, address } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: removeIP, isLoading, error } = useLinodeIPDeleteMutation(
-    linodeId,
-    address
-  );
+  const {
+    mutateAsync: removeIP,
+    isLoading,
+    error,
+  } = useLinodeIPDeleteMutation(linodeId, address);
 
   const handleDeleteIP = async () => {
     await removeIP();

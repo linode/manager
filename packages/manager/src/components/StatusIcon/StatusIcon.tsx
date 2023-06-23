@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
 export type Status = 'active' | 'inactive' | 'error' | 'other';
 

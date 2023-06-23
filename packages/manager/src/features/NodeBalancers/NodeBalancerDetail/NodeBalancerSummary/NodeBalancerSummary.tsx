@@ -1,11 +1,11 @@
-import * as React from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
 import { SummaryPanel } from './SummaryPanel';
 import { TablesPanel } from './TablesPanel';
-import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
-import { useParams } from 'react-router-dom';
 
 export const NodeBalancerSummary = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();

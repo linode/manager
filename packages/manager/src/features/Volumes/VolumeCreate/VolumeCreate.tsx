@@ -2,11 +2,11 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import LandingHeader from 'src/components/LandingHeader';
 import { useRegionsQuery } from 'src/queries/regions';
 import { MapState } from 'src/store/types';
 import { openForConfig, viewResizeInstructions } from 'src/store/volumeForm';
 import CreateVolumeForm from './CreateVolumeForm';
-import LandingHeader from 'src/components/LandingHeader';
 
 interface StateProps {
   mode: string;

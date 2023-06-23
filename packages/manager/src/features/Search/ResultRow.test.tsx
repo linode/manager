@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
-import { searchbarResult1 } from 'src/__data__/searchResults';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
+import { searchbarResult1 } from 'src/__data__/searchResults';
 
 import { ResultRow } from './ResultRow';
 

@@ -1,12 +1,12 @@
 import { MonitorStatus } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import {
   useDisableMonitorMutation,
@@ -37,12 +37,10 @@ export const MonitorActionMenu: React.FC<Props> = (props) => {
     status,
   } = props;
 
-  const { mutateAsync: enableServiceMonitor } = useEnableMonitorMutation(
-    monitorID
-  );
-  const { mutateAsync: disableServiceMonitor } = useDisableMonitorMutation(
-    monitorID
-  );
+  const { mutateAsync: enableServiceMonitor } =
+    useEnableMonitorMutation(monitorID);
+  const { mutateAsync: disableServiceMonitor } =
+    useDisableMonitorMutation(monitorID);
 
   const handleError = (message: string, error: APIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);

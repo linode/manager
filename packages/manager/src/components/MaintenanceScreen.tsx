@@ -1,12 +1,12 @@
-import * as React from 'react';
-import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
-import Box from 'src/components/core/Box';
-import Logo from 'src/assets/logo/akamai-logo.svg';
 import BuildIcon from '@mui/icons-material/Build';
 import Stack from '@mui/material/Stack';
 import { Theme, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+import Logo from 'src/assets/logo/akamai-logo.svg';
+import Box from 'src/components/core/Box';
+import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import Link from 'src/components/Link';
 
 export const MaintenanceScreen = () => {
   const theme = useTheme<Theme>();

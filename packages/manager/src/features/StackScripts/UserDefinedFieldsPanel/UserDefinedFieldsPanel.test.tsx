@@ -1,6 +1,6 @@
 import * as React from 'react';
-import UserDefinedFieldsPanel from './UserDefinedFieldsPanel';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import UserDefinedFieldsPanel from './UserDefinedFieldsPanel';
 
 describe('UserDefinedFieldsPanel', () => {
   it('does not show a <Notice /> about number of nodes when a One-Click App without clusters is selected', () => {

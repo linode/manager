@@ -1,13 +1,13 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import GridView from 'src/assets/icons/grid-view.svg';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableHead } from 'src/components/TableHead';
 import Tooltip from 'src/components/core/Tooltip';
 import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
 import { OrderByProps } from 'src/components/OrderBy';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { StyledToggleButton } from './DisplayLinodes.styles';

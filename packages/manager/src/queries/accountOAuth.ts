@@ -1,5 +1,3 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { queryKey as accountQueryKey } from './account';
 import {
   APIError,
   createOAuthClient,
@@ -12,7 +10,9 @@ import {
   resetOAuthClientSecret,
   updateOAuthClient,
 } from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { EventWithStore } from 'src/events';
+import { queryKey as accountQueryKey } from './account';
 
 const queryKey = [accountQueryKey, 'oauth'];
 

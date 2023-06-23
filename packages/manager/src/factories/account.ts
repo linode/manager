@@ -60,10 +60,9 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   euuid: '278EC57D-7424-4B3A-B35C3CE395787567',
 });
 
-export const accountTransferFactory = Factory.Sync.makeFactory<NetworkUtilization>(
-  {
+export const accountTransferFactory =
+  Factory.Sync.makeFactory<NetworkUtilization>({
     used: 50,
     quota: 11347,
     billable: 0,
-  }
-);
+  });

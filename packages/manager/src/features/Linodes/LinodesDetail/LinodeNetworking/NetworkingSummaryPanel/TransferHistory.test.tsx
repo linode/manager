@@ -1,10 +1,10 @@
+import { Stats } from '@linode/api-v4/lib/linodes';
 import { DateTime } from 'luxon';
 import {
-  sumPublicOutboundTraffic,
-  parseMonthOffset,
   getOffsetFromDate,
+  parseMonthOffset,
+  sumPublicOutboundTraffic,
 } from './TransferHistory';
-import { Stats } from '@linode/api-v4/lib/linodes';
 
 describe('combineGraphData', () => {
   const netStats: Stats['data']['netv4'] = {

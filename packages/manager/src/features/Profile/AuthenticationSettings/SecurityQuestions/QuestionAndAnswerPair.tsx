@@ -1,10 +1,10 @@
-import * as React from 'react';
 import { SecurityQuestion } from '@linode/api-v4/lib/profile';
-import Box from 'src/components/core/Box';
-import { Question } from './Question';
-import { Answer } from './Answer';
-import { Item } from 'src/components/EnhancedSelect';
 import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import Box from 'src/components/core/Box';
+import { Item } from 'src/components/EnhancedSelect';
+import { Answer } from './Answer';
+import { Question } from './Question';
 
 interface Props {
   edit: boolean;

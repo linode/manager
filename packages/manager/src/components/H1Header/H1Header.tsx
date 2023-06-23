@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { SxProps } from '@mui/system';
+import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 
 interface H1HeaderProps {

@@ -1,9 +1,9 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 

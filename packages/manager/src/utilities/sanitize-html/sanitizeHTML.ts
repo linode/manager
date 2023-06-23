@@ -59,5 +59,6 @@ export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
 export const isURLValid = (url: string) =>
   offSiteURL.test(url) || onSiteURL.test(url);
 
-export const offSiteURL = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+export const offSiteURL =
+  /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
 export const onSiteURL = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;

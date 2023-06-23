@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

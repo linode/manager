@@ -1,17 +1,17 @@
+import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { makeStyles } from '@mui/styles';
 import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
 import ResultRow from './ResultRow';
@@ -104,7 +104,9 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
 const handlers = withStateHandlers(
   { showMore: false },
   {
-    toggle: ({ showMore }) => () => ({ showMore: !showMore }),
+    toggle:
+      ({ showMore }) =>
+      () => ({ showMore: !showMore }),
   }
 );
 

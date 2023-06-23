@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
-import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { Configs, Props } from './Configs';
 
 const mockHandleSelect = jest.fn();

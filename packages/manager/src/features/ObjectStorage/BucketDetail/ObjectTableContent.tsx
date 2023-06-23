@@ -1,3 +1,8 @@
+import type {
+  ObjectStorageObject,
+  ObjectStorageObjectListResponse,
+} from '@linode/api-v4';
+import type { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
@@ -7,11 +12,6 @@ import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
 import { FolderTableRow } from './FolderTableRow';
 import { ObjectTableRow } from './ObjectTableRow';
-import type {
-  ObjectStorageObject,
-  ObjectStorageObjectListResponse,
-} from '@linode/api-v4';
-import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   data: ObjectStorageObjectListResponse[];

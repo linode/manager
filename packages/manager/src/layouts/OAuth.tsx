@@ -50,9 +50,9 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
       return history.push('/');
     }
 
-    const hashParams = (getQueryParamsFromQueryString(
+    const hashParams = getQueryParamsFromQueryString(
       location.hash.substr(1)
-    ) as unknown) as OAuthQueryParams;
+    ) as unknown as OAuthQueryParams;
 
     const {
       access_token: accessToken,

@@ -1,7 +1,7 @@
-import * as React from 'react';
 import copy from 'copy-to-clipboard';
-import { prefixArrayToString } from '../utilities';
+import * as React from 'react';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import { prefixArrayToString } from '../utilities';
 import {
   StyledCopied,
   StyledFileCopy,

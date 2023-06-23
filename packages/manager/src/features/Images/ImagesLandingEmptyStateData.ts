@@ -1,12 +1,12 @@
+import type {
+  ResourcesHeaders,
+  ResourcesLinks,
+  ResourcesLinkSection,
+} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 import {
   youtubeChannelLink,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
-import type {
-  ResourcesHeaders,
-  ResourcesLinkSection,
-  ResourcesLinks,
-} from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
   description:
@@ -26,13 +26,11 @@ export const gettingStartedGuides: ResourcesLinkSection = {
       text: 'Getting Started with Custom Images',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/tools/images/guides/capture-an-image/',
+      to: 'https://www.linode.com/docs/products/tools/images/guides/capture-an-image/',
       text: 'Capture an Image from a Linode',
     },
     {
-      to:
-        'https://www.linode.com/docs/products/tools/images/guides/upload-an-image/',
+      to: 'https://www.linode.com/docs/products/tools/images/guides/upload-an-image/',
       text: 'Upload a Custom Image',
     },
   ],
@@ -47,14 +45,12 @@ export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
       to: 'https://www.youtube.com/watch?v=1nYhLui1urQ',
-      text:
-        'How to use Linode Images | Learn how to Create, Upload, and Deploy Custom Images on Linode',
+      text: 'How to use Linode Images | Learn how to Create, Upload, and Deploy Custom Images on Linode',
       external: true,
     },
     {
       to: 'https://www.youtube.com/watch?v=GdEFNHTCGqA',
-      text:
-        'Custom Images on Linode | Create, Upload, and Deploy Custom iso Images to Deploy on Linode',
+      text: 'Custom Images on Linode | Create, Upload, and Deploy Custom iso Images to Deploy on Linode',
       external: true,
     },
     {

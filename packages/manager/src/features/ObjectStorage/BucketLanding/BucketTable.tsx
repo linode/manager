@@ -1,8 +1,7 @@
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import Paginate from 'src/components/Paginate';
-import { BucketTableRow } from './BucketTableRow';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -10,6 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { BucketTableRow } from './BucketTableRow';
 
 interface Props {
   data: ObjectStorageBucket[];

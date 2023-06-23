@@ -1,6 +1,6 @@
-import React from 'react';
-import { default as _LinearProgress } from '@mui/material/LinearProgress';
 import type { LinearProgressProps } from '@mui/material/LinearProgress';
+import { default as _LinearProgress } from '@mui/material/LinearProgress';
+import React from 'react';
 
 /**
  * Indeterminate indicator that expresses an unspecified amount of wait time. They should be used when progress isn’t detectable, or if it’s not necessary to indicate how long an activity will take.

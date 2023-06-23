@@ -1,10 +1,10 @@
-import React from 'react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import { LOGIN_ROOT } from 'src/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { screen } from '@testing-library/react';
-import { TPADialog } from './TPADialog';
 import type { TPADialogProps } from './TPADialog';
+import { TPADialog } from './TPADialog';
 
 jest.mock('src/hooks/useFlags', () => ({
   __esModule: true,

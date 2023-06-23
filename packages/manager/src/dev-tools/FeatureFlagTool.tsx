@@ -1,3 +1,4 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
@@ -5,7 +6,6 @@ import { Flags, FlagSet } from 'src/featureFlags';
 import { Dispatch } from 'src/hooks/types';
 import useFlags from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
-import Grid from '@mui/material/Unstable_Grid2';
 
 const options: { label: string; flag: keyof Flags }[] = [
   { label: 'Metadata', flag: 'metadata' },

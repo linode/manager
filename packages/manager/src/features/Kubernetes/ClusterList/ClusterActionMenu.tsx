@@ -1,13 +1,13 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';

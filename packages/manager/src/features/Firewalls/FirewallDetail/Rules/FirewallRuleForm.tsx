@@ -1,29 +1,29 @@
+import type { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Radio } from 'src/components/Radio/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
-import Select from 'src/components/EnhancedSelect';
-import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
-import { capitalize } from 'src/utilities/capitalize';
-import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
-import { makeStyles } from '@mui/styles';
+import Select from 'src/components/EnhancedSelect';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
-import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
-import { enforceIPMasks } from './FirewallRuleDrawer.utils';
+import { Radio } from 'src/components/Radio/Radio';
+import TextField from 'src/components/TextField';
 import {
   addressOptions,
   firewallOptionItemsShort,
   portPresets,
   protocolOptions,
 } from 'src/features/Firewalls/shared';
+import { capitalize } from 'src/utilities/capitalize';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 import type { FirewallRuleFormProps } from './FirewallRuleDrawer.types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
-import type { Theme } from '@mui/material/styles';
+import { enforceIPMasks } from './FirewallRuleDrawer.utils';
+import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
 
 const ipNetmaskTooltipText =
   'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';

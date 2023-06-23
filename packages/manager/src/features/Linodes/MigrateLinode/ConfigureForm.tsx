@@ -1,13 +1,13 @@
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
+import { Flag } from 'src/components/Flag';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
-import { Flag } from 'src/components/Flag';
-import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

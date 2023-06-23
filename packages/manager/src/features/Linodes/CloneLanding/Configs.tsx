@@ -1,12 +1,12 @@
 import { Config } from '@linode/api-v4/lib/linodes';
+import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles } from '@mui/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { ConfigSelection } from './utilities';

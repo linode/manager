@@ -3,15 +3,15 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as React from 'react';
 import { AccountActivationError } from 'src/components/AccountActivation';
-import { SupportError } from './components/SupportError';
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
-import { getEnvLocalStorageOverrides } from './utilities/storage';
+import { SupportError } from './components/SupportError';
 import { ApplicationStore } from './store';
+import { getEnvLocalStorageOverrides } from './utilities/storage';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
 import { Order } from 'src/components/Pagey/Pagey';

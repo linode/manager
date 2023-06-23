@@ -11,20 +11,20 @@ import { ThunkDispatch } from 'redux-thunk';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import {
+  useAccountSettings,
+  useMutateAccountSettings,
+} from 'src/queries/accountSettings';
 import { ApplicationState } from 'src/store';
 import { handleOpen } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AutoBackups from './AutoBackups';
+import CloseAccountSetting from './CloseAccountSetting';
 import EnableManaged from './EnableManaged';
 import EnableObjectStorage from './EnableObjectStorage';
 import NetworkHelper from './NetworkHelper';
-import CloseAccountSetting from './CloseAccountSetting';
-import {
-  useAccountSettings,
-  useMutateAccountSettings,
-} from 'src/queries/accountSettings';
 
 interface StateProps {
   linodesWithoutBackups: Linode[];
@@ -85,12 +85,8 @@ const GlobalSettings = (props: CombinedProps) => {
     return null;
   }
 
-  const {
-    backups_enabled,
-    managed,
-    network_helper,
-    object_storage,
-  } = accountSettings;
+  const { backups_enabled, managed, network_helper, object_storage } =
+    accountSettings;
 
   const toggleAutomaticBackups = () => {
     updateAccount({ backups_enabled: !backups_enabled }).catch(displayError);

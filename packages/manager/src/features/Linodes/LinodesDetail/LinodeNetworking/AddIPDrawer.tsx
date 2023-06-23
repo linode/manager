@@ -1,24 +1,24 @@
 import { IPv6Prefix } from '@linode/api-v4/lib/networking';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { Radio } from 'src/components/Radio/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
-import { Notice } from 'src/components/Notice/Notice';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -115,10 +115,8 @@ const AddIPDrawer = (props: Props) => {
 
   const [selectedIPv4, setSelectedIPv4] = React.useState<IPType | null>(null);
 
-  const [
-    selectedIPv6Prefix,
-    setSelectedIPv6Prefix,
-  ] = React.useState<IPv6Prefix | null>(null);
+  const [selectedIPv6Prefix, setSelectedIPv6Prefix] =
+    React.useState<IPv6Prefix | null>(null);
 
   const { data: ips } = useLinodeIPsQuery(linodeId, open);
 

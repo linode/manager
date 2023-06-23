@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
+import * as React from 'react';
 import Box from './core/Box';
 import CircularProgress from './core/CircularProgress';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {

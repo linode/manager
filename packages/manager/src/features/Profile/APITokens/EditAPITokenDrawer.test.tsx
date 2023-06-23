@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 import { act, waitFor } from '@testing-library/react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { appTokenFactory } from 'src/factories';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+import { appTokenFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 
 const props = {
   open: true,

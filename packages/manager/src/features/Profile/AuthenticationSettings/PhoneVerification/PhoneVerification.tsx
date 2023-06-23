@@ -1,17 +1,29 @@
-import * as React from 'react';
-import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
-import InputAdornment from 'src/components/core/InputAdornment';
-import TextField from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import type {
+  SendPhoneVerificationCodePayload,
+  VerifyVerificationCodePayload,
+} from '@linode/api-v4/lib/profile/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import { countries } from './countries';
-import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
-import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
-import { LinkButton } from 'src/components/LinkButton';
 import { useFormik } from 'formik';
-import { useQueryClient } from 'react-query';
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
+import InputAdornment from 'src/components/core/InputAdornment';
+import Typography from 'src/components/core/Typography';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import { LinkButton } from 'src/components/LinkButton';
+import TextField from 'src/components/TextField';
+import {
+  queryKey,
+  updateProfileData,
+  useProfile,
+  useSendPhoneVerificationCodeMutation,
+  useVerifyPhoneVerificationCodeMutation,
+} from 'src/queries/profile';
+import { countries } from './countries';
+import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 import {
   StyledButtonContainer,
   StyledCodeSentMessageBox,
@@ -22,18 +34,6 @@ import {
   StyledPhoneNumberTitle,
   StyledSelect,
 } from './PhoneVerification.styles';
-import {
-  queryKey,
-  updateProfileData,
-  useProfile,
-  useSendPhoneVerificationCodeMutation,
-  useVerifyPhoneVerificationCodeMutation,
-} from 'src/queries/profile';
-import type { Item } from 'src/components/EnhancedSelect/Select';
-import type {
-  SendPhoneVerificationCodePayload,
-  VerifyVerificationCodePayload,
-} from '@linode/api-v4/lib/profile/types';
 
 export const PhoneVerification = () => {
   const { data: profile } = useProfile();

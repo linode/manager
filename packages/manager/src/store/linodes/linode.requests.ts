@@ -10,6 +10,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { getAllLinodeFirewalls } from 'src/queries/linodes/firewalls';
+import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -23,7 +24,6 @@ import {
   updateLinodeActions,
   upsertLinode,
 } from './linodes.actions';
-import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 
 export const getLinode = createRequestThunk(getLinodeActions, ({ linodeId }) =>
   _getLinode(linodeId)
@@ -90,28 +90,26 @@ export const getLinodesPage = createRequestThunk(
 );
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void, number>;
-export const requestLinodeForStore: RequestLinodeForStoreThunk = (
-  id,
-  isCreatingOrUpdating
-) => (dispatch, getState) => {
-  const state = getState();
-  /** Don't request a Linode if it's already been deleted. */
-  if (
-    isCreatingOrUpdating ||
-    Boolean(state.__resources.linodes.itemsById[id])
-  ) {
-    return _getLinode(id)
-      .then((linode) => {
-        return dispatch(upsertLinode(linode));
-      })
-      .catch((_) => {
-        /**
-         * Usually this will fire when we're requesting events for a deleted Linode.
-         * Should be safe to ignore, the only cost would be a stale value in the store
-         * (if it fails for any other reason).
-         */
-      });
-  } else {
-    return Promise.resolve();
-  }
-};
+export const requestLinodeForStore: RequestLinodeForStoreThunk =
+  (id, isCreatingOrUpdating) => (dispatch, getState) => {
+    const state = getState();
+    /** Don't request a Linode if it's already been deleted. */
+    if (
+      isCreatingOrUpdating ||
+      Boolean(state.__resources.linodes.itemsById[id])
+    ) {
+      return _getLinode(id)
+        .then((linode) => {
+          return dispatch(upsertLinode(linode));
+        })
+        .catch((_) => {
+          /**
+           * Usually this will fire when we're requesting events for a deleted Linode.
+           * Should be safe to ignore, the only cost would be a stale value in the store
+           * (if it fails for any other reason).
+           */
+        });
+    } else {
+      return Promise.resolve();
+    }
+  };

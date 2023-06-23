@@ -2,9 +2,8 @@
 import searchString from 'search-string';
 import { searchableItems } from 'src/__data__/searchableItems';
 import * as RefinedSearch from './refinedSearch';
-import { QueryJSON } from './refinedSearch';
+import { COMPRESSED_IPV6_REGEX, QueryJSON } from './refinedSearch';
 import { SearchableItem } from './search.interfaces';
-import { COMPRESSED_IPV6_REGEX } from './refinedSearch';
 
 const {
   areAllTrue,

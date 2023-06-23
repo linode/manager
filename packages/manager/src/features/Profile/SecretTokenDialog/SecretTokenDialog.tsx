@@ -1,12 +1,12 @@
+import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
-import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
+import Box from 'src/components/core/Box';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
-import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 interface Props {
   objectStorageKey?: ObjectStorageKey | null;
