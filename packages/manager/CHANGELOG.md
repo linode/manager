@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Linodes Landing Grid/Tag views and toggle button styling ([#9273](https://github.com/linode/manager/pull/9273))
 - Fixed crash caused by un-escaped RegEx ([#9280](https://github.com/linode/manager/pull/9280))
 - Show accurate Notification Threshold values when toggling in Linode Settings ([#9281](https://github.com/linode/manager/pull/9281))
+- Regression with text input placeholder opacity ([#9303](https://github.com/linode/manager/pull/9303))
 
 ### Removed:
 
