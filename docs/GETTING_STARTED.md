@@ -59,7 +59,7 @@ yarn workspace linode-manager run start:ci
 By default, Cloud Manager's dev server only listens on `localhost`. If you need to
 expose the Vite dev server, you can use the following command.
 
-> **Note**: This is useful for running Cloud Manager's dev server in Docker-like envrionments
+> **Note**: This is useful for running Cloud Manager's dev server in Docker-like environments
 
 ```bash
 yarn up:expose
