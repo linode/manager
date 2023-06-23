@@ -204,6 +204,7 @@
     "lint-staged": "^13.2.2",
     "msw": "~0.20.5",
     "prettier": "~2.2.1",
+    "prettier-plugin-organize-imports": "^3.2.2",
     "redux-mock-store": "^1.5.3",
     "reselect-tools": "^0.0.7",
     "serve": "^14.0.1",
