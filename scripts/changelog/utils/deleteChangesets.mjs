@@ -3,13 +3,15 @@ import path from 'path';
 import { logger } from './logger.mjs';
 import { promisify } from 'util';
 import { changesetDirectory } from "./constants.mjs";
+import { exec } from 'child_process';
 
 const readdir = promisify(fs.readdir);
 const unlink = promisify(fs.unlink);
+const execAsync = promisify(exec);
 
 /**
  * Populates the changelog content with the provided entries.
- * @returns {void} Deletes the changeset files.
+ * @returns {void} Deletes the changeset files and tracks the deletions in Git.
  */
 export const deleteChangesets = async (linodePackage) => {
   const changesetDir = changesetDirectory(linodePackage);
@@ -19,14 +21,13 @@ export const deleteChangesets = async (linodePackage) => {
     for (const file of files) {
       if (file !== "README.md") {
         const filePath = path.join(changesetDir, file);
-        (async () => {
-          try {
-            await unlink(filePath);
-            console.warn(`Deleted: ${filePath}`);
-          } catch (error) {
-            console.error(`Error occurred while deleting ${filePath}:`, error);
-          }
-        })();
+        try {
+          await unlink(filePath);
+          console.warn(`Deleted: ${filePath}`);
+          await execAsync(`git rm ${filePath}`);
+        } catch (error) {
+          console.error(`Error occurred while deleting ${filePath}:`, error);
+        }
       }
     }
 
