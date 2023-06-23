@@ -118,6 +118,7 @@ export const LinodeSelectV2 = (
       renderInput={(params) => (
         <TextField
           label="Linodes"
+          inputId={params.id}
           placeholder={
             placeholder ?? multiple ? 'Select Linodes' : 'Select a Linode'
           }
