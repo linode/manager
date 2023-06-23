@@ -110,7 +110,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
-      "prettier --write",
+      "prettier --plugin prettier-plugin-organize-imports --write",
       "eslint --ext .js,.ts,.tsx --quiet"
     ]
   },
