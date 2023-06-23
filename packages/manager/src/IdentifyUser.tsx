@@ -52,20 +52,19 @@ export const IdentifyUser = () => {
         ? 'Unknown'
         : account?.country;
 
-      const _taxID = accountError
+      const taxID = accountError
         ? 'Unknown'
         : account?.tax_id === ''
         ? 'Unknown'
         : account?.tax_id;
-      if (client && userID && country && username && _taxID) {
+      if (client && country && username && taxID) {
         client
           .identify({
             kind: 'user',
             anonymous: true,
             country,
-            custom: {
-              taxID: _taxID,
-            },
+            taxID,
+            privateAttributeNames: ['country, taxID'],
           })
           .then(() => setFeatureFlagsLoaded())
           /**
@@ -84,7 +83,7 @@ export const IdentifyUser = () => {
         setFeatureFlagsLoaded();
       }
     }
-  }, [client, userID, username, account, accountError]);
+  }, [client, username, account, accountError]);
 
   return null;
 };
