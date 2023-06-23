@@ -23,7 +23,7 @@
 
    $ curl https://get.volta.sh | bash
 
-   ## Add nvm to your .*rc file, or open a new terminal window.
+   ## Add volta to your .*rc file, or open a new terminal window.
 
    $ volta install node@18.14.1
 
@@ -42,26 +42,25 @@
 10. Navigate to the root directory of the repository, then start Cloud Manager and the JS client with `yarn up`.
 11. After installation, Cloud Manager should be running at http://localhost:3000.
 
-## Serving a production build of Cloud Manager:
+## Serving a production build of Cloud Manager
 
-Since Cloud Manager was generated using Create React App, `yarn build` can be used to generate an optimized production bundle:
+You can then serve these files however you prefer or use our included local http server.
 
 ```bash
+yarn install:all
 
-    yarn install:all
+yarn workspace linode-manager build
 
-    yarn workspace linode-manager build
-
+yarn workspace linode-manager run start:ci
 ```
 
-You can then serve these files however you prefer, for example, with [http-server](https://www.npmjs.com/package/http-server):
+## Exposing Cloud Manager's dev server to the network
+
+By default, Cloud Manager's dev server only listens on `localhost`. If you need to
+expose the Vite dev server, you can use the following command.
+
+> **Note**: This is useful for running Cloud Manager's dev server in Docker-like environments
 
 ```bash
-
-    npm install -g http-server
-
-    cd packages/manager/build
-
-    http-server .
-
+yarn up:expose
 ```
