@@ -164,8 +164,8 @@ export const curriedCloneLandingReducer = produce(cloneLandingReducer);
 export const defaultState: CloneLandingState = {
   configSelection: {},
   diskSelection: {},
-  selectedLinodeId: null,
   isSubmitting: false,
+  selectedLinodeId: null,
 };
 
 // Returns an array of IDs of configs/disks that are selected.
@@ -206,8 +206,8 @@ export const createConfigDiskSelection = (
     });
 
     configSelection[eachConfig.id] = {
-      isSelected,
       associatedDiskIds,
+      isSelected,
     };
   });
 
@@ -219,8 +219,8 @@ export const createConfigDiskSelection = (
     const associatedConfigIds = diskConfigMap[eachDisk.id] || [];
 
     diskSelection[eachDisk.id] = {
-      isSelected,
       associatedConfigIds,
+      isSelected,
     };
   });
 

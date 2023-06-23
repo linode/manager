@@ -16,12 +16,12 @@ export interface TypeToConfirmProps extends Omit<Props, 'onChange'> {
 export const TypeToConfirm = (props: TypeToConfirmProps) => {
   const {
     confirmationText,
-    textFieldStyle,
-    typographyStyle,
-    title,
-    visible,
     hideInstructions,
     onChange,
+    textFieldStyle,
+    title,
+    typographyStyle,
+    visible,
     ...rest
   } = props;
 

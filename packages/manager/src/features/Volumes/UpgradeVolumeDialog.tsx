@@ -15,7 +15,7 @@ interface CopyProps {
 }
 
 export const VolumeUpgradeCopy = (props: CopyProps) => {
-  const { label, type, isManyVolumes } = props;
+  const { isManyVolumes, label, type } = props;
 
   const prefix =
     type === 'linode'
@@ -42,13 +42,13 @@ interface Props {
 }
 
 export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
-  const { open, onClose, id, label } = props;
+  const { id, label, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: migrateVolumes,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: migrateVolumes,
   } = useVolumesMigrateMutation();
 
   const onSubmit = () => {

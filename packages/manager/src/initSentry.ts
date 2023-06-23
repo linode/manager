@@ -7,11 +7,22 @@ import packageJson from '../package.json';
 export const initSentry = () => {
   if (SENTRY_URL) {
     init({
-      dsn: SENTRY_URL,
-      release: packageJson.version,
-      environment: import.meta.env.PROD ? 'production' : 'development',
-      beforeSend,
+      allowUrls: [
+        /** anything from either *.linode.com/* or localhost:3000 */
+        /linode.com{1}/g,
+        /localhost:3000{1}/g,
+      ],
       autoSessionTracking: false,
+      beforeSend,
+      denyUrls: [
+        // New Relic script
+        /new-relic\.js/i,
+        // Chrome extensions
+        /extensions\//i,
+        /^chrome:\/\//i,
+      ],
+      dsn: SENTRY_URL,
+      environment: import.meta.env.PROD ? 'production' : 'development',
       ignoreErrors: [
         // Random plugins/extensions
         'top.GLOBALS',
@@ -59,18 +70,7 @@ export const initSentry = () => {
         // This is apparently a benign error: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
         'ResizeObserver loop limit exceeded',
       ],
-      allowUrls: [
-        /** anything from either *.linode.com/* or localhost:3000 */
-        /linode.com{1}/g,
-        /localhost:3000{1}/g,
-      ],
-      denyUrls: [
-        // New Relic script
-        /new-relic\.js/i,
-        // Chrome extensions
-        /extensions\//i,
-        /^chrome:\/\//i,
-      ],
+      release: packageJson.version,
     });
   }
 };

@@ -70,20 +70,20 @@ const cloneLandingReducer = (
           ) {
             draft.files.splice(foundFileIdx, 1);
             draft.files.unshift({
-              status: 'QUEUED',
-              percentComplete: 0,
               file,
+              percentComplete: 0,
               prefix: action.prefix,
+              status: 'QUEUED',
             });
           }
         }
       });
 
       const extendedFiles: ExtendedFile[] = newFiles.map((file) => ({
-        status: 'QUEUED',
-        percentComplete: 0,
         file,
+        percentComplete: 0,
         prefix: action.prefix,
+        status: 'QUEUED',
       }));
 
       draft.files = [...extendedFiles, ...draft.files];
@@ -154,11 +154,11 @@ export const curriedObjectUploaderReducer = produce(cloneLandingReducer);
 
 export const defaultState: ObjectUploaderState = {
   files: [],
-  numQueued: 0,
-  numInProgress: 0,
-  numFinished: 0,
   numCanceled: 0,
   numErrors: 0,
+  numFinished: 0,
+  numInProgress: 0,
+  numQueued: 0,
 };
 
 const updateCount = (draft: ObjectUploaderState) => {

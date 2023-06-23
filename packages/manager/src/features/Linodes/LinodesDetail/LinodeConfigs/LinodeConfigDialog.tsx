@@ -63,8 +63,8 @@ import {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
-    marginTop: theme.spacing(),
     marginLeft: 1,
+    marginTop: theme.spacing(),
   },
   divider: {
     margin: '36px 8px 12px',
@@ -76,14 +76,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
       order: 3,
     },
   },
-  tooltip: {
-    maxWidth: 350,
-  },
   formGroup: {
-    alignItems: 'flex-start',
     '&.MuiFormGroup-root[role="radiogroup"]': {
       marginBottom: 0,
     },
+    alignItems: 'flex-start',
+  },
+  tooltip: {
+    maxWidth: 350,
   },
 }));
 
@@ -124,9 +124,9 @@ interface Props {
 }
 
 const defaultInterface = {
-  purpose: 'none',
-  label: '',
   ipam_address: '',
+  label: '',
+  purpose: 'none',
 } as ExtendedInterface;
 
 /**
@@ -145,16 +145,15 @@ const padInterfaceList = (interfaces: ExtendedInterface[]) => {
 
 const defaultInterfaceList = padInterfaceList([
   {
-    purpose: 'public',
-    label: '',
     ipam_address: '',
+    label: '',
+    purpose: 'public',
   },
 ]);
 
 const defaultFieldsValues = {
   comments: '',
   devices: {},
-  initrd: '',
   helpers: {
     devtmpfs_automount: true,
     distro: true,
@@ -162,15 +161,16 @@ const defaultFieldsValues = {
     network: true,
     updatedb_disabled: true,
   },
-  kernel: 'linode/latest-64bit',
+  initrd: '',
   interfaces: defaultInterfaceList,
+  kernel: 'linode/latest-64bit',
   label: '',
   memory_limit: 0,
   root_device: '/dev/sda',
   run_level: 'default' as RunLevel,
+  setMemoryLimit: 'no_limit' as MemoryLimit,
   useCustomRoot: false,
   virt_mode: 'paravirt' as VirtMode,
-  setMemoryLimit: 'no_limit' as MemoryLimit,
 };
 
 const pathsOptions = [
@@ -215,14 +215,14 @@ const deviceCounterDefault = 1;
 const finnixDiskID = 25669;
 
 export const LinodeConfigDialog = (props: Props) => {
-  const { open, onClose, config, isReadOnly, linodeId } = props;
+  const { config, isReadOnly, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
     data: kernels,
-    isLoading: kernelsLoading,
     error: kernelsError,
+    isLoading: kernelsLoading,
   } = useAllLinodeKernelsQuery(
     {},
     { [linode?.hypervisor ?? 'kvm']: true },
@@ -258,45 +258,45 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const showVlans = regionHasVLANS;
 
-  const { values, resetForm, setFieldValue, ...formik } = useFormik({
+  const { resetForm, setFieldValue, values, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
+    onSubmit: (values) => onSubmit(values),
+    validate: (values) => onValidate(values),
     validateOnChange: false,
     validateOnMount: false,
-    validate: (values) => onValidate(values),
-    onSubmit: (values) => onSubmit(values),
   });
 
   const convertStateToData = (
     state: EditableFields
   ): LinodeConfigCreationData => {
     const {
-      label,
-      devices,
-      initrd,
-      kernel,
       comments,
-      memory_limit,
-      run_level,
-      virt_mode,
-      setMemoryLimit,
-      interfaces,
+      devices,
       helpers,
+      initrd,
+      interfaces,
+      kernel,
+      label,
+      memory_limit,
       root_device,
+      run_level,
+      setMemoryLimit,
+      virt_mode,
     } = state;
 
     return {
-      label,
-      devices: createDevicesFromStrings(devices),
-      initrd: initrd !== '' ? initrd : null,
-      kernel,
       comments,
+      devices: createDevicesFromStrings(devices),
+      helpers,
+      initrd: initrd !== '' ? initrd : null,
+      interfaces: interfacesToPayload(interfaces),
+      kernel,
+      label,
       /** if the user did not toggle the limit radio button, send a value of 0 */
       memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
-      interfaces: interfacesToPayload(interfaces),
+      root_device,
       run_level,
       virt_mode,
-      helpers,
-      root_device,
     };
   };
 
@@ -426,20 +426,20 @@ export const LinodeConfigDialog = (props: Props) => {
 
         resetForm({
           values: {
-            useCustomRoot: isUsingCustomRoot(config.root_device),
-            label: config.label,
-            devices,
-            initrd: initrdFromConfig,
-            kernel: config.kernel,
             comments: config.comments,
-            memory_limit: config.memory_limit,
-            run_level: config.run_level,
-            virt_mode: config.virt_mode,
+            devices,
             helpers: config.helpers,
-            root_device: config.root_device,
+            initrd: initrdFromConfig,
             interfaces: interfacesToState(config.interfaces),
+            kernel: config.kernel,
+            label: config.label,
+            memory_limit: config.memory_limit,
+            root_device: config.root_device,
+            run_level: config.run_level,
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
+            useCustomRoot: isUsingCustomRoot(config.root_device),
+            virt_mode: config.virt_mode,
           },
         });
       } else {
@@ -504,9 +504,8 @@ export const LinodeConfigDialog = (props: Props) => {
       const categoryTitle = titlecase(category);
       return {
         label: categoryTitle,
-        value: category,
         options: [
-          ...items.map(({ label, id }) => {
+          ...items.map(({ id, label }) => {
             return {
               label,
               value: String(id) as string | number | null,
@@ -514,14 +513,15 @@ export const LinodeConfigDialog = (props: Props) => {
           }),
           { label: 'Recovery – Finnix (initrd)', value: String(finnixDiskID) },
         ],
+        value: category,
       };
     }
   );
 
   categorizedInitrdOptions.unshift({
     label: '',
-    value: '',
     options: [{ label: 'None', value: null }],
+    value: '',
   });
 
   /**
@@ -844,7 +844,7 @@ export const LinodeConfigDialog = (props: Props) => {
                     name="root_device"
                     value={values.root_device}
                     onChange={formik.handleChange}
-                    inputProps={{ name: 'root_device', id: 'root_device' }}
+                    inputProps={{ id: 'root_device', name: 'root_device' }}
                     fullWidth
                     errorText={formik.errors.root_device}
                     errorGroup="linode-config-dialog"
@@ -863,8 +863,8 @@ export const LinodeConfigDialog = (props: Props) => {
                   <TooltipIcon
                     status="help"
                     sxTooltipIcon={{
-                      paddingTop: 0,
                       paddingBottom: 0,
+                      paddingTop: 0,
                     }}
                     classes={{ tooltip: classes.tooltip }}
                     interactive
@@ -1032,7 +1032,7 @@ interface ConfigFormProps {
 }
 
 const DialogContent: React.FC<ConfigFormProps> = (props) => {
-  const { loading, errors } = props;
+  const { errors, loading } = props;
 
   if (loading) {
     return <CircleProgress />;

@@ -18,10 +18,10 @@ export const FolderActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Delete',
       onClick: () => {
         handleClickDelete(objectName);
       },
+      title: 'Delete',
     },
   ];
 

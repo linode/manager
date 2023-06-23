@@ -29,21 +29,21 @@ export interface Props {
 const StyledGrid = styled(Grid, {
   label: 'SelectionCardGrid',
 })<Partial<Props>>(({ ...props }) => ({
-  '&:focus': {
-    outline: '1px dotted #999',
-  },
   '& [class^="fl-"]': {
     transition: 'color 225ms ease-in-out',
+  },
+  '&:focus': {
+    outline: '1px dotted #999',
   },
   ...(props.onClick &&
     !props.disabled && {
       cursor: 'pointer',
     }),
   ...(props.disabled && {
-    cursor: 'not-allowed',
     '& > div': {
       opacity: 0.4,
     },
+    cursor: 'not-allowed',
   }),
 }));
 

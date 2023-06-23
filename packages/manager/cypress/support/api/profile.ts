@@ -14,7 +14,7 @@ import { pageSize } from 'support/constants/api';
  */
 export const deleteAllTestOAuthApps = async (): Promise<void> => {
   const oauthApps = await depaginate<OAuthClient>((page: number) =>
-    getOAuthClients({ page_size: pageSize, page })
+    getOAuthClients({ page, page_size: pageSize })
   );
 
   console.log(`oauth apps: ${JSON.stringify(oauthApps)}`);

@@ -17,10 +17,10 @@ type CombinedProps = Props & LVDataProps & WithTheme;
 
 const NetworkGauge: React.FC<CombinedProps> = (props) => {
   const {
-    longviewClientDataLoading: loading,
-    longviewClientDataError: error,
-    longviewClientData,
     lastUpdatedError,
+    longviewClientData,
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
   } = props;
 
   const networkUsed = generateUsedNetworkAsBytes(

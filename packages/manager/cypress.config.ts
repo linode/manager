@@ -17,34 +17,17 @@ import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regio
  * {@link https://docs.cypress.io/guides/references/configuration#Options | Cypress configuration documentation}
  */
 export default defineConfig({
-  trashAssetsBeforeRuns: false,
-  projectId: '5rhsif',
-
   // Browser configuration.
   chromeWebSecurity: false,
-  viewportWidth: 1440,
-  viewportHeight: 900,
-
-  // Timeouts.
-  requestTimeout: 30000,
-  responseTimeout: 80000,
   defaultCommandTimeout: 80000,
-  pageLoadTimeout: 60000,
 
-  // Only retry test when running via CI.
-  retries: process.env['CI'] ? 2 : 0,
-
-  experimentalMemoryManagement: true,
   e2e: {
-    experimentalRunAllSpecs: true,
-
     // This can be overridden using `CYPRESS_BASE_URL`.
     baseUrl: 'http://localhost:3000',
 
-    // This is overridden when `CY_SUITE` is defined.
-    // See `cypress/support/plugins/configure-test-suite.ts`.
-    specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
+    experimentalRunAllSpecs: true,
 
+    // This is overridden when `CY_SUITE` is defined.
     setupNodeEvents(on, config) {
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
@@ -58,5 +41,22 @@ export default defineConfig({
         regionOverrideCheck,
       ]);
     },
+
+    // See `cypress/support/plugins/configure-test-suite.ts`.
+    specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
   },
+  experimentalMemoryManagement: true,
+  pageLoadTimeout: 60000,
+
+  projectId: '5rhsif',
+  // Timeouts.
+  requestTimeout: 30000,
+  responseTimeout: 80000,
+  // Only retry test when running via CI.
+  retries: process.env['CI'] ? 2 : 0,
+
+  trashAssetsBeforeRuns: false,
+
+  viewportHeight: 900,
+  viewportWidth: 1440,
 });

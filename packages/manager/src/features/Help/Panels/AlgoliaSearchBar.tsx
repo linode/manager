@@ -21,47 +21,47 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      position: 'relative',
-    },
-    searchItem: {
-      '& em': {
-        fontStyle: 'normal',
-        color: theme.palette.primary.main,
-      },
-    },
-    searchIcon: {
-      position: 'absolute',
-      color: theme.color.grey1,
-      zIndex: 3,
-      top: 4,
-      left: 5,
-    },
     enhancedSelectWrapper: {
-      margin: '0 auto',
-      width: 300,
-      maxHeight: 500,
-      '& .react-select__value-container': {
-        paddingLeft: theme.spacing(4),
-      },
       '& .input': {
-        maxWidth: '100%',
-        '& p': {
-          paddingLeft: theme.spacing(3),
-          color: theme.color.grey1,
-        },
         '& > div': {
           marginRight: 0,
         },
+        '& p': {
+          color: theme.color.grey1,
+          paddingLeft: theme.spacing(3),
+        },
+        maxWidth: '100%',
       },
+      '& .react-select__value-container': {
+        paddingLeft: theme.spacing(4),
+      },
+      margin: '0 auto',
+      maxHeight: 500,
       [theme.breakpoints.up('md')]: {
         width: 500,
       },
+      width: 300,
     },
     notice: {
       '& p': {
         color: theme.color.white,
         fontFamily: 'LatoWeb',
+      },
+    },
+    root: {
+      position: 'relative',
+    },
+    searchIcon: {
+      color: theme.color.grey1,
+      left: 5,
+      position: 'absolute',
+      top: 4,
+      zIndex: 3,
+    },
+    searchItem: {
+      '& em': {
+        color: theme.palette.primary.main,
+        fontStyle: 'normal',
       },
     },
   });
@@ -99,7 +99,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     const { inputValue } = this.state;
     const options = [...docs, ...community];
     return [
-      { value: 'search', label: inputValue, data: { source: 'finalLink' } },
+      { data: { source: 'finalLink' }, label: inputValue, value: 'search' },
       ...options,
     ];
   };
@@ -167,7 +167,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             inputValue={inputValue}
             options={options}
             components={
-              { Option: SearchItem, DropdownIndicator: () => null } as any
+              { DropdownIndicator: () => null, Option: SearchItem } as any
             }
             onChange={this.handleSelect}
             onInputChange={this.onInputValueChange}
@@ -184,7 +184,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles, { withTheme: true });
-const search = withSearch({ hitsPerPage: 10, highlight: true });
+const search = withSearch({ highlight: true, hitsPerPage: 10 });
 
 export default compose<CombinedProps, {}>(
   styled,

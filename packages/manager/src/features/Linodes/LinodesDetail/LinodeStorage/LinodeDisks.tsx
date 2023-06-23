@@ -32,28 +32,28 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { CreateImageFromDiskDialog } from './CreateImageFromDiskDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    width: '100%',
-  },
-  headline: {
-    marginTop: 8,
-    marginBottom: 8,
-    marginLeft: 15,
-    lineHeight: '1.5rem',
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      padding: 5,
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: `-${theme.spacing(1.5)}`,
+    },
   },
   addNewWrapperContainer: {
     display: 'flex',
     flexDirection: 'row',
   },
-  addNewWrapper: {
-    [theme.breakpoints.down('sm')]: {
-      marginLeft: `-${theme.spacing(1.5)}`,
-    },
-    '&.MuiGrid-item': {
-      padding: 5,
-    },
+  headline: {
+    lineHeight: '1.5rem',
+    marginBottom: 8,
+    marginLeft: 15,
+    marginTop: 8,
+  },
+  root: {
+    backgroundColor: theme.color.white,
+    margin: 0,
+    width: '100%',
   },
 }));
 
@@ -63,7 +63,7 @@ export const LinodeDisks = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
-  const { data: disks, isLoading, error } = useAllLinodeDisksQuery(id);
+  const { data: disks, error, isLoading } = useAllLinodeDisksQuery(id);
   const { data: linode } = useLinodeQuery(id);
   const { data: grants } = useGrants();
 
@@ -158,8 +158,8 @@ export const LinodeDisks = () => {
               status="help"
               tooltipAnalyticsEvent={() =>
                 sendEvent({
-                  category: `Disk Resize Flow`,
                   action: `Open:tooltip`,
+                  category: `Disk Resize Flow`,
                   label: `Add a Disk help icon tooltip`,
                 })
               }
@@ -183,12 +183,12 @@ export const LinodeDisks = () => {
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData} scrollToRef={disksHeaderRef}>
             {({
+              count,
               data: paginatedData,
               handlePageChange,
               handlePageSizeChange,
               page,
               pageSize,
-              count,
             }) => {
               return (
                 <React.Fragment>

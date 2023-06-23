@@ -14,7 +14,7 @@ export interface Metrics {
 export const getMetrics = (data: number[][]): Metrics => {
   // If there's no data
   if (!data || !Array.isArray(data) || data.length < 1) {
-    return { max: 0, average: 0, last: 0, total: 0, length: 0 };
+    return { average: 0, last: 0, length: 0, max: 0, total: 0 };
   }
 
   let max = 0;
@@ -40,7 +40,7 @@ export const getMetrics = (data: number[][]): Metrics => {
 
   const last = data[length - 1][1] || 0;
 
-  return { max, average, last, total: sum, length };
+  return { average, last, length, max, total: sum };
 };
 
 export const formatNumber = (n: number): string => n.toFixed(2);
@@ -81,9 +81,9 @@ export const getTotalTraffic = (
   const outTraffic = getTraffic(averageOut);
 
   return {
+    combinedTraffic: inTraffic + outTraffic,
     inTraffic,
     outTraffic,
-    combinedTraffic: inTraffic + outTraffic,
   };
 };
 

@@ -24,12 +24,12 @@ export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
 };
 
 export const DeleteKubernetesClusterDialog = (props: Props) => {
-  const { clusterLabel, clusterId, open, onClose } = props;
+  const { clusterId, clusterLabel, onClose, open } = props;
 
   const {
-    mutateAsync: deleteCluster,
-    isLoading: isDeleting,
     error,
+    isLoading: isDeleting,
+    mutateAsync: deleteCluster,
   } = useDeleteKubernetesClusterMutation();
 
   const history = useHistory();
@@ -85,7 +85,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong>
-          <ul style={{ paddingLeft: '15px', margin: '5px 0px 0px' }}>
+          <ul style={{ margin: '5px 0px 0px', paddingLeft: '15px' }}>
             <li>Deleting a cluster is permanent and can&apos;t be undone.</li>
             <li>
               Attached Block Storage Volumes or NodeBalancers must be deleted

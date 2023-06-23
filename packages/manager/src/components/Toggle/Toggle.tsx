@@ -10,7 +10,7 @@ export interface ToggleProps extends SwitchProps {
 }
 
 export const Toggle = (props: ToggleProps) => {
-  const { tooltipText, interactive, ...rest } = props;
+  const { interactive, tooltipText, ...rest } = props;
 
   return (
     <React.Fragment>

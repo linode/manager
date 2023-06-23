@@ -27,13 +27,13 @@ const LinodesDetailNavigation = React.lazy(
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 
 const LinodeDetail = () => {
-  const { url, path } = useRouteMatch();
+  const { path, url } = useRouteMatch();
   const { linodeId } = useParams<{ linodeId: string }>();
 
   const id = Number(linodeId);
 
   const dispatch = useDispatch();
-  const { data: linode, isLoading, error } = useLinodeQuery(id);
+  const { data: linode, error, isLoading } = useLinodeQuery(id);
 
   // We can remove this when we remove the context below
   const extendedLinode = useExtendedLinode(id);

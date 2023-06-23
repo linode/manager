@@ -8,10 +8,10 @@ export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
 const durationMap = {
   day: () => Duration.fromObject({ days: 1 }),
-  week: () => Duration.fromObject({ weeks: 1 }),
   month: () => Duration.fromObject({ months: 1 }),
-  year: () => Duration.fromObject({ years: 1 }),
   never: () => Duration.fromObject({ years: 1000 }),
+  week: () => Duration.fromObject({ weeks: 1 }),
+  year: () => Duration.fromObject({ years: 1 }),
 };
 
 export const shouldHumanize = (

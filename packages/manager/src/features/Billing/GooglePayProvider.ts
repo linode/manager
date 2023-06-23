@@ -39,8 +39,8 @@ export const initGooglePaymentInstance = async (
 
     googlePaymentInstance = await braintree.googlePayment.create({
       client: braintreeClientToken,
-      googlePayVersion: 2,
       googleMerchantId: GPAY_MERCHANT_ID,
+      googlePayVersion: 2,
     });
   } catch (error) {
     reportException(error, {
@@ -62,10 +62,10 @@ const tokenizePaymentDataRequest = async (
 
   const paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest(
     {
+      callbackIntents: ['PAYMENT_AUTHORIZATION'],
       merchantInfo,
       // @ts-expect-error Braintree types are wrong
       transactionInfo,
-      callbackIntents: ['PAYMENT_AUTHORIZATION'],
     }
   );
 
@@ -78,9 +78,9 @@ const tokenizePaymentDataRequest = async (
   });
 
   const isReadyToPay = await googlePayClient.isReadyToPay({
+    allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods,
     apiVersion: 2,
     apiVersionMinor: 0,
-    allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods,
   });
   if (!isReadyToPay) {
     return Promise.reject('Your device does not support Google Pay.');
@@ -125,9 +125,9 @@ export const gPay = async (
 
   const addRecurringPayment = async (nonce: string) => {
     await addPaymentMethod({
-      type: 'payment_method_nonce',
       data: { nonce },
       is_default: true,
+      type: 'payment_method_nonce',
     });
     queryClient.invalidateQueries(`${accountPaymentKey}-all`);
     setMessage({

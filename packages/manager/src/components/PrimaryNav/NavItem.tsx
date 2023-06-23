@@ -26,16 +26,16 @@ export interface PrimaryLink {
 
 export const NavItem = React.memo((props: Props) => {
   const {
-    href,
-    onClick,
     QAKey,
+    closeMenu,
     display,
-    isCollapsed,
+    href,
     icon,
+    isCollapsed,
     isDisabled,
     linkClasses,
     listItemClasses,
-    closeMenu,
+    onClick,
   } = props;
 
   if (!onClick && !href) {
@@ -63,9 +63,9 @@ export const NavItem = React.memo((props: Props) => {
             primary={display}
             disableTypography={true}
             className={classNames({
+              hiddenWhenCollapsed: isCollapsed,
               [listItemClasses]: true,
               primaryNavLink: true,
-              hiddenWhenCollapsed: isCollapsed,
             })}
           />
         </Link>

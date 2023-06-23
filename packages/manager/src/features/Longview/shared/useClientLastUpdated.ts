@@ -124,5 +124,5 @@ export const useClientLastUpdated = (
     // @todo: fix deps.
   }, [clientAPIKey]);
 
-  return { lastUpdated, lastUpdatedError, authed, notifications };
+  return { authed, lastUpdated, lastUpdatedError, notifications };
 };

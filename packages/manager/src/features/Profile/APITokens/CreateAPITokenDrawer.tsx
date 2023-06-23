@@ -79,18 +79,18 @@ interface Props {
 
 export const CreateAPITokenDrawer = (props: Props) => {
   const expiryTups = genExpiryTups();
-  const { open, onClose, showSecret } = props;
+  const { onClose, open, showSecret } = props;
 
   const initialValues = {
-    scopes: scopeStringToPermTuples('*'),
-    label: '',
     expiry: expiryTups[0][1],
+    label: '',
+    scopes: scopeStringToPermTuples('*'),
   };
 
   const {
-    mutateAsync: createPersonalAccessToken,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createPersonalAccessToken,
   } = useCreatePersonalAccessTokenMutation();
 
   const form = useFormik<{
@@ -101,9 +101,9 @@ export const CreateAPITokenDrawer = (props: Props) => {
     initialValues,
     async onSubmit(values) {
       const { token } = await createPersonalAccessToken({
+        expiry: values.expiry,
         label: values.label,
         scopes: permTuplesToScopeString(values.scopes),
-        expiry: values.expiry,
       });
       onClose();
       showSecret(token ?? 'Secret not available');

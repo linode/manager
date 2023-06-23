@@ -34,10 +34,10 @@ export const PaginationFooter = (props: Props) => {
   const {
     count,
     fixedSize,
-    page,
-    pageSize,
     handlePageChange,
     handleSizeChange,
+    page,
+    pageSize,
     showAll,
   } = props;
 
@@ -98,15 +98,15 @@ export const PaginationFooter = (props: Props) => {
 const PageSizeSelectContainer = styled(Box, {
   label: 'PageSizeSelectContainer',
 })(({ theme }) => ({
+  '& .MuiInput-input': {
+    paddingTop: 4,
+  },
   '& .MuiInput-root': {
-    backgroundColor: theme.bg.bgPaper,
-    border: 'none',
     '&.Mui-focused': {
       boxShadow: 'none',
     },
-  },
-  '& .MuiInput-input': {
-    paddingTop: 4,
+    backgroundColor: theme.bg.bgPaper,
+    border: 'none',
   },
   '& .react-select__value-container': {
     paddingLeft: 12,

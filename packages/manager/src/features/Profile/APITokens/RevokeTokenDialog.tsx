@@ -18,7 +18,7 @@ export interface Props {
   type: APITokenType;
 }
 
-export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
+export const RevokeTokenDialog = ({ onClose, open, token, type }: Props) => {
   const queryMap = {
     'OAuth Client Token': useRevokeAppAccessTokenMutation,
     'Personal Access Token': useRevokePersonalAccessTokenMutation,
@@ -26,7 +26,7 @@ export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
 
   const useRevokeQuery = queryMap[type];
 
-  const { mutateAsync, isLoading, error } = useRevokeQuery(token?.id ?? -1);
+  const { error, isLoading, mutateAsync } = useRevokeQuery(token?.id ?? -1);
   const { enqueueSnackbar } = useSnackbar();
 
   const onRevoke = () => {

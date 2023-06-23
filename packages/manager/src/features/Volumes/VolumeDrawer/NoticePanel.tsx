@@ -10,9 +10,9 @@ interface Props {
 type CombinedProps = Props;
 
 const NoticePanel: React.FC<CombinedProps> = ({
-  success,
   error,
   important,
+  success,
 }) => {
   return (
     <>

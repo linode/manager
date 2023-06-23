@@ -29,36 +29,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useAccountSettings } from 'src/queries/accountSettings';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: 4,
-  },
-  collapsedTable: {
-    minHeight: 0,
-  },
-  table: {
-    border: `1px solid ${theme.borderColors.borderTable}`,
-    '& td': {
-      whiteSpace: 'nowrap',
-    },
-    '& tbody tr': {
-      cursor: 'pointer',
-    },
-  },
-  radio: {
-    marginLeft: `-${theme.spacing(0.5)}`,
-    marginRight: theme.spacing(2),
-    padding: 2,
-  },
-  currentSubscriptionLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: 2,
-    paddingRight: theme.spacing(3),
-    [theme.breakpoints.down('lg')]: {
-      paddingRight: 0,
-    },
-  },
   chip: {
     borderRadius: 1,
     fontSize: '0.65rem',
@@ -67,19 +37,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(0.5),
     textTransform: 'uppercase',
   },
-  planCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '40%',
-    },
-  },
   clientCell: {
     [theme.breakpoints.up('md')]: {
       width: '10%',
     },
   },
-  dataRetentionCell: {
-    [theme.breakpoints.up('md')]: {
-      width: '15%',
+  collapsedTable: {
+    minHeight: 0,
+  },
+  currentSubscriptionLabel: {
+    alignItems: 'center',
+    display: 'flex',
+    marginLeft: 2,
+    paddingRight: theme.spacing(3),
+    [theme.breakpoints.down('lg')]: {
+      paddingRight: 0,
     },
   },
   dataResolutionCell: {
@@ -87,14 +59,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '15%',
     },
   },
-  priceCell: {
+  dataRetentionCell: {
     [theme.breakpoints.up('md')]: {
       width: '15%',
     },
-  },
-  submitButton: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
   },
   disabledTableRow: {
     cursor: 'not-allowed !important',
@@ -106,6 +74,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& a:hover': {
       color: theme.palette.primary.main,
     },
+  },
+  planCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '40%',
+    },
+  },
+  priceCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '15%',
+    },
+  },
+  radio: {
+    marginLeft: `-${theme.spacing(0.5)}`,
+    marginRight: theme.spacing(2),
+    padding: 2,
+  },
+  root: {
+    padding: theme.spacing(3),
+    paddingBottom: 4,
+  },
+  submitButton: {
+    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(3),
+  },
+  table: {
+    '& tbody tr': {
+      cursor: 'pointer',
+    },
+    '& td': {
+      whiteSpace: 'nowrap',
+    },
+    border: `1px solid ${theme.borderColors.borderTable}`,
   },
 }));
 
@@ -333,7 +333,7 @@ interface LongviewPlansTableBodyProps {
 
 export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = React.memo(
   (props) => {
-    const { loading, error, subscriptions, selectedSub, ...rest } = props;
+    const { error, loading, selectedSub, subscriptions, ...rest } = props;
 
     if (loading) {
       return <TableRowLoading columns={5} />;
@@ -398,17 +398,17 @@ interface LongviewSubscriptionRowProps {
 export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = React.memo(
   (props) => {
     const {
-      id,
-      plan,
       clients,
-      dataRetention,
-      dataResolution,
-      price,
-      onRowSelect,
-      onRadioSelect,
       currentSubscriptionOnAccount,
-      isSelected,
+      dataResolution,
+      dataRetention,
       disabled,
+      id,
+      isSelected,
+      onRadioSelect,
+      onRowSelect,
+      plan,
+      price,
     } = props;
 
     const styles = useStyles();

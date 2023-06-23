@@ -7,33 +7,33 @@ import {
 } from '@mui/material/Table';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  noBorder: {
+    '& thead th': {
+      border: 0,
+    },
+  },
   root: {
-    overflowX: 'auto',
-    overflowY: 'hidden',
     '& thead': {
       '& th': {
-        backgroundColor: theme.bg.tableHeader,
-        borderTop: `2px solid ${theme.borderColors.borderTable}`,
-        borderRight: `1px solid ${theme.borderColors.borderTable}`,
-        borderBottom: `2px solid ${theme.borderColors.borderTable}`,
-        borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-        fontFamily: theme.font.bold,
-        fontSize: '0.875em !important',
-        color: theme.textColors.tableHeader,
-        padding: '10px 15px',
         '&:first-of-type': {
           borderLeft: 'none',
         },
         '&:last-of-type': {
           borderRight: 'none',
         },
+        backgroundColor: theme.bg.tableHeader,
+        borderBottom: `2px solid ${theme.borderColors.borderTable}`,
+        borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+        borderRight: `1px solid ${theme.borderColors.borderTable}`,
+        borderTop: `2px solid ${theme.borderColors.borderTable}`,
+        color: theme.textColors.tableHeader,
+        fontFamily: theme.font.bold,
+        fontSize: '0.875em !important',
+        padding: '10px 15px',
       },
     },
-  },
-  noBorder: {
-    '& thead th': {
-      border: 0,
-    },
+    overflowX: 'auto',
+    overflowY: 'hidden',
   },
 }));
 
@@ -54,13 +54,13 @@ export const Table = (props: TableProps) => {
 
   const {
     className,
-    tableClass,
+    colCount,
     noBorder,
     noOverflow,
-    spacingTop,
-    spacingBottom,
-    colCount,
     rowCount,
+    spacingBottom,
+    spacingTop,
+    tableClass,
     ...rest
   } = props;
 
@@ -68,14 +68,14 @@ export const Table = (props: TableProps) => {
     <div
       className={cx(
         {
-          [classes.root]: !noOverflow,
           [classes.noBorder]: noBorder,
+          [classes.root]: !noOverflow,
         },
         className
       )}
       style={{
-        marginTop: spacingTop !== undefined ? spacingTop : 0,
         marginBottom: spacingBottom !== undefined ? spacingBottom : 0,
+        marginTop: spacingTop !== undefined ? spacingTop : 0,
       }}
     >
       <_Table

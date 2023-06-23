@@ -19,15 +19,15 @@ import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  icon: {
+    height: 24,
+    width: 24,
+  },
   row: {
     '&:hover': {
       backgroundColor:
         theme.name === 'light' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
     },
-  },
-  icon: {
-    height: 24,
-    width: 24,
   },
 }));
 
@@ -43,7 +43,7 @@ interface Props {
 type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
-  const { event, entityId } = props;
+  const { entityId, event } = props;
   const store = useApplicationStore();
   const link = getLinkForEvent(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -57,9 +57,9 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     link,
     message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
+    timestamp,
     type,
     username: event.username,
-    timestamp,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;

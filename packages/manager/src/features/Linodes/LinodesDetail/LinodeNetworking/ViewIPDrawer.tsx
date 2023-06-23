@@ -10,9 +10,9 @@ import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   section: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
     marginBottom: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
   },
 }));
 

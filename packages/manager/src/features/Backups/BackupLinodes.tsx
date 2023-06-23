@@ -12,11 +12,11 @@ type ClassNames = 'root' | 'error';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     error: {
       color: theme.color.red,
       fontSize: 13,
     },
+    root: {},
   });
 
 interface Props {

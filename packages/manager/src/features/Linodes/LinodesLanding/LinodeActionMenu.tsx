@@ -39,8 +39,8 @@ export const buildQueryStringForLinodeClone = (
   regions: Region[]
 ): string => {
   const params: Record<string, string> = {
-    type: 'Clone Linode',
     linodeID: String(linodeId),
+    type: 'Clone Linode',
   };
 
   // If the type of this Linode is a valid (current) type, use it in the QS
@@ -58,11 +58,11 @@ export const buildQueryStringForLinodeClone = (
 
 export const LinodeActionMenu: React.FC<Props> = (props) => {
   const {
+    inListView,
     linodeId,
     linodeRegion,
     linodeStatus,
     linodeType,
-    inListView,
   } = props;
 
   const theme = useTheme<Theme>();
@@ -109,38 +109,37 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   const actions = [
     inListView || matchesSmDown
       ? {
-          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           disabled: !['running', 'offline'].includes(linodeStatus) || readOnly,
-          tooltip: readOnly ? noPermissionTooltipText : undefined,
           onClick: handlePowerAction,
+          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+          tooltip: readOnly ? noPermissionTooltipText : undefined,
         }
       : null,
     inListView || matchesSmDown
       ? {
-          title: 'Reboot',
           disabled: linodeStatus !== 'running' || readOnly,
-          tooltip: readOnly ? noPermissionTooltipText : undefined,
           onClick: () => {
             sendLinodeActionMenuItemEvent('Reboot Linode');
             props.onOpenPowerDialog('Reboot');
           },
+          title: 'Reboot',
+          tooltip: readOnly ? noPermissionTooltipText : undefined,
           ...readOnlyProps,
         }
       : null,
     inListView || matchesSmDown
       ? {
-          title: 'Launch LISH Console',
           onClick: () => {
             sendLinodeActionMenuItemEvent('Launch Console');
             lishLaunch(linodeId);
           },
+          title: 'Launch LISH Console',
           ...readOnlyProps,
         }
       : null,
     isBareMetalInstance
       ? null
       : {
-          title: 'Clone',
           onClick: () => {
             sendLinodeActionMenuItemEvent('Clone');
             history.push({
@@ -154,54 +153,55 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
               ),
             });
           },
+          title: 'Clone',
           ...maintenanceProps,
           ...readOnlyProps,
         },
     isBareMetalInstance
       ? null
       : {
-          title: 'Resize',
           onClick: () => {
             props.onOpenResizeDialog();
           },
+          title: 'Resize',
           ...maintenanceProps,
           ...readOnlyProps,
         },
     {
-      title: 'Rebuild',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
         props.onOpenRebuildDialog();
       },
+      title: 'Rebuild',
       ...maintenanceProps,
       ...readOnlyProps,
     },
     {
-      title: 'Rescue',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
         props.onOpenRescueDialog();
       },
+      title: 'Rescue',
       ...maintenanceProps,
       ...readOnlyProps,
     },
     isBareMetalInstance
       ? null
       : {
-          title: 'Migrate',
           onClick: () => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
             props.onOpenMigrateDialog();
           },
+          title: 'Migrate',
           ...readOnlyProps,
         },
     {
-      title: 'Delete',
       onClick: () => {
         sendLinodeActionMenuItemEvent('Delete Linode');
         props.onOpenDeleteDialog();
       },
+      title: 'Delete',
       ...readOnlyProps,
     },
   ].filter(Boolean) as ExtendedAction[];

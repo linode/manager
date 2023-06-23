@@ -17,7 +17,7 @@ export interface EntityDetailProps {
 }
 
 export const EntityDetail = (props: EntityDetailProps) => {
-  const { header, body, footer } = props;
+  const { body, footer, header } = props;
 
   return (
     <>

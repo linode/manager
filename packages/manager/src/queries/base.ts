@@ -13,24 +13,24 @@ import { isEmpty } from '@linode/api-v4/lib/request';
 type QueryConfigTypes = 'shortLived' | 'longLived' | 'oneTimeFetch' | 'noRetry';
 
 export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
-  shortLived: {
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    staleTime: 0,
-    cacheTime: 5 * 60 * 1000,
-  },
   longLived: {
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
-  },
-  oneTimeFetch: {
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 5 * 60 * 1000,
   },
   noRetry: {
     retry: false,
+  },
+  oneTimeFetch: {
+    cacheTime: Infinity,
+    staleTime: Infinity,
+  },
+  shortLived: {
+    cacheTime: 5 * 60 * 1000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   },
 };
 

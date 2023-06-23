@@ -15,7 +15,7 @@ interface DialogTitleProps {
 
 const DialogTitle = (props: DialogTitleProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const { className, onClose, title, id, sx } = props;
+  const { className, id, onClose, sx, title } = props;
 
   React.useEffect(() => {
     if (ref.current === null) {
@@ -41,9 +41,9 @@ const DialogTitle = (props: DialogTitleProps) => {
           alignItems: 'center',
           display: 'flex',
           justifyContent: 'space-between',
+          lineHeight: '1.5rem',
           position: 'relative',
           width: '100%',
-          lineHeight: '1.5rem',
         }}
       >
         {title}

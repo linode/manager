@@ -8,8 +8,8 @@ import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const options: { label: string; flag: keyof Flags }[] = [
-  { label: 'Metadata', flag: 'metadata' },
-  { label: 'Database Beta', flag: 'databaseBeta' },
+  { flag: 'metadata', label: 'Metadata' },
+  { flag: 'databaseBeta', label: 'Database Beta' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {
@@ -26,7 +26,7 @@ const FeatureFlagTool: React.FC<{}> = () => {
   return (
     <Grid container>
       <Grid xs={12}>
-        <h4 style={{ marginTop: 0, marginBottom: 8 }}>Feature Flags</h4>
+        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Feature Flags</h4>
       </Grid>
       <Grid xs={12}>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -35,10 +35,10 @@ const FeatureFlagTool: React.FC<{}> = () => {
               <div
                 key={thisOption.flag}
                 style={{
-                  display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  display: 'flex',
                   flexDirection: 'row',
+                  justifyContent: 'space-between',
                 }}
               >
                 <span>{thisOption.label} </span>

@@ -66,17 +66,17 @@ function getClientEnvironment(publicUrl) {
       },
       {
         // Useful for determining whether we’re running in production mode.
-        // Most importantly, it switches React into the correct mode.
-        NODE_ENV: process.env.NODE_ENV || 'development',
+        // environments where it is unneeded.
+        DISABLE_NEW_RELIC: process.env.DISABLE_NEW_RELIC,
         // Useful for resolving the correct path to static assets in `public`.
         // For example, <img src={process.env.PUBLIC_URL + '/img/logo.svg'} />.
         // This should only be used as an escape hatch. Normally you would put
+        // Most importantly, it switches React into the correct mode.
+        NODE_ENV: process.env.NODE_ENV || 'development',
         // images into the `src` and `import` them in code to get their paths.
         PUBLIC_URL: publicUrl,
-        VERSION: paths.appVersion,
         // Allow New Relic to be disabled when building Cloud Manager for
-        // environments where it is unneeded.
-        DISABLE_NEW_RELIC: process.env.DISABLE_NEW_RELIC,
+        VERSION: paths.appVersion,
       }
     );
   // Stringify all values so we can feed into Webpack DefinePlugin

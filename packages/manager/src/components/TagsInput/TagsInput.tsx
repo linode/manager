@@ -28,14 +28,14 @@ export interface TagsInputProps {
 
 const TagsInput = (props: TagsInputProps) => {
   const {
-    label,
+    disabled,
     hideLabel,
+    label,
+    menuPlacement,
     name,
+    onChange,
     tagError,
     value,
-    onChange,
-    disabled,
-    menuPlacement,
   } = props;
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
@@ -54,7 +54,7 @@ const TagsInput = (props: TagsInputProps) => {
     })) ?? [];
 
   const createTag = (inputValue: string) => {
-    const newTag = { value: inputValue, label: inputValue };
+    const newTag = { label: inputValue, value: inputValue };
     const updatedSelectedTags = concat(value, [newTag]);
 
     if (inputValue.length < 3 || inputValue.length > 50) {

@@ -12,10 +12,10 @@ type CombinedProps = Props & WithTheme & LVDataProps;
 
 const LoadGauge: React.FC<CombinedProps> = (props) => {
   const {
-    longviewClientData,
-    longviewClientDataLoading: loading,
-    longviewClientDataError: error,
     lastUpdatedError,
+    longviewClientData,
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
   } = props;
 
   const load = pathOr<number>(0, ['Load', 0, 'y'], longviewClientData);

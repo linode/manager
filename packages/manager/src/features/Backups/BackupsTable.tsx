@@ -11,13 +11,13 @@ import BackupLinodes from './BackupLinodes';
 import { ExtendedLinode } from './types';
 
 const useStyles = makeStyles(() => ({
-  root: {
+  container: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
     width: '100%',
   },
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  root: {
     width: '100%',
   },
 }));

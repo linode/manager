@@ -15,8 +15,8 @@ interface State {
 
 class Example extends React.Component<Props, State> {
   state: State = {
-    list: this.props.list,
     isSearching: false,
+    list: this.props.list,
   };
 
   handleSearch = (value: string) => {
@@ -36,8 +36,8 @@ class Example extends React.Component<Props, State> {
     }).then((res: string[]) => {
       action('result')(res);
       this.setState({
-        list: res,
         isSearching: false,
+        list: res,
       });
     });
   };

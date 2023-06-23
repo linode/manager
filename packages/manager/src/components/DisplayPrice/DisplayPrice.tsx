@@ -13,11 +13,11 @@ export const displayPrice = (price: number) => `$${price.toFixed(2)}`;
 
 export const DisplayPrice = (props: DisplayPriceProps) => {
   const theme = useTheme<Theme>();
-  const { interval, price, fontSize } = props;
+  const { fontSize, interval, price } = props;
 
   const sx: SxProps = {
-    display: 'inline-block',
     color: theme.palette.text.primary,
+    display: 'inline-block',
     fontSize: fontSize ?? '1.125rem',
   };
 

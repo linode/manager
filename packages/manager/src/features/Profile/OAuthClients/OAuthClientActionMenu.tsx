@@ -18,16 +18,16 @@ export const OAuthClientActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       onClick: props.onOpenEditDrawer,
+      title: 'Edit',
     },
     {
-      title: 'Reset',
       onClick: props.onOpenResetDialog,
+      title: 'Reset',
     },
     {
-      title: 'Delete',
       onClick: props.onOpenDeleteDialog,
+      title: 'Delete',
     },
   ];
 

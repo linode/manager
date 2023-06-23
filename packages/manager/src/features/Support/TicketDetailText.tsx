@@ -8,29 +8,29 @@ import { IconButton } from 'src/components/IconButton';
 import { truncate } from 'src/utilities/truncate';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(1),
-    padding: `${theme.spacing(2)} ${theme.spacing(1)}`,
-    position: 'relative',
-    '& pre': {
-      backgroundColor: theme.bg.tableHeader,
-    },
-  },
   expButton: {
-    position: 'absolute',
-    top: -43,
-    right: 0,
-    left: 'auto',
     '& svg': {
       stroke: theme.textColors.tableHeader,
     },
+    left: 'auto',
+    position: 'absolute',
+    right: 0,
+    top: -43,
+  },
+  expand: {
+    transform: 'rotate(180deg)',
+  },
+  root: {
+    '& pre': {
+      backgroundColor: theme.bg.tableHeader,
+    },
+    marginTop: theme.spacing(1),
+    padding: `${theme.spacing(2)} ${theme.spacing(1)}`,
+    position: 'relative',
   },
   toggle: {
     height: 22,
     width: 22,
-  },
-  expand: {
-    transform: 'rotate(180deg)',
   },
 }));
 

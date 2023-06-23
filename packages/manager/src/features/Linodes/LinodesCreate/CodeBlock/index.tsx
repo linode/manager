@@ -10,7 +10,7 @@ export interface Props {
 }
 
 const CodeBlock = (props: Props) => {
-  const { command, language, commandType } = props;
+  const { command, commandType, language } = props;
   const classes = useCodeBlockStyles();
 
   const handleCopyIconClick = () => {

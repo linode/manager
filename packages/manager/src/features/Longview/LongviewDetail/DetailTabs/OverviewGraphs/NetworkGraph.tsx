@@ -26,7 +26,7 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
     timezone,
   } = props;
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['network'],
     clientAPIKey,
     start,
@@ -46,7 +46,7 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
 
   const { rx_bytes, tx_bytes } = networkData;
 
-  const { maxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
+  const { formatNetwork, maxUnit } = getMaxUnitAndFormatNetwork(
     rx_bytes,
     tx_bytes
   );
@@ -66,16 +66,16 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
       nativeLegend
       data={[
         {
-          label: 'Inbound',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.network.inbound,
+          borderColor: 'transparent',
           data: _convertData(rx_bytes, start, end),
+          label: 'Inbound',
         },
         {
-          label: 'Outbound',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.network.outbound,
+          borderColor: 'transparent',
           data: _convertData(tx_bytes, start, end),
+          label: 'Outbound',
         },
       ]}
     />

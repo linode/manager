@@ -16,12 +16,12 @@ interface Props {
   isReadOnly?: boolean;
 }
 
-export const LinodeSettingsDeletePanel = ({ linodeId, isReadOnly }: Props) => {
+export const LinodeSettingsDeletePanel = ({ isReadOnly, linodeId }: Props) => {
   const { data: linode } = useLinodeQuery(linodeId);
   const {
-    mutateAsync: deleteLinode,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: deleteLinode,
   } = useLinodeDeleteMutation(linodeId);
 
   const history = useHistory();
@@ -52,7 +52,7 @@ export const LinodeSettingsDeletePanel = ({ linodeId, isReadOnly }: Props) => {
       </Accordion>
       <TypeToConfirmDialog
         title={`Delete ${linode?.label}?`}
-        entity={{ type: 'Linode', label: linode?.label }}
+        entity={{ label: linode?.label, type: 'Linode' }}
         open={open}
         loading={isLoading}
         errors={error}

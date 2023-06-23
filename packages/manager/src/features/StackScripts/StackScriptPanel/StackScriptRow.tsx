@@ -35,20 +35,20 @@ export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
 export const StackScriptRow: React.FC<CombinedProps> = (props) => {
   const {
+    canAddLinodes,
+    canModify,
+    category,
     classes,
-    label,
+    deploymentsTotal,
     description,
     images,
-    deploymentsTotal,
-    updated,
+    isPublic,
+    label,
     stackScriptID,
     stackScriptUsername,
     triggerDelete,
     triggerMakePublic,
-    canModify,
-    isPublic,
-    category,
-    canAddLinodes,
+    updated,
   } = props;
 
   const communityStackScript = category === 'community';

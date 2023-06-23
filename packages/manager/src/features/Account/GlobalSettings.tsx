@@ -46,8 +46,8 @@ const GlobalSettings = (props: CombinedProps) => {
 
   const {
     data: accountSettings,
-    isLoading: accountSettingsLoading,
     error: accountSettingsError,
+    isLoading: accountSettingsLoading,
   } = useAccountSettings();
 
   const { enqueueSnackbar } = useSnackbar();

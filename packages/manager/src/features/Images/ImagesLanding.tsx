@@ -50,8 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
   },
   imageTableHeader: {
-    padding: theme.spacing(),
     marginLeft: theme.spacing(),
+    padding: theme.spacing(),
   },
   imageTableSubheader: {
     marginTop: theme.spacing(),
@@ -80,19 +80,19 @@ interface ImageDialogState {
 type CombinedProps = ImageDrawerState & ImageDialogState;
 
 const defaultDrawerState = {
-  open: false,
-  mode: 'edit' as DrawerMode,
-  label: '',
   description: '',
+  label: '',
+  mode: 'edit' as DrawerMode,
+  open: false,
   selectedDisk: null,
 };
 
 const defaultDialogState = {
-  open: false,
-  submitting: false,
+  error: undefined,
   image: '',
   imageID: '',
-  error: undefined,
+  open: false,
+  submitting: false,
 };
 
 export const ImagesLanding: React.FC<CombinedProps> = () => {
@@ -109,27 +109,27 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     'manual'
   );
   const {
+    handleOrderChange: handleManualImagesOrderChange,
     order: manualImagesOrder,
     orderBy: manualImagesOrderBy,
-    handleOrderChange: handleManualImagesOrderChange,
   } = useOrder(
     {
-      orderBy: 'label',
       order: 'asc',
+      orderBy: 'label',
     },
     `${queryKey}-manual-order`,
     'manual'
   );
 
   const manualImagesFilter = {
-    ['+order_by']: manualImagesOrderBy,
     ['+order']: manualImagesOrder,
+    ['+order_by']: manualImagesOrderBy,
   };
 
   const {
     data: manualImages,
-    isLoading: manualImagesLoading,
     error: manualImagesError,
+    isLoading: manualImagesLoading,
   } = useImagesQuery(
     {
       page: paginationForManualImages.page,
@@ -137,8 +137,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     },
     {
       ...manualImagesFilter,
-      type: 'manual',
       is_public: false,
+      type: 'manual',
     }
   );
 
@@ -149,27 +149,27 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     'automatic'
   );
   const {
+    handleOrderChange: handleAutomaticImagesOrderChange,
     order: automaticImagesOrder,
     orderBy: automaticImagesOrderBy,
-    handleOrderChange: handleAutomaticImagesOrderChange,
   } = useOrder(
     {
-      orderBy: 'label',
       order: 'asc',
+      orderBy: 'label',
     },
     `${queryKey}-automatic-order`,
     'automatic'
   );
 
   const automaticImagesFilter = {
-    ['+order_by']: automaticImagesOrderBy,
     ['+order']: automaticImagesOrder,
+    ['+order_by']: automaticImagesOrderBy,
   };
 
   const {
     data: automaticImages,
-    isLoading: automaticImagesLoading,
     error: automaticImagesError,
+    isLoading: automaticImagesLoading,
   } = useImagesQuery(
     {
       page: paginationForAutomaticImages.page,
@@ -177,8 +177,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     },
     {
       ...automaticImagesFilter,
-      type: 'automatic',
       is_public: false,
+      type: 'automatic',
     }
   );
 
@@ -215,12 +215,12 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
-      open: true,
-      submitting: false,
+      error: undefined,
       image,
       imageID,
-      error: undefined,
+      open: true,
       status,
+      submitting: false,
     });
   };
 
@@ -237,8 +237,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     }
     setDialogState((dialog) => ({
       ...dialog,
-      submitting: true,
       error: undefined,
+      submitting: true,
     }));
 
     deleteImage({ imageId: dialog.imageID! })
@@ -265,8 +265,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
         );
         setDialogState((dialog) => ({
           ...dialog,
-          submitting: false,
           error: _error,
+          submitting: false,
         }));
       });
   };
@@ -278,8 +278,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   ) => {
     removeImageFromCache(queryClient);
     history.push('/images/create/upload', {
-      imageLabel,
       imageDescription,
+      imageLabel,
     });
   };
 
@@ -289,20 +289,20 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const openForEdit = (label: string, description: string, imageID: string) => {
     setDrawer({
-      open: true,
-      mode: 'edit',
       description,
       imageID,
       label,
+      mode: 'edit',
+      open: true,
       selectedDisk: null,
     });
   };
 
   const openForRestore = (imageID: string) => {
     setDrawer({
-      open: true,
-      mode: 'restore',
       imageID,
+      mode: 'restore',
+      open: true,
       selectedDisk: null,
     });
   };
@@ -392,12 +392,12 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   };
 
   const handlers: ImageHandlers = {
-    onRestore: openForRestore,
+    onCancelFailed: onCancelFailedClick,
+    onDelete: openDialog,
     onDeploy: deployNewLinode,
     onEdit: openForEdit,
-    onDelete: openDialog,
+    onRestore: openForRestore,
     onRetry: onRetryClick,
-    onCancelFailed: onCancelFailedClick,
   };
 
   const renderError = (_: APIError[]) => {

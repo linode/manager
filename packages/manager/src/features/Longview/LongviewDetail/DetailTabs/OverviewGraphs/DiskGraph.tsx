@@ -22,7 +22,7 @@ export const DiskGraph: React.FC<CombinedProps> = (props) => {
     timezone,
   } = props;
 
-  const { data, loading, error: requestError, request } = useGraphs(
+  const { data, error: requestError, loading, request } = useGraphs(
     ['disk', 'sysinfo'],
     clientAPIKey,
     start,
@@ -35,7 +35,7 @@ export const DiskGraph: React.FC<CombinedProps> = (props) => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  const { swap, read, write, error } = React.useMemo(
+  const { error, read, swap, write } = React.useMemo(
     () =>
       processDiskData(
         pathOr({}, ['Disk'], data),
@@ -59,22 +59,22 @@ export const DiskGraph: React.FC<CombinedProps> = (props) => {
       nativeLegend
       data={[
         {
-          label: 'Swap',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.swap,
+          borderColor: 'transparent',
           data: _convertData(swap, start, end),
+          label: 'Swap',
         },
         {
-          label: 'Write',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.write,
+          borderColor: 'transparent',
           data: _convertData(write, start, end),
+          label: 'Write',
         },
         {
-          label: 'Read',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.read,
+          borderColor: 'transparent',
           data: _convertData(read, start, end),
+          label: 'Read',
         },
       ]}
     />
@@ -90,8 +90,8 @@ interface DiskData {
 
 export const emptyState: DiskData = {
   read: [],
-  write: [],
   swap: [],
+  write: [],
 };
 
 /**

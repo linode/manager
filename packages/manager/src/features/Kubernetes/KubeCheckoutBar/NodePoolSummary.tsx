@@ -12,6 +12,25 @@ import { ExtendedType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    '&:hover': {
+      color: '#6e6e6e',
+    },
+    alignItems: 'flex-start',
+    color: '#979797',
+    marginTop: -4,
+    padding: 0,
+  },
+  numberInput: {
+    marginBottom: theme.spacing(1.5),
+    marginTop: theme.spacing(2),
+  },
+  price: {
+    '& h3': {
+      color: `${theme.palette.text.primary} !important`,
+      fontFamily: '"LatoWebRegular", sans-serif',
+    },
+  },
   root: {
     '& $textField': {
       width: 53,
@@ -24,25 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   typeSubheader: {
     fontSize: '14px',
-  },
-  button: {
-    alignItems: 'flex-start',
-    color: '#979797',
-    marginTop: -4,
-    padding: 0,
-    '&:hover': {
-      color: '#6e6e6e',
-    },
-  },
-  numberInput: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1.5),
-  },
-  price: {
-    '& h3': {
-      color: `${theme.palette.text.primary} !important`,
-      fontFamily: '"LatoWebRegular", sans-serif',
-    },
   },
 }));
 

@@ -4,32 +4,32 @@ import { action } from '@storybook/addon-actions';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 
 const meta: Meta<typeof EnhancedNumberInput> = {
-  title: 'Components/EnhancedNumberInput',
-  component: EnhancedNumberInput,
   argTypes: {
     max: {
       control: {
-        type: 'number',
         max: 100,
         min: 0,
+        type: 'number',
       },
     },
     min: {
       control: {
-        type: 'number',
-        min: 0,
         max: 100,
+        min: 0,
+        type: 'number',
       },
     },
     value: {
       control: {
-        type: 'number',
-        min: 0,
         max: 100,
+        min: 0,
+        type: 'number',
       },
     },
   },
   args: {},
+  component: EnhancedNumberInput,
+  title: 'Components/EnhancedNumberInput',
 };
 
 export default meta;

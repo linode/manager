@@ -31,28 +31,28 @@ import { SetSuccess } from './types';
 import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  currentBalance: {
-    fontSize: '1.1rem',
-    marginBottom: theme.spacing(4),
+  button: {
+    alignSelf: 'flex-end',
+    marginLeft: 'auto',
   },
   credit: {
     color: '#02b159',
+  },
+  currentBalance: {
+    fontSize: '1.1rem',
+    marginBottom: theme.spacing(4),
   },
   header: {
     fontSize: '1.1rem',
     marginBottom: theme.spacing(4),
   },
-  progress: {
-    marginBottom: 18,
-    width: '100%',
-    height: 5,
-  },
   input: {
     display: 'flex',
   },
-  button: {
-    alignSelf: 'flex-end',
-    marginLeft: 'auto',
+  progress: {
+    height: 5,
+    marginBottom: 18,
+    width: '100%',
   },
 }));
 
@@ -78,7 +78,7 @@ export const getMinimumPayment = (balance: number | false) => {
 };
 
 export const PaymentDrawer = (props: Props) => {
-  const { paymentMethods, selectedPaymentMethod, open, onClose } = props;
+  const { onClose, open, paymentMethods, selectedPaymentMethod } = props;
 
   const {
     data: account,
@@ -166,8 +166,8 @@ export const PaymentDrawer = (props: Props) => {
     setErrorMessage(null);
 
     const makePaymentData = {
-      usd: (+usd).toFixed(2),
       payment_method_id: paymentMethodId,
+      usd: (+usd).toFixed(2),
     };
 
     makePayment(makePaymentData)
@@ -353,10 +353,10 @@ export const PaymentDrawer = (props: Props) => {
             <Grid xs={9} sm={6}>
               <GooglePayButton
                 transactionInfo={{
-                  totalPriceStatus: 'FINAL',
-                  currencyCode: 'USD',
                   countryCode: 'US',
+                  currencyCode: 'USD',
                   totalPrice: usd,
+                  totalPriceStatus: 'FINAL',
                 }}
                 disabled={isProcessing}
                 setSuccess={setSuccess}

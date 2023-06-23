@@ -13,9 +13,9 @@ export interface Props {
 }
 
 export const EnableObjectStorageModal = ({
-  open,
-  onClose,
   handleSubmit,
+  onClose,
+  open,
 }: Props) => {
   return (
     <ConfirmationDialog

@@ -11,9 +11,9 @@ export const Radio = (props: RadioProps) => {
       data-qa-radio={props.checked || false}
       {...props}
       inputProps={{
-        role: 'radio',
-        'aria-label': props.name,
         'aria-checked': props.checked,
+        'aria-label': props.name,
+        role: 'radio',
         ...props.inputProps,
       }}
     />

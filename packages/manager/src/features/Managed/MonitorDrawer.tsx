@@ -43,12 +43,12 @@ const titleMap = {
 
 const typeOptions: Item<ServiceType>[] = [
   {
-    value: 'url',
     label: 'URL',
+    value: 'url',
   },
   {
-    value: 'tcp',
     label: 'TCP',
+    value: 'tcp',
   },
 ];
 
@@ -57,26 +57,26 @@ const getCredentialOptions = (
 ): Item<number>[] => {
   return credentials.map((thisCredential) => {
     return {
-      value: thisCredential.id,
       label: thisCredential.label,
+      value: thisCredential.id,
     };
   });
 };
 
 const getGroupsOptions = (groups: string[]): Item<string>[] => {
   return groups.map((thisGroup) => ({
-    value: thisGroup,
     label: thisGroup,
+    value: thisGroup,
   }));
 };
 
 const helperText = {
+  body: 'Response must contain this string or an alert will be triggered.',
   consultation_group:
     "If we need help along the way, we'll contact someone from this group.",
-  url: 'The URL to request.',
-  body: 'Response must contain this string or an alert will be triggered.',
   credentials:
     'Any additional credentials required for incident response or routine maintenance.',
+  url: 'The URL to request.',
 };
 
 const getValueFromItem = (value: string, options: Item<any>[]) => {
@@ -88,18 +88,18 @@ const getMultiValuesFromItems = (values: number[], options: Item<any>[]) => {
 };
 
 const emptyInitialValues = {
-  label: '',
-  consultation_group: '',
-  credentials: [],
-  service_type: 'url',
   address: '',
   body: '',
-  timeout: 10,
+  consultation_group: '',
+  credentials: [],
+  label: '',
   notes: '',
+  service_type: 'url',
+  timeout: 10,
 } as ManagedServicePayload;
 
 const MonitorDrawer: React.FC<CombinedProps> = (props) => {
-  const { credentials, groups, mode, monitor, open, onClose, onSubmit } = props;
+  const { credentials, groups, mode, monitor, onClose, onSubmit, open } = props;
 
   const credentialOptions = getCredentialOptions(credentials);
   const groupOptions = getGroupsOptions(groups);
@@ -126,14 +126,14 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
         onSubmit={onSubmit}
       >
         {({
-          values,
           errors,
-          status,
-          handleChange,
           handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
           setFieldValue,
+          status,
+          values,
         }) => (
           <>
             {status && (

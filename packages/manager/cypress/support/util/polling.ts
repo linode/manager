@@ -19,8 +19,8 @@ export type PollBackoffConfiguration =
 
 // Default backoff options for a poll.
 const defaultBackoffOptions: BackoffOptions = {
-  maxAttempts: 10,
   initialDelay: 0,
+  maxAttempts: 10,
 };
 
 // Default backoff method for a poll, which uses the default backoff options.

@@ -12,19 +12,19 @@ export const StyledBucketRow = styled(TableRow, {
 export const StyledBucketNameWrapper = styled('div', {
   label: 'StyledBucketNameWrapper',
 })(() => ({
+  alignItems: 'center',
   display: 'flex',
   flexFlow: 'row nowrap',
-  alignItems: 'center',
   wordBreak: 'break-all',
 }));
 
 export const StyledBucketLabelLink = styled(Link, {
   label: 'StyledBucketLabelLink',
 })(({ theme }) => ({
-  color: theme.textColors.linkActiveLight,
   '&:hover, &:focus': {
     textDecoration: 'underline',
   },
+  color: theme.textColors.linkActiveLight,
 }));
 
 export const StyledBucketRegionCell = styled(TableCell, {

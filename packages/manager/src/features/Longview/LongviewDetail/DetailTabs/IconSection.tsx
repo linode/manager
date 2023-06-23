@@ -22,45 +22,45 @@ import {
 } from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  wrapHeader: {
-    wordBreak: 'break-all',
-  },
   headerSection: {
     marginBottom: `calc(${theme.spacing(3)} - 2)`,
   },
-  iconSection: {
-    marginBottom: `calc(${theme.spacing(2)} - 2)`,
-    '&:last-of-type': {
-      marginBottom: 0,
-    },
-  },
-  packageButton: {
-    fontSize: '0.875rem',
-    padding: 0,
-    '& svg': {
-      marginRight: 15,
-    },
-    '& g': {
-      stroke: theme.palette.primary.main,
-    },
-  },
-  packageStaticOuter: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  packageStaticIcon: {
-    marginRight: theme.spacing(1),
-  },
   iconItem: {
-    alignSelf: 'center',
-    marginLeft: 0,
     '& svg': {
       display: 'block',
       margin: '0 auto',
     },
+    alignSelf: 'center',
+    marginLeft: 0,
   },
   iconItemLast: {
     alignSelf: 'center',
+  },
+  iconSection: {
+    '&:last-of-type': {
+      marginBottom: 0,
+    },
+    marginBottom: `calc(${theme.spacing(2)} - 2)`,
+  },
+  packageButton: {
+    '& g': {
+      stroke: theme.palette.primary.main,
+    },
+    '& svg': {
+      marginRight: 15,
+    },
+    fontSize: '0.875rem',
+    padding: 0,
+  },
+  packageStaticIcon: {
+    marginRight: theme.spacing(1),
+  },
+  packageStaticOuter: {
+    alignItems: 'center',
+    display: 'flex',
+  },
+  wrapHeader: {
+    wordBreak: 'break-all',
   },
 }));
 

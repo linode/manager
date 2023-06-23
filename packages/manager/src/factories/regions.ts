@@ -7,10 +7,10 @@ export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
 });
 
 export const regionFactory = Factory.Sync.makeFactory<Region>({
+  capabilities: ['Block Storage'],
+  country: 'US',
   id: Factory.each((id) => `us-${id}`),
   label: Factory.each((id) => `${id}, NJ`),
-  status: 'ok',
-  country: 'US',
-  capabilities: ['Block Storage'],
   resolvers: resolverFactory.build(),
+  status: 'ok',
 });

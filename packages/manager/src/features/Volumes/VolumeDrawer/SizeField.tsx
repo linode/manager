@@ -32,14 +32,14 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
-    name,
-    value,
     error,
+    isFromLinode,
+    name,
     onBlur,
     onChange,
-    isFromLinode,
     resize,
     textFieldStyles,
+    value,
     ...rest
   } = props;
 

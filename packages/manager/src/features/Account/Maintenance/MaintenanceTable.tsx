@@ -29,13 +29,13 @@ import {
 const preferenceKey = 'account-maintenance';
 
 const headersForCSVDownload = [
-  { label: 'Entity Label', key: 'entity.label' },
-  { label: 'Entity Type', key: 'entity.type' },
-  { label: 'Entity ID', key: 'entity.id' },
-  { label: 'Date', key: 'when' },
-  { label: 'Type', key: 'type' },
-  { label: 'Status', key: 'status' },
-  { label: 'Reason', key: 'reason' },
+  { key: 'entity.label', label: 'Entity Label' },
+  { key: 'entity.type', label: 'Entity Type' },
+  { key: 'entity.id', label: 'Entity ID' },
+  { key: 'when', label: 'Date' },
+  { key: 'type', label: 'Type' },
+  { key: 'status', label: 'Status' },
+  { key: 'reason', label: 'Reason' },
 ];
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -43,8 +43,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: '12%',
   },
   headingContainer: {
-    marginTop: theme.spacing(1.5),
     marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1.5),
     [theme.breakpoints.down('md')]: {
       paddingLeft: theme.spacing(),
       paddingRight: theme.spacing(),
@@ -62,23 +62,23 @@ const MaintenanceTable = ({ type }: Props) => {
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
   const formattedDate = useFormattedDate();
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'status',
       order: 'desc',
+      orderBy: 'status',
     },
     `${preferenceKey}-order-${type}`,
     type
   );
 
   const filters: Record<'pending' | 'completed', any> = {
-    pending: { '+or': ['pending, started'] },
     completed: 'completed',
+    pending: { '+or': ['pending, started'] },
   };
 
   const filter = {
-    '+order_by': orderBy,
     '+order': order,
+    '+order_by': orderBy,
     status: filters[type],
   };
 
@@ -88,7 +88,7 @@ const MaintenanceTable = ({ type }: Props) => {
     false
   );
 
-  const { data, isLoading, error } = useAccountMaintenanceQuery(
+  const { data, error, isLoading } = useAccountMaintenanceQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

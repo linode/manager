@@ -36,11 +36,11 @@ export const DNSResolvers = (props: DNSResolversProps) => {
       container
       sx={{
         display: 'grid',
-        overflowX: 'auto',
         gridTemplateAreas: `
             'one one'
             'two three'
           `,
+        overflowX: 'auto',
         [theme.breakpoints.down('sm')]: {
           flex: 1,
           paddingLeft: 0,
@@ -51,9 +51,9 @@ export const DNSResolvers = (props: DNSResolversProps) => {
       <Grid
         xs={12}
         sx={{
-          paddingTop: 0,
-          paddingBottom: 0,
           gridArea: 'one',
+          paddingBottom: 0,
+          paddingTop: 0,
         }}
       >
         <Typography>

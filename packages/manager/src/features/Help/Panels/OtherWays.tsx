@@ -13,13 +13,13 @@ type ClassNames = 'root' | 'wrapper' | 'heading';
 
 const styles = (theme: Theme) =>
   createStyles({
+    heading: {
+      marginBottom: theme.spacing(4),
+      textAlign: 'center',
+    },
     root: {},
     wrapper: {
       marginTop: theme.spacing(2),
-    },
-    heading: {
-      textAlign: 'center',
-      marginBottom: theme.spacing(4),
     },
   });
 

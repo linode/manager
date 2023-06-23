@@ -21,12 +21,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.875rem',
   },
   noticeList: {
-    fontSize: '0.875rem',
-    marginTop: 4,
-    paddingLeft: theme.spacing(2),
     '& li': {
       marginBottom: 4,
     },
+    fontSize: '0.875rem',
+    marginTop: 4,
+    paddingLeft: theme.spacing(2),
   },
 }));
 
@@ -37,7 +37,7 @@ interface Props {
 }
 
 export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
-  const { open, onClose, clusterID } = props;
+  const { clusterID, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [checked, setChecked] = React.useState(false);
 
@@ -99,7 +99,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
       error={error}
     >
       <HACopy />
-      <Typography variant="body1" style={{ marginTop: 12, marginBottom: 8 }}>
+      <Typography variant="body1" style={{ marginBottom: 8, marginTop: 12 }}>
         Pricing for the HA control plane is ${HIGH_AVAILABILITY_PRICE} per month
         per cluster.
       </Typography>

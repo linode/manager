@@ -10,10 +10,6 @@ import FinalCrumbPrefix from './FinalCrumbPrefix';
 import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  crumbsWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   crumb: {
     fontSize: '1.125rem',
     lineHeight: 'normal',
@@ -21,10 +17,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   crumbLink: {
-    color: theme.textColors.tableHeader,
     '&:hover': {
       textDecoration: 'underline',
     },
+    color: theme.textColors.tableHeader,
+  },
+  crumbsWrapper: {
+    alignItems: 'center',
+    display: 'flex',
   },
   noCap: {
     textTransform: 'initial',
@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   slash: {
     color: theme.textColors.tableHeader,
     fontSize: 20,
-    marginRight: 2,
     marginLeft: 2,
+    marginRight: 2,
   },
 }));
 
@@ -57,12 +57,12 @@ export const Crumbs = React.memo((props: Props) => {
   const classes = useStyles();
 
   const {
-    pathMap,
     crumbOverrides,
     firstAndLastOnly,
     labelOptions,
     labelTitle,
     onEditHandlers,
+    pathMap,
   } = props;
 
   const allCrumbsButLast = pathMap.slice(0, -1);

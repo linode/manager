@@ -30,8 +30,8 @@ jest.mock('src/components/EnhancedSelect/Select');
 
 const props: FirewallRuleDrawerProps = {
   category: 'inbound',
-  mode: 'create',
   isOpen: true,
+  mode: 'create',
   onClose: mockOnClose,
   onSubmit: mockOnSubmit,
 };
@@ -105,54 +105,54 @@ describe('utilities', () => {
       );
     });
     it('validates ports', () => {
-      expect(validateForm({ protocol: 'ICMP', ports: '80' })).toHaveProperty(
+      expect(validateForm({ ports: '80', protocol: 'ICMP' })).toHaveProperty(
         'ports',
         'Ports are not allowed for ICMP protocols.'
       );
       expect(
-        validateForm({ protocol: 'IPENCAP', ports: '443' })
+        validateForm({ ports: '443', protocol: 'IPENCAP' })
       ).toHaveProperty('ports', 'Ports are not allowed for IPENCAP protocols.');
       expect(
-        validateForm({ protocol: 'TCP', ports: 'invalid-port' })
+        validateForm({ ports: 'invalid-port', protocol: 'TCP' })
       ).toHaveProperty('ports');
     });
     it('validates custom ports', () => {
       const rest = {
-        label: 'Firewalllabel',
         addresses: 'All IPv4',
+        label: 'Firewalllabel',
       };
-      expect(validateForm({ protocol: 'TCP', ports: '1', ...rest })).toEqual(
+      expect(validateForm({ ports: '1', protocol: 'TCP', ...rest })).toEqual(
         {}
       );
       expect(
-        validateForm({ protocol: 'TCP', ports: '1,2,3,4,5', ...rest })
+        validateForm({ ports: '1,2,3,4,5', protocol: 'TCP', ...rest })
       ).toEqual({});
       expect(
-        validateForm({ protocol: 'TCP', ports: '1, 2, 3, 4, 5', ...rest })
+        validateForm({ ports: '1, 2, 3, 4, 5', protocol: 'TCP', ...rest })
       ).toEqual({});
-      expect(validateForm({ protocol: 'TCP', ports: '1-20', ...rest })).toEqual(
+      expect(validateForm({ ports: '1-20', protocol: 'TCP', ...rest })).toEqual(
         {}
       );
       expect(
-        validateForm({ protocol: 'TCP', ports: 'abc', ...rest })
+        validateForm({ ports: 'abc', protocol: 'TCP', ...rest })
       ).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       );
       expect(
-        validateForm({ protocol: 'TCP', ports: '1--20', ...rest })
+        validateForm({ ports: '1--20', protocol: 'TCP', ...rest })
       ).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       );
       expect(
-        validateForm({ protocol: 'TCP', ports: '1-2,3-4', ...rest })
+        validateForm({ ports: '1-2,3-4', protocol: 'TCP', ...rest })
       ).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       );
       expect(
-        validateForm({ protocol: 'TCP', ports: '-20', ...rest })
+        validateForm({ ports: '-20', protocol: 'TCP', ...rest })
       ).toHaveProperty(
         'ports',
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
@@ -161,51 +161,51 @@ describe('utilities', () => {
     it('validates label', () => {
       const expectedResults = [
         {
+          result: {},
           value: 'test',
-          result: {},
         },
         {
+          result: {},
           value: 'accept-inbound-HTTP',
-          result: {},
         },
         {
+          result: {
+            label: 'Label must be 3-32 characters.',
+          },
           value: 'ab',
+        },
+        {
           result: {
             label: 'Label must be 3-32 characters.',
           },
-        },
-        {
           value: 'qwertyuiopasdfghjklzxcvbnm1234567890',
-          result: {
-            label: 'Label must be 3-32 characters.',
-          },
         },
         {
-          value: ' test',
           result: {
             label: 'Label must begin with a letter.',
           },
+          value: ' test',
         },
         {
+          result: {
+            label:
+              'Label must include only ASCII letters, numbers, underscores, periods, and dashes.',
+          },
           value: 'test ',
-          result: {
-            label:
-              'Label must include only ASCII letters, numbers, underscores, periods, and dashes.',
-          },
         },
         {
-          value: 'b&a$e#c@!%^*()+=[]{}?/,<>~',
           result: {
             label:
               'Label must include only ASCII letters, numbers, underscores, periods, and dashes.',
           },
+          value: 'b&a$e#c@!%^*()+=[]{}?/,<>~',
         },
       ];
-      expectedResults.forEach(({ value, result }) => {
+      expectedResults.forEach(({ result, value }) => {
         const rest = {
-          protocol: 'TCP',
-          ports: '80',
           addresses: 'All IPv4',
+          ports: '80',
+          protocol: 'TCP',
         };
         expect(validateForm({ label: value, ...rest })).toEqual(result);
       });
@@ -222,15 +222,15 @@ describe('utilities', () => {
 
   describe('getInitialIPs', () => {
     const ruleToModify: ExtendedFirewallRule = {
-      ports: '80',
-      protocol: 'TCP',
-      status: 'NEW',
       action: 'ACCEPT',
-      originalIndex: 0,
       addresses: {
         ipv4: ['1.2.3.4'],
         ipv6: ['::0'],
       },
+      originalIndex: 0,
+      ports: '80',
+      protocol: 'TCP',
+      status: 'NEW',
     };
     it('parses the IPs when no errors', () => {
       expect(getInitialIPs(ruleToModify)).toEqual([
@@ -244,8 +244,8 @@ describe('utilities', () => {
           category: 'inbound',
           formField: 'addresses',
           idx: 1,
-          reason: 'Invalid IP',
           ip: { idx: 0, type: 'ipv4' },
+          reason: 'Invalid IP',
         },
       ];
       expect(getInitialIPs({ ...ruleToModify, errors })).toEqual([
@@ -265,8 +265,8 @@ describe('utilities', () => {
             category: 'inbound',
             formField: 'addresses',
             idx: 1,
-            reason: 'Invalid IP',
             ip: { idx: 0, type: 'ipv6' },
+            reason: 'Invalid IP',
           },
         ],
       });
@@ -295,11 +295,11 @@ describe('utilities', () => {
     const formValues = {
       action: 'DROP' as FirewallPolicyType,
       addresses: 'all',
+      description: '',
+      label: '',
       ports: '443',
       protocol: 'TCP',
       type: '',
-      label: '',
-      description: '',
     };
 
     it('correctly matches values to their representative type', () => {
@@ -322,13 +322,13 @@ describe('utilities', () => {
 
     it('should ignore the CUSTOM item', () => {
       expect(
-        itemsToPortString([...baseItems, { value: 'CUSTOM', label: 'Custom' }])
+        itemsToPortString([...baseItems, { label: 'Custom', value: 'CUSTOM' }])
       ).toMatch('22, 443');
     });
 
     it('should return a single range covering all ports if any of the items has the value ALL', () => {
       expect(
-        itemsToPortString([...baseItems, { value: 'ALL', label: 'All' }])
+        itemsToPortString([...baseItems, { label: 'All', value: 'ALL' }])
       ).toMatch('1-65535');
     });
 

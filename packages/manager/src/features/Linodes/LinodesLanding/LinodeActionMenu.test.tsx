@@ -11,18 +11,18 @@ import LinodeActionMenu, {
 
 const props: Props = {
   inListView: true,
-  linodeId: 1,
-  linodeRegion: 'us-east',
   linodeBackups: linodeBackupsFactory.build(),
+  linodeId: 1,
   linodeLabel: 'test-linode',
+  linodeRegion: 'us-east',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
-  onOpenPowerDialog: jest.fn(),
   onOpenDeleteDialog: jest.fn(),
-  onOpenResizeDialog: jest.fn(),
+  onOpenMigrateDialog: jest.fn(),
+  onOpenPowerDialog: jest.fn(),
   onOpenRebuildDialog: jest.fn(),
   onOpenRescueDialog: jest.fn(),
-  onOpenMigrateDialog: jest.fn(),
+  onOpenResizeDialog: jest.fn(),
 };
 
 describe('LinodeActionMenu', () => {

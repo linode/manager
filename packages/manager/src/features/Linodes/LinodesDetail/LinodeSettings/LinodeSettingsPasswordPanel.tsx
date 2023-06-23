@@ -27,13 +27,13 @@ interface Props {
 }
 
 export const LinodeSettingsPasswordPanel = (props: Props) => {
-  const { linodeId, isReadOnly } = props;
+  const { isReadOnly, linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
     data: disks,
-    isLoading: disksLoading,
     error: disksError,
+    isLoading: disksLoading,
   } = useAllLinodeDisksQuery(linodeId);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -49,14 +49,14 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
   const [password, setPassword] = React.useState<string>('');
 
   const {
-    mutateAsync: changeLinodePassword,
-    isLoading: isLinodePasswordLoading,
     error: linodePasswordError,
+    isLoading: isLinodePasswordLoading,
+    mutateAsync: changeLinodePassword,
   } = useLinodeChangePasswordMutation(linodeId);
   const {
-    mutateAsync: changeLinodeDiskPassword,
-    isLoading: isDiskPasswordLoading,
     error: diskPasswordError,
+    isLoading: isDiskPasswordLoading,
+    mutateAsync: changeLinodeDiskPassword,
   } = useLinodeDiskChangePasswordMutation(linodeId, selectedDiskId ?? -1);
 
   const isBareMetalInstance = type?.class === 'metal';

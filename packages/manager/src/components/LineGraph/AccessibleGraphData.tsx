@@ -27,7 +27,7 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
   const { datasets }: ChartData = chartInstance.config.data;
 
   const tables = datasets.map((dataset, tableID) => {
-    const { label, data } = dataset;
+    const { data, label } = dataset;
     const hidden = hiddenDatasets.includes(tableID);
 
     const TableHeader = (

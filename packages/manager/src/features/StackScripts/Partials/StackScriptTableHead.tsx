@@ -9,64 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& th': {
-      backgroundColor: theme.bg.tableHeader,
-      borderTop: `2px solid ${theme.borderColors.borderTable}`,
-      borderBottom: `2px solid ${theme.borderColors.borderTable}`,
-      fontFamily: theme.font.bold,
-      padding: '10px 15px',
-      '&:first-of-type': {
-        borderLeft: 'none',
-      },
-      '&:last-of-type': {
-        borderRight: 'none',
-      },
-      '&:hover': {
-        ...theme.applyTableHeaderStyles,
-      },
-    },
-  },
-  tableHead: {
-    color: theme.textColors.tableHeader,
-    top: 104,
-    '& span': {
-      color: theme.textColors.tableHeader,
-    },
-  },
-  noHover: {
-    cursor: 'default !important',
-  },
-  stackscriptTitles: {
-    width: '36%',
-    [theme.breakpoints.down('lg')]: {
-      width: '48%',
-    },
-    [theme.breakpoints.down('md')]: {
-      width: '50%',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '60%',
-    },
-  },
-  stackscriptTitlesAccount: {
-    width: '26%',
-    [theme.breakpoints.down('lg')]: {
-      width: '38%',
-    },
-    [theme.breakpoints.down('md')]: {
-      width: '50%',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '60%',
-    },
-  },
-  selectingStackscriptTitles: {
-    paddingLeft: '20px !important',
-    width: 'calc(100% - 65px)',
-  },
   deploys: {
-    width: '10%',
     [theme.breakpoints.down('lg')]: {
       width: '15%',
     },
@@ -76,16 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: '28%',
     },
-  },
-  revisions: {
-    whiteSpace: 'nowrap',
-    width: '13%',
-    [theme.breakpoints.down('lg')]: {
-      width: '17%',
-    },
-    [theme.breakpoints.down('md')]: {
-      width: '23%',
-    },
+    width: '10%',
   },
   images: {
     width: '26%',
@@ -93,8 +27,74 @@ const useStyles = makeStyles((theme: Theme) => ({
   imagesAccount: {
     width: '20%',
   },
+  noHover: {
+    cursor: 'default !important',
+  },
+  revisions: {
+    [theme.breakpoints.down('lg')]: {
+      width: '17%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '23%',
+    },
+    whiteSpace: 'nowrap',
+    width: '13%',
+  },
+  root: {
+    '& th': {
+      '&:first-of-type': {
+        borderLeft: 'none',
+      },
+      '&:hover': {
+        ...theme.applyTableHeaderStyles,
+      },
+      '&:last-of-type': {
+        borderRight: 'none',
+      },
+      backgroundColor: theme.bg.tableHeader,
+      borderBottom: `2px solid ${theme.borderColors.borderTable}`,
+      borderTop: `2px solid ${theme.borderColors.borderTable}`,
+      fontFamily: theme.font.bold,
+      padding: '10px 15px',
+    },
+  },
+  selectingStackscriptTitles: {
+    paddingLeft: '20px !important',
+    width: 'calc(100% - 65px)',
+  },
+  stackscriptTitles: {
+    [theme.breakpoints.down('lg')]: {
+      width: '48%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '50%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '60%',
+    },
+    width: '36%',
+  },
+  stackscriptTitlesAccount: {
+    [theme.breakpoints.down('lg')]: {
+      width: '38%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '50%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '60%',
+    },
+    width: '26%',
+  },
   status: {
     width: '7%',
+  },
+  tableHead: {
+    '& span': {
+      color: theme.textColors.tableHeader,
+    },
+    color: theme.textColors.tableHeader,
+    top: 104,
   },
 }));
 
@@ -115,11 +115,11 @@ type CombinedProps = Props;
 export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
-    currentFilterType,
-    isSelecting,
-    handleClickTableHeader,
-    sortOrder,
     category,
+    currentFilterType,
+    handleClickTableHeader,
+    isSelecting,
+    sortOrder,
   } = props;
 
   const Cell: React.ComponentType<any> =
@@ -128,10 +128,10 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
   const maybeAddSortingProps = (orderBy: string) =>
     !!handleClickTableHeader && sortOrder
       ? {
-          direction: sortOrder,
           active: currentFilterType === orderBy,
-          label: orderBy,
+          direction: sortOrder,
           handleClick: handleClickTableHeader,
+          label: orderBy,
         }
       : {};
 
@@ -147,10 +147,10 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
             Linode Create flow.  */}
         <Cell
           className={classNames({
-            [classes.tableHead]: true,
+            [classes.selectingStackscriptTitles]: isSelecting,
             [classes.stackscriptTitles]: true,
             [classes.stackscriptTitlesAccount]: category === 'account',
-            [classes.selectingStackscriptTitles]: isSelecting,
+            [classes.tableHead]: true,
           })}
           colSpan={isSelecting ? 2 : 1}
           data-qa-stackscript-table-header
@@ -182,10 +182,10 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           <Hidden lgDown>
             <TableCell
               className={classNames({
-                [classes.tableHead]: true,
                 [classes.images]: true,
                 [classes.imagesAccount]: category === 'account',
                 [classes.noHover]: true,
+                [classes.tableHead]: true,
               })}
               data-qa-stackscript-compatible-images
             >

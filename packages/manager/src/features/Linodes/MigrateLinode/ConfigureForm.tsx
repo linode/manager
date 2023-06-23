@@ -10,22 +10,22 @@ import { Flag } from 'src/components/Flag';
 import { Country } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  currentRegion: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(),
+    marginBottom: theme.spacing(4),
+  },
   root: {
-    marginTop: theme.spacing(4),
-    padding: 0,
     '& > p:first-of-type': {
       color: theme.color.label,
       fontFamily: theme.font.bold,
-      marginTop: theme.spacing(2),
       marginBottom: theme.spacing(),
+      marginTop: theme.spacing(2),
     },
-  },
-  currentRegion: {
-    display: 'flex',
-    gap: theme.spacing(),
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(4),
+    padding: 0,
   },
 }));
 

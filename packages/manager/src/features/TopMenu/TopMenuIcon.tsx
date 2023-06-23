@@ -8,33 +8,33 @@ interface Props {
 }
 
 export const StyledTopMenuIconWrapper = styled('div')(({ theme }) => ({
-  display: 'flex',
+  '& svg': {
+    height: 20,
+    width: 20,
+  },
+  '&:hover, &:focus': {
+    color: '#606469',
+  },
   alignItems: 'center',
   backgroundColor: 'inherit',
   border: 'none',
   color: '#c9c7c7',
   cursor: 'pointer',
+  display: 'flex',
   height: '100%',
-  outlineOffset: 'initial',
-  position: 'relative',
-  padding: 8,
   margin: 0,
-  [theme.breakpoints.up('sm')]: {
-    padding: '8px 12px',
-  },
+  outlineOffset: 'initial',
+  padding: 8,
+  position: 'relative',
   [theme.breakpoints.down(370)]: {
     padding: 3,
   },
-  '&:hover, &:focus': {
-    color: '#606469',
-  },
-  '& svg': {
-    height: 20,
-    width: 20,
+  [theme.breakpoints.up('sm')]: {
+    padding: '8px 12px',
   },
 }));
 
-export const TopMenuIcon = ({ title, children }: Props) => {
+export const TopMenuIcon = ({ children, title }: Props) => {
   return (
     <Tooltip
       title={title}

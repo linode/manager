@@ -15,7 +15,7 @@ describe('TypeToConfirmDialog Component', () => {
       <TypeToConfirmDialog
         title="Delete Linode test?"
         open={true}
-        entity={{ type: 'Linode', label: 'test' }}
+        entity={{ label: 'test', type: 'Linode' }}
         loading={false}
         {...props}
       >

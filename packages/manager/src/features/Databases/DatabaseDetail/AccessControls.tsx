@@ -19,28 +19,6 @@ import { makeStyles } from 'tss-react/mui';
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  topSection: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-  sectionTitleAndText: {
-    width: '100%',
-  },
-  sectionTitle: {
-    marginBottom: '0.25rem',
-  },
-  sectionText: {
-    marginBottom: '1rem',
-    width: '65%',
-    marginRight: 0,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
   addAccessControlBtn: {
     minWidth: 214,
     [theme.breakpoints.down('md')]: {
@@ -48,23 +26,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
       marginBottom: '1rem',
     },
   },
-  table: {
-    width: '50%',
-    border: `solid 1px ${theme.borderColors.borderTable}`,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  row: {
-    '&:last-of-type td': {
-      borderBottom: 'none',
-    },
-  },
   cell: {
-    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
     borderBottom: `solid 1px ${theme.borderColors.borderTable}`,
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   removeButton: {
     float: 'right',
@@ -75,6 +41,40 @@ const useStyles = makeStyles()((theme: Theme) => ({
   restrictWarningText: {
     fontSize: '0.875rem,',
   },
+  row: {
+    '&:last-of-type td': {
+      borderBottom: 'none',
+    },
+  },
+  sectionText: {
+    marginBottom: '1rem',
+    marginRight: 0,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    width: '65%',
+  },
+  sectionTitle: {
+    marginBottom: '0.25rem',
+  },
+  sectionTitleAndText: {
+    width: '100%',
+  },
+  table: {
+    border: `solid 1px ${theme.borderColors.borderTable}`,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    width: '50%',
+  },
+  topSection: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('md')]: {
+      flexDirection: 'column',
+    },
+  },
 }));
 
 interface Props {
@@ -84,7 +84,7 @@ interface Props {
 
 export const AccessControls = (props: Props) => {
   const {
-    database: { id, engine, allow_list: allowList },
+    database: { allow_list: allowList, engine, id },
     description,
   } = props;
 
@@ -106,8 +106,8 @@ export const AccessControls = (props: Props) => {
   const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
 
   const {
-    mutateAsync: updateDatabase,
     isLoading: databaseUpdating,
+    mutateAsync: updateDatabase,
   } = useDatabaseMutation(engine, id);
 
   React.useEffect(() => {

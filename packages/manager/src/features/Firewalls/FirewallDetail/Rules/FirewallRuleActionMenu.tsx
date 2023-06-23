@@ -20,8 +20,8 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
-    idx,
     disabled,
+    idx,
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
@@ -30,25 +30,25 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       disabled,
       onClick: () => {
         triggerOpenRuleDrawerForEditing(idx);
       },
+      title: 'Edit',
     },
     {
-      title: 'Clone',
       disabled,
       onClick: () => {
         triggerCloneFirewallRule(idx);
       },
+      title: 'Clone',
     },
     {
-      title: 'Delete',
       disabled,
       onClick: () => {
         triggerDeleteFirewallRule(idx);
       },
+      title: 'Delete',
     },
   ];
 

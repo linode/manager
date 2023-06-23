@@ -25,11 +25,11 @@ type CombinedProps = Props;
 
 const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
   const {
-    onClose,
-    onSubmit,
-    onSelectConfig,
     isOpen,
     linodeConfigs,
+    onClose,
+    onSelectConfig,
+    onSubmit,
     selectedConfigID,
   } = props;
 

@@ -15,10 +15,10 @@ interface Props {
 }
 
 const PaymentMethods = ({
-  loading,
   error,
-  paymentMethods,
+  loading,
   openDeleteDialog,
+  paymentMethods,
 }: Props) => {
   if (loading) {
     return (

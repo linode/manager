@@ -100,5 +100,5 @@ export const useAPIRequest = <T>(
     setData(produce<T, T>(data, fn));
   };
 
-  return { data, loading, lastUpdated, error, update: _request, transformData };
+  return { data, error, lastUpdated, loading, transformData, update: _request };
 };

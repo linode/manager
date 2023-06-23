@@ -10,10 +10,10 @@ const pool = nodePoolFactory.build({
 const smallPool = nodePoolFactory.build({ count: 2 });
 
 const props: Props = {
-  open: true,
-  onClose: jest.fn(),
-  nodePool: pool,
   kubernetesClusterId: 1,
+  nodePool: pool,
+  onClose: jest.fn(),
+  open: true,
 };
 
 describe('ResizeNodePoolDrawer', () => {

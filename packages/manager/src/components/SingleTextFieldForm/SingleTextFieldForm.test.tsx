@@ -6,9 +6,9 @@ import userEvent from '@testing-library/user-event';
 
 describe('SingleTextFieldForm', () => {
   const props = {
+    initialValue: 'jane-doe',
     label: 'Username',
     submitForm: jest.fn(() => Promise.resolve()),
-    initialValue: 'jane-doe',
   };
 
   it('Renders a TextField with the given label and initial value', () => {

@@ -14,7 +14,7 @@ import { depaginate } from 'support/util/paginate';
  */
 export const deleteAllTestClients = async (): Promise<void> => {
   const clients = await depaginate<LongviewClient>((page: number) =>
-    getLongviewClients({ page_size: pageSize, page })
+    getLongviewClients({ page, page_size: pageSize })
   );
 
   const deletionPromises = clients
@@ -32,12 +32,12 @@ const makeClientCreateReq = (client, label) => {
       };
 
   return cy.request({
-    method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/longview/clients',
-    body: linodeData,
     auth: {
       bearer: oauthToken,
     },
+    body: linodeData,
+    method: 'POST',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/longview/clients',
   });
 };
 

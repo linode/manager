@@ -10,18 +10,18 @@ import { Toggle } from 'src/components/Toggle';
 import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  footnote: {
+  enableBackupsButton: {
+    ...theme.applyLinkStyles,
     fontSize: '0.875rem',
+  },
+  footnote: {
     cursor: 'pointer',
+    fontSize: '0.875rem',
   },
   icon: {
     display: 'inline-block',
     fontSize: '0.8em',
     marginLeft: `calc(${theme.spacing(1)} / 3)`,
-  },
-  enableBackupsButton: {
-    ...theme.applyLinkStyles,
-    fontSize: '0.875rem',
   },
 }));
 
@@ -37,9 +37,9 @@ const AutoBackups = (props: Props) => {
   const {
     backups_enabled,
     hasLinodesWithoutBackups,
+    isManagedCustomer,
     onChange,
     openBackupsDrawer,
-    isManagedCustomer,
   } = props;
 
   const { classes } = useStyles();

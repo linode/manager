@@ -37,8 +37,6 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = (props) => {
 
   const tabs: NavTab[] = [
     {
-      title: 'Account StackScripts',
-      routeName: `/stackscripts/account`,
       render: (
         <StackScriptPanelContent
           category="account"
@@ -48,10 +46,10 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = (props) => {
           request={getMineAndAccountStackScripts}
         />
       ),
+      routeName: `/stackscripts/account`,
+      title: 'Account StackScripts',
     },
     {
-      title: 'Community StackScripts',
-      routeName: `/stackscripts/community`,
       render: (
         <StackScriptPanelContent
           category="community"
@@ -61,6 +59,8 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = (props) => {
           request={getCommunityStackscripts}
         />
       ),
+      routeName: `/stackscripts/community`,
+      title: 'Community StackScripts',
     },
   ];
 

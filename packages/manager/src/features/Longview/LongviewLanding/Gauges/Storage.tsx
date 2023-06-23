@@ -18,10 +18,10 @@ export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
 
 const StorageGauge: React.FC<CombinedProps> = (props) => {
   const {
+    lastUpdatedError,
+    longviewClientData,
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData,
-    lastUpdatedError,
   } = props;
 
   const storageInBytes = sumStorage(longviewClientData.Disk);

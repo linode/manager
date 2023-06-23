@@ -12,21 +12,21 @@ export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
 
 const AddNewLink = (props: Props) => {
   const {
+    className,
     disabled,
     disabledReason,
     display,
     label,
     onClick,
-    className,
     ...remainingPropsAsTooltipProps
   } = props;
 
   const baseProps = {
+    className,
     disabled,
     onClick,
     text: label,
     title: label,
-    className,
   };
 
   if (!!disabled && !!disabledReason) {

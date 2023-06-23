@@ -27,13 +27,13 @@ export interface Props {
 }
 
 const initialValues: CreateFirewallPayload = {
+  devices: {
+    linodes: [],
+  },
   label: '',
   rules: {
     inbound_policy: 'ACCEPT',
     outbound_policy: 'ACCEPT',
-  },
-  devices: {
-    linodes: [],
   },
 };
 
@@ -44,28 +44,25 @@ const CreateFirewallDrawer = (props: Props) => {
    * We'll eventually want to check the read_write firewall
    * grant here too, but it doesn't exist yet.
    */
-  const { _isRestrictedUser, _hasGrant } = useAccountManagement();
+  const { _hasGrant, _isRestrictedUser } = useAccountManagement();
   const { data: grants } = useGrants();
 
   const { mutateAsync } = useCreateFirewall();
 
   const {
-    values,
     errors,
-    status,
-    handleChange,
     handleBlur,
+    handleChange,
     handleSubmit,
     isSubmitting,
     setFieldValue,
+    status,
+    values,
   } = useFormik({
     initialValues,
-    validationSchema: CreateFirewallSchema,
-    validateOnChange: false,
-    validateOnBlur: false,
     onSubmit(
       values: CreateFirewallPayload,
-      { setSubmitting, setErrors, setStatus }
+      { setErrors, setStatus, setSubmitting }
     ) {
       // Clear drawer error state
       setStatus(undefined);
@@ -108,6 +105,9 @@ const CreateFirewallDrawer = (props: Props) => {
           );
         });
     },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: CreateFirewallSchema,
   });
 
   const userCannotAddFirewall =

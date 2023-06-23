@@ -49,7 +49,7 @@ const LinodeDetailHeader = () => {
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const { data: linode, isLoading, error } = useLinodeQuery(matchedLinodeId);
+  const { data: linode, error, isLoading } = useLinodeQuery(matchedLinodeId);
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     matchedLinodeId
@@ -124,8 +124,8 @@ const LinodeDetailHeader = () => {
 
   const {
     editableLabelError,
-    setEditableLabelError,
     resetEditableLabel,
+    setEditableLabelError,
   } = useEditableLabelState();
 
   const updateLinodeLabel = async (label: string) => {
@@ -181,12 +181,12 @@ const LinodeDetailHeader = () => {
   };
 
   const handlers = {
-    onOpenPowerDialog,
     onOpenDeleteDialog,
-    onOpenResizeDialog,
+    onOpenMigrateDialog,
+    onOpenPowerDialog,
     onOpenRebuildDialog,
     onOpenRescueDialog,
-    onOpenMigrateDialog,
+    onOpenResizeDialog,
   };
 
   if (isLoading) {
@@ -211,13 +211,13 @@ const LinodeDetailHeader = () => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         breadcrumbProps={{
-          pathname: `/linodes/${linode?.label}`,
           onEditHandlers: {
             editableTextTitle: linode?.label ?? '',
-            onEdit: handleLinodeLabelUpdate,
-            onCancel: resetEditableLabel,
             errorText: editableLabelError,
+            onCancel: resetEditableLabel,
+            onEdit: handleLinodeLabelUpdate,
           },
+          pathname: `/linodes/${linode?.label}`,
         }}
         onDocsClick={() => {
           sendLinodeCreateFlowDocsClickEvent('Getting Started');

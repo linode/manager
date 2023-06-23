@@ -13,11 +13,11 @@ describe('AutoBackups simple sanity check', () => {
   it('not managed not auto backups with linodes nobackups', async () => {
     const openDrawer = jest.fn();
     const props = {
-      isManagedCustomer: false,
       backups_enabled: false,
+      hasLinodesWithoutBackups: true,
+      isManagedCustomer: false,
       onChange: jest.fn(),
       openBackupsDrawer: openDrawer,
-      hasLinodesWithoutBackups: true,
     };
     const res = renderWithTheme(<AutoBackups {...props} />);
     expect(res).toPassAxeCheck();

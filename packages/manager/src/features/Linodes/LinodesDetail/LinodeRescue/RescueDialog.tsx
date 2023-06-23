@@ -11,7 +11,7 @@ export interface Props {
 }
 
 export const RescueDialog = (props: Props) => {
-  const { linodeId, open, onClose } = props;
+  const { linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,

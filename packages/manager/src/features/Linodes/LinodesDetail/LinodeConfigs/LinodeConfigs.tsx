@@ -22,22 +22,22 @@ import { BootConfigDialog } from './BootConfigDialog';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  tableCell: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-    fontWeight: 'bold',
+  actionsColumn: {
+    width: '10%',
+  },
+  deviceColumn: {
+    width: '25%',
+  },
+  interfacesColumn: {
+    width: '30%',
   },
   labelColumn: {
     ...theme.applyTableHeaderStyles,
     width: '35%',
   },
-  interfacesColumn: {
-    width: '30%',
-  },
-  deviceColumn: {
-    width: '25%',
-  },
-  actionsColumn: {
-    width: '10%',
+  tableCell: {
+    borderRight: `1px solid ${theme.palette.divider}`,
+    fontWeight: 'bold',
   },
 }));
 
@@ -57,7 +57,7 @@ const LinodeConfigs = () => {
     grants?.linode.find((grant) => grant.id === id)?.permissions ===
       'read_only';
 
-  const { data: configs, isLoading, error } = useAllLinodeConfigsQuery(id);
+  const { data: configs, error, isLoading } = useAllLinodeConfigsQuery(id);
 
   const [
     isLinodeConfigDialogOpen,
@@ -119,12 +119,12 @@ const LinodeConfigs = () => {
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData} scrollToRef={configsPanel}>
             {({
+              count,
               data: paginatedData,
               handlePageChange,
               handlePageSizeChange,
               page,
               pageSize,
-              count,
             }) => {
               return (
                 <React.Fragment>

@@ -26,27 +26,24 @@ interface Props {
 }
 
 const AttachVolumeValidationSchema = object({
-  linode_id: number()
-    .min(0, 'Linode is required.')
-    .required('Linode is required.'),
   config_id: number()
     .min(0, 'Config is required.')
     .required('Config is required.'),
+  linode_id: number()
+    .min(0, 'Linode is required.')
+    .required('Linode is required.'),
 });
 
 export const VolumeAttachmentDrawer = React.memo((props: Props) => {
-  const { open, volumeLabel, disabled, linodeRegion, volumeId } = props;
+  const { disabled, linodeRegion, open, volumeId, volumeLabel } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const { mutateAsync: attachVolume, error } = useAttachVolumeMutation();
+  const { error, mutateAsync: attachVolume } = useAttachVolumeMutation();
 
   const formik = useFormik({
-    initialValues: { linode_id: -1, config_id: -1 },
-    validationSchema: AttachVolumeValidationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
+    initialValues: { config_id: -1, linode_id: -1 },
     async onSubmit(values) {
       await attachVolume({
         volumeId,
@@ -56,6 +53,9 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
         handleClose();
       });
     },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: AttachVolumeValidationSchema,
   });
 
   const { data, isLoading: configsLoading } = useAllLinodeConfigsQuery(
@@ -66,7 +66,7 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
   const configs = data ?? [];
 
   const configChoices = configs.map((config) => {
-    return { value: `${config.id}`, label: config.label };
+    return { label: config.label, value: `${config.id}` };
   });
 
   React.useEffect(() => {

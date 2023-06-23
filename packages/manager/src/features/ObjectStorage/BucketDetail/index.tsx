@@ -34,16 +34,16 @@ export const BucketDetailLanding = React.memo((props: Props) => {
 
   const tabs = [
     {
-      title: 'Objects',
       routeName: `${props.match.url}/objects`,
+      title: 'Objects',
     },
     {
-      title: 'Access',
       routeName: `${props.match.url}/access`,
+      title: 'Access',
     },
     {
-      title: 'SSL/TLS',
       routeName: `${props.match.url}/ssl`,
+      title: 'SSL/TLS',
     },
   ];
 
@@ -63,14 +63,14 @@ export const BucketDetailLanding = React.memo((props: Props) => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
         breadcrumbProps={{
-          pathname: `/object-storage/${bucketName}`,
-          labelOptions: { noCap: true },
           crumbOverrides: [
             {
-              position: 1,
               label: 'Object Storage',
+              position: 1,
             },
           ],
+          labelOptions: { noCap: true },
+          pathname: `/object-storage/${bucketName}`,
         }}
       />
 

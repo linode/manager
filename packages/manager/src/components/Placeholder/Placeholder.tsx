@@ -48,12 +48,8 @@ export const Placeholder = (props: PlaceholderProps) => {
    * pass that into the Placeholder component
    * */
   const IconStyles = {
-    width: '160px',
-    height: '160px',
-    padding: theme.spacing(2),
-    '& .outerCircle': {
-      fill: theme.name === 'light' ? '#fff' : '#000',
-      stroke: theme.bg.offWhite,
+    '& .bucket.insidePath path': {
+      fill: theme.palette.primary.main,
     },
     '& .circle': {
       fill: theme.name === 'light' ? '#fff' : '#000',
@@ -62,9 +58,13 @@ export const Placeholder = (props: PlaceholderProps) => {
       opacity: 0,
       stroke: theme.palette.primary.main,
     },
-    '& .bucket.insidePath path': {
-      fill: theme.palette.primary.main,
+    '& .outerCircle': {
+      fill: theme.name === 'light' ? '#fff' : '#000',
+      stroke: theme.bg.offWhite,
     },
+    height: '160px',
+    padding: theme.spacing(2),
+    width: '160px',
   };
 
   return (
@@ -82,17 +82,17 @@ export const Placeholder = (props: PlaceholderProps) => {
           renderAsSecondary={renderAsSecondary}
           data-qa-placeholder-title
           sx={{
-            textAlign: 'center',
             gridArea: 'title',
+            textAlign: 'center',
           }}
         />
         {hasSubtitle ? (
           <Typography
             variant="h2"
             sx={{
+              color: theme.palette.text.primary,
               gridArea: 'subtitle',
               textAlign: 'center',
-              color: theme.palette.text.primary,
             }}
           >
             {subtitle}
@@ -134,20 +134,20 @@ const StyledIconWrapper = styled('div')<Pick<PlaceholderProps, 'isEntity'>>(
     gridArea: 'icon',
     padding: theme.spacing(2),
     ...(props.isEntity && {
-      borderRadius: '50%',
+      alignItems: 'center',
       backgroundColor: theme.bg.bgPaper,
+      borderRadius: '50%',
       color: theme.color.green,
       display: 'flex',
-      alignItems: 'center',
       justifyContent: 'center',
     }),
   })
 );
 
 const StyledButtonWrapper = styled('div')(({ theme }) => ({
-  gridArea: 'button',
   display: 'flex',
   gap: theme.spacing(2),
+  gridArea: 'button',
   [theme.breakpoints.down('xs')]: {
     flexDirection: 'column',
   },
@@ -156,26 +156,26 @@ const StyledButtonWrapper = styled('div')(({ theme }) => ({
 const StyledLinksSection = styled('div')<
   Pick<PlaceholderProps, 'showTransferDisplay'>
 >(({ theme, ...props }) => ({
-  gridArea: 'links',
   borderTop: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
+  gridArea: 'links',
   paddingTop: '38px',
 
   ...(props.showTransferDisplay && {
+    borderBottom: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
     paddingBottom: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       paddingBottom: theme.spacing(4),
     },
-    borderBottom: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
   }),
 }));
 
 const StyledCopy = styled('div', {
   label: 'StyledCopy',
 })<Pick<PlaceholderProps, 'descriptionMaxWidth'>>(({ theme, ...props }) => ({
-  textAlign: 'center',
   gridArea: 'copy',
-  minWidth: 'min-content',
   maxWidth: props.descriptionMaxWidth ? props.descriptionMaxWidth : '75%',
+  minWidth: 'min-content',
+  textAlign: 'center',
   [theme.breakpoints.down('md')]: {
     maxWidth: 'none',
   },
@@ -183,12 +183,16 @@ const StyledCopy = styled('div', {
 
 const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
   ({ theme, ...props }) => ({
+    '& .bucket.insidePath path': {
+      fill: theme.palette.primary.main,
+    },
+    // @TODO: Check! These were in the root of the makeStyles function...
+    '& .insidePath path': {
+      animation: `${fadeIn} .2s ease-in-out forwards .3s`,
+      opacity: 0,
+      stroke: theme.palette.primary.main,
+    },
     display: 'grid',
-    gridTemplateColumns: 'repeat(5, 1fr) 35% 35% repeat(5, 1fr)',
-    gridTemplateRows:
-      props.showTransferDisplay && props.linksSection === undefined
-        ? 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 40px'
-        : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 64px min-content',
     gridTemplateAreas:
       props.showTransferDisplay && props.linksSection === undefined
         ? `
@@ -215,7 +219,13 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
         ". . . . . . . . . . . ."
         ". . . links links links links links links . . ."
       `,
+    gridTemplateColumns: 'repeat(5, 1fr) 35% 35% repeat(5, 1fr)',
+    gridTemplateRows:
+      props.showTransferDisplay && props.linksSection === undefined
+        ? 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 40px'
+        : 'max-content 12px max-content 7px max-content 15px max-content 24px max-content 64px min-content',
     justifyItems: 'center',
+
     padding: props.showTransferDisplay
       ? `${theme.spacing(4)} 0`
       : `${theme.spacing(2)} 0`,
@@ -223,16 +233,6 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
       padding: props.showTransferDisplay
         ? `${theme.spacing(10)} 0 ${theme.spacing(4)}`
         : `${theme.spacing(10)} 0`,
-    },
-
-    // @TODO: Check! These were in the root of the makeStyles function...
-    '& .insidePath path': {
-      opacity: 0,
-      animation: `${fadeIn} .2s ease-in-out forwards .3s`,
-      stroke: theme.palette.primary.main,
-    },
-    '& .bucket.insidePath path': {
-      fill: theme.palette.primary.main,
     },
   })
 );

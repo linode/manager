@@ -90,8 +90,8 @@ export const mockGetImage = (
   return cy.intercept('GET', apiMatcher(`images/${encodedId}*`), (req) => {
     return req.reply(
       imageFactory.build({
-        label,
         id,
+        label,
         status,
       })
     );

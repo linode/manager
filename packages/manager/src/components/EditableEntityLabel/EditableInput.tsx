@@ -20,25 +20,54 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
-  root: {
-    padding: '5px 8px',
-    display: 'inline-block',
-    transition: theme.transitions.create(['opacity']),
-    wordBreak: 'break-all',
-    textDecoration: 'inherit',
-    lineHeight: 1,
+  button: {
+    background: 'transparent !important',
+    height: 24,
+    marginTop: 5,
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+    width: 24,
+  },
+  close: {
+    fontSize: 26,
   },
   container: {
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
     position: 'relative',
   },
   containerEditing: {
+    alignItems: 'flex-start',
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
     position: 'relative',
+  },
+  edit: {
+    border: '1px solid transparent',
+    fontSize: 22,
+  },
+  editIcon: {
+    marginTop: '0 !important',
+    position: 'absolute',
+    right: 10,
+    [theme.breakpoints.up('sm')]: {
+      '&:focus': {
+        opacity: 1,
+      },
+      opacity: 0,
+    },
+  },
+  headline: {
+    ...theme.typography.h1,
+  },
+  icon: {
+    '&:hover, &:focus': {
+      color: theme.palette.primary.light,
+    },
+    color: theme.palette.text.primary,
+    margin: '0 10px',
   },
   initial: {
     '&:hover, &:focus': {
@@ -46,79 +75,50 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 1,
       },
       '& $icon': {
-        color: theme.color.grey1,
         '&:hover': {
           color: theme.color.black,
         },
+        color: theme.color.grey1,
       },
     },
   },
-  edit: {
-    fontSize: 22,
-    border: '1px solid transparent',
-  },
-  textField: {
-    opacity: 0,
-    animation: '$fadeIn .3s ease-in-out forwards',
-    margin: 0,
+  input: {
+    padding: '5px 8px',
+    ...theme.typography.body1,
   },
   inputRoot: {
-    maxWidth: 170,
-    borderColor: `${theme.palette.primary.main} !important`,
     backgroundColor: 'transparent',
+    borderColor: `${theme.palette.primary.main} !important`,
     boxShadow: 'none',
+    maxWidth: 170,
     minHeight: 40,
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
       width: '100%',
     },
   },
-  button: {
-    padding: 0,
-    height: 24,
-    width: 24,
-    minWidth: 'auto',
-    minHeight: 'auto',
-    marginTop: 5,
-    background: 'transparent !important',
+  root: {
+    display: 'inline-block',
+    lineHeight: 1,
+    padding: '5px 8px',
+    textDecoration: 'inherit',
+    transition: theme.transitions.create(['opacity']),
+    wordBreak: 'break-all',
   },
-  icon: {
-    margin: '0 10px',
-    color: theme.palette.text.primary,
-    '&:hover, &:focus': {
-      color: theme.palette.primary.light,
-    },
+  save: {
+    fontSize: 26,
   },
   saveButton: {
     marginLeft: 8,
     marginRight: 8,
   },
-  save: {
-    fontSize: 26,
-  },
-  close: {
-    fontSize: 26,
-  },
-  input: {
-    padding: '5px 8px',
-    ...theme.typography.body1,
-  },
-  headline: {
-    ...theme.typography.h1,
+  textField: {
+    animation: '$fadeIn .3s ease-in-out forwards',
+    margin: 0,
+    opacity: 0,
   },
   title: {
     ...theme.typography.h1,
-  },
-  editIcon: {
-    position: 'absolute',
-    marginTop: '0 !important',
-    right: 10,
-    [theme.breakpoints.up('sm')]: {
-      opacity: 0,
-      '&:focus': {
-        opacity: 1,
-      },
-    },
   },
 }));
 
@@ -145,18 +145,18 @@ type FinalProps = PassThroughProps;
 
 export const EditableInput: React.FC<FinalProps> = (props) => {
   const {
-    errorText,
-    editable,
-    onEdit,
-    openForEdit,
     cancelEdit,
+    className,
+    editable,
+    errorText,
+    inputText,
     isEditing,
+    loading,
+    onEdit,
     onInputChange,
+    openForEdit,
     text,
     typeVariant,
-    className,
-    inputText,
-    loading,
     ...rest
   } = props;
 
@@ -222,8 +222,8 @@ export const EditableInput: React.FC<FinalProps> = (props) => {
           inputProps={{
             className: classNames({
               [classes.headline]: typeVariant === 'h1',
-              [classes.title]: typeVariant === 'h2',
               [classes.input]: true,
+              [classes.title]: typeVariant === 'h2',
             }),
           }}
           // eslint-disable-next-line jsx-a11y/no-autofocus

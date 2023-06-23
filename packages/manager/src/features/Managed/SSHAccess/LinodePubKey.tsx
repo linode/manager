@@ -18,82 +18,82 @@ const DOC_URL =
   'https://www.linode.com/docs/platform/linode-managed/#adding-the-public-key';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2.5),
-    minHeight: '112px',
-  },
-  errorState: {
-    padding: `calc(${theme.spacing(2)} - 1px)`,
-    '& > div': {
-      padding: 0,
-    },
-  },
-  loadingState: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  spinner: {
-    padding: theme.spacing(5),
-  },
-  icon: {
-    marginRight: theme.spacing(1),
-    marginBottom: `calc(${theme.spacing(1)} - 2px)`,
-    stroke: theme.color.offBlack,
-  },
-  sshKeyContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
-  },
-  sshKey: {
-    // NOTE A:
-    // I'm not confident about this CSS, but it works on recent versions
-    // of Chrome, Firefox, Safari, and Edge. If we run into inconsistencies
-    // in other environments, consider removing it and using the fallback
-    // provided in the component below.
-    display: '-webkit-box',
-    WebkitLineClamp: 3,
-    WebkitBoxOrient: 'vertical',
-    transition: 'all 1s ease-in',
-    overflow: 'hidden',
-    wordBreak: 'break-all',
-    fontFamily: '"Ubuntu Mono", monospace, sans-serif',
-    color: theme.color.grey1,
-    fontSize: '0.9rem',
-    [theme.breakpoints.up('md')]: {
-      padding: `0 ${theme.spacing(4)} 0 ${theme.spacing(1)}`,
-    },
-    [theme.breakpoints.up('lg')]: {
-      paddingRight: theme.spacing(6),
-    },
-    [theme.breakpoints.up('xl')]: {
-      paddingRight: theme.spacing(4),
-      paddingLeft: theme.spacing(4),
-    },
-    '&:hover': {
-      transition: 'all 1s ease-in',
-      WebkitLineClamp: 'unset',
-    },
-  },
   copyToClipboard: {
+    '& > button': {
+      marginTop: theme.spacing(1),
+      minWidth: 190,
+    },
     alignItems: 'flex-start',
     display: 'flex',
     justifyContent: 'flex-start',
     [theme.breakpoints.up('sm')]: {
       justifyContent: 'flex-end',
     },
-    '& > button': {
-      minWidth: 190,
-      marginTop: theme.spacing(1),
+  },
+  errorState: {
+    '& > div': {
+      padding: 0,
     },
+    padding: `calc(${theme.spacing(2)} - 1px)`,
+  },
+  icon: {
+    marginBottom: `calc(${theme.spacing(1)} - 2px)`,
+    marginRight: theme.spacing(1),
+    stroke: theme.color.offBlack,
+  },
+  loadingState: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  root: {
+    minHeight: '112px',
+    padding: theme.spacing(2.5),
+  },
+  spinner: {
+    padding: theme.spacing(5),
+  },
+  sshKey: {
+    // NOTE A:
+    // I'm not confident about this CSS, but it works on recent versions
+    // of Chrome, Firefox, Safari, and Edge. If we run into inconsistencies
+    // in other environments, consider removing it and using the fallback
+    '&:hover': {
+      WebkitLineClamp: 'unset',
+      transition: 'all 1s ease-in',
+    },
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 3,
+    color: theme.color.grey1,
+    // provided in the component below.
+    display: '-webkit-box',
+    fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+    fontSize: '0.9rem',
+    overflow: 'hidden',
+    [theme.breakpoints.up('lg')]: {
+      paddingRight: theme.spacing(6),
+    },
+    [theme.breakpoints.up('md')]: {
+      padding: `0 ${theme.spacing(4)} 0 ${theme.spacing(1)}`,
+    },
+    [theme.breakpoints.up('xl')]: {
+      paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
+    },
+    transition: 'all 1s ease-in',
+    wordBreak: 'break-all',
+  },
+  sshKeyContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    flex: 1,
   },
 }));
 
 const LinodePubKey: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, isLoading, error } = useManagedSSHKey();
+  const { data, error, isLoading } = useManagedSSHKey();
 
   const [copied, setCopied] = React.useState<boolean>(false);
   const timeout = React.useRef<NodeJS.Timeout>();

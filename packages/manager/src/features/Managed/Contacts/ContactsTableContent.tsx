@@ -24,11 +24,11 @@ export type CombinedProps = Props;
 export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
   const {
     contacts,
-    loading,
-    lastUpdated,
-    openDrawer,
-    openDialog,
     error,
+    lastUpdated,
+    loading,
+    openDialog,
+    openDrawer,
   } = props;
 
   if (loading && lastUpdated === 0) {

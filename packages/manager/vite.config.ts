@@ -6,14 +6,14 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
-  plugins: [react(), svgr({ exportAsDefault: true })],
   envPrefix: 'REACT_APP_',
-  server: {
-    port: 3000,
-  },
+  plugins: [react(), svgr({ exportAsDefault: true })],
   resolve: {
     alias: {
       src: `${__dirname}/src`,
     },
+  },
+  server: {
+    port: 3000,
   },
 });

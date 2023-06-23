@@ -54,6 +54,35 @@ type ClassNames =
   | 'setAll';
 
 const styles = (theme: Theme) => ({
+  globalRow: {
+    padding: `${theme.spacing(1)} 0`,
+  },
+  globalSection: {
+    marginTop: theme.spacing(2),
+  },
+  section: {
+    marginTop: theme.spacing(2),
+    paddingBottom: 0,
+  },
+  setAll: {
+    '& .react-select__menu, & .input': {
+      marginLeft: theme.spacing(1),
+      right: 0,
+      textAlign: 'left' as const,
+      width: 125,
+    },
+    '& .react-select__menu-list': {
+      width: '100%',
+    },
+    '& > div': {
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+    '& label': {
+      marginTop: 6,
+    },
+  },
   title: {
     [theme.breakpoints.down('md')]: {
       paddingLeft: theme.spacing(),
@@ -65,35 +94,6 @@ const styles = (theme: Theme) => ({
   unrestrictedRoot: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(3),
-  },
-  globalSection: {
-    marginTop: theme.spacing(2),
-  },
-  globalRow: {
-    padding: `${theme.spacing(1)} 0`,
-  },
-  section: {
-    marginTop: theme.spacing(2),
-    paddingBottom: 0,
-  },
-  setAll: {
-    '& > div': {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-    },
-    '& label': {
-      marginTop: 6,
-    },
-    '& .react-select__menu, & .input': {
-      width: 125,
-      right: 0,
-      marginLeft: theme.spacing(1),
-      textAlign: 'left' as const,
-    },
-    '& .react-select__menu-list': {
-      width: '100%',
-    },
   },
 });
 
@@ -130,11 +130,11 @@ type CombinedProps = Props & WithSnackbarProps & WithQueryClientProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
-    loadingGrants: false,
-    loading: true,
-    setAllPerm: 'null',
-    isSavingGlobal: false,
     isSavingEntity: false,
+    isSavingGlobal: false,
+    loading: true,
+    loadingGrants: false,
+    setAllPerm: 'null',
   };
 
   globalBooleanPerms = [
@@ -175,7 +175,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         }
         return acc;
       },
-      { tabs: [], showTabs: false }
+      { showTabs: false, tabs: [] }
     );
 
   getUserGrants = () => {
@@ -188,9 +188,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
             this.setState({
               grants,
-              originalGrants: grants,
               loading: false,
               loadingGrants: false,
+              originalGrants: grants,
               restricted: true,
               showTabs,
               tabs,
@@ -228,7 +228,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   savePermsType = (type: string) => () => {
     this.setState({ errors: undefined });
-    const { username, clearNewUser } = this.props;
+    const { clearNewUser, username } = this.props;
     const { grants } = this.state;
     if (!username || !(grants && grants[type])) {
       return this.setState({
@@ -263,11 +263,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         })
         .catch((errResponse) => {
           this.setState({
-            isSavingGlobal: false,
             errors: getAPIErrorOrDefault(
               errResponse,
               'Error while updating global permissions for this user. Please try again later.'
             ),
+            isSavingGlobal: false,
           });
           scrollErrorIntoView();
         });
@@ -282,12 +282,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { grants } = this.state;
     if (!username || !grants) {
       return this.setState({
-        isSavingEntity: false,
         errors: [
           {
             reason: `Can\'t set entity-specific permissions at this time. Please try again later`,
           },
         ],
+        isSavingEntity: false,
       });
     }
 
@@ -319,11 +319,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       })
       .catch((errResponse) => {
         this.setState({
-          isSavingEntity: false,
           errors: getAPIErrorOrDefault(
             errResponse,
             'Error while updating entity-specific permissions for this user. Please try again later'
           ),
+          isSavingEntity: false,
         });
         scrollErrorIntoView();
       });
@@ -395,18 +395,18 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderGlobalPerm = (perm: string, checked: boolean) => {
     const classes = withStyles.getClasses(this.props);
     const permDescriptionMap = {
+      add_databases: 'Can add Databases to this account ($)',
+      add_domains: 'Can add Domains using the DNS Manager',
+      add_firewalls: 'Can add Firewalls to this account',
+      add_images: 'Can create frozen Images under this account ($)',
       add_linodes: 'Can add Linodes to this account ($)',
-      add_nodebalancers: 'Can add NodeBalancers to this account ($)',
       add_longview: 'Can add Longview clients to this account',
+      add_nodebalancers: 'Can add NodeBalancers to this account ($)',
+      add_stackscripts: 'Can create StackScripts under this account',
+      add_volumes: 'Can add Block Storage Volumes to this account ($)',
+      cancel_account: 'Can cancel the entire account',
       longview_subscription:
         'Can modify this account\u{2019}s Longview subscription ($)',
-      add_domains: 'Can add Domains using the DNS Manager',
-      add_stackscripts: 'Can create StackScripts under this account',
-      add_images: 'Can create frozen Images under this account ($)',
-      add_volumes: 'Can add Block Storage Volumes to this account ($)',
-      add_firewalls: 'Can add Firewalls to this account',
-      cancel_account: 'Can cancel the entire account',
-      add_databases: 'Can add Databases to this account ($)',
     };
     return (
       <Grid key={perm} xs={12} sm={6} className="py0">
@@ -590,7 +590,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   renderSpecificPerms = () => {
     const classes = withStyles.getClasses(this.props);
-    const { grants, setAllPerm, isSavingEntity } = this.state;
+    const { grants, isSavingEntity, setAllPerm } = this.state;
 
     const permOptions = [
       { label: 'None', value: 'null' },
@@ -704,7 +704,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderBody = () => {
     const classes = withStyles.getClasses(this.props);
     const { currentUser, username } = this.props;
-    const { restricted, errors } = this.state;
+    const { errors, restricted } = this.state;
     const hasErrorFor = getAPIErrorsFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
 

@@ -63,13 +63,13 @@ export const AUTO_ENROLL_TOGGLE = '@manager/backups/AUTO_ENROLL_TOGGLE';
 export const handleEnable: ActionCreator = () => ({ type: ENABLE });
 
 export const handleEnableSuccess: ActionCreator = (data: number[]) => ({
-  type: ENABLE_SUCCESS,
   data,
+  type: ENABLE_SUCCESS,
 });
 
 export const handleEnableError: ActionCreator = (data: Accumulator) => ({
-  type: ENABLE_ERROR,
   data,
+  type: ENABLE_ERROR,
 });
 
 export const handleResetSuccess: ActionCreator = () => ({
@@ -89,8 +89,8 @@ export const handleAutoEnrollSuccess: ActionCreator = () => ({
 });
 
 export const handleAutoEnrollError: ActionCreator = (error: string) => ({
-  type: AUTO_ENROLL_ERROR,
   data: error,
+  type: AUTO_ENROLL_ERROR,
 });
 
 export const handleAutoEnrollToggle: ActionCreator = () => ({
@@ -99,14 +99,14 @@ export const handleAutoEnrollToggle: ActionCreator = () => ({
 
 // DEFAULT STATE
 export const defaultState: State = {
-  enabling: false,
-  error: undefined,
-  open: false,
-  enableErrors: [],
-  enableSuccess: false,
   autoEnroll: false,
   autoEnrollError: undefined,
+  enableErrors: [],
+  enableSuccess: false,
+  enabling: false,
   enrolling: false,
+  error: undefined,
+  open: false,
   updatedCount: 0,
 };
 
@@ -119,13 +119,13 @@ const reducer: Reducer<State> = (
     case OPEN:
       return {
         ...state,
+        autoEnroll: true,
+        autoEnrollError: undefined,
+        enableErrors: [],
+        error: undefined,
         lastUpdated: Date.now(),
         open: true,
-        error: undefined,
-        enableErrors: [],
-        autoEnrollError: undefined,
         updatedCount: 0,
-        autoEnroll: true,
       };
 
     case CLOSE:
@@ -134,45 +134,45 @@ const reducer: Reducer<State> = (
     case ENABLE:
       return {
         ...state,
-        enabling: true,
         enableErrors: [],
         enableSuccess: false,
+        enabling: true,
         lastUpdated: Date.now(),
       };
 
     case ENABLE_SUCCESS:
       return {
         ...state,
+        data: action.data,
+        enableSuccess: true,
         enabling: false,
         lastUpdated: Date.now(),
-        enableSuccess: true,
-        data: action.data,
         updatedCount: action.data.length,
       };
 
     case ENABLE_ERROR:
       return {
         ...state,
-        enabling: false,
-        lastUpdated: Date.now(),
         enableErrors: action.data.errors,
-        updatedCount: action.data.success.length,
+        enabling: false,
         error: action.error,
+        lastUpdated: Date.now(),
+        updatedCount: action.data.success.length,
       };
 
     case RESET_ERRORS:
       return {
         ...state,
-        lastUpdated: Date.now(),
         enableErrors: [],
         error: undefined,
+        lastUpdated: Date.now(),
       };
 
     case RESET_SUCCESS:
       return {
         ...state,
-        lastUpdated: Date.now(),
         enableSuccess: false,
+        lastUpdated: Date.now(),
         updatedCount: 0,
       };
 
@@ -263,8 +263,8 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
 
   dispatch(handleEnable());
   Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, {
-    success: [],
     errors: [],
+    success: [],
   })
     .then((response) => {
       if (response.errors && !isEmpty(response.errors)) {
@@ -316,12 +316,6 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = ({
   queryClient.executeMutation({
     mutationFn: updateAccountSettings,
     mutationKey: queryKey,
-    variables: { backups_enabled: shouldEnableBackups },
-    onSuccess: (data) => {
-      updateAccountSettingsData(data, queryClient);
-      dispatch(handleAutoEnrollSuccess());
-      dispatch(enableAllBackups());
-    },
     onError: (errors: APIError[]) => {
       const finalError = getErrorStringOrDefault(
         errors,
@@ -329,5 +323,11 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = ({
       );
       dispatch(handleAutoEnrollError(finalError));
     },
+    onSuccess: (data) => {
+      updateAccountSettingsData(data, queryClient);
+      dispatch(handleAutoEnrollSuccess());
+      dispatch(enableAllBackups());
+    },
+    variables: { backups_enabled: shouldEnableBackups },
   });
 };

@@ -60,19 +60,19 @@ const LinodesDetailNavigation = () => {
       title: 'Network',
     },
     {
+      hidden: isBareMetalInstance,
       routeName: `${url}/storage`,
       title: 'Storage',
-      hidden: isBareMetalInstance,
     },
     {
+      hidden: isBareMetalInstance,
       routeName: `${url}/configurations`,
       title: 'Configurations',
-      hidden: isBareMetalInstance,
     },
     {
+      hidden: isBareMetalInstance,
       routeName: `${url}/backup`,
       title: 'Backups',
-      hidden: isBareMetalInstance,
     },
     {
       routeName: `${url}/activity`,
@@ -116,7 +116,7 @@ const LinodesDetailNavigation = () => {
           tabs[getIndex()]?.title ?? 'Detail View'
         }`}
       />
-      <SMTPRestrictionText supportLink={{ label: linode?.label, id }}>
+      <SMTPRestrictionText supportLink={{ id, label: linode?.label }}>
         {({ text }) =>
           text !== null ? (
             <DismissibleBanner

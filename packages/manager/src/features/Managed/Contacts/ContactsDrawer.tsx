@@ -31,17 +31,17 @@ interface Props {
 type CombinedProps = Props;
 
 const emptyContactPayload: ContactPayload = {
-  name: '',
   email: '',
+  group: '',
+  name: '',
   phone: {
     primary: '',
     secondary: '',
   },
-  group: '',
 };
 
 const ContactsDrawer: React.FC<CombinedProps> = (props) => {
-  const { isOpen, closeDrawer, mode, contact, groups } = props;
+  const { closeDrawer, contact, groups, isOpen, mode } = props;
 
   const isEditing = mode === 'edit' && contact;
 
@@ -59,7 +59,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
 
   const onSubmit = (
     values: ContactPayload,
-    { setErrors, setSubmitting, setStatus }: FormikHelpers<ContactPayload>
+    { setErrors, setStatus, setSubmitting }: FormikHelpers<ContactPayload>
   ) => {
     setStatus(undefined);
 
@@ -112,14 +112,14 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
         onSubmit={onSubmit}
       >
         {({
-          values,
           errors,
-          status,
-          handleChange,
           handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
           setFieldValue,
+          status,
+          values,
         }) => {
           const primaryPhoneError = pathOr('', ['phone', 'primary'], errors);
           // prettier-ignore
@@ -188,8 +188,8 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                   value={
                     values.group
                       ? {
-                          value: values.group,
                           label: values.group,
+                          value: values.group,
                         }
                       : null
                   }

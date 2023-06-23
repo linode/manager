@@ -41,7 +41,7 @@ const AppWrapper = () => (
   <>
     <SplashScreen />
     <SnackBar
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       maxSnack={3}
       autoHideDuration={4000}
       data-qa-toast

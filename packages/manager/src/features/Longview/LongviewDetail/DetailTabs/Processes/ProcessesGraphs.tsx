@@ -20,12 +20,12 @@ import {
 import { Process } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  graphWrap: {
+    marginTop: theme.spacing(3),
+  },
   root: {
     marginTop: theme.spacing(1.25),
     padding: theme.spacing(3),
-  },
-  graphWrap: {
-    marginTop: theme.spacing(3),
   },
   title: {
     [theme.breakpoints.down('lg')]: {
@@ -53,16 +53,16 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
 
   const {
     error,
+    isToday,
     processesData,
     processesLoading,
     selectedProcess,
-    timezone,
-    isToday,
-    time,
     theme,
+    time,
+    timezone,
   } = props;
 
-  const { start, end } = time;
+  const { end, start } = time;
 
   const name = selectedProcess?.name ?? '';
   const user = selectedProcess?.user ?? '';
@@ -98,10 +98,10 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
   ]);
 
   const commonGraphProps = {
-    timezone,
-    showToday: isToday,
-    loading: processesLoading,
     error,
+    loading: processesLoading,
+    showToday: isToday,
+    timezone,
   };
 
   return (
@@ -117,10 +117,10 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
           ariaLabel="CPU Usage Graph"
           data={[
             {
+              backgroundColor: theme.graphs.cpu.system,
+              borderColor: 'transparent',
               data: _convertData(cpu, start, end),
               label: 'CPU',
-              borderColor: 'transparent',
-              backgroundColor: theme.graphs.cpu.system,
             },
           ]}
           {...commonGraphProps}
@@ -134,10 +134,10 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
             formatTooltip={(value: number) => readableBytes(value).formatted}
             data={[
               {
+                backgroundColor: theme.graphs.memory.used,
+                borderColor: 'transparent',
                 data: _convertData(memory, start, end, formatMemory),
                 label: 'RAM',
-                borderColor: 'transparent',
-                backgroundColor: theme.graphs.memory.used,
               },
             ]}
             {...commonGraphProps}
@@ -150,10 +150,10 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
             ariaLabel="Process Count Graph"
             data={[
               {
+                backgroundColor: theme.graphs.processCount,
+                borderColor: 'transparent',
                 data: _convertData(count, start, end, formatCount),
                 label: 'Count',
-                borderColor: 'transparent',
-                backgroundColor: theme.graphs.processCount,
               },
             ]}
             {...commonGraphProps}
@@ -170,16 +170,16 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
             nativeLegend
             data={[
               {
-                label: 'Write',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.diskIO.write,
+                borderColor: 'transparent',
                 data: _convertData(iowritekbytes, start, end, formatDisk),
+                label: 'Write',
               },
               {
-                label: 'Read',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.diskIO.read,
+                borderColor: 'transparent',
                 data: _convertData(ioreadkbytes, start, end, formatDisk),
+                label: 'Read',
               },
             ]}
             {...commonGraphProps}

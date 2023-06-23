@@ -47,7 +47,7 @@ interface Values {
 }
 
 const AddCreditCardForm = (props: Props) => {
-  const { onClose, disabled } = props;
+  const { disabled, onClose } = props;
   const [error, setError] = React.useState<string>();
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -57,8 +57,8 @@ const AddCreditCardForm = (props: Props) => {
   const addCreditCard = async (
     { card_number, cvv, expiry_month, expiry_year }: Values,
     {
-      setSubmitting,
       setFieldError,
+      setSubmitting,
     }: {
       setSubmitting: (isSubmitting: boolean) => void;
       setFieldError: (field: string, reason: string) => void;
@@ -69,14 +69,14 @@ const AddCreditCardForm = (props: Props) => {
 
     try {
       await addPaymentMethod({
-        type: 'credit_card',
-        is_default: true,
         data: {
           card_number,
           cvv,
           expiry_month: Number(expiry_month),
           expiry_year: Number(expiry_year),
         },
+        is_default: true,
+        type: 'credit_card',
       });
       enqueueSnackbar('Successfully added Credit Card', {
         variant: 'success',
@@ -98,25 +98,25 @@ const AddCreditCardForm = (props: Props) => {
   // });
 
   const {
-    values,
     errors,
-    touched,
-    isSubmitting,
     handleChange,
     handleSubmit,
+    isSubmitting,
     setFieldValue,
+    touched,
+    values,
   } = useFormik({
     initialValues: {
-      card_number: '',
-      expiry_month: '',
-      expiry_year: '',
-      cvv: '',
       address: '',
       address2: '',
+      card_number: '',
       city: '',
+      country: '',
+      cvv: '',
+      expiry_month: '',
+      expiry_year: '',
       state: '',
       zip: '',
-      country: '',
     },
     onSubmit: addCreditCard,
     validate: async (values) => {

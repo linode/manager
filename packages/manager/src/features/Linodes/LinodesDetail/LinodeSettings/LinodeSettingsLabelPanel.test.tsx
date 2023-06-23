@@ -15,7 +15,7 @@ describe('LinodeSettingsLabelPanel', () => {
       })
     );
 
-    const { getByText, getByLabelText } = renderWithTheme(
+    const { getByLabelText, getByText } = renderWithTheme(
       <LinodeSettingsLabelPanel linodeId={1} />
     );
 

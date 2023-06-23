@@ -15,10 +15,10 @@ interface Props {
 }
 
 export const DeleteConfigDialog = (props: Props) => {
-  const { open, onClose, linodeId, config } = props;
+  const { config, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useLinodeConfigDeleteMutation(
+  const { error, isLoading, mutateAsync } = useLinodeConfigDeleteMutation(
     linodeId,
     config?.id ?? -1
   );

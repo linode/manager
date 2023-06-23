@@ -10,9 +10,9 @@ import {
 } from './utilities';
 
 const linodeImage = imageFactory.build({
-  vendor: 'linode',
   id: 'linode/debian10',
   label: 'Debian 10',
+  vendor: 'linode',
 });
 const images = normalizeEntities(imageFactory.buildList(10));
 images['linode/debian10'] = linodeImage;
@@ -59,15 +59,15 @@ describe('getRegionIDFromLinodeID', () => {
 describe('Marketplace cluster pricing', () => {
   it('should return the monthly and hourly price multipled by the number of nodes', () => {
     expect(getMonthlyAndHourlyNodePricing(30, 0.045, 3)).toEqual({
-      monthlyPrice: 90,
       hourlyPrice: 0.135,
+      monthlyPrice: 90,
     });
   });
 
   it('should round the hourly price to 3 digits', () => {
     expect(getMonthlyAndHourlyNodePricing(30, 0.045, 5)).toEqual({
-      monthlyPrice: 150,
       hourlyPrice: 0.225,
+      monthlyPrice: 150,
     });
   });
 });

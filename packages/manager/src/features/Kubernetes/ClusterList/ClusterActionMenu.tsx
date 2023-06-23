@@ -31,16 +31,16 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = (
 
   const actions: Action[] = [
     {
-      title: 'Download kubeconfig',
       onClick: () => {
         downloadKubeConfig();
       },
+      title: 'Download kubeconfig',
     },
     {
-      title: 'Delete',
       onClick: () => {
         openDialog();
       },
+      title: 'Delete',
     },
   ];
 

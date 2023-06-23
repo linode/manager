@@ -25,7 +25,7 @@ export interface Props {
 }
 
 export const RenameDiskDrawer = (props: Props) => {
-  const { disk, open, onClose, linodeId } = props;
+  const { disk, linodeId, onClose, open } = props;
 
   const { mutateAsync: updateDisk, reset } = useLinodeDiskUpdateMutation(
     linodeId,
@@ -33,12 +33,10 @@ export const RenameDiskDrawer = (props: Props) => {
   );
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       label: disk?.label ?? '',
     },
-    validationSchema: RenameDiskSchema,
-    validateOnChange: true,
-    enableReinitialize: true,
     async onSubmit(values, helpers) {
       try {
         await updateDisk(values);
@@ -47,6 +45,8 @@ export const RenameDiskDrawer = (props: Props) => {
         handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
       }
     },
+    validateOnChange: true,
+    validationSchema: RenameDiskSchema,
   });
 
   React.useEffect(() => {

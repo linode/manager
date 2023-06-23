@@ -9,23 +9,23 @@ import type { FileUploadProps } from './FileUpload';
 export const StyledRootContainer = styled('div', {
   label: 'StyledRootContainer',
 })<Partial<FileUploadProps>>(({ theme, ...props }) => ({
-  marginTop: theme.spacing(0.5),
-  marginBottom: theme.spacing(0.5),
-  position: 'relative',
-  cursor: props.error ? 'pointer' : 'default',
   '&:last-child ': {
     [`&.${useStyles().classes.overwriteNotice}`]: {
       borderBottom: 0,
       paddingBottom: theme.spacing(1),
     },
   },
+  cursor: props.error ? 'pointer' : 'default',
+  marginBottom: theme.spacing(0.5),
+  marginTop: theme.spacing(0.5),
+  position: 'relative',
 }));
 
 export const StyledContainer = styled('div', {
   label: 'StyledContainer',
 })(({ theme }) => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   justifyContent: 'space-between',
   padding: theme.spacing(),
   position: 'relative',
@@ -35,16 +35,16 @@ export const StyledContainer = styled('div', {
 export const StyledLeftWrapper = styled('div', {
   label: 'StyledLeftWrapper',
 })(({ theme }) => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   marginRight: theme.spacing(),
 }));
 
 export const StyledRightWrapper = styled('div', {
   label: 'StyledRightWrapper',
 })(() => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
 }));
 
 export const StyledUploadPending = styled(UploadPending, {
@@ -63,11 +63,11 @@ export const StyledFileSizeTypography = styled(Typography, {
 export const StyledActionsContainer = styled('div', {
   label: 'StyledActionsContainer',
 })(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
   '& button': {
     marginLeft: theme.spacing(),
   },
+  display: 'flex',
+  justifyContent: 'center',
 }));
 
 export const useStyles = makeStyles()((theme: Theme) => ({
@@ -75,19 +75,19 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.name === 'light' ? '#cce2ff' : '#243142',
   },
   error: {
-    color: theme.palette.error.dark,
     '& g': {
       stroke: theme.palette.error.dark,
     },
+    color: theme.palette.error.dark,
   },
   iconRight: {
     color: theme.textColors.headlineStatic,
   },
   overwriteNotice: {
-    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
     borderBottom: `1px solid ${theme.color.grey2}`,
+    display: 'flex',
+    justifyContent: 'space-between',
     padding: theme.spacing(),
     paddingTop: 0,
     position: 'relative',
@@ -97,8 +97,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.bg.app,
     borderRadius: 3,
     height: theme.spacing(5.25),
-    width: '100%',
     position: 'absolute',
+    width: '100%',
     zIndex: 1,
   },
 }));

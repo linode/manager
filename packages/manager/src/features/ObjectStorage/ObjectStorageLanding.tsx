@@ -48,8 +48,8 @@ export const ObjectStorageLanding = () => {
   const { data: objectStorageClusters } = useObjectStorageClusters();
   const {
     data: objectStorageBucketsResponse,
-    isLoading: areBucketsLoading,
     error: bucketsErrors,
+    isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(objectStorageClusters);
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
@@ -57,12 +57,12 @@ export const ObjectStorageLanding = () => {
 
   const tabs = [
     {
-      title: 'Buckets',
       routeName: `/object-storage/buckets`,
+      title: 'Buckets',
     },
     {
-      title: 'Access Keys',
       routeName: `/object-storage/access-keys`,
+      title: 'Access Keys',
     },
   ];
 
@@ -179,8 +179,8 @@ export const BillingNotice = React.memo(() => {
       important
       preferenceKey={NOTIFICATION_KEY}
       options={{
-        label: NOTIFICATION_KEY,
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
+        label: NOTIFICATION_KEY,
       }}
     >
       <Typography variant="body1">

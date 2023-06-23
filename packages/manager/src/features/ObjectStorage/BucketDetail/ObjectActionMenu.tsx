@@ -18,21 +18,21 @@ export const ObjectActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { handleClickDownload, handleClickDelete, objectName } = props;
+  const { handleClickDelete, handleClickDownload, objectName } = props;
 
   const actions: Action[] = [
     {
-      title: 'Download',
       onClick: () => {
         const shouldOpenInNewTab = true;
         handleClickDownload(objectName, shouldOpenInNewTab);
       },
+      title: 'Download',
     },
     {
-      title: 'Delete',
       onClick: () => {
         handleClickDelete(objectName);
       },
+      title: 'Delete',
     },
   ];
 

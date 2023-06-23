@@ -6,9 +6,9 @@ import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const meta: Meta<typeof EntityIcon> = {
-  title: 'Components/EntityIcon',
-  component: EntityIcon,
   args: { variant: 'linode' },
+  component: EntityIcon,
+  title: 'Components/EntityIcon',
 };
 
 export default meta;
@@ -31,13 +31,13 @@ const variantList = [
 ];
 
 const sxGridItem = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: 125,
   '& svg': {
     color: '#333',
   },
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  width: 125,
 };
 
 export const Default: Story = {

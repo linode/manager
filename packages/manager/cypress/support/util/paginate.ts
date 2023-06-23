@@ -22,9 +22,9 @@ export const paginate = (data: any | any[]): PaginatedData => {
   const arrayData = Array.isArray(data) ? data : [data];
   return {
     data: arrayData,
-    results: arrayData.length,
     page: 1,
     pages: 1,
+    results: arrayData.length,
   };
 };
 
@@ -89,12 +89,12 @@ export const paginateResponse = (
 ): Response => {
   const dataArray = Array.isArray(data) ? data : [data];
   return {
-    statusCode,
     body: {
-      results: dataArray.length,
       data: dataArray,
       page,
       pages: totalPages,
+      results: dataArray.length,
     },
+    statusCode,
   };
 };

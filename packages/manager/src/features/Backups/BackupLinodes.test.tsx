@@ -16,8 +16,8 @@ const linode1: ExtendedLinode = {
 };
 const linode2: ExtendedLinode = {
   ...linodes.linode2,
-  typeInfo: type,
   linodeError: { linodeId: linodes.linode2.id, reason: 'Error occurred' },
+  typeInfo: type,
 };
 
 import { BackupLinodes, displayPrice } from './BackupLinodes';
@@ -26,7 +26,7 @@ import { extendType } from 'src/utilities/extendType';
 const component = shallow(
   <BackupLinodes
     linodes={[linode1, linode2]}
-    classes={{ root: '', error: '' }}
+    classes={{ error: '', root: '' }}
   />
 );
 

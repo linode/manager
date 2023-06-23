@@ -14,14 +14,14 @@ const groupsToItems = (groups: any[]) => {
 };
 
 export default ({
-  options,
-  value,
-  label,
   disabled,
-  onChange,
   errorText,
-  placeholder,
   isMulti,
+  label,
+  onChange,
+  options,
+  placeholder,
+  value,
 }: any) => {
   const handleChange = (event: any) => {
     const option = _options.find(

@@ -12,17 +12,17 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionInner: {
-    padding: '0 !important',
     '&.MuiTableCell-root': {
       paddingRight: 0,
     },
+    padding: '0 !important',
   },
   interfaceList: {
     listStyleType: 'none',
     margin: 0,
-    paddingTop: theme.spacing(),
     paddingBottom: theme.spacing(),
     paddingLeft: 0,
+    paddingTop: theme.spacing(),
   },
   interfaceListItem: {
     paddingBottom: 4,
@@ -39,7 +39,7 @@ interface Props {
 }
 
 export const ConfigRow = React.memo((props: Props) => {
-  const { config, linodeId, onBoot, onEdit, onDelete, readOnly } = props;
+  const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
 
   const { data: kernel } = useLinodeKernelQuery(config.kernel);
 

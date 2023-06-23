@@ -26,14 +26,14 @@ export interface BarPercentProps {
  */
 export const BarPercent = (props: BarPercentProps) => {
   const {
-    max,
-    value,
     className,
-    valueBuffer,
     isFetchingValue,
-    rounded,
+    max,
     narrow,
+    rounded,
     sx,
+    value,
+    valueBuffer,
   } = props;
 
   return (
@@ -62,25 +62,25 @@ export const getPercentage = (value: number, max: number) =>
   (value / max) * 100;
 
 const StyledDiv = styled('div')({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   position: 'relative',
 });
 
 const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
 })<Partial<BarPercentProps>>(({ theme, ...props }) => ({
-  backgroundColor: theme.color.grey2,
-  padding: props.narrow ? 8 : 12,
-  width: '100%',
-  borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
-  '& .MuiLinearProgress-barColorPrimary': {
-    backgroundColor: '#5ad865',
-  },
   '& .MuiLinearProgress-bar2Buffer': {
     backgroundColor: '#99ec79',
+  },
+  '& .MuiLinearProgress-barColorPrimary': {
+    backgroundColor: '#5ad865',
   },
   '& .MuiLinearProgress-dashed': {
     display: 'none',
   },
+  backgroundColor: theme.color.grey2,
+  borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
+  padding: props.narrow ? 8 : 12,
+  width: '100%',
 }));

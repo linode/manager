@@ -15,8 +15,8 @@ export const generateObjectUrl = (
 ) => {
   const path = `${bucketName}.${clusterId}.${OBJECT_STORAGE_ROOT}/${objectName}`;
   return {
-    path,
     absolute: 'https://' + path,
+    path,
   };
 };
 
@@ -73,13 +73,13 @@ export const extendObject = (
 
   return {
     ...object,
-    _isFolder,
     _displayName,
+    _isFolder,
     // If we're in a folder called "my-folder", we don't want to show the object
     // called "my-folder/". We can look at the prefix to make this decision,
+    _manuallyCreated: manuallyCreated,
     // since it will also be "my-folder/".
     _shouldDisplayObject: object.name !== prefix,
-    _manuallyCreated: manuallyCreated,
   };
 };
 
@@ -118,9 +118,9 @@ export const tableUpdateAction = (
     const delta = objectName.slice(currentPrefix.length);
 
     if (isFile(delta)) {
-      return { type: 'FILE', name: delta };
+      return { name: delta, type: 'FILE' };
     } else {
-      return { type: 'FOLDER', name: firstSubfolder(delta) };
+      return { name: firstSubfolder(delta), type: 'FOLDER' };
     }
   }
   return null;
@@ -170,9 +170,9 @@ export const bucketACLOptions: Item<ACLType>[] = [
 ];
 
 export const objectACLHelperText: Record<ACLType, string> = {
+  'authenticated-read': 'Authenticated Read ACL',
+  custom: 'Custom ACL',
   private: 'Private ACL',
   'public-read': 'Public Read ACL',
-  'authenticated-read': 'Authenticated Read ACL',
   'public-read-write': 'Public Read/Write ACL',
-  custom: 'Custom ACL',
 };

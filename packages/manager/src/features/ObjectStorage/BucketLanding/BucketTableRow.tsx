@@ -25,14 +25,14 @@ export interface BucketTableRowProps extends ObjectStorageBucket {
 
 export const BucketTableRow = (props: BucketTableRowProps) => {
   const {
-    label,
     cluster,
-    hostname,
     created,
-    size,
-    onRemove,
+    hostname,
+    label,
     objects,
     onDetails,
+    onRemove,
+    size,
   } = props;
 
   const { data: clusters } = useObjectStorageClusters();

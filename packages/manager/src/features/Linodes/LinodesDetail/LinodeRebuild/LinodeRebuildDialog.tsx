@@ -13,29 +13,29 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  helperText: {
     paddingBottom: theme.spacing(2),
+  },
+  root: {
     '& + div': {
-      padding: 0,
       '& .MuiPaper-root': {
-        padding: 0,
-        '& > div': {
-          padding: 0,
-        },
         '& .MuiTableCell-head': {
           top: theme.spacing(11),
         },
+        '& > div': {
+          padding: 0,
+        },
+        padding: 0,
       },
       '& .notice': {
         padding: theme.spacing(2),
       },
+      padding: 0,
     },
+    paddingBottom: theme.spacing(2),
   },
   title: {
     marginBottom: theme.spacing(2),
-  },
-  helperText: {
-    paddingBottom: theme.spacing(2),
   },
 }));
 
@@ -51,15 +51,15 @@ type MODES =
   | 'fromAccountStackScript';
 
 const options = [
-  { value: 'fromImage', label: 'From Image' },
-  { value: 'fromCommunityStackScript', label: 'From Community StackScript' },
-  { value: 'fromAccountStackScript', label: 'From Account StackScript' },
+  { label: 'From Image', value: 'fromImage' },
+  { label: 'From Community StackScript', value: 'fromCommunityStackScript' },
+  { label: 'From Account StackScript', value: 'fromAccountStackScript' },
 ];
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
 export const LinodeRebuildDialog = (props: Props) => {
-  const { linodeId, open, onClose } = props;
+  const { linodeId, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();

@@ -34,9 +34,9 @@ const renderContent = (
     return (
       <div
         style={{
+          alignItems: 'center',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
           minHeight: height,
         }}
       >
@@ -50,14 +50,14 @@ const renderContent = (
 
 export const ExtendedAccordion = (props: ExtendedAccordionProps) => {
   const {
+    defaultExpanded,
     error,
     heading,
+    headingNumberCount,
     height,
     loading,
     onChange,
     renderMainContent,
-    headingNumberCount,
-    defaultExpanded,
   } = props;
 
   return (

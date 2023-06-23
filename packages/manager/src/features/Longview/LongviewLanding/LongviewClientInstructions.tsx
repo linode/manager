@@ -13,15 +13,15 @@ import RestrictedUserLabel from './RestrictedUserLabel';
 import Instructions from '../shared/InstallationInstructions';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(4),
-    padding: theme.spacing(3),
-  },
   button: {
-    padding: 0,
     '&:hover': {
       color: theme.color.red,
     },
+    padding: 0,
+  },
+  root: {
+    marginBottom: theme.spacing(4),
+    padding: theme.spacing(3),
   },
 }));
 
@@ -36,12 +36,12 @@ interface Props extends ActionHandlers {
 
 export const LongviewClientInstructions: React.FC<Props> = (props) => {
   const {
+    clientAPIKey,
     clientID,
     clientLabel,
     installCode,
-    clientAPIKey,
-    updateLongviewClient,
     triggerDeleteLongviewClient,
+    updateLongviewClient,
     userCanModifyClient,
   } = props;
   const classes = useStyles();

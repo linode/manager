@@ -46,11 +46,11 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
   const {
     addNodePool,
     apiError,
-    types,
     hasSelectedRegion,
-    isSelectedRegionEligibleForPlan,
     isPlanPanelDisabled,
+    isSelectedRegionEligibleForPlan,
     regionsData,
+    types,
   } = props;
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
@@ -65,9 +65,9 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
      * Add pool and reset form state.
      */
     addNodePool({
+      count: nodeCount,
       id: Math.random(),
       type: selectedPlanType,
-      count: nodeCount,
     });
     updatePlanCount(selectedPlanType, 0);
     setSelectedType(undefined);

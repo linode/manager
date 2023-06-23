@@ -25,26 +25,30 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  label: {
-    fontWeight: 'bold',
-    marginBottom: `calc(${theme.spacing(1)} - 3px)`,
-  },
-  kubeconfigElements: {
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.palette.primary.main,
+  disabled: {
+    '& g': {
+      stroke: theme.palette.text.secondary,
+    },
+    color: theme.palette.text.secondary,
+    pointer: 'default',
+    pointerEvents: 'none',
   },
   kubeconfigElement: {
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    borderRight: '1px solid #c4c4c4',
     '&:hover': {
       opacity: 0.7,
     },
     '&:last-child': {
       borderRight: 'none',
     },
+    alignItems: 'center',
+    borderRight: '1px solid #c4c4c4',
+    cursor: 'pointer',
+    display: 'flex',
+  },
+  kubeconfigElements: {
+    alignItems: 'center',
+    color: theme.palette.primary.main,
+    display: 'flex',
   },
   kubeconfigFileText: {
     color: theme.textColors.linkActiveLight,
@@ -53,17 +57,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   kubeconfigIcons: {
     height: 16,
-    width: 16,
     margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
+    width: 16,
   },
-  disabled: {
-    color: theme.palette.text.secondary,
-    pointer: 'default',
-    pointerEvents: 'none',
-    '& g': {
-      stroke: theme.palette.text.secondary,
-    },
+  label: {
+    fontWeight: 'bold',
+    marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
 }));
 
@@ -88,8 +88,8 @@ export const KubeConfigDisplay = (props: Props) => {
   const {
     clusterId,
     clusterLabel,
-    isResettingKubeConfig,
     handleOpenDrawer,
+    isResettingKubeConfig,
     setResetKubeConfigDialogOpen,
   } = props;
 
@@ -100,8 +100,8 @@ export const KubeConfigDisplay = (props: Props) => {
 
   const {
     data: endpoints,
-    isLoading: endpointsLoading,
     error: endpointsError,
+    isLoading: endpointsLoading,
   } = useAllKubernetesClusterAPIEndpointsQuery(clusterId);
 
   const downloadKubeConfig = async () => {
@@ -171,14 +171,14 @@ export const KubeConfigDisplay = (props: Props) => {
           >
             <ResetIcon
               className={classNames({
-                [classes.kubeconfigIcons]: true,
                 [classes.disabled]: isResettingKubeConfig,
+                [classes.kubeconfigIcons]: true,
               })}
             />
             <Typography
               className={classNames({
-                [classes.kubeconfigFileText]: true,
                 [classes.disabled]: isResettingKubeConfig,
+                [classes.kubeconfigFileText]: true,
               })}
             >
               Reset

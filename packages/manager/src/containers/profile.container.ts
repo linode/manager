@@ -18,8 +18,8 @@ export const withProfile = <Props>(
 
     return React.createElement(Component, {
       ...props,
-      profile,
       grants,
+      profile,
     });
   };
 };

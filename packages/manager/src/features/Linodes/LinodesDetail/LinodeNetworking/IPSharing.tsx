@@ -32,34 +32,34 @@ import {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addNewButton: {
-    marginTop: theme.spacing(3),
     marginBottom: `-${theme.spacing(2)}`,
+    marginTop: theme.spacing(3),
   },
   ipField: {
-    width: '100%',
     marginTop: 0,
+    width: '100%',
   },
   ipFieldLabel: {
-    width: '100%',
     [theme.breakpoints.up('sm')]: {
       width: `calc(175px + ${theme.spacing(2)})`,
     },
-  },
-  noIPsMessage: {
-    marginTop: theme.spacing(2),
-    color: theme.color.grey1,
+    width: '100%',
   },
   networkActionText: {
     marginBottom: theme.spacing(2),
   },
-  removeCont: {
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
+  noIPsMessage: {
+    color: theme.color.grey1,
+    marginTop: theme.spacing(2),
   },
   remove: {
     [theme.breakpoints.down('sm')]: {
       margin: '-16px 0 0 -26px',
+    },
+  },
+  removeCont: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     },
   },
 }));
@@ -76,7 +76,7 @@ type AvailableRangesMap = { [linode_id: number]: string[] };
 const IPSharingPanel = (props: Props) => {
   const { classes } = useStyles();
   const flags = useFlags();
-  const { linodeId, readOnly, open, onClose } = props;
+  const { linodeId, onClose, open, readOnly } = props;
   const { data: linode } = useLinodeQuery(linodeId);
 
   const { data: ips } = useLinodeIPsQuery(linodeId, open);
@@ -110,7 +110,7 @@ const IPSharingPanel = (props: Props) => {
       }
       return acc;
     },
-    { sharedRanges: [], availableRanges: [] }
+    { availableRanges: [], sharedRanges: [] }
   );
 
   const sharedRanges = rangeData?.sharedRanges ?? [];
@@ -271,8 +271,8 @@ const IPSharingPanel = (props: Props) => {
       Object.keys(groupedUnsharedRanges).forEach((linode_id) => {
         promises.push(
           shareAddresses({
-            linode_id: parseInt(linode_id, 10),
             ips: groupedUnsharedRanges[linode_id],
+            linode_id: parseInt(linode_id, 10),
           }).catch((errorResponse) => {
             const errors = getAPIErrorOrDefault(
               errorResponse,
@@ -293,7 +293,7 @@ const IPSharingPanel = (props: Props) => {
         return;
       }
 
-      shareAddresses({ linode_id: linodeId, ips: finalIPs })
+      shareAddresses({ ips: finalIPs, linode_id: linodeId })
         .then((_) => {
           setErrors(undefined);
           setSubmitting(false);
@@ -499,11 +499,11 @@ interface SharingRowProps extends RowProps {
 
 export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   const {
-    ip,
-    idx,
     getRemainingChoices,
     handleDelete,
     handleSelect,
+    idx,
+    ip,
     labels,
     readOnly,
   } = props;

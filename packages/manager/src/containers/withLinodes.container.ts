@@ -58,10 +58,10 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
   >(
     (state, ownProps) => {
       const {
-        loading,
         error,
         itemsById,
         lastUpdated,
+        loading,
         results,
       } = state.__resources.linodes;
       const linodes = Object.values(itemsById);
@@ -75,16 +75,16 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       }
 
       return {
-        linodesError: path(['read'], error),
-        linodesLoading: loading,
         linodesData: linodes,
-        linodesResults: results,
+        linodesError: path(['read'], error),
         linodesLastUpdated: lastUpdated,
+        linodesLoading: loading,
+        linodesResults: results,
       };
     },
     (dispatch: ThunkDispatch) => ({
       getLinodes: (params, filter) =>
-        dispatch(requestLinodes({ params, filter })),
+        dispatch(requestLinodes({ filter, params })),
     })
   );
 

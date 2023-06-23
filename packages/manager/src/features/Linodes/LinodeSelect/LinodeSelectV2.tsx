@@ -65,12 +65,12 @@ export const LinodeSelectV2 = (
     disabled,
     errorText,
     filter,
-    onSelectionChange,
     helperText,
     loading,
     multiple,
     noOptionsMessage,
     onBlur,
+    onSelectionChange,
     optionsFilter,
     placeholder,
     value,
@@ -78,10 +78,10 @@ export const LinodeSelectV2 = (
 
   const {
     data: linodesData,
-    isLoading: linodesDataLoading,
     error,
-    hasNextPage,
     fetchNextPage,
+    hasNextPage,
+    isLoading: linodesDataLoading,
   } = useInfiniteLinodesQuery(filter);
 
   const linodes = linodesData?.pages.flatMap((page) => page.data);

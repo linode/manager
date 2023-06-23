@@ -10,8 +10,8 @@ import ConfirmTransferDialog, {
 } from './ConfirmTransferDialog';
 
 const props: Props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
   token: 'blahblah',
 };
 
@@ -34,11 +34,11 @@ describe('Accept Entity Transfer confirmation dialog', () => {
       server.use(
         rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
           const transfer = entityTransferFactory.build({
-            is_sender: false,
             entities: {
-              linodes: [0, 1, 2, 3],
               domains: [1, 2, 3, 4, 5],
+              linodes: [0, 1, 2, 3],
             } as any, // Domains aren't allowed yet
+            is_sender: false,
           });
           return res(ctx.json(transfer));
         })

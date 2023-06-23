@@ -17,7 +17,7 @@ export interface TPADialogProps {
 
 export const TPADialog = (props: TPADialogProps) => {
   const flags = useFlags();
-  const { currentProvider, newProvider, open, onClose } = props;
+  const { currentProvider, newProvider, onClose, open } = props;
   // Get list of providers from LaunchDarkly
   const providers = flags.tpaProviders ?? [];
   const displayName =
@@ -83,7 +83,7 @@ const StyledConfirmationDialog = styled(ConfirmationDialog, {
   label: 'StyledConfirmationDialog',
 })(() => ({
   '& .dialog-content': {
-    paddingTop: 0,
     paddingBottom: 0,
+    paddingTop: 0,
   },
 }));

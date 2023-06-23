@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const LinodeBackupActionMenu = (props: Props) => {
-  const { disabled, onRestore, onDeploy } = props;
+  const { disabled, onDeploy, onRestore } = props;
   const disabledProps = {
     disabled,
     tooltip: disabled
@@ -20,17 +20,17 @@ export const LinodeBackupActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Restore to Existing Linode',
       onClick: () => {
         onRestore();
       },
+      title: 'Restore to Existing Linode',
       ...disabledProps,
     },
     {
-      title: 'Deploy New Linode',
       onClick: () => {
         onDeploy();
       },
+      title: 'Deploy New Linode',
       ...disabledProps,
     },
   ];

@@ -47,13 +47,13 @@ const Wrapper = styled('div', {
   display: 'flex',
   justifyContent: 'space-between',
   margin: 0,
-  width: '100%',
   [theme.breakpoints.down('sm')]: {
     flexWrap: 'wrap',
   },
+  width: '100%',
 }));
 
 const sxTypography = {
-  whiteSpace: 'nowrap',
   padding: 1,
+  whiteSpace: 'nowrap',
 };

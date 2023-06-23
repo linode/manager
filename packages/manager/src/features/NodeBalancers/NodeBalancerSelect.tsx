@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const NodeBalancerSelect = (props: Props) => {
-  const { disabled, error, onChange, value, region } = props;
+  const { disabled, error, onChange, region, value } = props;
   const [inputValue, setInputValue] = React.useState<string>('');
 
   const searchFilter = inputValue
@@ -28,14 +28,14 @@ export const NodeBalancerSelect = (props: Props) => {
 
   const {
     data,
-    isLoading,
     fetchNextPage,
     hasNextPage,
+    isLoading,
   } = useInfiniteNodebalancersQuery({
     ...searchFilter,
     ...(region ? { region } : {}),
-    '+order_by': 'label',
     '+order': 'asc',
+    '+order_by': 'label',
   });
   const nodebalancers = data?.pages.flatMap((page) => page.data);
 

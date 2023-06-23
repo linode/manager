@@ -15,9 +15,9 @@ interface Props {
 }
 
 export const DeleteNodePoolDialog = (props: Props) => {
-  const { open, onClose, kubernetesClusterId, nodePool } = props;
+  const { kubernetesClusterId, nodePool, onClose, open } = props;
 
-  const { mutateAsync, isLoading, error } = useDeleteNodePoolMutation(
+  const { error, isLoading, mutateAsync } = useDeleteNodePoolMutation(
     kubernetesClusterId,
     nodePool?.id ?? -1
   );

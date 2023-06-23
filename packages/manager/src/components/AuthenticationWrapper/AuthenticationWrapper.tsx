@@ -38,8 +38,8 @@ type CombinedProps = Props &
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
-    showChildren: false,
     hasEnsuredAllTypes: false,
+    showChildren: false,
   };
 
   static defaultProps = {
@@ -76,8 +76,8 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
       // Is a user managed
       this.props.queryClient.prefetchQuery({
-        queryKey: 'account-settings',
         queryFn: getAccountSettings,
+        queryKey: 'account-settings',
       }),
 
       // Is this a large account? (should we use API or Redux-based search/pagination)
@@ -162,9 +162,9 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   isAuthenticated: Boolean(state.authentication.token),
-  linodesLoading: state.__resources.linodes.loading,
-  linodesLastUpdated: state.__resources.linodes.lastUpdated,
   linodes: Object.values(state.__resources.linodes.itemsById),
+  linodesLastUpdated: state.__resources.linodes.lastUpdated,
+  linodesLoading: state.__resources.linodes.loading,
   pendingUpload: state.pendingUpload,
 });
 
@@ -178,10 +178,10 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
-  initSession: () => dispatch(handleInitTokens()),
   checkAccountSize: () => dispatch(checkAccountSize()),
-  requestLinodes: () => dispatch(requestLinodes({})),
+  initSession: () => dispatch(handleInitTokens()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
+  requestLinodes: () => dispatch(requestLinodes({})),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

@@ -12,20 +12,20 @@ import { FileAttachment } from './index';
 
 const useStyles = makeStyles((theme: Theme) => ({
   attachmentField: {
-    marginTop: 0,
-    width: 415,
-    [theme.breakpoints.down('sm')]: {
-      width: 165,
-    },
     '& > div ': {
       backgroundColor: 'transparent',
       border: 0,
     },
     '& svg': {
       color: theme.palette.text.primary,
-      width: 24,
       fontSize: 22,
+      width: 24,
     },
+    marginTop: 0,
+    [theme.breakpoints.down('sm')]: {
+      width: 165,
+    },
+    width: 415,
   },
   closeIcon: {
     cursor: 'pointer',
@@ -65,11 +65,6 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
           value={file.name}
           errorText={err}
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="end">
-                <CloudUpload />
-              </InputAdornment>
-            ),
             endAdornment: (
               <InputAdornment
                 onClick={onClick}
@@ -79,6 +74,11 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
                 data-qa-inline-delete
               >
                 <Close />
+              </InputAdornment>
+            ),
+            startAdornment: (
+              <InputAdornment position="end">
+                <CloudUpload />
               </InputAdornment>
             ),
           }}

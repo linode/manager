@@ -14,14 +14,14 @@ import { Props as LVProps } from 'src/containers/longview.container';
 import LongviewRows from './LongviewListRows';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  empty: {
-    height: '20em',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   button: {
     ...theme.applyLinkStyles,
+  },
+  empty: {
+    alignItems: 'center',
+    display: 'flex',
+    height: '20em',
+    justifyContent: 'center',
   },
   emptyText: {
     fontSize: '1.1em',
@@ -54,8 +54,8 @@ type CombinedProps = Props & LongviewProps;
 const LongviewList: React.FC<CombinedProps> = (props) => {
   const {
     createLongviewClient,
-    loading,
     filteredData,
+    loading,
     longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
@@ -120,8 +120,8 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
     // since displaying a large number of client rows has performance impacts.
     <Paginate data={filteredData} pageSize={pageSize}>
       {({
-        data: paginatedAndOrderedData,
         count,
+        data: paginatedAndOrderedData,
         handlePageChange,
         handlePageSizeChange,
         page,

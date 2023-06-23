@@ -4,9 +4,9 @@ import { longviewDiskFactory } from './longviewDisks';
 
 export const longviewResponseFactory = Factory.Sync.makeFactory<LongviewResponse>(
   {
-    VERSION: 0.4,
-    NOTIFICATIONS: [],
     ACTION: 'getValues',
     DATA: longviewDiskFactory.build(),
+    NOTIFICATIONS: [],
+    VERSION: 0.4,
   }
 );

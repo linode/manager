@@ -55,24 +55,24 @@ const LinodesDetailHeader = React.lazy(
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(1),
-  },
-  paper: {
-    padding: `${theme.spacing(3)} ${theme.spacing(3)} 0`,
-  },
   appBar: {
     '& > div': {
       marginTop: 0,
     },
   },
-  outerContainer: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
   diskContainer: {
     marginTop: theme.spacing(4),
+  },
+  outerContainer: {
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  },
+  paper: {
+    padding: `${theme.spacing(3)} ${theme.spacing(3)} 0`,
+  },
+  root: {
+    marginTop: theme.spacing(1),
   },
   title: {
     marginBottom: theme.spacing(2),
@@ -95,10 +95,10 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
     configs,
     disks,
     history,
-    region,
-    requestDisks,
     linodeId,
     linodesData,
+    region,
+    requestDisks,
   } = props;
 
   const classes = useStyles();
@@ -109,12 +109,12 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   const tabs = [
     // These must correspond to the routes inside the Switch
     {
-      title: 'Configuration Profiles',
       routeName: `${props.match.url}/configs`,
+      title: 'Configuration Profiles',
     },
     {
-      title: 'Disks',
       routeName: `${props.match.url}/disks`,
+      title: 'Disks',
     },
   ];
 
@@ -147,9 +147,9 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   // Update configs and disks if they change
   React.useEffect(() => {
     dispatch({
-      type: 'syncConfigsDisks',
       configs,
       disks,
+      type: 'syncConfigsDisks',
     });
     // We can't use `configs` and `disks` as deps, since they are arrays.
     // Instead we use a serialized representation of their IDs.
@@ -166,7 +166,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     const configFromQS = Number(queryParams.selectedConfig);
     if (configFromQS) {
-      return dispatch({ type: 'toggleConfig', id: configFromQS });
+      return dispatch({ id: configFromQS, type: 'toggleConfig' });
     }
   }, [queryParams]);
 
@@ -174,21 +174,21 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     const diskFromQS = Number(queryParams.selectedDisk);
     if (diskFromQS) {
-      return dispatch({ type: 'toggleDisk', id: diskFromQS });
+      return dispatch({ id: diskFromQS, type: 'toggleDisk' });
     }
   }, [queryParams]);
 
   // Helper functions for updating the state.
   const toggleConfig = (id: number) => {
-    return dispatch({ type: 'toggleConfig', id });
+    return dispatch({ id, type: 'toggleConfig' });
   };
 
   const toggleDisk = (id: number) => {
-    return dispatch({ type: 'toggleDisk', id });
+    return dispatch({ id, type: 'toggleDisk' });
   };
 
   const setSelectedLinodeId = (id: number) => {
-    return dispatch({ type: 'setSelectedLinodeId', id });
+    return dispatch({ id, type: 'setSelectedLinodeId' });
   };
 
   const setSubmitting = (value: boolean) => {
@@ -196,7 +196,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const setErrors = (errors?: APIError[]) => {
-    return dispatch({ type: 'setErrors', errors });
+    return dispatch({ errors, type: 'setErrors' });
   };
 
   const clearAll = () => dispatch({ type: 'clearAll' });
@@ -262,9 +262,9 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
        */
       request = () =>
         cloneLinode(sourceLinodeId, {
-          linode_id: destinationLinodeId,
           configs: selectedConfigIds,
           disks: selectedDiskIds,
+          linode_id: destinationLinodeId,
         });
     }
 
@@ -408,13 +408,13 @@ interface LinodeContextProps {
   linodeEvents: Event[];
 }
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeId: linode.id,
   configs: linode._configs,
   disks: linode._disks,
-  region: linode.region,
   label: linode.label,
-  linodeStatus: linode.status,
   linodeEvents: linode._events,
+  linodeId: linode.id,
+  linodeStatus: linode.status,
+  region: linode.region,
 }));
 
 interface DispatchProps {
@@ -437,8 +437,8 @@ const enhanced = compose<CombinedProps, {}>(
   linodeContext,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
-    linodesLoading,
     linodesError,
+    linodesLoading,
   })),
   withRouter
 );

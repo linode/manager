@@ -24,8 +24,8 @@ type ActionCreator = (...args: any[]) => Action;
 export const openStackScriptDialog: ActionCreator = (
   stackScriptId: number
 ): Open => ({
-  type: OPEN,
   stackScriptId,
+  type: OPEN,
 });
 export const closeStackScriptDialog: ActionCreator = (): Close => ({
   type: CLOSE,

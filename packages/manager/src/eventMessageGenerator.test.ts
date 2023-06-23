@@ -26,8 +26,8 @@ describe('Event message generation', () => {
     it('should filter mangled events', () => {
       const mockEvent = {
         action: 'linode_reboot',
-        status: 'scheduled',
         entity: null,
+        status: 'scheduled',
       };
       const result = getEventMessage(mockEvent as Event);
 
@@ -37,8 +37,8 @@ describe('Event message generation', () => {
     it('should call the message generator with the event', () => {
       const mockEvent = {
         action: 'linode_reboot',
-        status: 'scheduled',
         entity: { label: 'test-linode-123' },
+        status: 'scheduled',
       };
 
       /** Mock the message creator */

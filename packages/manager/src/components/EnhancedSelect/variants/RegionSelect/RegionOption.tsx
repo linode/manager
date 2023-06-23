@@ -8,15 +8,15 @@ import Option from 'src/components/EnhancedSelect/components/Option';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(1),
+  disabled: {
+    cursor: 'not-allowed !important',
   },
   focused: {
     backgroundColor: theme.palette.primary.main,
     color: 'white',
   },
-  disabled: {
-    cursor: 'not-allowed !important',
+  root: {
+    padding: theme.spacing(1),
   },
 }));
 
@@ -36,9 +36,9 @@ export const RegionOption = (props: RegionOptionProps) => {
   return (
     <Option
       className={cx({
-        [classes.root]: true,
-        [classes.focused]: props.isFocused,
         [classes.disabled]: isDisabled,
+        [classes.focused]: props.isFocused,
+        [classes.root]: true,
       })}
       value={data.value}
       attrs={{ ['data-qa-region-select-item']: data.value }}

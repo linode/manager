@@ -12,22 +12,22 @@ import {
 export type State = EntitiesAsObjectState<LongviewClient>;
 
 export const defaultState: State = {
-  loading: false,
-  lastUpdated: 0,
-  results: 0,
   data: {},
   error: {},
+  lastUpdated: 0,
+  loading: false,
+  results: 0,
 };
 
 const reducer = reducerWithInitialState(defaultState)
   /** START GET ACTIONS */
   .case(getLongviewClients.started, (state) => ({
     ...state,
-    loading: true,
     error: {
       ...state.error,
       read: undefined,
     },
+    loading: true,
   }))
   .caseWithAction(
     getLongviewClients.done,
@@ -37,9 +37,9 @@ const reducer = reducerWithInitialState(defaultState)
         acc[client.id] = client;
         return acc;
       }, {}),
+      lastUpdated: Date.now(),
       loading: false,
       results: result.results,
-      lastUpdated: Date.now(),
     })
   )
   .caseWithAction(getLongviewClients.failed, (state, { payload: result }) => ({
@@ -65,8 +65,8 @@ const reducer = reducerWithInitialState(defaultState)
         ...state.data,
         [result.id]: result,
       },
-      results: state.results + 1,
       lastUpdated: Date.now(),
+      results: state.results + 1,
     })
   )
   .caseWithAction(
@@ -97,8 +97,8 @@ const reducer = reducerWithInitialState(defaultState)
       return {
         ...state,
         data: dataCopy,
-        results: state.results - 1,
         lastUpdated: Date.now(),
+        results: state.results - 1,
       };
     }
   )

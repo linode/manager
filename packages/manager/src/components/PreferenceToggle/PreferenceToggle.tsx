@@ -30,12 +30,12 @@ interface Props<T = PreferenceValue> {
 
 export const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
   const {
-    value,
+    children,
     preferenceKey,
     preferenceOptions,
-    toggleCallbackFnDebounced,
     toggleCallbackFn,
-    children,
+    toggleCallbackFnDebounced,
+    value,
   } = props;
 
   /** will be undefined and render-block children unless otherwise specified */

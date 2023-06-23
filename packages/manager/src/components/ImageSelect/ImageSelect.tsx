@@ -89,12 +89,12 @@ export const imagesToGroupedItems = (images: Image[]) => {
           options: group
             .reduce((acc: ImageItem[], thisImage) => {
               const {
+                capabilities,
                 created,
                 eol,
                 id,
                 label,
                 vendor,
-                capabilities,
               } = thisImage;
               const differenceInMonths = DateTime.now().diff(
                 DateTime.fromISO(eol!),
@@ -103,16 +103,16 @@ export const imagesToGroupedItems = (images: Image[]) => {
               // if image is past its end of life, hide it, otherwise show it
               if (!eol || differenceInMonths < MAX_MONTHS_EOL_FILTER) {
                 acc.push({
-                  created,
-                  // Add suffix 'deprecated' to the image at end of life.
-                  label:
-                    differenceInMonths > 0 ? `${label} (deprecated)` : label,
-                  value: id,
-                  isCloudInitCompatible: capabilities?.includes('cloud-init'),
                   className: vendor
                     ? // Use Tux as a fallback.
                       `fl-${distroIcons[vendor] ?? 'tux'}`
                     : `fl-tux`,
+                  created,
+                  isCloudInitCompatible: capabilities?.includes('cloud-init'),
+                  // Add suffix 'deprecated' to the image at end of life.
+                  label:
+                    differenceInMonths > 0 ? `${label} (deprecated)` : label,
+                  value: id,
                 });
               }
 
@@ -126,18 +126,18 @@ export const imagesToGroupedItems = (images: Image[]) => {
 
 export const ImageSelect = (props: ImageSelectProps) => {
   const {
+    classNames,
     disabled,
     handleSelectImage,
     images,
     selectedImageID,
     title,
     variant,
-    classNames,
     ...reactSelectProps
   } = props;
 
   // Check for loading status and request errors in React Query
-  const { isLoading: _loading, error } = useAllImagesQuery();
+  const { error, isLoading: _loading } = useAllImagesQuery();
 
   const imageError = error
     ? getAPIErrorOrDefault(error, 'Unable to load Images')[0].reason

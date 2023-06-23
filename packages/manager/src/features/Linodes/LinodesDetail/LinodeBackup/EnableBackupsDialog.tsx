@@ -20,10 +20,10 @@ export const EnableBackupsDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
 
   const {
+    error,
+    isLoading,
     mutateAsync: enableBackups,
     reset,
-    isLoading,
-    error,
   } = useLinodeBackupsEnableMutation(linodeId ?? -1);
 
   const { data: linode } = useLinodeQuery(

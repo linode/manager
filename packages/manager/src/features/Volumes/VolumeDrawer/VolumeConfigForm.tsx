@@ -9,13 +9,13 @@ type ClassNames = 'root' | 'copySection' | 'copyField';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    copySection: {
-      marginTop: theme.spacing(3),
-    },
     copyField: {
       marginTop: theme.spacing(0.5),
     },
+    copySection: {
+      marginTop: theme.spacing(3),
+    },
+    root: {},
   });
 
 interface Props {

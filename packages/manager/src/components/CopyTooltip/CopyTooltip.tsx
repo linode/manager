@@ -13,38 +13,38 @@ interface Props {
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    position: 'relative',
-    padding: 4,
+  copyableTextBtn: {
     backgroundColor: 'transparent',
-    transition: theme.transitions.create(['background-color']),
-    borderRadius: 4,
     border: 'none',
+    color: theme.palette.text.primary,
     cursor: 'pointer',
-    color: theme.color.grey1,
-    '& svg': {
-      transition: theme.transitions.create(['color']),
-      color: theme.color.grey1,
-      margin: 0,
-      position: 'relative',
-      width: 20,
-      height: 20,
-    },
-    '& svg:hover': {
-      color: theme.palette.primary.main,
-    },
+    font: 'inherit',
+    padding: 0,
   },
   flex: {
     display: 'flex',
     width: 'auto !important',
   },
-  copyableTextBtn: {
-    padding: 0,
+  root: {
+    '& svg': {
+      color: theme.color.grey1,
+      height: 20,
+      margin: 0,
+      position: 'relative',
+      transition: theme.transitions.create(['color']),
+      width: 20,
+    },
+    '& svg:hover': {
+      color: theme.palette.primary.main,
+    },
     backgroundColor: 'transparent',
     border: 'none',
+    borderRadius: 4,
+    color: theme.color.grey1,
     cursor: 'pointer',
-    font: 'inherit',
-    color: theme.palette.text.primary,
+    padding: 4,
+    position: 'relative',
+    transition: theme.transitions.create(['background-color']),
   },
 }));
 
@@ -52,7 +52,7 @@ export const CopyTooltip = (props: Props) => {
   const { classes, cx } = useStyles();
   const [copied, setCopied] = React.useState<boolean>(false);
 
-  const { text, className, copyableText, onClickCallback } = props;
+  const { className, copyableText, onClickCallback, text } = props;
 
   const handleIconClick = () => {
     setCopied(true);

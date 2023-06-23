@@ -53,11 +53,11 @@ export const AccessCell = React.memo((props: AccessCellProps) => {
 const StyledCheckIcon = styled('span', {
   label: 'StyledCheckIcon',
 })(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'center',
   '& svg': {
     height: 25,
     width: 25,
   },
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'center',
 }));

@@ -28,10 +28,10 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
     entity,
     error,
     label,
+    loading,
     onClose,
     onDelete,
     open,
-    loading,
     typeToConfirm,
     ...rest
   } = props;
@@ -91,8 +91,8 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
           <Typography
             component={'span'}
             sx={{
-              paddingTop: theme.spacing(2),
               paddingBottom: theme.spacing(),
+              paddingTop: theme.spacing(2),
             }}
           >
             To confirm deletion, type the name of the {entity} (

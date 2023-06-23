@@ -15,19 +15,19 @@ export const StyledRootContainer = styled('div', {
 export const StyledCTAWrapper = styled('div', {
   label: 'StyledCTAWrapper',
 })(({ theme }) => ({
+  alignItems: 'center',
   display: 'flex',
   flexFlow: 'row nowrap',
-  alignItems: 'center',
   justifyContent: 'left',
-  marginTop: theme.spacing(3),
   marginBottom: theme.spacing(3),
+  marginTop: theme.spacing(3),
 }));
 
 export const StyledCopy = styled(Typography, {
   label: 'StyledCopy',
 })(({ theme }) => ({
   lineHeight: '20px',
-  marginTop: theme.spacing(),
   marginBottom: theme.spacing(),
+  marginTop: theme.spacing(),
   maxWidth: 960,
 }));

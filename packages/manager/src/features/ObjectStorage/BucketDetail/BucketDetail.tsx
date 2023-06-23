@@ -71,11 +71,11 @@ export const BucketDetail = () => {
   const {
     data,
     error,
-    isLoading,
     fetchNextPage,
     hasNextPage,
     isFetching,
     isFetchingNextPage,
+    isLoading,
   } = useObjectBucketDetailsInfiniteQuery(clusterId, bucketName, prefix);
   const [
     isCreateFolderDrawerOpen,
@@ -148,8 +148,8 @@ export const BucketDetail = () => {
 
     if (objectToDelete.endsWith('/')) {
       const itemsInFolderData = await getObjectList(clusterId, bucketName, {
-        prefix: objectToDelete,
         delimiter: OBJECT_STORAGE_DELIMITER,
+        prefix: objectToDelete,
       });
 
       // Exclude the empty object the represents a folder so we can
@@ -199,8 +199,8 @@ export const BucketDetail = () => {
     }>(
       [queryKey, clusterId, bucketName, 'objects', ...prefixToQueryKey(prefix)],
       (data) => ({
-        pages,
         pageParams: data?.pageParams || [],
+        pages,
       })
     );
   };
@@ -240,10 +240,10 @@ export const BucketDetail = () => {
     }
 
     const object: ObjectStorageObject = {
-      name: prefix + objectName,
       etag: '',
-      owner: '',
       last_modified: new Date().toISOString(),
+      name: prefix + objectName,
+      owner: '',
       size: sizeInBytes,
     };
 
@@ -280,10 +280,10 @@ export const BucketDetail = () => {
     }
 
     const folder: ObjectStorageObject = {
-      name: `${prefix + objectName}/`,
       etag: null,
-      owner: null,
       last_modified: null,
+      name: `${prefix + objectName}/`,
+      owner: null,
       size: null,
     };
 

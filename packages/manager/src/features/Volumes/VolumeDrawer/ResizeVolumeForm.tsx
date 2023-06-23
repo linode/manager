@@ -25,12 +25,12 @@ interface Props {
 
 export const ResizeVolumeForm = (props: Props) => {
   const {
-    volumeId,
-    volumeSize,
     onClose,
-    volumeLabel,
     onSuccess,
     readOnly,
+    volumeId,
+    volumeLabel,
+    volumeSize,
   } = props;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
@@ -44,11 +44,11 @@ export const ResizeVolumeForm = (props: Props) => {
       validationSchema={validationSchema}
       onSubmit={(
         values,
-        { resetForm, setSubmitting, setStatus, setErrors }
+        { resetForm, setErrors, setStatus, setSubmitting }
       ) => {
         setSubmitting(true);
 
-        resizeVolume({ volumeId, size: Number(values.size) })
+        resizeVolume({ size: Number(values.size), volumeId })
           .then((_) => {
             resetForm({ values: initialValues });
             setSubmitting(false);

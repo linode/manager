@@ -15,9 +15,9 @@ export interface Props {
 }
 
 export const RemoveDeviceDialog = (props: Props) => {
-  const { device, firewallLabel, firewallId, onClose, open } = props;
+  const { device, firewallId, firewallLabel, onClose, open } = props;
 
-  const { mutateAsync, isLoading, error } = useRemoveFirewallDeviceMutation(
+  const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
     device?.id ?? -1
   );

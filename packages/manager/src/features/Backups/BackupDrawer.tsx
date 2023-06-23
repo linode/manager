@@ -141,8 +141,8 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
 
   handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     const {
-      actions: { enable, enroll },
       accountSettings,
+      actions: { enable, enroll },
       queryClient,
     } = this.props;
     if (accountSettings.data?.backups_enabled) {
@@ -154,6 +154,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
 
   render() {
     const {
+      accountSettings,
       actions: { close, toggle },
       autoEnroll,
       autoEnrollError,
@@ -162,9 +163,8 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       enrolling,
       loading,
       open,
-      updatedCount,
       requestedTypesData,
-      accountSettings,
+      updatedCount,
     } = this.props;
 
     const extendedTypeData = requestedTypesData.map(extendType);
@@ -219,7 +219,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
             />
           </Grid>
           <Grid>
-            <ActionsPanel style={{ padding: 0, margin: 0 }}>
+            <ActionsPanel style={{ margin: 0, padding: 0 }}>
               <Button
                 onClick={close}
                 buttonType="secondary"
@@ -254,10 +254,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     actions: {
-      enable: () => dispatch(enableAllBackups()),
       close: () => dispatch(handleClose()),
       dismissError: () => dispatch(handleResetError()),
       dismissSuccess: () => dispatch(handleResetSuccess()),
+      enable: () => dispatch(enableAllBackups()),
       enroll: (backupsEnabled: boolean, queryClient: QueryClient) =>
         dispatch(enableAutoEnroll({ backupsEnabled, queryClient })),
       toggle: () => dispatch(handleAutoEnrollToggle()),
@@ -310,18 +310,18 @@ const mapStateToProps: MapStateToProps<
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = getLinodesWithoutBackups(state.__resources);
   return {
+    autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
+    autoEnrollError: path(['backups', 'autoEnrollError'], state),
     backupLoadError: pathOr('', ['backups', 'error'], state),
     backupsLoading: pathOr(false, ['backups', 'loading'], state),
     enableErrors,
     enableSuccess: pathOr(false, ['backups', 'enableSuccess'], state),
-    updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),
-    open: pathOr(false, ['backups', 'open'], state),
-    loading: pathOr(false, ['backups', 'loading'], state),
     enabling: pathOr(false, ['backups', 'enabling'], state),
-    linodesWithoutBackups: linodes,
-    autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
-    autoEnrollError: path(['backups', 'autoEnrollError'], state),
+    linodesWithoutBackups: linodes,
+    loading: pathOr(false, ['backups', 'loading'], state),
+    open: pathOr(false, ['backups', 'open'], state),
+    updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),
   };
 };
 

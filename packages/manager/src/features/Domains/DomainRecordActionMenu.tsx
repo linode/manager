@@ -32,7 +32,7 @@ interface Props {
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
-  const { editPayload, onEdit, deleteData } = props;
+  const { deleteData, editPayload, onEdit } = props;
 
   const handleEdit = () => {
     onEdit(editPayload);
@@ -44,17 +44,17 @@ export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions = [
     {
-      title: 'Edit',
       onClick: () => {
         handleEdit();
       },
+      title: 'Edit',
     },
     has('deleteData', props)
       ? {
-          title: 'Delete',
           onClick: () => {
             handleDelete();
           },
+          title: 'Delete',
         }
       : null,
   ].filter(Boolean) as Action[];

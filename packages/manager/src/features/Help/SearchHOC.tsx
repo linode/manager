@@ -43,12 +43,12 @@ export const convertDocsToItems = (
 ): Item[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return {
-      value: idx,
-      label: getDocsResultLabel(hit, highlight),
       data: {
-        source: 'Linode documentation',
         href: DOCS_BASE_URL + hit.href,
+        source: 'Linode documentation',
       },
+      label: getDocsResultLabel(hit, highlight),
+      value: idx,
     };
   });
 };
@@ -59,12 +59,12 @@ export const convertCommunityToItems = (
 ): Item[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return {
-      value: idx,
-      label: getCommunityResultLabel(hit, highlight),
       data: {
-        source: 'Linode Community Site',
         href: getCommunityUrl(hit.objectID),
+        source: 'Linode Community Site',
       },
+      label: getCommunityResultLabel(hit, highlight),
+      value: idx,
     };
   });
 };
@@ -109,7 +109,7 @@ export const cleanDescription = (description: string): string => {
 export default (options: SearchOptions) => (
   Component: React.ComponentType<any>
 ) => {
-  const { hitsPerPage, highlight } = options;
+  const { highlight, hitsPerPage } = options;
   class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
     client: SearchClient;
     mounted: boolean = false;
@@ -149,8 +149,8 @@ export default (options: SearchOptions) => (
       }
       if (!this.client) {
         this.setState({
-          searchResults: [[], []],
           searchError: 'Search could not be enabled.',
+          searchResults: [[], []],
         });
         return;
       }
@@ -159,24 +159,24 @@ export default (options: SearchOptions) => (
         const results = await this.client.search([
           {
             indexName: 'linode-docs',
-            query: inputValue,
             params: {
-              hitsPerPage,
               attributesToRetrieve: ['title', '_highlightResult', 'href'],
+              hitsPerPage,
             },
+            query: inputValue,
           },
           {
             indexName: 'linode-community',
-            query: inputValue,
             params: {
-              hitsPerPage,
-              distinct: true,
               attributesToRetrieve: [
                 'title',
                 'description',
                 '_highlightResult',
               ],
+              distinct: true,
+              hitsPerPage,
             },
+            query: inputValue,
           },
         ]);
         this.searchSuccess(results);
@@ -201,8 +201,8 @@ export default (options: SearchOptions) => (
       const docsResults = convertDocsToItems(highlight, docs);
       const commResults = convertCommunityToItems(highlight, community);
       this.setState({
-        searchResults: [docsResults, commResults],
         searchError: undefined,
+        searchResults: [docsResults, commResults],
       });
     };
 

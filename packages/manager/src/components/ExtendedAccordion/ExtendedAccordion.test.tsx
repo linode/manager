@@ -38,7 +38,7 @@ describe('ExtendedAccordion', () => {
     );
   });
   it('should render a loading state', () => {
-    component.setProps({ loading: true, error: false });
+    component.setProps({ error: false, loading: true });
     expect(renderMainContent).not.toHaveBeenCalled();
     expect(component.containsMatchingElement(<CircleProgress />));
   });

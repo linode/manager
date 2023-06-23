@@ -65,63 +65,33 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  formControlLabel: {
-    marginBottom: theme.spacing(),
-  },
   btnCtn: {
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center',
     marginTop: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
       alignItems: 'flex-end',
+      flexDirection: 'column',
       marginTop: theme.spacing(),
     },
   },
+  chip: {
+    marginTop: 4,
+  },
   createBtn: {
-    whiteSpace: 'nowrap',
     [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
+    whiteSpace: 'nowrap',
   },
   createText: {
     marginLeft: theme.spacing(),
     marginRight: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(),
       marginRight: 0,
+      padding: theme.spacing(),
     },
-  },
-  selectPlanPanel: {
-    padding: 0,
-    margin: 0,
-  },
-  labelToolTipCtn: {
-    '& strong': {
-      padding: 8,
-    },
-    '& ul': {
-      margin: '4px',
-    },
-  },
-  nodeHelpIcon: {
-    padding: '0px 0px 0px 2px',
-    marginTop: '-2px',
-  },
-  chip: {
-    marginTop: 4,
-  },
-  tooltip: {
-    '& .MuiTooltip-tooltip': {
-      [theme.breakpoints.up('md')]: {
-        minWidth: 350,
-      },
-    },
-  },
-  notice: {
-    fontSize: 15,
-    lineHeight: '18px',
   },
   engineSelect: {
     '& .react-select__option--is-focused': {
@@ -132,12 +102,42 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
     },
   },
+  formControlLabel: {
+    marginBottom: theme.spacing(),
+  },
+  labelToolTipCtn: {
+    '& strong': {
+      padding: 8,
+    },
+    '& ul': {
+      margin: '4px',
+    },
+  },
+  nodeHelpIcon: {
+    marginTop: '-2px',
+    padding: '0px 0px 0px 2px',
+  },
+  notice: {
+    fontSize: 15,
+    lineHeight: '18px',
+  },
+  selectPlanPanel: {
+    margin: 0,
+    padding: 0,
+  },
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      [theme.breakpoints.up('md')]: {
+        minWidth: 350,
+      },
+    },
+  },
 }));
 
 const engineIcons = {
+  mongodb: () => <MongoDBIcon width="24" height="24" />,
   mysql: () => <MySQLIcon width="24" height="24" />,
   postgresql: () => <PostgreSQLIcon width="24" height="24" />,
-  mongodb: () => <MongoDBIcon width="24" height="24" />,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
@@ -171,11 +171,11 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
           options: groupedEngines[thisGroup]
             .map((engineObject) => ({
               ...engineObject,
+              flag: engineIcons[engineObject.engine],
               label: `${databaseEngineMap[engineObject.engine]} v${
                 engineObject.version
               }`,
               value: `${engineObject.engine}/${engineObject.version}`,
-              flag: engineIcons[engineObject.engine],
             }))
             .sort((a, b) => (a.version > b.version ? -1 : 1)),
         },
@@ -197,20 +197,20 @@ const DatabaseCreate = () => {
 
   const {
     data: regionsData,
-    isLoading: regionsLoading,
     error: regionsError,
+    isLoading: regionsLoading,
   } = useRegionsQuery();
 
   const {
     data: engines,
-    isLoading: enginesLoading,
     error: enginesError,
+    isLoading: enginesLoading,
   } = useDatabaseEnginesQuery();
 
   const {
     data: dbtypes,
-    isLoading: typesLoading,
     error: typesError,
+    isLoading: typesLoading,
   } = useDatabaseTypesQuery();
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
@@ -289,36 +289,36 @@ const DatabaseCreate = () => {
   };
 
   const {
-    values,
     errors,
-    isSubmitting,
     handleSubmit,
-    setFieldValue,
+    isSubmitting,
     setFieldError,
+    setFieldValue,
     setSubmitting,
+    values,
   } = useFormik({
     initialValues: {
-      label: '',
-      engine: 'mysql' as Engine,
-      region: '',
-      type: '',
-      cluster_size: -1 as ClusterSize,
-      replication_type: 'none' as ComprehensiveReplicationType,
-      replication_commit_type: undefined, // specific to Postgres
       allow_list: [
         {
           address: '',
           error: '',
         },
       ],
+      cluster_size: -1 as ClusterSize,
+      compression_type: undefined, // specific to MongoDB
+      engine: 'mysql' as Engine,
+      label: '',
+      region: '',
+      replication_commit_type: undefined, // specific to Postgres
+      replication_type: 'none' as ComprehensiveReplicationType,
       ssl_connection: true,
       storage_engine: undefined, // specific to MongoDB
-      compression_type: undefined, // specific to MongoDB
+      type: '',
     },
-    validationSchema: createDatabaseSchema,
-    validateOnChange: false,
-    validate: handleIPValidation,
     onSubmit: submitForm,
+    validate: handleIPValidation,
+    validateOnChange: false,
+    validationSchema: createDatabaseSchema,
   });
 
   const selectedEngine = values.engine.split('/')[0] as Engine;
@@ -333,7 +333,7 @@ const DatabaseCreate = () => {
       const singleNodePricing = type.engines[selectedEngine].find(
         (cluster) => cluster.quantity === 1
       );
-      const price = singleNodePricing?.price ?? { monthly: null, hourly: null };
+      const price = singleNodePricing?.price ?? { hourly: null, monthly: null };
       const subHeadings = [
         `$${price.monthly}/mo ($${price.hourly}/hr)`,
         typeLabelDetails(type.memory, type.disk, type.vcpus),
@@ -367,7 +367,6 @@ const DatabaseCreate = () => {
 
   const nodeOptions = [
     {
-      value: 1,
       label: (
         <Typography>
           1 Node {` `}
@@ -379,9 +378,9 @@ const DatabaseCreate = () => {
           </span>
         </Typography>
       ),
+      value: 1,
     },
     {
-      value: 3,
       label: (
         <Typography>
           3 Nodes - High Availability (recommended)
@@ -393,6 +392,7 @@ const DatabaseCreate = () => {
           </span>
         </Typography>
       ),
+      value: 3,
     },
   ];
 
@@ -409,11 +409,11 @@ const DatabaseCreate = () => {
     const engineType = values.engine.split('/')[0];
 
     setNodePricing({
-      single: type.engines[engineType].find(
-        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
-      )?.price,
       multi: type.engines[engineType].find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
+      )?.price,
+      single: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
       )?.price,
     });
     setFieldValue(
@@ -446,11 +446,10 @@ const DatabaseCreate = () => {
       <LandingHeader
         title="Create"
         breadcrumbProps={{
-          pathname: location.pathname,
           crumbOverrides: [
             {
-              position: 1,
               label: 'Database Clusters',
+              position: 1,
             },
           ],
           labelOptions: {
@@ -458,6 +457,7 @@ const DatabaseCreate = () => {
               <BetaChip className={classes.chip} component="span" />
             ) : null,
           },
+          pathname: location.pathname,
         }}
       />
       <Paper>
@@ -545,7 +545,7 @@ const DatabaseCreate = () => {
               <Notice error text={errors.cluster_size} />
             ) : null}
             <RadioGroup
-              style={{ marginTop: 0, marginBottom: 0 }}
+              style={{ marginBottom: 0, marginTop: 0 }}
               value={values.cluster_size}
             >
               {nodeOptions.map((nodeOption) => (

@@ -5,7 +5,7 @@ import { TableRow } from 'src/components/TableRow';
 import ActionMenu, { Props as ActionProps } from './FirewallDeviceActionMenu';
 
 export const FirewallDeviceRow: React.FC<ActionProps> = (props) => {
-  const { deviceLabel, deviceID, deviceEntityID } = props;
+  const { deviceEntityID, deviceID, deviceLabel } = props;
 
   return (
     <TableRow

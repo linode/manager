@@ -50,7 +50,7 @@ describe('SMTPRestrictionText component', () => {
 
     const { getByText } = renderWithTheme(
       <SMTPRestrictionText
-        supportLink={{ label: 'Test Linode', id: 0 }}
+        supportLink={{ id: 0, label: 'Test Linode' }}
         {...props}
       />
     );
@@ -67,7 +67,7 @@ describe('SMTPRestrictionText component', () => {
 
     const { queryByText } = renderWithTheme(
       <SMTPRestrictionText
-        supportLink={{ label: 'Test Linode', id: 0 }}
+        supportLink={{ id: 0, label: 'Test Linode' }}
         {...props}
       />
     );
@@ -94,7 +94,7 @@ describe('SMTPRestrictionText component', () => {
 
     const { getByText } = renderWithTheme(
       <SMTPRestrictionText
-        supportLink={{ label: 'Test Linode', id: 0 }}
+        supportLink={{ id: 0, label: 'Test Linode' }}
         {...props}
       />
     );

@@ -17,15 +17,15 @@ export const ImagesLandingEmptyState = () => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Image',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Image',
             });
             push('/images/create');
           },
-          children: 'Create Image',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

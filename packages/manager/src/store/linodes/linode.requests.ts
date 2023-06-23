@@ -68,7 +68,7 @@ export const deleteLinode = createRequestThunk(
 
 export const rebootLinode = createRequestThunk(
   rebootLinodeActions,
-  ({ linodeId, configId }) => _rebootLinode(linodeId, configId)
+  ({ configId, linodeId }) => _rebootLinode(linodeId, configId)
 );
 
 const getAllLinodes = (payload: { params?: Params; filter?: Filter }) =>
@@ -78,7 +78,7 @@ const getAllLinodes = (payload: { params?: Params; filter?: Filter }) =>
 
 export const requestLinodes = createRequestThunk(
   getLinodesActions,
-  ({ params, filter }) => getAllLinodes({ params, filter })
+  ({ filter, params }) => getAllLinodes({ filter, params })
 );
 
 /**
@@ -86,7 +86,7 @@ export const requestLinodes = createRequestThunk(
  */
 export const getLinodesPage = createRequestThunk(
   getLinodesPageActions,
-  ({ params, filters }) => getLinodes(params, filters)
+  ({ filters, params }) => getLinodes(params, filters)
 );
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void, number>;

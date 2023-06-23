@@ -30,24 +30,24 @@ import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { capitalize } from 'src/utilities/capitalize';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  title: {
-    display: 'flex',
-    alignItems: 'center',
+  closed: {
+    backgroundColor: theme.color.red,
+  },
+  open: {
+    backgroundColor: theme.color.green,
+  },
+  status: {
+    color: theme.color.white,
+    marginLeft: theme.spacing(1),
+    marginTop: 5,
   },
   ticketLabel: {
     position: 'relative',
     top: -3,
   },
-  status: {
-    marginTop: 5,
-    marginLeft: theme.spacing(1),
-    color: theme.color.white,
-  },
-  open: {
-    backgroundColor: theme.color.green,
-  },
-  closed: {
-    backgroundColor: theme.color.red,
+  title: {
+    alignItems: 'center',
+    display: 'flex',
   },
 }));
 
@@ -68,13 +68,13 @@ const SupportTicketDetail = () => {
 
   const { data: profile } = useProfile();
 
-  const { data: ticket, isLoading, error, refetch } = useSupportTicketQuery(id);
+  const { data: ticket, error, isLoading, refetch } = useSupportTicketQuery(id);
   const {
     data: repliesData,
-    isLoading: repliesLoading,
     error: repliesError,
-    hasNextPage,
     fetchNextPage,
+    hasNextPage,
+    isLoading: repliesLoading,
   } = useInfiniteSupportTicketRepliesQuery(id);
 
   const replies = repliesData?.pages.flatMap((page) => page.data);
@@ -122,9 +122,9 @@ const SupportTicketDetail = () => {
   const _Chip = () => (
     <Chip
       className={cx({
-        [classes.status]: true,
-        [classes.open]: ticket.status === 'open' || ticket.status === 'new',
         [classes.closed]: ticket.status === 'closed',
+        [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+        [classes.status]: true,
       })}
       label={ticket.status}
       component="div"
@@ -138,17 +138,11 @@ const SupportTicketDetail = () => {
       <LandingHeader
         title={`#${ticket.id}: ${ticket.summary}`}
         breadcrumbProps={{
-          pathname: location.pathname,
           breadcrumbDataAttrs: {
             'data-qa-breadcrumb': true,
           },
-          labelOptions: {
-            subtitle: `${status} by ${ticket.updated_by} at ${formattedDate}`,
-            suffixComponent: <_Chip />,
-          },
           crumbOverrides: [
             {
-              position: 2,
               linkTo: {
                 pathname: `/support/tickets`,
                 // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
@@ -156,8 +150,14 @@ const SupportTicketDetail = () => {
                   ticket.status === 'closed' ? 'closed' : 'open'
                 }`,
               },
+              position: 2,
             },
           ],
+          labelOptions: {
+            subtitle: `${status} by ${ticket.updated_by} at ${formattedDate}`,
+            suffixComponent: <_Chip />,
+          },
+          pathname: location.pathname,
         }}
       />
 

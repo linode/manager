@@ -42,11 +42,11 @@ export interface Props {
 export const TopProcesses: React.FC<Props> = (props) => {
   const classes = useStyles();
   const {
-    topProcessesData,
-    topProcessesLoading,
-    topProcessesError,
-    lastUpdatedError,
     clientID,
+    lastUpdatedError,
+    topProcessesData,
+    topProcessesError,
+    topProcessesLoading,
   } = props;
 
   const errorMessage = Boolean(topProcessesError || lastUpdatedError)
@@ -158,7 +158,7 @@ interface TopProcessRowProps {
 
 export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(
   (props) => {
-    const { name, cpu, mem } = props;
+    const { cpu, mem, name } = props;
 
     // Memory is given from the API in KB.
     const memInBytes = mem * 1024;

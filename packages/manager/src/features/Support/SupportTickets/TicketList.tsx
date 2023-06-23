@@ -29,20 +29,20 @@ export const TicketList = (props: Props) => {
 
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'opened',
       order: 'desc',
+      orderBy: 'opened',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
-  const { data, isLoading, error, refetch } = useSupportTicketsQuery(
+  const { data, error, isLoading, refetch } = useSupportTicketsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

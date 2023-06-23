@@ -6,9 +6,9 @@ import PrimaryNav from './PrimaryNav';
 
 const props = {
   closeMenu: jest.fn(),
-  toggleTheme: jest.fn(),
-  toggleSpacing: jest.fn(),
   isCollapsed: false,
+  toggleSpacing: jest.fn(),
+  toggleTheme: jest.fn(),
 };
 
 const queryClient = queryClientFactory();
@@ -22,10 +22,10 @@ describe('PrimaryNav', () => {
     );
 
     const {
-      getByTestId,
-      rerender,
-      queryByTestId,
       findByTestId,
+      getByTestId,
+      queryByTestId,
+      rerender,
     } = renderWithTheme(<PrimaryNav {...props} />, { queryClient });
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 

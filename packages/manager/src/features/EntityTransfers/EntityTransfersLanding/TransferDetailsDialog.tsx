@@ -6,15 +6,15 @@ import Typography from 'src/components/core/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  token: {
-    marginBottom: theme.spacing(3),
+  entities: {
+    marginBottom: theme.spacing(2),
   },
   label: {
     color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
-  entities: {
-    marginBottom: theme.spacing(2),
+  token: {
+    marginBottom: theme.spacing(3),
   },
 }));
 
@@ -27,7 +27,7 @@ export interface Props {
 
 export const TransferDetailsDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { isOpen, onClose, token, entities } = props;
+  const { entities, isOpen, onClose, token } = props;
 
   return (
     <Dialog

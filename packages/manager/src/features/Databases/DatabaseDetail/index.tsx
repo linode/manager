@@ -32,15 +32,15 @@ export const DatabaseDetail = () => {
 
   const id = Number(databaseId);
 
-  const { data: database, isLoading, error } = useDatabaseQuery(engine, id);
+  const { data: database, error, isLoading } = useDatabaseQuery(engine, id);
   const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
 
   const {
     editableLabelError,
-    setEditableLabelError,
     resetEditableLabel,
+    setEditableLabelError,
   } = useEditableLabelState();
 
   if (error) {
@@ -63,16 +63,16 @@ export const DatabaseDetail = () => {
 
   const tabs = [
     {
-      title: 'Summary',
       routeName: `/databases/${engine}/${id}/summary`,
+      title: 'Summary',
     },
     {
-      title: 'Backups',
       routeName: `/databases/${engine}/${id}/backups`,
+      title: 'Backups',
     },
     {
-      title: 'Settings',
       routeName: `/databases/${engine}/${id}/settings`,
+      title: 'Settings',
     },
   ];
 
@@ -120,21 +120,21 @@ export const DatabaseDetail = () => {
       <LandingHeader
         title={database.label}
         breadcrumbProps={{
-          firstAndLastOnly: true,
-          pathname: location.pathname,
-          labelOptions: { noCap: true },
           crumbOverrides: [
             {
               label: 'Database Clusters',
               position: 1,
             },
           ],
+          firstAndLastOnly: true,
+          labelOptions: { noCap: true },
           onEditHandlers: {
             editableTextTitle: database.label,
             errorText: editableLabelError,
             onCancel: resetEditableLabel,
             onEdit: handleSubmitLabelChange,
           },
+          pathname: location.pathname,
         }}
       />
       <Tabs index={getTabIndex()} onChange={handleTabChange}>

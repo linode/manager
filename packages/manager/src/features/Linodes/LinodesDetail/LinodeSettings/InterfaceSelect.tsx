@@ -45,16 +45,16 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
 
   const {
-    readOnly,
-    slotNumber,
-    purpose,
-    label,
+    fromAddonsPanel,
+    handleChange,
     ipamAddress,
     ipamError,
+    label,
     labelError,
+    purpose,
+    readOnly,
     region,
-    handleChange,
-    fromAddonsPanel,
+    slotNumber,
   } = props;
 
   const [newVlan, setNewVlan] = React.useState('');
@@ -93,28 +93,28 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
     const purpose = selected.value;
     handleChange({
-      purpose,
-      label: purpose === 'vlan' ? label : '',
       ipam_address: purpose === 'vlan' ? ipamAddress : '',
+      label: purpose === 'vlan' ? label : '',
+      purpose,
     });
   };
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    handleChange({ purpose, label, ipam_address: e.target.value });
+    handleChange({ ipam_address: e.target.value, label, purpose });
 
   const handleLabelChange = (selected: Item<string>) =>
     handleChange({
-      purpose,
       ipam_address: ipamAddress,
       label: selected?.value ?? '',
+      purpose,
     });
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);
     handleChange({
-      purpose,
       ipam_address: ipamAddress,
       label: _newVlan,
+      purpose,
     });
   };
 

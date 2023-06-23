@@ -37,6 +37,15 @@ import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      paddingRight: 0,
+      paddingTop: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
+    },
+  },
   copy: {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
@@ -49,15 +58,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     margin: 0,
     width: '100%',
   },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-      paddingRight: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
 }));
 
 export type FormikProps = FormikBag<{}, CredentialPayload>;
@@ -65,7 +65,7 @@ export type FormikProps = FormikBag<{}, CredentialPayload>;
 export const CredentialList = () => {
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { data, isLoading, error } = useAllManagedCredentialsQuery();
+  const { data, error, isLoading } = useAllManagedCredentialsQuery();
 
   const credentials = data || [];
 
@@ -86,11 +86,11 @@ export const CredentialList = () => {
   const { mutateAsync: updateCredential } = useUpdateCredentialMutation(editID);
 
   const {
-    dialog,
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog,
     handleError,
+    openDialog,
+    submitDialog,
   } = useDialog<number>((id) => deleteCredential({ id: id || -1 }));
 
   const selectedCredential = credentials.find(
@@ -128,7 +128,7 @@ export const CredentialList = () => {
 
   const handleCreate = (
     values: CredentialPayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     setStatus(undefined);
     createCredential(values)
@@ -149,7 +149,7 @@ export const CredentialList = () => {
 
   const handleUpdatePassword = (
     values: CredentialPayload,
-    { setSubmitting, setErrors, setStatus, setFieldValue }: FormikProps
+    { setErrors, setFieldValue, setStatus, setSubmitting }: FormikProps
   ) => {
     setStatus(undefined);
     if (!selectedCredential) {
@@ -178,7 +178,7 @@ export const CredentialList = () => {
 
   const handleUpdateLabel = (
     values: CredentialPayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     setStatus(undefined);
     if (!selectedCredential) {
@@ -240,8 +240,8 @@ export const CredentialList = () => {
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
-              data,
               count,
+              data,
               handlePageChange,
               handlePageSizeChange,
               page,

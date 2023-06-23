@@ -11,18 +11,18 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(2),
+  failureText: {
+    color: theme.color.red,
   },
   icon: {
-    marginLeft: theme.spacing(1),
-    transition: 'color 225ms ease-in-out',
     '&:hover': {
       color: theme.color.red,
     },
+    marginLeft: theme.spacing(1),
+    transition: 'color 225ms ease-in-out',
   },
-  failureText: {
-    color: theme.color.red,
+  root: {
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -75,8 +75,8 @@ const DayDisplay: React.FC<DisplayProps> = (props) => {
 };
 
 const iconStyles = {
-  width: 30,
   height: 30,
+  width: 30,
 };
 
 export const IssueDay: React.FC<Props> = (props) => {

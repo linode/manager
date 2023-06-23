@@ -11,7 +11,7 @@ export interface Props {
 }
 
 export const DrawerContent = (props: Props) => {
-  const { title, loading, error, errorMessage, children } = props;
+  const { children, error, errorMessage, loading, title } = props;
   if (loading) {
     return <CircleProgress />;
   }

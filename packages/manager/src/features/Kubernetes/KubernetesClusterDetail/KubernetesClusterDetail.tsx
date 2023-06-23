@@ -25,7 +25,7 @@ export const KubernetesClusterDetail = () => {
   const id = Number(clusterID);
   const location = useLocation();
 
-  const { data: cluster, isLoading, error } = useKubernetesClusterQuery(id);
+  const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
 
   const { data: regionsData } = useRegionsQuery();
 
@@ -38,8 +38,8 @@ export const KubernetesClusterDetail = () => {
   const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
 
   const {
-    showHighAvailability,
     isClusterHighlyAvailable,
+    showHighAvailability,
   } = getKubeHighAvailability(account, cluster);
 
   if (error) {
@@ -92,13 +92,13 @@ export const KubernetesClusterDetail = () => {
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
           firstAndLastOnly: true,
-          pathname: location.pathname,
           onEditHandlers: {
             editableTextTitle: cluster?.label,
-            onEdit: handleLabelChange,
-            onCancel: resetEditableLabel,
             errorText: updateError,
+            onCancel: resetEditableLabel,
+            onEdit: handleLabelChange,
           },
+          pathname: location.pathname,
         }}
         createButtonText="Upgrade to HA"
         onButtonClick={

@@ -39,7 +39,7 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
     };
 
     getLabel = (...args: LabelArgTypes[]) => {
-      const { hasUserTypedCustomLabel, customLabel } = this.state;
+      const { customLabel, hasUserTypedCustomLabel } = this.state;
 
       // If a user has typed in the 'label' input field, don't derive a default label name
       if (hasUserTypedCustomLabel || !args) {
@@ -60,8 +60,8 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
 
     render() {
       return React.createElement(Component, {
-        updateCustomLabel: this.updateCustomLabel,
         getLabel: this.getLabel,
+        updateCustomLabel: this.updateCustomLabel,
         ...this.props,
         ...this.state,
       });

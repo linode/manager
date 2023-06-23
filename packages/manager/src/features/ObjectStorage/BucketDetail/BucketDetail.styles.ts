@@ -34,6 +34,6 @@ export const StyledFooter = styled(Typography, {
   label: 'StyledFooter',
 })(({ theme }) => ({
   color: theme.palette.primary.main,
-  textDecoration: 'underline',
   cursor: 'pointer',
+  textDecoration: 'underline',
 }));

@@ -15,18 +15,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     color: '#3683dc',
   },
+  iconLink: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    font: 'inherit',
+    marginRight: theme.spacing(1),
+    padding: 0,
+  },
   tooltip: {
     '& svg': {
       color: '#3683dc',
     },
-  },
-  iconLink: {
-    marginRight: theme.spacing(1),
-    background: 'none',
-    border: 'none',
-    padding: 0,
-    font: 'inherit',
-    cursor: 'pointer',
   },
 }));
 
@@ -39,14 +39,14 @@ interface Props {
 
 export const KubeConfigDrawer = (props: Props) => {
   const classes = useStyles();
-  const { clusterLabel, clusterId, closeDrawer, open } = props;
+  const { closeDrawer, clusterId, clusterLabel, open } = props;
 
   const {
     data,
     error,
+    isFetching,
     isLoading,
     refetch,
-    isFetching,
   } = useKubenetesKubeConfigQuery(clusterId, open);
 
   // refetchOnMount isnt good enough for this query because

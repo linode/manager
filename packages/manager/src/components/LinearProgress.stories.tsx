@@ -3,8 +3,8 @@ import { Meta, StoryObj } from '@storybook/react';
 import { LinearProgress } from './LinearProgress';
 
 const meta: Meta<typeof LinearProgress> = {
-  title: 'Components/Loading States/Linear Progress',
   component: LinearProgress,
+  title: 'Components/Loading States/Linear Progress',
 };
 
 type Story = StoryObj<typeof LinearProgress>;

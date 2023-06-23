@@ -6,8 +6,8 @@ import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 jest.mock('src/components/ActionMenu/ActionMenu');
 
 const props: Props = {
-  idx: 1,
   disabled: false,
+  idx: 1,
   triggerCloneFirewallRule: jest.fn(),
   triggerDeleteFirewallRule: jest.fn(),
   triggerOpenRuleDrawerForEditing: jest.fn(),

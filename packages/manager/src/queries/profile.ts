@@ -101,8 +101,8 @@ export const useSSHKeysQuery = (
     [queryKey, 'ssh-keys', 'paginated', params, filter],
     () => getSSHKeys(params, filter),
     {
-      keepPreviousData: true,
       enabled,
+      keepPreviousData: true,
     }
   );
 

@@ -28,21 +28,21 @@ interface Props {
 }
 
 export const EditDomainDrawer = (props: Props) => {
-  const { open, onClose, domain } = props;
+  const { domain, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const { mutateAsync: updateDomain, error, reset } = useUpdateDomainMutation();
+  const { error, mutateAsync: updateDomain, reset } = useUpdateDomainMutation();
 
   const formik = useFormik<UpdateDomainPayload>({
     enableReinitialize: true,
     initialValues: {
+      axfr_ips: domain?.axfr_ips,
       domain: domain?.domain,
+      master_ips: domain?.master_ips,
       soa_email: domain?.soa_email,
       tags: domain?.tags,
-      master_ips: domain?.master_ips,
-      axfr_ips: domain?.axfr_ips,
     },
     onSubmit: async (values) => {
       if (!domain) {
@@ -57,16 +57,16 @@ export const EditDomainDrawer = (props: Props) => {
           ? // Not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
             {
               domain: values.domain,
-              tags: values.tags,
-              soa_email: values.soa_email,
               id: domain.id,
+              soa_email: values.soa_email,
+              tags: values.tags,
             }
           : {
-              domain: values.domain,
-              tags: values.tags,
-              master_ips: primaryIPs,
-              id: domain.id,
               axfr_ips: finalTransferIPs,
+              domain: values.domain,
+              id: domain.id,
+              master_ips: primaryIPs,
+              tags: values.tags,
             };
 
       await updateDomain(data);

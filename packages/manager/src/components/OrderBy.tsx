@@ -85,8 +85,8 @@ export const getInitialValuesFromUserPreferences = (
   }
   return (
     preferences?.sortKeys?.[preferenceKey] ?? {
-      orderBy: defaultOrderBy,
       order: defaultOrder,
+      orderBy: defaultOrderBy,
     }
   );
 };
@@ -219,11 +219,11 @@ export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
 
   const downstreamProps = {
     ...props,
+    count: props.data.length,
+    data: sortedData,
+    handleOrderChange,
     order,
     orderBy,
-    handleOrderChange,
-    data: sortedData,
-    count: props.data.length,
   };
 
   // eslint-disable-next-line

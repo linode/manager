@@ -37,14 +37,14 @@ const isPoolReady = (pool: KubeNodePoolResponse): boolean =>
  */
 export const deleteAllTestLkeClusters = async (): Promise<any[]> => {
   const clusters = await depaginate<KubernetesCluster>((page: number) =>
-    getKubernetesClusters({ page_size: pageSize, page })
+    getKubernetesClusters({ page, page_size: pageSize })
   );
 
   const clusterDeletionPromises = clusters
     .filter((cluster) => isTestLabel(cluster.label))
     .map(async (cluster) => {
       const pools = await depaginate<KubeNodePoolResponse>((page: number) =>
-        getNodePools(cluster.id, { page_size: pageSize, page })
+        getNodePools(cluster.id, { page, page_size: pageSize })
       );
       // Only delete clusters that have finished provisioning.
       if (pools.every(isPoolReady)) {

@@ -40,11 +40,11 @@ export const MySQLLanding: React.FC<Props> = (props) => {
 
   const [version, setVersion] = React.useState<string | undefined>();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
     end: 0,
+    start: 0,
   });
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['mysql'],
     clientAPIKey,
     time.start,
@@ -69,7 +69,7 @@ export const MySQLLanding: React.FC<Props> = (props) => {
   }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
+    setTimeBox({ end, start });
   };
 
   const mySQL = data.Applications?.MySQL;

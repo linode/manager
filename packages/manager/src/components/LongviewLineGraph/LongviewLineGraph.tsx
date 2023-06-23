@@ -12,19 +12,19 @@ import {
 } from 'src/components/LineGraph/LineGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  message: {
+    left: '50%',
+    position: 'absolute',
+    top: '45%',
+    transform: 'translate(-50%, -50%)',
+  },
   title: {
-    color: theme.color.headline,
-    fontWeight: 'bold',
-    fontSize: '1rem',
     '& > span': {
       color: theme.palette.text.primary,
     },
-  },
-  message: {
-    position: 'absolute',
-    left: '50%',
-    top: '45%',
-    transform: 'translate(-50%, -50%)',
+    color: theme.color.headline,
+    fontSize: '1rem',
+    fontWeight: 'bold',
   },
 }));
 
@@ -41,7 +41,7 @@ type CombinedProps = Props;
 const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { error, loading, title, subtitle, ariaLabel, ...rest } = props;
+  const { ariaLabel, error, loading, subtitle, title, ...rest } = props;
 
   const message = error // Error state is separate, don't want to put text on top of it
     ? undefined

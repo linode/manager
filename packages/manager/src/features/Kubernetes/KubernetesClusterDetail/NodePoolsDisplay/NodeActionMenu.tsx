@@ -13,28 +13,28 @@ interface Props {
 
 const useStyles = makeStyles(() => ({
   root: {
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center',
   },
 }));
 
 export const NodeActionMenu: React.FC<Props> = (props) => {
-  const { nodeId, instanceLabel, openRecycleNodeDialog } = props;
+  const { instanceLabel, nodeId, openRecycleNodeDialog } = props;
   const theme = useTheme<Theme>();
   const classes = useStyles();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const actions = [
     {
-      title: 'Recycle',
+      disabled: !nodeId || !instanceLabel,
       onClick: () => {
         if (!nodeId || !instanceLabel) {
           return;
         }
         openRecycleNodeDialog(nodeId!, instanceLabel!);
       },
-      disabled: !nodeId || !instanceLabel,
+      title: 'Recycle',
     },
   ];
 

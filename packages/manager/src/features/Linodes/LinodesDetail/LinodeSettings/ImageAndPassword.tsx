@@ -38,14 +38,14 @@ type CombinedProps = Props & ContextProps;
 
 export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
   const {
+    authorizedUsers,
     imageFieldError,
     onImageChange,
     onPasswordChange,
     password,
     passwordError,
-    setAuthorizedUsers,
-    authorizedUsers,
     permissions,
+    setAuthorizedUsers,
   } = props;
 
   const classes = useStyles();

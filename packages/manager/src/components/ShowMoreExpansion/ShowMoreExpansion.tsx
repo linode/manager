@@ -7,32 +7,32 @@ import Collapse from 'src/components/core/Collapse';
 
 const useStyles = makeStyles<void, 'caret'>()(
   (theme: Theme, _params, classes) => ({
+    caret: {
+      '&.rotate': {
+        transform: 'rotate(90deg)',
+        transition: 'transform .3s ease-in-out',
+      },
+      color: theme.palette.primary.main,
+      fontSize: 28,
+      marginRight: theme.spacing(0.5),
+      transition: 'transform .1s ease-in-out',
+    },
     root: {
-      paddingLeft: 0,
-      paddingRight: 0,
-      backgroundColor: 'transparent !important',
-      display: 'flex',
-      alignItems: 'center',
-      fontFamily: theme.font.bold,
-      width: 'auto',
-      color: theme.color.headline,
-      transition: theme.transitions.create('color'),
       '&:hover': {
-        color: theme.palette.primary.main,
         [`& .${classes.caret}`]: {
           color: theme.palette.primary.light,
         },
+        color: theme.palette.primary.main,
       },
-    },
-    caret: {
-      color: theme.palette.primary.main,
-      marginRight: theme.spacing(0.5),
-      fontSize: 28,
-      transition: 'transform .1s ease-in-out',
-      '&.rotate': {
-        transition: 'transform .3s ease-in-out',
-        transform: 'rotate(90deg)',
-      },
+      alignItems: 'center',
+      backgroundColor: 'transparent !important',
+      color: theme.color.headline,
+      display: 'flex',
+      fontFamily: theme.font.bold,
+      paddingLeft: 0,
+      paddingRight: 0,
+      transition: theme.transitions.create('color'),
+      width: 'auto',
     },
   })
 );
@@ -44,7 +44,7 @@ interface ShowMoreExpansionProps {
 }
 
 const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
-  const { name, defaultExpanded, children } = props;
+  const { children, defaultExpanded, name } = props;
 
   const { classes } = useStyles();
 

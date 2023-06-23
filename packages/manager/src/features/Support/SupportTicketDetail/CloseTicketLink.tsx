@@ -23,9 +23,9 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const {
-    mutateAsync: closeSupportTicket,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: closeSupportTicket,
   } = useSupportTicketCloseMutation(ticketId);
 
   const closeTicket = async () => {

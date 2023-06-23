@@ -27,7 +27,7 @@ export interface Props {
 type CombinedProps = Props;
 
 const CredentialDrawer: React.FC<CombinedProps> = (props) => {
-  const { label, open, onClose, onSubmitLabel, onSubmitPassword } = props;
+  const { label, onClose, onSubmitLabel, onSubmitPassword, open } = props;
 
   return (
     <Drawer title={`Edit Credential: ${label}`} open={open} onClose={onClose}>
@@ -41,13 +41,13 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
         onSubmit={onSubmitLabel}
       >
         {({
-          values,
           errors,
-          status,
-          handleChange,
           handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
+          status,
+          values,
         }) => (
           <>
             {status && status.generalError && (
@@ -105,13 +105,13 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
         onSubmit={onSubmitPassword}
       >
         {({
-          values,
           errors,
-          status,
-          handleChange,
           handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
+          status,
+          values,
         }) => (
           <div style={{ paddingTop: '1em' }}>
             {status && status.generalError && (

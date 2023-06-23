@@ -28,7 +28,7 @@ export const LinodeTransferTable = (props: Props) => {
 
   const pagination = usePagination();
 
-  const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery(
+  const { data, dataUpdatedAt, error, isError, isLoading } = useLinodesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -103,7 +103,7 @@ interface RowProps {
 }
 
 const LinodeRow: React.FC<RowProps> = (props) => {
-  const { linode, isChecked, handleToggleCheck } = props;
+  const { handleToggleCheck, isChecked, linode } = props;
   const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
   const displayType = type?.formattedLabel ?? linode.type;

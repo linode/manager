@@ -42,8 +42,8 @@ export const ConfigNodeIPSelect = React.memo(
         value={
           props.nodeAddress
             ? {
-                value: props.nodeAddress,
                 label: props.nodeAddress,
+                value: props.nodeAddress,
               }
             : null
         }

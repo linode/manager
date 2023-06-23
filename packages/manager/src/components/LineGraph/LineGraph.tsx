@@ -66,11 +66,11 @@ export interface LineGraphProps {
 }
 
 const lineOptions: ChartDataSets = {
-  borderWidth: 1,
   borderJoinStyle: 'miter',
+  borderWidth: 1,
   lineTension: 0,
-  pointRadius: 0,
   pointHitRadius: 10,
+  pointRadius: 0,
 };
 
 const humanizeLargeData = (value: number) => {
@@ -93,20 +93,20 @@ export const LineGraph = (props: LineGraphProps) => {
   const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
 
   const {
+    accessibleDataTable,
     ariaLabel,
     chartHeight,
+    data,
     formatData,
     formatTooltip,
-    suggestedMax,
-    showToday,
-    timezone,
-    data,
-    rowHeaders,
     legendRows,
     nativeLegend,
+    rowHeaders,
+    showToday,
+    suggestedMax,
     tabIndex,
+    timezone,
     unit,
-    accessibleDataTable,
   } = props;
 
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -137,48 +137,30 @@ export const LineGraph = (props: LineGraphProps) => {
     _tooltipUnit?: string
   ) => {
     const finalChartOptions: ChartOptions = {
-      maintainAspectRatio: false,
-      responsive: true,
       animation: { duration: 0 },
       legend: {
         display: _nativeLegend,
         position: _nativeLegend ? 'bottom' : undefined,
       },
+      maintainAspectRatio: false,
+      responsive: true,
       scales: {
-        yAxes: [
-          {
-            // Defines a fixed width for the Y-axis labels
-            afterFit(axes) {
-              axes.width = 35;
-            },
-            gridLines: {
-              borderDash: [3, 6],
-              drawTicks: false,
-              zeroLineWidth: 1,
-              zeroLineBorderDashOffset: 2,
-            },
-            ticks: {
-              beginAtZero: true,
-              fontColor: theme.textColors.tableHeader,
-              fontSize: 12,
-              fontStyle: 'normal',
-              maxTicksLimit: 8,
-              padding: 10,
-              suggestedMax: _suggestedMax ?? undefined,
-              callback(value: number, _index: number) {
-                return humanizeLargeData(value);
-              },
-            },
-          },
-        ],
         xAxes: [
           {
-            type: 'time',
+            adapters: {
+              date: {
+                zone: timezone,
+              },
+            },
             gridLines: {
               display: false,
             },
+            ticks: {
+              fontColor: theme.textColors.tableHeader,
+              fontSize: 12,
+              fontStyle: 'normal',
+            },
             time: {
-              stepSize: showToday ? 3 : 5,
               displayFormats: showToday
                 ? {
                     hour: 'HH:00',
@@ -188,38 +170,56 @@ export const LineGraph = (props: LineGraphProps) => {
                     hour: 'LLL dd',
                     minute: 'LLL dd',
                   },
+              stepSize: showToday ? 3 : 5,
             },
-            adapters: {
-              date: {
-                zone: timezone,
-              },
-            },
-            ticks: {
-              fontColor: theme.textColors.tableHeader,
-              fontSize: 12,
-              fontStyle: 'normal',
-            },
+            type: 'time',
             // This cast is because the type definition does not include adapters
           } as ChartXAxe,
         ],
+        yAxes: [
+          {
+            // Defines a fixed width for the Y-axis labels
+            afterFit(axes) {
+              axes.width = 35;
+            },
+            gridLines: {
+              borderDash: [3, 6],
+              drawTicks: false,
+              zeroLineBorderDashOffset: 2,
+              zeroLineWidth: 1,
+            },
+            ticks: {
+              beginAtZero: true,
+              callback(value: number, _index: number) {
+                return humanizeLargeData(value);
+              },
+              fontColor: theme.textColors.tableHeader,
+              fontSize: 12,
+              fontStyle: 'normal',
+              maxTicksLimit: 8,
+              padding: 10,
+              suggestedMax: _suggestedMax ?? undefined,
+            },
+          },
+        ],
       },
       tooltips: {
-        cornerRadius: 0,
         backgroundColor: '#fbfbfb',
         bodyFontColor: '#32363C',
-        displayColors: false,
-        titleFontColor: '#606469',
-        xPadding: 8,
-        yPadding: 10,
-        borderWidth: 0.5,
         borderColor: '#999',
-        caretPadding: 10,
-        position: 'nearest',
+        borderWidth: 0.5,
         callbacks: {
           label: _formatTooltip(data, formatTooltip, _tooltipUnit),
         },
+        caretPadding: 10,
+        cornerRadius: 0,
+        displayColors: false,
         intersect: false,
         mode: 'index',
+        position: 'nearest',
+        titleFontColor: '#606469',
+        xPadding: 8,
+        yPadding: 10,
       },
     };
 
@@ -252,12 +252,12 @@ export const LineGraph = (props: LineGraphProps) => {
         return acc;
       }, []);
       return {
-        label: dataSet.label,
-        borderColor: dataSet.borderColor,
         backgroundColor: dataSet.backgroundColor,
+        borderColor: dataSet.borderColor,
         data: timeData,
         fill: dataSet.fill,
         hidden: hiddenDatasets.includes(idx),
+        label: dataSet.label,
         ...lineOptions,
       };
     });
@@ -273,12 +273,12 @@ export const LineGraph = (props: LineGraphProps) => {
       }
 
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
-        type: 'line',
         data: {
           datasets: _formatData(),
         },
-        plugins,
         options: getChartOptions(suggestedMax, nativeLegend, unit),
+        plugins,
+        type: 'line',
       });
     }
   });

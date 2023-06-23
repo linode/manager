@@ -40,16 +40,16 @@ export class StackScriptSelectionRow extends React.Component<
 > {
   render() {
     const {
-      classes,
-      onSelect,
-      disabledCheckedSelect,
       checked,
-      label,
+      classes,
       description,
+      disabled,
+      disabledCheckedSelect,
+      label,
+      onSelect,
+      openStackScriptDialog,
       stackScriptID,
       stackScriptUsername,
-      openStackScriptDialog,
-      disabled,
     } = this.props;
 
     const renderLabel = () => {

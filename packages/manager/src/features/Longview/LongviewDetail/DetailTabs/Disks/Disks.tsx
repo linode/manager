@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   select: {
-    width: 250,
     marginBottom: theme.spacing(),
+    width: 250,
   },
 }));
 
@@ -40,22 +40,22 @@ const Disks: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
+    clientAPIKey,
+    clientLastUpdated,
     lastUpdated,
     lastUpdatedError,
-    clientLastUpdated,
-    clientAPIKey,
   } = props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
     end: 0,
+    start: 0,
   });
 
   const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
+    setTimeBox({ end, start });
   };
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['disk', 'sysinfo'],
     clientAPIKey,
     time.start,

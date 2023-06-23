@@ -195,11 +195,11 @@ export const mockUpdateUsername = (
   restricted: boolean = false
 ) => {
   return cy.intercept('PUT', apiMatcher(`account/users/${oldUsername}`), {
-    username: newUsername,
     email: 'mockEmail@example.com',
     restricted,
     ssh_keys: [],
     tfa_enabled: false,
+    username: newUsername,
     verified_phone_number: null,
   });
 };

@@ -17,16 +17,16 @@ import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  paragraphBreak: {
+    marginTop: theme.spacing(2),
+  },
   title: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing(2),
     '& button': {
       paddingLeft: theme.spacing(),
     },
-  },
-  paragraphBreak: {
-    marginTop: theme.spacing(2),
+    alignItems: 'center',
+    display: 'flex',
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -47,12 +47,12 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   const {
     handleVLANChange,
     helperText,
-    vlanLabel,
-    labelError,
     ipamAddress,
     ipamError,
+    labelError,
     readOnly,
     region,
+    vlanLabel,
   } = props;
 
   const classes = useStyles();

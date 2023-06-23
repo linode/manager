@@ -14,46 +14,46 @@ export interface Props extends DrawerProps {
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  paper: {
-    width: 300,
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      width: 480,
-      padding: theme.spacing(4),
+  button: {
+    '& :hover, & :focus': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
     },
-    '& .actionPanel': {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginTop: theme.spacing(),
+    '& > span': {
+      padding: 2,
     },
-    '& .selectionCard': {
-      maxWidth: '100%',
-      flexBasis: '100%',
-    },
-  },
-  wide: {
-    [theme.breakpoints.up('sm')]: {
-      width: 700,
-    },
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
   },
   drawerHeader: {
     '&&': {
       marginBottom: theme.spacing(2),
     },
   },
+  paper: {
+    '& .actionPanel': {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      marginTop: theme.spacing(),
+    },
+    '& .selectionCard': {
+      flexBasis: '100%',
+      maxWidth: '100%',
+    },
+    padding: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(4),
+      width: 480,
+    },
+    width: 300,
+  },
   title: {
     wordBreak: 'break-word',
   },
-  button: {
-    minWidth: 'auto',
-    minHeight: 'auto',
-    padding: 0,
-    '& > span': {
-      padding: 2,
-    },
-    '& :hover, & :focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
+  wide: {
+    [theme.breakpoints.up('sm')]: {
+      width: 700,
     },
   },
 }));
@@ -61,7 +61,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 const Drawer = (props: Props) => {
   const { classes } = useStyles();
 
-  const { title, children, onClose, wide, ...rest } = props;
+  const { children, onClose, title, wide, ...rest } = props;
 
   const titleID = convertForAria(title);
 

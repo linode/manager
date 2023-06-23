@@ -24,16 +24,16 @@ interface CheckoutBarProps {
 
 const CheckoutBar = (props: CheckoutBarProps) => {
   const {
-    onDeploy,
-    heading,
+    agreement,
     calculatedPrice,
+    children,
     disabled,
+    footer,
+    heading,
     isMakingRequest,
+    onDeploy,
     priceHelperText,
     submitText,
-    footer,
-    agreement,
-    children,
   } = props;
 
   const theme = useTheme();

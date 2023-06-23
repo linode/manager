@@ -5,12 +5,12 @@ describe('Firewall rule table tests', () => {
   describe('firewallRuleToRowData', () => {
     it('transforms a FirewallRuleType to the appropriate row', () => {
       const rule: ExtendedFirewallRule = {
+        action: 'ACCEPT',
+        addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
+        originalIndex: 0,
         ports: '22',
         protocol: 'TCP',
-        addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
-        action: 'ACCEPT',
         status: 'NOT_MODIFIED',
-        originalIndex: 0,
       };
       expect(firewallRuleToRowData([rule])[0]).toHaveProperty('type', 'SSH');
       expect(firewallRuleToRowData([rule])[0]).toHaveProperty(

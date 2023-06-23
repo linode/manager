@@ -22,14 +22,14 @@ import {
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),
-  error: {
-    marginTop: `${theme.spacing(3)} !important`,
-    marginBottom: `0 !important`,
+  delete: {
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: theme.spacing(),
+    },
   },
-  root: {
-    marginLeft: 0,
-    marginRight: 0,
-    marginBottom: theme.spacing(3),
+  error: {
+    marginBottom: `0 !important`,
+    marginTop: `${theme.spacing(3)} !important`,
   },
   main: {
     '&.MuiGrid-item': {
@@ -39,19 +39,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       order: 1,
     },
   },
+  root: {
+    marginBottom: theme.spacing(3),
+    marginLeft: 0,
+    marginRight: 0,
+  },
   tagsSection: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(2),
-      order: 2,
-    },
     '&.MuiGrid-item': {
       paddingLeft: 0,
       paddingRight: 0,
     },
-  },
-  delete: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(2),
+      order: 2,
     },
   },
 }));
@@ -82,7 +82,7 @@ export const DomainDetail = () => {
       return Promise.reject('No Domain found.');
     }
 
-    return updateDomain({ id: domain.id, domain: label }).catch((e) => {
+    return updateDomain({ domain: label, id: domain.id }).catch((e) => {
       setUpdateError(e[0].reason);
       return Promise.reject(e);
     });
@@ -127,14 +127,14 @@ export const DomainDetail = () => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/dns-manager/"
         breadcrumbProps={{
-          pathname: location.pathname,
           labelOptions: { noCap: true },
           onEditHandlers: {
             editableTextTitle: domain.domain,
-            onEdit: handleLabelChange,
-            onCancel: resetEditableLabel,
             errorText: updateError,
+            onCancel: resetEditableLabel,
+            onEdit: handleLabelChange,
           },
+          pathname: location.pathname,
         }}
         extraActions={
           <DownloadDNSZoneFileButton

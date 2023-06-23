@@ -26,7 +26,7 @@ export const CheckoutSummary = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { heading, agreement, displaySections, children } = props;
+  const { agreement, children, displaySections, heading } = props;
 
   return (
     <StyledPaper data-qa-summary>
@@ -54,8 +54,8 @@ export const CheckoutSummary = (props: Props) => {
 };
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(3),
   marginBottom: theme.spacing(3),
+  marginTop: theme.spacing(3),
 }));
 
 const StyledHeading = styled(Typography)(({ theme }) => ({
@@ -65,10 +65,10 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
 const StyledSummary = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     '& > div': {
-      borderRight: 'solid 1px #9DA4A6',
       '&:last-child': {
         borderRight: 'none',
       },
+      borderRight: 'solid 1px #9DA4A6',
     },
   },
 }));

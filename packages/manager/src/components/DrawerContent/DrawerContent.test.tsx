@@ -9,10 +9,10 @@ const renderDrawer = (props: Props) =>
   renderWithTheme(<DrawerContent {...props} />);
 
 const props: Props = {
-  loading: true,
-  error: false,
-  title: 'my-drawer',
   children: defaultChildren,
+  error: false,
+  loading: true,
+  title: 'my-drawer',
 };
 
 describe('DrawerContent', () => {
@@ -25,9 +25,9 @@ describe('DrawerContent', () => {
   it('should show error if loading is finished but the error persists', () => {
     renderDrawer({
       ...props,
-      loading: false,
       error: true,
       errorMessage: 'My Error',
+      loading: false,
     });
     expect(screen.getByText('My Error')).toBeInTheDocument();
     expect(screen.queryByText('Content')).not.toBeInTheDocument();

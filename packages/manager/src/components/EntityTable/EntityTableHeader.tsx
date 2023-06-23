@@ -13,12 +13,12 @@ import { Entity, HeaderCell } from './types';
 import { StyledToggleButton } from 'src/features/Linodes/LinodesLanding/DisplayLinodes.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  hiddenHeaderCell: theme.visually.hidden,
   groupByTagCell: {
     backgroundColor: theme.bg.tableHeader,
     paddingRight: `0px !important`,
     textAlign: 'right',
   },
+  hiddenHeaderCell: theme.visually.hidden,
 }));
 
 interface Props extends Omit<OrderByProps<Entity>, 'data'> {
@@ -38,18 +38,18 @@ interface NormalCellProps {
 
 export const EntityTableHeader: React.FC<Props> = (props) => {
   const {
-    headers,
     handleOrderChange,
+    headers,
+    isGroupedByTag,
+    isLargeAccount,
     order,
     orderBy,
     toggleGroupByTag,
-    isGroupedByTag,
-    isLargeAccount,
   } = props;
   const classes = useStyles();
 
   const SortCell: React.FC<SortCellProps> = (props) => {
-    const { orderBy, order, thisCell, handleOrderChange } = props;
+    const { handleOrderChange, order, orderBy, thisCell } = props;
     return (
       <TableSortCell
         active={orderBy === thisCell.dataColumn}
@@ -157,7 +157,7 @@ interface GroupByTagToggleProps {
 
 export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
   (props) => {
-    const { toggleGroupByTag, isGroupedByTag, isLargeAccount } = props;
+    const { isGroupedByTag, isLargeAccount, toggleGroupByTag } = props;
 
     return (
       <>

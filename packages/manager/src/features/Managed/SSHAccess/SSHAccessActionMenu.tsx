@@ -17,7 +17,7 @@ export interface Props {
 }
 
 export const SSHAccessActionMenu: React.FC<Props> = (props) => {
-  const { linodeId, isEnabled, openDrawer } = props;
+  const { isEnabled, linodeId, openDrawer } = props;
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -34,14 +34,13 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       onClick: () => {
         openDrawer(linodeId);
       },
+      title: 'Edit',
     },
     isEnabled
       ? {
-          title: 'Disable',
           onClick: () => {
             updateLinodeSettings({
               ssh: { access: false },
@@ -55,9 +54,9 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
                 handleError('Error disabling SSH Access for this Linode.', err);
               });
           },
+          title: 'Disable',
         }
       : {
-          title: 'Enable',
           onClick: () => {
             updateLinodeSettings({
               ssh: { access: true },
@@ -71,6 +70,7 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
                 handleError('Error enabling SSH Access for this Linode.', err);
               });
           },
+          title: 'Enable',
         },
   ];
 

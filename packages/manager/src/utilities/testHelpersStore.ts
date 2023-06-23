@@ -1,3 +1,3 @@
 export const withLinodesLoaded = {
-  __resources: { linodes: { loading: false, lastUpdated: 1 } },
+  __resources: { linodes: { lastUpdated: 1, loading: false } },
 };

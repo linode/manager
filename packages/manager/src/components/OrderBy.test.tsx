@@ -8,33 +8,33 @@ import {
 } from './OrderBy';
 
 const a = {
-  name: 'april',
-  hobbies: ['this', 'that', 'the other'],
   age: 43,
+  hobbies: ['this', 'that', 'the other'],
+  name: 'april',
 };
 
 const b = {
-  name: 'may',
-  hobbies: [],
   age: 23,
+  hobbies: [],
+  name: 'may',
 };
 
 const c = {
-  name: 'june',
-  hobbies: ['traditional Irish bowling'],
   age: 53,
+  hobbies: ['traditional Irish bowling'],
+  name: 'june',
 };
 
 const d = {
-  name: 'july',
-  hobbies: ['one', 'two', 'three'],
   age: 53,
+  hobbies: ['one', 'two', 'three'],
+  name: 'july',
 };
 
 const e = {
-  name: 'august',
-  hobbies: ['traditional Irish bowling'],
   age: 53,
+  hobbies: ['traditional Irish bowling'],
+  name: 'august',
 };
 
 describe('OrderBy', () => {
@@ -62,8 +62,8 @@ describe('OrderBy', () => {
     const preferences = {
       sortKeys: {
         ['listening-services']: {
-          orderBy: 'test-order',
           order: 'desc' as any,
+          orderBy: 'test-order',
         },
       },
     };
@@ -87,7 +87,7 @@ describe('OrderBy', () => {
           'default',
           'desc'
         )
-      ).toEqual({ orderBy: 'test-order', order: 'desc' });
+      ).toEqual({ order: 'desc', orderBy: 'test-order' });
     });
 
     it("should return the defaults if the key isn't found", () => {
@@ -117,15 +117,15 @@ describe('OrderBy', () => {
 
   describe('component', () => {
     const componentProps = {
-      preferences: {},
       getUserPreferences: jest.fn(),
+      preferences: {},
       updateUserPreferences: jest.fn(),
     };
 
     it('re-sorts (previously) sorted data when the order changes', () => {
       const data = [
-        { name: 'april', age: 50 },
-        { name: 'may', age: 50 },
+        { age: 50, name: 'april' },
+        { age: 50, name: 'may' },
       ];
 
       const { container, getByTestId } = render(

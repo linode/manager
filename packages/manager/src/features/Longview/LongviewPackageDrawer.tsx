@@ -33,7 +33,7 @@ interface Props {
 type CombinedProps = Props & DispatchProps & LVClientData;
 
 export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
-  const { isOpen, clientLabel, longviewClientData, onClose } = props;
+  const { clientLabel, isOpen, longviewClientData, onClose } = props;
 
   const classes = useStyles();
 

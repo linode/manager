@@ -18,23 +18,30 @@ type CSSClasses =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      marginBottom: theme.spacing(0.5),
-      maxWidth: '100%',
-      width: '100%',
-      '&:last-child': {
-        marginBottom: 0,
+    hide: {
+      '&:focus': {
+        opacity: 1,
       },
-      '&:hover': {
-        '& $hide': {
-          opacity: 1,
-        },
+      [theme.breakpoints.up('md')]: {
+        // Hide until the component is hovered,
+        // when props.showCopyOnHover is true (only on desktop)
+        opacity: 0,
+      },
+      transition: theme.transitions.create(['opacity']),
+    },
+    icon: {
+      '& svg': {
+        height: 12,
+        top: 1,
+        width: 12,
       },
     },
-    row: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      width: '100%',
+    ipLink: {
+      color: theme.palette.primary.main,
+      display: 'inline-block',
+      position: 'relative',
+      top: -1,
+      transition: theme.transitions.create(['color']),
     },
     multipleAddresses: {
       '&:not(:last-child)': {
@@ -42,35 +49,28 @@ const styles = (theme: Theme) =>
       },
     },
     right: {
-      display: 'flex',
       alignItems: 'center',
+      display: 'flex',
       justifyContent: 'center',
       marginLeft: theme.spacing(0.5),
     },
-    icon: {
-      '& svg': {
-        height: 12,
-        width: 12,
-        top: 1,
+    root: {
+      '&:hover': {
+        '& $hide': {
+          opacity: 1,
+        },
       },
+      '&:last-child': {
+        marginBottom: 0,
+      },
+      marginBottom: theme.spacing(0.5),
+      maxWidth: '100%',
+      width: '100%',
     },
-    ipLink: {
-      display: 'inline-block',
-      color: theme.palette.primary.main,
-      position: 'relative',
-      top: -1,
-      transition: theme.transitions.create(['color']),
-    },
-    hide: {
-      [theme.breakpoints.up('md')]: {
-        // Hide until the component is hovered,
-        // when props.showCopyOnHover is true (only on desktop)
-        opacity: 0,
-      },
-      transition: theme.transitions.create(['opacity']),
-      '&:focus': {
-        opacity: 1,
-      },
+    row: {
+      alignItems: 'flex-start',
+      display: 'flex',
+      width: '100%',
     },
   });
 
@@ -133,7 +133,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   };
 
   render() {
-    const { classes, ips, showMore, showAll } = this.props;
+    const { classes, ips, showAll, showMore } = this.props;
 
     const formattedIPS = ips
       .map((ip) => ip.replace('/64', ''))

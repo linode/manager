@@ -41,14 +41,14 @@ export interface Props {
 
 const handleLinkClick = (label: string) => {
   sendEvent({
-    category: 'Disk Resize Flow',
     action: `Click:link`,
+    category: 'Disk Resize Flow',
     label,
   });
 };
 
 export const ResizeDiskDrawer = (props: Props) => {
-  const { disk, open, onClose, linodeId } = props;
+  const { disk, linodeId, onClose, open } = props;
 
   const classes = useStyles();
 
@@ -66,12 +66,10 @@ export const ResizeDiskDrawer = (props: Props) => {
   const maximumSize = calculateDiskFree(linode, disks, disk?.id ?? 0);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       size: disk?.size ?? maximumSize,
     },
-    validationSchema: ResizeLinodeDiskSchema,
-    validateOnChange: true,
-    enableReinitialize: true,
     async onSubmit(values, helpers) {
       try {
         await resizeDisk(values);
@@ -82,6 +80,8 @@ export const ResizeDiskDrawer = (props: Props) => {
         handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
       }
     },
+    validateOnChange: true,
+    validationSchema: ResizeLinodeDiskSchema,
   });
 
   React.useEffect(() => {

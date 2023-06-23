@@ -59,8 +59,8 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
   // Fetch the Pending Transfers
   const {
     data: pendingTransfersData,
-    isLoading: pendingTransfersLoading,
     error: pendingTransfersError,
+    isLoading: pendingTransfersLoading,
   } = useEntityTransfersQuery(
     {
       page: paginationPendingTransfers.page,
@@ -76,8 +76,8 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
   // Fetch the Received Transfers
   const {
     data: receivedTransfersData,
-    isLoading: receivedTransfersLoading,
     error: receivedTransfersError,
+    isLoading: receivedTransfersLoading,
   } = useEntityTransfersQuery(
     {
       page: paginationReceivedTransfers.page,
@@ -94,8 +94,8 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
   // Fetch the Sent Transfers
   const {
     data: sentTransfersData,
-    isLoading: sentTransfersLoading,
     error: sentTransfersError,
+    isLoading: sentTransfersLoading,
   } = useEntityTransfersQuery(
     {
       page: paginationSentTransfers.page,

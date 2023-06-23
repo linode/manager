@@ -19,9 +19,9 @@ describe('Support Ticket Detail', () => {
     server.use(
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
+          description: 'TEST Support Ticket body',
           id: req.params.ticketId,
           status: 'open',
-          description: 'TEST Support Ticket body',
           summary: '#0: TEST Support Ticket',
         });
         return res(ctx.json(ticket));
@@ -80,9 +80,9 @@ describe('Support Ticket Detail', () => {
       }),
       rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
         const ticket = supportTicketFactory.build({
+          description: 'this ticket should have a reply on it',
           id: req.params.ticketId,
           status: 'open',
-          description: 'this ticket should have a reply on it',
           summary: 'My Linode is broken :(',
         });
         return res(ctx.json(ticket));

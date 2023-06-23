@@ -61,10 +61,10 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
   >(
     (state, ownProps) => {
       const {
-        loading,
-        error,
         data,
+        error,
         lastUpdated,
+        loading,
         results,
       } = state.longviewClients;
       if (mapStateToProps) {
@@ -78,18 +78,18 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       }
 
       return {
-        longviewClientsError: error,
-        longviewClientsLoading: loading,
         longviewClientsData: data,
-        longviewClientsResults: results,
+        longviewClientsError: error,
         longviewClientsLastUpdated: lastUpdated,
+        longviewClientsLoading: loading,
+        longviewClientsResults: results,
       };
     },
     (dispatch: ThunkDispatch) => ({
-      getLongviewClients: (params, filter) =>
-        dispatch(getAllLongviewClients({ params, filter })),
       createLongviewClient: (label) => dispatch(create({ label })),
       deleteLongviewClient: (id) => dispatch(_delete({ id })),
+      getLongviewClients: (params, filter) =>
+        dispatch(getAllLongviewClients({ filter, params })),
       updateLongviewClient: (id, label) => dispatch(update({ id, label })),
     })
   );

@@ -15,12 +15,12 @@ import {
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    marginBottom: theme.spacing(2),
-  },
   configs: {
     fontSize: '0.875rem',
     lineHeight: '22px',
+  },
+  header: {
+    marginBottom: theme.spacing(2),
   },
   label: {
     fontFamily: theme.font.bold,
@@ -28,8 +28,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: theme.spacing(7),
   },
   status: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     textTransform: 'capitalize',
   },
 }));

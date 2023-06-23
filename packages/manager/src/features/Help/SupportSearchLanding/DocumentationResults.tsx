@@ -8,32 +8,32 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  noResultsContainer: {
-    padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
+  header: {
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(3),
   },
   icon: {
     color: '#3683DC',
     fontSize: '0.8rem',
     marginLeft: theme.spacing(1),
   },
-  header: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-  },
   label: {
     color: '#3683DC',
   },
   link: {
-    marginTop: theme.spacing(2),
     fontFamily: theme.font.bold,
+    marginTop: theme.spacing(2),
+  },
+  noResultsContainer: {
+    padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
   },
   searchItem: {
-    position: 'initial',
-    backgroundColor: theme.color.white,
-    borderBottom: `1px solid ${theme.palette.divider}`,
     '&:hover': {
       backgroundColor: theme.bg.offWhite,
     },
+    backgroundColor: theme.color.white,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    position: 'initial',
   },
 }));
 

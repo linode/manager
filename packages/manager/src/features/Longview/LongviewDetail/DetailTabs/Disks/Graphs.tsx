@@ -12,18 +12,18 @@ import GraphCard from '../../GraphCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   graphContainer: {
-    marginTop: theme.spacing(),
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-around',
     '& > div': {
       flexGrow: 1,
-      width: '33%',
       [theme.breakpoints.down('lg')]: {
         marginTop: theme.spacing(),
         width: '60%',
       },
+      width: '33%',
     },
+    display: 'flex',
+    flexFlow: 'row wrap',
+    justifyContent: 'space-around',
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -49,21 +49,21 @@ type CombinedProps = Props & WithTheme;
 
 const Graphs: React.FC<CombinedProps> = (props) => {
   const {
-    isSwap,
     childOf,
-    sysInfoType,
     diskLabel,
-    theme,
-    loading,
-    timezone,
-    free,
-    total,
-    iFree,
-    isMounted,
-    iTotal,
-    startTime,
     endTime,
+    free,
+    iFree,
+    iTotal,
+    isMounted,
+    isSwap,
+    loading,
     reads,
+    startTime,
+    sysInfoType,
+    theme,
+    timezone,
+    total,
     writes,
   } = props;
 
@@ -100,16 +100,16 @@ const Graphs: React.FC<CombinedProps> = (props) => {
               loading={loading}
               data={[
                 {
+                  backgroundColor: theme.graphs.diskIO.write,
+                  borderColor: 'transparent',
                   data: convertData(writes, startTime, endTime, formatDiskIO),
                   label: 'Write',
-                  borderColor: 'transparent',
-                  backgroundColor: theme.graphs.diskIO.write,
                 },
                 {
+                  backgroundColor: theme.graphs.diskIO.read,
+                  borderColor: 'transparent',
                   data: convertData(reads, startTime, endTime, formatDiskIO),
                   label: 'Read',
-                  borderColor: 'transparent',
-                  backgroundColor: theme.graphs.diskIO.read,
                 },
               ]}
               title="Disk I/O"
@@ -133,10 +133,10 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                 <LongviewLineGraph
                   data={[
                     {
+                      backgroundColor: theme.graphs.space,
+                      borderColor: 'transparent',
                       data: convertData(_free, startTime, endTime),
                       label: 'Space',
-                      borderColor: 'transparent',
-                      backgroundColor: theme.graphs.space,
                     },
                   ]}
                   showToday={isToday}
@@ -153,10 +153,10 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                 <LongviewLineGraph
                   data={[
                     {
+                      backgroundColor: theme.graphs.inodes,
+                      borderColor: 'transparent',
                       data: convertData(_inodes, startTime, endTime),
                       label: 'Inodes',
-                      borderColor: 'transparent',
-                      backgroundColor: theme.graphs.inodes,
                     },
                   ]}
                   showToday={isToday}
@@ -181,9 +181,9 @@ export const formatINodes = (
   itotal: StatWithDummyPoint[]
 ): StatWithDummyPoint[] => {
   return itotal.map((eachTotalStat, index) => {
-    const { y: totalY, x: totalX } = eachTotalStat;
+    const { x: totalX, y: totalY } = eachTotalStat;
     const { y: freeY } = pathOr(
-      { y: null, x: 0 },
+      { x: 0, y: null },
       [index],
       ifree
     ) as StatWithDummyPoint;

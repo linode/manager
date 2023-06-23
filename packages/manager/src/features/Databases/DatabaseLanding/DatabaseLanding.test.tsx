@@ -95,7 +95,7 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByText, getByTestId } = renderWithTheme(<DatabaseLanding />, {
+    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
       queryClient,
     });
 

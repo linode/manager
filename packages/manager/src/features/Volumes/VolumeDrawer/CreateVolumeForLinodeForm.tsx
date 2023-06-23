@@ -61,12 +61,12 @@ type CombinedProps = Props & StateProps & DispatchProps;
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
-    onClose,
-    onSuccess,
+    actions,
     linode_id,
     linodeLabel,
     linodeRegion,
-    actions,
+    onClose,
+    onSuccess,
     origin,
   } = props;
 
@@ -92,8 +92,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
     <Formik
       initialValues={initialValues}
       validationSchema={extendedCreateVolumeSchema}
-      onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        const { label, size, config_id, tags } = values;
+      onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
+        const { config_id, label, size, tags } = values;
 
         setSubmitting(true);
 
@@ -101,15 +101,15 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         setStatus(undefined);
 
         createVolume({
-          label,
-          size: maybeCastToNumber(size),
-          linode_id: maybeCastToNumber(linode_id),
           config_id:
             // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
             config_id === -1 ? undefined : maybeCastToNumber(config_id),
+          label,
+          linode_id: maybeCastToNumber(linode_id),
+          size: maybeCastToNumber(size),
           tags: tags.map((v) => v.value),
         })
-          .then(({ label: newLabel, filesystem_path }) => {
+          .then(({ filesystem_path, label: newLabel }) => {
             resetEventsPolling();
             onSuccess(
               newLabel,
@@ -272,11 +272,11 @@ interface FormState {
 }
 
 const initialValues: FormState = {
-  label: '',
-  size: 20,
-  region: 'none',
-  linode_id: -1,
   config_id: -1,
+  label: '',
+  linode_id: -1,
+  region: 'none',
+  size: 20,
   tags: [],
 };
 

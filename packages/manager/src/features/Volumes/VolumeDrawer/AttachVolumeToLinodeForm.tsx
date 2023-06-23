@@ -37,18 +37,18 @@ type CombinedProps = Props & DispatchProps;
  * provided as a prop and not a user input value.
  */
 const AttachVolumeValidationSchema = object({
-  volume_id: number()
-    .min(0, 'Volume is required.')
-    .required('Volume is required.'),
   config_id: number()
     .min(0, 'Config is required.')
     .required('Config is required.'),
+  volume_id: number()
+    .min(0, 'Volume is required.')
+    .required('Volume is required.'),
 });
 
-const initialValues = { volume_id: -1, config_id: -1 };
+const initialValues = { config_id: -1, volume_id: -1 };
 
 const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
-  const { actions, onClose, linodeId, linodeRegion, readOnly } = props;
+  const { actions, linodeId, linodeRegion, onClose, readOnly } = props;
 
   const { data: grants } = useGrants();
 
@@ -66,11 +66,11 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
   return (
     <Formik
       validationSchema={AttachVolumeValidationSchema}
-      onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
+      onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
         attachVolume({
-          volumeId: values.volume_id,
-          linode_id: linodeId,
           config_id: values.config_id,
+          linode_id: linodeId,
+          volumeId: values.volume_id,
         })
           .then((_) => {
             onClose();

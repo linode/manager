@@ -25,15 +25,15 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    marginTop: theme.spacing(),
+  },
   root: {
-    padding: `${theme.spacing(3)} 0 ${theme.spacing(1)}`,
     '& .iconTextLink': {
       display: 'inline-flex',
       margin: `${theme.spacing(3)} 0 0 0`,
     },
-  },
-  button: {
-    marginTop: theme.spacing(),
+    padding: `${theme.spacing(3)} 0 ${theme.spacing(1)}`,
   },
 }));
 
@@ -84,7 +84,7 @@ export const getDefaultDeviceMapAndCounter = (
 };
 
 export const StandardRescueDialog = (props: Props) => {
-  const { open, onClose, linodeId } = props;
+  const { linodeId, onClose, open } = props;
 
   const classes = useStyles();
 

@@ -20,9 +20,9 @@ import { EventWithStore } from 'src/events';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
-    queryKey: [queryKey, 'app-tokens', params, filter],
-    queryFn: () => getAppTokens(params, filter),
     keepPreviousData: true,
+    queryFn: () => getAppTokens(params, filter),
+    queryKey: [queryKey, 'app-tokens', params, filter],
   });
 };
 
@@ -31,9 +31,9 @@ export const usePersonalAccessTokensQuery = (
   filter?: Filter
 ) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
-    queryKey: [queryKey, 'personal-access-tokens', params, filter],
-    queryFn: () => getPersonalAccessTokens(params, filter),
     keepPreviousData: true,
+    queryFn: () => getPersonalAccessTokens(params, filter),
+    queryKey: [queryKey, 'personal-access-tokens', params, filter],
   });
 };
 

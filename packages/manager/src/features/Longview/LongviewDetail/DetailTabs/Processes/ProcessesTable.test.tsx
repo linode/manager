@@ -17,7 +17,7 @@ describe('ProcessTable', () => {
   const extendedData = extendData(longviewProcessFactory.build());
 
   it('renders all columns for each row', () => {
-    const { getAllByText, getAllByTestId } = renderWithTheme(
+    const { getAllByTestId, getAllByText } = renderWithTheme(
       <ProcessesTable {...props} processesData={extendedData} />
     );
     extendedData.forEach((row) => {

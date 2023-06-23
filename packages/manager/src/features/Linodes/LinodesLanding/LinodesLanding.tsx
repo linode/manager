@@ -99,14 +99,14 @@ type CombinedProps = Props &
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
-    enableBackupsDialogOpen: false,
-    powerDialogOpen: false,
     deleteDialogOpen: false,
+    enableBackupsDialogOpen: false,
+    groupByTag: false,
+    linodeMigrateOpen: false,
+    linodeResizeOpen: false,
+    powerDialogOpen: false,
     rebuildDialogOpen: false,
     rescueDialogOpen: false,
-    groupByTag: false,
-    linodeResizeOpen: false,
-    linodeMigrateOpen: false,
   };
 
   /**
@@ -140,8 +140,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     linodeConfigs: Config[]
   ) => {
     this.setState({
-      powerDialogOpen: true,
       powerDialogAction: bootAction,
+      powerDialogOpen: true,
       selectedLinodeConfigs: linodeConfigs,
       selectedLinodeID: linodeID,
       selectedLinodeLabel: linodeLabel,
@@ -189,24 +189,24 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   closeDialogs = () => {
     this.setState({
-      powerDialogOpen: false,
       deleteDialogOpen: false,
+      enableBackupsDialogOpen: false,
+      linodeMigrateOpen: false,
+      linodeResizeOpen: false,
+      powerDialogOpen: false,
       rebuildDialogOpen: false,
       rescueDialogOpen: false,
-      linodeResizeOpen: false,
-      linodeMigrateOpen: false,
-      enableBackupsDialogOpen: false,
     });
   };
 
   render() {
     const {
-      linodesRequestError,
-      linodesRequestLoading,
+      classes,
       linodesCount,
       linodesData,
-      classes,
       linodesInTransition,
+      linodesRequestError,
+      linodesRequestLoading,
     } = this.props;
 
     const params = new URLSearchParams(this.props.location.search);
@@ -218,10 +218,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     const componentProps = {
       count: linodesCount,
+      openDialog: this.openDialog,
+      openPowerActionDialog: this.openPowerDialog,
       someLinodesHaveMaintenance: this.props
         .someLinodesHaveScheduledMaintenance,
-      openPowerActionDialog: this.openPowerDialog,
-      openDialog: this.openDialog,
     };
 
     if (linodesRequestError) {
@@ -350,10 +350,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
                           return {
                             ...linode,
+                            _statusPriority: statusToPriority(_status),
                             displayStatus: linode.maintenance
                               ? 'maintenance'
                               : linode.status,
-                            _statusPriority: statusToPriority(_status),
                           };
                         })}
                         // If there are Linodes with scheduled maintenance, default to

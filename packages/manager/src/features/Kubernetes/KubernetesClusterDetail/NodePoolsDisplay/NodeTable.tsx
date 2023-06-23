@@ -27,19 +27,23 @@ import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinod
 import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  table: {
-    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-    borderRight: `1px solid ${theme.borderColors.borderTable}`,
+  copy: {
+    '& svg': {
+      height: `12px`,
+      opacity: 0,
+      width: `12px`,
+    },
+    marginLeft: 4,
+    top: 1,
   },
-  labelCell: {
+  error: {
+    color: theme.color.red,
+  },
+  ipCell: {
     ...theme.applyTableHeaderStyles,
     width: '35%',
   },
-  statusCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '15%',
-  },
-  ipCell: {
+  labelCell: {
     ...theme.applyTableHeaderStyles,
     width: '35%',
   },
@@ -51,17 +55,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
-  copy: {
-    top: 1,
-    marginLeft: 4,
-    '& svg': {
-      height: `12px`,
-      width: `12px`,
-      opacity: 0,
-    },
+  statusCell: {
+    ...theme.applyTableHeaderStyles,
+    width: '15%',
   },
-  error: {
-    color: theme.color.red,
+  table: {
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
   },
 }));
 
@@ -76,7 +76,7 @@ export interface Props {
 }
 
 export const NodeTable: React.FC<Props> = (props) => {
-  const { nodes, poolId, typeLabel, openRecycleNodeDialog } = props;
+  const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
 
   const classes = useStyles();
 
@@ -92,8 +92,8 @@ export const NodeTable: React.FC<Props> = (props) => {
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({
-            data: paginatedAndOrderedData,
             count,
+            data: paginatedAndOrderedData,
             handlePageChange,
             handlePageSizeChange,
             page,
@@ -207,15 +207,15 @@ interface NodeRowProps extends NodeRow {
 
 export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
   const {
-    nodeId,
     instanceId,
-    label,
     instanceStatus,
     ip,
-    typeLabel,
-    nodeStatus,
+    label,
     linodeError,
+    nodeId,
+    nodeStatus,
     openRecycleNodeDialog,
+    typeLabel,
   } = props;
 
   const classes = useStyles();
@@ -304,11 +304,11 @@ export const nodeToRow = (
   );
 
   return {
-    nodeId: node.id,
     instanceId: node.instance_id || undefined,
-    label: foundLinode?.label,
     instanceStatus: foundLinode?.status,
     ip: foundLinode?.ipv4[0],
+    label: foundLinode?.label,
+    nodeId: node.id,
     nodeStatus: node.status,
   };
 };

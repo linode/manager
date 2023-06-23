@@ -20,8 +20,28 @@ import {
 } from './utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2),
+  clearButton: {
+    top: `-${theme.spacing(0.5)}`,
+  },
+  closeIcon: {
+    '& path': {
+      fill: theme.palette.primary.main,
+    },
+    alignItems: 'center',
+    backgroundColor: theme.color.white,
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    paddingBottom: 0,
+    paddingTop: 0,
+  },
+  errorText: {
+    '& a': {
+      color: theme.color.red,
+      textDecoration: 'underline',
+    },
+    color: theme.color.red,
+    marginTop: theme.spacing(1),
   },
   header: {
     display: 'flex',
@@ -29,45 +49,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     marginBottom: theme.spacing(2),
   },
-  clearButton: {
-    top: `-${theme.spacing(0.5)}`,
+  labelOuter: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   list: {
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
   nestedList: {
-    marginLeft: theme.spacing(2),
     flexBasis: '100%',
+    marginLeft: theme.spacing(2),
   },
-  closeIcon: {
-    cursor: 'pointer',
-    paddingTop: 0,
-    paddingBottom: 0,
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
-    border: 'none',
-    '& path': {
-      fill: theme.palette.primary.main,
-    },
+  root: {
+    padding: theme.spacing(2),
   },
   submitButton: {
     marginTop: theme.spacing(3),
-  },
-  labelOuter: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-  },
-  errorText: {
-    color: theme.color.red,
-    marginTop: theme.spacing(1),
-    '& a': {
-      textDecoration: 'underline',
-      color: theme.color.red,
-    },
   },
 }));
 
@@ -89,19 +89,19 @@ interface Props {
 
 export const Configs: React.FC<Props> = (props) => {
   const {
+    clearAll,
     currentLinodeId,
+    errorMap,
+    handleClone,
+    handleSelectLinode,
+    handleToggleConfig,
+    handleToggleDisk,
+    isSubmitting,
     selectedConfigs,
     selectedDisks,
     selectedLinodeId,
-    thisLinodeRegion,
-    isSubmitting,
-    errorMap,
-    handleToggleConfig,
-    handleToggleDisk,
-    handleSelectLinode,
     selectedLinodeRegion,
-    handleClone,
-    clearAll,
+    thisLinodeRegion,
   } = props;
 
   const { data: regions } = useRegionsQuery();
@@ -135,8 +135,8 @@ export const Configs: React.FC<Props> = (props) => {
   }
 
   const errorMessageLinks = {
-    shrink: `/linodes/${selectedLinodeId}/advanced`,
     resize: `/linodes/${selectedLinodeId}/resize`,
+    shrink: `/linodes/${selectedLinodeId}/advanced`,
   };
 
   /**

@@ -109,8 +109,8 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
       ...defaultDialogState,
       delete: {
         ...dialog.delete,
-        submitting: true,
         error: undefined,
+        submitting: true,
       },
     });
     deleteStackScript(dialog.stackScriptID!)
@@ -128,9 +128,9 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
         setDialogState({
           ...defaultDialogState,
           delete: {
+            error: e[0].reason,
             open: true,
             submitting: false,
-            error: e[0].reason,
           },
           makePublic: {
             open: false,

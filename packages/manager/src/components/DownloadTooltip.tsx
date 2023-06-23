@@ -16,41 +16,41 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    position: 'relative',
-    padding: 4,
-    backgroundColor: 'transparent',
-    transition: theme.transitions.create(['background-color']),
-    borderRadius: 4,
-    border: 'none',
-    cursor: 'pointer',
-    color: theme.color.grey1,
-    '& svg': {
-      transition: theme.transitions.create(['color']),
-      color: theme.color.grey1,
-      margin: 0,
-      position: 'relative',
-      width: 20,
-      height: 20,
-    },
-    '&:hover': {
-      backgroundColor: theme.color.white,
-    },
+  displayText: {
+    color: theme.textColors.linkActiveLight,
+    marginLeft: 6,
   },
   flex: {
     display: 'flex',
     width: 'auto !important',
   },
-  displayText: {
-    color: theme.textColors.linkActiveLight,
-    marginLeft: 6,
+  root: {
+    '& svg': {
+      color: theme.color.grey1,
+      height: 20,
+      margin: 0,
+      position: 'relative',
+      transition: theme.transitions.create(['color']),
+      width: 20,
+    },
+    '&:hover': {
+      backgroundColor: theme.color.white,
+    },
+    backgroundColor: 'transparent',
+    border: 'none',
+    borderRadius: 4,
+    color: theme.color.grey1,
+    cursor: 'pointer',
+    padding: 4,
+    position: 'relative',
+    transition: theme.transitions.create(['background-color']),
   },
 }));
 
 export const DownloadTooltip: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { text, className, displayText, onClickCallback, fileName } = props;
+  const { className, displayText, fileName, onClickCallback, text } = props;
 
   const handleIconClick = () => {
     downloadFile(`${fileName}.txt`, text);
@@ -67,8 +67,8 @@ export const DownloadTooltip: React.FC<Props> = (props) => {
         type="button"
         onClick={handleIconClick}
         className={classNames(className, {
-          [classes.root]: true,
           [classes.flex]: Boolean(displayText),
+          [classes.root]: true,
         })}
       >
         <FileDownload />

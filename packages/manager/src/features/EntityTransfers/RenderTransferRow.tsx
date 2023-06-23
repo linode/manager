@@ -12,6 +12,42 @@ import { pluralize } from 'src/utilities/pluralize';
 import ActionMenu from './TransfersPendingActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  cellContents: {
+    paddingLeft: '1rem',
+  },
+  createdCell: {
+    [theme.breakpoints.down('sm')]: {
+      width: '25%',
+    },
+    width: '20%',
+  },
+  entitiesCell: {
+    [theme.breakpoints.down('md')]: {
+      width: '20%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '25%',
+    },
+    width: '15%',
+  },
+  expiryCell: {
+    [theme.breakpoints.down('sm')]: {
+      width: '25%',
+    },
+    width: '20%',
+  },
+  icon: {
+    '& svg': {
+      height: 12,
+      width: 12,
+    },
+    marginLeft: theme.spacing(1),
+    marginTop: 2,
+  },
+  link: {
+    ...theme.applyLinkStyles,
+    fontSize: '0.875rem',
+  },
   row: {
     '&:hover': {
       '& [data-qa-copy-token]': {
@@ -19,53 +55,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  cellContents: {
-    paddingLeft: '1rem',
-  },
-  tokenCell: {
-    width: '40%',
-    [theme.breakpoints.down('md')]: {
-      width: '50%',
-    },
-  },
   tokenAndCopyIcon: {
-    display: 'flex',
     '& [data-qa-copy-token]': {
       opacity: 0,
     },
+    display: 'flex',
   },
-  icon: {
-    marginLeft: theme.spacing(1),
-    marginTop: 2,
-    '& svg': {
-      width: 12,
-      height: 12,
-    },
-  },
-  createdCell: {
-    width: '20%',
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-  },
-  entitiesCell: {
-    width: '15%',
+  tokenCell: {
     [theme.breakpoints.down('md')]: {
-      width: '20%',
+      width: '50%',
     },
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-  },
-  expiryCell: {
-    width: '20%',
-    [theme.breakpoints.down('sm')]: {
-      width: '25%',
-    },
-  },
-  link: {
-    ...theme.applyLinkStyles,
-    fontSize: '0.875rem',
+    width: '40%',
   },
 }));
 
@@ -87,14 +87,14 @@ type CombinedProps = Props;
 
 export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
   const {
-    token,
     created,
     entities,
     expiry,
-    status,
-    transferType,
     handleCancelPendingTransferClick,
     handleTokenClick,
+    status,
+    token,
+    transferType,
   } = props;
 
   const classes = useStyles();

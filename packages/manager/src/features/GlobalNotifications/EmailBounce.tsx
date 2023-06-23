@@ -85,17 +85,17 @@ export const EmailBounceNotificationSection = React.memo(() => {
 // <EmailBounceNotification />
 // =============================================================================
 const useEmailBounceNotificationStyles = makeStyles((theme: Theme) => ({
-  updateButton: {
-    marginLeft: 16,
-  },
   buttonContainer: {
     justifyContent: 'flex-end',
     [theme.breakpoints.down('md')]: {
-      marginTop: 8,
+      justifyContent: 'flex-start',
       marginBottom: 4,
       marginLeft: 2,
-      justifyContent: 'flex-start',
+      marginTop: 8,
     },
+  },
+  updateButton: {
+    marginLeft: 16,
   },
 }));
 
@@ -106,7 +106,7 @@ interface Props {
 }
 
 const EmailBounceNotification = React.memo((props: Props) => {
-  const { text, confirmEmail, changeEmail } = props;
+  const { changeEmail, confirmEmail, text } = props;
 
   const classes = useEmailBounceNotificationStyles();
 

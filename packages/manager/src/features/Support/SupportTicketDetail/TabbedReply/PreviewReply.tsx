@@ -11,8 +11,8 @@ const styles = () =>
     root: {
       border: '1px solid #ccc',
       height: 320,
-      padding: `9px 12px 9px 12px`,
       overflowY: 'auto',
+      padding: `9px 12px 9px 12px`,
     },
   });
 
@@ -24,7 +24,7 @@ interface Props {
 type CombinedProps = WithStyles<ClassNames> & Props;
 
 const PreviewReply: React.FC<CombinedProps> = (props) => {
-  const { classes, value, error } = props;
+  const { classes, error, value } = props;
 
   return (
     <Paper className={classes.root} error={error}>

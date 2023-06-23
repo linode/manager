@@ -47,14 +47,14 @@ export const BucketLanding = () => {
 
   const {
     data: objectStorageClusters,
-    isLoading: areClustersLoading,
     error: clustersErrors,
+    isLoading: areClustersLoading,
   } = useObjectStorageClusters();
 
   const {
     data: objectStorageBucketsResponse,
-    isLoading: areBucketsLoading,
     error: bucketsErrors,
+    isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(objectStorageClusters);
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
@@ -178,12 +178,12 @@ export const BucketLanding = () => {
         >
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
             const bucketTableProps = {
-              orderBy,
-              order,
-              handleOrderChange,
-              handleClickRemove,
-              handleClickDetails,
               data: orderedData,
+              handleClickDetails,
+              handleClickRemove,
+              handleOrderChange,
+              order,
+              orderBy,
             };
             return <BucketTable {...bucketTableProps} />;
           }}
@@ -191,7 +191,7 @@ export const BucketLanding = () => {
         {/* If there's more than one Bucket, display the total usage. */}
         {objectStorageBucketsResponse.buckets.length > 1 ? (
           <Typography
-            style={{ marginTop: 18, width: '100%', textAlign: 'center' }}
+            style={{ marginTop: 18, textAlign: 'center', width: '100%' }}
             variant="body1"
           >
             Total storage used: {readableBytes(totalUsage).formatted}
@@ -204,8 +204,8 @@ export const BucketLanding = () => {
       <TypeToConfirmDialog
         title={`Delete Bucket ${bucketLabel}`}
         entity={{
-          type: 'Bucket',
           label: bucketLabel,
+          type: 'Bucket',
         }}
         open={removeBucketConfirmationDialog.isOpen}
         loading={isLoading}

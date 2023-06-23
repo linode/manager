@@ -16,7 +16,7 @@ const linodeEventsHandler: EventHandler = (
   getState,
   queryClient
 ) => {
-  const { action, entity, percent_complete, status, id: eventID } = event;
+  const { action, entity, id: eventID, percent_complete, status } = event;
   const { id } = entity;
 
   // We may want to request notifications here, depending on the event

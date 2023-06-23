@@ -4,12 +4,12 @@ import { AccessKeyTable, AccessKeyTableProps } from './AccessKeyTable';
 
 describe('ObjectStorageKeyTable', () => {
   const props: AccessKeyTableProps = {
-    openDrawer: jest.fn(),
-    openRevokeDialog: jest.fn(),
-    isRestrictedUser: false,
-    isLoading: false,
     data: [],
     error: undefined,
+    isLoading: false,
+    isRestrictedUser: false,
+    openDrawer: jest.fn(),
+    openRevokeDialog: jest.fn(),
   };
 
   it('it includes a header with "Label" and "Access Key" cells', () => {

@@ -14,20 +14,20 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles()(() => ({
   button: {
-    border: 0,
-    padding: 0,
-    backgroundColor: 'transparent',
-    cursor: 'pointer',
     '&:hover': {
       opacity: 0.7,
     },
+    backgroundColor: 'transparent',
+    border: 0,
+    cursor: 'pointer',
+    padding: 0,
   },
   disabled: {
-    cursor: 'default',
-    opacity: 0.3,
     '&:hover': {
       opacity: 0.3,
     },
+    cursor: 'default',
+    opacity: 0.3,
   },
 }));
 
@@ -42,14 +42,14 @@ interface Props {
 export const GooglePayChip = (props: Props) => {
   const {
     disabled: disabledDueToProcessing,
-    setMessage,
-    setProcessing,
     onClose,
     renderError,
+    setMessage,
+    setProcessing,
   } = props;
   const { classes, cx } = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
-  const { data, isLoading, error: clientTokenError } = useClientToken();
+  const { data, error: clientTokenError, isLoading } = useClientToken();
   const queryClient = useQueryClient();
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
@@ -80,9 +80,9 @@ export const GooglePayChip = (props: Props) => {
     gPay(
       'add-recurring-payment',
       {
-        totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-        currencyCode: 'USD',
         countryCode: 'US',
+        currencyCode: 'USD',
+        totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
       },
       handleMessage,
       setProcessing,

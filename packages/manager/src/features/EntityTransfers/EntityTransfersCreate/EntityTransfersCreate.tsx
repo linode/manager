@@ -23,31 +23,31 @@ import {
 import { QueryClient, useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  error: {
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: theme.spacing(),
+    },
+  },
   root: {
     [theme.breakpoints.down('lg')]: {
-      margin: 0,
       justifyContent: 'center',
+      margin: 0,
     },
   },
   sidebar: {
     [theme.breakpoints.down('lg')]: {
-      padding: '0px 8px !important',
       '&.MuiGrid-item': {
         paddingLeft: 0,
         paddingRight: 0,
       },
-    },
-  },
-  error: {
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
+      padding: '0px 8px !important',
     },
   },
 }));
 
 export const EntityTransfersCreate: React.FC<{}> = (_) => {
   const { push } = useHistory();
-  const { mutateAsync: createTransfer, error, isLoading } = useCreateTransfer();
+  const { error, isLoading, mutateAsync: createTransfer } = useCreateTransfer();
   const classes = useStyles();
   const queryClient = useQueryClient();
 
@@ -62,18 +62,18 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
 
   const addEntitiesToTransfer = curry(
     (entityType: TransferableEntity, entitiesToAdd: any[]) => {
-      dispatch({ type: 'ADD', entityType, entitiesToAdd });
+      dispatch({ entitiesToAdd, entityType, type: 'ADD' });
     }
   );
 
   const removeEntitiesFromTransfer = curry(
     (entityType: TransferableEntity, entitiesToRemove: any[]) => {
-      dispatch({ type: 'REMOVE', entityType, entitiesToRemove });
+      dispatch({ entitiesToRemove, entityType, type: 'REMOVE' });
     }
   );
 
   const toggleEntity = curry((entityType: TransferableEntity, entity: any) => {
-    dispatch({ type: 'TOGGLE', entityType, entity });
+    dispatch({ entity, entityType, type: 'TOGGLE' });
   });
 
   /**
@@ -102,14 +102,14 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
       <LandingHeader
         title="Make a Service Transfer"
         breadcrumbProps={{
-          pathname: location.pathname,
-          labelOptions: { noCap: true },
           crumbOverrides: [
             {
-              position: 2,
               label: 'Service Transfers',
+              position: 2,
             },
           ],
+          labelOptions: { noCap: true },
+          pathname: location.pathname,
         }}
       />
       {error ? (

@@ -45,11 +45,11 @@ export function getPaymentLimits(
   balance: number | undefined
 ): { min: number; max: number } {
   if (balance === undefined) {
-    return { min: PAYMENT_MIN, max: PAYMENT_HARD_MAX };
+    return { max: PAYMENT_HARD_MAX, min: PAYMENT_MIN };
   }
 
   return {
-    min: balance < PAYMENT_MIN && balance > 0 ? balance : PAYMENT_MIN,
     max: balance <= PAYMENT_SOFT_MAX ? PAYMENT_SOFT_MAX : PAYMENT_HARD_MAX,
+    min: balance < PAYMENT_MIN && balance > 0 ? balance : PAYMENT_MIN,
   };
 }

@@ -56,10 +56,30 @@ type ClassNames = 'root' | 'cells' | 'linkContainer';
 
 const styles = (theme: Theme) =>
   createStyles({
+    cells: {
+      '& .data': {
+        maxWidth: 300,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        [theme.breakpoints.up('md')]: {
+          maxWidth: 750,
+        },
+        whiteSpace: 'nowrap',
+      },
+      '&:last-of-type': {
+        display: 'flex',
+        justifyContent: 'flex-end',
+      },
+      whiteSpace: 'nowrap',
+      width: 'auto',
+    },
+    linkContainer: {
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing(),
+      },
+    },
     root: {
-      margin: 0,
-      marginTop: theme.spacing(2),
-      width: '100%',
       '& .MuiGrid-item': {
         paddingLeft: 0,
         paddingRight: 0,
@@ -69,33 +89,13 @@ const styles = (theme: Theme) =>
           marginRight: theme.spacing(),
         },
       },
+      margin: 0,
+      marginTop: theme.spacing(2),
       [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing(),
       },
-    },
-    cells: {
-      whiteSpace: 'nowrap',
-      width: 'auto',
-      '& .data': {
-        maxWidth: 300,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        [theme.breakpoints.up('md')]: {
-          maxWidth: 750,
-        },
-      },
-      '&:last-of-type': {
-        display: 'flex',
-        justifyContent: 'flex-end',
-      },
-    },
-    linkContainer: {
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(),
-        marginRight: theme.spacing(),
-      },
+      width: '100%',
     },
   });
 
@@ -150,8 +150,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   eventsSubscription$: Subscription;
 
   static defaultDrawerState: DrawerState = {
-    open: false,
     mode: 'create',
+    open: false,
     type: 'NS',
   };
 
@@ -167,9 +167,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
   openForCreation = (type: RecordType) =>
     this.updateDrawer(() => ({
+      mode: 'create',
       open: true,
       submitting: false,
-      mode: 'create',
       type,
     }));
 
@@ -178,11 +178,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     fields: Partial<DomainRecord> | Partial<Domain>
   ) =>
     this.updateDrawer(() => ({
+      fields,
+      mode: 'edit',
       open: true,
       submitting: false,
-      mode: 'edit',
       type,
-      fields,
     }));
 
   openForEditPrimaryDomain = (f: Partial<Domain>) =>
@@ -249,8 +249,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
     this.updateConfirmDialog((c) => ({
       ...c,
-      submitting: true,
       errors: undefined,
+      submitting: true,
     }));
 
     deleteDomainRecord(domainId, recordId)
@@ -258,18 +258,18 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         this.props.updateRecords();
 
         this.updateConfirmDialog((_) => ({
-          open: false,
-          submitting: false,
           errors: undefined,
+          open: false,
           recordId: undefined,
+          submitting: false,
         }));
       })
       .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
         this.updateConfirmDialog((c) => ({
           ...c,
-          submitting: false,
           errors,
+          submitting: false,
         }));
       });
     this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
@@ -284,37 +284,32 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   generateTypes = (): IType[] => [
     /** SOA Record */
     {
-      title: 'SOA Record',
-      orderBy: 'domain',
-      order: 'asc',
-      data: [this.props.domain],
       columns: [
         {
-          title: 'Primary Domain',
           render: (d: Domain) => d.domain,
+          title: 'Primary Domain',
         },
         {
-          title: 'Email',
           render: (d: Domain) => d.soa_email,
+          title: 'Email',
         },
         {
-          title: 'Default TTL',
           render: compose(msToReadable, pathOr(0, ['ttl_sec'])),
+          title: 'Default TTL',
         },
         {
-          title: 'Refresh Rate',
           render: compose(msToReadable, pathOr(0, ['refresh_sec'])),
+          title: 'Refresh Rate',
         },
         {
-          title: 'Retry Rate',
           render: compose(msToReadable, pathOr(0, ['retry_sec'])),
+          title: 'Retry Rate',
         },
         {
-          title: 'Expire Time',
           render: compose(msToReadable, pathOr(0, ['expire_sec'])),
+          title: 'Expire Time',
         },
         {
-          title: '',
           render: (d: Domain) => {
             return d.type === 'master' ? (
               <ActionMenu
@@ -324,23 +319,23 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               />
             ) : null;
           },
+          title: '',
         },
       ],
+      data: [this.props.domain],
+      order: 'asc',
+      orderBy: 'domain',
+      title: 'SOA Record',
     },
 
     /** NS Record */
     {
-      title: 'NS Record',
-      orderBy: 'target',
-      order: 'asc',
-      data: getNSRecords(this.props),
       columns: [
         {
-          title: 'Name Server',
           render: (r: DomainRecord) => r.target,
+          title: 'Name Server',
         },
         {
-          title: 'Subdomain',
           render: (r: DomainRecord) => {
             const sd = r.name;
             const {
@@ -348,13 +343,13 @@ class DomainRecords extends React.Component<CombinedProps, State> {
             } = this.props;
             return isEmpty(sd) ? domain : `${sd}.${domain}`;
           },
+          title: 'Subdomain',
         },
         {
-          title: 'TTL',
           render: getTTL,
+          title: 'TTL',
         },
         {
-          title: '',
           /**
            * If the NS is one of Linode's, don't display the Action menu since the user
            * cannot make changes to Linode's nameservers.
@@ -371,41 +366,41 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 label={name}
                 onEdit={this.openForEditNSRecord}
                 deleteData={{
-                  recordID: id,
                   onDelete: this.confirmDeletion,
+                  recordID: id,
                 }}
               />
             ),
+          title: '',
         },
       ],
+      data: getNSRecords(this.props),
       link: () => createLink('Add an NS Record', this.openForCreateNSRecord),
+      order: 'asc',
+      orderBy: 'target',
+      title: 'NS Record',
     },
 
     /** MX Record */
     {
-      title: 'MX Record',
-      orderBy: 'target',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('MX')),
       columns: [
         {
-          title: 'Mail Server',
           render: (r: DomainRecord) => r.target,
+          title: 'Mail Server',
         },
         {
-          title: 'Preference',
           render: (r: DomainRecord) => String(r.priority),
+          title: 'Preference',
         },
         {
-          title: 'Subdomain',
           render: (r: DomainRecord) => r.name,
+          title: 'Subdomain',
         },
         {
-          title: 'TTL',
           render: getTTL,
+          title: 'TTL',
         },
         {
-          title: '',
           render: ({ id, name, priority, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               onEdit={this.openForEditMXRecord}
@@ -418,33 +413,31 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               }}
               label={name}
               deleteData={{
-                recordID: id,
                 onDelete: this.confirmDeletion,
+                recordID: id,
               }}
             />
           ),
+          title: '',
         },
       ],
+      data: this.props.domainRecords.filter(typeEq('MX')),
       link: () => createLink('Add a MX Record', this.openForCreateMXRecord),
+      order: 'asc',
+      orderBy: 'target',
+      title: 'MX Record',
     },
 
     /** A/AAAA Record */
     {
-      title: 'A/AAAA Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(
-        (r) => typeEq('AAAA', r) || typeEq('A', r)
-      ),
       columns: [
         {
-          title: 'Hostname',
           render: (r: DomainRecord) => r.name || this.props.domain.domain,
+          title: 'Hostname',
         },
-        { title: 'IP Address', render: (r: DomainRecord) => r.target },
-        { title: 'TTL', render: getTTL },
+        { render: (r: DomainRecord) => r.target, title: 'IP Address' },
+        { render: getTTL, title: 'TTL' },
         {
-          title: '',
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               editPayload={{
@@ -456,28 +449,30 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               onEdit={this.openForEditARecord}
               label={name || this.props.domain.domain}
               deleteData={{
-                recordID: id,
                 onDelete: this.confirmDeletion,
+                recordID: id,
               }}
             />
           ),
+          title: '',
         },
       ],
+      data: this.props.domainRecords.filter(
+        (r) => typeEq('AAAA', r) || typeEq('A', r)
+      ),
       link: () => createLink('Add an A/AAAA Record', this.openForCreateARecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'A/AAAA Record',
     },
 
     /** CNAME Record */
     {
-      title: 'CNAME Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('CNAME')),
       columns: [
-        { title: 'Hostname', render: (r: DomainRecord) => r.name },
-        { title: 'Aliases to', render: (r: DomainRecord) => r.target },
-        { title: 'TTL', render: getTTL },
+        { render: (r: DomainRecord) => r.name, title: 'Hostname' },
+        { render: (r: DomainRecord) => r.target, title: 'Aliases to' },
+        { render: getTTL, title: 'TTL' },
         {
-          title: '',
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               editPayload={{
@@ -489,33 +484,33 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               label={name}
               onEdit={this.openForEditCNAMERecord}
               deleteData={{
-                recordID: id,
                 onDelete: this.confirmDeletion,
+                recordID: id,
               }}
             />
           ),
+          title: '',
         },
       ],
+      data: this.props.domainRecords.filter(typeEq('CNAME')),
       link: () =>
         createLink('Add a CNAME Record', this.openForCreateCNAMERecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'CNAME Record',
     },
 
     /** TXT Record */
     {
-      title: 'TXT Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('TXT')),
       columns: [
-        { title: 'Hostname', render: (r: DomainRecord) => r.name },
+        { render: (r: DomainRecord) => r.name, title: 'Hostname' },
         {
-          title: 'Value',
           render: (r: DomainRecord) => truncateEnd(r.target, 100),
+          title: 'Value',
         },
-        { title: 'TTL', render: getTTL },
+        { render: getTTL, title: 'TTL' },
         {
-          title: '',
-          render: ({ id, target, name, ttl_sec }: DomainRecord) => (
+          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
@@ -526,88 +521,88 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               label={name}
               onEdit={this.openForEditTXTRecord}
               deleteData={{
-                recordID: id,
                 onDelete: this.confirmDeletion,
+                recordID: id,
               }}
             />
           ),
+          title: '',
         },
       ],
+      data: this.props.domainRecords.filter(typeEq('TXT')),
       link: () => createLink('Add a TXT Record', this.openForCreateTXTRecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'TXT Record',
     },
     /** SRV Record */
     {
-      title: 'SRV Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('SRV')),
       columns: [
-        { title: 'Name', render: (r: DomainRecord) => r.name },
+        { render: (r: DomainRecord) => r.name, title: 'Name' },
         {
-          title: 'Domain',
           render: () => this.props.domain.domain,
+          title: 'Domain',
         },
         {
-          title: 'Priority',
           render: (r: DomainRecord) => String(r.priority),
+          title: 'Priority',
         },
         {
-          title: 'Weight',
           render: (r: DomainRecord) => String(r.weight),
+          title: 'Weight',
         },
-        { title: 'Port', render: (r: DomainRecord) => String(r.port) },
-        { title: 'Target', render: (r: DomainRecord) => r.target },
-        { title: 'TTL', render: getTTL },
+        { render: (r: DomainRecord) => String(r.port), title: 'Port' },
+        { render: (r: DomainRecord) => r.target, title: 'Target' },
+        { render: getTTL, title: 'TTL' },
         {
-          title: '',
           render: ({
             id,
-            service,
             port,
             priority,
             protocol,
+            service,
             target,
             weight,
           }: DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
-                service,
                 port,
                 priority,
                 protocol,
+                service,
                 target,
                 weight,
               }}
               label={this.props.domain.domain}
               onEdit={this.openForEditSRVRecord}
               deleteData={{
-                recordID: id,
                 onDelete: this.confirmDeletion,
+                recordID: id,
               }}
             />
           ),
+          title: '',
         },
       ],
+      data: this.props.domainRecords.filter(typeEq('SRV')),
       link: () => createLink('Add an SRV Record', this.openForCreateSRVRecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'SRV Record',
     },
 
     /** CAA Record */
     {
-      title: 'CAA Record',
-      orderBy: 'name',
-      order: 'asc',
-      data: this.props.domainRecords.filter(typeEq('CAA')),
       columns: [
-        { title: 'Name', render: (r: DomainRecord) => r.name },
-        { title: 'Tag', render: (r: DomainRecord) => r.tag },
+        { render: (r: DomainRecord) => r.name, title: 'Name' },
+        { render: (r: DomainRecord) => r.tag, title: 'Tag' },
         {
-          title: 'Value',
           render: (r: DomainRecord) => r.target,
+          title: 'Value',
         },
-        { title: 'TTL', render: getTTL },
+        { render: getTTL, title: 'TTL' },
         {
-          title: '',
           render: ({ id, name, tag, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               editPayload={{
@@ -620,33 +615,38 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               label={name}
               onEdit={this.openForEditCAARecord}
               deleteData={{
-                recordID: id,
                 onDelete: this.confirmDeletion,
+                recordID: id,
               }}
             />
           ),
+          title: '',
         },
       ],
+      data: this.props.domainRecords.filter(typeEq('CAA')),
       link: () => createLink('Add a CAA Record', this.openForCreateCAARecord),
+      order: 'asc',
+      orderBy: 'name',
+      title: 'CAA Record',
     },
   ];
 
   handleCloseDialog = () => {
     this.updateConfirmDialog(() => ({
       open: false,
-      submitting: false,
       recordId: undefined,
+      submitting: false,
     }));
   };
 
   constructor(props: CombinedProps) {
     super(props);
     this.state = {
-      drawer: DomainRecords.defaultDrawerState,
       confirmDialog: {
         open: false,
         submitting: false,
       },
+      drawer: DomainRecords.defaultDrawerState,
       types: this.generateTypes(),
     };
   }
@@ -678,8 +678,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { domain, domainRecords, classes } = this.props;
-    const { drawer, confirmDialog } = this.state;
+    const { classes, domain, domainRecords } = this.props;
+    const { confirmDialog, drawer } = this.state;
 
     return (
       <>
@@ -767,7 +767,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                                         {type.columns.length > 0 &&
                                           type.columns.map(
                                             (
-                                              { title, render },
+                                              { render, title },
                                               columnIndex
                                             ) => {
                                               return (
@@ -865,69 +865,69 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
   flatten,
   prepend([
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
+      priority: 0,
+      protocol: null,
+      service: null,
+      tag: null,
       target: 'ns1.linode.com',
-      service: null,
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
+      priority: 0,
+      protocol: null,
+      service: null,
+      tag: null,
       target: 'ns2.linode.com',
-      service: null,
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
+      priority: 0,
+      protocol: null,
+      service: null,
+      tag: null,
       target: 'ns3.linode.com',
-      service: null,
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
+      priority: 0,
+      protocol: null,
+      service: null,
+      tag: null,
       target: 'ns4.linode.com',
-      service: null,
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
     {
-      priority: 0,
-      type: 'NS',
-      name: '',
       id: -1,
-      protocol: null,
-      weight: 0,
-      tag: null,
+      name: '',
       port: 0,
-      target: 'ns5.linode.com',
+      priority: 0,
+      protocol: null,
       service: null,
+      tag: null,
+      target: 'ns5.linode.com',
       ttl_sec: 0,
+      type: 'NS',
+      weight: 0,
     },
   ])
 );

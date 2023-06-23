@@ -40,40 +40,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& .mlMain': {
-      maxWidth: '100%',
-      flexBasis: '100%',
-      [theme.breakpoints.up('lg')]: {
-        maxWidth: '78.8%',
-        flexBasis: '78.8%',
-      },
-    },
-    '& .mlSidebar': {
-      position: 'static',
-      width: '100%',
-      flexBasis: '100%',
-      maxWidth: '100%',
-      [theme.breakpoints.up('lg')]: {
-        position: 'sticky',
-        maxWidth: '21.2%',
-        flexBasis: '21.2%',
-      },
-    },
-  },
-  sidebar: {
-    marginTop: '0px !important',
-    paddingTop: '0px !important',
-    background: 'none',
-    [theme.breakpoints.down('lg')]: {
-      padding: `${theme.spacing(3)} !important`,
-      marginTop: `${theme.spacing(3)} !important`,
-      background: theme.color.white,
-    },
-    [theme.breakpoints.down('md')]: {
-      padding: `${theme.spacing()} !important`,
-    },
-  },
   inner: {
     '& > div': {
       marginBottom: theme.spacing(2),
@@ -81,29 +47,63 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& label': {
       color: theme.color.headline,
       fontWeight: 600,
-      lineHeight: '1.33rem',
       letterSpacing: '0.25px',
+      lineHeight: '1.33rem',
       margin: 0,
     },
   },
   inputWidth: {
-    maxWidth: 440,
     '& .react-select__menu': {
       maxWidth: 440,
     },
+    maxWidth: 440,
   },
   regionSubtitle: {
+    '& .MuiInput-root': {
+      maxWidth: 440,
+    },
+    '& .react-select__menu': {
+      maxWidth: 440,
+    },
     '& p': {
       fontWeight: 500,
       lineHeight: '1.43rem',
       margin: 0,
       maxWidth: '100%',
     },
-    '& .MuiInput-root': {
-      maxWidth: 440,
+  },
+  root: {
+    '& .mlMain': {
+      flexBasis: '100%',
+      maxWidth: '100%',
+      [theme.breakpoints.up('lg')]: {
+        flexBasis: '78.8%',
+        maxWidth: '78.8%',
+      },
     },
-    '& .react-select__menu': {
-      maxWidth: 440,
+    '& .mlSidebar': {
+      flexBasis: '100%',
+      maxWidth: '100%',
+      position: 'static',
+      [theme.breakpoints.up('lg')]: {
+        flexBasis: '21.2%',
+        maxWidth: '21.2%',
+        position: 'sticky',
+      },
+      width: '100%',
+    },
+  },
+  sidebar: {
+    background: 'none',
+    marginTop: '0px !important',
+    paddingTop: '0px !important',
+    [theme.breakpoints.down('lg')]: {
+      background: theme.color.white,
+      marginTop: `${theme.spacing(3)} !important`,
+      padding: `${theme.spacing(3)} !important`,
+    },
+    [theme.breakpoints.down('md')]: {
+      padding: `${theme.spacing()} !important`,
     },
   },
 }));
@@ -112,8 +112,8 @@ export const CreateCluster = () => {
   const classes = useStyles();
   const {
     data: allTypes,
-    isLoading: typesLoading,
     error: typesError,
+    isLoading: typesLoading,
   } = useAllTypes();
 
   const {
@@ -151,8 +151,8 @@ export const CreateCluster = () => {
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
   const versions = (versionData ?? []).map((thisVersion) => ({
-    value: thisVersion.id,
     label: thisVersion.id,
+    value: thisVersion.id,
   }));
   const history = useHistory();
 
@@ -179,10 +179,10 @@ export const CreateCluster = () => {
 
     const payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability },
-      region: selectedRegionID,
-      node_pools,
-      label,
       k8s_version,
+      label,
+      node_pools,
+      region: selectedRegionID,
     };
 
     createKubernetesCluster(payload)
@@ -240,8 +240,8 @@ export const CreateCluster = () => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
-    selectedRegionID,
     regionsData,
+    selectedRegionID,
   });
 
   if (typesError || regionsError || versionLoadError) {

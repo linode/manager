@@ -15,19 +15,19 @@ import { Notice } from 'src/components/Notice/Notice';
 
 const useStyles = makeStyles()(() => ({
   itemCount: {
-    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#2575d0',
     borderRadius: '50%',
     color: '#fff',
+    display: 'flex',
     fontSize: '0.875rem',
     fontWeight: 600,
     height: 30,
-    width: 30,
+    justifyContent: 'center',
     lineHeight: 0,
     position: 'absolute',
     right: 50,
+    width: 30,
   },
 }));
 
@@ -49,17 +49,17 @@ export const Accordion = (props: Props) => {
   const { classes } = useStyles();
 
   const {
-    summaryProps,
-    detailProps,
-    headingProps,
-    heading,
     actions,
-    success,
-    warning,
-    error,
     defaultExpanded,
-    headingNumberCount,
+    detailProps,
+    error,
     expandIconClassNames,
+    heading,
+    headingNumberCount,
+    headingProps,
+    success,
+    summaryProps,
+    warning,
     ...accordionProps
   } = props;
 

@@ -8,36 +8,36 @@ import { Theme } from '@mui/material/styles';
 const useStyles = makeStyles((theme: Theme) => ({
   btnRoot: {
     ...theme.applyLinkStyles,
-    padding: '12px 10px',
-    minWidth: 0,
-    color: theme.textColors.linkActiveLight,
-    whiteSpace: 'nowrap',
-    borderRadius: 0,
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       color: '#ffffff',
       textDecoration: 'none',
     },
     '&[disabled]': {
-      // Override disabled background color defined for dark mode
-      backgroundColor: 'transparent',
-      color: '#cdd0d5',
-      cursor: 'default',
       '&:hover': {
         backgroundColor: 'inherit',
         textDecoration: 'none',
       },
+      // Override disabled background color defined for dark mode
+      backgroundColor: 'transparent',
+      color: '#cdd0d5',
+      cursor: 'default',
     },
+    borderRadius: 0,
+    color: theme.textColors.linkActiveLight,
+    minWidth: 0,
+    padding: '12px 10px',
+    whiteSpace: 'nowrap',
   },
   linkRoot: {
-    textAlign: 'center',
-    color: theme.textColors.linkActiveLight,
-    borderRadius: 0,
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       color: '#ffffff',
       textDecoration: 'none',
     },
+    borderRadius: 0,
+    color: theme.textColors.linkActiveLight,
+    textAlign: 'center',
   },
 }));
 
@@ -58,11 +58,11 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
   const {
     actionText,
     className,
-    href,
     disabled,
-    tooltip,
-    onClick,
+    href,
     loading,
+    onClick,
+    tooltip,
     tooltipAnalyticsEvent,
   } = props;
 

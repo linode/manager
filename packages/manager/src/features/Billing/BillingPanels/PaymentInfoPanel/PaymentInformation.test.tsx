@@ -44,7 +44,7 @@ describe('Payment Info Panel', () => {
   });
 
   it('Shows Add Payment button for Linode customers and hides it for Akamai customers', () => {
-    const { queryByText, getByTestId, rerender } = renderWithTheme(
+    const { getByTestId, queryByText, rerender } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <PaymentInformation
           loading={false}

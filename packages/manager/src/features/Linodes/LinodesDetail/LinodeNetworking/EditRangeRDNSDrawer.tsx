@@ -19,18 +19,18 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { listIPv6InRange } from './LinodeNetworking';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  section: {
-    marginTop: theme.spacing(2),
-    borderTop: `1px solid ${theme.palette.divider}`,
-  },
   header: {
-    marginTop: theme.spacing(2),
-  },
-  rdnsRecord: {
     marginTop: theme.spacing(2),
   },
   ipv6Input: {
     marginBottom: theme.spacing(2),
+  },
+  rdnsRecord: {
+    marginTop: theme.spacing(2),
+  },
+  section: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -42,7 +42,7 @@ interface Props {
 }
 
 export const EditRangeRDNSDrawer = (props: Props) => {
-  const { open, onClose, range, linodeId } = props;
+  const { linodeId, onClose, open, range } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(linodeId, open);
@@ -61,9 +61,9 @@ export const EditRangeRDNSDrawer = (props: Props) => {
     : [];
 
   const {
-    mutateAsync: updateIP,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateIP,
     reset,
   } = useLinodeIPMutation();
 

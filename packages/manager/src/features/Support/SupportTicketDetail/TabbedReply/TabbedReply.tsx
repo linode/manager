@@ -15,12 +15,12 @@ interface Props {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    '& div[role="tablist"]': {
+      marginBottom: theme.spacing(),
+      marginTop: theme.spacing(),
+    },
     backgroundColor: 'transparent',
     padding: 0,
-    '& div[role="tablist"]': {
-      marginTop: theme.spacing(),
-      marginBottom: theme.spacing(),
-    },
   },
 }));
 
@@ -28,22 +28,22 @@ type CombinedProps = Props & ReplyProps;
 
 const TabbedReply: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { innerClass, rootClass, value, error, ...rest } = props;
+  const { error, innerClass, rootClass, value, ...rest } = props;
 
   const title = props.isReply ? 'Reply' : 'Description';
 
   const tabs: Tab[] = [
     {
-      title: props.required ? `${title} (required)` : title,
       render: () => {
         return <Reply {...rest} value={value} error={error} />;
       },
+      title: props.required ? `${title} (required)` : title,
     },
     {
-      title: 'Preview',
       render: () => {
         return <Preview value={value} error={error} />;
       },
+      title: 'Preview',
     },
   ];
 

@@ -5,10 +5,10 @@ import { BucketActionMenu } from './BucketActionMenu';
 
 window.matchMedia = jest.fn().mockImplementation((query) => {
   return {
+    addListener: jest.fn(),
     matches: true,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
     removeListener: jest.fn(),
   };
 });
@@ -16,10 +16,10 @@ window.matchMedia = jest.fn().mockImplementation((query) => {
 const mockOnRemove = jest.fn();
 
 const props = {
-  onRemove: mockOnRemove,
-  onDetails: jest.fn(),
-  label: '',
   cluster: '',
+  label: '',
+  onDetails: jest.fn(),
+  onRemove: mockOnRemove,
 };
 
 describe('BucketActionMenu', () => {

@@ -10,32 +10,32 @@ import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  checkbox: {
+    marginLeft: theme.spacing(2),
+  },
+  header: {
+    marginLeft: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
   root: {
-    marginTop: 24,
-    marginBottom: theme.spacing(2),
-    padding: '4px 16px',
-    backgroundColor: theme.bg.bgPaper,
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
     '& ul:first-of-type': {
-      fontFamily: theme.font.normal,
       '& li': {
         fontSize: '0.875rem',
         marginBottom: theme.spacing(),
       },
+      fontFamily: theme.font.normal,
     },
-  },
-  header: {
-    marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    backgroundColor: theme.bg.bgPaper,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
+    marginBottom: theme.spacing(2),
+    marginTop: 24,
+    padding: '4px 16px',
   },
   volumes: {
-    marginTop: theme.spacing(),
     '& li': {
       fontFamily: theme.font.bold,
     },
-  },
-  checkbox: {
-    marginLeft: theme.spacing(2),
+    marginTop: theme.spacing(),
   },
 }));
 

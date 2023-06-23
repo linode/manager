@@ -41,7 +41,7 @@ const StyledInstructions = styled(Typography, {
 const StyledQRCodeContainer = styled('div', {
   label: 'StyledQRCodeContainer',
 })(({ theme }) => ({
-  margin: `${theme.spacing(2)} 0`,
   border: `5px solid #fff`,
   display: 'inline-block',
+  margin: `${theme.spacing(2)} 0`,
 }));

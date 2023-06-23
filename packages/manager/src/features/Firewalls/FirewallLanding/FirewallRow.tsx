@@ -14,13 +14,13 @@ import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
-    display: 'block',
-    color: theme.textColors.linkActiveLight,
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },
+    color: theme.textColors.linkActiveLight,
+    display: 'block',
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
   },
 }));
 
@@ -29,9 +29,9 @@ export type Props = Firewall & ActionHandlers;
 export const FirewallRow = (props: Props) => {
   const classes = useStyles();
 
-  const { id, label, status, rules, ...actionHandlers } = props;
+  const { id, label, rules, status, ...actionHandlers } = props;
 
-  const { data: devices, isLoading, error } = useAllFirewallDevicesQuery(id);
+  const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
 
   const count = getCountOfRules(rules);
 

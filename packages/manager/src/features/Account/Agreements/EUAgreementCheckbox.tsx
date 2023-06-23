@@ -15,7 +15,7 @@ interface Props {
 }
 
 const EUAgreementCheckbox = (props: Props) => {
-  const { checked, onChange, className, centerCheckbox } = props;
+  const { centerCheckbox, checked, className, onChange } = props;
 
   const checkboxStyle = centerCheckbox
     ? { marginLeft: -8 }

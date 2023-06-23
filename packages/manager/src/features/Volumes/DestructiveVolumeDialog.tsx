@@ -33,7 +33,7 @@ interface Props {
 export const DestructiveVolumeDialog = (props: Props) => {
   const classes = useStyles();
 
-  const { volumeLabel: label, volumeId, linodeId, mode, open, onClose } = props;
+  const { linodeId, mode, onClose, open, volumeId, volumeLabel: label } = props;
 
   const { enqueueSnackbar } = useSnackbar();
   const linodes = useLinodes();
@@ -42,15 +42,15 @@ export const DestructiveVolumeDialog = (props: Props) => {
     linodeId !== undefined ? linodes.linodes.itemsById[linodeId] : undefined;
 
   const {
-    mutateAsync: detachVolume,
     error: detachError,
     isLoading: detachLoading,
+    mutateAsync: detachVolume,
   } = useDetachVolumeMutation();
 
   const {
-    mutateAsync: deleteVolume,
     error: deleteError,
     isLoading: deleteLoading,
+    mutateAsync: deleteVolume,
   } = useDeleteVolumeMutation();
 
   const onDetach = () => {
@@ -73,29 +73,29 @@ export const DestructiveVolumeDialog = (props: Props) => {
   const poweredOff = linode?.status === 'offline';
 
   const method = {
-    detach: onDetach,
     delete: onDelete,
+    detach: onDetach,
   }[props.mode];
 
   const action = {
-    detach: {
-      verb: 'Detach',
-      noun: 'detachment',
-    },
     delete: {
-      verb: 'Delete',
       noun: 'deletion',
+      verb: 'Delete',
+    },
+    detach: {
+      noun: 'detachment',
+      verb: 'Detach',
     },
   }[props.mode];
 
   const loading = {
-    detach: detachLoading,
     delete: deleteLoading,
+    detach: detachLoading,
   }[props.mode];
 
   const selectedError = {
-    detach: detachError,
     delete: deleteError,
+    detach: detachError,
   }[props.mode];
 
   const error = selectedError
@@ -103,14 +103,14 @@ export const DestructiveVolumeDialog = (props: Props) => {
     : undefined;
 
   const title = {
-    detach: `Detach ${label ? `Volume ${label}` : 'Volume'}?`,
     delete: `Delete ${label ? `Volume ${label}` : 'Volume'}?`,
+    detach: `Detach ${label ? `Volume ${label}` : 'Volume'}?`,
   }[props.mode];
 
   return (
     <TypeToConfirmDialog
       title={title}
-      entity={{ type: 'Volume', label }}
+      entity={{ label, type: 'Volume' }}
       open={open}
       loading={loading}
       onClose={onClose}

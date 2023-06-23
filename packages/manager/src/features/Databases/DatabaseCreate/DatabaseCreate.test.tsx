@@ -25,7 +25,7 @@ describe('Database Create', () => {
   });
 
   it('should render inputs', async () => {
-    const { getAllByText, getAllByTestId } = renderWithTheme(
+    const { getAllByTestId, getAllByText } = renderWithTheme(
       <DatabaseCreate />,
       {
         queryClient,
@@ -45,9 +45,9 @@ describe('Database Create', () => {
   it('should display the correct node price and disable 3 nodes for 1 GB plans', async () => {
     const standardTypes = [
       databaseTypeFactory.build({
+        class: 'nanode',
         id: 'g6-standard-0',
         label: `Nanode 1 GB`,
-        class: 'nanode',
         memory: 1024,
       }),
       ...databaseTypeFactory.buildList(7, { class: 'standard' }),

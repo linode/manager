@@ -24,7 +24,7 @@ interface Props {
 }
 
 export const AddDeviceDrawer = (props: Props) => {
-  const { open, onClose } = props;
+  const { onClose, open } = props;
 
   const { id } = useParams<{ id: string }>();
 
@@ -44,9 +44,9 @@ export const AddDeviceDrawer = (props: Props) => {
       .map((device) => device.entity.id) ?? [];
 
   const {
-    mutateAsync: addDevice,
     error,
     isLoading,
+    mutateAsync: addDevice,
   } = useAddFirewallDeviceMutation(Number(id));
   const theme = useTheme();
 
@@ -56,7 +56,7 @@ export const AddDeviceDrawer = (props: Props) => {
 
   const handleSubmit = async () => {
     await Promise.all(
-      selectedLinodeIds.map((id) => addDevice({ type: 'linode', id }))
+      selectedLinodeIds.map((id) => addDevice({ id, type: 'linode' }))
     );
     onClose();
     setSelectedLinodeIds([]);

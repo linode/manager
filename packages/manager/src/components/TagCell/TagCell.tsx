@@ -33,7 +33,7 @@ const checkOverflow = (el: any) => {
 };
 
 const TagCell = (props: TagCellProps) => {
-  const { updateTags, tags, sx } = props;
+  const { sx, tags, updateTags } = props;
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
@@ -122,17 +122,17 @@ const TagCell = (props: TagCellProps) => {
 export { TagCell };
 
 const StyledGrid = styled(Grid)({
+  justifyContent: 'flex-end',
   minHeight: 40,
   position: 'relative',
-  justifyContent: 'flex-end',
 });
 
 const StyledCircleDiv = styled('div')({
-  display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
-  position: 'absolute',
+  display: 'flex',
   height: '100%',
+  justifyContent: 'center',
+  position: 'absolute',
   width: '100%',
   zIndex: 2,
 });
@@ -142,14 +142,14 @@ const StyledTagListDiv = styled('div', {
 })<{
   hasOverflow: boolean;
 }>(({ ...props }) => ({
+  '& .MuiChip-root:last-child': {
+    marginRight: 4,
+  },
   display: 'flex',
   flexWrap: 'nowrap',
   overflow: 'hidden',
   position: 'relative',
   whiteSpace: 'nowrap',
-  '& .MuiChip-root:last-child': {
-    marginRight: 4,
-  },
   ...(props.hasOverflow && {
     maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`,
   }),
@@ -166,6 +166,10 @@ const StyledTag = styled(Tag, {
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  '&:hover': {
+    backgroundColor: theme.palette.primary.main,
+    color: '#ffff',
+  },
   backgroundColor: theme.color.tagButton,
   borderRadius: 0,
   color: theme.color.tagIcon,
@@ -173,24 +177,26 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   marginLeft: theme.spacing(0.5),
   marginRight: theme.spacing(0.5),
   padding: 0,
-  width: '40px',
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main,
-    color: '#ffff',
-  },
   [theme.breakpoints.down('lg')]: {
     marginLeft: 0,
   },
+  width: '40px',
 }));
 
 const StyledAddTagButton = styled('button')(({ theme }) => ({
-  display: 'flex',
+  '& svg': {
+    color: theme.color.tagIcon,
+    height: 10,
+    marginLeft: 10,
+    width: 10,
+  },
   alignItems: 'center',
-  borderRadius: 3,
   backgroundColor: theme.color.tagButton,
   border: 'none',
+  borderRadius: 3,
   color: theme.textColors.linkActiveLight,
   cursor: 'pointer',
+  display: 'flex',
   fontFamily: theme.font.normal,
   fontSize: 14,
   fontWeight: 'bold',
@@ -198,10 +204,4 @@ const StyledAddTagButton = styled('button')(({ theme }) => ({
   paddingLeft: 10,
   paddingRight: 10,
   whiteSpace: 'nowrap',
-  '& svg': {
-    color: theme.color.tagIcon,
-    marginLeft: 10,
-    height: 10,
-    width: 10,
-  },
 }));

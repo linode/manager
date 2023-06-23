@@ -20,69 +20,66 @@ const useStyles = makeStyles()((theme: Theme) => ({
       opacity: 1,
     },
   },
-  tag: {
-    marginTop: theme.spacing(0.5),
-    marginRight: 4,
-  },
   addButtonWrapper: {
     display: 'flex',
     justifyContent: 'flex-start',
     width: '100%',
   },
-  hasError: {
-    marginTop: 0,
-  },
-  errorNotice: {
-    animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.error.dark}`,
-    '& .noticeText': {
-      fontFamily: '"LatoWeb", sans-serif',
-    },
-    marginTop: 20,
-    paddingLeft: 10,
-    textAlign: 'left',
-  },
   addTagButton: {
-    display: 'flex',
+    '& svg': {
+      color: theme.color.tagIcon,
+      height: 10,
+      marginLeft: 10,
+      width: 10,
+    },
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: theme.color.tagButton,
     border: 'none',
     borderRadius: 3,
     color: theme.textColors.linkActiveLight,
     cursor: 'pointer',
+    display: 'flex',
     fontFamily: theme.font.normal,
     fontSize: '0.875rem',
     fontWeight: 'bold',
+    justifyContent: 'center',
     padding: '7px 10px',
     whiteSpace: 'nowrap',
-    '& svg': {
-      color: theme.color.tagIcon,
-      marginLeft: 10,
-      height: 10,
-      width: 10,
-    },
   },
-  tagsPanelItemWrapper: {
-    marginBottom: theme.spacing(),
-    position: 'relative',
+  errorNotice: {
+    '& .noticeText': {
+      fontFamily: '"LatoWeb", sans-serif',
+    },
+    animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
+    marginTop: 20,
+    paddingLeft: 10,
+    textAlign: 'left',
+  },
+  hasError: {
+    marginTop: 0,
+  },
+  loading: {
+    opacity: 0.4,
+  },
+  progress: {
+    alignItems: 'center',
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
+    zIndex: 2,
   },
   selectTag: {
-    animation: '$fadeIn .3s ease-in-out forwards',
-    marginTop: -3.5,
-    minWidth: 275,
-    position: 'relative',
-    textAlign: 'left',
-    width: '100%',
-    zIndex: 3,
     '& .error-for-scroll > div': {
       flexDirection: 'row',
       flexWrap: 'wrap-reverse',
     },
     '& .input': {
       '& p': {
-        color: theme.color.grey1,
         borderLeft: 'none',
+        color: theme.color.grey1,
         fontSize: '.9rem',
       },
     },
@@ -94,18 +91,21 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& .react-select__value-container': {
       padding: '6px',
     },
-  },
-  progress: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    height: '100%',
+    animation: '$fadeIn .3s ease-in-out forwards',
+    marginTop: -3.5,
+    minWidth: 275,
+    position: 'relative',
+    textAlign: 'left',
     width: '100%',
-    zIndex: 2,
+    zIndex: 3,
   },
-  loading: {
-    opacity: 0.4,
+  tag: {
+    marginRight: 4,
+    marginTop: theme.spacing(0.5),
+  },
+  tagsPanelItemWrapper: {
+    marginBottom: theme.spacing(),
+    position: 'relative',
   },
 }));
 
@@ -131,7 +131,7 @@ export interface TagsPanelProps {
 
 const TagsPanel = (props: TagsPanelProps) => {
   const { classes, cx } = useStyles();
-  const { tags, disabled, updateTags } = props;
+  const { disabled, tags, updateTags } = props;
 
   const queryClient = useQueryClient();
 
@@ -143,8 +143,8 @@ const TagsPanel = (props: TagsPanelProps) => {
 
   const {
     data: userTags,
-    isLoading: userTagsLoading,
     error: userTagsError,
+    isLoading: userTagsLoading,
   } = useTagSuggestions(!profile?.restricted);
 
   const tagsToSuggest = React.useMemo<Item[] | undefined>(
@@ -288,8 +288,8 @@ const TagsPanel = (props: TagsPanelProps) => {
             <Tag
               key={`tag-item-${thisTag}`}
               className={cx({
-                [classes.tag]: true,
                 [classes.loading]: tagsLoading,
+                [classes.tag]: true,
               })}
               colorVariant="lightBlue"
               label={thisTag}

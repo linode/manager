@@ -61,8 +61,8 @@ const getSubHeading = (paymentMethod: PaymentMethod, isExpired: boolean) => {
 
 export const PaymentMethodCard = (props: Props) => {
   const theme = useTheme();
-  const { paymentMethod, paymentMethodId, handlePaymentMethodChange } = props;
-  const { id, type, is_default } = paymentMethod;
+  const { handlePaymentMethodChange, paymentMethod, paymentMethodId } = props;
+  const { id, is_default, type } = paymentMethod;
 
   const heading = getHeading(paymentMethod, type);
   const cardIsExpired = getIsCardExpired(paymentMethod);
@@ -74,8 +74,8 @@ export const PaymentMethodCard = (props: Props) => {
   };
 
   const sxVariant = {
-    paddingLeft: { xs: 0, sm: 1 },
     flexShrink: 0,
+    paddingLeft: { sm: 1, xs: 0 },
   };
 
   const renderVariant = () => {

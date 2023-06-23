@@ -13,12 +13,12 @@ interface Props {
 }
 
 export const DeleteDiskDialog = (props: Props) => {
-  const { onClose, open, disk, linodeId } = props;
+  const { disk, linodeId, onClose, open } = props;
 
   const {
-    mutateAsync: deleteDisk,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: deleteDisk,
     reset,
   } = useLinodeDeleteDiskMutation(linodeId, disk?.id ?? -1);
 

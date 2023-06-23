@@ -68,8 +68,8 @@ export const DisplaySettings = () => {
         display="flex"
         sx={{
           gap: 2,
-          marginTop: theme.spacing(),
           marginBottom: theme.spacing(4),
+          marginTop: theme.spacing(),
         }}
       >
         <GravatarByEmail email={profile?.email ?? ''} height={88} width={88} />
@@ -81,8 +81,8 @@ export const DisplaySettings = () => {
               text={tooltipIconText}
               status="help"
               sxTooltipIcon={{
-                marginTop: '-2px',
                 marginLeft: '6px',
+                marginTop: '-2px',
                 padding: 0,
               }}
             />
@@ -141,22 +141,22 @@ export const DisplaySettings = () => {
 const StyledAddImageLink = styled(ExternalLink, {
   label: 'StyledAddImageLink',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
-  fontSize: '1rem',
   '& svg': {
     height: '1rem',
-    width: '1rem',
+    left: 6,
     position: 'relative',
     top: 3,
-    left: 6,
+    width: '1rem',
   },
+  fontFamily: theme.font.bold,
+  fontSize: '1rem',
 }));
 
 const StyledProfileCopy = styled(Typography, {
   label: 'StyledProfileCopy',
 })(({ theme }) => ({
-  marginTop: 4,
   marginBottom: theme.spacing(2),
+  marginTop: 4,
   maxWidth: 360,
 }));
 

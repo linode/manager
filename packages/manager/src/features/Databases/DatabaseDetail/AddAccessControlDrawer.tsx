@@ -41,7 +41,7 @@ interface Values {
 type CombinedProps = Props;
 
 const AddAccessControlDrawer = (props: CombinedProps) => {
-  const { open, onClose, updateDatabase, allowList } = props;
+  const { allowList, onClose, open, updateDatabase } = props;
 
   const { classes } = useStyles();
 
@@ -61,8 +61,8 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   const handleUpdateAccessControlsClick = (
     { _allowList }: Values,
     {
-      setSubmitting,
       setFieldError,
+      setSubmitting,
     }: {
       setSubmitting: (isSubmitting: boolean) => void;
       setFieldError: (field: string, reason: string) => void;
@@ -124,20 +124,20 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   };
 
   const {
-    values,
-    isSubmitting,
     handleSubmit,
-    setValues,
+    isSubmitting,
     resetForm,
+    setValues,
+    values,
   } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       _allowList: allowList,
     },
-    enableReinitialize: true,
     onSubmit: handleUpdateAccessControlsClick,
-    validateOnChange: false,
-    validateOnBlur: false,
     validate: (values: Values) => onValidate(values),
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleIPChange = React.useCallback(

@@ -10,13 +10,13 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles((theme: Theme) => ({
-  item: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   container: {
     flexWrap: 'nowrap',
     marginTop: theme.spacing(1),
+  },
+  item: {
+    alignItems: 'center',
+    display: 'flex',
   },
 }));
 
@@ -30,7 +30,7 @@ interface Props {
 }
 
 export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
-  const { open, onClose, loading, onDelete, error, paymentMethod } = props;
+  const { error, loading, onClose, onDelete, open, paymentMethod } = props;
   const classes = useStyles();
 
   const actions = (
@@ -57,7 +57,7 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
         <Grid
           item
           className={classes.item}
-          style={{ paddingLeft: 0, paddingBottom: 0 }}
+          style={{ paddingBottom: 0, paddingLeft: 0 }}
         >
           {paymentMethod && paymentMethod.type === 'credit_card' ? (
             <CreditCard creditCard={paymentMethod.data} />

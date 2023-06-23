@@ -12,7 +12,7 @@ const DomainDetailRouting = () => {
   const params = useParams<{ domainId: string }>();
   const domainId = Number(params.domainId);
 
-  const { data: domain, isLoading, error } = useDomainQuery(domainId);
+  const { data: domain, error, isLoading } = useDomainQuery(domainId);
 
   if (isLoading) {
     return <CircleProgress />;

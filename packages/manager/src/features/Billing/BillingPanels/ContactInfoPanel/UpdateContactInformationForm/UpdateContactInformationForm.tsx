@@ -22,9 +22,9 @@ interface Props {
 
 const excludedUSRegions = ['Micronesia', 'Marshall Islands', 'Palau'];
 
-const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
+const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: account } = useAccount();
-  const { mutateAsync, isLoading, error } = useMutateAccount();
+  const { error, isLoading, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
   const { classes } = useStyles();
   const flags = useFlags();
@@ -33,18 +33,18 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
+      address_1: account?.address_1,
+      address_2: account?.address_2,
+      city: account?.city,
+      company: account?.company,
+      country: account?.country,
       email: account?.email,
       first_name: account?.first_name,
       last_name: account?.last_name,
-      company: account?.company,
-      address_1: account?.address_1,
-      address_2: account?.address_2,
-      country: account?.country,
-      state: account?.state,
-      city: account?.city,
-      zip: account?.zip,
       phone: account?.phone,
+      state: account?.state,
       tax_id: account?.tax_id,
+      zip: account?.zip,
     },
     async onSubmit(values) {
       await mutateAsync(values);
@@ -92,8 +92,8 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
 
   const countryResults: Item<string>[] = countryData.map((country: Country) => {
     return {
-      value: country.countryShortCode,
       label: country.countryName,
+      value: country.countryShortCode,
     };
   });
 
@@ -112,14 +112,14 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
   const regionResults = countryRegions.map((region) => {
     if (formik.values.country === 'US' && region.name === 'Virgin Islands') {
       return {
-        value: region.shortCode,
         label: 'Virgin Islands, U.S.',
+        value: region.shortCode,
       };
     }
 
     return {
-      value: region.shortCode,
       label: region.name,
+      value: region.shortCode,
     };
   });
 
@@ -131,8 +131,8 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
     );
 
     filteredRegionResults.push({
-      value: 'UM',
       label: 'United States Minor Outlying Islands',
+      value: 'UM',
     });
   } else {
     filteredRegionResults = regionResults;
@@ -343,19 +343,19 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
 };
 
 const useStyles = makeStyles()({
-  mainFormContainer: {
-    maxWidth: 860,
-    '& .MuiGrid-item:not(:first-of-type) label': {
-      marginTop: 0,
-    },
-  },
   actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    paddingBottom: 0,
     '& button': {
       marginBottom: 0,
     },
+    display: 'flex',
+    justifyContent: 'flex-end',
+    paddingBottom: 0,
+  },
+  mainFormContainer: {
+    '& .MuiGrid-item:not(:first-of-type) label': {
+      marginTop: 0,
+    },
+    maxWidth: 860,
   },
 });
 

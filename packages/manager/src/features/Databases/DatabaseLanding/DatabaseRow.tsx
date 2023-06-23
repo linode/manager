@@ -18,20 +18,20 @@ import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
-  provisioning: 'other',
   active: 'active',
-  suspending: 'other',
-  suspended: 'error',
-  resuming: 'other',
-  restoring: 'other',
-  failed: 'error',
   degraded: 'inactive',
+  failed: 'error',
+  provisioning: 'other',
+  restoring: 'other',
+  resuming: 'other',
+  suspended: 'error',
+  suspending: 'other',
 };
 
 export const databaseEngineMap: Record<Engine, string> = {
+  mongodb: 'MongoDB',
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
-  mongodb: 'MongoDB',
   redis: 'Redis',
 };
 
@@ -41,14 +41,14 @@ interface Props {
 
 export const DatabaseRow = ({ database }: Props) => {
   const {
+    cluster_size,
+    created,
+    engine,
     id,
     label,
-    engine,
-    created,
-    status,
     region,
+    status,
     version,
-    cluster_size,
   } = database;
 
   const { data: regions } = useRegionsQuery();

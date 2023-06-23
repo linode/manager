@@ -38,26 +38,6 @@ import {
 } from 'src/queries/linodes/networking';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  sourceIPWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  ipField: {
-    marginTop: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 175,
-    },
-  },
-  ipFieldLabel: {
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing(2)})`,
-    },
-  },
   actionsLabel: {
     [theme.breakpoints.down('sm')]: {
       display: 'none',
@@ -66,20 +46,40 @@ const useStyles = makeStyles()((theme: Theme) => ({
   autoGridsm: {
     minWidth: 175,
     [theme.breakpoints.up('sm')]: {
-      maxWidth: 'auto',
       flexBasis: 'auto',
+      maxWidth: 'auto',
     },
   },
-  networkActionText: {
-    marginBottom: theme.spacing(2),
-  },
   emptyStateText: {
-    marginTop: theme.spacing(2),
     color: theme.color.grey1,
+    marginTop: theme.spacing(2),
+  },
+  ipField: {
+    marginTop: 0,
+    [theme.breakpoints.up('sm')]: {
+      width: 175,
+    },
+    width: '100%',
+  },
+  ipFieldLabel: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(175px + ${theme.spacing(2)})`,
+    },
+    width: '100%',
   },
   loading: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  networkActionText: {
+    marginBottom: theme.spacing(2),
+  },
+  sourceIPWrapper: {
+    alignItems: 'center',
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 }));
 
@@ -139,7 +139,7 @@ export const getLinodeIPv6Ranges = (
 };
 
 const LinodeNetworkingIPTransferPanel = (props: Props) => {
-  const { linodeId, open, onClose, readOnly } = props;
+  const { linodeId, onClose, open, readOnly } = props;
   const { classes } = useStyles();
   const { mutateAsync: assignAddresses } = useAssignAdressesMutation();
 
@@ -181,21 +181,21 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
 
   const {
     data: allLinodes,
-    isLoading,
     error: linodesError,
+    isLoading,
   } = useAllLinodesQuery(
     {},
     {
-      region: linode?.region,
       label: { '+contains': searchText ? searchText : undefined },
+      region: linode?.region,
     },
     open // only run the query if the modal is open
   );
 
   const {
     data: ipv6RangesData,
-    isLoading: ipv6RangesLoading,
     error: ipv6RangesError,
+    isLoading: ipv6RangesLoading,
   } = useAllIPv6RangesQuery();
 
   const linodes = (allLinodes ?? []).filter((l) => l.id !== linodeId);
@@ -336,7 +336,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     );
   };
 
-  const linodeSelect = ({ sourceIP, selectedLinodeID }: Move) => {
+  const linodeSelect = ({ selectedLinodeID, sourceIP }: Move) => {
     const linodeList = linodes.map((l) => {
       return { label: l.label, value: l.id };
     });
@@ -370,7 +370,7 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     );
   };
 
-  const ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
+  const ipSelect = ({ selectedIP, selectedLinodesIPs, sourceIP }: Swap) => {
     const IPList = selectedLinodesIPs.map((ip) => {
       return { label: ip, value: ip };
     });

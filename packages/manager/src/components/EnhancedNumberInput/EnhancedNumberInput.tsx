@@ -7,9 +7,6 @@ import TextField from 'src/components/TextField';
 import Box from '@mui/material/Box';
 
 const sxTextFieldBase = {
-  padding: '0 8px',
-  textAlign: 'right',
-  '-moz-appearance': 'textfield',
   '&::-webkit-inner-spin-button': {
     '-webkit-appearance': 'none',
     margin: 0,
@@ -18,6 +15,9 @@ const sxTextFieldBase = {
     '-webkit-appearance': 'none',
     margin: 0,
   },
+  '-moz-appearance': 'textfield',
+  padding: '0 8px',
+  textAlign: 'right',
 };
 
 const sxTextField = {
@@ -46,7 +46,7 @@ interface EnhancedNumberInputProps {
 
 export const EnhancedNumberInput = React.memo(
   (props: EnhancedNumberInputProps) => {
-    const { inputLabel, setValue, disabled } = props;
+    const { disabled, inputLabel, setValue } = props;
 
     const max = props.max ?? 100;
     const min = props.min ?? 0;
@@ -112,8 +112,8 @@ export const EnhancedNumberInput = React.memo(
           data-testid={'quantity-input'}
           sx={{
             ...sxTextField,
-            '.MuiInputBase-root': sxTextField,
             '.MuiInputBase-input': sxTextFieldBase,
+            '.MuiInputBase-root': sxTextField,
           }}
         />
         <StyledButton
@@ -134,23 +134,23 @@ export const EnhancedNumberInput = React.memo(
 );
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  '&.MuiButtonBase-root.Mui-disabled': {
+    '& svg g': {
+      stroke: theme.color.disabledText,
+    },
+
+    border: 'none',
+  },
+  '&:hover': {
+    backgroundColor: 'rgba(224, 224, 224, 0.69)',
+    border: 'none',
+  },
+  border: 'none',
   borderRadius: 0,
   height: 34,
   minHeight: 'fit-content',
   minWidth: 30,
   width: 35,
-  border: 'none',
-  '&:hover': {
-    backgroundColor: 'rgba(224, 224, 224, 0.69)',
-    border: 'none',
-  },
-  '&.MuiButtonBase-root.Mui-disabled': {
-    border: 'none',
-
-    '& svg g': {
-      stroke: theme.color.disabledText,
-    },
-  },
 }));
 
 const MinusIcon = styled(Minus)({

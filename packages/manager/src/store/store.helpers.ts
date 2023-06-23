@@ -18,7 +18,7 @@ export const addEntityRecord = <T extends Entity>(
 ): EntityMap<T> => assoc(String(current.id), current, result);
 
 export const onStart = <S>(state: S) =>
-  Object.assign({}, state, { loading: true, error: undefined });
+  Object.assign({}, state, { error: undefined, loading: true });
 
 export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
@@ -26,13 +26,13 @@ export const onGetAllSuccess = <E extends Entity, S>(
   update: (e: E) => E = (i) => i
 ): S =>
   Object.assign({}, state, {
-    loading: false,
-    lastUpdated: Date.now(),
     items: items.map(mapIDs),
     itemsById: items.reduce(
       (itemsById, item) => ({ ...itemsById, [item.id]: update(item) }),
       {}
     ),
+    lastUpdated: Date.now(),
+    loading: false,
   });
 
 export const onError = <S = {}, E = APIError[] | undefined>(
@@ -46,11 +46,11 @@ export const createDefaultState = <
 >(
   override: Partial<MappedEntityState<E, O>> = {}
 ): MappedEntityState<E, O> => ({
-  itemsById: {},
-  items: [],
-  loading: false,
-  lastUpdated: 0,
   error: undefined,
+  items: [],
+  itemsById: {},
+  lastUpdated: 0,
+  loading: false,
   ...override,
 });
 
@@ -76,8 +76,8 @@ export const removeMany = <E extends Entity, O = APIError[] | undefined>(
 
   return {
     ...state,
-    itemsById,
     items: keys(itemsById),
+    itemsById,
   };
 };
 
@@ -92,8 +92,8 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
 
   return {
     ...state,
-    itemsById,
     items: keys(itemsById),
+    itemsById,
   };
 };
 
@@ -119,13 +119,13 @@ export const createRequestThunk = <Req extends any, Res, Err>(
   request: (params: Req) => Promise<Res>
 ): ThunkActionCreator<Promise<Res>, Req> => {
   return (params: Req) => async (dispatch) => {
-    const { started, done, failed } = actions;
+    const { done, failed, started } = actions;
 
     dispatch(started(params));
 
     try {
       const result = await request(params);
-      const doneAction = done({ result, params });
+      const doneAction = done({ params, result });
       dispatch(doneAction);
       return result;
     } catch (error) {

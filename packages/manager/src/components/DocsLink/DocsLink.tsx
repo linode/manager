@@ -6,21 +6,6 @@ import { sendHelpButtonClickEvent } from 'src/utilities/analytics';
 import { IconTextLink } from '../IconTextLink/IconTextLink';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    alignItems: 'center',
-    fontFamily: theme.font.normal,
-    fontSize: '.875rem',
-    lineHeight: 'normal',
-    margin: 0,
-    minWidth: 'auto',
-    '& svg': {
-      marginRight: theme.spacing(),
-    },
-    '&:hover': {
-      color: theme.textColors.linkActiveLight,
-      textDecoration: 'underline',
-    },
-  },
   '@supports (-moz-appearance: none)': {
     /* Fix text alignment for Firefox */
     root: {
@@ -28,6 +13,21 @@ const useStyles = makeStyles()((theme: Theme) => ({
         top: 1,
       },
     },
+  },
+  root: {
+    '& svg': {
+      marginRight: theme.spacing(),
+    },
+    '&:hover': {
+      color: theme.textColors.linkActiveLight,
+      textDecoration: 'underline',
+    },
+    alignItems: 'center',
+    fontFamily: theme.font.normal,
+    fontSize: '.875rem',
+    lineHeight: 'normal',
+    margin: 0,
+    minWidth: 'auto',
   },
 }));
 
@@ -41,7 +41,7 @@ interface Props {
 export const DocsLink = (props: Props) => {
   const { classes } = useStyles();
 
-  const { href, label, analyticsLabel, onClick } = props;
+  const { analyticsLabel, href, label, onClick } = props;
 
   return (
     <IconTextLink

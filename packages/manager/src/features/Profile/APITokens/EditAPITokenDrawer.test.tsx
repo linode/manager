@@ -6,14 +6,14 @@ import { appTokenFactory } from 'src/factories';
 import userEvent from '@testing-library/user-event';
 
 const props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
   token: appTokenFactory.build({ label: 'my-token' }),
 };
 
 describe('Edit API Token Drawer', () => {
   it('Should render a title, input for token label, and action buttons', () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <EditAPITokenDrawer {...props} />
     );
     const drawerTitle = getByText('Edit Personal Access Token');

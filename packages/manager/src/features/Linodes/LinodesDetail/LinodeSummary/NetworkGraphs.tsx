@@ -39,23 +39,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   grid: {
-    backgroundColor: theme.bg.offWhite,
-    border: `solid 1px ${theme.borderColors.divider}`,
+    '& h2': {
+      fontSize: '1rem',
+    },
     '&.MuiGrid-item': {
       padding: theme.spacing(2),
     },
-    '& h2': {
-      fontSize: '1rem',
+    backgroundColor: theme.bg.offWhite,
+    border: `solid 1px ${theme.borderColors.divider}`,
+    [theme.breakpoints.down(1100)]: {
+      '&:first-of-type': {
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2),
+      },
     },
     [theme.breakpoints.up(1100)]: {
       '&:first-of-type': {
         marginRight: theme.spacing(2),
-      },
-    },
-    [theme.breakpoints.down(1100)]: {
-      '&:first-of-type': {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
       },
     },
   },
@@ -90,10 +90,10 @@ interface NetworkStats {
 
 const _getMetrics = (data: NetworkStats) => {
   return {
-    publicIn: getMetrics(data.publicIn),
-    publicOut: getMetrics(data.publicOut),
     privateIn: getMetrics(data.privateIn),
     privateOut: getMetrics(data.privateOut ?? []),
+    publicIn: getMetrics(data.publicIn),
+    publicOut: getMetrics(data.publicOut),
   };
 };
 
@@ -104,17 +104,17 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const v4Data: NetworkStats = {
-    publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
-    publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
     privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
     privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats),
+    publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
+    publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
   };
 
   const v6Data: NetworkStats = {
-    publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
-    publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
     privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats),
     privateOut: pathOr([], ['data', 'netv6', 'private_out'], stats),
+    publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
+    publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
   };
 
   const v4Metrics = _getMetrics(v4Data);
@@ -161,10 +161,10 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
   const v6Unit = generateNetworkUnits(maxV6InBytes);
 
   const commonGraphProps = {
-    timezone: props.timezone,
-    theme,
     chartHeight: props.height,
     rangeSelection,
+    theme,
+    timezone: props.timezone,
   };
 
   return (
@@ -263,26 +263,26 @@ const Graph: React.FC<GraphProps> = (props) => {
       showToday={rangeSelection === '24'}
       data={[
         {
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.network.inbound,
+          borderColor: 'transparent',
           data: convertedPublicIn,
           label: 'Public In',
         },
         {
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.network.outbound,
+          borderColor: 'transparent',
           data: convertedPublicOut,
           label: 'Public Out',
         },
         {
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.purple,
+          borderColor: 'transparent',
           data: convertedPrivateIn,
           label: 'Private In',
         },
         {
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.yellow,
+          borderColor: 'transparent',
           data: convertedPrivateOut,
           label: 'Private Out',
         },

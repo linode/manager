@@ -46,8 +46,8 @@ export const RenderNotification: React.FC<Props> = (props) => {
       <Box
         data-test-id={notification.type}
         sx={{
-          display: 'flex',
           alignItem: 'flex-start',
+          display: 'flex',
         }}
       >
         <Box
@@ -57,12 +57,12 @@ export const RenderNotification: React.FC<Props> = (props) => {
         >
           <Box
             sx={{
-              display: 'flex',
-              lineHeight: '1rem',
               '& svg': {
                 height: '1.25rem',
                 width: '1.25rem',
               },
+              display: 'flex',
+              lineHeight: '1rem',
             }}
           >
             {severity === 'critical' ? (
@@ -103,10 +103,10 @@ export const RenderNotification: React.FC<Props> = (props) => {
 
 const StyledLink = styled(Link)<Partial<Props>>(({ theme, ...props }) => ({
   ...(props.notification?.severity === 'critical' && {
-    color: `${theme.color.red} !important`,
     '&:hover': {
       textDecoration: `${theme.color.red} underline`,
     },
+    color: `${theme.color.red} !important`,
   }),
 }));
 

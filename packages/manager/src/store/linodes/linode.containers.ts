@@ -27,7 +27,7 @@ export interface LinodeActionsProps {
 
 export const withLinodeActions = connect(undefined, (dispatch) => ({
   linodeActions: bindActionCreators(
-    { createLinode, deleteLinode, updateLinode, rebootLinode },
+    { createLinode, deleteLinode, rebootLinode, updateLinode },
     dispatch
   ),
 }));

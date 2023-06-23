@@ -14,49 +14,49 @@ import { StyledToggleButton } from './DisplayLinodes.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
+    backgroundColor: theme.bg.tableHeader,
     display: 'flex',
     justifyContent: 'flex-end',
-    backgroundColor: theme.bg.tableHeader,
   },
   // There's nothing very scientific about the widths across the breakpoints
   // here, just a lot of trial and error based on maximum expected column sizes.
   labelCell: {
     ...theme.applyTableHeaderStyles,
-    width: '24%',
     [theme.breakpoints.down('lg')]: {
       width: '20%',
     },
-  },
-  statusCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '20%',
-    [theme.breakpoints.only('md')]: {
-      width: '27%',
-    },
-    [theme.breakpoints.down('md')]: {
-      width: '25%',
-    },
-  },
-  planCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '14%',
-    [theme.breakpoints.only('sm')]: {
-      width: '15%',
-    },
-  },
-  regionCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '14%',
-    [theme.breakpoints.down('sm')]: {
-      width: '18%',
-    },
+    width: '24%',
   },
   lastBackupCell: {
     ...theme.applyTableHeaderStyles,
-    width: '14%',
     [theme.breakpoints.down('sm')]: {
       width: '18%',
     },
+    width: '14%',
+  },
+  planCell: {
+    ...theme.applyTableHeaderStyles,
+    [theme.breakpoints.only('sm')]: {
+      width: '15%',
+    },
+    width: '14%',
+  },
+  regionCell: {
+    ...theme.applyTableHeaderStyles,
+    [theme.breakpoints.down('sm')]: {
+      width: '18%',
+    },
+    width: '14%',
+  },
+  statusCell: {
+    ...theme.applyTableHeaderStyles,
+    [theme.breakpoints.down('md')]: {
+      width: '25%',
+    },
+    [theme.breakpoints.only('md')]: {
+      width: '27%',
+    },
+    width: '20%',
   },
 }));
 
@@ -75,13 +75,13 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
 
   const {
     handleOrderChange,
+    isVLAN,
+    linodeViewPreference,
+    linodesAreGrouped,
     order,
     orderBy,
-    toggleLinodeView,
-    linodeViewPreference,
     toggleGroupLinodes,
-    linodesAreGrouped,
-    isVLAN,
+    toggleLinodeView,
   } = props;
 
   const isActive = (label: string) =>

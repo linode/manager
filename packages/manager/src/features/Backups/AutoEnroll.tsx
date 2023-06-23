@@ -12,19 +12,19 @@ type ClassNames = 'root' | 'header' | 'toggleLabel' | 'toggleLabelText';
 
 const styles = (theme: Theme) =>
   createStyles({
+    header: {
+      fontSize: 17,
+      marginBottom: theme.spacing(1),
+    },
     root: {
       backgroundColor: theme.bg.offWhite,
       padding: theme.spacing(1),
     },
-    header: {
-      marginBottom: theme.spacing(1),
-      fontSize: 17,
-    },
     toggleLabel: {
-      display: 'flex',
       alignItems: 'flex-start',
-      marginLeft: 0,
+      display: 'flex',
       marginBottom: theme.spacing(1),
+      marginLeft: 0,
     },
     toggleLabelText: {
       marginTop: theme.spacing(1) + theme.spacing(0.5),

@@ -63,8 +63,8 @@ export const ServicesTable: React.FC<TableProps> = (props) => {
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData} pageSize={25}>
           {({
-            data: paginatedData,
             count,
+            data: paginatedData,
             handlePageChange,
             handlePageSizeChange,
             page,

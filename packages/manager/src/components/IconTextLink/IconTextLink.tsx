@@ -6,59 +6,59 @@ import { Theme } from '@mui/material/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    cursor: 'pointer',
-    padding: theme.spacing(1.5),
-    color: theme.textColors.linkActiveLight,
-    transition: 'none',
-    margin: `0 ${theme.spacing(1)} 2px 0`,
-    minHeight: 'auto',
-    borderRadius: 0,
-    '&:hover': {
-      color: theme.palette.primary.light,
-      backgroundColor: 'transparent',
-      '& .border': {
-        color: theme.palette.primary.light,
-      },
-    },
-    '&:focus': { outline: '1px dotted #999' },
-  },
   active: {
     color: '#1f64b6',
   },
   disabled: {
+    '& $icon': {
+      borderColor: '#939598',
+      color: '#939598',
+    },
     color: '#939598',
     pointerEvents: 'none',
-    '& $icon': {
-      color: '#939598',
-      borderColor: '#939598',
-    },
   },
   icon: {
-    transition: 'none',
-    fontSize: 18,
-    marginRight: theme.spacing(0.5),
-    color: 'inherit',
     '& .border': {
       transition: 'none',
     },
+    color: 'inherit',
+    fontSize: 18,
+    marginRight: theme.spacing(0.5),
+    transition: 'none',
+  },
+  label: {
+    position: 'relative',
+    top: -1,
+    whiteSpace: 'nowrap',
   },
   left: {
     left: `-${theme.spacing(1.5)}`,
   },
-  label: {
-    whiteSpace: 'nowrap',
-    position: 'relative',
-    top: -1,
-  },
   linkWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
     '&:hover, &:focus': {
       textDecoration: 'none',
     },
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  root: {
+    '&:focus': { outline: '1px dotted #999' },
+    '&:hover': {
+      '& .border': {
+        color: theme.palette.primary.light,
+      },
+      backgroundColor: 'transparent',
+      color: theme.palette.primary.light,
+    },
+    alignItems: 'flex-start',
+    borderRadius: 0,
+    color: theme.textColors.linkActiveLight,
+    cursor: 'pointer',
+    display: 'flex',
+    margin: `0 ${theme.spacing(1)} 2px 0`,
+    minHeight: 'auto',
+    padding: theme.spacing(1.5),
+    transition: 'none',
   },
 }));
 
@@ -80,15 +80,15 @@ export const IconTextLink = (props: Props) => {
   const { classes, cx } = useStyles();
   const {
     SideIcon,
-    text,
-    onClick,
     active,
-    disabled,
-    title,
-    left,
     className,
-    to,
+    disabled,
     hideText,
+    left,
+    onClick,
+    text,
+    title,
+    to,
   } = props;
 
   const LinkButton = (
@@ -96,8 +96,8 @@ export const IconTextLink = (props: Props) => {
       className={cx(
         classes.root,
         {
-          [classes.disabled]: disabled,
           [classes.active]: active,
+          [classes.disabled]: disabled,
           [classes.left]: left,
         },
         className

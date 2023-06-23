@@ -9,21 +9,21 @@ import { OFFICIAL_USERNAMES } from './ticketUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hivelyContainer: {
+    alignItems: 'center',
+    borderTop: `1px solid ${theme.color.grey2}`,
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
     margin: `${theme.spacing(3)} ${theme.spacing(1)} 0`,
     paddingTop: theme.spacing(1),
-    borderTop: `1px solid ${theme.color.grey2}`,
-  },
-  hivelyLink: {
-    textDecoration: 'none',
-    color: theme.color.black,
-    marginRight: theme.spacing(2),
   },
   hivelyImage: {
-    width: '25px',
     margin: 3,
+    width: '25px',
+  },
+  hivelyLink: {
+    color: theme.color.black,
+    marginRight: theme.spacing(2),
+    textDecoration: 'none',
   },
   hivelyLinkIcon: {
     display: 'inline-block',
@@ -64,7 +64,7 @@ export const shouldRenderHively = (
 
 export const Hively: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { linodeUsername, ticketId, replyId } = props;
+  const { linodeUsername, replyId, ticketId } = props;
   const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
 
   return (

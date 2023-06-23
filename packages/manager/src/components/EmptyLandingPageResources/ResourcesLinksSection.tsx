@@ -22,8 +22,8 @@ const StyledResourcesLinksSection = styled('div', {
   maxWidth: props.wide === false ? 762 : '100%',
   [theme.breakpoints.down(props.wide ? 'lg' : 'md')]: {
     gridAutoFlow: 'row',
-    rowGap: theme.spacing(8),
     justifyItems: 'start',
+    rowGap: theme.spacing(8),
   },
 }));
 

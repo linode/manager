@@ -38,59 +38,59 @@ export const AddNewMenu = () => {
 
   const links = [
     {
-      entity: 'Linode',
       description: 'High performance SSD Linux servers',
+      entity: 'Linode',
       icon: LinodeIcon,
       link: '/linodes/create',
     },
     {
-      entity: 'Volume',
       description: 'Attach additional storage to your Linode',
+      entity: 'Volume',
       icon: VolumeIcon,
       link: '/volumes/create',
     },
     {
-      entity: 'NodeBalancer',
       description: 'Ensure your services are highly available',
+      entity: 'NodeBalancer',
       icon: NodebalancerIcon,
       link: '/nodebalancers/create',
     },
     {
-      entity: 'Firewall',
       description: 'Control network access to your Linodes',
+      entity: 'Firewall',
       icon: FirewallIcon,
       link: '/firewalls/create',
     },
     {
-      entity: 'Domain',
       description: 'Manage your DNS records',
+      entity: 'Domain',
       icon: DomainIcon,
       link: '/domains/create',
     },
     {
-      entity: 'Database',
       description: 'High-performance managed database clusters',
+      entity: 'Database',
       icon: DatabaseIcon,
       link: '/databases/create',
     },
     {
-      entity: 'Kubernetes',
       description: 'Highly available container workloads',
+      entity: 'Kubernetes',
       icon: KubernetesIcon,
       link: '/kubernetes/create',
     },
     {
-      entity: 'Bucket',
       description: 'S3-compatible object storage',
+      entity: 'Bucket',
       icon: BucketIcon,
       link: '/object-storage/buckets/create',
     },
     {
-      entity: 'Marketplace',
+      attr: { 'data-qa-one-click-add-new': true },
       description: 'Deploy applications with ease',
+      entity: 'Marketplace',
       icon: OneClickIcon,
       link: '/linodes/create?type=One-Click',
-      attr: { 'data-qa-one-click-add-new': true },
     },
   ];
 
@@ -134,12 +134,12 @@ export const AddNewMenu = () => {
             key={link.entity}
             onClick={handleClose}
             sx={{
-              paddingY: 1.5,
               '&:hover': {
                 // This MUI Menu gets special colors compared
                 // to a standard menu such as the NodeBalancer Config Node Mode select menu
                 backgroundColor: theme.bg.app,
               },
+              paddingY: 1.5,
             }}
             component={Link}
             to={link.link}

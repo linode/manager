@@ -9,7 +9,7 @@ describe('RestoreToLinodeDrawer', () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
         return res(
-          ctx.json(linodeFactory.build({ id: 1, backups: { enabled: true } }))
+          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );
       })
     );

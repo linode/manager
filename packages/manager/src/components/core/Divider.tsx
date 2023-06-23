@@ -5,11 +5,11 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  light: {
-    borderColor: theme.name === 'light' ? '#e3e5e8' : '#2e3238',
-  },
   dark: {
     borderColor: theme.color.border2,
+  },
+  light: {
+    borderColor: theme.name === 'light' ? '#e3e5e8' : '#2e3238',
   },
 }));
 
@@ -25,7 +25,7 @@ interface Props extends _DividerProps {
 
 const _Divider: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { dark, light, spacingTop, spacingBottom, ...rest } = props;
+  const { dark, light, spacingBottom, spacingTop, ...rest } = props;
 
   return (
     <Divider
@@ -33,7 +33,7 @@ const _Divider: React.FC<Props> = (props) => {
         [classes.dark]: dark,
         [classes.light]: light,
       })}
-      style={{ marginTop: spacingTop, marginBottom: spacingBottom }}
+      style={{ marginBottom: spacingBottom, marginTop: spacingTop }}
       {...rest}
     />
   );

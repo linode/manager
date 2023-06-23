@@ -16,18 +16,18 @@ interface Props {
 
 export const Question = (props: Props) => {
   const {
-    questionResponse,
+    index,
     isReadOnly,
     onClickEdit,
     options,
-    index,
+    questionResponse,
     setFieldValue,
   } = props;
 
   const currentOption = questionResponse
     ? {
-        value: questionResponse.id,
         label: questionResponse.question,
+        value: questionResponse.id,
       }
     : undefined;
 

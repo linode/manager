@@ -16,13 +16,13 @@ interface Props {
 }
 
 export const CreateImageFromDiskDialog = (props: Props) => {
-  const { open, onClose, disk, linodeId } = props;
+  const { disk, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: createImage,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createImage,
     reset,
   } = useCreateImageMutation();
 

@@ -7,8 +7,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import SSHKeyCreationDrawer from './CreateSSHKeyDrawer';
 
 const props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
 };
 
 describe('SSHKeyCreationDrawer', () => {

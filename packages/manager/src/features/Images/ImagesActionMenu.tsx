@@ -35,16 +35,16 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
 
   const {
     description,
+    event,
     id,
     label,
-    status,
-    event,
-    onRestore,
+    onCancelFailed,
+    onDelete,
     onDeploy,
     onEdit,
-    onDelete,
+    onRestore,
     onRetry,
-    onCancelFailed,
+    status,
   } = props;
 
   const actions: Action[] = React.useMemo(() => {
@@ -54,54 +54,54 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     return isFailed
       ? [
           {
-            title: 'Retry',
             onClick: () => {
               onRetry(id, label, description);
             },
+            title: 'Retry',
           },
           {
-            title: 'Cancel',
             onClick: () => {
               onCancelFailed(id);
             },
+            title: 'Cancel',
           },
         ]
       : [
           {
-            title: 'Edit',
             disabled: isDisabled,
-            tooltip: isDisabled
-              ? 'Image is not yet available for use.'
-              : undefined,
             onClick: () => {
               onEdit(label, description ?? ' ', id);
             },
-          },
-          {
-            title: 'Deploy to New Linode',
-            disabled: isDisabled,
+            title: 'Edit',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
+          },
+          {
+            disabled: isDisabled,
             onClick: () => {
               onDeploy(id);
             },
-          },
-          {
-            title: 'Rebuild an Existing Linode',
-            disabled: isDisabled,
+            title: 'Deploy to New Linode',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
+          },
+          {
+            disabled: isDisabled,
             onClick: () => {
               onRestore(id);
             },
+            title: 'Rebuild an Existing Linode',
+            tooltip: isDisabled
+              ? 'Image is not yet available for use.'
+              : undefined,
           },
           {
-            title: isAvailable ? 'Delete' : 'Cancel Upload',
             onClick: () => {
               onDelete(label, id, status);
             },
+            title: isAvailable ? 'Delete' : 'Cancel Upload',
           },
         ];
   }, [

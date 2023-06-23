@@ -54,16 +54,16 @@ export const PhoneVerification = () => {
 
   const {
     data,
+    error: sendPhoneVerificationCodeError,
+    isLoading: isResending,
+    mutateAsync: resendPhoneVerificationCode,
     mutateAsync: sendPhoneVerificationCode,
     reset: resetSendCodeMutation,
-    error: sendPhoneVerificationCodeError,
-    mutateAsync: resendPhoneVerificationCode,
-    isLoading: isResending,
   } = useSendPhoneVerificationCodeMutation();
   const {
+    error: verifyError,
     mutateAsync: sendVerificationCode,
     reset: resetCodeMutation,
-    error: verifyError,
   } = useVerifyPhoneVerificationCodeMutation();
   const isCodeSent = data !== undefined;
   const onSubmitPhoneNumber = async (
@@ -107,8 +107,8 @@ export const PhoneVerification = () => {
 
   const sendCodeForm = useFormik<SendPhoneVerificationCodePayload>({
     initialValues: {
-      phone_number: '',
       iso_code: 'US',
+      phone_number: '',
     },
     onSubmit: onSubmitPhoneNumber,
   });
@@ -159,15 +159,15 @@ export const PhoneVerification = () => {
 
   const customStyles = {
     menu: () => ({
-      width: '500px',
       marginLeft: '-1px !important',
       marginTop: '0px !important',
+      width: '500px',
     }),
     singleValue: (provided: React.CSSProperties) =>
       ({
         ...provided,
-        textAlign: 'center',
         fontSize: '20px',
+        textAlign: 'center',
       } as const),
   };
   const selectedCountry = countries.find(
@@ -251,8 +251,8 @@ export const PhoneVerification = () => {
                   name="iso_code"
                   isClearable={false}
                   value={{
-                    value: sendCodeForm.values.iso_code,
                     label: getCountryFlag(sendCodeForm.values.iso_code),
+                    value: sendCodeForm.values.iso_code,
                   }}
                   isOptionSelected={(option) =>
                     sendCodeForm.values.iso_code === option.value

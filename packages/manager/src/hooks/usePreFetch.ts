@@ -47,13 +47,13 @@ export const usePrefetch = (
   }, []);
 
   const handlers = {
-    onMouseEnter: makeRequest,
-    onFocus: makeRequest,
-    onMouseLeave: cancelRequest,
     onBlur: cancelRequest,
+    onFocus: makeRequest,
+    onMouseEnter: makeRequest,
+    onMouseLeave: cancelRequest,
   };
 
-  return { makeRequest, cancelRequest, handlers };
+  return { cancelRequest, handlers, makeRequest };
 };
 
 export default usePrefetch;

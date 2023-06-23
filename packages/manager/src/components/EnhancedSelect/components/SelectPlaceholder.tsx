@@ -20,13 +20,13 @@ export const SelectPlaceholder = (props: Props) => {
 };
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  position: 'absolute',
-  left: '10px',
-  wordWrap: 'normal',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
   fontSize: '0.9rem',
+  left: '10px',
+  overflow: 'hidden',
+  position: 'absolute',
   [theme.breakpoints.only('xs')]: {
     fontSize: '1rem',
   },
+  whiteSpace: 'nowrap',
+  wordWrap: 'normal',
 }));

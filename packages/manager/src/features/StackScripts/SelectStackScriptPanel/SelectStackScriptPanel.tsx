@@ -38,16 +38,8 @@ type ClassNames = 'table' | 'selecting' | 'link' | 'panel' | 'inner';
 
 const styles = (theme: Theme) =>
   createStyles({
-    table: {
-      backgroundColor: theme.color.white,
-      flexGrow: 1,
-      width: '100%',
-    },
-    selecting: {
-      maxHeight: '1000px',
-      minHeight: '400px',
-      overflowY: 'scroll',
-      paddingTop: 0,
+    inner: {
+      padding: 0,
     },
     link: {
       display: 'block',
@@ -61,8 +53,16 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(3),
       width: '100%',
     },
-    inner: {
-      padding: 0,
+    selecting: {
+      maxHeight: '1000px',
+      minHeight: '400px',
+      overflowY: 'scroll',
+      paddingTop: 0,
+    },
+    table: {
+      backgroundColor: theme.color.white,
+      flexGrow: 1,
+      width: '100%',
     },
   });
 
@@ -104,8 +104,8 @@ interface State {
 
 class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    stackScriptLoading: false,
     stackScriptError: false,
+    stackScriptLoading: false,
   };
 
   mounted: boolean = false;
@@ -130,7 +130,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
           );
         })
         .catch((_) => {
-          this.setState({ stackScriptLoading: false, stackScriptError: true });
+          this.setState({ stackScriptError: true, stackScriptLoading: false });
         });
     }
     this.mounted = true;
@@ -148,12 +148,12 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     const {
       category,
       classes,
-      request,
-      selectedId,
       error,
       profile,
+      request,
+      selectedId,
     } = this.props;
-    const { stackScript, stackScriptLoading, stackScriptError } = this.state;
+    const { stackScript, stackScriptError, stackScriptLoading } = this.state;
 
     if (selectedId) {
       if (stackScriptLoading) {
@@ -181,8 +181,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   description={truncate(stackScript.description, 100)}
                   deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, {
-                    timezone: profile.data?.timezone,
                     displayTime: false,
+                    timezone: profile.data?.timezone,
                   })}
                   checked={selectedId === stackScript.id}
                   updateFor={[selectedId === stackScript.id]}

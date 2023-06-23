@@ -5,13 +5,13 @@ import { extendedTypes } from 'src/__data__';
 import type { NodePoolPanelProps } from './NodePoolPanel';
 
 const props: NodePoolPanelProps = {
+  addNodePool: jest.fn(),
   hasSelectedRegion: true,
-  isSelectedRegionEligibleForPlan: () => false,
   isPlanPanelDisabled: () => false,
+  isSelectedRegionEligibleForPlan: () => false,
   regionsData: [],
   types: extendedTypes,
   typesLoading: false,
-  addNodePool: jest.fn(),
 };
 
 describe('NodePoolPanel', () => {

@@ -19,36 +19,36 @@ import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  advDescription: {
+    margin: `${theme.spacing(2)} 0`,
+  },
+  clusterNotice: {
+    paddingTop: '1rem',
+  },
+  header: {
+    '& > img': {
+      height: 60,
+      width: 60,
+    },
+    alignItems: 'center',
+    columnGap: theme.spacing(),
+    display: 'flex',
+  },
+  marketplaceSpacing: {
+    paddingBottom: theme.spacing(),
+    paddingTop: theme.spacing(),
+  },
   root: {
-    padding: theme.spacing(3),
-    marginBottom: theme.spacing(3),
     '& > div:last-child': {
       border: 0,
       marginBottom: 0,
       paddingBottom: 0,
     },
-  },
-  advDescription: {
-    margin: `${theme.spacing(2)} 0`,
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(3),
   },
   username: {
     color: theme.color.grey1,
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: theme.spacing(),
-    '& > img': {
-      width: 60,
-      height: 60,
-    },
-  },
-  marketplaceSpacing: {
-    paddingTop: theme.spacing(),
-    paddingBottom: theme.spacing(),
-  },
-  clusterNotice: {
-    paddingTop: '1rem',
   },
 }));
 
@@ -184,14 +184,14 @@ const handleOpenDrawer = (
 const UserDefinedFieldsPanel = (props: CombinedProps) => {
   const classes = useStyles();
   const {
-    userDefinedFields,
+    appLogo,
+    errors,
+    handleChange,
     openDrawer,
     selectedLabel,
-    handleChange,
-    udf_data,
-    errors,
-    appLogo,
     setNumberOfNodesForAppCluster,
+    udf_data,
+    userDefinedFields,
   } = props;
 
   const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(

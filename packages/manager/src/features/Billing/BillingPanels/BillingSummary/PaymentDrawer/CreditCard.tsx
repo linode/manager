@@ -13,10 +13,6 @@ import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import Box from '@mui/material/Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   card: {
     display: 'flex',
     [theme.breakpoints.down('sm')]: {
@@ -36,18 +32,22 @@ const useStyles = makeStyles()((theme: Theme) => ({
   icon: {
     display: 'flex',
     justifyContent: 'center',
-    width: 45,
     paddingLeft: 6,
     paddingRight: 6,
+    width: 45,
+  },
+  root: {
+    alignItems: 'center',
+    display: 'flex',
   },
 }));
 
 const iconMap = {
-  Visa: VisaIcon,
-  MasterCard: MastercardIcon,
   'American Express': AmexIcon,
   Discover: DiscoverIcon,
   JCB: JCBIcon,
+  MasterCard: MastercardIcon,
+  Visa: VisaIcon,
 };
 
 interface Props {
@@ -65,7 +65,7 @@ export const getIcon = (type: CardType | undefined) => {
 
 export const CreditCard = (props: Props) => {
   const {
-    creditCard: { card_type: type = undefined, last_four: lastFour, expiry },
+    creditCard: { card_type: type = undefined, expiry, last_four: lastFour },
     showIcon = true,
   } = props;
 

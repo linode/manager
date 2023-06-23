@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const ClusterSelect: React.FC<Props> = (props) => {
-  const { selectedCluster, error, onChange, onBlur, disabled } = props;
+  const { disabled, error, onBlur, onChange, selectedCluster } = props;
 
   const { data: clusters, error: clustersError } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();

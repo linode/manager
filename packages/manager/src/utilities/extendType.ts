@@ -14,13 +14,13 @@ export interface ExtendedType extends LinodeType {
 
 export const extendType = (type: LinodeType): ExtendedType => {
   const {
+    disk,
     label,
     memory,
-    vcpus,
-    disk,
     network_out,
+    price: { hourly, monthly },
     transfer,
-    price: { monthly, hourly },
+    vcpus,
   } = type;
   const formattedLabel = formatStorageUnits(label);
 
@@ -40,8 +40,8 @@ export const extendType = (type: LinodeType): ExtendedType => {
     ...type,
     formattedLabel,
     heading: formattedLabel,
-    subHeadings,
     isDeprecated: type.successor !== null,
+    subHeadings,
   };
 };
 

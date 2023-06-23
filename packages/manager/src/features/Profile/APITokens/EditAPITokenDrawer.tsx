@@ -16,19 +16,19 @@ interface Props {
 }
 
 export const EditAPITokenDrawer = (props: Props) => {
-  const { open, onClose, token } = props;
+  const { onClose, open, token } = props;
 
   const {
-    mutateAsync: updatePersonalAccessToken,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updatePersonalAccessToken,
   } = useUpdatePersonalAccessTokenMutation(token?.id ?? -1);
 
   const form = useFormik<Partial<TokenRequest>>({
+    enableReinitialize: true,
     initialValues: {
       label: token?.label,
     },
-    enableReinitialize: true,
     async onSubmit(values) {
       await updatePersonalAccessToken(values);
       onClose();

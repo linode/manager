@@ -18,9 +18,9 @@ interface Props {
  * to specify an exact delay duration.
  */
 export const LandingLoading: React.FC<Props> = ({
-  shouldDelay,
-  delayInMS,
   children,
+  delayInMS,
+  shouldDelay,
 }) => {
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
 

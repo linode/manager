@@ -70,8 +70,8 @@ export const PlansPanel = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
-    selectedRegionID,
     regionsData,
+    selectedRegionID,
   });
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {

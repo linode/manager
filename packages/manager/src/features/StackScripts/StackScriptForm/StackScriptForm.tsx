@@ -17,13 +17,10 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-  labelField: {
-    '& input': {
-      paddingLeft: 0,
-    },
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    paddingBottom: 0,
   },
   gridWithTips: {
     maxWidth: '50%',
@@ -32,28 +29,31 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
-  tips: {
-    marginLeft: theme.spacing(4),
-    marginTop: `${theme.spacing(4)} !important`,
-    padding: theme.spacing(4),
-    backgroundColor: theme.palette.divider,
-    [theme.breakpoints.down('xl')]: {
-      marginLeft: 0,
+  labelField: {
+    '& input': {
+      paddingLeft: 0,
     },
-    [theme.breakpoints.down('lg')]: {
-      paddingLeft: theme.spacing(2),
-    },
-  },
-  scriptTextarea: {
-    maxWidth: '100%',
   },
   revisionTextarea: {
     maxWidth: '100%',
   },
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    paddingBottom: 0,
+  root: {
+    padding: theme.spacing(2),
+  },
+  scriptTextarea: {
+    maxWidth: '100%',
+  },
+  tips: {
+    backgroundColor: theme.palette.divider,
+    marginLeft: theme.spacing(4),
+    marginTop: `${theme.spacing(4)} !important`,
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('lg')]: {
+      paddingLeft: theme.spacing(2),
+    },
+    [theme.breakpoints.down('xl')]: {
+      marginLeft: 0,
+    },
   },
 }));
 
@@ -89,8 +89,8 @@ interface Props {
 type CombinedProps = Props;
 
 const errorResources = {
-  label: 'A label',
   images: 'Images',
+  label: 'A label',
   script: 'A script',
 };
 
@@ -99,19 +99,19 @@ const errorResources = {
 export const StackScriptForm: React.FC<CombinedProps> = (props) => {
   const {
     currentUser,
-    label,
-    revision,
     description,
-    script,
+    disableSubmit,
+    disabled,
     errors,
+    images,
+    isSubmitting,
+    label,
+    mode,
+    onCancel,
     onSelectChange,
     onSubmit,
-    onCancel,
-    isSubmitting,
-    images,
-    mode,
-    disabled,
-    disableSubmit,
+    revision,
+    script,
   } = props;
 
   const classes = useStyles();

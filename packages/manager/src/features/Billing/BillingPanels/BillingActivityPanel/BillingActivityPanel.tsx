@@ -46,69 +46,71 @@ import { getTaxID } from '../../billingUtils';
 import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    padding: '8px 0',
+  activeSince: {
+    marginRight: theme.spacing(1.25),
+  },
+  dateColumn: {
+    width: '25%',
+  },
+  descriptionColumn: {
+    width: '25%',
+  },
+  flexContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
   },
   headerContainer: {
+    alignItems: 'center',
     backgroundColor: theme.color.white,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
       alignItems: 'flex-start',
+      flexDirection: 'column',
     },
   },
   headerLeft: {
     display: 'flex',
+    flexGrow: 2,
     marginLeft: 10,
     paddingLeft: 20,
-    flexGrow: 2,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 0,
     },
   },
   headerRight: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     padding: 5,
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
       alignItems: 'flex-start',
+      flexDirection: 'column',
       marginLeft: 15,
       paddingLeft: 0,
     },
   },
-  flexContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   headline: {
     fontSize: '1rem',
-    marginTop: 8,
+    lineHeight: '1.5rem',
     marginBottom: 8,
     marginLeft: 15,
-    lineHeight: '1.5rem',
+    marginTop: 8,
   },
-  activeSince: {
-    marginRight: theme.spacing(1.25),
+  pdfDownloadColumn: {
+    '& > .loading': {
+      width: 115,
+    },
+    textAlign: 'right',
   },
-  transactionType: {
-    marginRight: theme.spacing(),
-    width: 200,
+  pdfError: {
+    color: theme.color.red,
   },
-  transactionDate: {
-    width: 130,
-  },
-  descriptionColumn: {
-    width: '25%',
-  },
-  dateColumn: {
-    width: '25%',
+  root: {
+    padding: '8px 0',
   },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
@@ -116,14 +118,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
       width: '10%',
     },
   },
-  pdfDownloadColumn: {
-    textAlign: 'right',
-    '& > .loading': {
-      width: 115,
-    },
+  transactionDate: {
+    width: 130,
   },
-  pdfError: {
-    color: theme.color.red,
+  transactionType: {
+    marginRight: theme.spacing(),
+    width: 200,
   },
 }));
 
@@ -208,14 +208,14 @@ export const BillingActivityPanel = (props: Props) => {
 
   const {
     data: payments,
-    isLoading: accountPaymentsLoading,
     error: accountPaymentsError,
+    isLoading: accountPaymentsLoading,
   } = useAllAccountPayments({}, filter);
 
   const {
     data: invoices,
-    isLoading: accountInvoicesLoading,
     error: accountInvoicesError,
+    isLoading: accountInvoicesLoading,
   } = useAllAccountInvoices({}, filter);
 
   const downloadInvoicePDF = React.useCallback(
@@ -397,8 +397,8 @@ export const BillingActivityPanel = (props: Props) => {
             ({ data: orderedData }) => (
               <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
                 {({
-                  data: paginatedAndOrderedData,
                   count,
+                  data: paginatedAndOrderedData,
                   handlePageChange,
                   handlePageSizeChange,
                   page,
@@ -509,13 +509,13 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
 
   const {
     date,
-    label,
-    total,
-    id,
-    type,
     downloadPDF,
     hasError,
+    id,
     isLoading,
+    label,
+    total,
+    type,
   } = props;
 
   const handleClick = React.useCallback(
@@ -528,9 +528,9 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   );
 
   const action = {
-    title: hasError ? 'Error. Click to try again.' : 'Download PDF',
     className: hasError ? classes.pdfError : '',
     onClick: handleClick,
+    title: hasError ? 'Error. Click to try again.' : 'Download PDF',
   };
 
   return (
@@ -587,9 +587,9 @@ export const paymentToActivityFeedItem = (
   const total = Math.abs(usd);
 
   return {
-    label,
     date,
     id,
+    label,
     total,
     type: 'payment',
   };
@@ -637,8 +637,8 @@ export const getCutoffFromDateRange = (
  */
 export const makeFilter = (endDate?: string): any => {
   const filter: any = {
-    '+order_by': 'date',
     '+order': 'desc',
+    '+order_by': 'date',
   };
   if (endDate) {
     const filterEndDate = parseAPIDate(endDate);

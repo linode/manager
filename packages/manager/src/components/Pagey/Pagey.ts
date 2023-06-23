@@ -69,14 +69,14 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
   return class WrappedComponent extends React.PureComponent<any, State> {
     state: State = {
       count: 0,
-      loading: true,
+      error: undefined,
+      filter: {},
       isSorting: false,
+      loading: true,
+      order: options.order ?? ('asc' as Order),
+      orderBy: options.orderBy,
       page: 1,
       pageSize: storage.pageSize.get() || 25,
-      error: undefined,
-      orderBy: options.orderBy,
-      order: options.order ?? ('asc' as Order),
-      filter: {},
       searching: false,
     };
 
@@ -91,7 +91,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
     }
 
     private onDelete = () => {
-      const { page, data } = this.state;
+      const { data, page } = this.state;
 
       /*
        * Basically, if we're on page 2 and the user deletes the last entity
@@ -138,23 +138,23 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
           if (this.mounted) {
             this.setState({
               count: response.results,
-              page: response.page,
-              pages: response.pages,
               data: map ? map(response.data) : response.data,
-              loading: false,
               error: undefined,
               isSorting: false,
+              loading: false,
+              page: response.page,
+              pages: response.pages,
               searching: false,
             });
           }
         })
         .catch((response) => {
-          this.setState({ loading: false, error: response });
+          this.setState({ error: response, loading: false });
         });
     };
 
     public handlePageSizeChange = (pageSize: number) => {
-      this.setState({ pageSize, page: 1 }, () => {
+      this.setState({ page: 1, pageSize }, () => {
         this.request();
       });
       storage.pageSize.set(pageSize);
@@ -174,7 +174,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       order: Order = 'asc',
       page: number = 1
     ) => {
-      this.setState({ orderBy, order, page, isSorting: true }, () =>
+      this.setState({ isSorting: true, order, orderBy, page }, () =>
         this.request()
       );
     };
@@ -187,12 +187,12 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       return React.createElement(Component, {
         ...this.props,
         ...this.state,
+        handleOrderChange: this.handleOrderChange,
         handlePageChange: this.handlePageChange,
         handlePageSizeChange: this.handlePageSizeChange,
-        request: this.request,
-        handleOrderChange: this.handleOrderChange,
         handleSearch: this.handleSearch,
         onDelete: this.onDelete,
+        request: this.request,
       });
     }
   };

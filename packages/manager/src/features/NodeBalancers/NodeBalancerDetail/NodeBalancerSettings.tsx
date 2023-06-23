@@ -21,15 +21,15 @@ export const NodeBalancerSettings = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   const {
-    mutateAsync: updateNodeBalancerLabel,
     error: labelError,
     isLoading: isUpdatingLabel,
+    mutateAsync: updateNodeBalancerLabel,
   } = useNodebalancerUpdateMutation(id);
 
   const {
-    mutateAsync: updateNodeBalancerThrottle,
     error: throttleError,
     isLoading: isUpdatingThrottle,
+    mutateAsync: updateNodeBalancerThrottle,
   } = useNodebalancerUpdateMutation(id);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(

@@ -41,8 +41,8 @@ export const useAccountMaintenanceQuery = (params: Params, filter: Filter) => {
     () => getAccountMaintenance(params, filter),
     {
       keepPreviousData: true,
-      refetchOnWindowFocus: 'always',
       refetchInterval: 20000,
+      refetchOnWindowFocus: 'always',
     }
   );
 };

@@ -5,8 +5,8 @@ import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(() => ({
   inlineActions: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     justifyContent: 'flex-end',
   },
 }));
@@ -22,8 +22,8 @@ const DatabaseBackupActionMenu = (props: Props) => {
 
   const actions = [
     {
-      title: 'Restore',
       onClick: () => onRestore(backup.id),
+      title: 'Restore',
     },
   ];
 

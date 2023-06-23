@@ -117,12 +117,12 @@ export const NotificationMenu = () => {
           aria-haspopup="true"
           onClick={handleNotificationMenuToggle}
           sx={{
-            margin: 0,
-            padding: 0,
-            minWidth: 'unset',
             '&:hover': {
               backgroundColor: 'unset',
             },
+            margin: 0,
+            minWidth: 'unset',
+            padding: 0,
           }}
           disableRipple
         >
@@ -142,18 +142,18 @@ export const NotificationMenu = () => {
         disablePortal
         sx={{
           boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-          zIndex: 3000,
-          top: '50px !important',
           left: 'auto !important',
-          right: '15px',
-          width: '430px',
-          position: 'absolute !important',
           maxHeight: 'calc(100vh - 150px)',
           overflowY: 'auto',
+          position: 'absolute !important',
+          right: '15px',
           [theme.breakpoints.down('sm')]: {
             right: 0,
             width: '100%',
           },
+          top: '50px !important',
+          width: '430px',
+          zIndex: 3000,
         }}
       >
         <ClickAwayListener onClickAway={handleClose}>
@@ -164,12 +164,12 @@ export const NotificationMenu = () => {
           >
             <MenuItem
               sx={{
-                boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-                whiteSpace: 'initial',
                 border: 'none',
-                padding: 0,
+                boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
                 cursor: 'default',
                 display: 'block',
+                padding: 0,
+                whiteSpace: 'initial',
               }}
               disableRipple
             >

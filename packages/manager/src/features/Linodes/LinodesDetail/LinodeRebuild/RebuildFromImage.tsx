@@ -35,17 +35,17 @@ import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { StyledNotice } from './RebuildFromImage.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingTop: theme.spacing(3),
+  actionPanel: {
+    '& button': {
+      alignSelf: 'flex-end',
+    },
+    flexDirection: 'column',
   },
   error: {
     marginTop: theme.spacing(2),
   },
-  actionPanel: {
-    flexDirection: 'column',
-    '& button': {
-      alignSelf: 'flex-end',
-    },
+  root: {
+    paddingTop: theme.spacing(3),
   },
 }));
 
@@ -66,20 +66,20 @@ interface RebuildFromImageForm {
 }
 
 const initialValues: RebuildFromImageForm = {
-  image: '',
-  root_pass: '',
   authorized_users: [],
+  image: '',
   metadata: {
     user_data: '',
   },
+  root_pass: '',
 };
 
 export const RebuildFromImage = (props: Props) => {
   const {
     disabled,
+    handleRebuildError,
     linodeId,
     linodeLabel,
-    handleRebuildError,
     onClose,
     passwordHelperText,
   } = props;
@@ -119,8 +119,8 @@ export const RebuildFromImage = (props: Props) => {
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
-    { image, root_pass, authorized_users }: RebuildFromImageForm,
-    { setSubmitting, setStatus, setErrors }: FormikProps<RebuildFromImageForm>
+    { authorized_users, image, root_pass }: RebuildFromImageForm,
+    { setErrors, setStatus, setSubmitting }: FormikProps<RebuildFromImageForm>
   ) => {
     setSubmitting(true);
 
@@ -128,9 +128,8 @@ export const RebuildFromImage = (props: Props) => {
     setStatus(undefined);
 
     const params: RebuildRequest = {
-      image,
-      root_pass,
       authorized_users,
+      image,
       metadata: {
         user_data: userData
           ? window.btoa(userData)
@@ -138,6 +137,7 @@ export const RebuildFromImage = (props: Props) => {
           ? null
           : '',
       },
+      root_pass,
     };
 
     /*
@@ -192,8 +192,8 @@ export const RebuildFromImage = (props: Props) => {
         handleSubmit,
         setFieldValue,
         status, // holds generalError messages
-        values,
         validateForm,
+        values,
       }) => {
         // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {

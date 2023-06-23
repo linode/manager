@@ -72,7 +72,7 @@ export const useLinodeVolumesQuery = (
   useQuery<ResourcePage<Volume>, APIError[]>(
     [queryKey, 'linode', linodeId, params, filters],
     () => getLinodeVolumes(linodeId, params, filters),
-    { keepPreviousData: true, enabled }
+    { enabled, keepPreviousData: true }
   );
 
 export const useResizeVolumeMutation = () => {

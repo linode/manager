@@ -18,8 +18,8 @@ const user = 'Linode';
 const reply = supportReplyFactory.build();
 
 const props = {
-  reply,
   isCurrentUser: false,
+  reply,
 };
 
 describe('Expandable ticket panel', () => {

@@ -16,14 +16,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   summaryOuter: {
-    backgroundColor: theme.bg.bgPaper,
-    marginBottom: 20,
-    '&.MuiGrid-item': {
-      padding: 0,
-    },
     '& .statusOther:before': {
       animation: '$pulse 1.5s ease-in-out infinite',
     },
+    '&.MuiGrid-item': {
+      padding: 0,
+    },
+    backgroundColor: theme.bg.bgPaper,
+    marginBottom: 20,
   },
 }));
 
@@ -35,10 +35,10 @@ const CardView = (props: RenderLinodesProps) => {
   const [tagDrawer, setTagDrawer] = React.useState<
     Omit<TagDrawerProps, 'updateTags' | 'onClose'>
   >({
+    entityID: 0,
+    entityLabel: '',
     open: false,
     tags: [],
-    entityLabel: '',
-    entityID: 0,
   });
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
@@ -55,10 +55,10 @@ const CardView = (props: RenderLinodesProps) => {
     tags: string[]
   ) => {
     setTagDrawer({
-      open: true,
-      entityLabel,
-      tags,
       entityID,
+      entityLabel,
+      open: true,
+      tags,
     });
   };
 
@@ -95,14 +95,14 @@ const CardView = (props: RenderLinodesProps) => {
                     openDialog('delete', linode.id, linode.label),
                   onOpenMigrateDialog: () =>
                     openDialog('migrate', linode.id, linode.label),
+                  onOpenPowerDialog: (action) =>
+                    openPowerActionDialog(action, linode.id, linode.label, []),
                   onOpenRebuildDialog: () =>
                     openDialog('rebuild', linode.id, linode.label),
                   onOpenRescueDialog: () =>
                     openDialog('rescue', linode.id, linode.label),
                   onOpenResizeDialog: () =>
                     openDialog('resize', linode.id, linode.label),
-                  onOpenPowerDialog: (action) =>
-                    openPowerActionDialog(action, linode.id, linode.label, []),
                 }}
                 isSummaryView
                 openTagDrawer={(tags) =>

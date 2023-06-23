@@ -20,15 +20,15 @@ jest.mock('@linode/api-v4/lib/object-storage/objects', () => {
 jest.mock('src/components/EnhancedSelect/Select');
 
 const props: ObjectDetailsDrawerProps = {
-  onClose: jest.fn(),
-  open: true,
-  lastModified: '2019-12-31T23:59:59Z',
-  displayName: 'my-image.png',
-  name: 'my-dir/my-image.png',
-  size: 12345,
-  url: 'https://my-bucket.cluster-id.linodeobjects.com/my-image.png',
   bucketName: 'my-bucket',
   clusterId: 'cluster-id',
+  displayName: 'my-image.png',
+  lastModified: '2019-12-31T23:59:59Z',
+  name: 'my-dir/my-image.png',
+  onClose: jest.fn(),
+  open: true,
+  size: 12345,
+  url: 'https://my-bucket.cluster-id.linodeobjects.com/my-image.png',
 };
 
 describe('ObjectDetailsDrawer', () => {

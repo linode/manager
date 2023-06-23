@@ -14,19 +14,19 @@ import { truncate } from 'src/utilities/truncate';
 import { useProfile } from 'src/queries/profile';
 
 const statusTextMap: Record<AccountMaintenance['status'], string> = {
-  started: 'In Progress',
-  pending: 'Scheduled',
   completed: 'Completed',
+  pending: 'Scheduled',
+  started: 'In Progress',
 };
 
 const statusIconMap: Record<AccountMaintenance['status'], Status> = {
-  started: 'other',
-  pending: 'active',
   completed: 'inactive',
+  pending: 'active',
+  started: 'other',
 };
 
 export const MaintenanceTableRow = (props: AccountMaintenance) => {
-  const { entity, when, type, status, reason } = props;
+  const { entity, reason, status, type, when } = props;
 
   const { data: profile } = useProfile();
 

@@ -24,10 +24,10 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     expiry,
     id,
     label,
+    onCancelFailed,
+    onRetry,
     size,
     status,
-    onRetry,
-    onCancelFailed,
     ...rest
   } = props;
 

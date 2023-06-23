@@ -28,10 +28,10 @@ const PREFERENCE_KEY = 'oauth-clients';
 const OAuthClients = () => {
   const pagination = usePagination(1, PREFERENCE_KEY);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'status',
       order: 'desc',
+      orderBy: 'status',
     },
     PREFERENCE_KEY
   );
@@ -42,8 +42,8 @@ const OAuthClients = () => {
       page_size: pagination.pageSize,
     },
     {
-      '+order_by': orderBy,
       '+order': order,
+      '+order_by': orderBy,
     }
   );
 
@@ -87,7 +87,7 @@ const OAuthClients = () => {
       return <TableRowEmpty colSpan={6} />;
     }
 
-    return data?.data.map(({ id, label, redirect_uri, public: isPublic }) => (
+    return data?.data.map(({ id, label, public: isPublic, redirect_uri }) => (
       <TableRow ariaLabel={label} key={id}>
         <TableCell>{label}</TableCell>
         <Hidden smDown>
@@ -124,7 +124,7 @@ const OAuthClients = () => {
       <Box
         display="flex"
         justifyContent="flex-end"
-        paddingRight={{ xs: 1, sm: 1, md: 0, lg: 0 }}
+        paddingRight={{ lg: 0, md: 0, sm: 1, xs: 1 }}
         marginBottom={1}
       >
         <AddNewLink

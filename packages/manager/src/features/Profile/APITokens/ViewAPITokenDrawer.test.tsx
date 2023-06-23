@@ -7,8 +7,8 @@ import { basePerms } from './utils';
 const token = appTokenFactory.build({ label: 'my-token', scopes: '*' });
 
 const props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
   token,
 };
 

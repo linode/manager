@@ -25,23 +25,23 @@ const UsersActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'User Profile',
       onClick: () => {
         history.push(`/account/users/${username}`);
       },
+      title: 'User Profile',
     },
     {
-      title: 'User Permissions',
       onClick: () => {
         history.push(`/account/users/${username}/permissions`);
       },
+      title: 'User Permissions',
     },
     {
       disabled: username === profileUsername,
-      title: 'Delete',
       onClick: () => {
         onDelete(username);
       },
+      title: 'Delete',
       tooltip:
         username === profileUsername
           ? "You can't delete the currently active user."

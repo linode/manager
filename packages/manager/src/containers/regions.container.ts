@@ -24,11 +24,11 @@ export interface RegionsProps {
 export const withRegions = <Props>(
   Component: React.ComponentType<Props & RegionsProps>
 ) => (props: Props) => {
-  const { data, isLoading, error } = useRegionsQuery();
+  const { data, error, isLoading } = useRegionsQuery();
   return React.createElement(Component, {
     regionsData: data ?? [],
-    regionsLoading: isLoading,
     regionsError: error ?? undefined,
+    regionsLoading: isLoading,
     ...props,
   });
 };

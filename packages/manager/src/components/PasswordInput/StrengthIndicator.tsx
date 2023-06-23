@@ -12,26 +12,21 @@ interface Props {
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  block: {
+    '&[class*="strength-"]': {
+      backgroundColor: theme.palette.primary.main,
+    },
+    backgroundColor: '#C9CACB',
+    height: '4px',
+    transition: 'background-color .5s ease-in-out',
+  },
+  blockOuter: {
+    padding: '4px !important' as '4px',
+  },
   root: {
     maxWidth: `calc(415px + ${theme.spacing(1)})`,
     [theme.breakpoints.down('sm')]: {
       maxWidth: `calc(100% + ${theme.spacing(1)})`,
-    },
-  },
-  block: {
-    backgroundColor: '#C9CACB',
-    height: '4px',
-    transition: 'background-color .5s ease-in-out',
-    '&[class*="strength-"]': {
-      backgroundColor: theme.palette.primary.main,
-    },
-  },
-  strengthText: {
-    position: 'relative',
-    fontSize: '.85rem',
-    textAlign: 'right',
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'center',
     },
   },
   strengthLabel: {
@@ -39,15 +34,20 @@ const useStyles = makeStyles()((theme: Theme) => ({
       display: 'none',
     },
   },
-  blockOuter: {
-    padding: '4px !important' as '4px',
+  strengthText: {
+    fontSize: '.85rem',
+    position: 'relative',
+    textAlign: 'right',
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'center',
+    },
   },
 }));
 
 export const StrengthIndicator = (props: Props) => {
   const { classes, cx } = useStyles();
 
-  const { strength, hideStrengthLabel } = props;
+  const { hideStrengthLabel, strength } = props;
 
   return (
     <Grid
@@ -62,11 +62,11 @@ export const StrengthIndicator = (props: Props) => {
         <Grid key={idx} xs={3} className={classes.blockOuter}>
           <div
             className={cx({
-              [classes.block]: true,
               [`strength-${strength}`]:
                 strength !== undefined &&
                 strength !== null &&
                 idx <= scaledStrength(strength),
+              [classes.block]: true,
             })}
           />
         </Grid>

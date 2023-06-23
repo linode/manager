@@ -4,14 +4,14 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(),
-  },
   example: {
     backgroundColor: theme.name === 'dark' ? theme.bg.white : theme.bg.offWhite,
     margin: `${theme.spacing(2)} 0`,
     padding: theme.spacing(2),
+  },
+  header: {
+    marginBottom: theme.spacing(),
+    marginTop: theme.spacing(2),
   },
 }));
 

@@ -62,90 +62,90 @@ export const Tag = (props: TagProps) => {
 const StyledChip = styled(Chip, {
   shouldForwardProp: (prop) => prop !== 'colorVariant',
 })<TagProps>(({ theme, ...props }) => ({
-  height: 30,
-  fontSize: '0.875rem',
-  padding: 0,
   '& .MuiChip-label': {
+    '&:hover': {
+      borderBottomRightRadius: props.onDelete && 0,
+      borderTopRightRadius: props.onDelete && 0,
+    },
     borderRadius: 4,
     color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
     maxWidth: 350,
     padding: '7px 10px',
-    '&:hover': {
-      borderTopRightRadius: props.onDelete && 0,
-      borderBottomRightRadius: props.onDelete && 0,
-    },
-  },
-  // Overrides MUI chip default styles so these appear as separate elements.
-  '&:hover': {
-    backgroundColor: theme.color.tagButton,
-    ['& .StyledDeleteButton']: {
-      color: theme.color.tagIcon,
-    },
-  },
-  '&:focus': {
-    backgroundColor: theme.color.tagButton,
-    ['& .StyledDeleteButton']: {
-      color: theme.color.tagIcon,
-    },
   },
   // Targets first span (tag label)
   '& > span': {
+    borderBottomRightRadius: 0,
     borderRadius: 3,
     borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
     padding: '7px 10px',
   },
+  '&:focus': {
+    ['& .StyledDeleteButton']: {
+      color: theme.color.tagIcon,
+    },
+    backgroundColor: theme.color.tagButton,
+  },
+  // Overrides MUI chip default styles so these appear as separate elements.
+  '&:hover': {
+    ['& .StyledDeleteButton']: {
+      color: theme.color.tagIcon,
+    },
+    backgroundColor: theme.color.tagButton,
+  },
+  fontSize: '0.875rem',
+  height: 30,
+  padding: 0,
   ...(props.colorVariant === 'blue' && {
-    backgroundColor: theme.palette.primary.main,
     '& > span': {
       color: 'white',
     },
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
     },
+    backgroundColor: theme.palette.primary.main,
   }),
   ...(props.colorVariant === 'lightBlue' && {
-    backgroundColor: theme.color.tagButton,
     '& > span': {
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
-      },
       '&:focus': {
         backgroundColor: theme.color.tagButton,
         color: theme.color.black,
       },
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white',
+      },
     },
+    backgroundColor: theme.color.tagButton,
   }),
 }));
 
 const StyledDeleteButton = styled('button', { label: 'StyledDeleteButton' })(
   ({ theme }) => ({
     ...theme.applyLinkStyles,
-    borderRadius: 0,
-    borderTopRightRadius: 3,
-    borderBottomRightRadius: 3,
-    borderLeft: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
-    height: 30,
-    margin: 0,
-    minWidth: 30,
-    padding: theme.spacing(),
     '& svg': {
       borderRadius: 0,
       color: theme.color.tagIcon,
       height: 15,
       width: 15,
     },
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-      '& svg': {
-        color: 'white',
-      },
-    },
     '&:focus': {
       backgroundColor: theme.bg.lightBlue1,
       color: theme.color.black,
     },
+    '&:hover': {
+      '& svg': {
+        color: 'white',
+      },
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
+    borderBottomRightRadius: 3,
+    borderLeft: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
+    borderRadius: 0,
+    borderTopRightRadius: 3,
+    height: 30,
+    margin: 0,
+    minWidth: 30,
+    padding: theme.spacing(),
   })
 );

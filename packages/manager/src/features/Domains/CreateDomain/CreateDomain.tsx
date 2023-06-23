@@ -47,8 +47,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { generateDefaultDomainRecords } from '../domainUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  main: {
-    width: '100%',
+  helperText: {
+    maxWidth: 'none',
   },
   inner: {
     '& > div': {
@@ -56,21 +56,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& label': {
       color: theme.color.headline,
-      lineHeight: '1.33rem',
       letterSpacing: '0.25px',
+      lineHeight: '1.33rem',
       margin: 0,
-    },
-  },
-  radio: {
-    '& label:first-of-type .MuiButtonBase-root': {
-      marginLeft: -10,
     },
   },
   ip: {
     maxWidth: 468,
   },
-  helperText: {
-    maxWidth: 'none',
+  main: {
+    width: '100%',
+  },
+  radio: {
+    '& label:first-of-type .MuiButtonBase-root': {
+      marginLeft: -10,
+    },
   },
 }));
 
@@ -95,8 +95,8 @@ export const CreateDomain = () => {
   const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
     Item<DefaultRecordsType>
   >({
-    value: 'none',
     label: 'Do not insert default records for me.',
+    value: 'none',
   });
 
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
@@ -110,14 +110,14 @@ export const CreateDomain = () => {
   const { values, ...formik } = useFormik({
     initialValues: {
       domain: '',
-      type: 'master' as DomainType,
-      soa_email: '',
       master_ips: [''],
+      soa_email: '',
+      type: 'master' as DomainType,
     },
-    validationSchema: createDomainSchema,
+    onSubmit: (values) => create(values),
     validateOnChange: true,
     validateOnMount: true,
-    onSubmit: (values) => create(values),
+    validationSchema: createDomainSchema,
   });
 
   React.useEffect(() => {
@@ -157,7 +157,7 @@ export const CreateDomain = () => {
   };
 
   const create = (_values: CreateDomainPayload) => {
-    const { domain, type, master_ips, soa_email: soaEmail, tags } = _values;
+    const { domain, master_ips, soa_email: soaEmail, tags, type } = _values;
 
     /**
      * In this case, the user wants default domain records created, but
@@ -166,8 +166,8 @@ export const CreateDomain = () => {
     if (defaultRecordsSetting.value === 'linode' && !selectedDefaultLinode) {
       return setErrors([
         {
-          reason: 'Please select a Linode.',
           field: 'defaultLinode',
+          reason: 'Please select a Linode.',
         },
       ]);
     }
@@ -178,16 +178,16 @@ export const CreateDomain = () => {
     ) {
       return setErrors([
         {
-          reason: 'Please select a NodeBalancer.',
           field: 'defaultNodeBalancer',
+          reason: 'Please select a NodeBalancer.',
         },
       ]);
     }
 
     const data =
       type === 'master'
-        ? { domain, type, tags, soa_email: soaEmail }
-        : { domain, type, tags, master_ips };
+        ? { domain, soa_email: soaEmail, tags, type }
+        : { domain, master_ips, tags, type };
 
     formik.setSubmitting(true);
     createDomain(data)
@@ -219,10 +219,10 @@ export const CreateDomain = () => {
                 reportException(
                   `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
                   {
-                    selectedLinode: selectedDefaultLinode!.id,
                     domainID: domainData.id,
                     ipv4: path(['ipv4', 0], selectedDefaultLinode),
                     ipv6: path(['ipv6'], selectedDefaultLinode),
+                    selectedLinode: selectedDefaultLinode!.id,
                   }
                 );
                 return redirectToLandingOrDetail(type, domainData.id, {
@@ -246,10 +246,10 @@ export const CreateDomain = () => {
                 reportException(
                   `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
                   {
-                    selectedNodeBalancer: selectedDefaultNodeBalancer!.id,
                     domainID: domainData.id,
                     ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
                     ipv6: path(['ipv6'], selectedDefaultNodeBalancer),
+                    selectedNodeBalancer: selectedDefaultNodeBalancer!.id,
                   }
                 );
                 return redirectToLandingOrDetail(type, domainData.id, {
@@ -397,17 +397,17 @@ export const CreateDomain = () => {
                   label="Insert Default Records"
                   options={[
                     {
-                      value: 'none',
                       label: 'Do not insert default records for me.',
+                      value: 'none',
                     },
                     {
-                      value: 'linode',
                       label: 'Insert default records from one of my Linodes.',
+                      value: 'linode',
                     },
                     {
-                      value: 'nodebalancer',
                       label:
                         'Insert default records from one of my NodeBalancers.',
+                      value: 'nodebalancer',
                     },
                   ]}
                   disabled={disabled}

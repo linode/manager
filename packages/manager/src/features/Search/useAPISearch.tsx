@@ -45,8 +45,8 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
     (searchText: string) => {
       if (!searchText || searchText === '') {
         return Promise.resolve({
-          searchResultsByEntity: emptyResults,
           combinedResults: [],
+          searchResultsByEntity: emptyResults,
         });
       }
 

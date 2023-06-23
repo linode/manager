@@ -18,15 +18,15 @@ interface Props {
 }
 
 export const LinodeSettingsLabelPanel = (props: Props) => {
-  const { linodeId, isReadOnly } = props;
+  const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
-    mutateAsync: updateLinode,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
   const formik = useFormik({

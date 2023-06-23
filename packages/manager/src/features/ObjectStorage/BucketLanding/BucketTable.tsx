@@ -23,18 +23,18 @@ interface Props {
 export const BucketTable = (props: Props) => {
   const {
     data,
-    orderBy,
-    order,
-    handleOrderChange,
-    handleClickRemove,
     handleClickDetails,
+    handleClickRemove,
+    handleOrderChange,
+    order,
+    orderBy,
   } = props;
 
   return (
     <Paginate data={data} pageSize={25}>
       {({
-        data: paginatedData,
         count,
+        data: paginatedData,
         handlePageChange,
         handlePageSizeChange,
         page,
@@ -130,7 +130,7 @@ interface RenderDataProps {
 }
 
 const RenderData: React.FC<RenderDataProps> = (props) => {
-  const { data, onRemove, onDetails } = props;
+  const { data, onDetails, onRemove } = props;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment

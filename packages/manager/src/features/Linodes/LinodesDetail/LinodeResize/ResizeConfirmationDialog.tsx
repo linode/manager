@@ -44,13 +44,13 @@ const renderActions = (
 
 export const ResizeDialog: React.FC<Props> = (props) => {
   const {
-    isOpen,
-    error,
-    submitting,
     currentPlan,
-    targetPlan,
+    error,
+    isOpen,
     onClose,
     onResize,
+    submitting,
+    targetPlan,
   } = props;
 
   return (

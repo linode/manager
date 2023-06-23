@@ -23,14 +23,14 @@ describe('Region status banner', () => {
     server.use(
       rest.get('*/regions', (req, res, ctx) => {
         const regions = regionFactory.buildList(1, {
-          status: 'outage',
           id: 'us-east',
           label: 'Newark, NJ',
+          status: 'outage',
         });
         return res(ctx.json(makeResourcePage(regions)));
       })
     );
-    const { queryAllByText, queryAllByTestId } = renderWithTheme(
+    const { queryAllByTestId, queryAllByText } = renderWithTheme(
       <RegionStatusBanner />,
       {
         queryClient: new QueryClient(),

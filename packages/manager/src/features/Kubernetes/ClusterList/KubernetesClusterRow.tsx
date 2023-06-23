@@ -23,29 +23,29 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  link: {
-    display: 'block',
-    color: theme.textColors.linkActiveLight,
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-    },
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-  },
   clusterRow: {
     '&:before': {
       display: 'none',
     },
   },
-  version: {
-    display: 'flex',
+  labelStatusWrapper: {
     alignItems: 'center',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    whiteSpace: 'nowrap',
+  },
+  link: {
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+    },
+    color: theme.textColors.linkActiveLight,
+    display: 'block',
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+  },
+  version: {
+    alignItems: 'center',
+    display: 'flex',
     justifyContent: 'flex-start',
   },
 }));
@@ -76,7 +76,7 @@ export const KubernetesClusterRow = (props: Props) => {
 
   const hasUpgrade = nextVersion !== null;
 
-  const { RAM, CPU } = getTotalClusterMemoryCPUAndStorage(
+  const { CPU, RAM } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],
     types ?? []
   );

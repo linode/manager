@@ -14,8 +14,6 @@ import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
  */
 
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
-  component: Button,
   argTypes: {
     tooltipAnalyticsEvent: {
       action: 'Analytics Event Action',
@@ -29,9 +27,11 @@ const meta: Meta<typeof Button> = {
     disabled: false,
     loading: false,
     sx: {},
-    tooltipText: '',
     tooltipAnalyticsEvent: action('tooltipAnalyticsEvent'),
+    tooltipText: '',
   },
+  component: Button,
+  title: 'Components/Button',
 };
 
 export default meta;

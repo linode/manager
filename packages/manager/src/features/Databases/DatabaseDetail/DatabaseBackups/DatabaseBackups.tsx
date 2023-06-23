@@ -35,19 +35,19 @@ export const DatabaseBackups = () => {
 
   const {
     data: database,
-    isLoading: isDatabaseLoading,
     error: databaseError,
+    isLoading: isDatabaseLoading,
   } = useDatabaseQuery(engine, id);
 
   const {
     data: backups,
-    isLoading: isBackupsLoading,
     error: backupsError,
+    isLoading: isBackupsLoading,
   } = useDatabaseBackupsQuery(engine, id);
 
-  const { order, orderBy, handleOrderChange } = useOrder({
-    orderBy: 'created',
+  const { handleOrderChange, order, orderBy } = useOrder({
     order: 'desc',
+    orderBy: 'created',
   });
 
   const onRestore = (id: number) => {

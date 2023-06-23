@@ -11,20 +11,15 @@ import TextField from 'src/components/TextField';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    margin: `${theme.spacing(2)} 0`,
-    [theme.breakpoints.down('lg')]: {
-      alignItems: 'flex-end',
+  label: {
+    color: theme.textColors.headlineStatic,
+    fontSize: '1rem',
+    marginRight: theme.spacing(),
+    [theme.breakpoints.down('md')]: {
+      marginBottom: 4,
+      marginLeft: 0,
     },
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      marginTop: theme.spacing(),
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
-    },
-  },
-  reviewDetails: {
-    marginLeft: theme.spacing(2),
+    whiteSpace: 'nowrap',
   },
   labelWrapper: {
     margin: 0,
@@ -32,31 +27,59 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'wrap',
     },
     [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
       alignItems: 'flex-start',
+      flexDirection: 'column',
       marginLeft: theme.spacing(),
     },
   },
-  label: {
-    color: theme.textColors.headlineStatic,
-    fontSize: '1rem',
-    marginRight: theme.spacing(),
-    whiteSpace: 'nowrap',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: 4,
-      marginLeft: 0,
-    },
-  },
-  transferInputWrapper: {
+  makeTransfer: {
+    paddingLeft: 0,
+    paddingRight: 0,
     [theme.breakpoints.down('sm')]: {
-      width: 'calc(100% - 16px)',
-      '& > div': {
-        flexGrow: 1,
+      '&.MuiGrid-item': {
+        padding: 0,
+      },
+      margin: 0,
+      width: '100%',
+    },
+    [theme.breakpoints.up('md')]: {
+      '&.MuiGrid-item': {
+        paddingRight: 0,
       },
     },
   },
+  makeTransferButton: {
+    minWidth: 152,
+    [theme.breakpoints.down('lg')]: {
+      marginBottom: theme.spacing(),
+    },
+    [theme.breakpoints.down('md')]: {
+      margin: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+      marginBottom: theme.spacing(),
+      marginTop: theme.spacing(),
+      width: 'calc(100% - 32px)',
+    },
+    whiteSpace: 'nowrap',
+  },
+  reviewDetails: {
+    marginLeft: theme.spacing(2),
+  },
+  root: {
+    margin: `${theme.spacing(2)} 0`,
+    [theme.breakpoints.down('lg')]: {
+      alignItems: 'flex-end',
+    },
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
+      marginTop: theme.spacing(),
+    },
+  },
   transferInput: {
-    width: 360,
     [theme.breakpoints.down('lg')]: {
       width: 240,
     },
@@ -66,37 +89,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
+    width: 360,
   },
-  makeTransfer: {
-    paddingRight: 0,
-    paddingLeft: 0,
-    [theme.breakpoints.up('md')]: {
-      '&.MuiGrid-item': {
-        paddingRight: 0,
-      },
-    },
+  transferInputWrapper: {
     [theme.breakpoints.down('sm')]: {
-      margin: 0,
-      width: '100%',
-      '&.MuiGrid-item': {
-        padding: 0,
+      '& > div': {
+        flexGrow: 1,
       },
-    },
-  },
-  makeTransferButton: {
-    minWidth: 152,
-    whiteSpace: 'nowrap',
-    [theme.breakpoints.down('lg')]: {
-      marginBottom: theme.spacing(),
-    },
-    [theme.breakpoints.down('md')]: {
-      margin: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
-      marginTop: theme.spacing(),
-      marginBottom: theme.spacing(),
-      width: 'calc(100% - 32px)',
+      width: 'calc(100% - 16px)',
     },
   },
 }));

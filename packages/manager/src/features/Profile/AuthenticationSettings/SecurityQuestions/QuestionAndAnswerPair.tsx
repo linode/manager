@@ -54,24 +54,24 @@ export const QuestionAndAnswerPair = (props: Props) => {
 const StyledRootContainer = styled(Box, {
   label: 'StyledRootContainer',
 })(({ theme }) => ({
-  display: 'flex',
-  flexBasis: 'flex-start',
-  minHeight: '74px',
   '& > div': {
     flexGrow: 1,
     width: '100%',
   },
-  [theme.breakpoints.up('md')]: {
-    flexDirection: 'row',
-  },
+  display: 'flex',
+  flexBasis: 'flex-start',
+  minHeight: '74px',
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
+  },
+  [theme.breakpoints.up('md')]: {
+    flexDirection: 'row',
   },
 }));
 
 const StyledQuestionContainer = styled(Box, {
   label: 'StyledQuestionContainer',
-})<{ edit: boolean }>(({ theme, edit }) => ({
+})<{ edit: boolean }>(({ edit, theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   flexShrink: 1.5,

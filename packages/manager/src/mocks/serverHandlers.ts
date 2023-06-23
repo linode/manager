@@ -89,10 +89,10 @@ export const makeResourcePage = <T>(
     pages: 1,
   }
 ) => ({
+  data: e,
   page: override.page ?? 1,
   pages: override.pages ?? 1,
   results: override.results ?? e.length,
-  data: e,
 });
 
 const statusPage = [
@@ -165,9 +165,9 @@ const databases = [
   rest.get('*/databases/types', (req, res, ctx) => {
     const standardTypes = [
       databaseTypeFactory.build({
+        class: 'nanode',
         id: 'g6-standard-0',
         label: `Nanode 1 GB`,
-        class: 'nanode',
         memory: 1024,
       }),
       ...databaseTypeFactory.buildList(7, { class: 'standard' }),
@@ -201,21 +201,21 @@ const databases = [
 
   rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
     const database = databaseFactory.build({
+      compression_type: req.params.engine === 'mongodb' ? 'none' : undefined,
+      engine: req.params.engine,
       id: req.params.id,
       label: `database-${req.params.id}`,
-      engine: req.params.engine,
-      ssl_connection: true,
+      replication_commit_type:
+        req.params.engine === 'postgresql' ? 'local' : undefined,
       replication_type:
         req.params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
           : req.params.engine === 'postgresql'
           ? pickRandom(possiblePostgresReplicationTypes)
           : (undefined as any),
-      replication_commit_type:
-        req.params.engine === 'postgresql' ? 'local' : undefined,
+      ssl_connection: true,
       storage_engine:
         req.params.engine === 'mongodb' ? 'wiredtiger' : undefined,
-      compression_type: req.params.engine === 'mongodb' ? 'none' : undefined,
     });
     return res(ctx.json(database));
   }),
@@ -234,8 +234,8 @@ const databases = [
       return res(
         // ctx.status(400)
         ctx.json({
-          username: 'lnroot',
           password: 'password123',
+          username: 'lnroot',
         })
       );
     }
@@ -244,8 +244,8 @@ const databases = [
   rest.get('*/databases/:engine/instances/:databaseId/ssl', (req, res, ctx) => {
     return res(
       ctx.json({
-        public_key: 'testkey',
         certificate: 'testcertificate',
+        public_key: 'testkey',
       })
     );
   }),
@@ -323,31 +323,31 @@ export const handlers = [
       type: 'manual',
     });
     const cloudinitCompatableDistro = imageFactory.build({
+      capabilities: ['cloud-init'],
       id: 'metadata-test-distro',
-      label: 'metadata-test-distro',
       is_public: true,
+      label: 'metadata-test-distro',
       status: 'available',
       type: 'manual',
-      capabilities: ['cloud-init'],
     });
     const cloudinitCompatableImage = imageFactory.build({
+      capabilities: ['cloud-init'],
       id: 'metadata-test-image',
       label: 'metadata-test-image',
       status: 'available',
       type: 'manual',
-      capabilities: ['cloud-init'],
     });
     const creatingImages = imageFactory.buildList(2, {
-      type: 'manual',
       status: 'creating',
+      type: 'manual',
     });
     const pendingImages = imageFactory.buildList(5, {
       status: 'pending_upload',
       type: 'manual',
     });
     const automaticImages = imageFactory.buildList(5, {
-      type: 'automatic',
       expiry: '2021-05-01',
+      type: 'automatic',
     });
     const publicImages = imageFactory.buildList(4, { is_public: true });
     const images = [
@@ -389,9 +389,9 @@ export const handlers = [
       label: 'metadata-test-image',
     });
     const metadataLinodeWithCompatibleImageAndRegion = linodeFactory.build({
-      region: 'eu-west',
       image: 'metadata-test-image',
       label: 'metadata-test-region',
+      region: 'eu-west',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -405,11 +405,10 @@ export const handlers = [
     const busyLinodes = linodeFactory.buildList(1, { status: 'migrating' });
     const eventLinode = linodeFactory.build({
       id: 999,
-      status: 'rebooting',
       label: 'eventful',
+      status: 'rebooting',
     });
     const multipleIPLinode = linodeFactory.build({
-      label: 'multiple-ips',
       ipv4: [
         '192.168.0.0',
         '192.168.0.1',
@@ -418,6 +417,7 @@ export const handlers = [
         '192.168.0.4',
         '192.168.0.5',
       ],
+      label: 'multiple-ips',
       tags: ['test1', 'test2', 'test3'],
     });
     const linodes = [
@@ -428,20 +428,20 @@ export const handlers = [
       ...offlineLinodes,
       ...busyLinodes,
       linodeFactory.build({
+        backups: { enabled: false },
         label: 'shadow-plan',
         type: 'g5-standard-20-s1',
-        backups: { enabled: false },
       }),
       linodeFactory.build({
+        backups: { enabled: false },
         label: 'bare-metal',
         type: 'g1-metal-c2',
-        backups: { enabled: false },
       }),
       linodeFactory.build({
-        label: 'shadow-plan-with-tags',
-        type: 'g5-standard-20-s1',
         backups: { enabled: false },
+        label: 'shadow-plan-with-tags',
         tags: ['test1', 'test2', 'test3'],
+        type: 'g5-standard-20-s1',
       }),
       linodeFactory.build({
         label: 'eu-linode',
@@ -493,10 +493,10 @@ export const handlers = [
   rest.post('*/instances', async (req, res, ctx) => {
     const payload = req.body as any;
     const linode = linodeFactory.build({
-      label: payload?.label ?? 'new-linode',
-      type: payload?.type ?? 'g6-standard-1',
       image: payload?.image ?? 'linode/debian-10',
+      label: payload?.label ?? 'new-linode',
       region: payload?.region ?? 'us-east',
+      type: payload?.type ?? 'g6-standard-1',
     });
     return res(ctx.json(linode));
     // return res(
@@ -691,8 +691,8 @@ export const handlers = [
   rest.get('*/regions/*/migration-queue', (req, res, ctx) => {
     return res(
       ctx.json({
-        volumes: 953,
         linodes: 8,
+        volumes: 953,
       })
     );
   }),
@@ -734,9 +734,9 @@ export const handlers = [
   }),
   rest.get('*/account', (req, res, ctx) => {
     const account = accountFactory.build({
-      balance: 50,
-      active_since: '2022-11-30',
       active_promotions: promoFactory.buildList(1),
+      active_since: '2022-11-30',
+      balance: 50,
     });
     return res(ctx.json(account));
   }),
@@ -818,11 +818,11 @@ export const handlers = [
     return res(
       ctx.json(
         grantsFactory.build({
+          domain: [],
+          firewall: [],
           global: {
             cancel_account: true,
           },
-          domain: [],
-          firewall: [],
           image: [],
           linode: grantFactory.buildList(6000),
           longview: [],
@@ -844,11 +844,11 @@ export const handlers = [
     });
 
     const paypalPaymentMethod = paymentMethodFactory.build({
-      type: 'paypal',
       data: {
         email: 'test@example.com',
         paypal_id: '6781945682',
       },
+      type: 'paypal',
     });
 
     const otherPaymentMethod = paymentMethodFactory.build();
@@ -867,26 +867,26 @@ export const handlers = [
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
       action: 'lke_node_create',
-      percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      entity: { id: 999, label: 'linode-1', type: 'linode' },
       message:
         'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+      percent_complete: 15,
     });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
-      seen: true,
       percent_complete: 100,
+      seen: true,
     });
     const eventWithSpecialCharacters = eventFactory.build({
       action: 'ticket_update',
-      status: 'notification',
       entity: {
-        type: 'ticket',
-        label: 'Ticket name with special characters... (?)',
         id: 10,
+        label: 'Ticket name with special characters... (?)',
+        type: 'ticket',
       },
       message: 'Ticket name with special characters... (?)',
       percent_complete: 100,
+      status: 'notification',
     });
     return res.once(
       ctx.json(
@@ -900,8 +900,8 @@ export const handlers = [
   }),
   rest.get('*/support/tickets/999', (req, res, ctx) => {
     const ticket = supportTicketFactory.build({
-      id: 999,
       closed: new Date().toISOString(),
+      id: 999,
     });
     return res(ctx.json(ticket));
   }),
@@ -1002,14 +1002,14 @@ export const handlers = [
   }),
   rest.get('*managed/issues', (req, res, ctx) => {
     const openIssue = managedIssueFactory.build({
-      services: [998],
-      entity: { id: 1 },
       created: DateTime.now().minus({ days: 2 }).toISO(),
+      entity: { id: 1 },
+      services: [998],
     });
     const closedIssue = managedIssueFactory.build({
-      services: [999],
-      entity: { id: 999 },
       created: DateTime.now().minus({ days: 2 }).toISO(),
+      entity: { id: 999 },
+      services: [999],
     });
     return res(ctx.json(makeResourcePage([openIssue, closedIssue])));
   }),
@@ -1060,142 +1060,142 @@ export const handlers = [
   rest.get('*/notifications', (req, res, ctx) => {
     // pastDueBalance included here merely for ease of testing for Notifications section in the Notifications drawer.
     const pastDueBalance = notificationFactory.build({
+      body: null,
       entity: null,
       label: 'past due',
       message: `You have a past due balance of $58.50. Please make a payment immediately to avoid service disruption.`,
-      type: 'payment_due',
       severity: 'critical',
-      when: null,
+      type: 'payment_due',
       until: null,
-      body: null,
+      when: null,
     });
 
     // const gdprNotification = gdprComplianceNotification.build();
 
     const generalGlobalNotice = {
-      type: 'notice',
+      body: null,
       entity: null,
-      when: null,
+      label: "We've updated our policies.",
       // eslint-disable-next-line xss/no-mixed-html
       message:
         "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
-      label: "We've updated our policies.",
       severity: 'minor',
+      type: 'notice',
       until: null,
-      body: null,
+      when: null,
     };
 
     const outageNotification = {
-      type: 'outage',
+      body: null,
       entity: {
-        type: 'region',
-        label: null,
         id: 'us-east',
+        label: null,
+        type: 'region',
         url: '/regions/us-east',
       },
-      when: null,
+      label: 'There is an issue affecting service in this facility',
       message:
         'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
-      label: 'There is an issue affecting service in this facility',
       severity: 'major',
+      type: 'outage',
       until: null,
-      body: null,
+      when: null,
     };
 
     const emailBounce = notificationFactory.build({
-      type: 'billing_email_bounce',
-      entity: null,
-      when: null,
-      message: 'We are unable to send emails to your billing email address!',
-      label: 'We are unable to send emails to your billing email address!',
-      severity: 'major',
-      until: null,
       body: null,
+      entity: null,
+      label: 'We are unable to send emails to your billing email address!',
+      message: 'We are unable to send emails to your billing email address!',
+      severity: 'major',
+      type: 'billing_email_bounce',
+      until: null,
+      when: null,
     });
 
     const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationNotification = notificationFactory.build({
-      type: 'migration_pending',
+      entity: { id: 0, label: 'linode-0', type: 'linode' },
       label: 'You have a migration pending!',
       message:
         'You have a migration pending! Your Linode must be offline before starting the migration.',
-      entity: { id: 0, type: 'linode', label: 'linode-0' },
       severity: 'major',
+      type: 'migration_pending',
     });
 
     const minorSeverityNotification = notificationFactory.build({
-      type: 'notice',
       message: 'Testing for minor notification',
       severity: 'minor',
+      type: 'notice',
     });
 
     const criticalSeverityNotification = notificationFactory.build({
-      type: 'notice',
       message: 'Testing for critical notification',
       severity: 'critical',
+      type: 'notice',
     });
 
     const balanceNotification = notificationFactory.build({
-      type: 'payment_due',
       message: 'You have an overdue balance!',
       severity: 'major',
+      type: 'payment_due',
     });
 
     const blockStorageMigrationScheduledNotification = notificationFactory.build(
       {
-        type: 'volume_migration_scheduled' as NotificationType,
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
         entity: {
-          type: 'volume',
-          label: 'eligibleNow',
           id: 20,
+          label: 'eligibleNow',
+          type: 'volume',
           url: '/volumes/20',
         },
-        when: '2021-09-30T04:00:00',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
         message:
           'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-        label: 'You have a scheduled Block Storage volume upgrade pending!',
         severity: 'critical',
+        type: 'volume_migration_scheduled' as NotificationType,
         until: '2021-10-16T04:00:00',
-        body: 'Your volumes in us-east will be upgraded to NVMe.',
+        when: '2021-09-30T04:00:00',
       }
     );
 
     const blockStorageMigrationScheduledNotificationUnattached = notificationFactory.build(
       {
-        type: 'volume_migration_scheduled' as NotificationType,
+        body: 'Your volume will be upgraded to NVMe.',
         entity: {
-          type: 'volume',
-          label: 'hdd-unattached',
           id: 30,
+          label: 'hdd-unattached',
+          type: 'volume',
           url: '/volumes/30',
         },
-        when: '2021-09-30T04:00:00',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
         message:
           'This unattached volume is scheduled to be migrated to NVMe I think.',
-        label: 'You have a scheduled Block Storage volume upgrade pending!',
         severity: 'critical',
+        type: 'volume_migration_scheduled' as NotificationType,
         until: '2021-10-16T04:00:00',
-        body: 'Your volume will be upgraded to NVMe.',
+        when: '2021-09-30T04:00:00',
       }
     );
 
     const blockStorageMigrationImminentNotification = notificationFactory.build(
       {
-        type: 'volume_migration_imminent' as NotificationType,
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
         entity: {
-          type: 'volume',
-          label: 'example-upgrading',
           id: 2,
+          label: 'example-upgrading',
+          type: 'volume',
           url: '/volumes/2',
         },
-        when: '2021-09-30T04:00:00',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
         message:
           'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-        label: 'You have a scheduled Block Storage volume upgrade pending!',
         severity: 'major',
+        type: 'volume_migration_imminent' as NotificationType,
         until: '2021-10-16T04:00:00',
-        body: 'Your volumes in us-east will be upgraded to NVMe.',
+        when: '2021-09-30T04:00:00',
       }
     );
 
@@ -1267,6 +1267,11 @@ export const mockDataHandlers: Record<
   keyof MockData,
   (count: number) => RequestHandler
 > = {
+  domain: (count) =>
+    rest.get('*/domains', (req, res, ctx) => {
+      const domains = domainFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(domains)));
+    }),
   linode: (count) =>
     rest.get('*/linode/instances', async (req, res, ctx) => {
       linodeFactory.resetSequenceNumber();
@@ -1277,11 +1282,6 @@ export const mockDataHandlers: Record<
     rest.get('*/nodebalancers', (req, res, ctx) => {
       const nodeBalancers = nodeBalancerFactory.buildList(count);
       return res(ctx.json(makeResourcePage(nodeBalancers)));
-    }),
-  domain: (count) =>
-    rest.get('*/domains', (req, res, ctx) => {
-      const domains = domainFactory.buildList(count);
-      return res(ctx.json(makeResourcePage(domains)));
     }),
   volume: (count) =>
     rest.get('*/volumes', (req, res, ctx) => {

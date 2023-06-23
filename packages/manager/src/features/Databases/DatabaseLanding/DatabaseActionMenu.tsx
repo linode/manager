@@ -8,10 +8,10 @@ import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(() => ({
   root: {
-    padding: '0px !important',
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    padding: '0px !important',
   },
 }));
 
@@ -37,18 +37,18 @@ const DatabaseActionMenu = (props: CombinedProps) => {
 
   const actions: Action[] = [
     {
-      title: 'Resize',
       onClick: () => {
         alert('Resize not yet implemented');
       },
+      title: 'Resize',
     },
     {
-      title: 'Delete',
       onClick: () => {
         if (triggerDeleteDatabase !== undefined) {
           triggerDeleteDatabase(databaseID, databaseLabel);
         }
       },
+      title: 'Delete',
     },
   ];
 

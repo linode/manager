@@ -15,7 +15,7 @@ export const TwoFactorToggle = (props: ToggleProps) => {
   const { disabled, twoFactorEnabled } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { twoFactorConfirmed, onChange } = props;
+    const { onChange, twoFactorConfirmed } = props;
     const enabled = e.currentTarget.checked;
     /**
      * only open the disable dialog if 2FA has been turned on and we're flipping the toggle off

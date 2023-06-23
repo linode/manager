@@ -26,7 +26,7 @@ interface Props {
 const initialValues = { label: '' };
 
 export const CloneVolumeForm = (props: Props) => {
-  const { onClose, volumeId, volumeRegion, volumeLabel, volumeSize } = props;
+  const { onClose, volumeId, volumeLabel, volumeRegion, volumeSize } = props;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
@@ -34,8 +34,8 @@ export const CloneVolumeForm = (props: Props) => {
     <Formik
       initialValues={initialValues}
       validationSchema={CloneVolumeSchema}
-      onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        cloneVolume({ volumeId, label: values.label })
+      onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
+        cloneVolume({ label: values.label, volumeId })
           .then((_) => {
             onClose();
             resetEventsPolling();

@@ -15,16 +15,16 @@ export interface BucketActionMenuProps {
 export const BucketActionMenu = (props: BucketActionMenuProps) => {
   const actions: Action[] = [
     {
-      title: 'Details',
       onClick: () => {
         props.onDetails();
       },
+      title: 'Details',
     },
     {
-      title: 'Delete',
       onClick: () => {
         props.onRemove();
       },
+      title: 'Delete',
     },
   ];
 

@@ -134,8 +134,8 @@ export const mockEnableTwoFactorAuth = (
   // TODO Create an expiration date based on the current time.
   const expiry = '2025-05-01T03:59:59';
   return cy.intercept('POST', apiMatcher('profile/tfa-enable'), {
-    secret: secretString,
     expiry,
+    secret: secretString,
   });
 };
 

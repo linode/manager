@@ -14,7 +14,7 @@ export interface TagDrawerProps {
 }
 
 const TagDrawer = (props: TagDrawerProps) => {
-  const { updateTags, entityLabel, onClose, open, tags } = props;
+  const { entityLabel, onClose, open, tags, updateTags } = props;
 
   return (
     <Drawer open={open} title={`Tags (${entityLabel})`} onClose={onClose}>

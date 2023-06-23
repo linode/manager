@@ -20,8 +20,8 @@ export default createSelector(
   linodesErrorSelector,
   nodeBalsErrorSelector,
   (linodes, nodebalancers) => ({
+    hasErrors: linodes || nodebalancers,
     linodes,
     nodebalancers,
-    hasErrors: linodes || nodebalancers,
   })
 );

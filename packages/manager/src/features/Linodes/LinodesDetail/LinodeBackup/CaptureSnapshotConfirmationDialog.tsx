@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const CaptureSnapshotConfirmationDialog = (props: Props) => {
-  const { open, loading, onClose, error, onSnapshot } = props;
+  const { error, loading, onClose, onSnapshot, open } = props;
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>

@@ -8,8 +8,8 @@ const cluster = kubernetesClusterFactory.build();
 
 const props: Props = {
   cluster,
-  openUpgradeDialog: jest.fn(),
   openDeleteDialog: jest.fn(),
+  openUpgradeDialog: jest.fn(),
 };
 
 describe('ClusterRow component', () => {

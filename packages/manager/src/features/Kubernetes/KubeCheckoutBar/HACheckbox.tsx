@@ -20,22 +20,22 @@ export const HACopy = () => (
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
+  checkbox: {
+    marginLeft: -8,
+    marginTop: -8,
+  },
   heading: {
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(),
     fontSize: '16px',
     fontWeight: 600,
-  },
-  checkbox: {
-    marginTop: -8,
-    marginLeft: -8,
+    paddingBottom: theme.spacing(),
+    paddingTop: theme.spacing(0.5),
   },
   price: {
-    marginTop: theme.spacing(),
     '& h3': {
       color: `${theme.palette.text.primary} !important`,
       fontFamily: theme.font.normal,
     },
+    marginTop: theme.spacing(),
   },
 }));
 

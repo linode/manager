@@ -14,8 +14,6 @@ const sxBoxFlex = {
 };
 
 const meta: Meta<typeof EntityHeader> = {
-  title: 'Components/EntityHeader',
-  component: EntityHeader,
   argTypes: {
     title: {
       table: {
@@ -24,6 +22,8 @@ const meta: Meta<typeof EntityHeader> = {
     },
   },
   args: {},
+  component: EntityHeader,
+  title: 'Components/EntityHeader',
 };
 
 export default meta;
@@ -32,21 +32,21 @@ type Story = StoryObj<typeof EntityHeader>;
 
 export const Default: Story = {
   args: {
+    isSummaryView: true,
     title: <Link to={`linodes/1234`}>linode-001</Link>,
     variant: 'h2',
-    isSummaryView: true,
   },
   render: (args) => {
     const sxActionItem = {
+      '&:hover': {
+        backgroundColor: '#3683dc',
+        color: '#fff',
+      },
       color: '#2575d0',
       fontFamily: '"LatoWeb", sans-serif',
       fontSize: '0.875rem',
       height: '34px',
       minWidth: 'auto',
-      '&:hover': {
-        backgroundColor: '#3683dc',
-        color: '#fff',
-      },
     };
 
     return (
@@ -68,11 +68,11 @@ export const Default: Story = {
           <LinodeActionMenu
             linodeBackups={{
               enabled: true,
+              last_successful: '2021-03-27T18:00:00',
               schedule: {
                 day: 'Saturday',
                 window: 'W0',
               },
-              last_successful: '2021-03-27T18:00:00',
             }}
             linodeId={12434}
             linodeLabel="linode-001"
@@ -82,24 +82,24 @@ export const Default: Story = {
               addons: {
                 backups: {
                   price: {
-                    monthly: 5,
                     hourly: 0.0015,
+                    monthly: 5,
                   },
                 },
               },
-              transfer: 2000,
-              network_out: 125,
-              gpus: 0,
-              price: {
-                monthly: 20,
-                hourly: 0.0075,
-              },
               class: 'standard',
-              successor: 'g6-standard-1',
               disk: 81920,
+              gpus: 0,
               id: 'g6-standard-2',
               label: 'Linode 2GB',
               memory: 2048,
+              network_out: 125,
+              price: {
+                hourly: 0.0075,
+                monthly: 20,
+              },
+              successor: 'g6-standard-1',
+              transfer: 2000,
               vcpus: 1,
             }}
             onOpenPowerDialog={action('onOpenPowerDialog')}

@@ -14,13 +14,13 @@ interface Props {
 }
 
 export const DeleteRangeDialog = (props: Props) => {
-  const { open, onClose, range } = props;
+  const { onClose, open, range } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: removeRange,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: removeRange,
   } = useLinodeRemoveRangeMutation(range.range);
 
   const handleDeleteIP = async () => {

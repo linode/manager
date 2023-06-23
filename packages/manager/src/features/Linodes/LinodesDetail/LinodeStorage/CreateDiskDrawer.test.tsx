@@ -18,7 +18,7 @@ describe('CreateDiskDrawer', () => {
       })
     );
 
-    const { getByText, getByLabelText, findByText } = renderWithTheme(
+    const { findByText, getByLabelText, getByText } = renderWithTheme(
       <CreateDiskDrawer open={true} onClose={jest.fn()} linodeId={1} />
     );
 

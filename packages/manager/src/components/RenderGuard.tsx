@@ -36,7 +36,7 @@ const renderGuard = <P extends {}>(
       //
       // Destructure out "theme" so it's not passed to the component.
       // This fixes the "<div theme=[object Object] />" issue.
-      const { updateFor, theme, ...rest } = this.props as any;
+      const { theme, updateFor, ...rest } = this.props as any;
       return <Component {...rest} />;
     }
   }

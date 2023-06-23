@@ -26,10 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const errorResources = {
-  type: 'A plan selection',
-  region: 'region',
   label: 'A label',
+  region: 'region',
   root_pass: 'A root password',
+  type: 'A plan selection',
 };
 
 export type CombinedProps = CloneFormStateHandlers &
@@ -43,12 +43,12 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     errors,
     imagesData,
     linodesData,
-    typesData,
     regionsData,
     selectedLinodeID,
-    userCannotCreateLinode,
+    typesData,
     updateLinodeID,
     updateTypeID,
+    userCannotCreateLinode,
   } = props;
 
   const extendedTypes = typesData?.map(extendType);

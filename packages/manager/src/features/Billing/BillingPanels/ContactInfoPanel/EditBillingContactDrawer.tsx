@@ -21,7 +21,7 @@ export interface Props {
 }
 
 export const BillingContactDrawer = (props: Props) => {
-  const { open, onClose, focusEmail } = props;
+  const { focusEmail, onClose, open } = props;
 
   const { classes } = useStyles();
 

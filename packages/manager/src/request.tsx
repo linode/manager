@@ -60,6 +60,7 @@ export const handleError = (error: AxiosError, store: ApplicationStore) => {
 
   const interceptedErrors = interceptErrors(errors, [
     {
+      condition: (e) => !!e.reason.match(/verification is required/i),
       replacementText: (
         <VerificationError
           title={
@@ -69,9 +70,19 @@ export const handleError = (error: AxiosError, store: ApplicationStore) => {
           }
         />
       ),
-      condition: (e) => !!e.reason.match(/verification is required/i),
     },
     {
+      callback: () => {
+        if (store && !store.getState().globalErrors.account_unactivated) {
+          store.dispatch(
+            setErrors({
+              account_unactivated: true,
+            })
+          );
+        }
+      },
+      condition: (e) =>
+        !!e.reason.match(/account must be activated/i) && status === 403,
       /**
        * this component when rendered will set an account activation
        * error in the globalErrors Redux state. The only issue here
@@ -84,32 +95,21 @@ export const handleError = (error: AxiosError, store: ApplicationStore) => {
        * 2. Fix the Landing page components to display the actual error being passed.
        */
       replacementText: <AccountActivationError errors={errors} />,
-      condition: (e) =>
-        !!e.reason.match(/account must be activated/i) && status === 403,
-      callback: () => {
-        if (store && !store.getState().globalErrors.account_unactivated) {
-          store.dispatch(
-            setErrors({
-              account_unactivated: true,
-            })
-          );
-        }
-      },
     },
     {
-      replacementText: <MigrateError />,
       condition: (e) => {
         return (
           !!e.reason.match(/migrations are currently disabled/i) &&
           !!url.match(/migrate/i)
         );
       },
+      replacementText: <MigrateError />,
     },
     {
-      replacementText: <SupportError errors={errors} />,
       condition: (e) => {
         return !!e.reason.match(/.*open a support ticket/i) && !e.field;
       },
+      replacementText: <SupportError errors={errors} />,
     },
   ]);
 
@@ -117,7 +117,7 @@ export const handleError = (error: AxiosError, store: ApplicationStore) => {
   return Promise.reject(interceptedErrors);
 };
 
-export const getURL = ({ url, baseURL }: AxiosRequestConfig) => {
+export const getURL = ({ baseURL, url }: AxiosRequestConfig) => {
   if (!url || !baseURL) {
     return;
   }
@@ -182,11 +182,11 @@ export const setupInterceptors = (store: ApplicationStore) => {
 
     return {
       ...config,
-      url,
       headers: {
         ...config.headers,
         ...(token && { Authorization: `${token}` }),
       },
+      url,
     };
   });
 

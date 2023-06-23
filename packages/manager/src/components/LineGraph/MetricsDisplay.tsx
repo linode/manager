@@ -51,7 +51,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
       </TableHead>
       <TableBody>
         {rows.map((row) => {
-          const { legendTitle, legendColor, data, format } = row;
+          const { data, format, legendColor, legendTitle } = row;
           return (
             <TableRow key={legendTitle} data-qa-metric-row>
               <TableCell className={classes.legend}>

@@ -26,14 +26,14 @@ export const LinodeDiskActionMenu = (props: Props) => {
   const history = useHistory();
 
   const {
-    linodeStatus,
-    readOnly,
-    linodeId,
     diskId,
-    onRename,
+    linodeId,
+    linodeStatus,
     onDelete,
-    onResize,
     onImagize,
+    onRename,
+    onResize,
+    readOnly,
   } = props;
 
   let _tooltip =
@@ -47,38 +47,38 @@ export const LinodeDiskActionMenu = (props: Props) => {
 
   const disabledProps = _tooltip
     ? {
-        tooltip: _tooltip,
         disabled: true,
+        tooltip: _tooltip,
       }
     : {};
 
   const actions: Action[] = [
     {
-      title: 'Rename',
-      onClick: onRename,
       disabled: readOnly,
+      onClick: onRename,
+      title: 'Rename',
       tooltip: readOnly ? _tooltip : '',
     },
     {
-      title: 'Resize',
       onClick: onResize,
+      title: 'Resize',
       ...disabledProps,
     },
     {
-      title: 'Imagize',
       onClick: onImagize,
+      title: 'Imagize',
       ...(readOnly ? disabledProps : {}),
     },
     {
-      title: 'Clone',
       onClick: () => {
         history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
       },
+      title: 'Clone',
       ...(readOnly ? disabledProps : {}),
     },
     {
-      title: 'Delete',
       onClick: onDelete,
+      title: 'Delete',
       ...disabledProps,
     },
   ];
@@ -100,8 +100,8 @@ export const LinodeDiskActionMenu = (props: Props) => {
               action.title === 'Resize'
                 ? () =>
                     sendEvent({
-                      category: `Disk ${action.title} Flow`,
                       action: `Open:tooltip`,
+                      category: `Disk ${action.title} Flow`,
                       label: `${action.title} help icon tooltip`,
                     })
                 : undefined

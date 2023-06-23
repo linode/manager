@@ -12,25 +12,6 @@ import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    paddingBottom: 10,
-  },
-  poolUsageProgress: {
-    marginBottom: theme.spacing(0.5),
-  },
-  legendItem: {
-    marginTop: 10,
-    display: 'flex',
-    alignItems: 'center',
-    '&:before': {
-      content: '""',
-      borderRadius: 5,
-      width: 20,
-      height: 20,
-
-      marginRight: 10,
-    },
-  },
   darkGreen: {
     '&:before': {
       backgroundColor: '#5ad865',
@@ -40,6 +21,25 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '&:before': {
       backgroundColor: theme.color.grey2,
     },
+  },
+  header: {
+    paddingBottom: 10,
+  },
+  legendItem: {
+    '&:before': {
+      borderRadius: 5,
+      content: '""',
+      height: 20,
+      marginRight: 10,
+
+      width: 20,
+    },
+    alignItems: 'center',
+    display: 'flex',
+    marginTop: 10,
+  },
+  poolUsageProgress: {
+    marginBottom: theme.spacing(0.5),
   },
 }));
 
@@ -54,14 +54,14 @@ export const NetworkTransfer: React.FC<Props> = (props) => {
 
   const linodeTransfer = useAPIRequest(
     () => getLinodeTransfer(linodeID),
-    { used: 0, quota: 0, billable: 0 },
+    { billable: 0, quota: 0, used: 0 },
     [linodeID]
   );
 
   const {
     data: accountTransfer,
-    isLoading: accountTransferLoading,
     error: accountTransferError,
+    isLoading: accountTransferLoading,
   } = useAccountTransfer();
 
   const linodeUsedInGB = readableBytes(linodeTransfer.data.used, {
@@ -106,12 +106,12 @@ interface ContentProps {
 
 const TransferContent: React.FC<ContentProps> = (props) => {
   const {
+    accountQuotaInGB,
     error,
     linodeLabel,
-    loading,
     linodeUsedInGB,
+    loading,
     totalUsedInGB,
-    accountQuotaInGB,
     // accountBillableInGB
   } = props;
   const { classes } = useStyles();

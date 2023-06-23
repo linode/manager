@@ -31,19 +31,19 @@ export interface Props {
 }
 
 export const Disks: React.FC<Props> = (props) => {
-  const { disks, diskSelection, selectedConfigIds, handleSelect } = props;
+  const { diskSelection, disks, handleSelect, selectedConfigIds } = props;
 
   const classes = useStyles();
 
   return (
     <Paginate data={disks}>
       {({
+        count,
         data: paginatedData,
         handlePageChange,
         handlePageSizeChange,
         page,
         pageSize,
-        count,
       }) => {
         return (
           <React.Fragment>

@@ -30,34 +30,34 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 class CreateUserDrawer extends React.Component<CombinedProps, State> {
   state: State = {
-    username: '',
     email: '',
-    restricted: false,
     errors: [],
+    restricted: false,
     submitting: false,
+    username: '',
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (this.props.open === true && prevProps.open === false) {
       this.setState({
-        username: '',
         email: '',
-        restricted: false,
         errors: [],
+        restricted: false,
         submitting: false,
+        username: '',
       });
     }
   }
 
   onSubmit = () => {
     const {
-      refetch,
-      onClose,
       history: { push },
+      onClose,
+      refetch,
     } = this.props;
-    const { username, email, restricted } = this.state;
+    const { email, restricted, username } = this.state;
     this.setState({ errors: [], submitting: true });
-    createUser({ username, email, restricted })
+    createUser({ email, restricted, username })
       .then((user: User) => {
         this.setState({ submitting: false });
         onClose();
@@ -96,11 +96,11 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { open, onClose } = this.props;
-    const { username, email, restricted, errors, submitting } = this.state;
+    const { onClose, open } = this.props;
+    const { email, errors, restricted, submitting, username } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(
-      { username: 'Username', email: 'Email' },
+      { email: 'Email', username: 'Username' },
       errors
     );
     const generalError = hasErrorFor('none');

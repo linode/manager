@@ -16,7 +16,7 @@ interface AddTagProps {
 }
 
 const AddTag = (props: AddTagProps) => {
-  const { addTag, label, onClose, tags, fixedMenu } = props;
+  const { addTag, fixedMenu, label, onClose, tags } = props;
 
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -31,7 +31,7 @@ const AddTag = (props: AddTagProps) => {
 
   const tagOptions = accountTags
     ?.filter((tag) => !tags.includes(tag.label))
-    .map((tag) => ({ value: tag.label, label: tag.label }));
+    .map((tag) => ({ label: tag.label, value: tag.label }));
 
   const handleAddTag = (newTag: Item<string>) => {
     if (newTag?.value) {
@@ -80,17 +80,17 @@ const StyledSelect = styled(Select, {
   fixedMenu?: boolean;
   inDetailsContext?: boolean;
 }>(({ ...props }) => ({
-  width: '100%',
   padding: '0px',
+  width: '100%',
   ...(props.fixedMenu && {
     '& .react-select__menu': {
       margin: '2px 0 0 0',
     },
   }),
   ...(props.inDetailsContext && {
-    width: '415px',
-    flexBasis: '100%',
     display: 'flex',
+    flexBasis: '100%',
     justifyContent: 'flex-end',
+    width: '415px',
   }),
 }));

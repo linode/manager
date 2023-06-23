@@ -22,6 +22,24 @@ import RestrictedUserLabel from './RestrictedUserLabel';
 import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  lastUpdatedOuter: {
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(1),
+    },
+  },
+  lastUpdatedText: {
+    fontSize: '0.75rem',
+  },
+  packageButton: {
+    '&:hover': {
+      backgroundColor: 'inherit',
+      color: 'inherit',
+      textDecoration: 'underline',
+    },
+    fontSize: '0.875rem',
+    padding: 0,
+    textAlign: 'left',
+  },
   root: {
     '& a': {
       color: theme.textColors.linkActiveLight,
@@ -30,32 +48,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
     [theme.breakpoints.down('lg')]: {
-      flexDirection: 'row',
       alignItems: 'center',
+      flexDirection: 'row',
     },
   },
   updates: {
     [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(2),
     },
-  },
-  packageButton: {
-    fontSize: '0.875rem',
-    padding: 0,
-    textAlign: 'left',
-    '&:hover': {
-      textDecoration: 'underline',
-      color: 'inherit',
-      backgroundColor: 'inherit',
-    },
-  },
-  lastUpdatedOuter: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(1),
-    },
-  },
-  lastUpdatedText: {
-    fontSize: '0.75rem',
   },
 }));
 

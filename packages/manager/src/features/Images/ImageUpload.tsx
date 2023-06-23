@@ -37,21 +37,6 @@ import { wrapInQuotes } from 'src/utilities/stringUtils';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    minWidth: '100%',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(),
-    '& .MuiFormHelperText-root': {
-      marginBottom: theme.spacing(2),
-    },
-  },
-  helperText: {
-    marginTop: theme.spacing(2),
-    width: '90%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
   browseFilesButton: {
     marginLeft: '1rem',
   },
@@ -60,8 +45,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 700,
   },
   cloudInitCheckboxWrapper: {
-    marginTop: theme.spacing(2),
     marginLeft: '3px',
+    marginTop: theme.spacing(2),
+  },
+  container: {
+    '& .MuiFormHelperText-root': {
+      marginBottom: theme.spacing(2),
+    },
+    minWidth: '100%',
+    paddingBottom: theme.spacing(),
+    paddingTop: theme.spacing(2),
+  },
+  helperText: {
+    marginTop: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    width: '90%',
   },
 }));
 
@@ -92,12 +92,12 @@ export interface Props {
 
 export const ImageUpload: React.FC<Props> = (props) => {
   const {
-    label,
-    description,
-    changeLabel,
     changeDescription,
     changeIsCloudInit,
+    changeLabel,
+    description,
     isCloudInit,
+    label,
   } = props;
 
   const { data: profile } = useProfile();
@@ -194,7 +194,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
         confirmWhenLeaving={true}
         onConfirm={onConfirm}
       >
-        {({ isModalOpen, handleCancel, handleConfirm }) => {
+        {({ handleCancel, handleConfirm, isModalOpen }) => {
           return (
             <ConfirmationDialog
               open={isModalOpen}

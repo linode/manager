@@ -12,7 +12,7 @@ import { oauthToken, pageSize } from 'support/constants/api';
  */
 export const deleteAllTestDomains = async (): Promise<void> => {
   const domains = await depaginate<Domain>((page: number) =>
-    getDomains({ page_size: pageSize, page })
+    getDomains({ page, page_size: pageSize })
   );
 
   const deletionPromises = domains
@@ -27,17 +27,17 @@ const makeDomainCreateReq = (domain) => {
     ? domain
     : {
         domain: randomDomainName(),
-        type: 'master',
         soa_email: 'admin@example.com',
+        type: 'master',
       };
 
   return cy.request({
-    method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/domains',
-    body: domainData,
     auth: {
       bearer: oauthToken,
     },
+    body: domainData,
+    method: 'POST',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/domains',
   });
 };
 

@@ -29,7 +29,7 @@ export interface Props {
 }
 
 export const AccessSelect = React.memo((props: Props) => {
-  const { getAccess, updateAccess, name, variant } = props;
+  const { getAccess, name, updateAccess, variant } = props;
   // Access data for this Object (from the API).
   const [aclData, setACLData] = React.useState<ACLType | null>(null);
   const [corsData, setCORSData] = React.useState(true);
@@ -44,7 +44,7 @@ export const AccessSelect = React.memo((props: Props) => {
   const [updateAccessError, setUpdateAccessError] = React.useState('');
   const [updateAccessSuccess, setUpdateAccessSuccess] = React.useState(false);
   // State for dealing with the confirmation modal when selecting read/write.
-  const { open: openDialog, isOpen, close: closeDialog } = useOpenClose();
+  const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
 
   React.useEffect(() => {
@@ -164,7 +164,7 @@ export const AccessSelect = React.memo((props: Props) => {
 
       {variant === 'bucket' ? (
         <FormControlLabel
-          style={{ marginTop: 16, display: 'block' }}
+          style={{ display: 'block', marginTop: 16 }}
           control={
             <Toggle
               disabled={accessLoading}

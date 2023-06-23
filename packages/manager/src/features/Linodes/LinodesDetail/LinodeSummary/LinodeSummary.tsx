@@ -34,11 +34,12 @@ setUpCharts();
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      width: '100%',
-    },
     chartSelect: {
       maxWidth: 150,
+    },
+    emptyText: {
+      marginTop: theme.spacing(),
+      textAlign: 'center',
     },
     graphControls: {
       display: 'flex',
@@ -53,15 +54,15 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     grid: {
-      backgroundColor: theme.bg.offWhite,
-      border: `solid 1px ${theme.borderColors.divider}`,
-      marginBottom: theme.spacing(2),
-      '&.MuiGrid-item': {
-        padding: theme.spacing(2),
-      },
       '& h2': {
         fontSize: '1rem',
       },
+      '&.MuiGrid-item': {
+        padding: theme.spacing(2),
+      },
+      backgroundColor: theme.bg.offWhite,
+      border: `solid 1px ${theme.borderColors.divider}`,
+      marginBottom: theme.spacing(2),
       [theme.breakpoints.up(1100)]: {
         '&:first-of-type': {
           marginRight: theme.spacing(2),
@@ -72,9 +73,8 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '1rem',
       paddingRight: theme.spacing(2),
     },
-    emptyText: {
-      textAlign: 'center',
-      marginTop: theme.spacing(),
+    root: {
+      width: '100%',
     },
   })
 );
@@ -87,7 +87,7 @@ interface Props {
 const chartHeight = 160;
 
 const LinodeSummary: React.FC<Props> = (props) => {
-  const { linodeCreated, isBareMetalInstance } = props;
+  const { isBareMetalInstance, linodeCreated } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const theme = useTheme<Theme>();
@@ -96,7 +96,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
 
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
 
   const options = getDateOptions(linodeCreated);
   const [rangeSelection, setRangeSelection] = React.useState('24');
@@ -106,15 +106,15 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
   const {
     data: statsData,
-    isLoading: statsLoading,
     error: statsError,
+    isLoading: statsLoading,
     refetch: refetchLinodeStats,
   } = useLinodeStats(id, isLast24Hours, linodeCreated);
 
   const {
     data: statsByDateData,
-    isLoading: statsByDateLoading,
     error: statsByDateError,
+    isLoading: statsByDateLoading,
   } = useLinodeStatsByDate(id, year, month, !isLast24Hours, linodeCreated);
 
   const stats = isLast24Hours ? statsData : statsByDateData;
@@ -164,18 +164,18 @@ const LinodeSummary: React.FC<Props> = (props) => {
         showToday={rangeSelection === '24'}
         data={[
           {
-            borderColor: 'transparent',
             backgroundColor: theme.graphs.cpu.percent,
+            borderColor: 'transparent',
             data,
             label: 'CPU %',
           },
         ]}
         legendRows={[
           {
-            legendTitle: 'CPU %',
-            legendColor: 'blue',
             data: metrics,
             format: formatPercentage,
+            legendColor: 'blue',
+            legendTitle: 'CPU %',
           },
         ]}
       />
@@ -197,14 +197,14 @@ const LinodeSummary: React.FC<Props> = (props) => {
         showToday={rangeSelection === '24'}
         data={[
           {
-            borderColor: 'transparent',
             backgroundColor: theme.graphs.diskIO.read,
+            borderColor: 'transparent',
             data: data.io,
             label: 'I/O Rate',
           },
           {
-            borderColor: 'transparent',
             backgroundColor: theme.graphs.diskIO.swap,
+            borderColor: 'transparent',
             data: data.swap,
             label: 'Swap Rate',
           },
@@ -232,7 +232,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
       <Paper>
         <ErrorState
           CustomIcon={PendingIcon}
-          CustomIconStyles={{ width: 64, height: 64 }}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -256,7 +256,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
     return (
       <Paper>
         <ErrorState
-          CustomIconStyles={{ width: 64, height: 64 }}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={statsErrorString}
         />
       </Paper>
@@ -264,10 +264,10 @@ const LinodeSummary: React.FC<Props> = (props) => {
   }
 
   const chartProps: ChartProps = {
-    loading: isLoading,
     height: chartHeight,
-    timezone,
+    loading: isLoading,
     rangeSelection,
+    timezone,
   };
 
   return (

@@ -37,14 +37,14 @@ export const useAccountManagement = () => {
   const _isManagedAccount = accountSettings?.managed ?? false;
 
   return {
+    _hasAccountAccess,
+    _hasGrant,
+    _isLargeAccount,
+    _isManagedAccount,
+    _isRestrictedUser,
     account,
     accountSettings,
     profile,
-    _isRestrictedUser,
-    _hasGrant,
-    _hasAccountAccess,
-    _isManagedAccount,
-    _isLargeAccount,
   };
 };
 

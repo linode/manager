@@ -16,23 +16,23 @@ describe('LinodeBackups', () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
         return res(
-          ctx.json(linodeFactory.build({ id: 1, backups: { enabled: true } }))
+          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
         );
       }),
       rest.get('*/linode/instances/1/backups', (req, res, ctx) => {
         const response: LinodeBackupsResponse = {
           automatic: backupFactory.buildList(1, { label: null, type: 'auto' }),
           snapshot: {
-            in_progress: backupFactory.build({
-              label: 'in-progress-test-backup',
-              created: '2023-05-03T04:00:05',
-              finished: '2023-05-03T04:02:06',
-              type: 'snapshot',
-            }),
             current: backupFactory.build({
               label: 'current-snapshot',
-              type: 'snapshot',
               status: 'needsPostProcessing',
+              type: 'snapshot',
+            }),
+            in_progress: backupFactory.build({
+              created: '2023-05-03T04:00:05',
+              finished: '2023-05-03T04:02:06',
+              label: 'in-progress-test-backup',
+              type: 'snapshot',
             }),
           },
         };
@@ -59,7 +59,7 @@ describe('LinodeBackups', () => {
     server.use(
       rest.get('*/linode/instances/1', (req, res, ctx) => {
         return res(
-          ctx.json(linodeFactory.build({ id: 1, backups: { enabled: false } }))
+          ctx.json(linodeFactory.build({ backups: { enabled: false }, id: 1 }))
         );
       })
     );

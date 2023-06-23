@@ -14,6 +14,9 @@ type ClassNames = 'root' | 'attachmentPaperWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
+    attachmentPaperWrapper: {
+      overflowX: 'auto',
+    },
     root: {
       marginLeft: theme.spacing(7),
       maxWidth: 600,
@@ -21,9 +24,6 @@ const styles = (theme: Theme) =>
         marginLeft: theme.spacing(5),
         width: 'calc(100% - 32px)',
       },
-    },
-    attachmentPaperWrapper: {
-      overflowX: 'auto',
     },
   });
 

@@ -47,7 +47,7 @@ export const getTotalClusterMemoryCPUAndStorage = (
   types: ExtendedType[]
 ) => {
   if (!types || !pools) {
-    return { RAM: 0, CPU: 0, Storage: 0 };
+    return { CPU: 0, RAM: 0, Storage: 0 };
   }
 
   return pools.reduce(
@@ -59,12 +59,12 @@ export const getTotalClusterMemoryCPUAndStorage = (
         return accumulator;
       }
       return {
-        RAM: accumulator.RAM + thisType.memory * thisPool.count,
         CPU: accumulator.CPU + thisType.vcpus * thisPool.count,
+        RAM: accumulator.RAM + thisType.memory * thisPool.count,
         Storage: accumulator.Storage + thisType.disk * thisPool.count,
       };
     },
-    { RAM: 0, CPU: 0, Storage: 0 }
+    { CPU: 0, RAM: 0, Storage: 0 }
   );
 };
 
@@ -131,7 +131,7 @@ export const getKubeHighAvailability = (
   );
 
   return {
-    showHighAvailability,
     isClusterHighlyAvailable,
+    showHighAvailability,
   };
 };

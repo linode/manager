@@ -19,7 +19,7 @@ export interface Props {
  */
 
 export const KernelSelect: React.FC<Props> = (props) => {
-  const { selectedKernel, kernels, onChange, readOnly, errorText } = props;
+  const { errorText, kernels, onChange, readOnly, selectedKernel } = props;
 
   const options = kernelsToGroupedItems(kernels);
 
@@ -98,9 +98,9 @@ export const kernelsToGroupedItems = (kernels: Kernel[]) => {
 };
 
 const PRIORITY = {
-  Current: 4,
-  '64 bit': 3,
   '32 bit': 2,
+  '64 bit': 3,
+  Current: 4,
   Deprecated: 1,
 };
 

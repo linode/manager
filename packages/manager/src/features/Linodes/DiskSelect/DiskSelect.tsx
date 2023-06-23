@@ -34,12 +34,12 @@ const diskFromValue = (
 const DiskSelect: React.FC<CombinedProps> = (props) => {
   const {
     disabled,
-    disks,
     diskError,
+    disks,
     generalError,
     handleChange,
-    selectedDisk,
     required,
+    selectedDisk,
   } = props;
   const options = disksToOptions(disks);
   return (

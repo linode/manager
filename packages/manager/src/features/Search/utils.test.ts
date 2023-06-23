@@ -29,13 +29,13 @@ describe('separate results by entity', () => {
   it('returns empty results if there is no data', () => {
     const newResults = separateResultsByEntity([]);
     expect(newResults).toEqual({
-      linodes: [],
-      volumes: [],
+      buckets: [],
       domains: [],
       images: [],
-      nodebalancers: [],
       kubernetesClusters: [],
-      buckets: [],
+      linodes: [],
+      nodebalancers: [],
+      volumes: [],
     });
   });
 });

@@ -5,19 +5,19 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { screen } from '@testing-library/react';
 
 const props = {
+  accessDrawerOpen: false,
   classes: {
+    confirmationDialog: '',
+    createdCell: '',
     headline: '',
-    paper: '',
     helperText: '',
     labelCell: '',
-    createdCell: '',
-    confirmationDialog: '',
+    paper: '',
   },
-  isRestrictedUser: false,
-  accessDrawerOpen: false,
-  openAccessDrawer: jest.fn(),
   closeAccessDrawer: jest.fn(),
+  isRestrictedUser: false,
   mode: 'creating' as any,
+  openAccessDrawer: jest.fn(),
   ...pageyProps,
 };
 

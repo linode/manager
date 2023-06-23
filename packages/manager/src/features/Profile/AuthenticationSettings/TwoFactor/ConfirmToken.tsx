@@ -69,6 +69,6 @@ export const ConfirmToken = React.memo((props: Props) => {
 const StyledWarningNotice = styled(Notice, {
   label: 'StyledWarningNotice',
 })(({ theme }) => ({
-  marginTop: theme.spacing(2),
   marginLeft: '0 !important',
+  marginTop: theme.spacing(2),
 }));

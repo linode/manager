@@ -7,7 +7,7 @@ interface Props extends NoticeProps<any, any> {}
 type CombinedProps = Props;
 
 const NoOptionsMessage: React.FC<CombinedProps> = (props) => {
-  const { selectProps, innerProps, children } = props;
+  const { children, innerProps, selectProps } = props;
 
   return (
     <Typography

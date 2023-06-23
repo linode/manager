@@ -17,8 +17,8 @@ export type ReduxEntity = 'linodes' | 'events' | 'longview';
 type RequestMap = Record<ReduxEntity, any>;
 
 const requestMap: RequestMap = {
-  linodes: () => requestLinodes({}),
   events: getEvents,
+  linodes: () => requestLinodes({}),
   longview: getAllLongviewClients,
 };
 

@@ -7,10 +7,10 @@ type ClassNames = 'replyField';
 const styles = () =>
   createStyles({
     replyField: {
-      marginTop: 0,
       '& > div': {
         maxWidth: '100% !important',
       },
+      marginTop: 0,
     },
   });
 
@@ -25,7 +25,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TicketReply extends React.Component<CombinedProps> {
   render() {
-    const { placeholder, classes, value, handleChange, error } = this.props;
+    const { classes, error, handleChange, placeholder, value } = this.props;
 
     return (
       <TextField

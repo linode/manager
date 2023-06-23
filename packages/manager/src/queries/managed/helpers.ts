@@ -27,8 +27,8 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
         .then((ticket) => {
           return {
             ...thisIssue,
-            status: ticket.status,
             dateClosed: ticket.closed,
+            status: ticket.status,
           } as ExtendedIssue;
         })
         // If this fails, we'll just use a normal issue

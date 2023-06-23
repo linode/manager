@@ -6,34 +6,34 @@ import { Theme } from '@mui/material/styles';
 import PrimaryNav from './PrimaryNav/PrimaryNav';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  collapsedDesktopMenu: {
+    '&:hover': {
+      '& .primaryNavLink': {
+        opacity: 1,
+      },
+      overflowY: 'auto',
+      width: 190,
+    },
+    [theme.breakpoints.up('sm')]: {
+      overflowY: 'hidden',
+    },
+    width: 52,
+  },
+  desktopMenu: {
+    transform: 'none',
+  },
+  menuDocked: {
+    height: '100%',
+  },
   menuPaper: {
     backgroundColor: theme.bg.primaryNavPaper,
     borderRight: 'none',
     boxShadow: 'none',
     height: '100%',
-    width: 190,
     left: 'inherit',
     overflowX: 'hidden',
     transition: 'width linear .1s',
-  },
-  menuDocked: {
-    height: '100%',
-  },
-  desktopMenu: {
-    transform: 'none',
-  },
-  collapsedDesktopMenu: {
-    width: 52,
-    '&:hover': {
-      overflowY: 'auto',
-      width: 190,
-      '& .primaryNavLink': {
-        opacity: 1,
-      },
-    },
-    [theme.breakpoints.up('sm')]: {
-      overflowY: 'hidden',
-    },
+    width: 190,
   },
 }));
 
@@ -47,7 +47,7 @@ type CombinedProps = Props;
 
 export const SideMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { collapse, open, closeMenu } = props;
+  const { closeMenu, collapse, open } = props;
 
   return (
     <>
@@ -69,10 +69,10 @@ export const SideMenu: React.FC<CombinedProps> = (props) => {
       <Hidden mdDown implementation="css">
         <Drawer
           classes={{
+            docked: classes.menuDocked,
             paper: `${classes.menuPaper} ${
               collapse && classes.collapsedDesktopMenu
             }`,
-            docked: classes.menuDocked,
           }}
           className={classes.desktopMenu}
           open

@@ -9,7 +9,7 @@ interface Props {
   dataTestId?: string;
 }
 
-export const MetalNotice = ({ hasDisabledClass, dataTestId }: Props) => {
+export const MetalNotice = ({ dataTestId, hasDisabledClass }: Props) => {
   const { data: regions } = useRegionsQuery();
 
   // Until BM-426 is merged, we aren't filtering for regions in getDisabledClass

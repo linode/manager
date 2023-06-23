@@ -26,7 +26,7 @@ interface Props {
 }
 
 const PromoDialog = (props: Props) => {
-  const { open, onClose } = props;
+  const { onClose, open } = props;
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();

@@ -30,11 +30,11 @@ export const NodeBalancerDetail = () => {
   const [label, setLabel] = React.useState<string>();
 
   const {
-    mutateAsync: updateNodeBalancer,
     error: updateError,
+    mutateAsync: updateNodeBalancer,
   } = useNodebalancerUpdateMutation(id);
 
-  const { data: nodebalancer, isLoading, error } = useNodeBalancerQuery(id);
+  const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -95,13 +95,13 @@ export const NodeBalancerDetail = () => {
         docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
         breadcrumbProps={{
           firstAndLastOnly: true,
-          pathname: `/nodebalancers/${nodeBalancerLabel}`,
           onEditHandlers: {
             editableTextTitle: nodeBalancerLabel,
-            onEdit: (label) => updateNodeBalancer({ label }),
-            onCancel: cancelUpdate,
             errorText: labelError,
+            onCancel: cancelUpdate,
+            onEdit: (label) => updateNodeBalancer({ label }),
           },
+          pathname: `/nodebalancers/${nodeBalancerLabel}`,
         }}
       />
       {errorMap.none && <Notice error text={errorMap.none} />}

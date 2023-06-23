@@ -6,8 +6,8 @@ import { UserDefinedSelect } from './UserDefinedSelect';
 describe('UserDefinedSelect', () => {
   it('renders select when oneof has more than 4 options', () => {
     const field = {
-      name: 'selectField',
       label: 'Select Field',
+      name: 'selectField',
       oneof: 'option1,option2,option3,option4,option5',
     };
     const { getByLabelText, getByText } = renderWithTheme(
@@ -27,8 +27,8 @@ describe('UserDefinedSelect', () => {
 
   it('renders radio when oneof has 4 or fewer options', () => {
     const field = {
-      name: 'radioField',
       label: 'Radio Field',
+      name: 'radioField',
       oneof: 'option1,option2,option3,option4',
     };
     const updateFormState = jest.fn();
@@ -48,8 +48,8 @@ describe('UserDefinedSelect', () => {
 
   it('calls updateFormState when a new option is selected', () => {
     const field = {
-      name: 'selectField',
       label: 'Select Field',
+      name: 'selectField',
       oneof: 'option1,option2,option3,option4',
     };
     const updateFormState = jest.fn();

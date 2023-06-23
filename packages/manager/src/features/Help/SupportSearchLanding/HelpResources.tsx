@@ -21,37 +21,37 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    wrapper: {
-      marginTop: theme.spacing(4),
-    },
-    heading: {
-      textAlign: 'center',
-      marginBottom: theme.spacing(1),
-    },
     card: {
-      display: 'flex',
-      flexDirection: 'column',
       alignItems: 'center',
       backgroundColor: theme.color.white,
-      padding: theme.spacing(4),
       border: `1px solid ${theme.color.grey2}`,
+      display: 'flex',
+      flexDirection: 'column',
       height: '100%',
+      padding: theme.spacing(4),
     },
-    tileTitle: {
-      fontSize: '1.2rem',
-      marginTop: theme.spacing(1),
+    heading: {
       marginBottom: theme.spacing(1),
+      textAlign: 'center',
     },
     icon: {
-      margin: '0 auto 16px',
-      display: 'block',
-      padding: 16,
-      borderRadius: '50%',
       border: `2px solid ${theme.palette.divider}`,
-      width: 66,
-      height: 66,
+      borderRadius: '50%',
       color: theme.palette.primary.main,
+      display: 'block',
+      height: 66,
+      margin: '0 auto 16px',
+      padding: 16,
+      width: 66,
+    },
+    root: {},
+    tileTitle: {
+      fontSize: '1.2rem',
+      marginBottom: theme.spacing(1),
+      marginTop: theme.spacing(1),
+    },
+    wrapper: {
+      marginTop: theme.spacing(4),
     },
   });
 

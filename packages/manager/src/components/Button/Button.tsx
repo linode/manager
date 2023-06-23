@@ -35,20 +35,20 @@ const StyledButton = styled(_Button, {
   ...(props.buttonType === 'secondary' &&
     props.compactX && {
       minWidth: 50,
-      paddingRight: 0,
       paddingLeft: 0,
+      paddingRight: 0,
     }),
   ...(props.buttonType === 'secondary' &&
     props.compactY && {
       minHeight: 20,
-      paddingTop: 0,
       paddingBottom: 0,
+      paddingTop: 0,
     }),
   ...(props.loading && {
     '& svg': {
       animation: `${rotate360} 2s linear infinite`,
-      margin: '0 auto',
       height: `${theme.spacing(2)}`,
+      margin: '0 auto',
       width: `${theme.spacing(2)}`,
     },
     '&:disabled': {
@@ -59,12 +59,12 @@ const StyledButton = styled(_Button, {
 }));
 
 const Span = styled('span')({
-  display: 'flex',
-  alignItems: 'center',
   '@supports (-moz-appearance: none)': {
     /* Fix text alignment for Firefox */
     marginTop: 2,
   },
+  alignItems: 'center',
+  display: 'flex',
 });
 
 const Button = React.forwardRef<HTMLButtonElement, Props>(
@@ -81,8 +81,8 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
       disabled,
       loading,
       sx,
-      tooltipText,
       tooltipAnalyticsEvent,
+      tooltipText,
       ...rest
     }: Props,
     ref

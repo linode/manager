@@ -6,20 +6,20 @@ import { H1Header } from 'src/components/H1Header/H1Header';
 import { CombinedProps, SupportSearchLanding } from './SupportSearchLanding';
 
 const classes = {
-  root: '',
   backButton: '',
+  root: '',
   searchBar: '',
   searchBoxInner: '',
-  searchHeading: '',
   searchField: '',
+  searchHeading: '',
   searchIcon: '',
 };
 
 const props: CombinedProps = {
   classes,
   searchAlgolia: jest.fn(),
-  searchResults: [[], []],
   searchEnabled: true,
+  searchResults: [[], []],
   ...reactRouterProps,
 };
 

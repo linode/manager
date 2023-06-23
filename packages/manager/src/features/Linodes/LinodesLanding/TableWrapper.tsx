@@ -20,15 +20,15 @@ type CombinedProps<T> = Omit<OrderByProps<T>, 'data'> & Props;
 const TableWrapper = <T extends unknown>(props: CombinedProps<T>) => {
   const {
     dataLength,
+    handleOrderChange,
+    isVLAN,
+    linodeViewPreference,
+    linodesAreGrouped,
     order,
     orderBy,
-    handleOrderChange,
-    toggleLinodeView,
-    linodeViewPreference,
-    toggleGroupLinodes,
-    linodesAreGrouped,
-    isVLAN,
     tableProps,
+    toggleGroupLinodes,
+    toggleLinodeView,
   } = props;
 
   return (

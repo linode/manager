@@ -78,12 +78,12 @@ describe('useOrder hook', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
-          queryClient,
           MemoryRouter: {
             initialEntries: [
               'https://cloud.linode.com/account/maintenance?order=desc&orderBy=when',
             ],
           },
+          queryClient,
         }),
     });
 
@@ -92,7 +92,7 @@ describe('useOrder hook', () => {
   });
 
   it('use preferences are used when there are no query params', async () => {
-    const { waitFor, result } = renderHook(
+    const { result, waitFor } = renderHook(
       () => useOrder(defaultOrder, 'account-maintenance-order'),
       {
         wrapper: (ui) => wrapWithTheme(ui, { queryClient }),

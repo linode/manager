@@ -255,8 +255,8 @@ export const printInvoice = (
   } catch (e) {
     reportException(Error('Error while generating Invoice PDF.'), e);
     return {
-      status: 'error',
       error: e,
+      status: 'error',
     };
   }
 };
@@ -306,8 +306,8 @@ export const printPayment = (
   } catch (e) {
     reportException(Error('Error while generating Payment PDF.'), e);
     return {
-      status: 'error',
       error: e,
+      status: 'error',
     };
   }
 };

@@ -17,15 +17,15 @@ interface Props {
 
 export const CreateFolderDrawer = (props: Props) => {
   const {
-    open,
-    onClose,
     bucketName,
     clusterId,
     maybeAddObjectToTable,
+    onClose,
+    open,
     prefix,
   } = props;
 
-  const { mutateAsync, isLoading, error } = useCreateObjectUrlMutation(
+  const { error, isLoading, mutateAsync } = useCreateObjectUrlMutation(
     clusterId,
     bucketName
   );
@@ -34,20 +34,12 @@ export const CreateFolderDrawer = (props: Props) => {
     initialValues: {
       name: '',
     },
-    validate(values) {
-      if (values.name === '') {
-        return {
-          name: 'Folder name required.',
-        };
-      }
-      return {};
-    },
     async onSubmit({ name }, helpers) {
       const newObjectAbsolutePath = prefix + name + '/';
 
-      const { url, exists } = await mutateAsync({
-        name: newObjectAbsolutePath,
+      const { exists, url } = await mutateAsync({
         method: 'PUT',
+        name: newObjectAbsolutePath,
         options: {
           content_type: 'application/octet-stream',
         },
@@ -59,14 +51,22 @@ export const CreateFolderDrawer = (props: Props) => {
       }
 
       fetch(url, {
-        method: 'PUT',
         headers: {
           'Content-Type': 'application/octet-stream',
         },
+        method: 'PUT',
       });
 
       maybeAddObjectToTable(newObjectAbsolutePath, 0);
       onClose();
+    },
+    validate(values) {
+      if (values.name === '') {
+        return {
+          name: 'Folder name required.',
+        };
+      }
+      return {};
     },
   });
 

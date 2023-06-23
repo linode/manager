@@ -48,7 +48,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const pagination = usePagination(1);
 
-  const { data, isLoading, error, refetch } = useObjectStorageAccessKeys({
+  const { data, error, isLoading, refetch } = useObjectStorageAccessKeys({
     page: pagination.page,
     page_size: pagination.pageSize,
   });
@@ -82,7 +82,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const handleCreateKey = (
     values: ObjectStorageKeyRequest,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     // Clear out status (used for general errors)
     setStatus(null);
@@ -138,7 +138,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const handleEditKey = (
     values: ObjectStorageKeyRequest,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     // This shouldn't happen, but just in case.
     if (!keyToEdit) {

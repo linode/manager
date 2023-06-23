@@ -29,10 +29,10 @@ const ipNetmaskTooltipText =
   'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  ipSelect: {
+  actionSection: {
     marginTop: theme.spacing(2),
   },
-  actionSection: {
+  ipSelect: {
     marginTop: theme.spacing(2),
   },
 }));
@@ -42,23 +42,23 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
     const classes = useStyles();
 
     const {
-      values,
-      errors,
-      status,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-      setFieldValue,
       addressesLabel,
+      category,
+      errors,
+      handleBlur,
+      handleChange,
+      handleSubmit,
       ips,
-      setIPs,
-      presetPorts,
-      setPresetPorts,
       mode,
+      presetPorts,
       ruleErrors,
       setFieldError,
+      setFieldValue,
+      setIPs,
+      setPresetPorts,
+      status,
       touched,
-      category,
+      values,
     } = props;
 
     const hasCustomInput = presetPorts.some(

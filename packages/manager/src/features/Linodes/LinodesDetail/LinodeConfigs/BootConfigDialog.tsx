@@ -16,10 +16,10 @@ interface Props {
 }
 
 export const BootConfigDialog = (props: Props) => {
-  const { open, onClose, linodeId, config } = props;
+  const { config, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useRebootLinodeMutation(linodeId);
+  const { error, isLoading, mutateAsync } = useRebootLinodeMutation(linodeId);
 
   const onBoot = async () => {
     await mutateAsync({ config_id: config?.id ?? -1 });

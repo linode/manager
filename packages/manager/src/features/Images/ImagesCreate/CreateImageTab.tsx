@@ -25,24 +25,24 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(),
-    '& .MuiFormHelperText-root': {
-      marginBottom: theme.spacing(2),
-    },
-  },
   buttonGroup: {
-    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'flex-end',
     },
   },
-  rawDiskWarning: {
-    maxWidth: 600,
-    width: '100%',
+  cloudInitCheckboxWrapper: {
+    marginLeft: 3,
+    marginTop: theme.spacing(2),
+  },
+  container: {
+    '& .MuiFormHelperText-root': {
+      marginBottom: theme.spacing(2),
+    },
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(),
+    paddingTop: theme.spacing(2),
   },
   diskAndPrice: {
     '& > div': {
@@ -52,14 +52,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginBottom: theme.spacing(),
     marginTop: theme.spacing(2),
-    width: '80%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
+    width: '80%',
   },
-  cloudInitCheckboxWrapper: {
-    marginTop: theme.spacing(2),
-    marginLeft: 3,
+  rawDiskWarning: {
+    maxWidth: 600,
+    width: '100%',
   },
 }));
 
@@ -82,12 +82,12 @@ export interface Props {
 
 export const CreateImageTab: React.FC<Props> = (props) => {
   const {
-    label,
-    description,
-    isCloudInit,
-    changeLabel,
     changeDescription,
     changeIsCloudInit,
+    changeLabel,
+    description,
+    isCloudInit,
+    label,
   } = props;
 
   const classes = useStyles();
@@ -164,10 +164,10 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
     const safeDescription = description ?? '';
     createImage({
+      cloud_init: isCloudInit ? isCloudInit : undefined,
+      description: safeDescription,
       diskID: Number(selectedDisk),
       label,
-      description: safeDescription,
-      cloud_init: isCloudInit ? isCloudInit : undefined,
     })
       .then((_) => {
         resetEventsPolling();
@@ -218,11 +218,11 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
   const hasErrorFor = getAPIErrorFor(
     {
-      linode_id: 'Linode',
       disk_id: 'Disk',
+      label: 'Label',
+      linode_id: 'Linode',
       region: 'Region',
       size: 'Size',
-      label: 'Label',
     },
     errors
   );

@@ -30,9 +30,9 @@ export const DeleteDomain = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: deleteDomain,
     error,
     isLoading,
+    mutateAsync: deleteDomain,
   } = useDeleteDomainMutation(domainId);
 
   const [open, setOpen] = React.useState(false);

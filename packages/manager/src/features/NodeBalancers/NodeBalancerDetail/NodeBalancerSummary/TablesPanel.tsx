@@ -31,7 +31,7 @@ export const TablesPanel = () => {
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
 
-  const { data: stats, isLoading, error } = useNodeBalancerStats(
+  const { data: stats, error, isLoading } = useNodeBalancerStats(
     nodebalancer?.id ?? -1,
     nodebalancer?.created
   );
@@ -50,7 +50,7 @@ export const TablesPanel = () => {
       return (
         <ErrorState
           CustomIcon={PendingIcon}
-          CustomIconStyles={{ width: 64, height: 64 }}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -89,10 +89,10 @@ export const TablesPanel = () => {
             accessibleDataTable={{ unit: 'CXN/s' }}
             data={[
               {
-                label: 'Connections',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.purple,
+                borderColor: 'transparent',
                 data,
+                label: 'Connections',
               },
             ]}
           />
@@ -101,10 +101,10 @@ export const TablesPanel = () => {
           <MetricsDisplay
             rows={[
               {
-                legendTitle: 'Connections',
-                legendColor: 'purple',
                 data: metrics,
                 format: formatNumber,
+                legendColor: 'purple',
+                legendTitle: 'Connections',
               },
             ]}
           />
@@ -121,7 +121,7 @@ export const TablesPanel = () => {
       return (
         <ErrorState
           CustomIcon={PendingIcon}
-          CustomIconStyles={{ width: 64, height: 64 }}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -158,16 +158,16 @@ export const TablesPanel = () => {
             accessibleDataTable={{ unit: 'bits/s' }}
             data={[
               {
-                label: 'Traffic In',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.network.inbound,
+                borderColor: 'transparent',
                 data: trafficIn,
+                label: 'Traffic In',
               },
               {
-                label: 'Traffic Out',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.network.outbound,
+                borderColor: 'transparent',
                 data: trafficOut,
+                label: 'Traffic Out',
               },
             ]}
           />
@@ -176,16 +176,16 @@ export const TablesPanel = () => {
           <MetricsDisplay
             rows={[
               {
-                legendTitle: 'Inbound',
-                legendColor: 'darkGreen',
                 data: getMetrics(trafficIn),
                 format: formatBitsPerSecond,
+                legendColor: 'darkGreen',
+                legendTitle: 'Inbound',
               },
               {
-                legendTitle: 'Outbound',
-                legendColor: 'lightGreen',
                 data: getMetrics(trafficOut),
                 format: formatBitsPerSecond,
+                legendColor: 'lightGreen',
+                legendTitle: 'Outbound',
               },
             ]}
           />
@@ -230,27 +230,27 @@ const StyledTitle = styled(Typography, {
 const StyledChart = styled('div', {
   label: 'StyledChart',
 })(({ theme }) => ({
+  paddingLeft: theme.spacing(1),
   position: 'relative',
   width: '100%',
-  paddingLeft: theme.spacing(1),
 }));
 
 const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
 })(({ theme }) => ({
-  margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
-  padding: 10,
-  color: '#777',
   backgroundColor: theme.bg.offWhite,
   border: `1px solid ${theme.color.border3}`,
+  color: '#777',
   fontSize: 14,
+  margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
+  padding: 10,
 }));
 
 const StyledgGraphControls = styled(Typography, {
   label: 'StyledgGraphControls',
 })(({ theme }) => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   [theme.breakpoints.up('md')]: {
     margin: `${theme.spacing(2)} 0`,
   },
@@ -259,23 +259,23 @@ const StyledgGraphControls = styled(Typography, {
 const StyledPanel = styled(Paper, {
   label: 'StyledPanel',
 })(({ theme }) => ({
-  padding: theme.spacing(2),
   marginTop: theme.spacing(2),
+  padding: theme.spacing(2),
 }));
 
 const StyledEmptyText = styled(Typography, {
   label: 'StyledEmptyText',
 })(({ theme }) => ({
-  textAlign: 'center',
   marginTop: theme.spacing(),
+  textAlign: 'center',
 }));
 
 const Loading = () => (
   <div
     style={{
+      alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center',
       minHeight: 300,
     }}
   >

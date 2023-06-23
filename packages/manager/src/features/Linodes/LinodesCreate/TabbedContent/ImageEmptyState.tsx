@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const ImageEmptyState: React.FC<Props> = (props) => {
-  const { errorText, className } = props;
+  const { className, errorText } = props;
   const classes = useStyles();
 
   return (

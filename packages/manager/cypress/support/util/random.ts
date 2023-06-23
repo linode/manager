@@ -27,10 +27,10 @@ interface RandomStringOptions {
 // Default options for random string generation.
 const defaultRandomStringOptions = {
   lowercase: true,
-  uppercase: true,
   numbers: true,
-  symbols: false,
   spaces: false,
+  symbols: false,
+  uppercase: true,
 };
 
 /**
@@ -114,10 +114,10 @@ export const randomString = (
 export const randomLabel = (length: number = 10): string => {
   const randomStringOptions = {
     lowercase: true,
-    uppercase: false,
     numbers: false,
-    symbols: false,
     spaces: false,
+    symbols: false,
+    uppercase: false,
   };
 
   return `${entityPrefix}${randomString(length, randomStringOptions)}`;
@@ -191,10 +191,10 @@ export const randomPhrase = (count: number = 5): string => {
       const length = randomNumber(3, 9);
       return randomString(length, {
         lowercase: true,
-        uppercase: false,
         numbers: false,
-        symbols: false,
         spaces: false,
+        symbols: false,
+        uppercase: false,
       });
     })
     .join(' ');
@@ -212,10 +212,10 @@ export const randomPhrase = (count: number = 5): string => {
 export const randomUuid = (): string => {
   const randomStringOptions = {
     lowercase: false,
-    uppercase: true,
     numbers: true,
-    symbols: false,
     spaces: false,
+    symbols: false,
+    uppercase: true,
   };
 
   return [

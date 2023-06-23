@@ -28,16 +28,16 @@ jest.mock('@linode/api-v4/lib/account', () => {
 
   return {
     getInvoices: jest.fn().mockResolvedValue({
-      results: 2,
+      data: invoices,
       page: 1,
       pages: 1,
-      data: invoices,
+      results: 2,
     }),
     getPayments: jest.fn().mockResolvedValue({
-      results: 2,
+      data: payments,
       page: 1,
       pages: 1,
-      data: payments,
+      results: 2,
     }),
   };
 });
@@ -55,7 +55,7 @@ describe('BillingActivityPanel', () => {
   });
 
   it('renders a row for each payment and invoice', async () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <BillingActivityPanel />
     );
     await waitFor(() => {
@@ -67,7 +67,7 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by item type', async () => {
-    const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
+    const { queryAllByTestId, queryByTestId, queryByText } = renderWithTheme(
       <BillingActivityPanel />
     );
 
@@ -91,7 +91,7 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by transaction date', async () => {
-    const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
+    const { queryAllByTestId, queryByTestId, queryByText } = renderWithTheme(
       <BillingActivityPanel />
     );
 
@@ -134,7 +134,7 @@ describe('invoiceToActivityFeedItem', () => {
 
 describe('paymentToActivityFeedItem', () => {
   it('sets label as "Payment" if usd >= 0 ', () => {
-    const payment = paymentFactory.build({ usd: 0, id: 1 });
+    const payment = paymentFactory.build({ id: 1, usd: 0 });
     expect(paymentToActivityFeedItem(payment).label).toBe('Payment #1');
     expect(paymentToActivityFeedItem(payment).label).toBe('Payment #1');
   });
@@ -157,9 +157,9 @@ describe('paymentToActivityFeedItem', () => {
     it('returns the datetime of the range relative to given date', () => {
       const testDate = DateTime.fromObject(
         {
-          year: 2020,
-          month: 1,
           day: 1,
+          month: 1,
+          year: 2020,
         },
         { zone: 'utc' }
       );

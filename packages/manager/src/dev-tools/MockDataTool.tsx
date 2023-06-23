@@ -5,10 +5,10 @@ import { MockData, mockDataController } from './mockDataController';
 import ServiceWorkerTool from './ServiceWorkerTool';
 
 const options: { label: string; key: keyof MockData }[] = [
-  { label: 'Linodes', key: 'linode' },
-  { label: 'NodeBalancers', key: 'nodeBalancer' },
-  { label: 'Domains', key: 'domain' },
-  { label: 'Volumes', key: 'volume' },
+  { key: 'linode', label: 'Linodes' },
+  { key: 'nodeBalancer', label: 'NodeBalancers' },
+  { key: 'domain', label: 'Domains' },
+  { key: 'volume', label: 'Volumes' },
 ];
 
 const MockDataTool: React.FC<{}> = () => {
@@ -36,7 +36,7 @@ const MockDataTool: React.FC<{}> = () => {
   return (
     <Grid container>
       <Grid xs={12}>
-        <h4 style={{ marginTop: 0, marginBottom: 8 }}>Mock Data</h4>
+        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Mock Data</h4>
       </Grid>
       <Grid xs={12}>
         {options.map((thisOption) => {

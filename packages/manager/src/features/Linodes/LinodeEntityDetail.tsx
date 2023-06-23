@@ -61,7 +61,7 @@ export type Props = LinodeEntityDetailProps & {
 };
 
 const LinodeEntityDetail = (props: Props) => {
-  const { variant, linode, isSummaryView, openTagDrawer, handlers } = props;
+  const { handlers, isSummaryView, linode, openTagDrawer, variant } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -165,21 +165,17 @@ export interface HeaderProps {
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.bg.bgPaper,
-  },
-  linodeLabel: {
-    color: theme.textColors.linkActiveLight,
-    marginLeft: theme.spacing(),
-    '&:hover': {
-      color: theme.palette.primary.light,
-      textDecoration: 'underline',
+  actionItemsOuter: {
+    '&.MuiGrid-item': {
+      paddingRight: 0,
     },
+    alignItems: 'center',
+    display: 'flex',
   },
   body: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     padding: 0,
     width: '100%',
   },
@@ -190,22 +186,32 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  divider: {
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    paddingRight: `16px !important`,
+  },
+  linodeLabel: {
+    '&:hover': {
+      color: theme.palette.primary.light,
+      textDecoration: 'underline',
+    },
+    color: theme.textColors.linkActiveLight,
+    marginLeft: theme.spacing(),
+  },
+  root: {
+    backgroundColor: theme.bg.bgPaper,
+  },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    fontSize: '0.875rem',
-    letterSpacing: '.5px',
     borderRadius: 0,
+    fontSize: '0.875rem',
     height: `24px !important`,
+    letterSpacing: '.5px',
     marginLeft: theme.spacing(2),
   },
   statusChipLandingDetailView: {
     [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
-    },
-  },
-  statusRunning: {
-    '&:before': {
-      backgroundColor: theme.color.teal,
     },
   },
   statusOffline: {
@@ -218,15 +224,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.color.orange,
     },
   },
-  divider: {
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    paddingRight: `16px !important`,
-  },
-  actionItemsOuter: {
-    display: 'flex',
-    alignItems: 'center',
-    '&.MuiGrid-item': {
-      paddingRight: 0,
+  statusRunning: {
+    '&:before': {
+      backgroundColor: theme.color.teal,
     },
   },
 }));
@@ -236,18 +236,18 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
   const theme = useTheme();
 
   const {
-    linodeLabel,
-    linodeId,
-    linodeStatus,
-    linodeRegionDisplay,
     backups,
-    type,
-    variant,
+    handlers,
     isSummaryView,
+    linodeId,
+    linodeLabel,
+    linodeRegionDisplay,
+    linodeStatus,
+    openNotificationMenu,
     progress,
     transitionText,
-    openNotificationMenu,
-    handlers,
+    type,
+    variant,
   } = props;
 
   const isRunning = linodeStatus === 'running';
@@ -270,15 +270,15 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
     formattedTransitionText !== formattedStatus;
 
   const sxActionItem = {
+    '&:hover': {
+      backgroundColor: theme.color.blueDTwhite,
+      color: theme.color.white,
+    },
     color: theme.textColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '0.875rem',
     height: theme.spacing(5),
     minWidth: 'auto',
-    '&:hover': {
-      backgroundColor: theme.color.blueDTwhite,
-      color: theme.color.white,
-    },
   };
 
   const sxBoxFlex = {
@@ -300,12 +300,12 @@ const Header = (props: HeaderProps & { handlers: LinodeHandlers }) => {
         <Chip
           data-qa-linode-status
           className={classNames({
+            [classes.divider]: hasSecondaryStatus,
             [classes.statusChip]: true,
             [classes.statusChipLandingDetailView]: isSummaryView,
-            [classes.statusRunning]: isRunning,
             [classes.statusOffline]: isOffline,
             [classes.statusOther]: isOther,
-            [classes.divider]: hasSecondaryStatus,
+            [classes.statusRunning]: isRunning,
             statusOtherDetail: isOther,
           })}
           label={formattedStatus}
@@ -395,6 +395,13 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
+  rightColumn: {
+    flexBasis: '75%',
+    flexWrap: 'nowrap',
+    [theme.breakpoints.down('md')]: {
+      flexDirection: 'column',
+    },
+  },
   summaryContainer: {
     flexBasis: '25%',
   },
@@ -409,27 +416,20 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       color: theme.textColors.tableStatic,
     },
   },
-  rightColumn: {
-    flexBasis: '75%',
-    flexWrap: 'nowrap',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
 }));
 
 export const Body = React.memo((props: BodyProps) => {
   const classes = useBodyStyles();
   const {
-    numCPUs,
     gbRAM,
     gbStorage,
-    region,
     ipv4,
     ipv6,
-    linodeLabel,
     linodeId,
+    linodeLabel,
+    numCPUs,
     numVolumes,
+    region,
   } = props;
 
   const { data: profile } = useProfile();
@@ -486,8 +486,8 @@ export const Body = React.memo((props: BodyProps) => {
         justifyContent="space-between"
         spacing={2}
         sx={{
-          paddingRight: 0,
           paddingBottom: 0,
+          paddingRight: 0,
         }}
       >
         <AccessTable
@@ -537,20 +537,13 @@ export const Body = React.memo((props: BodyProps) => {
 // @todo: Maybe move this component somewhere to its own file? Could potentially
 // be used elsewhere.
 const useAccessTableStyles = makeStyles((theme: Theme) => ({
-  columnLabel: {
-    color: theme.textColors.headlineStatic,
-    fontFamily: theme.font.bold,
-  },
-  accessTableContent: {
-    '&.MuiGrid-item': {
-      padding: 0,
-      paddingLeft: theme.spacing(),
-    },
-  },
   accessTable: {
-    tableLayout: 'fixed',
-    '& tr': {
-      height: 32,
+    '& td': {
+      border: 'none',
+      borderBottom: `1px solid ${theme.bg.bgPaper}`,
+      fontSize: '0.875rem',
+      lineHeight: 1,
+      whiteSpace: 'nowrap',
     },
     '& th': {
       backgroundColor: theme.bg.app,
@@ -564,70 +557,77 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       whiteSpace: 'nowrap',
       width: 170,
     },
-    '& td': {
-      border: 'none',
-      borderBottom: `1px solid ${theme.bg.bgPaper}`,
-      fontSize: '0.875rem',
-      lineHeight: 1,
-      whiteSpace: 'nowrap',
+    '& tr': {
+      height: 32,
+    },
+    tableLayout: 'fixed',
+  },
+  accessTableContent: {
+    '&.MuiGrid-item': {
+      padding: 0,
+      paddingLeft: theme.spacing(),
     },
   },
   code: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: theme.bg.bgAccessRow,
-    color: theme.textColors.tableStatic,
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
-    padding: '4px 8px',
-    position: 'relative',
     '& div': {
       fontSize: 15,
     },
+    alignItems: 'center',
+    backgroundColor: theme.bg.bgAccessRow,
+    color: theme.textColors.tableStatic,
+    display: 'flex',
+    fontFamily: '"UbuntuMono", monospace, sans-serif',
+    justifyContent: 'space-between',
+    padding: '4px 8px',
+    position: 'relative',
   },
-  row: {
-    '&:hover $copy > svg, & $copy:focus > svg': {
-      opacity: 1,
-    },
-  },
-  copyCell: {
-    backgroundColor: theme.bg.lightBlue2,
-    height: 33,
-    width: 36,
-    padding: 0,
-    '& svg': {
-      height: 16,
-      width: 16,
-      '& path': {
-        fill: theme.textColors.linkActiveLight,
-      },
-    },
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      '& svg path': {
-        fill: '#fff',
-      },
-    },
+  columnLabel: {
+    color: theme.textColors.headlineStatic,
+    fontFamily: theme.font.bold,
   },
   copy: {
     '& svg': {
       height: `12px`,
-      width: `12px`,
       opacity: 0,
+      width: `12px`,
     },
   },
+  copyCell: {
+    '& svg': {
+      '& path': {
+        fill: theme.textColors.linkActiveLight,
+      },
+      height: 16,
+      width: 16,
+    },
+    '&:hover': {
+      '& svg path': {
+        fill: '#fff',
+      },
+      backgroundColor: '#3683dc',
+    },
+    backgroundColor: theme.bg.lightBlue2,
+    height: 33,
+    padding: 0,
+    width: 36,
+  },
   gradient: {
-    overflowY: 'hidden', // For Edge
-    overflowX: 'auto',
-    paddingRight: 15,
     '&:after': {
+      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.bg.bgAccessRow});`,
+      bottom: 0,
       content: '""',
-      width: 30,
       height: '100%',
       position: 'absolute',
       right: 0,
-      bottom: 0,
-      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.bg.bgAccessRow});`,
+      width: 30,
+    },
+    overflowX: 'auto',
+    overflowY: 'hidden', // For Edge
+    paddingRight: 15,
+  },
+  row: {
+    '&:hover $copy > svg, & $copy:focus > svg': {
+      opacity: 1,
     },
   },
 }));
@@ -702,10 +702,10 @@ export const Footer = React.memo((props: FooterProps) => {
   const { data: profile } = useProfile();
 
   const {
+    linodeCreated,
+    linodeId,
     linodePlan,
     linodeRegionDisplay,
-    linodeId,
-    linodeCreated,
     linodeTags,
     openTagDrawer,
   } = props;
@@ -729,15 +729,15 @@ export const Footer = React.memo((props: FooterProps) => {
   );
 
   const sxListItemMdBp = {
-    flex: '50%',
     borderRight: 0,
+    flex: '50%',
     padding: 0,
   };
 
   const sxListItem = {
-    display: 'flex',
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     color: theme.textColors.tableStatic,
+    display: 'flex',
     padding: `0px 10px`,
     [theme.breakpoints.down('md')]: {
       ...sxListItemMdBp,
@@ -759,8 +759,8 @@ export const Footer = React.memo((props: FooterProps) => {
   };
 
   const sxBox = {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     [theme.breakpoints.down('md')]: {
       alignItems: 'flex-start',
       flexDirection: 'column',
@@ -780,8 +780,8 @@ export const Footer = React.memo((props: FooterProps) => {
       justifyContent="space-between"
       spacing={2}
       sx={{
-        padding: 0,
         flex: 1,
+        padding: 0,
       }}
     >
       <Grid
@@ -791,12 +791,12 @@ export const Footer = React.memo((props: FooterProps) => {
         sx={{
           display: 'flex',
           padding: 0,
+          [theme.breakpoints.down('lg')]: {
+            padding: '8px',
+          },
           [theme.breakpoints.down('md')]: {
             display: 'grid',
             gridTemplateColumns: '50% 2fr',
-          },
-          [theme.breakpoints.down('lg')]: {
-            padding: '8px',
           },
         }}
       >
@@ -868,10 +868,10 @@ export const Footer = React.memo((props: FooterProps) => {
           listAllTags={openTagDrawer}
           sx={{
             [theme.breakpoints.down('lg')]: {
-              flexDirection: 'row-reverse',
               '& > button': {
                 marginRight: theme.spacing(0.5),
               },
+              flexDirection: 'row-reverse',
             },
           }}
         />

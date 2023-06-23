@@ -45,12 +45,12 @@ HTMLCanvasElement.prototype.getContext = () => {
  */
 
 jest.mock('chart.js', () => ({
-  Chart: jest.fn(),
   _adapters: {
     _date: {
       override: jest.fn(),
     },
   },
+  Chart: jest.fn(),
   defaults: {
     global: {
       defaultFontFamily: '',
@@ -63,7 +63,7 @@ jest.mock('chart.js', () => ({
 jest.mock('highlight.js/lib/highlight', () => ({
   default: {
     configure: jest.fn(),
-    registerLanguage: jest.fn(),
     highlightBlock: jest.fn(),
+    registerLanguage: jest.fn(),
   },
 }));

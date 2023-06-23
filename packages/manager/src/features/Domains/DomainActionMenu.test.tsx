@@ -5,9 +5,9 @@ import { domainFactory } from 'src/factories/domain';
 
 const props = {
   onClone: jest.fn(),
-  onRemove: jest.fn(),
-  onEdit: jest.fn(),
   onDisableOrEnable: jest.fn(),
+  onEdit: jest.fn(),
+  onRemove: jest.fn(),
 };
 
 describe('Domain action menu', () => {

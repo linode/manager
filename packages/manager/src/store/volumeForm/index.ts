@@ -122,7 +122,7 @@ export const openForResize = (
   volumeId: number,
   volumeSize: number,
   volumeLabel: string
-): Resizing => ({ type: RESIZING, volumeId, volumeSize, volumeLabel });
+): Resizing => ({ type: RESIZING, volumeId, volumeLabel, volumeSize });
 
 interface Cloning extends Action {
   type: typeof CLONING;
@@ -142,8 +142,8 @@ export const openForClone = (
     type: CLONING,
     volumeId,
     volumeLabel,
-    volumeSize,
     volumeRegion,
+    volumeSize,
   };
 };
 interface Attaching extends Action {
@@ -159,10 +159,10 @@ export const openForAttaching = (
   linodeLabel: string
 ): Attaching => {
   return {
-    type: ATTACHING,
     linodeId,
-    linodeRegion,
     linodeLabel,
+    linodeRegion,
+    type: ATTACHING,
   };
 };
 
@@ -179,17 +179,17 @@ export const openForConfig = (
   message?: string
 ): ViewingConfig => {
   return {
+    message,
     type: VIEWING_CONFIG,
     volumeLabel,
     volumePath,
-    message,
   };
 };
 
 export const defaultState: State = {
   mode: modes.CLOSED,
-  volumeLabel: undefined,
   volumeId: undefined,
+  volumeLabel: undefined,
   volumeSize: undefined,
 };
 
@@ -224,23 +224,23 @@ export const volumeForm: Reducer<State> = (
 
     return {
       ...state,
-      mode: getMode(action),
-      origin: 'Created from Linode Details',
       linodeId,
       linodeLabel,
       linodeRegion,
+      mode: getMode(action),
+      origin: 'Created from Linode Details',
     };
   }
 
   if (isType(action, viewResizeInstructions)) {
     const {
-      payload: { volumeLabel, message },
+      payload: { message, volumeLabel },
     } = action;
     return {
       ...state,
+      message,
       mode: getMode(action),
       volumeLabel,
-      message,
     };
   }
 
@@ -255,10 +255,10 @@ export const volumeForm: Reducer<State> = (
     case CREATING_FOR_LINODE:
       return {
         ...defaultState,
-        mode: modes.CREATING_FOR_LINODE,
         linodeId: action.linodeId,
         linodeLabel: action.linodeLabel,
         linodeRegion: action.linodeRegion,
+        mode: modes.CREATING_FOR_LINODE,
       };
 
     case EDITING:
@@ -275,36 +275,36 @@ export const volumeForm: Reducer<State> = (
         ...defaultState,
         mode: modes.RESIZING,
         volumeId: action.volumeId,
-        volumeSize: action.volumeSize,
         volumeLabel: action.volumeLabel,
+        volumeSize: action.volumeSize,
       };
 
     case CLONING:
       return {
         ...defaultState,
+        mode: modes.CLONING,
         volumeId: action.volumeId,
         volumeLabel: action.volumeLabel,
         volumeRegion: action.volumeRegion,
         volumeSize: action.volumeSize,
-        mode: modes.CLONING,
       };
 
     case ATTACHING:
       return {
         ...defaultState,
         linodeId: action.linodeId,
-        linodeRegion: action.linodeRegion,
         linodeLabel: action.linodeLabel,
+        linodeRegion: action.linodeRegion,
         mode: modes.ATTACHING,
       };
 
     case VIEWING_CONFIG:
       return {
         ...defaultState,
-        volumeLabel: action.volumeLabel,
-        volumePath: action.volumePath,
         message: action.message,
         mode: modes.VIEWING_CONFIG,
+        volumeLabel: action.volumeLabel,
+        volumePath: action.volumePath,
       };
 
     default:

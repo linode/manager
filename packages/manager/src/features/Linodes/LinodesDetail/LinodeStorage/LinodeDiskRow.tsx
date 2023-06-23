@@ -11,26 +11,26 @@ import { useEvents } from 'src/hooks/useEvents';
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  diskLabel: {
-    width: '20%',
-  },
-  diskType: {
-    width: '10%',
-  },
-  diskSize: {
-    width: '15%',
+  bar: {
+    paddingLeft: theme.spacing(),
+    width: 250,
   },
   diskCreated: {
     width: '20%',
   },
+  diskLabel: {
+    width: '20%',
+  },
+  diskSize: {
+    width: '15%',
+  },
+  diskType: {
+    width: '10%',
+  },
   progressBar: {
+    alignItems: 'center',
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
-  },
-  bar: {
-    paddingLeft: theme.spacing(),
-    width: 250,
   },
 }));
 
@@ -52,17 +52,17 @@ export const LinodeDiskRow = React.memo((props: Props) => {
     disk,
     linodeId,
     linodeStatus,
-    readOnly,
     onDelete,
     onImagize,
     onRename,
     onResize,
+    readOnly,
   } = props;
 
   const diskEventLabelMap = {
     disk_create: 'Creating',
-    disk_resize: 'Resizing',
     disk_delete: 'Deleting',
+    disk_resize: 'Resizing',
   };
 
   const diskEventsToShowProgressFor = Object.keys(diskEventLabelMap);

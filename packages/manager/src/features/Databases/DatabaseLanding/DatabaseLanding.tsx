@@ -26,17 +26,17 @@ const DatabaseLanding = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'desc',
+      orderBy: 'label',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
   const { data, error, isLoading } = useDatabasesQuery(

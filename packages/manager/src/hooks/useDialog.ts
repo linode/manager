@@ -121,10 +121,10 @@ export const useDialog = <T extends string | number | undefined>(
   }, []);
 
   return {
-    dialog: { isOpen, isLoading, error, entityLabel, entityID },
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog: { entityID, entityLabel, error, isLoading, isOpen },
     handleError,
+    openDialog,
+    submitDialog,
   };
 };

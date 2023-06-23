@@ -29,7 +29,7 @@ export const useOpenClose = (
 
   const isOpen = entity.open;
 
-  return { isOpen, open, close };
+  return { close, isOpen, open };
 };
 
 export default useOpenClose;

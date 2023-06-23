@@ -62,12 +62,12 @@ export const IdentifyUser = () => {
       if (client && userID && country && username && _taxID) {
         client
           .identify({
-            key: md5(String(userID)),
-            name: username,
             country,
             custom: {
               taxID: _taxID,
             },
+            key: md5(String(userID)),
+            name: username,
             privateAttributeNames: ['country', 'taxID'],
           })
           .then(() => setFeatureFlagsLoaded())

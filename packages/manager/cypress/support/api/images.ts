@@ -12,7 +12,7 @@ export const createMockImage = (
   id = 'private/99999999'
 ) => {
   return makeResourcePage(
-    imageFactory.buildList(1, { eol, label, id, ...data })
+    imageFactory.buildList(1, { eol, id, label, ...data })
   );
 };
 
@@ -23,7 +23,7 @@ export const createMockImage = (
  */
 export const deleteAllTestImages = async (): Promise<void> => {
   const images = await depaginate<Image>((page: number) =>
-    getImages({ page_size: pageSize, page })
+    getImages({ page, page_size: pageSize })
   );
   const imageDeletePromises = images
     .filter((image: Image) => isTestLabel(image.label))

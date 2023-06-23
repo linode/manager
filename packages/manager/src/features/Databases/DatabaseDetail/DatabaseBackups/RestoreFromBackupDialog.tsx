@@ -23,7 +23,7 @@ interface Props extends Omit<DialogProps, 'title'> {
 }
 
 export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
-  const { database, backup, onClose, open, ...rest } = props;
+  const { backup, database, onClose, open, ...rest } = props;
 
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -34,9 +34,9 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
 
   const {
-    mutateAsync: restore,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: restore,
   } = useRestoreFromBackupMutation(database.engine, database.id, backup.id);
 
   const handleRestoreDatabase = () => {

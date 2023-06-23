@@ -33,7 +33,7 @@ export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
      * 'location.hash = `#access_token=something&token_type=Admin&destination=linodes/1234`
      *
      */
-    const { location, history } = this.props;
+    const { history, location } = this.props;
 
     /**
      * If the hash doesn't contain a string after the #, there's no point continuing as we dont have
@@ -51,8 +51,8 @@ export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
     const {
       access_token: accessToken,
       destination,
-      token_type: tokenType,
       expires_in: expiresIn,
+      token_type: tokenType,
     } = hashParams;
 
     /** If the access token wasn't returned, something is wrong and we should bail. */
@@ -103,11 +103,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
     dispatchStartSession: (token, tokenType, expires) =>
       dispatch(
         handleStartSession({
+          expires,
+          scopes: '*',
           token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
             1
           )} ${token}`,
-          scopes: '*',
-          expires,
         })
       ),
   };

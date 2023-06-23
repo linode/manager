@@ -8,19 +8,19 @@ import { Theme } from '@mui/material/styles';
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    '& .MuiDialogTitle-root': {
-      marginBottom: 10,
+  actions: {
+    '& button': {
+      marginBottom: 0,
     },
+    justifyContent: 'flex-end',
   },
   error: {
     color: '#C44742',
     marginTop: theme.spacing(2),
   },
-  actions: {
-    justifyContent: 'flex-end',
-    '& button': {
-      marginBottom: 0,
+  root: {
+    '& .MuiDialogTitle-root': {
+      marginBottom: 10,
     },
   },
 }));
@@ -35,7 +35,7 @@ export interface ConfirmationDialogProps extends DialogProps {
 export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const { classes } = useStyles();
 
-  const { title, children, actions, error, onClose, ...dialogProps } = props;
+  const { actions, children, error, onClose, title, ...dialogProps } = props;
 
   return (
     <Dialog

@@ -19,7 +19,7 @@ describe('SSHKeys', () => {
       })
     );
 
-    const { getByText, getByTestId } = renderWithTheme(<SSHKeys />);
+    const { getByTestId, getByText } = renderWithTheme(<SSHKeys />);
 
     // Check for table headers
     getByText('Label');

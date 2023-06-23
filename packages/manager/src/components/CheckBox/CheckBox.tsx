@@ -15,7 +15,7 @@ interface Props extends CheckboxProps {
 }
 
 const LinodeCheckBox = (props: Props) => {
-  const { toolTipInteractive, toolTipText, text, sxFormLabel, ...rest } = props;
+  const { sxFormLabel, text, toolTipInteractive, toolTipText, ...rest } = props;
 
   if (props.text) {
     return (
@@ -58,25 +58,25 @@ const LinodeCheckBox = (props: Props) => {
 export default LinodeCheckBox;
 
 const StyledCheckbox = styled(Checkbox)(({ theme, ...props }) => ({
-  color: '#ccc',
-  transition: theme.transitions.create(['color']),
   '& .defaultFill': {
     transition: theme.transitions.create(['fill']),
   },
   '&:hover': {
     color: theme.palette.primary.main,
   },
+  color: '#ccc',
+  transition: theme.transitions.create(['color']),
   ...(props.checked && {
     color: theme.palette.primary.main,
   }),
   ...(props.disabled && {
+    '& .defaultFill': {
+      fill: `${theme.bg.main}`,
+      opacity: 0.5,
+    },
     color: '#ccc !important',
     fill: `${theme.bg.main} !important`,
     pointerEvents: 'none',
-    '& .defaultFill': {
-      opacity: 0.5,
-      fill: `${theme.bg.main}`,
-    },
   }),
 }));
 

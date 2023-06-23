@@ -41,12 +41,12 @@ export const FirewallDetail = () => {
 
   const tabs = [
     {
-      title: 'Rules',
       routeName: `${url}/rules`,
+      title: 'Rules',
     },
     {
-      title: 'Linodes',
       routeName: `${url}/linodes`,
+      title: 'Linodes',
     },
   ];
 
@@ -58,11 +58,11 @@ export const FirewallDetail = () => {
     history.push(tabs[index].routeName);
   };
 
-  const { data: firewall, isLoading, error } = useFirewallQuery(firewallId);
+  const { data: firewall, error, isLoading } = useFirewallQuery(firewallId);
 
   const {
-    mutateAsync: updateFirewall,
     error: updateError,
+    mutateAsync: updateFirewall,
     reset,
   } = useMutateFirewall(firewallId);
 
@@ -101,13 +101,13 @@ export const FirewallDetail = () => {
         docsLabel="Docs"
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
         breadcrumbProps={{
-          pathname: location.pathname,
           onEditHandlers: {
             editableTextTitle: firewall.label,
-            onEdit: handleLabelChange,
-            onCancel: resetEditableLabel,
             errorText,
+            onCancel: resetEditableLabel,
+            onEdit: handleLabelChange,
           },
+          pathname: location.pathname,
         }}
       />
       <Tabs

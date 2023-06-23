@@ -42,11 +42,28 @@ import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { getImageLabelForLinode } from '../Images/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: 0,
-    '&.MuiGrid-container': {
-      width: 'calc(100% + 16px)',
+  emptyResult: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
+    [theme.breakpoints.down('md')]: {
+      padding: theme.spacing(4),
     },
+  },
+  emptyResultWrapper: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
+  },
+  errorIcon: {
+    color: theme.palette.text.primary,
+    height: 60,
+    marginBottom: theme.spacing(4),
+    width: 60,
   },
   headline: {
     marginBottom: theme.spacing(),
@@ -54,39 +71,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(),
     },
   },
-  emptyResultWrapper: {
-    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyResult: {
-    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      padding: theme.spacing(4),
+  root: {
+    '&.MuiGrid-container': {
+      width: 'calc(100% + 16px)',
     },
-  },
-  errorIcon: {
-    width: 60,
-    height: 60,
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing(4),
+    padding: 0,
   },
 }));
 
 const displayMap = {
-  linodes: 'Linodes',
+  buckets: 'Buckets',
   domains: 'Domains',
-  volumes: 'Volumes',
-  nodebalancers: 'NodeBalancers',
   images: 'Images',
   kubernetesClusters: 'Kubernetes',
-  buckets: 'Buckets',
+  linodes: 'Linodes',
+  nodebalancers: 'NodeBalancers',
+  volumes: 'Volumes',
 };
 
 export type CombinedProps = SearchProps & RouteComponentProps<{}>;
@@ -107,8 +107,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const {
     data: objectStorageClusters,
-    isLoading: areClustersLoading,
     error: objectStorageClustersError,
+    isLoading: areClustersLoading,
   } = useObjectStorageClusters(!_isLargeAccount);
 
   const {
@@ -136,14 +136,14 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const {
     data: volumes,
-    isLoading: areVolumesLoading,
     error: volumesError,
+    isLoading: areVolumesLoading,
   } = useAllVolumesQuery({}, {}, !_isLargeAccount);
 
   const {
     data: _privateImages,
-    isLoading: areImagesLoading,
     error: imagesError,
+    isLoading: areImagesLoading,
   } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
 
   const { data: publicImages } = useAllImagesQuery(

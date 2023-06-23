@@ -26,15 +26,15 @@ export const LinodesLandingEmptyState = () => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Linode',
           onClick: () => {
             push('/linodes/create');
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Linode',
             });
           },
-          children: 'Create Linode',
         },
       ]}
       CustomResource={() => (

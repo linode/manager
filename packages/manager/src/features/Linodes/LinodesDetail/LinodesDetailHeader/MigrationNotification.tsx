@@ -37,20 +37,20 @@ const MigrationNotification: React.FC<Props> = (props) => {
 
   const {
     linodeID,
-    requestNotifications,
+    migrationTime,
     notificationMessage,
     notificationType,
-    migrationTime,
+    requestNotifications,
   } = props;
 
   const { data: profile } = useProfile();
 
   const {
-    dialog,
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog,
     handleError,
+    openDialog,
+    submitDialog,
   } = useDialog<number>((linodeID: number) =>
     scheduleOrQueueMigration(linodeID)
   );

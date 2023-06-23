@@ -85,8 +85,8 @@ export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
 
   return {
     dismissNotifications,
-    hasDismissedNotifications,
     dismissedNotifications,
+    hasDismissedNotifications,
   };
 };
 
@@ -111,9 +111,9 @@ export const updateDismissedNotifications = (
   notificationsToDismiss.forEach((thisNotification) => {
     const hashKey = getHashKey(thisNotification, options.prefix);
     newNotifications[hashKey] = {
-      id: hashKey,
       created: DateTime.utc().toISO(),
       expiry: options.expiry,
+      id: hashKey,
       label: options.label || options.prefix || undefined,
     };
   });

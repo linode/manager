@@ -67,9 +67,9 @@ export const mockCreateBucket = (
     'POST',
     apiMatcher('object-storage/buckets'),
     objectStorageBucketFactory.build({
-      label,
       cluster,
       hostname: `${label}.${cluster}.linodeobjects.com`,
+      label,
     })
   );
 };
@@ -127,8 +127,8 @@ export const mockDeleteBucket = (
     'DELETE',
     apiMatcher(`object-storage/buckets/${cluster}/${label}`),
     {
-      statusCode,
       body: {},
+      statusCode,
     }
   );
 };
@@ -155,12 +155,12 @@ export const mockGetBucketObjects = (
       `object-storage/buckets/${cluster}/${label}/object-list?delimiter=%2F&prefix=`
     ),
     {
-      statusCode,
       body: {
         data,
-        next_marker: null,
         is_truncated: false,
+        next_marker: null,
       },
+      statusCode,
     }
   );
 };
@@ -187,11 +187,11 @@ export const mockUploadBucketObject = (
   statusCode: number = 200
 ): Cypress.Chainable<null> => {
   const mockResponse = {
-    statusCode,
     body: data || {
-      url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
       exists: false,
+      url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
     },
+    statusCode,
   };
 
   return cy.intercept(
@@ -260,8 +260,8 @@ export const mockDeleteBucketObject = (
     'POST',
     apiMatcher(`object-storage/buckets/${cluster}/${label}/object-url`),
     {
-      url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
       exists: true,
+      url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
     }
   );
 };
@@ -311,8 +311,8 @@ export const mockGetAccessKeys = (
   response: Partial<Response>
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('object-storage/keys*'), {
-    statusCode: 200,
     body: {},
+    statusCode: 200,
     ...response,
   });
 };
@@ -337,8 +337,8 @@ export const mockCreateAccessKey = (
   response: Partial<Response>
 ): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher('object-storage/keys'), {
-    statusCode: 200,
     body: {},
+    statusCode: 200,
     ...response,
   });
 };
@@ -352,7 +352,7 @@ export const mockCreateAccessKey = (
  */
 export const mockDeleteAccessKey = (keyId: number): Cypress.Chainable<null> => {
   return cy.intercept('DELETE', apiMatcher(`object-storage/keys/${keyId}`), {
-    statusCode: 200,
     body: {},
+    statusCode: 200,
   });
 };

@@ -135,32 +135,32 @@ type CombinedProps = WithSnackbarProps &
   WithAccountSettingsProps;
 
 const defaultState: State = {
-  privateIPEnabled: false,
+  appInstancesLoading: false,
+  attachedVLANLabel: '',
+  authorized_users: [],
   backupsEnabled: false,
+  disabledClasses: [],
+  errors: undefined,
+  formIsSubmitting: false,
   label: '',
   password: '',
-  selectedImageID: undefined,
+  privateIPEnabled: false,
   selectedBackupID: undefined,
   selectedDiskSize: undefined,
+  selectedImageID: undefined,
   selectedLinodeID: undefined,
+  selectedRegionID: '',
   selectedStackScriptID: undefined,
   selectedStackScriptLabel: '',
   selectedStackScriptUsername: '',
-  selectedRegionID: '',
   selectedTypeID: undefined,
-  tags: [],
-  authorized_users: [],
-  udfs: undefined,
   showAgreement: false,
-  signedAgreement: false,
-  formIsSubmitting: false,
-  errors: undefined,
-  appInstancesLoading: false,
-  attachedVLANLabel: '',
-  vlanIPAMAddress: null,
   showApiAwarenessModal: false,
+  signedAgreement: false,
+  tags: [],
+  udfs: undefined,
   userData: undefined,
-  disabledClasses: [],
+  vlanIPAMAddress: null,
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -204,24 +204,24 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   state: State = {
     ...defaultState,
-    // These can be passed in as query params
-    selectedTypeID: this.params.typeID,
-    selectedRegionID: this.params.regionID,
+    disabledClasses: [],
+    selectedBackupID: isNaN(+this.params.backupID)
+      ? undefined
+      : +this.params.backupID,
     selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
     // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean. UPDATE 3/16/23 lol what
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined
       : +this.params.linodeID,
-    selectedBackupID: isNaN(+this.params.backupID)
-      ? undefined
-      : +this.params.backupID,
+    selectedRegionID: this.params.regionID,
+    // These can be passed in as query params
+    selectedTypeID: this.params.typeID,
     showAgreement: Boolean(
       !this.props.profile.data?.restricted &&
         isEURegion(this.params.regionID) &&
         !this.props.agreements?.data?.eu_model
     ),
     signedAgreement: false,
-    disabledClasses: [],
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -267,14 +267,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           trimOneClickFromLabel(stackscript)
         );
         this.setState({
-          appInstancesLoading: false,
           appInstances: trimmedApps,
+          appInstancesLoading: false,
         });
       })
       .catch((_) => {
         this.setState({
-          appInstancesLoading: false,
           appInstancesError: 'There was an error loading Marketplace Apps.',
+          appInstancesLoading: false,
         });
       });
   }
@@ -287,8 +287,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (typeof id === 'undefined') {
       /** In this case we also clear any VLAN input, since VLANs are incompatible with empty Linodes */
       return this.setState({
-        selectedImageID: undefined,
         attachedVLANLabel: '',
+        selectedImageID: undefined,
         vlanIPAMAddress: '',
       });
     }
@@ -303,13 +303,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   setRegionID = (id: string) => {
     const disabledClasses = getDisabledClasses(id, this.props.regionsData);
     this.setState({
+      disabledClasses,
       selectedRegionID: id,
       showAgreement: Boolean(
         !this.props.profile.data?.restricted &&
           isEURegion(id) &&
           !this.props.agreements?.data?.eu_model
       ),
-      disabledClasses,
     });
   };
 
@@ -318,10 +318,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       // VLANs and backups don't work with bare metal;
       // reset those values.
       this.setState({
-        selectedTypeID: id,
-        vlanIPAMAddress: '',
         attachedVLANLabel: '',
         backupsEnabled: false,
+        selectedTypeID: id,
+        vlanIPAMAddress: '',
       });
     } else {
       this.setState({
@@ -351,11 +351,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         id
       );
       this.setState({
-        selectedLinodeID: id,
-        selectedDiskSize: diskSize,
-        selectedTypeID: undefined,
         selectedBackupID: undefined,
+        selectedDiskSize: diskSize,
+        selectedLinodeID: id,
         selectedRegionID,
+        selectedTypeID: undefined,
       });
     }
   };
@@ -380,15 +380,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       : label;
 
     this.setState({
+      availableStackScriptImages: images,
+      availableUserDefinedFields: userDefinedFields,
+      errors: undefined,
+      /** reset image because stackscript might not be compatible with selected one */
+      selectedImageID: defaultImage,
       selectedStackScriptID: id,
       selectedStackScriptLabel: stackScriptLabel,
       selectedStackScriptUsername: username,
-      availableUserDefinedFields: userDefinedFields,
-      availableStackScriptImages: images,
       udfs: defaultData,
-      /** reset image because stackscript might not be compatible with selected one */
-      selectedImageID: defaultImage,
-      errors: undefined,
     });
   };
 
@@ -432,8 +432,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
-      selectedLinodeID,
       selectedImageID,
+      selectedLinodeID,
       selectedRegionID,
       selectedStackScriptLabel,
     } = this.state;
@@ -547,8 +547,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         () => ({
           errors: [
             {
-              reason: 'You must select a Linode to clone from',
               field: 'linode_id',
+              reason: 'You must select a Linode to clone from',
             },
           ],
         }),
@@ -574,8 +574,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         () => ({
           errors: [
             {
-              reason: 'You must select a StackScript.',
               field: 'stackscript_id',
+              reason: 'You must select a StackScript.',
             },
           ],
         }),
@@ -588,8 +588,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         () => ({
           errors: [
             {
-              reason: 'You must select a Marketplace App.',
               field: 'stackscript_id',
+              reason: 'You must select a Marketplace App.',
             },
           ],
         }),
@@ -614,10 +614,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             APIError[],
             Partial<Agreements>
           >({
-            variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
             mutationKey: accountAgreementsQueryKey,
             onError: reportAgreementSigningError,
+            variables: { eu_model: true, privacy_policy: true },
             ...simpleMutationHandlers(
               accountAgreementsQueryKey,
               this.props.queryClient
@@ -697,11 +697,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     return (
       type && {
-        title: type.formattedLabel,
-        details: `$${type.price.monthly}/month`,
-        monthly: type.price.monthly ?? 0,
-        hourly: type.price.hourly ?? 0,
         backupsMonthly: type.addons.backups.price.monthly,
+        details: `$${type.price.monthly}/month`,
+        hourly: type.price.hourly ?? 0,
+        monthly: type.price.monthly ?? 0,
+        title: type.formattedLabel,
       }
     );
   };
@@ -737,15 +737,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       return undefined;
     }
 
-    const { vendor, label } = selectedImage;
+    const { label, vendor } = selectedImage;
 
     return { title: `${label ? label : vendor ? vendor : ''}` };
   };
 
   render() {
     const {
-      profile,
       grants,
+      profile,
       regionsData,
       typesData,
       ...restOfProps
@@ -832,8 +832,8 @@ export default recompose<CombinedProps, {}>(
   withImages,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
-    linodesLoading,
     linodesError,
+    linodesLoading,
   })),
   withRegions,
   withTypes,

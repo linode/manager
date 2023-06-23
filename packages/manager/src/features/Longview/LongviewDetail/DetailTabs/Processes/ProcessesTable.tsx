@@ -19,10 +19,10 @@ import { Process } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   processName: {
+    alignItems: 'center',
     display: 'flex',
     flexFlow: 'row nowrap',
     wordBreak: 'break-all',
-    alignItems: 'center',
   },
   tableModifier: {
     '& tbody': {
@@ -33,20 +33,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& thead': {
       '& th': {
-        borderTop: `2px solid ${theme.color.grey9}`,
-        borderRight: `1px solid ${theme.color.grey9}`,
-        borderBottom: `2px solid ${theme.color.grey9}`,
-        borderLeft: `1px solid ${theme.color.grey9}`,
-        fontFamily: theme.font.bold,
-        fontSize: '0.875em !important',
-        color: theme.palette.text.primary,
-        padding: '10px 15px',
         '&:first-of-type': {
           borderLeft: 'none',
         },
         '&:last-of-type': {
           borderRight: 'none',
         },
+        borderBottom: `2px solid ${theme.color.grey9}`,
+        borderLeft: `1px solid ${theme.color.grey9}`,
+        borderRight: `1px solid ${theme.color.grey9}`,
+        borderTop: `2px solid ${theme.color.grey9}`,
+        color: theme.palette.text.primary,
+        fontFamily: theme.font.bold,
+        fontSize: '0.875em !important',
+        padding: '10px 15px',
       },
     },
   },
@@ -68,9 +68,9 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
   const { width } = useWindowDimensions();
 
   const {
+    error,
     processesData,
     processesLoading,
-    error,
     selectedProcess,
     setSelectedProcess,
   } = props;
@@ -201,14 +201,14 @@ export interface ProcessTableRowProps extends ExtendedProcess {
 export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
   (props) => {
     const {
-      name,
-      user,
-      maxCount,
-      averageIO,
       averageCPU,
+      averageIO,
       averageMem,
-      setSelectedProcess,
       isSelected,
+      maxCount,
+      name,
+      setSelectedProcess,
+      user,
     } = props;
 
     const classes = useStyles();

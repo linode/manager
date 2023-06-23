@@ -24,11 +24,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(2),
   },
-  ipv6: {
-    marginTop: theme.spacing(4),
-  },
   ipSubheader: {
     marginTop: '1rem',
+  },
+  ipv6: {
+    marginTop: theme.spacing(4),
   },
   radioButtons: {
     marginTop: '0 !important',
@@ -38,17 +38,25 @@ const useStyles = makeStyles()((theme: Theme) => ({
 type IPType = 'v4Public' | 'v4Private';
 
 const ipOptions: Item<IPType>[] = [
-  { value: 'v4Public', label: 'Public' },
-  { value: 'v4Private', label: 'Private' },
+  { label: 'Public', value: 'v4Public' },
+  { label: 'Private', value: 'v4Private' },
 ];
 
 const prefixOptions = [
-  { value: '64', label: '/64' },
-  { value: '56', label: '/56' },
+  { label: '/64', value: '64' },
+  { label: '/56', value: '56' },
 ];
 
 // @todo: Pre-fill support tickets.
 const explainerCopy: Record<IPType, JSX.Element> = {
+  v4Private: (
+    <>
+      Add a private IP address to your Linode. Data sent explicitly to and from
+      private IP addresses in the same data center does not incur transfer quota
+      usage. To ensure that the private IP is properly configured once added,
+      it&rsquo;s best to reboot your Linode.
+    </>
+  ),
   v4Public: (
     <>
       Public IP addresses, over and above the one included with each Linode,
@@ -56,14 +64,6 @@ const explainerCopy: Record<IPType, JSX.Element> = {
       Address you must request one. Please open a{' '}
       <Link to="support/tickets">Support Ticket</Link> if you have not done so
       already.
-    </>
-  ),
-  v4Private: (
-    <>
-      Add a private IP address to your Linode. Data sent explicitly to and from
-      private IP addresses in the same data center does not incur transfer quota
-      usage. To ensure that the private IP is properly configured once added,
-      it&rsquo;s best to reboot your Linode.
     </>
   ),
 };
@@ -84,8 +84,8 @@ const IPv6ExplanatoryCopy = {
 };
 
 const tooltipCopy: Record<IPType, JSX.Element | null> = {
-  v4Public: null,
   v4Private: <>This Linode already has a private IP address.</>,
+  v4Public: null,
 };
 
 interface Props {
@@ -96,20 +96,20 @@ interface Props {
 }
 
 const AddIPDrawer = (props: Props) => {
-  const { open, onClose, readOnly, linodeId } = props;
+  const { linodeId, onClose, open, readOnly } = props;
   const { classes } = useStyles();
 
   const {
-    mutateAsync: allocateIPAddress,
-    isLoading: ipv4Loading,
     error: ipv4Error,
+    isLoading: ipv4Loading,
+    mutateAsync: allocateIPAddress,
     reset: resetIPv4,
   } = useAllocateIPMutation(linodeId);
 
   const {
-    mutateAsync: createIPv6Range,
-    isLoading: ipv6Loading,
     error: ipv6Error,
+    isLoading: ipv6Loading,
+    mutateAsync: createIPv6Range,
     reset: resetIPv6,
   } = useCreateIPv6RangeMutation();
 
@@ -148,8 +148,8 @@ const AddIPDrawer = (props: Props) => {
   const handleAllocateIPv4 = async () => {
     // Only IPv4 addresses can currently be allocated.
     await allocateIPAddress({
-      type: 'ipv4',
       public: selectedIPv4 === 'v4Public',
+      type: 'ipv4',
     });
     onClose();
   };

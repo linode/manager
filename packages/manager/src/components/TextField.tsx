@@ -15,51 +15,51 @@ import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  helpWrapper: {
+  absolute: {
+    position: 'absolute',
+  },
+  editable: {
+    paddingLeft: 1,
+    wordBreak: 'keep-all',
+  },
+  errorText: {
+    alignItems: 'center',
+    color: theme.color.red,
     display: 'flex',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
-  },
-  wrapper: {
-    marginTop: theme.spacing(2),
-  },
-  noTransform: {
-    transform: 'none',
-  },
-  label: {
-    fontFamily: theme.font.normal,
-  },
-  helperTextTop: {
-    marginBottom: theme.spacing(),
-    marginTop: theme.spacing(),
-  },
-  helpWrapperContainer: {
-    display: 'flex',
+    left: 5,
+    top: 42,
     width: '100%',
   },
   expand: {
     maxWidth: '100%',
   },
-  root: {
-    marginTop: 0,
+  helpWrapper: {
+    alignItems: 'flex-end',
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  helpWrapperContainer: {
+    display: 'flex',
+    width: '100%',
   },
   helpWrapperTextField: {
     width: '415px',
   },
-  errorText: {
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.color.red,
-    top: 42,
-    left: 5,
-    width: '100%',
+  helperTextTop: {
+    marginBottom: theme.spacing(),
+    marginTop: theme.spacing(),
   },
-  editable: {
-    wordBreak: 'keep-all',
-    paddingLeft: 1,
+  label: {
+    fontFamily: theme.font.normal,
   },
-  absolute: {
-    position: 'absolute',
+  noTransform: {
+    transform: 'none',
+  },
+  root: {
+    marginTop: 0,
+  },
+  wrapper: {
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -113,6 +113,9 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
+    InputLabelProps,
+    InputProps,
+    SelectProps,
     children,
     className,
     dataAttrs,
@@ -126,9 +129,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     helperTextPosition,
     hideLabel,
     inputId,
-    InputLabelProps,
     inputProps,
-    InputProps,
     label,
     loading,
     max,
@@ -137,14 +138,13 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     onChange,
     optional,
     required,
-    SelectProps,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     theme,
-    tooltipPosition,
-    tooltipText,
     tooltipClasses,
     tooltipInteractive,
     tooltipOnMouseEnter,
+    tooltipPosition,
+    tooltipText,
     type,
     value,
     ...textFieldProps
@@ -230,8 +230,8 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
       <InputLabel
         data-qa-textfield-label={label}
         className={classNames({
-          [classes.wrapper]: noMarginTop ? false : true,
           [classes.noTransform]: true,
+          [classes.wrapper]: noMarginTop ? false : true,
           'visually-hidden': hideLabel,
         })}
         htmlFor={validInputId}
@@ -286,12 +286,6 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             ...inputProps,
           }}
           InputProps={{
-            disableUnderline: true,
-            endAdornment: loading && (
-              <InputAdornment position="end">
-                <CircleProgress mini />
-              </InputAdornment>
-            ),
             className: classNames(
               'input',
               {
@@ -299,23 +293,29 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
               },
               className
             ),
+            disableUnderline: true,
+            endAdornment: loading && (
+              <InputAdornment position="end">
+                <CircleProgress mini />
+              </InputAdornment>
+            ),
             ...InputProps,
           }}
           SelectProps={{
-            disableUnderline: true,
             IconComponent: KeyboardArrowDown,
             MenuProps: {
-              anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-              transformOrigin: { vertical: 'top', horizontal: 'left' },
               MenuListProps: { className: 'selectMenuList' },
               PaperProps: { className: 'selectMenuDropdown' },
+              anchorOrigin: { horizontal: 'left', vertical: 'bottom' },
+              transformOrigin: { horizontal: 'left', vertical: 'top' },
             },
+            disableUnderline: true,
             ...SelectProps,
           }}
           className={classNames(
             {
-              [classes.root]: true,
               [classes.helpWrapperTextField]: Boolean(tooltipText),
+              [classes.root]: true,
             },
             className
           )}
@@ -340,9 +340,9 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
       {errorText && (
         <FormHelperText
           className={classNames({
-            [classes.errorText]: true,
-            [classes.editable]: editable,
             [classes.absolute]: editable || hasAbsoluteError,
+            [classes.editable]: editable,
+            [classes.errorText]: true,
           })}
           data-qa-textfield-error-text={label}
           role="alert"

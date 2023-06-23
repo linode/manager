@@ -8,10 +8,10 @@ const supportTicket = supportTicketFactory.build();
 
 window.matchMedia = jest.fn().mockImplementation((query) => {
   return {
+    addListener: jest.fn(),
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
     removeListener: jest.fn(),
   };
 });

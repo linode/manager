@@ -11,46 +11,46 @@ import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  link: {
+    '& p': {
+      marginRight: 4,
+    },
+    '& svg': {
+      '&:hover': {
+        color: 'inherit',
+      },
+      color: theme.palette.text.primary,
+      height: 15,
+      width: 15,
+    },
+    alignItems: 'center',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    marginTop: theme.spacing(1),
+  },
+  openModalButton: {
+    ...theme.applyLinkStyles,
+  },
+  paper: {
+    padding: theme.spacing(3),
+  },
+  poolUsageProgress: {
+    '& .MuiLinearProgress-root': {
+      borderRadius: 1,
+    },
+    marginBottom: theme.spacing(0.5),
+  },
+  proratedNotice: {
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+  },
   root: {
-    width: '100%',
     margin: 'auto',
     textAlign: 'center',
     [theme.breakpoints.down('md')]: {
       width: '85%',
     },
-  },
-  poolUsageProgress: {
-    marginBottom: theme.spacing(0.5),
-    '& .MuiLinearProgress-root': {
-      borderRadius: 1,
-    },
-  },
-  link: {
-    display: 'flex',
-    alignItems: 'center',
-    flexFlow: 'row nowrap',
-    marginTop: theme.spacing(1),
-    '& p': {
-      marginRight: 4,
-    },
-    '& svg': {
-      width: 15,
-      height: 15,
-      color: theme.palette.text.primary,
-      '&:hover': {
-        color: 'inherit',
-      },
-    },
-  },
-  paper: {
-    padding: theme.spacing(3),
-  },
-  proratedNotice: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-  openModalButton: {
-    ...theme.applyLinkStyles,
+    width: '100%',
   },
 }));
 
@@ -62,7 +62,7 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const { classes } = useStyles();
 
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { data, isLoading, isError } = useAccountTransfer();
+  const { data, isError, isLoading } = useAccountTransfer();
   const quota = data?.quota ?? 0;
   const used = data?.used ?? 0;
 

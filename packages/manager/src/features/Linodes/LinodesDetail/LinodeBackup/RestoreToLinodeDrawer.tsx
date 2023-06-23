@@ -27,14 +27,14 @@ interface Props {
 }
 
 export const RestoreToLinodeDrawer = (props: Props) => {
-  const { linodeId, backup, open, onClose } = props;
+  const { backup, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: linode } = useLinodeQuery(linodeId, open);
 
   const {
     data: linodes,
-    isLoading: linodesLoading,
     error: linodeError,
+    isLoading: linodesLoading,
   } = useAllLinodesQuery(
     {},
     {
@@ -44,24 +44,24 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   );
 
   const {
-    mutateAsync: restoreBackup,
     error,
     isLoading,
+    mutateAsync: restoreBackup,
     reset: resetMutation,
   } = useLinodeBackupRestoreMutation();
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      overwrite: false,
       linode_id: linodeId,
+      overwrite: false,
     },
     async onSubmit(values) {
       await restoreBackup({
-        linodeId,
         backupId: backup?.id ?? -1,
-        targetLinodeId: values.linode_id ?? -1,
+        linodeId,
         overwrite: values.overwrite,
+        targetLinodeId: values.linode_id ?? -1,
       });
       enqueueSnackbar(
         `Started restoring Linode ${selectedLinodeOption?.label} from a backup`,
@@ -80,7 +80,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   }, [open]);
 
   const linodeOptions =
-    linodes?.map(({ label, id }) => {
+    linodes?.map(({ id, label }) => {
       return { label, value: id };
     }) ?? [];
 

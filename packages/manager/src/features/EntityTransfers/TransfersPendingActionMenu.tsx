@@ -5,9 +5,9 @@ import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles(() => ({
   root: {
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center',
   },
 }));
 
@@ -24,10 +24,10 @@ const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'Cancel',
       onClick: () => {
         onCancelClick();
       },
+      title: 'Cancel',
     },
   ];
 

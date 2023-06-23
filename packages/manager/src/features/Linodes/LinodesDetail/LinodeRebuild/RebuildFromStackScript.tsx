@@ -37,11 +37,11 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingTop: theme.spacing(3),
-  },
-  error: {
-    marginTop: theme.spacing(2),
+  actionPanel: {
+    '& button': {
+      alignSelf: 'flex-end',
+    },
+    flexDirection: 'column',
   },
   emptyImagePanel: {
     padding: theme.spacing(3),
@@ -50,11 +50,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
     padding: `${theme.spacing(1)} 0`,
   },
-  actionPanel: {
-    flexDirection: 'column',
-    '& button': {
-      alignSelf: 'flex-end',
-    },
+  error: {
+    marginTop: theme.spacing(2),
+  },
+  root: {
+    paddingTop: theme.spacing(3),
   },
 }));
 
@@ -76,17 +76,17 @@ interface RebuildFromStackScriptForm {
 }
 
 const initialValues: RebuildFromStackScriptForm = {
+  authorized_users: [],
   image: '',
   root_pass: '',
   stackscript_id: '',
-  authorized_users: [],
 };
 
 export const RebuildFromStackScript = (props: Props) => {
   const {
+    handleRebuildError,
     linodeId,
     linodeLabel,
-    handleRebuildError,
     onClose,
     passwordHelperText,
   } = props;
@@ -128,21 +128,21 @@ export const RebuildFromStackScript = (props: Props) => {
   );
 
   const handleFormSubmit = (
-    { image, root_pass, authorized_users }: RebuildFromStackScriptForm,
+    { authorized_users, image, root_pass }: RebuildFromStackScriptForm,
     {
-      setSubmitting,
-      setStatus,
       setErrors,
+      setStatus,
+      setSubmitting,
     }: FormikProps<RebuildFromStackScriptForm>
   ) => {
     setSubmitting(true);
 
     rebuildLinode(linodeId, {
-      stackscript_id: ss.id,
-      stackscript_data: ss.udf_data,
-      root_pass,
-      image,
       authorized_users,
+      image,
+      root_pass,
+      stackscript_data: ss.udf_data,
+      stackscript_id: ss.id,
     })
       .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
@@ -225,8 +225,8 @@ export const RebuildFromStackScript = (props: Props) => {
         handleSubmit,
         setFieldValue,
         status, // holds generalError messages
-        values,
         validateForm,
+        values,
       }) => {
         // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {

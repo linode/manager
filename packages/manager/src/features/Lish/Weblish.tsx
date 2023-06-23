@@ -33,8 +33,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class Weblish extends React.Component<CombinedProps, State> {
   state: State = {
-    renderingLish: true,
     error: '',
+    renderingLish: true,
   };
 
   mounted: boolean = false;
@@ -86,8 +86,8 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     this.terminal = new Terminal({
       cols: 120,
-      rows: 40,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+      rows: 40,
       screenReaderMode: true,
     });
 

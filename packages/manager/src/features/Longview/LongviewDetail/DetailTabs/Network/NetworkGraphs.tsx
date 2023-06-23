@@ -98,16 +98,16 @@ export const NetworkGraphs: React.FC<CombinedProps> = (props) => {
                 timezone={timezone}
                 data={[
                   {
-                    label: 'Inbound',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
+                    borderColor: 'transparent',
                     data: _convertData(rx_bytes, start, end),
+                    label: 'Inbound',
                   },
                   {
-                    label: 'Outbound',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
+                    borderColor: 'transparent',
                     data: _convertData(tx_bytes, start, end),
+                    label: 'Outbound',
                   },
                 ]}
               />

@@ -40,8 +40,8 @@ export const getLinodeDisks = createRequestThunk(
   getLinodeDisksActions,
   ({ linodeId }) =>
     _getLinodeDisks(linodeId).then((result) => ({
-      results: result.results,
       data: result.data.map(addLinodeIdToDisk(linodeId)),
+      results: result.results,
     }))
 );
 
@@ -51,30 +51,30 @@ export const getAllLinodeDisks = createRequestThunk(
     getAll<Disk>((diskParams: Params, filter: Filter) =>
       _getLinodeDisks(linodeId, diskParams, filter)
     )().then((result) => ({
-      results: result.results,
       data: result.data.map(addLinodeIdToDisk(linodeId)),
+      results: result.results,
     }))
 );
 
 export const getLinodeDisk = createRequestThunk(
   getLinodeDiskActions,
-  ({ linodeId, diskId }) =>
+  ({ diskId, linodeId }) =>
     _getLinodeDisk(linodeId, diskId).then(addLinodeIdToDisk(linodeId))
 );
 
 export const updateLinodeDisk = createRequestThunk(
   updateLinodeDiskActions,
-  ({ linodeId, diskId, ...data }) =>
+  ({ diskId, linodeId, ...data }) =>
     _updateLinodeDisk(linodeId, diskId, data).then(addLinodeIdToDisk(linodeId))
 );
 
 export const deleteLinodeDisk = createRequestThunk(
   deleteLinodeDiskActions,
-  ({ linodeId, diskId }) => _deleteLinodeDisk(linodeId, diskId)
+  ({ diskId, linodeId }) => _deleteLinodeDisk(linodeId, diskId)
 );
 
 export const resizeLinodeDisk = createRequestThunk(
   resizeLinodeDiskActions,
-  ({ linodeId, diskId, size }) =>
+  ({ diskId, linodeId, size }) =>
     _resizeLinodeDisk(linodeId, diskId, size).then(addLinodeIdToDisk(linodeId))
 );

@@ -31,24 +31,24 @@ const debouncedSendEntityTransferDraftEmailEvent = debounce(
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingBottom: theme.spacing(),
-  },
-  tokenInput: {
-    maxWidth: '100%',
-  },
   copyButton: {
+    alignSelf: 'flex-end',
     marginTop: theme.spacing(2),
     maxWidth: 220,
-    alignSelf: 'flex-end',
-  },
-  text: {
-    marginBottom: theme.spacing(),
   },
   inputSection: {
     display: 'flex',
     flexFlow: 'column nowrap',
     paddingBottom: theme.spacing(1),
+  },
+  root: {
+    paddingBottom: theme.spacing(),
+  },
+  text: {
+    marginBottom: theme.spacing(),
+  },
+  tokenInput: {
+    maxWidth: '100%',
   },
 }));
 

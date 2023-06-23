@@ -22,7 +22,7 @@ interface Props {
 export const ReplyActions = (props: Props) => {
   const classes = useStyles();
 
-  const { isSubmitting, submitForm, closable, value, ticketId } = props;
+  const { closable, isSubmitting, submitForm, ticketId, value } = props;
 
   const handleSubmitForm = () => {
     submitForm(value);

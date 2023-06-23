@@ -60,12 +60,12 @@ const UserDetail: React.FC = () => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      title: 'User Profile',
       routeName: `/account/users/${usernameParam}/profile`,
+      title: 'User Profile',
     },
     {
-      title: 'User Permissions',
       routeName: `/account/users/${usernameParam}/permissions`,
+      title: 'User Permissions',
     },
   ];
 
@@ -118,7 +118,7 @@ const UserDetail: React.FC = () => {
     setProfileSuccess(false);
     setProfileErrors([]);
 
-    updateUser(originalUsername, { username, restricted })
+    updateUser(originalUsername, { restricted, username })
       .then((user) => {
         /**
          * Update the state of the component with the updated information.
@@ -202,10 +202,10 @@ const UserDetail: React.FC = () => {
         title={username}
         removeCrumbX={4}
         breadcrumbProps={{
-          pathname: location.pathname,
           labelOptions: {
             noCap: true,
           },
+          pathname: location.pathname,
         }}
       />
       <Tabs

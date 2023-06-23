@@ -25,17 +25,17 @@ const preferenceKey = 'firewalls';
 
 const FirewallLanding = () => {
   const pagination = usePagination(1, preferenceKey);
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'asc',
+      orderBy: 'label',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
   const params = {
@@ -43,7 +43,7 @@ const FirewallLanding = () => {
     page_size: pagination.pageSize,
   };
 
-  const { data, isLoading, error } = useFirewallsQuery(params, filter);
+  const { data, error, isLoading } = useFirewallsQuery(params, filter);
 
   const [
     isCreateFirewallDrawerOpen,
@@ -101,9 +101,9 @@ const FirewallLanding = () => {
   }, [setIsCreateFirewallDrawerOpen, replace]);
 
   const handlers: FirewallHandlers = {
-    triggerEnableFirewall: handleOpenEnableFirewallModal,
-    triggerDisableFirewall: handleOpenDisableFirewallModal,
     triggerDeleteFirewall: handleOpenDeleteFirewallModal,
+    triggerDisableFirewall: handleOpenDisableFirewallModal,
+    triggerEnableFirewall: handleOpenEnableFirewallModal,
   };
 
   if (isLoading) {

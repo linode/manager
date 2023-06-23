@@ -10,16 +10,16 @@ export type CombinedProps = GraphProps & WithTheme;
 export const LoadGraph: React.FC<CombinedProps> = (props) => {
   const {
     clientAPIKey,
-    lastUpdated,
-    lastUpdatedError,
     end,
     isToday,
+    lastUpdated,
+    lastUpdatedError,
     start,
     theme,
     timezone,
   } = props;
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['load'],
     clientAPIKey,
     start,
@@ -44,10 +44,10 @@ export const LoadGraph: React.FC<CombinedProps> = (props) => {
       nativeLegend
       data={[
         {
-          label: 'Load',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.load,
+          borderColor: 'transparent',
           data: _convertData(data.Load || [], start, end),
+          label: 'Load',
         },
       ]}
     />

@@ -27,16 +27,16 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  suffix: {
-    fontSize: '.9rem',
-    marginRight: theme.spacing(1),
-  },
   actionPanel: {
     marginTop: theme.spacing(2),
   },
   helperText: {
     paddingTop: theme.spacing(0.5),
+  },
+  root: {},
+  suffix: {
+    fontSize: '.9rem',
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -66,33 +66,33 @@ const createImageText = 'Create Image';
 const titleMap: Record<DrawerMode, string> = {
   closed: '',
   create: createImageText,
-  imagize: createImageText,
   edit: 'Edit Image',
+  imagize: createImageText,
   restore: 'Restore from Image',
 };
 
 const buttonTextMap: Record<DrawerMode, string> = {
   closed: '',
   create: createImageText,
-  restore: 'Restore Image',
   edit: 'Save Changes',
   imagize: createImageText,
+  restore: 'Restore Image',
 };
 
 export const ImageDrawer: React.FC<CombinedProps> = (props) => {
   const {
-    mode,
+    changeDescription,
+    changeDisk,
+    changeLabel,
+    changeLinode,
+    description,
     imageId,
     label,
-    description,
+    mode,
+    onClose,
+    open,
     selectedDisk,
     selectedLinode,
-    changeLabel,
-    changeDescription,
-    changeLinode,
-    changeDisk,
-    open,
-    onClose,
   } = props;
 
   const classes = useStyles();
@@ -197,7 +197,7 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
           return;
         }
 
-        updateImage({ imageId, label, description: safeDescription })
+        updateImage({ description: safeDescription, imageId, label })
           .then(() => {
             if (!mounted) {
               return;
@@ -220,9 +220,9 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
       case 'create':
       case 'imagize':
         createImage({
+          description: safeDescription,
           diskID: Number(selectedDisk),
           label,
-          description: safeDescription,
         })
           .then(() => {
             if (!mounted) {
@@ -292,11 +292,11 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
 
   const hasErrorFor = getAPIErrorFor(
     {
-      linode_id: 'Linode',
       disk_id: 'Disk',
+      label: 'Label',
+      linode_id: 'Linode',
       region: 'Region',
       size: 'Size',
-      label: 'Label',
     },
     errors
   );

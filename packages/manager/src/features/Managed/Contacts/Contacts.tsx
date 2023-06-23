@@ -30,6 +30,15 @@ import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      paddingRight: 0,
+      paddingTop: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
+    },
+  },
   copy: {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
@@ -42,15 +51,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     margin: 0,
     width: '100%',
   },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-      paddingRight: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
 }));
 
 const Contacts = () => {
@@ -59,9 +59,9 @@ const Contacts = () => {
 
   const {
     data,
-    isLoading,
-    error,
     dataUpdatedAt,
+    error,
+    isLoading,
   } = useAllManagedContactsQuery();
 
   const contacts = data || [];
@@ -77,11 +77,11 @@ const Contacts = () => {
   const { mutateAsync: deleteContact } = useDeleteContactMutation();
 
   const {
-    dialog,
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog,
     handleError,
+    openDialog,
+    submitDialog,
   } = useDialog<number>((id) => deleteContact({ id: id || -1 }));
 
   const handleDelete = () => {
@@ -278,8 +278,8 @@ export const generateGroupsFromContacts = (
     // If not, add a new group.
     if (idx === -1) {
       groups.push({
-        groupName: contact.group,
         contactNames: [contact.name],
+        groupName: contact.group,
       });
     } else {
       // If we've already tracked the group, just add this contact's name.

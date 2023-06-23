@@ -18,8 +18,8 @@ import {
 export const SecurityQuestions = () => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
   const {
-    mutateAsync: updateSecurityQuestions,
     isLoading: isUpdating,
+    mutateAsync: updateSecurityQuestions,
   } = useMutateSecurityQuestions();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -37,8 +37,8 @@ export const SecurityQuestions = () => {
   const initalFormValues = { security_questions: answeredQuestions };
 
   const formikConfig: FormikConfig<SecurityQuestionsData> = {
-    initialValues: initalFormValues,
     enableReinitialize: true,
+    initialValues: initalFormValues,
     onSubmit: async (values) => {
       try {
         const action = hasSecurityQuestionsCompleted ? 'updated' : 'added';
@@ -89,12 +89,12 @@ export const SecurityQuestions = () => {
   };
 
   const {
-    values,
-    handleSubmit,
-    setFieldValue,
-    handleChange,
     dirty,
+    handleChange,
+    handleSubmit,
     resetForm,
+    setFieldValue,
+    values,
   } = useFormik(formikConfig);
 
   const isButtonDisabled =
@@ -105,8 +105,8 @@ export const SecurityQuestions = () => {
     );
 
   const qaProps = {
-    setFieldValue,
     handleChange,
+    setFieldValue,
   };
 
   if (isLoading) {
@@ -193,24 +193,24 @@ const StyledCopy = styled(Typography, {
   label: 'StyledCopy',
 })(({ theme }) => ({
   lineHeight: '20px',
-  marginTop: theme.spacing(),
   marginBottom: theme.spacing(),
+  marginTop: theme.spacing(),
   maxWidth: 960,
 }));
 
 const StyledForm = styled('form', {
   label: 'StyledForm',
 })(() => ({
-  width: '100%',
   display: 'flex',
   flexDirection: 'column',
+  width: '100%',
 }));
 
 const StyledButtonContainer = styled(Box, {
   label: 'StyledButtonContainer',
 })(({ theme }) => ({
-  marginTop: theme.spacing(2),
   gap: theme.spacing(),
+  marginTop: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
     marginTop: theme.spacing(2),
   },

@@ -16,23 +16,23 @@ const store = storeFactory(queryClientFactory());
 const mockImages = imageFactory.buildList(10);
 
 const mockProps: CombinedProps = {
+  accountBackupsEnabled: false,
   category: 'community',
   classes: {
-    main: '',
     emptyImagePanel: '',
     emptyImagePanelText: '',
+    main: '',
   },
-  accountBackupsEnabled: false,
-  updateImageID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
+  handleSelectUDFs: jest.fn(),
+  header: '',
   imagesData: {},
   regionsData: [],
-  userCannotCreateLinode: false,
   request: jest.fn(),
-  header: '',
+  updateImageID: jest.fn(),
+  updateRegionID: jest.fn(),
   updateStackScript: jest.fn(),
-  handleSelectUDFs: jest.fn(),
+  updateTypeID: jest.fn(),
+  userCannotCreateLinode: false,
 };
 
 describe('FromImageContent', () => {

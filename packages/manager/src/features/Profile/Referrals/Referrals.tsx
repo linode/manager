@@ -25,8 +25,8 @@ import {
 export const Referrals = () => {
   const {
     data: profile,
-    isLoading: profileLoading,
     error: profileError,
+    isLoading: profileLoading,
   } = useProfile();
 
   if (profileError) {
@@ -47,7 +47,7 @@ export const Referrals = () => {
     return <CircularProgress />;
   }
 
-  const { url, total, completed, pending, credit } = profile?.referrals;
+  const { completed, credit, pending, total, url } = profile?.referrals;
   const allowReferral = Boolean(url);
 
   return (
@@ -132,8 +132,8 @@ export const Referrals = () => {
             justifyContent="space-between"
             wrap="nowrap"
             sx={{
-              width: '100%',
               padding: 0,
+              width: '100%',
             }}
           >
             <StyledImageGrid>

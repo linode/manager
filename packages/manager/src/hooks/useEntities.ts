@@ -37,9 +37,9 @@ export const useEntities = () => {
   return {
     linodes: {
       data: linodes,
-      request: requestLinodes,
-      lastUpdated: _linodes.lastUpdated,
       error: _linodes.error?.read,
+      lastUpdated: _linodes.lastUpdated,
+      request: requestLinodes,
     },
   };
 };

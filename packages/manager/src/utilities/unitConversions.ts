@@ -77,9 +77,9 @@ export const readableBytes = (
     typeof num !== 'number'
   ) {
     return {
-      value: 0,
-      unit: storageUnits[0],
       formatted: `0 ${storageUnits[0]}`,
+      unit: storageUnits[0],
+      value: 0,
     };
   }
 
@@ -105,16 +105,16 @@ export const readableBytes = (
   // Special case to account for pluralization.
   if ((value === 1 || value === -1) && unit === 'bytes') {
     return {
-      value: isNegative ? -value : value,
-      unit: 'byte' as StorageSymbol,
       formatted: (isNegative ? '-' : '') + value + ' byte',
+      unit: 'byte' as StorageSymbol,
+      value: isNegative ? -value : value,
     };
   }
 
   return {
-    value: isNegative ? -value : value,
-    unit,
     formatted: (isNegative ? '-' : '') + value + ' ' + unit,
+    unit,
+    value: isNegative ? -value : value,
   };
 };
 

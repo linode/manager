@@ -38,18 +38,18 @@ export type CombinedProps = Props;
 export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
   const {
     client,
-    clientID,
-    longviewClientData,
     clientAPIKey,
+    clientID,
     lastUpdated,
+    lastUpdatedError,
     listeningPortsData,
     listeningPortsError,
     listeningPortsLoading,
-    topProcessesData,
-    topProcessesLoading,
-    topProcessesError,
-    lastUpdatedError,
+    longviewClientData,
     timezone,
+    topProcessesData,
+    topProcessesError,
+    topProcessesLoading,
   } = props;
 
   /**

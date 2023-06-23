@@ -19,8 +19,8 @@ const ComplianceUpdateModal = () => {
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
   const {
-    mutateAsync: updateAccountAgreements,
     isLoading,
+    mutateAsync: updateAccountAgreements,
   } = useMutateAccountAgreements();
 
   const handleAgree = () => {

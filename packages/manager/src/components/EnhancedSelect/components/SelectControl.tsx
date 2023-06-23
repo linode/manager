@@ -17,9 +17,9 @@ const SelectControl: React.FC<Props> = (props) => {
       InputProps={{
         inputComponent: 'div',
         inputProps: {
+          children: props.children,
           className: props.selectProps.classes.input,
           ref: props.innerRef,
-          children: props.children,
           ...props.innerProps,
         },
       }}

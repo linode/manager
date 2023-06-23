@@ -34,7 +34,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedText extends React.Component<CombinedProps, {}> {
   renderTextField = () => {
-    const { error, field, placeholder, isOptional } = this.props;
+    const { error, field, isOptional, placeholder } = this.props;
 
     return (
       <TextField
@@ -50,13 +50,13 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
 
   renderPasswordField = () => {
     const {
+      classes,
       error,
       field,
-      placeholder,
       isOptional,
+      placeholder,
       tooltip,
       tooltipInteractive,
-      classes,
     } = this.props;
 
     return (
@@ -80,12 +80,12 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
   };
 
   handleUpdateText = (e: any) => {
-    const { updateFormState, field } = this.props;
+    const { field, updateFormState } = this.props;
     updateFormState(field.name, e.target.value);
   };
 
   handleUpdatePassword = (value: string) => {
-    const { updateFormState, field } = this.props;
+    const { field, updateFormState } = this.props;
     updateFormState(field.name, value);
   };
 

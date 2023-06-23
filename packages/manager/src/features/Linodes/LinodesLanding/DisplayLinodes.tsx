@@ -54,17 +54,17 @@ type CombinedProps = Props &
 
 export const DisplayLinodes = React.memo((props: CombinedProps) => {
   const {
+    component: Component,
     count,
     data,
     display,
-    component: Component,
-    order,
-    orderBy,
     handleOrderChange,
-    toggleLinodeView,
-    toggleGroupLinodes,
     linodeViewPreference,
     linodesAreGrouped,
+    order,
+    orderBy,
+    toggleGroupLinodes,
+    toggleLinodeView,
     updatePageUrl,
     ...rest
   } = props;
@@ -109,17 +109,17 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
           ...rest,
           count,
           data: paginatedData,
-          pageSize,
-          page,
-          handlePageSizeChange,
           handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
         };
         const tableWrapperProps = {
+          dataLength: paginatedData.length,
           handleOrderChange,
           order,
           orderBy,
           someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-          dataLength: paginatedData.length,
         };
         return (
           <React.Fragment>

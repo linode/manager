@@ -19,17 +19,17 @@ interface Props {
 }
 
 export const CreateOAuthClientDrawer = ({
-  open,
   onClose,
+  open,
   showSecret,
 }: Props) => {
-  const { mutateAsync, error, isLoading } = useCreateOAuthClientMutation();
+  const { error, isLoading, mutateAsync } = useCreateOAuthClientMutation();
 
   const formik = useFormik<OAuthClientRequest>({
     initialValues: {
       label: '',
-      redirect_uri: '',
       public: false,
+      redirect_uri: '',
     },
     async onSubmit(values) {
       const data = await mutateAsync(values);

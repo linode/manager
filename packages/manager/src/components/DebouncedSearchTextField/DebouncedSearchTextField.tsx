@@ -21,15 +21,15 @@ interface DebouncedSearchProps extends TextFieldProps {
 
 const DebouncedSearch = (props: DebouncedSearchProps) => {
   const {
-    className,
-    isSearching,
     InputProps,
+    className,
     debounceTime,
+    defaultValue,
+    hideLabel,
+    isSearching,
+    label,
     onSearch,
     placeholder,
-    label,
-    hideLabel,
-    defaultValue,
     ...restOfTextFieldProps
   } = props;
   const [query, setQuery] = React.useState<string>('');
@@ -71,17 +71,17 @@ const DebouncedSearch = (props: DebouncedSearchProps) => {
       label={label}
       hideLabel={hideLabel}
       InputProps={{
-        startAdornment: (
-          <InputAdornment position="end">
-            <StyledSearchIcon />
-          </InputAdornment>
-        ),
         endAdornment: isSearching ? (
           <InputAdornment position="end">
             <CircleProgress mini={true} />
           </InputAdornment>
         ) : (
           <React.Fragment />
+        ),
+        startAdornment: (
+          <InputAdornment position="end">
+            <StyledSearchIcon />
+          </InputAdornment>
         ),
         ...InputProps,
       }}

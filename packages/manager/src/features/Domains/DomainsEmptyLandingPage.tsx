@@ -21,26 +21,26 @@ export const DomainsEmptyLandingState = (props: Props) => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Domain',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Domain',
             });
             navigateToCreate();
           },
-          children: 'Create Domain',
         },
         {
+          children: 'Import a Zone',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Import a Zone',
             });
             openImportZoneDrawer();
           },
-          children: 'Import a Zone',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

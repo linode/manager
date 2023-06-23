@@ -53,41 +53,41 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
 
     this.state = {
       extendedUpgradeInfo: {
-        vcpus: {
-          label: 'vCPUs',
-          newAmount: props.mutateInfo.vcpus,
-          currentAmount: props.currentTypeInfo.vcpus,
-          unit: '',
-        },
-        memory: {
-          label: 'RAM',
-          newAmount: props.mutateInfo.memory,
-          currentAmount: props.currentTypeInfo.memory,
-          unit: 'MB',
-        },
         disk: {
+          currentAmount:
+            props.currentTypeInfo.disk !== null
+              ? props.currentTypeInfo.disk / 1024
+              : props.currentTypeInfo.disk,
           label: 'Storage',
           newAmount:
             props.mutateInfo.disk !== null
               ? props.mutateInfo.disk / 1024
               : props.mutateInfo.disk,
-          currentAmount:
-            props.currentTypeInfo.disk !== null
-              ? props.currentTypeInfo.disk / 1024
-              : props.currentTypeInfo.disk,
           unit: 'GB',
         },
-        transfer: {
-          label: 'Transfer',
-          newAmount: props.mutateInfo.transfer,
-          currentAmount: props.currentTypeInfo.transfer,
-          unit: 'GB',
+        memory: {
+          currentAmount: props.currentTypeInfo.memory,
+          label: 'RAM',
+          newAmount: props.mutateInfo.memory,
+          unit: 'MB',
         },
         network_out: {
+          currentAmount: props.currentTypeInfo.network_out,
           label: 'Outbound Mbits',
           newAmount: props.mutateInfo.network_out,
-          currentAmount: props.currentTypeInfo.network_out,
           unit: 'Mbits',
+        },
+        transfer: {
+          currentAmount: props.currentTypeInfo.transfer,
+          label: 'Transfer',
+          newAmount: props.mutateInfo.transfer,
+          unit: 'GB',
+        },
+        vcpus: {
+          currentAmount: props.currentTypeInfo.vcpus,
+          label: 'vCPUs',
+          newAmount: props.mutateInfo.vcpus,
+          unit: '',
         },
       },
     } as State;
@@ -95,11 +95,11 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      open,
-      handleClose,
-      loading,
       error,
       estimatedTimeToUpgradeInMins,
+      handleClose,
+      loading,
+      open,
     } = this.props;
 
     const { extendedUpgradeInfo } = this.state;
@@ -117,8 +117,8 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           <ul className="nonMUI-list">
             {Object.keys(extendedUpgradeInfo).map((newSpec) => {
               const {
-                label,
                 currentAmount,
+                label,
                 newAmount,
                 unit,
               } = extendedUpgradeInfo[newSpec];
@@ -139,7 +139,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             })}
           </ul>
         )}
-        <Typography variant="h2" style={{ marginTop: 32, marginBottom: 16 }}>
+        <Typography variant="h2" style={{ marginBottom: 16, marginTop: 32 }}>
           How it Works
         </Typography>
         <Typography>

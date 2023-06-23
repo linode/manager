@@ -52,7 +52,7 @@ export const useLinodeBackupRestoreMutation = () => {
       targetLinodeId: number;
       overwrite: boolean;
     }
-  >(({ linodeId, backupId, targetLinodeId, overwrite }) =>
+  >(({ backupId, linodeId, overwrite, targetLinodeId }) =>
     restoreBackup(linodeId, backupId, targetLinodeId, overwrite)
   );
 };

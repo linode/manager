@@ -59,7 +59,7 @@ export const BucketSSL = (props: Props) => {
 
 export const SSLBody = (props: Props) => {
   const { bucketName, clusterId } = props;
-  const { data, isLoading, error } = useBucketSSLQuery(clusterId, bucketName);
+  const { data, error, isLoading } = useBucketSSLQuery(clusterId, bucketName);
   const hasSSL = Boolean(data?.ssl);
 
   if (isLoading) {
@@ -80,7 +80,7 @@ export const SSLBody = (props: Props) => {
 const AddCertForm = (props: Props) => {
   const { bucketName, clusterId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync, isLoading, error } = useBucketSSLMutation(
+  const { error, isLoading, mutateAsync } = useBucketSSLMutation(
     clusterId,
     bucketName
   );
@@ -152,9 +152,9 @@ const RemoveCertForm = (props: Props) => {
   const [open, setOpen] = React.useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const {
-    mutateAsync: deleteSSLCert,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: deleteSSLCert,
   } = useBucketSSLDeleteMutation(clusterId, bucketName);
 
   const removeCertificate = async () => {

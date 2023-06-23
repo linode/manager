@@ -19,8 +19,8 @@ import Button from 'src/components/Button';
 export const BillingDetail = () => {
   const {
     data: paymentMethods,
-    isLoading: paymentMethodsLoading,
     error: paymentMethodsError,
+    isLoading: paymentMethodsLoading,
   } = useAllPaymentMethodsQuery();
 
   const {
@@ -102,6 +102,11 @@ export const BillingBox = styled('div')(({ theme }) => ({
 }));
 
 export const BillingActionButton = styled(Button)(({ theme }) => ({
+  '&:hover, &:focus': {
+    backgroundColor: 'transparent',
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+  },
   color: theme.textColors.linkActiveLight,
   fontFamily: theme.font.normal,
   fontSize: '.875rem',
@@ -109,11 +114,6 @@ export const BillingActionButton = styled(Button)(({ theme }) => ({
   minHeight: 'unset',
   minWidth: 'auto',
   padding: 0,
-  '&:hover, &:focus': {
-    backgroundColor: 'transparent',
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-  },
 }));
 
 export default BillingDetail;

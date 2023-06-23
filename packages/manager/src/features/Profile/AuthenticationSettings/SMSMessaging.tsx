@@ -15,9 +15,9 @@ export const SMSMessaging = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const {
-    mutateAsync: optOut,
     error,
     isLoading,
+    mutateAsync: optOut,
     reset,
   } = useSMSOptOutMutation();
   const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
@@ -123,14 +123,14 @@ const StyledButton = styled(Button, {
 const StyledCopy = styled(Typography, {
   label: 'StyledCopy',
 })(() => ({
-  maxWidth: 960,
   lineHeight: '20px',
+  maxWidth: 960,
 }));
 
 const StyledNotice = styled(Notice, {
   label: 'StyledNotice',
 })<{ hasVerifiedPhoneNumber: boolean }>(
-  ({ theme, hasVerifiedPhoneNumber }) => ({
+  ({ hasVerifiedPhoneNumber, theme }) => ({
     borderLeft: hasVerifiedPhoneNumber
       ? `5px solid ${theme.color.green}`
       : `5px solid ${theme.color.yellow}`,

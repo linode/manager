@@ -27,7 +27,7 @@ describe('AttachFileListItem component', () => {
     expect(queryAllByTestId('delete-button')).toHaveLength(1);
   });
   it('should call the removeFile method when the delete button is clicked', () => {
-    const { queryAllByTestId, getByTestId } = renderWithTheme(
+    const { getByTestId, queryAllByTestId } = renderWithTheme(
       <AttachFileListItem file={attachment1} {...props} />
     );
 

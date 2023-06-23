@@ -20,9 +20,9 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   getState
 ) => {
   const {
-    mostRecentEventTime,
-    inProgressEvents,
     events: _events,
+    inProgressEvents,
+    mostRecentEventTime,
   } = getState().events;
 
   // Regardless of date created, we request events that are still in-progress.

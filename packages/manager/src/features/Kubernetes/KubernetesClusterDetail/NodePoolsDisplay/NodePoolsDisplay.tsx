@@ -28,14 +28,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
   },
   displayTable: {
-    padding: '8px 8px 0px',
-    width: '100%',
     '& > div': {
       marginBottom: theme.spacing(3),
     },
     '& > div:last-child': {
       marginBottom: 0,
     },
+    padding: '8px 8px 0px',
+    width: '100%',
   },
   nodePoolHeader: {
     marginBottom: theme.spacing(),
@@ -47,8 +47,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   nodePoolHeaderOuter: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
   },
 }));
 
@@ -65,8 +65,8 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const {
     data: pools,
-    isLoading,
     error: poolsError,
+    isLoading,
   } = useAllKubernetesNodePoolQuery(clusterID, { refetchInterval: 15000 });
 
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');

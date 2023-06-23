@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const ViewAPITokenDrawer = (props: Props) => {
-  const { open, onClose, token } = props;
+  const { onClose, open, token } = props;
 
   const permissions = scopeStringToPermTuples(token?.scopes ?? '');
 

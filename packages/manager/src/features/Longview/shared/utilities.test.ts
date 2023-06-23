@@ -227,20 +227,20 @@ describe('Utility Functions', () => {
   describe('appendStats', () => {
     it('sums Y values if X values are equal', () => {
       const a = [
-        { y: 10, x: 1 },
-        { y: 100, x: 2 },
+        { x: 1, y: 10 },
+        { x: 2, y: 100 },
       ];
       const b = [
-        { y: 20, x: 1 },
-        { y: 200, x: 2 },
+        { x: 1, y: 20 },
+        { x: 2, y: 200 },
       ];
       const result = appendStats(a, b);
       expect(result[0].y).toBe(30);
       expect(result[1].y).toBe(300);
     });
     it('sums Y values correctly when values are 0', () => {
-      const a = [{ y: 0, x: 1 }];
-      const b = [{ y: 10, x: 1 }];
+      const a = [{ x: 1, y: 0 }];
+      const b = [{ x: 1, y: 10 }];
       const result = appendStats(a, b);
       expect(result[0].y).toBe(10);
     });

@@ -25,17 +25,17 @@ type ClassNames = 'main' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles = (theme: Theme) =>
   createStyles({
-    main: {
-      [theme.breakpoints.up('md')]: {
-        maxWidth: '100%',
-      },
-    },
     emptyImagePanel: {
       padding: theme.spacing(3),
     },
     emptyImagePanelText: {
       marginTop: theme.spacing(1),
       padding: `${theme.spacing(1)} 0`,
+    },
+    main: {
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '100%',
+      },
     },
   });
 
@@ -46,13 +46,13 @@ interface Props {
 }
 
 const errorResources = {
-  type: 'A plan selection',
-  region: 'region',
-  label: 'A label',
-  root_pass: 'A root password',
   image: 'image',
-  tags: 'Tags',
+  label: 'A label',
+  region: 'region',
+  root_pass: 'A root password',
   stackscript_id: 'The selected StackScript',
+  tags: 'Tags',
+  type: 'A plan selection',
 };
 
 type InnerProps = Props &
@@ -119,20 +119,20 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
   render() {
     const {
-      selectedImageID,
-      errors,
-      classes,
-      selectedStackScriptID,
-      userCannotCreateLinode,
-      selectedStackScriptUsername,
-      selectedStackScriptLabel,
-      request,
-      header,
-      updateImageID,
-      availableUserDefinedFields: userDefinedFields,
       availableStackScriptImages: compatibleImages,
-      selectedUDFs: udf_data,
+      availableUserDefinedFields: userDefinedFields,
+      classes,
+      errors,
+      header,
       imagesData,
+      request,
+      selectedImageID,
+      selectedStackScriptID,
+      selectedStackScriptLabel,
+      selectedStackScriptUsername,
+      selectedUDFs: udf_data,
+      updateImageID,
+      userCannotCreateLinode,
     } = this.props;
 
     // If all of the StackScript's compatibleImages match the full array of images,

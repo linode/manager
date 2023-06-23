@@ -37,7 +37,7 @@ export interface HighlightedMarkdownProps {
 
 export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const theme = useTheme<Theme>();
-  const { className, language, textOrMarkdown, sanitizeOptions } = props;
+  const { className, language, sanitizeOptions, textOrMarkdown } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   /**

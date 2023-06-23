@@ -6,9 +6,9 @@ import { UserDataAccordion } from './UserDataAccordion';
 describe('UserDataAccordion', () => {
   const onChange = jest.fn();
   const props = {
-    userData: 'test data',
-    onChange,
     createType: 'fromImage',
+    onChange,
+    userData: 'test data',
   } as const;
 
   it('should render without errors', () => {

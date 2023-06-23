@@ -38,11 +38,11 @@ export const NetworkLanding: React.FC<Props> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
     end: 0,
+    start: 0,
   });
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['network'],
     clientAPIKey,
     time.start,
@@ -54,7 +54,7 @@ export const NetworkLanding: React.FC<Props> = (props) => {
   }, [clientAPIKey, lastUpdated, lastUpdatedError, time]);
 
   const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
+    setTimeBox({ end, start });
   };
 
   const interfaces: LongviewNetworkInterface = data?.Network?.Interface ?? {};

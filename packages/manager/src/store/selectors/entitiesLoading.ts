@@ -14,10 +14,10 @@ interface Resource<T, E = APIError[]> {
 }
 
 const emptyResource = {
-  results: [],
   entities: [],
-  loading: false,
   lastUpdated: 0,
+  loading: false,
+  results: [],
 };
 
 export const linodesSelector = (state: State) => state.linodes;

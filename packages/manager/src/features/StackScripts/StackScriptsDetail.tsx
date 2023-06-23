@@ -19,7 +19,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 export const StackScriptsDetail = () => {
-  const { _isRestrictedUser, _hasGrant, profile } = useAccountManagement();
+  const { _hasGrant, _isRestrictedUser, profile } = useAccountManagement();
   const { data: grants } = useGrants();
   const { stackScriptId } = useParams<{ stackScriptId: string }>();
   const history = useHistory();
@@ -119,25 +119,25 @@ export const StackScriptsDetail = () => {
         onButtonClick={handleCreateClick}
         docsLink="https://www.linode.com/docs/platform/stackscripts"
         breadcrumbProps={{
-          pathname: location.pathname,
-          labelOptions: { noCap: true },
           crumbOverrides: [
             {
-              position: 1,
               label: 'StackScripts',
               linkTo: stackScript.mine
                 ? '/stackscripts/account'
                 : '/stackscripts/community',
+              position: 1,
             },
           ],
+          labelOptions: { noCap: true },
           onEditHandlers: userCanModify
             ? {
                 editableTextTitle: stackScriptLabel,
-                onEdit: handleLabelChange,
-                onCancel: resetEditableLabel,
                 errorText: labelError,
+                onCancel: resetEditableLabel,
+                onEdit: handleLabelChange,
               }
             : undefined,
+          pathname: location.pathname,
         }}
       />
       <div className="detailsWrapper">

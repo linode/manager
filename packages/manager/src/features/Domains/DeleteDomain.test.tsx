@@ -18,7 +18,7 @@ describe('DeleteDomain', () => {
   });
 
   it('displays the modal when the button is clicked', async () => {
-    const { getByText, findByText } = render(
+    const { findByText, getByText } = render(
       wrapWithTheme(<DeleteDomain {...props} />)
     );
     fireEvent.click(getByText('Delete Domain'));

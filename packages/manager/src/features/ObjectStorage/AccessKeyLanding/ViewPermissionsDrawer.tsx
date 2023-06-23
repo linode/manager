@@ -13,7 +13,7 @@ export interface Props {
 type CombinedProps = Props;
 
 export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
-  const { open, onClose, objectStorageKey } = props;
+  const { objectStorageKey, onClose, open } = props;
 
   if (objectStorageKey === null) {
     return null;

@@ -8,8 +8,8 @@ import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/Enhanced
 const setValue = jest.fn();
 
 const props = {
-  value: 1,
   setValue,
+  value: 1,
 };
 
 const disabledProps = {

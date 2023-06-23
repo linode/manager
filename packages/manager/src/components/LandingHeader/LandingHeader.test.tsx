@@ -125,15 +125,15 @@ describe('LandingHeader', () => {
       <LinodeThemeWrapper>
         <LandingHeader
           breadcrumbProps={{
-            pathname: '/my/path/to/somewhere',
             crumbOverrides: [
               {
-                position: 1,
                 label: 'My First Crumb',
                 linkTo: '/someRoute',
                 noCap: true,
+                position: 1,
               },
             ],
+            pathname: '/my/path/to/somewhere',
           }}
         />
       </LinodeThemeWrapper>

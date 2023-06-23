@@ -23,15 +23,15 @@ type CombinedProps = Props & Partial<NoticeProps>;
 
 export const DismissibleBanner = (props: CombinedProps) => {
   const {
-    className,
-    preferenceKey,
-    options,
-    children,
     actionButton,
+    children,
+    className,
+    options,
+    preferenceKey,
     ...rest
   } = props;
 
-  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
+  const { handleDismiss, hasDismissedBanner } = useDismissibleBanner(
     preferenceKey,
     options
   );
@@ -89,28 +89,28 @@ export const useDismissibleBanner = (
     dismissNotifications([preferenceKey], options);
   };
 
-  return { hasDismissedBanner, handleDismiss };
+  return { handleDismiss, hasDismissedBanner };
 };
 
 const StyledNotice = styled(Notice)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  flexFlow: 'row nowrap',
-  justifyContent: 'space-between',
-  borderRadius: 1,
-  marginBottom: theme.spacing(),
-  padding: theme.spacing(2),
-  background: theme.bg.bgPaper,
   '&&': {
     p: {
       lineHeight: '1.25rem',
     },
   },
+  alignItems: 'center',
+  background: theme.bg.bgPaper,
+  borderRadius: 1,
+  display: 'flex',
+  flexFlow: 'row nowrap',
+  justifyContent: 'space-between',
+  marginBottom: theme.spacing(),
+  padding: theme.spacing(2),
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({
   ...theme.applyLinkStyles,
-  display: 'flex',
   color: theme.textColors.tableStatic,
+  display: 'flex',
   marginLeft: 20,
 }));

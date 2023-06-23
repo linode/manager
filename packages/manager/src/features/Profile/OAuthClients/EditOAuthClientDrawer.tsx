@@ -18,8 +18,8 @@ interface Props {
   client: OAuthClient | undefined;
 }
 
-export const EditOAuthClientDrawer = ({ open, onClose, client }: Props) => {
-  const { mutateAsync, error, isLoading, reset } = useUpdateOAuthClientMutation(
+export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
+  const { error, isLoading, mutateAsync, reset } = useUpdateOAuthClientMutation(
     client?.id ?? ''
   );
 

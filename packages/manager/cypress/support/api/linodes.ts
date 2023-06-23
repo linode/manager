@@ -19,25 +19,25 @@ export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
 };
 
 const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
-  type: 'g6-standard-2',
-  tags: [entityTag],
-  private_ip: true,
-  image: 'linode/debian10',
-  region: chooseRegion().id,
-  booted: true,
-  backups_enabled: false,
   authorized_users: [],
+  backups_enabled: false,
+  booted: true,
+  image: 'linode/debian10',
+  private_ip: true,
+  region: chooseRegion().id,
   root_pass: randomString(32),
+  tags: [entityTag],
+  type: 'g6-standard-2',
 };
 
 const linodeRequest = (linodeData) => {
   return cy.request({
-    method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
-    body: linodeData,
     auth: {
       bearer: oauthToken,
     },
+    body: linodeData,
+    method: 'POST',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
   });
 };
 
@@ -64,7 +64,7 @@ export const deleteLinodeById = (linodeId: number) =>
  */
 export const deleteAllTestLinodes = async (): Promise<void> => {
   const linodes = await depaginate<Linode>((page: number) =>
-    getLinodes({ page_size: pageSize, page })
+    getLinodes({ page, page_size: pageSize })
   );
 
   const deletePromises = linodes

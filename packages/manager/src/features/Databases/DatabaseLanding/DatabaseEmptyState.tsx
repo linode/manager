@@ -17,15 +17,15 @@ export const DatabaseEmptyState = () => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Database Cluster',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Database Cluster',
             });
             push('/databases/create');
           },
-          children: 'Create Database Cluster',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

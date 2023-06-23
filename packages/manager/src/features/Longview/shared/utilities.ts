@@ -106,8 +106,8 @@ export const sumNetwork = (
   networkData: LongviewNetworkInterface = {}
 ): InboundOutboundNetwork<'yAsNull'> => {
   const result: InboundOutboundNetwork<'yAsNull'> = {
-    tx_bytes: [],
     rx_bytes: [],
+    tx_bytes: [],
   };
 
   // Protect against malformed data.
@@ -364,7 +364,7 @@ export const getMaxUnitAndFormatNetwork = (
     return convertNetworkToUnit(valueInBits, maxUnit);
   };
 
-  return { maxUnit, formatNetwork };
+  return { formatNetwork, maxUnit };
 };
 
 export const getMaxUnit = (stats: Stat[][]) => {

@@ -38,35 +38,49 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  activationWrapper: {
+    padding: theme.spacing(4),
+    [theme.breakpoints.up('xl')]: {
+      margin: '0 auto',
+      width: '50%',
+    },
+  },
   appFrame: {
-    position: 'relative',
-    display: 'flex',
-    minHeight: '100vh',
-    flexDirection: 'column',
     backgroundColor: theme.bg.app,
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+    position: 'relative',
     zIndex: 1,
+  },
+  bgStyling: {
+    backgroundColor: theme.bg.main,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '100vh',
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
     padding: `${theme.spacing(3)} 0`,
     paddingTop: 12,
-    transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('md')]: {
-      paddingTop: theme.spacing(2),
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
     [theme.breakpoints.between('md', 'xl')]: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: 0,
+      paddingRight: 0,
+      paddingTop: theme.spacing(2),
+    },
+    transition: theme.transitions.create('opacity'),
   },
   content: {
     flex: 1,
-    transition: 'margin-left .1s linear',
     [theme.breakpoints.up('md')]: {
       marginLeft: 190,
     },
+    transition: 'margin-left .1s linear',
   },
   fullWidthContent: {
     marginLeft: 0,
@@ -74,22 +88,29 @@ const useStyles = makeStyles()((theme: Theme) => ({
       marginLeft: 52,
     },
   },
+  grid: {
+    marginLeft: 0,
+    marginRight: 0,
+    [theme.breakpoints.up('lg')]: {
+      height: '100%',
+    },
+    width: '100%',
+  },
   hidden: {
     display: 'none',
     overflow: 'hidden',
   },
-  grid: {
-    marginLeft: 0,
-    marginRight: 0,
-    width: '100%',
-    [theme.breakpoints.up('lg')]: {
-      height: '100%',
+  logo: {
+    '& > g': {
+      fill: theme.color.black,
     },
   },
   switchWrapper: {
-    flex: 1,
-    maxWidth: '100%',
-    position: 'relative',
+    '& .mlSidebar': {
+      [theme.breakpoints.up('lg')]: {
+        paddingRight: `0 !important`,
+      },
+    },
     '& > .MuiGrid-container': {
       maxWidth: theme.breakpoints.values.lg,
       width: '100%',
@@ -99,30 +120,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
         maxWidth: '78.8%',
       },
     },
-    '& .mlSidebar': {
-      [theme.breakpoints.up('lg')]: {
-        paddingRight: `0 !important`,
-      },
-    },
-  },
-  logo: {
-    '& > g': {
-      fill: theme.color.black,
-    },
-  },
-  activationWrapper: {
-    padding: theme.spacing(4),
-    [theme.breakpoints.up('xl')]: {
-      width: '50%',
-      margin: '0 auto',
-    },
-  },
-  bgStyling: {
-    backgroundColor: theme.bg.main,
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
+    flex: 1,
+    maxWidth: '100%',
+    position: 'relative',
   },
 }));
 
@@ -177,7 +177,7 @@ const MainContent = (props: CombinedProps) => {
   const complianceUpdateContextValue = useDialogContext();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const { account, profile, _isManagedAccount } = useAccountManagement();
+  const { _isManagedAccount, account, profile } = useAccountManagement();
 
   const username = profile?.username || '';
 

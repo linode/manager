@@ -48,7 +48,7 @@ export const TimezoneForm = (props: Props) => {
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const { mutateAsync: updateProfile, isLoading, error } = useMutateProfile();
+  const { error, isLoading, mutateAsync: updateProfile } = useMutateProfile();
   const [value, setValue] = React.useState<Item<string> | null>(null);
   const timezone = profile?.timezone ?? '';
 
@@ -134,7 +134,7 @@ const StyledLoggedInAsCustomerNotice = styled('div', {
   label: 'StyledLoggedInAsCustomerNotice',
 })(({ theme }) => ({
   backgroundColor: theme.color.red,
-  padding: 16,
   marginBottom: 8,
+  padding: 16,
   textAlign: 'center',
 }));

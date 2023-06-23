@@ -55,17 +55,17 @@ type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
 
 export const DisplayGroupedLinodes = (props: CombinedProps) => {
   const {
+    component: Component,
     data,
     display,
-    component: Component,
-    order,
-    orderBy,
     handleOrderChange,
-    toggleLinodeView,
-    toggleGroupLinodes,
+    isVLAN,
     linodeViewPreference,
     linodesAreGrouped,
-    isVLAN,
+    order,
+    orderBy,
+    toggleGroupLinodes,
+    toggleLinodeView,
     ...rest
   } = props;
 
@@ -73,12 +73,12 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
 
   const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
+    dataLength,
     handleOrderChange,
+    isVLAN,
     order,
     orderBy,
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-    dataLength,
-    isVLAN,
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -156,25 +156,25 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
                 pageSizeSetter={setInfinitePageSize}
               >
                 {({
+                  count,
                   data: paginatedData,
                   handlePageChange,
                   handlePageSizeChange,
                   page,
                   pageSize,
-                  count,
                 }) => {
                   const finalProps = {
                     ...rest,
+                    count,
                     data: paginatedData,
-                    pageSize,
-                    page,
-                    handlePageSizeChange,
-                    handlePageChange,
                     handleOrderChange,
+                    handlePageChange,
+                    handlePageSizeChange,
+                    isVLAN,
                     order,
                     orderBy,
-                    isVLAN,
-                    count,
+                    page,
+                    pageSize,
                   };
                   return (
                     <React.Fragment>
@@ -224,25 +224,25 @@ export const DisplayGroupedLinodes = (props: CombinedProps) => {
                 pageSizeSetter={setInfinitePageSize}
               >
                 {({
+                  count,
                   data: paginatedData,
                   handlePageChange,
                   handlePageSizeChange,
                   page,
                   pageSize,
-                  count,
                 }) => {
                   const finalProps = {
                     ...rest,
+                    count,
                     data: paginatedData,
-                    pageSize,
-                    page,
-                    handlePageSizeChange,
-                    handlePageChange,
                     handleOrderChange,
+                    handlePageChange,
+                    handlePageSizeChange,
+                    isVLAN,
                     order,
                     orderBy,
-                    isVLAN,
-                    count,
+                    page,
+                    pageSize,
                   };
                   return (
                     <TableBody data-qa-tag-header={tag}>

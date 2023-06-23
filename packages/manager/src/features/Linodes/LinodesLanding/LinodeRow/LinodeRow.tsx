@@ -36,7 +36,7 @@ type Props = Linode & { handlers: LinodeHandlers };
 
 export const LinodeRow = (props: Props) => {
   const classes = useStyles();
-  const { backups, id, ipv4, label, region, status, type, handlers } = props;
+  const { backups, handlers, id, ipv4, label, region, status, type } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -198,7 +198,7 @@ export const RenderFlag: React.FC<{
    * or if it has a pending mutation available. Mutations take
    * precedent over notifications
    */
-  const { mutationAvailable, linodeNotifications, classes } = props;
+  const { classes, linodeNotifications, mutationAvailable } = props;
 
   if (mutationAvailable) {
     return (
@@ -230,7 +230,7 @@ export const ProgressDisplay: React.FC<{
   progress: null | number;
   text: string | undefined;
 }> = (props) => {
-  const { progress, text, className, sx } = props;
+  const { className, progress, sx, text } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 
   return (

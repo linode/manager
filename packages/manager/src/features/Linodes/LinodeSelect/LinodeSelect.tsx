@@ -55,26 +55,26 @@ type CombinedProps = Props & WithLinodesProps;
 
 const LinodeSelect: React.FC<CombinedProps> = (props) => {
   const {
+    className,
     disabled,
+    filterCondition,
     generalError,
+    groupByRegion,
     handleChange,
+    inputId,
+    isClearable,
+    labelOverride,
     linodeError,
+    linodesData,
     linodesError,
     linodesLoading,
-    linodesData,
+    noOptionsMessage,
+    placeholder,
     region,
     selectedLinode,
-    groupByRegion,
-    className,
-    placeholder,
-    valueOverride,
-    labelOverride,
-    filterCondition,
     value,
-    inputId,
-    noOptionsMessage,
+    valueOverride,
     width,
-    isClearable,
     ...rest
   } = props;
 
@@ -152,8 +152,8 @@ export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
-    linodesLoading,
     linodesError,
+    linodesLoading,
   }))
 )(LinodeSelect);
 
@@ -172,19 +172,19 @@ export const linodesToItems = (
     : linodes;
 
   return maybeFilteredLinodes.map((thisLinode) => ({
-    value:
-      typeof valueOverride === 'function'
-        ? valueOverride(thisLinode)
-        : !!valueOverride
-        ? thisLinode[valueOverride]
-        : thisLinode.id,
+    data: thisLinode,
     label:
       typeof labelOverride === 'function'
         ? labelOverride(thisLinode)
         : !!labelOverride
         ? labelOverride
         : thisLinode.label,
-    data: thisLinode,
+    value:
+      typeof valueOverride === 'function'
+        ? valueOverride(thisLinode)
+        : !!valueOverride
+        ? thisLinode[valueOverride]
+        : thisLinode.id,
   }));
 };
 

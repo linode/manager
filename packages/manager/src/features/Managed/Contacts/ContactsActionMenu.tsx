@@ -12,20 +12,20 @@ interface Props {
 export type CombinedProps = Props;
 
 export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
-  const { contactId, openDrawer, openDialog } = props;
+  const { contactId, openDialog, openDrawer } = props;
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       onClick: () => {
         openDrawer(contactId);
       },
+      title: 'Edit',
     },
     {
-      title: 'Delete',
       onClick: () => {
         openDialog(contactId);
       },
+      title: 'Delete',
     },
   ];
 

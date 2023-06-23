@@ -103,24 +103,24 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     mounted: boolean = false;
 
     state: State = {
-      currentPage: 1,
-      loading: true,
-      gettingMoreStackScripts: false,
-      listOfStackScripts: [],
       allStackScriptsLoaded: false,
-      getMoreStackScriptsFailed: false,
-      sortOrder: 'asc',
-      currentFilterType: null,
       currentFilter: {
-        ['+order_by']: 'deployments_total',
         ['+order']: 'desc',
+        ['+order_by']: 'deployments_total',
       },
+      currentFilterType: null,
+      currentPage: 1,
       currentSearchFilter: {},
-      isSorting: false,
+      didSearch: false,
       error: undefined,
       fieldError: undefined,
+      getMoreStackScriptsFailed: false,
+      gettingMoreStackScripts: false,
       isSearching: false,
-      didSearch: false,
+      isSorting: false,
+      listOfStackScripts: [],
+      loading: true,
+      sortOrder: 'asc',
       successMessage: '',
     };
 
@@ -147,11 +147,11 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       filter: Filter = this.state.currentFilter,
       isSorting: boolean = false
     ) => {
-      const { request, category } = this.props;
+      const { category, request } = this.props;
       this.setState({
+        currentPage: page,
         gettingMoreStackScripts: true,
         isSorting,
-        currentPage: page,
       });
 
       return request(
@@ -208,11 +208,11 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             return;
           }
           this.setState({
-            listOfStackScripts: filteredData,
-            gettingMoreStackScripts: false,
-            loading: false,
-            isSorting: false,
             getMoreStackScriptsFailed: false,
+            gettingMoreStackScripts: false,
+            isSorting: false,
+            listOfStackScripts: filteredData,
+            loading: false,
           });
           return filteredData;
         })
@@ -228,8 +228,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               e,
               'There was an error loading StackScripts'
             ),
-            loading: false,
             gettingMoreStackScripts: false,
+            loading: false,
           });
         });
     };
@@ -298,24 +298,24 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
        */
       const filterWithSearch = !!Object.keys(currentSearchFilter).length
         ? {
-            ['+order_by']: filterInfo.apiFilter ?? undefined,
             ['+order']: sortOrder,
+            ['+order_by']: filterInfo.apiFilter ?? undefined,
             ...currentSearchFilter,
           }
         : {
-            ['+order_by']: filterInfo.apiFilter ?? undefined,
             ['+order']: sortOrder,
+            ['+order_by']: filterInfo.apiFilter ?? undefined,
           };
 
       this.getDataAtPage(1, filterWithSearch, true);
       this.setState({
+        currentFilter: {
+          ['+order']: sortOrder,
+          ['+order_by']: filterInfo.apiFilter ?? undefined,
+        },
+        currentFilterType: filterInfo.currentFilter,
         currentPage: 1,
         sortOrder: nextSortOrder,
-        currentFilterType: filterInfo.currentFilter,
-        currentFilter: {
-          ['+order_by']: filterInfo.apiFilter ?? undefined,
-          ['+order']: sortOrder,
-        },
       });
     };
 
@@ -326,7 +326,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
     handleSearch = (value: string) => {
       const { currentFilter } = this.state;
-      const { category, request, history } = this.props;
+      const { category, history, request } = this.props;
 
       const lowerCaseValue = value.toLowerCase().trim();
 
@@ -373,8 +373,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       }
 
       this.setState({
-        isSearching: true, // wether to show the loading spinner in search bar
         didSearch: true, // table will show default empty state unless didSearch is true
+        isSearching: true, // wether to show the loading spinner in search bar
       });
 
       request({ page: 1, page_size: 50 }, { ...filter, ...currentFilter })
@@ -383,8 +383,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             return;
           }
           this.setState({
-            listOfStackScripts: response.data,
             isSearching: false,
+            listOfStackScripts: response.data,
             loading: false,
           });
           /*
@@ -420,21 +420,21 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
     render() {
       const {
+        allStackScriptsLoaded,
         currentFilterType,
-        isSorting,
+        didSearch,
         error,
         fieldError,
-        isSearching,
-        listOfStackScripts,
-        didSearch,
-        successMessage,
-        sortOrder,
-        allStackScriptsLoaded,
-        gettingMoreStackScripts,
         getMoreStackScriptsFailed,
+        gettingMoreStackScripts,
+        isSearching,
+        isSorting,
+        listOfStackScripts,
+        sortOrder,
+        successMessage,
       } = this.state;
 
-      const { classes, profile, grants } = this.props;
+      const { classes, grants, profile } = this.props;
 
       const userCannotCreateStackScripts =
         Boolean(profile.data?.restricted) &&
@@ -505,8 +505,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             <React.Fragment>
               <div
                 className={classNames({
-                  [classes.searchWrapper]: true,
                   [classes.landing]: !isSelecting,
+                  [classes.searchWrapper]: true,
                 })}
               >
                 <DebouncedSearchTextField

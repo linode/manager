@@ -57,7 +57,7 @@ export const findInEvents = (
 export const setDeletedEvents = (events: Event[]) => {
   /** Create a list of deletion events. */
   const deletions = events.reduce((result: Event[], event) => {
-    const { entity, action, status } = event;
+    const { action, entity, status } = event;
     if (!entity) {
       return result;
     }
@@ -149,7 +149,7 @@ export const addToEvents = (prevArr: Event[], arr: Event[]) =>
   }, prevArr);
 
 export const isLongPendingEvent = (event: Event): boolean => {
-  const { status, action } = event;
+  const { action, status } = event;
   return status === 'scheduled' && action === 'image_upload';
 };
 

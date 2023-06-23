@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const GravatarByUsername = (props: Props) => {
-  const { username, className } = props;
+  const { className, username } = props;
   const { data: user } = useAccountUser(username ?? '');
   const url = user?.email ? getGravatarUrl(user.email) : undefined;
 
@@ -30,7 +30,7 @@ export const GravatarByUsername = (props: Props) => {
 const StyledAvatar = styled(Avatar, {
   label: 'StyledGravatarByUsername',
 })(() => ({
+  borderRadius: '50%',
   height: 28,
   width: 28,
-  borderRadius: '50%',
 }));

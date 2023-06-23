@@ -15,9 +15,9 @@ export const AdditionalMenuItems = React.memo((props: Props) => {
   const { isCollapsed } = props;
   const links: PrimaryLink[] = [
     {
+      QAKey: 'help',
       display: 'Get Help',
       href: '/support',
-      QAKey: 'help',
       icon: <Help className="small wBorder" />,
     },
   ];

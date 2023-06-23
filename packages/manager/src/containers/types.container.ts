@@ -21,15 +21,15 @@ export const withTypes = <Props>(
 ) => (props: Props) => {
   const {
     data: typesData,
-    isLoading: typesLoading,
     error: typesError,
+    isLoading: typesLoading,
   } = useAllTypes(enabled);
 
   return React.createElement(Component, {
     ...props,
     typesData,
-    typesLoading,
     typesError: typesError ?? undefined,
+    typesLoading,
   });
 };
 
@@ -45,7 +45,7 @@ export const withSpecificTypes = <Props>(
 
   return React.createElement(Component, {
     ...props,
-    setRequestedTypes,
     requestedTypesData,
+    setRequestedTypes,
   });
 };

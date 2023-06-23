@@ -47,11 +47,11 @@ type ClassNames = 'backButton' | 'createTitle';
 const styles = () =>
   createStyles({
     backButton: {
-      margin: '5px 0 0 -16px',
       '& svg': {
-        width: 34,
         height: 34,
+        width: 34,
       },
+      margin: '5px 0 0 -16px',
     },
   });
 
@@ -81,22 +81,22 @@ type CombinedProps = Props &
   WithQueryClientProps;
 
 const errorResources = {
-  label: 'A label',
   images: 'Images',
+  label: 'A label',
   script: 'A script',
 };
 
 export class StackScriptCreate extends React.Component<CombinedProps, State> {
   state: State = {
-    label: '',
     description: '',
+    dialogOpen: false,
     images: [],
+    isLoadingStackScript: false,
+    isSubmitting: false,
+    label: '',
+    revisionNote: '',
     /* available images to select from in the dropdown */
     script: '',
-    revisionNote: '',
-    isSubmitting: false,
-    dialogOpen: false,
-    isLoadingStackScript: false,
     updated: '',
   };
 
@@ -127,23 +127,23 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             !stackScriptHasBeenUpdatedElsewhere
           ) {
             this.setState({
-              label: valuesFromStorage.label ?? '',
+              apiResponse: response,
               description: valuesFromStorage.description ?? '',
               images: valuesFromStorage.images ?? [],
-              script: valuesFromStorage.script ?? '',
-              revisionNote: valuesFromStorage.rev_note ?? '',
               isLoadingStackScript: false,
-              apiResponse: response,
+              label: valuesFromStorage.label ?? '',
+              revisionNote: valuesFromStorage.rev_note ?? '',
+              script: valuesFromStorage.script ?? '',
             });
           } else {
             this.setState({
-              label: response.label,
+              apiResponse: response, // Saved for use when resetting the form
               description: response.description,
               images: response.images,
+              isLoadingStackScript: false,
+              label: response.label,
               revisionNote: response.rev_note,
               script: response.script,
-              apiResponse: response, // Saved for use when resetting the form
-              isLoadingStackScript: false,
               updated: response.updated,
             });
           }
@@ -158,11 +158,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
        * so load that in.
        */
       this.setState({
-        label: valuesFromStorage.label ?? '',
         description: valuesFromStorage.description ?? '',
         images: valuesFromStorage.images ?? [],
-        script: valuesFromStorage.script ?? '',
+        label: valuesFromStorage.label ?? '',
         revisionNote: valuesFromStorage.rev_note ?? '',
+        script: valuesFromStorage.script ?? '',
       });
     }
   }
@@ -173,18 +173,18 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   _saveStateToLocalStorage = (queryClient: QueryClient) => {
     const {
-      label,
       description,
-      script,
       images,
+      label,
       revisionNote: rev_note,
+      script,
       updated,
     } = this.state;
     const {
-      mode,
       match: {
         params: { stackScriptID },
       },
+      mode,
     } = this.props;
     const account = queryClient.getQueryData<Account>('account');
 
@@ -194,12 +194,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       const id = mode === 'create' ? account.euuid : +stackScriptID;
 
       storage.stackScriptInProgress.set({
-        id,
-        label,
         description,
-        script,
+        id,
         images,
+        label,
         rev_note,
+        script,
         updated,
       });
     }
@@ -252,11 +252,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.handleCloseDialog();
     this.setState(
       {
-        script: payload?.script ?? '',
-        label: payload?.label ?? '',
-        images: payload?.images ?? [],
         description: payload?.description ?? '',
+        images: payload?.images ?? [],
+        label: payload?.label ?? '',
         revisionNote: payload?.rev_note ?? '',
+        script: payload?.script ?? '',
       },
       () => this.saveStateToLocalStorage(this.props.queryClient)
     );
@@ -269,8 +269,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
     this.setState(
       () => ({
-        isSubmitting: false,
         errors,
+        isSubmitting: false,
       }),
       () => {
         scrollErrorIntoView();
@@ -323,25 +323,25 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   generatePayload = () => {
-    const { script, label, images, description, revisionNote } = this.state;
+    const { description, images, label, revisionNote, script } = this.state;
 
     return {
-      script,
-      label,
-      images,
       description,
+      images,
+      label,
       rev_note: revisionNote,
+      script,
     };
   };
 
   hasUnsavedChanges = () => {
     const {
       apiResponse,
-      script,
-      label,
-      images,
       description,
+      images,
+      label,
       revisionNote,
+      script,
     } = this.state;
     if (!apiResponse) {
       // Create flow; return true if there's any input anywhere
@@ -426,24 +426,24 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      location,
-      imagesData,
-      mode,
       grants,
-      profile,
+      imagesData,
+      location,
       match: {
         params: { stackScriptID },
       },
+      mode,
+      profile,
     } = this.props;
     const {
-      images,
-      script,
-      label,
       description,
-      revisionNote,
       errors,
-      isSubmitting,
+      images,
       isLoadingStackScript,
+      isSubmitting,
+      label,
+      revisionNote,
+      script,
       // apiResponse
     } = this.state;
 
@@ -495,16 +495,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <LandingHeader
           title={pageTitle}
           breadcrumbProps={{
-            pathname: location.pathname,
             breadcrumbDataAttrs: {
               'data-qa-create-stackscript-breadcrumb': true,
             },
             crumbOverrides: [
               {
-                position: 1,
                 label: 'StackScripts',
+                position: 1,
               },
             ],
+            pathname: location.pathname,
           }}
         />
         {shouldDisable && (
@@ -528,20 +528,20 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             selected: images,
           }}
           label={{
-            value: label,
             handler: this.handleLabelChange,
+            value: label,
           }}
           description={{
-            value: description,
             handler: this.handleDescriptionChange,
+            value: description,
           }}
           revision={{
-            value: revisionNote,
             handler: this.handleChangeRevisionNote,
+            value: revisionNote,
           }}
           script={{
-            value: script,
             handler: this.handleChangeScript,
+            value: script,
           }}
           onSelectChange={this.handleChooseImage}
           errors={errors}

@@ -5,12 +5,12 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { RebuildFromStackScript } from './RebuildFromStackScript';
 
 const props = {
-  type: 'community' as const,
-  linodeId: 1234,
   disabled: false,
-  passwordHelperText: '',
   handleRebuildError: jest.fn(),
+  linodeId: 1234,
   onClose: jest.fn(),
+  passwordHelperText: '',
+  type: 'community' as const,
   ...reactRouterProps,
 };
 

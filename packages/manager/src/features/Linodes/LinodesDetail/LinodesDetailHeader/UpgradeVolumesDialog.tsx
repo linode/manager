@@ -30,15 +30,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const UpgradeVolumesDialog = (props: Props) => {
-  const { open, onClose, linode, upgradeableVolumeIds } = props;
+  const { linode, onClose, open, upgradeableVolumeIds } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const queryClient = useQueryClient();
 
   const {
-    mutateAsync: migrateVolumes,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: migrateVolumes,
   } = useVolumesMigrateMutation();
 
   const numUpgradeableVolumes = upgradeableVolumeIds.length;

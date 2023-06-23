@@ -34,16 +34,16 @@ import Box from 'src/components/core/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   resizeTitle: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     minHeight: '44px',
   },
   selectPlanPanel: {
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(3),
     '& > div': {
       padding: 0,
     },
+    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(5),
   },
 }));
 
@@ -56,7 +56,7 @@ interface Props {
 
 export const LinodeResize = (props: Props) => {
   const classes = useStyles();
-  const { linodeId, open, onClose } = props;
+  const { linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -78,17 +78,17 @@ export const LinodeResize = (props: Props) => {
   const [confirmationText, setConfirmationText] = React.useState('');
 
   const {
-    mutateAsync: resizeLinode,
-    isLoading,
     error: resizeError,
+    isLoading,
+    mutateAsync: resizeLinode,
   } = useLinodeResizeMutation(linodeId ?? -1);
 
   const { data: regionsData } = useRegionsQuery();
 
   const formik = useFormik({
     initialValues: {
-      type: '',
       allow_auto_disk_resize: shouldEnableAutoResizeDiskOption(disks ?? [])[1],
+      type: '',
     },
     async onSubmit(values) {
       const isSmaller = isSmallerThanCurrentPlan(
@@ -103,8 +103,8 @@ export const LinodeResize = (props: Props) => {
        * is larger than the target plan).
        */
       await resizeLinode({
-        type: values.type,
         allow_auto_disk_resize: values.allow_auto_disk_resize && !isSmaller,
+        type: values.type,
       });
       resetEventsPolling();
       enqueueSnackbar('Linode queued for resize.', {

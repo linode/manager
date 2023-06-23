@@ -31,7 +31,7 @@ export interface Props {
 }
 
 export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
-  const { onClose, open, token, entities } = props;
+  const { entities, onClose, open, token } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();

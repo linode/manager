@@ -57,7 +57,7 @@ export const search = (
   inputValue: string
 ): SearchResults => {
   if (!inputValue || inputValue === '') {
-    return { searchResultsByEntity: emptyResults, combinedResults: [] };
+    return { combinedResults: [], searchResultsByEntity: emptyResults };
   }
 
   const combinedResults = refinedSearch(inputValue, entities);
@@ -131,10 +131,10 @@ export default () => (Component: React.ComponentType<any>) => {
             ],
             query
           );
-          const { searchResultsByEntity, combinedResults } = results;
+          const { combinedResults, searchResultsByEntity } = results;
           return {
-            searchResultsByEntity,
             combinedResults,
+            searchResultsByEntity,
           };
         },
       }

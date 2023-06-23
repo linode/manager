@@ -5,11 +5,11 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import StatusBanners, { IncidentBanner, IncidentProps } from './StatusBanners';
 
 const props: IncidentProps = {
-  title: 'my incident',
-  status: 'monitoring',
-  message: 'We are monitoring this incident.',
   href: 'https://www.example.com',
   impact: 'major',
+  message: 'We are monitoring this incident.',
+  status: 'monitoring',
+  title: 'my incident',
 };
 
 describe('Status banners from statuspage.io', () => {

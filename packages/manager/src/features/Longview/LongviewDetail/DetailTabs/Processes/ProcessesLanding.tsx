@@ -21,14 +21,14 @@ import { Process } from './types';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  filterInput: {
+    width: 300,
+  },
   root: {
     [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
-  },
-  filterInput: {
-    width: 300,
   },
   selectTimeRange: {
     width: 200,
@@ -74,17 +74,17 @@ const ProcessesLanding: React.FC<Props> = (props) => {
 
   // For the TimeRangeSelect.
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
     end: 0,
+    start: 0,
   });
   const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
+    setTimeBox({ end, start });
   };
 
   const isToday = _isToday(time.start, time.end);
 
   // We get all the data needed for the table and Graphs in one request.
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['processes'],
     clientAPIKey,
     time.start,
@@ -204,15 +204,15 @@ export const extendData = (
       const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({
-        id: `${processName}-${user}`,
-        name: processName,
-        user,
-        maxCount: statMax(userProcess.count),
+        averageCPU: statAverage(userProcess.cpu),
         averageIO:
           statAverage(userProcess.ioreadkbytes) +
           statAverage(userProcess.iowritekbytes),
-        averageCPU: statAverage(userProcess.cpu),
         averageMem: statAverage(userProcess.mem),
+        id: `${processName}-${user}`,
+        maxCount: statMax(userProcess.count),
+        name: processName,
+        user,
       });
     });
   });

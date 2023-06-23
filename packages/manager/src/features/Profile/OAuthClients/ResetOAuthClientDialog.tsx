@@ -14,13 +14,13 @@ interface Props {
 }
 
 export const ResetOAuthClientDialog = ({
-  open,
-  onClose,
   id,
   label,
+  onClose,
+  open,
   showSecret,
 }: Props) => {
-  const { mutateAsync, isLoading, error } = useResetOAuthClientMutation(id);
+  const { error, isLoading, mutateAsync } = useResetOAuthClientMutation(id);
 
   const onReset = () => {
     mutateAsync().then((data) => {

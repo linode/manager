@@ -5,6 +5,12 @@ import { Theme } from '@mui/material/styles';
 import CloseSnackbar from './CloseSnackbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  error: {
+    borderLeft: `6px solid ${theme.palette.error.dark}`,
+  },
+  info: {
+    borderLeft: `6px solid ${theme.palette.primary.main}`,
+  },
   root: {
     '& div': {
       backgroundColor: `${theme.bg.white} !important`,
@@ -25,14 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  info: {
-    borderLeft: `6px solid ${theme.palette.primary.main}`,
-  },
   success: {
     borderLeft: `6px solid ${theme.palette.primary.main}`,
-  },
-  error: {
-    borderLeft: `6px solid ${theme.palette.error.dark}`,
   },
   warning: {
     borderLeft: `6px solid ${theme.palette.warning.dark}`,
@@ -62,10 +62,10 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
       {...rest}
       classes={{
         root: classes.root,
-        variantSuccess: classes.success,
         variantError: classes.error,
-        variantWarning: classes.warning,
         variantInfo: classes.info,
+        variantSuccess: classes.success,
+        variantWarning: classes.warning,
       }}
       action={(key) => (
         <CloseSnackbar

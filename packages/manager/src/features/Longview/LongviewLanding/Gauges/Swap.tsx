@@ -13,10 +13,10 @@ type CombinedProps = Props & WithTheme & LVDataProps;
 
 const SwapGauge: React.FC<CombinedProps> = (props) => {
   const {
+    lastUpdatedError,
+    longviewClientData,
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData,
-    lastUpdatedError,
   } = props;
 
   const freeMemory = pathOr<number>(

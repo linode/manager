@@ -12,9 +12,9 @@ describe('Redux backups', () => {
       const newState = backups(
         {
           ...B.defaultState,
-          error: apiError,
-          enableErrors: [error],
           autoEnrollError: 'Error',
+          enableErrors: [error],
+          error: apiError,
         },
         B.handleOpen()
       );

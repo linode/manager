@@ -24,7 +24,7 @@ const useStyles = makeStyles()(() => ({
 export const BackupsPlaceholder = (props: Props) => {
   const { classes } = useStyles();
 
-  const { backupsMonthlyPrice, linodeId, disabled } = props;
+  const { backupsMonthlyPrice, disabled, linodeId } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -57,9 +57,9 @@ export const BackupsPlaceholder = (props: Props) => {
         renderAsSecondary
         buttonProps={[
           {
-            onClick: () => setDialogOpen(true),
             children: 'Enable Backups',
             disabled,
+            onClick: () => setDialogOpen(true),
           },
         ]}
       >

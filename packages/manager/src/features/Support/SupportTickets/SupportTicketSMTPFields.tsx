@@ -17,17 +17,17 @@ export const smtpHelperText =
   'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';
 
 export const fieldNameToLabelMap: Record<string, string> = {
-  customerName: 'First and last name',
   companyName: 'Business or company name',
-  useCase:
-    "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
+  customerName: 'First and last name',
   emailDomains: 'Domain(s) that will be sending emails',
   publicInfo:
     "Links to public information - e.g. your business or application's website, Twitter profile, GitHub, etc.",
+  useCase:
+    "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
 };
 
 const SupportTicketSMTPFields: React.FC<Props> = (props) => {
-  const { handleChange, formState } = props;
+  const { formState, handleChange } = props;
 
   return (
     <React.Fragment>

@@ -109,7 +109,7 @@ export const Prompt = React.memo((props: PromptProps) => {
   return (
     <>
       <ReactRouterPrompt when={props.when} message={handleNavigation} />
-      {props.children({ isModalOpen, handleCancel, handleConfirm })}
+      {props.children({ handleCancel, handleConfirm, isModalOpen })}
     </>
   );
 });

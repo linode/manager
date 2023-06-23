@@ -6,12 +6,12 @@ const mockFn = jest.fn();
 
 const mockTabs: Tab[] = [
   {
-    title: 'Example Tab',
     render: mockFn,
+    title: 'Example Tab',
   },
   {
-    title: 'Example Tab 2',
     render: mockFn,
+    title: 'Example Tab 2',
   },
 ];
 

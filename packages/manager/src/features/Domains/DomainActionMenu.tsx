@@ -41,13 +41,12 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions = [
     {
-      title: 'Edit',
       onClick: () => {
         onEdit(domain);
       },
+      title: 'Edit',
     },
     {
-      title: domain.status === 'active' ? 'Disable' : 'Enable',
       className: classes.button,
       onClick: () => {
         onDisableOrEnable(
@@ -55,18 +54,19 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
           domain
         );
       },
+      title: domain.status === 'active' ? 'Disable' : 'Enable',
     },
     {
-      title: 'Clone',
       onClick: () => {
         onClone(domain);
       },
+      title: 'Clone',
     },
     {
-      title: 'Delete',
       onClick: () => {
         onRemove(domain);
       },
+      title: 'Delete',
     },
   ] as ExtendedAction[];
 

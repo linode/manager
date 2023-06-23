@@ -78,7 +78,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
     const { classes } = this.props.selectProps;
     const { icon } = pathOr<string>('default', [], suggestion);
     const { searchText } = suggestion;
-    const { innerRef, innerProps } = this.props;
+    const { innerProps, innerRef } = this.props;
     const { status } = suggestion;
     return (
       <div

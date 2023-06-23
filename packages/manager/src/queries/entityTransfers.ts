@@ -17,16 +17,16 @@ interface EntityTransfersData {
   entityTransfers: Record<string, EntityTransfer>;
 }
 
-const sortFilter = { '+order_by': 'created', '+order': 'desc' };
+const sortFilter = { '+order': 'desc', '+order_by': 'created' };
 
 export const TRANSFER_FILTERS = {
-  received: {
-    ...sortFilter,
-    '+and': [{ is_sender: false }, { status: { '+neq': 'pending' } }],
-  },
   pending: {
     ...sortFilter,
     status: 'pending',
+  },
+  received: {
+    ...sortFilter,
+    '+and': [{ is_sender: false }, { status: { '+neq': 'pending' } }],
   },
   sent: {
     ...sortFilter,

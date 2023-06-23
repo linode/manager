@@ -88,10 +88,10 @@ export default class Paginate extends React.Component<Props, State> {
     const props = {
       ...this.props,
       ...this.state,
+      count: this.props.data.length,
+      data: view(this.props.data),
       handlePageChange: this.handlePageChange,
       handlePageSizeChange: this.handlePageSizeChange,
-      data: view(this.props.data),
-      count: this.props.data.length,
     };
 
     return this.props.children(props);

@@ -17,20 +17,20 @@ interface Props {
   onClose: () => void;
 }
 
-const EditSSHKeyDrawer = ({ open, onClose, sshKey }: Props) => {
+const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
-    mutateAsync: updateSSHKey,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateSSHKey,
     reset,
   } = useUpdateSSHKeyMutation(sshKey?.id ?? -1);
 
   const formik = useFormik<{ label: string }>({
+    enableReinitialize: true,
     initialValues: {
       label: sshKey?.label ?? '',
     },
-    enableReinitialize: true,
     async onSubmit(values) {
       await updateSSHKey(values);
       enqueueSnackbar('Successfully updated SSH key.', { variant: 'success' });

@@ -71,9 +71,9 @@ Cypress.Commands.add(
   'visitWithLogin',
   (url: string, linodeOptions?: LinodeVisitOptions, cypressOptions?: any) => {
     const defaultLinodeOptions: LinodeVisitOptions = {
+      localStorageOverrides: undefined,
       mockRequests: true,
       preferenceOverrides: undefined,
-      localStorageOverrides: undefined,
     };
 
     const resolvedLinodeOptions = linodeOptions

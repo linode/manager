@@ -5,16 +5,16 @@ import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles(() => ({
   graphsUnavailable: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     justifyContent: 'center',
     padding: 16,
     paddingTop: 0,
     width: '100%',
   },
   spinner: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     justifyContent: 'center',
     width: '100%',
   },

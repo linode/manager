@@ -14,40 +14,61 @@ import TextField from '../TextField';
 
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({
-    root: {
-      display: 'inline-block',
-      border: '1px solid transparent',
-      color: theme.textColors.tableStatic,
-      fontSize: '1.125rem !important',
-      lineHeight: 1,
-      padding: '5px 8px',
-      textDecoration: 'inherit',
-      transition: theme.transitions.create(['opacity']),
-      wordBreak: 'break-all',
+    button: {
+      '&:first-of-type': {
+        marginLeft: theme.spacing(2),
+        [theme.breakpoints.down('md')]: {
+          marginLeft: theme.spacing(2),
+        },
+      },
+      background: 'transparent !important',
+      marginLeft: 0,
+      marginTop: 2,
+      minWidth: 'auto',
+      paddingLeft: 6,
+      paddingRight: 6,
     },
     container: {
-      display: 'flex',
       alignItems: 'center',
+      display: 'flex',
       justifyContent: 'flex-start',
       position: 'relative',
     },
+    editIcon: {
+      [theme.breakpoints.up('sm')]: {
+        '&:focus': {
+          opacity: 1,
+        },
+        opacity: 0,
+      },
+    },
+    icon: {
+      '&:hover, &:focus': {
+        color: theme.palette.primary.light,
+      },
+      color: theme.palette.text.primary,
+      fontSize: '1.25rem',
+      minHeight: 34,
+    },
     initial: {
-      border: '1px solid transparent',
       '&:hover, &:focus': {
         [`& .${classes.editIcon}`]: {
           opacity: 1,
         },
         [`& .${classes.icon}`]: {
-          color: theme.color.grey1,
           '&:hover': {
             color: theme.color.black,
           },
+          color: theme.color.grey1,
         },
       },
+      border: '1px solid transparent',
     },
-    textField: {
-      animation: `${fadeIn} .3s ease-in-out forwards`,
-      margin: 0,
+    input: {
+      fontFamily: theme.font.bold,
+      fontSize: '1.125rem',
+      padding: 0,
+      paddingLeft: 2,
     },
     inputRoot: {
       backgroundColor: 'transparent',
@@ -58,41 +79,20 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
         width: '100%',
       },
     },
-    input: {
-      fontFamily: theme.font.bold,
-      fontSize: '1.125rem',
-      padding: 0,
-      paddingLeft: 2,
+    root: {
+      border: '1px solid transparent',
+      color: theme.textColors.tableStatic,
+      display: 'inline-block',
+      fontSize: '1.125rem !important',
+      lineHeight: 1,
+      padding: '5px 8px',
+      textDecoration: 'inherit',
+      transition: theme.transitions.create(['opacity']),
+      wordBreak: 'break-all',
     },
-    button: {
-      background: 'transparent !important',
-      marginTop: 2,
-      marginLeft: 0,
-      minWidth: 'auto',
-      paddingRight: 6,
-      paddingLeft: 6,
-      '&:first-of-type': {
-        marginLeft: theme.spacing(2),
-        [theme.breakpoints.down('md')]: {
-          marginLeft: theme.spacing(2),
-        },
-      },
-    },
-    icon: {
-      color: theme.palette.text.primary,
-      fontSize: '1.25rem',
-      minHeight: 34,
-      '&:hover, &:focus': {
-        color: theme.palette.primary.light,
-      },
-    },
-    editIcon: {
-      [theme.breakpoints.up('sm')]: {
-        opacity: 0,
-        '&:focus': {
-          opacity: 1,
-        },
-      },
+    textField: {
+      animation: `${fadeIn} .3s ease-in-out forwards`,
+      margin: 0,
     },
     underlineOnHover: {
       '&:hover, &:focus': {
@@ -119,12 +119,12 @@ export const EditableText = (props: PassThroughProps) => {
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
   const {
-    labelLink,
-    errorText,
-    onEdit,
-    onCancel,
-    text: propText,
     className,
+    errorText,
+    labelLink,
+    onCancel,
+    onEdit,
+    text: propText,
     ...rest
   } = props;
 

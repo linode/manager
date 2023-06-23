@@ -30,21 +30,21 @@ const arrayToData = (data: any[]): Record<string, LongviewClient> => {
 };
 
 const props: CombinedProps = {
+  activeSubscription: longviewSubscriptionFactory.build(),
+  closeSnackbar: jest.fn(),
+  createLongviewClient: jest.fn().mockResolvedValue({}),
+  deleteLongviewClient: jest.fn(),
+  enqueueSnackbar: jest.fn(),
+  getLongviewClients: jest.fn().mockResolvedValue([]),
+  handleAddClient: jest.fn(),
   longviewClientsData: arrayToData(clients),
   longviewClientsError: {},
   longviewClientsLastUpdated: 0,
   longviewClientsLoading: false,
   longviewClientsResults: clients.length,
-  createLongviewClient: jest.fn().mockResolvedValue({}),
-  deleteLongviewClient: jest.fn(),
-  getLongviewClients: jest.fn().mockResolvedValue([]),
-  updateLongviewClient: jest.fn(),
-  enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
-  activeSubscription: longviewSubscriptionFactory.build(),
   lvClientData: {},
-  handleAddClient: jest.fn(),
   newClientLoading: false,
+  updateLongviewClient: jest.fn(),
   ...reactRouterProps,
 };
 

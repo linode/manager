@@ -15,13 +15,13 @@ interface Props {
 }
 
 export const CancelBackupsDialog = (props: Props) => {
-  const { isOpen, onClose, linodeId } = props;
+  const { isOpen, linodeId, onClose } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: cancelBackups,
     error,
     isLoading,
+    mutateAsync: cancelBackups,
   } = useLinodeBackupsCancelMutation(linodeId);
 
   const onCancelBackups = async () => {

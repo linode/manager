@@ -11,22 +11,22 @@ import RemoveDeviceDialog from './RemoveDeviceDialog';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  actions: {
+    '&.MuiGrid-item': {
+      paddingTop: 0,
+    },
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: theme.spacing(),
+    [theme.breakpoints.only('sm')]: {
+      marginRight: theme.spacing(),
+    },
+  },
   copy: {
     fontSize: '0.875rem',
     marginTop: theme.spacing(),
     [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-  },
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginBottom: theme.spacing(),
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-    },
-    [theme.breakpoints.only('sm')]: {
       marginRight: theme.spacing(),
     },
   },
@@ -39,10 +39,10 @@ interface Props {
 }
 
 const FirewallLinodesLanding = (props: Props) => {
-  const { firewallID, firewallLabel, disabled } = props;
+  const { disabled, firewallID, firewallLabel } = props;
   const classes = useStyles();
 
-  const { data: devices, isLoading, error } = useAllFirewallDevicesQuery(
+  const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(
     firewallID
   );
 

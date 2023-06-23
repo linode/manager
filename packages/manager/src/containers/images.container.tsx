@@ -31,7 +31,7 @@ type Wrapper = (
 const imagesContainer: Wrapper = (
   Component: React.ComponentType<DefaultProps>
 ) => (props) => {
-  const { data, error, isLoading, dataUpdatedAt } = useAllImagesQuery();
+  const { data, dataUpdatedAt, error, isLoading } = useAllImagesQuery();
 
   const _imagesData = listToItemsByID(data ?? []);
   return (

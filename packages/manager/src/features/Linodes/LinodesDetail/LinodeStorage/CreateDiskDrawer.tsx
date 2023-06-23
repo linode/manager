@@ -47,7 +47,7 @@ export interface Props {
 }
 
 export const CreateDiskDrawer = (props: Props) => {
-  const { open, onClose, linodeId } = props;
+  const { linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const [selectedMode, setSelectedMode] = React.useState<CreateMode>('empty');
@@ -63,12 +63,12 @@ export const CreateDiskDrawer = (props: Props) => {
   const maximumSize = calculateDiskFree(linode, disks, 0);
 
   const initialValues = {
-    label: '',
-    filesystem: 'ext4' as FileSystem,
-    size: maximumSize,
-    image: '',
-    root_pass: '',
     authorized_users: [],
+    filesystem: 'ext4' as FileSystem,
+    image: '',
+    label: '',
+    root_pass: '',
+    size: maximumSize,
   };
 
   const validationSchema =
@@ -77,17 +77,16 @@ export const CreateDiskDrawer = (props: Props) => {
       : CreateLinodeDiskSchema;
 
   const formik = useFormik({
-    initialValues,
     enableReinitialize: true,
-    validationSchema,
+    initialValues,
     async onSubmit(values, helpers) {
       try {
         const cleanedValues =
           selectedMode === 'empty'
             ? {
+                filesystem: values.filesystem,
                 label: values.label,
                 size: values.size,
-                filesystem: values.filesystem,
               }
             : values;
 
@@ -101,6 +100,7 @@ export const CreateDiskDrawer = (props: Props) => {
         handleAPIErrors(e, helpers.setFieldError, helpers.setStatus);
       }
     },
+    validationSchema,
   });
 
   React.useEffect(() => {

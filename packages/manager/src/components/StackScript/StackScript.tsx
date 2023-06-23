@@ -18,58 +18,58 @@ import { makeStyles } from 'tss-react/mui';
 import TooltipIcon from '../TooltipIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.bg.bgPaper,
-    '.detailsWrapper &': {
-      padding: theme.spacing(4),
-    },
-  },
-  headerLabel: {
-    maxWidth: 'calc(100% - 80px)',
-  },
-  editBtn: {
-    minWidth: 'fit-content',
-  },
-  deployments: {
-    marginTop: theme.spacing(1),
-  },
   author: {
+    marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
   },
-  description: {
-    whiteSpace: 'pre-wrap',
-  },
-  heading: {
-    marginBottom: theme.spacing(1),
-  },
-  descriptionText: {
-    marginBottom: theme.spacing(2),
-  },
-  deploymentSection: {
+  compatibleImages: {
+    display: 'block',
     marginTop: theme.spacing(1),
-    fontSize: '1rem',
-  },
-  idSection: {
-    marginTop: theme.spacing(1),
-    fontSize: '1rem',
   },
   copyIcon: {
-    color: theme.palette.primary.main,
-    position: 'relative',
-    display: 'inline-block',
     '& svg': {
-      width: '1em',
       height: '1em',
+      width: '1em',
     },
+    color: theme.palette.primary.main,
+    display: 'inline-block',
+    position: 'relative',
   },
   dateTimeDisplay: {
     display: 'inline-block',
     fontSize: '1rem',
   },
-  compatibleImages: {
-    display: 'block',
+  deploymentSection: {
+    fontSize: '1rem',
     marginTop: theme.spacing(1),
+  },
+  deployments: {
+    marginTop: theme.spacing(1),
+  },
+  description: {
+    whiteSpace: 'pre-wrap',
+  },
+  descriptionText: {
+    marginBottom: theme.spacing(2),
+  },
+  editBtn: {
+    minWidth: 'fit-content',
+  },
+  headerLabel: {
+    maxWidth: 'calc(100% - 80px)',
+  },
+  heading: {
+    marginBottom: theme.spacing(1),
+  },
+  idSection: {
+    fontSize: '1rem',
+    marginTop: theme.spacing(1),
+  },
+  root: {
+    '.detailsWrapper &': {
+      padding: theme.spacing(4),
+    },
+    backgroundColor: theme.bg.bgPaper,
   },
 }));
 
@@ -86,15 +86,15 @@ interface StackScriptImages {
 export const StackScript = (props: StackScriptProps) => {
   const {
     data: {
-      username,
-      deployments_total,
       deployments_active,
+      deployments_total,
       description,
       id: stackscriptId,
-      script,
-      label,
-      updated,
       images,
+      label,
+      script,
+      updated,
+      username,
     },
     userCanModify,
   } = props;
@@ -156,8 +156,8 @@ export const StackScript = (props: StackScriptProps) => {
     <div className={classes.root}>
       <Box
         sx={{
-          display: 'flex',
           alignItems: 'flex-start',
+          display: 'flex',
           justifyContent: 'space-between',
         }}
       >
@@ -255,8 +255,8 @@ export const StackScript = (props: StackScriptProps) => {
                   text="You must update your StackScript to use a compatible Image to deploy it"
                   tooltipPosition="bottom"
                   sxTooltipIcon={{
-                    padding: 0,
                     marginLeft: theme.spacing(),
+                    padding: 0,
                   }}
                   status="help"
                 />

@@ -9,8 +9,8 @@ import SelectionCardWrapper from 'src/features/Linodes/LinodesCreate/SelectionCa
 import Chip from 'src/components/core/Chip';
 
 const AppPanelGrid = styled(Grid)(({ theme }) => ({
-  marginTop: theme.spacing(2),
   marginBottom: theme.spacing(),
+  marginTop: theme.spacing(2),
   padding: `${theme.spacing(1)} 0`,
 }));
 
@@ -32,13 +32,13 @@ interface Props {
 
 export const AppPanelSection: React.FC<Props> = (props) => {
   const {
-    heading,
     apps,
-    selectedStackScriptID,
     disabled,
-    openDrawer,
     handleClick,
+    heading,
+    openDrawer,
     searchValue,
+    selectedStackScriptID,
   } = props;
 
   if (heading === 'New apps' && !apps.length) {

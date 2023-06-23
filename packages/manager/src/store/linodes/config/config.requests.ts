@@ -47,13 +47,13 @@ export const getLinodeConfigs = createRequestThunk(
 
 export const getLinodeConfig = createRequestThunk(
   getLinodeConfigActions,
-  ({ linodeId, configId }) =>
+  ({ configId, linodeId }) =>
     _getLinodeConfig(linodeId, configId).then(addLinodeIdToConfig(linodeId))
 );
 
 export const updateLinodeConfig = createRequestThunk(
   updateLinodeConfigActions,
-  ({ linodeId, configId, ...data }) =>
+  ({ configId, linodeId, ...data }) =>
     _updateLinodeConfig(linodeId, configId, data).then(
       addLinodeIdToConfig(linodeId)
     )
@@ -61,7 +61,7 @@ export const updateLinodeConfig = createRequestThunk(
 
 export const deleteLinodeConfig = createRequestThunk(
   deleteLinodeConfigActions,
-  ({ linodeId, configId }) => _deleteLinodeConfig(linodeId, configId)
+  ({ configId, linodeId }) => _deleteLinodeConfig(linodeId, configId)
 );
 
 export const getAllLinodeConfigs: ThunkActionCreator<
@@ -69,7 +69,7 @@ export const getAllLinodeConfigs: ThunkActionCreator<
   GetAllLinodeConfigsParams
 > = (params) => async (dispatch) => {
   const { linodeId } = params;
-  const { started, done, failed } = getAllLinodeConfigsActions;
+  const { done, failed, started } = getAllLinodeConfigsActions;
   dispatch(started(params));
   const req = getAll<Config>((configParams?: Params, filter?: Filter) =>
     _getLinodeConfigs(linodeId, configParams, filter)
@@ -88,7 +88,7 @@ export const getAllLinodeConfigs: ThunkActionCreator<
     );
     return response.data;
   } catch (error) {
-    dispatch(failed({ params, error }));
+    dispatch(failed({ error, params }));
     return error;
   }
 };

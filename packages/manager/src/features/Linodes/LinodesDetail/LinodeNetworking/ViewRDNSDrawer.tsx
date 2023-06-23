@@ -22,7 +22,7 @@ interface Props {
 }
 
 const ViewRDNSDrawer = (props: Props) => {
-  const { open, onClose, linodeId, selectedRange } = props;
+  const { linodeId, onClose, open, selectedRange } = props;
   const { classes } = useStyles();
 
   const { data: linode } = useLinodeQuery(linodeId, open);

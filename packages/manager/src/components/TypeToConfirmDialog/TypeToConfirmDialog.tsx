@@ -32,15 +32,15 @@ type CombinedProps = TypeToConfirmDialogProps &
 
 export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
-    open,
-    title,
-    onClose,
-    onClick,
-    loading,
-    entity,
     children,
     confirmationText,
+    entity,
     errors,
+    loading,
+    onClick,
+    onClose,
+    open,
+    title,
     typographyStyle,
   } = props;
 

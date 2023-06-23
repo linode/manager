@@ -33,24 +33,24 @@ type RegionGroup = ContinentNames | 'Other';
 
 export const getRegionOptions = (regions: Region[]) => {
   const groups: Record<RegionGroup, RegionItem[]> = {
-    'North America': [],
-    Europe: [],
-    Asia: [],
-    'South America': [],
-    Oceania: [],
     Africa: [],
     Antartica: [],
+    Asia: [],
+    Europe: [],
+    'North America': [],
+    Oceania: [],
     Other: [],
+    'South America': [],
   };
 
   for (const region of regions) {
     const group = getRegionCountryGroup(region);
 
     groups[group].push({
+      country: region.country,
+      flag: <Flag country={region.country as Lowercase<Country>} />,
       label: `${region.label} (${region.id})`,
       value: region.id,
-      flag: <Flag country={region.country as Lowercase<Country>} />,
-      country: region.country,
     });
   }
 
@@ -92,15 +92,15 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
 export const RegionSelect = React.memo(
   <IsClearable extends boolean>(props: Props<IsClearable>) => {
     const {
-      label,
       disabled,
       handleSelection,
-      isClearable,
       helperText,
+      isClearable,
+      label,
       regions,
+      required,
       selectedID,
       styles,
-      required,
       width,
       ...restOfReactSelectProps
     } = props;

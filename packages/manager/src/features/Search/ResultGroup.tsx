@@ -17,15 +17,15 @@ import { capitalize } from 'src/utilities/capitalize';
 import ResultRow from './ResultRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    marginTop: theme.spacing(),
+    width: '10%',
+  },
   entityHeading: {
     marginBottom: theme.spacing(),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
-  },
-  button: {
-    marginTop: theme.spacing(),
-    width: '10%',
   },
 }));
 
@@ -44,7 +44,7 @@ type CombinedProps = Props & HandlerProps;
 export const ResultGroup: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { entity, groupSize, results, toggle, showMore } = props;
+  const { entity, groupSize, results, showMore, toggle } = props;
 
   if (isEmpty(results)) {
     return null;

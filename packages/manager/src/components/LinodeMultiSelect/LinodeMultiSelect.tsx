@@ -18,13 +18,13 @@ export interface Props {
 const LinodeMultiSelect = (props: Props) => {
   const {
     allowedRegions,
+    disabled,
     errorText,
     filteredLinodes,
     helperText,
+    onBlur,
     onChange,
     value,
-    disabled,
-    onBlur,
   } = props;
 
   const regionFilter = allowedRegions
@@ -35,7 +35,7 @@ const LinodeMultiSelect = (props: Props) => {
       }
     : {};
 
-  const { data, isLoading, error } = useAllLinodesQuery({}, regionFilter);
+  const { data, error, isLoading } = useAllLinodesQuery({}, regionFilter);
 
   const options = data
     ?.filter((linode) => !filteredLinodes?.includes(linode.id))

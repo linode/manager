@@ -18,15 +18,15 @@ interface Props extends TextFieldProps {
 
 export const SingleTextFieldForm = React.memo((props: Props) => {
   const {
-    label,
-    fieldName,
-    submitForm,
     disabled,
-    tooltipText,
-    successMessage,
     errorMessage,
-    successCallback,
+    fieldName,
     initialValue,
+    label,
+    submitForm,
+    successCallback,
+    successMessage,
+    tooltipText,
     ...textFieldProps
   } = props;
 

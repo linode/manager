@@ -47,16 +47,16 @@ const formatEventForDisplay = (
   event: ExtendedEvent,
   onClose: () => void
 ): NotificationItem => ({
-  id: `event-${event.id}`,
   body: <RenderEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  id: `event-${event.id}`,
 });
 
 const formatProgressEventForDisplay = (
   event: ExtendedEvent,
   onClose: () => void
 ): NotificationItem => ({
-  id: `progress-event-${event.id}`,
   body: <RenderProgressEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen,
+  id: `progress-event-${event.id}`,
 });

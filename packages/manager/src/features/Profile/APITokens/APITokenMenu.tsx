@@ -21,33 +21,33 @@ export const APITokenMenu = (props: Props) => {
 
   const {
     isThirdPartyAccessToken,
-    openViewDrawer,
     openEditDrawer,
     openRevokeDialog,
+    openViewDrawer,
     token,
     type,
   } = props;
 
   const actions = [
     {
-      title: 'View Scopes',
       onClick: () => {
         openViewDrawer(token);
       },
+      title: 'View Scopes',
     },
     !isThirdPartyAccessToken
       ? {
-          title: 'Rename',
           onClick: () => {
             openEditDrawer(token);
           },
+          title: 'Rename',
         }
       : null,
     {
-      title: 'Revoke',
       onClick: () => {
         openRevokeDialog(token, type);
       },
+      title: 'Revoke',
     },
   ].filter(Boolean) as Action[];
 

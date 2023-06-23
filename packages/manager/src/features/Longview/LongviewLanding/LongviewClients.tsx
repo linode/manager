@@ -33,6 +33,9 @@ import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  cta: {
+    marginTop: theme.spacing(2),
+  },
   headingWrapper: {
     marginBottom: theme.spacing(),
     [theme.breakpoints.down('lg')]: {
@@ -44,29 +47,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& > div': {
       width: '300px',
     },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
     [theme.breakpoints.only('md')]: {
       '&.MuiGrid-item': {
         paddingLeft: 0,
       },
     },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  cta: {
-    marginTop: theme.spacing(2),
-  },
-  sortSelect: {
-    display: 'flex',
-    alignItems: 'center',
-    flexFlow: 'row nowrap',
-    width: 210,
-    [theme.breakpoints.up('xs')]: {
-      width: 221,
-    },
   },
   selectLabel: {
     minWidth: '65px',
+  },
+  sortSelect: {
+    alignItems: 'center',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    [theme.breakpoints.up('xs')]: {
+      width: 221,
+    },
+    width: 210,
   },
 }));
 
@@ -193,15 +193,15 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
   }, []);
 
   const {
+    activeSubscription,
+    deleteLongviewClient,
+    handleAddClient,
     longviewClientsData,
     longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
     lvClientData,
-    activeSubscription,
-    deleteLongviewClient,
-    handleAddClient,
     newClientLoading,
   } = props;
 

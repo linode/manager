@@ -12,8 +12,8 @@ interface Props {
   label?: string;
 }
 
-const DeleteSSHKeyDialog = ({ id, open, onClose, label }: Props) => {
-  const { mutateAsync, isLoading, error } = useDeleteSSHKeyMutation(id);
+const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
+  const { error, isLoading, mutateAsync } = useDeleteSSHKeyMutation(id);
 
   const onDelete = async () => {
     await mutateAsync();

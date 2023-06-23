@@ -10,13 +10,13 @@ import { ExtendedType } from 'src/utilities/extendType';
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 
 const tableCells = [
-  { cellName: 'Plan', testId: 'plan', center: false, noWrap: false },
-  { cellName: 'Monthly', testId: 'monthly', center: false, noWrap: false },
-  { cellName: 'Hourly', testId: 'hourly', center: false, noWrap: false },
-  { cellName: 'RAM', testId: 'ram', center: true, noWrap: false },
-  { cellName: 'CPUs', testId: 'cpu', center: true, noWrap: false },
-  { cellName: 'Storage', testId: 'storage', center: true, noWrap: false },
-  { cellName: 'Quantity', testId: 'quantity', center: false, noWrap: false },
+  { cellName: 'Plan', center: false, noWrap: false, testId: 'plan' },
+  { cellName: 'Monthly', center: false, noWrap: false, testId: 'monthly' },
+  { cellName: 'Hourly', center: false, noWrap: false, testId: 'hourly' },
+  { cellName: 'RAM', center: true, noWrap: false, testId: 'ram' },
+  { cellName: 'CPUs', center: true, noWrap: false, testId: 'cpu' },
+  { cellName: 'Storage', center: true, noWrap: false, testId: 'storage' },
+  { cellName: 'Quantity', center: false, noWrap: false, testId: 'quantity' },
 ];
 
 interface Props {
@@ -60,7 +60,7 @@ export const KubernetesPlanContainer = ({
           <Table aria-label="List of Linode Plans" spacingBottom={16}>
             <TableHead>
               <TableRow>
-                {tableCells.map(({ cellName, testId, center, noWrap }) => {
+                {tableCells.map(({ cellName, center, noWrap, testId }) => {
                   const attributeValue = `${testId}-header`;
                   return (
                     <TableCell

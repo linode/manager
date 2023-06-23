@@ -23,7 +23,7 @@ export const CPUGraph: React.FC<CombinedProps> = (props) => {
     timezone,
   } = props;
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['cpu'],
     clientAPIKey,
     start,
@@ -58,22 +58,22 @@ export const CPUGraph: React.FC<CombinedProps> = (props) => {
       timezone={timezone}
       data={[
         {
-          label: 'System',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.system,
+          borderColor: 'transparent',
           data: _convertData(cpuData.system, start, end),
+          label: 'System',
         },
         {
-          label: 'User',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.user,
+          borderColor: 'transparent',
           data: _convertData(cpuData.user, start, end),
+          label: 'User',
         },
         {
-          label: 'Wait',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.wait,
+          borderColor: 'transparent',
           data: _convertData(cpuData.wait, start, end),
+          label: 'Wait',
         },
       ]}
     />

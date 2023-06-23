@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const UserDeleteConfirmationDialog = (props: Props) => {
-  const { onDelete, onCancel, open, username } = props;
+  const { onCancel, onDelete, open, username } = props;
 
   return (
     <ConfirmationDialog

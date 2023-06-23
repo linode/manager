@@ -17,10 +17,10 @@ interface Props {
 }
 
 export const RecycleClusterDialog = (props: Props) => {
-  const { open, onClose, clusterId } = props;
+  const { clusterId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useRecycleClusterMutation(
+  const { error, isLoading, mutateAsync } = useRecycleClusterMutation(
     clusterId
   );
 

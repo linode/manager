@@ -29,32 +29,32 @@ interface Props {
 const InfoGrid = styled(Grid, {
   label: 'InfoGrid',
 })(({ theme }) => ({
+  '& svg': {
+    height: '19px',
+    width: '19px',
+  },
+  color: theme.palette.primary.main,
   display: 'flex',
   justifyContent: 'flex-end',
-  color: theme.palette.primary.main,
+  maxWidth: 40,
   padding: theme.spacing(1),
   paddingLeft: 0,
-  maxWidth: 40,
-  '& svg': {
-    width: '19px',
-    height: '19px',
-  },
 }));
 
 export const SelectionCardWrapper: React.FC<Props> = (props) => {
   const theme = useTheme();
   const {
-    iconUrl,
-    id,
-    checked,
-    label,
-    clusterLabel,
-    userDefinedFields,
     availableImages,
+    checked,
+    clusterLabel,
     disabled,
     handleClick,
-    openDrawer,
+    iconUrl,
+    id,
+    label,
     labelDecoration,
+    openDrawer,
+    userDefinedFields,
   } = props;
   /**
    * '' is the default value for a stackscript's logo_url;

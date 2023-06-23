@@ -16,12 +16,12 @@ import { isTestLabel } from './common';
  */
 export const cancelAllTestEntityTransfers = async (): Promise<void> => {
   const linodes = await depaginate<Linode>((page: number) =>
-    getLinodes({ page_size: pageSize, page })
+    getLinodes({ page, page_size: pageSize })
   );
 
   const entityTransfers = (
     await depaginate<EntityTransfer>((page: number) =>
-      getEntityTransfers({ page_size: pageSize, page })
+      getEntityTransfers({ page, page_size: pageSize })
     )
   ).filter(
     (entityTransfer: EntityTransfer) => entityTransfer.status === 'pending'

@@ -24,10 +24,10 @@ const Dialog = (props: DialogProps) => {
     error,
     fullHeight,
     fullWidth,
-    title,
-    titleBottomBorder,
     maxWidth = 'md',
     onClose,
+    title,
+    titleBottomBorder,
     ...rest
   } = props;
 

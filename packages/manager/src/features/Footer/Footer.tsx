@@ -12,47 +12,22 @@ interface Props {
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    width: '100%',
     backgroundColor: theme.bg.main,
     margin: 0,
     padding: '4px 0px',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
       alignItems: 'flex-start',
+      flexDirection: 'column',
     },
     [theme.breakpoints.up('md')]: {
       paddingLeft: 200,
     },
+    width: '100%',
   },
   desktopMenuIsOpen: {
     paddingLeft: 0,
     [theme.breakpoints.up('md')]: {
       paddingLeft: 52,
-    },
-  },
-  version: {
-    '&.MuiGrid-item': {
-      paddingLeft: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-  linkContainer: {
-    [theme.breakpoints.down('sm')]: {
-      padding: '0 8px !important',
-    },
-  },
-  link: {
-    color: theme.palette.text.primary,
-    fontSize: '90%',
-    transition: theme.transitions.create('color'),
-    '&:hover, &:focus': {
-      color: theme.color.black,
-      textDecoration: 'underline',
-    },
-    [theme.breakpoints.down('lg')]: {
-      marginRight: theme.spacing(1),
     },
   },
   feedbackLink: {
@@ -63,6 +38,31 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&.MuiGrid-item': {
         paddingRight: 0,
       },
+    },
+  },
+  link: {
+    '&:hover, &:focus': {
+      color: theme.color.black,
+      textDecoration: 'underline',
+    },
+    color: theme.palette.text.primary,
+    fontSize: '90%',
+    [theme.breakpoints.down('lg')]: {
+      marginRight: theme.spacing(1),
+    },
+    transition: theme.transitions.create('color'),
+  },
+  linkContainer: {
+    [theme.breakpoints.down('sm')]: {
+      padding: '0 8px !important',
+    },
+  },
+  version: {
+    '&.MuiGrid-item': {
+      paddingLeft: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
     },
   },
 }));
@@ -103,8 +103,8 @@ export const Footer: React.FC<Props> = (props) => {
         </Grid>
         <Grid
           className={classNames({
-            [classes.linkContainer]: true,
             [classes.feedbackLink]: true,
+            [classes.linkContainer]: true,
           })}
         >
           <ExternalLink

@@ -11,22 +11,22 @@ import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/Paymen
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
-    display: 'flex',
-    // Safari's default setting for `alignItems` is `stretch` so defining it as
-    // `center` fixes the issue
     // https://stackoverflow.com/questions/57516373/image-stretching-in-flexbox-in-safari
     alignItems: 'center',
+    // Safari's default setting for `alignItems` is `stretch` so defining it as
+    // `center` fixes the issue
+    display: 'flex',
     justifyContent: 'center',
     paddingLeft: 6,
     paddingRight: 6,
     width: 45,
   },
-  paymentTextContainer: {
-    display: 'flex',
-  },
   paymentMethodLabel: {
     fontFamily: theme.font.bold,
     marginRight: theme.spacing(),
+  },
+  paymentTextContainer: {
+    display: 'flex',
   },
 }));
 

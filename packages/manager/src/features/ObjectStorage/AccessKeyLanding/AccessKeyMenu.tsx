@@ -14,26 +14,26 @@ interface Props {
 }
 
 export const AccessKeyMenu = (props: Props) => {
-  const { openRevokeDialog, objectStorageKey, openDrawer } = props;
+  const { objectStorageKey, openDrawer, openRevokeDialog } = props;
 
   const actions = [
     {
-      title: 'Edit Label',
       onClick: () => {
         openDrawer('editing', objectStorageKey);
       },
+      title: 'Edit Label',
     },
     {
-      title: 'Permissions',
       onClick: () => {
         openDrawer('viewing', objectStorageKey);
       },
+      title: 'Permissions',
     },
     {
-      title: 'Revoke',
       onClick: () => {
         openRevokeDialog(objectStorageKey);
       },
+      title: 'Revoke',
     },
   ];
 
@@ -61,7 +61,7 @@ export const AccessKeyMenu = (props: Props) => {
 const StyledInlineActionsContainer = styled('div', {
   label: 'StyledInlineActionsContainer',
 })(() => ({
-  display: 'flex',
   alignItems: 'center',
+  display: 'flex',
   justifyContent: 'flex-end',
 }));

@@ -19,12 +19,23 @@ import { plansNoticesUtils } from 'src/utilities/planNotices';
 import type { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  boxOuter: {
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'column',
+    },
+    width: '100%',
+  },
+  button: {
+    marginTop: '0 !important',
+    paddingTop: 0,
+  },
   drawer: {
     '& .MuiDrawer-paper': {
+      overflowX: 'hidden',
       [theme.breakpoints.up('md')]: {
         width: 790,
       },
-      overflowX: 'hidden',
     },
     '& .MuiGrid-root': {
       marginBottom: 0,
@@ -35,33 +46,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   plans: {
     '& > *': {
-      marginTop: 0,
       '& > *': {
         padding: 0,
       },
+      marginTop: 0,
     },
   },
-  button: {
-    paddingTop: 0,
-    marginTop: '0 !important',
-  },
   priceDisplay: {
+    '& span': {
+      fontWeight: 'bold',
+    },
     color: theme.color.headline,
     display: 'inline',
     fontSize: '1rem',
     lineHeight: '1.25rem',
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    '& span': {
-      fontWeight: 'bold',
-    },
-  },
-  boxOuter: {
-    width: '100%',
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'flex-start',
-      flexDirection: 'column',
-    },
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -86,9 +86,9 @@ export const AddNodePoolDrawer = (props: Props) => {
   const classes = useStyles();
   const { data: types } = useAllTypes(open);
   const {
-    mutateAsync: createPool,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
 
   // Only want to use current types here.
@@ -126,7 +126,7 @@ export const AddNodePoolDrawer = (props: Props) => {
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    setSelectedTypeInfo(newCount > 0 ? { planId, count: newCount } : undefined);
+    setSelectedTypeInfo(newCount > 0 ? { count: newCount, planId } : undefined);
   };
 
   const handleAdd = () => {
@@ -134,8 +134,8 @@ export const AddNodePoolDrawer = (props: Props) => {
       return;
     }
     return createPool({
-      type: selectedTypeInfo.planId,
       count: selectedTypeInfo.count,
+      type: selectedTypeInfo.planId,
     }).then(() => {
       onClose();
     });
@@ -146,8 +146,8 @@ export const AddNodePoolDrawer = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
-    selectedRegionID: clusterRegionId,
     regionsData,
+    selectedRegionID: clusterRegionId,
   });
 
   return (
@@ -170,7 +170,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           selectedID={selectedTypeInfo?.planId}
           onSelect={(newType: string) => {
             if (selectedTypeInfo?.planId !== newType) {
-              setSelectedTypeInfo({ planId: newType, count: 1 });
+              setSelectedTypeInfo({ count: 1, planId: newType });
             }
           }}
           hasSelectedRegion={hasSelectedRegion}

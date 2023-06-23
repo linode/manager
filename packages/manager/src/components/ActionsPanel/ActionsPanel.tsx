@@ -6,24 +6,24 @@ import Box, { BoxProps } from '../core/Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(1),
-    '& > button': {
-      marginBottom: theme.spacing(1),
-    },
     '& > :first-of-type': {
-      marginRight: theme.spacing(),
       marginLeft: 0,
+      marginRight: theme.spacing(),
     },
     '& > :only-child': {
       marginRight: 0,
     },
+    '& > button': {
+      marginBottom: theme.spacing(1),
+    },
+    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(2),
   },
 }));
 
 const ActionPanel = (props: BoxProps) => {
   const { classes, cx } = useStyles();
-  const { className, children, ...rest } = props;
+  const { children, className, ...rest } = props;
 
   return (
     <Box

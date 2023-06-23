@@ -26,16 +26,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(),
     },
   },
+  topMargin: {
+    marginLeft: 0,
+    marginTop: theme.spacing(2),
+  },
   wrapper: {
-    backgroundColor: theme.color.white,
-    marginTop: theme.spacing(),
     '&:not(:last-child)': {
       marginBottom: theme.spacing(3),
     },
-  },
-  topMargin: {
-    marginTop: theme.spacing(2),
-    marginLeft: 0,
+    backgroundColor: theme.color.white,
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -62,20 +62,20 @@ const UserProfile: React.FC<Props> = (props) => {
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const {
-    username,
-    email,
-    changeUsername,
-    changeEmail,
-    saveAccount,
+    accountErrors,
     accountSaving,
     accountSuccess,
-    accountErrors,
+    changeEmail,
+    changeUsername,
+    email,
+    originalEmail,
+    originalUsername,
+    profileErrors,
     profileSaving,
     profileSuccess,
-    profileErrors,
+    saveAccount,
     saveProfile,
-    originalUsername,
-    originalEmail,
+    username,
   } = props;
 
   const { data: profile } = useProfile();
@@ -232,8 +232,8 @@ const UserProfile: React.FC<Props> = (props) => {
             status="help"
             text="You can't delete the currently active user"
             sxTooltipIcon={{
-              marginTop: theme.spacing(2),
               marginLeft: 0,
+              marginTop: theme.spacing(2),
             }}
           />
         )}

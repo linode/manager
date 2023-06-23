@@ -16,13 +16,13 @@ interface Props {
   isReadOnly?: boolean;
 }
 
-export const LinodeWatchdogPanel = ({ linodeId, isReadOnly }: Props) => {
+export const LinodeWatchdogPanel = ({ isReadOnly, linodeId }: Props) => {
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
-    mutateAsync: updateLinode,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
   return (

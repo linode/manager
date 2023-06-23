@@ -22,6 +22,9 @@ import { DEFAULTS } from './common';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  helperText: {
+    marginBottom: theme.spacing(1.25),
+  },
   ip: {
     [theme.breakpoints.down('md')]: {
       paddingBottom: '0px !important',
@@ -31,9 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       paddingTop: '0px !important',
     },
-  },
-  helperText: {
-    marginBottom: theme.spacing(1.25),
   },
 }));
 
@@ -46,7 +46,7 @@ interface Props {
 const EditSSHAccessDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { isOpen, closeDrawer, linodeSetting } = props;
+  const { closeDrawer, isOpen, linodeSetting } = props;
 
   const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
     linodeSetting?.id || -1
@@ -58,7 +58,7 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
 
   const onSubmit = (
     values: Omit<ManagedLinodeSetting, 'id' | 'label' | 'group'>,
-    { setErrors, setSubmitting, setStatus }: FormikHelpers<ManagedLinodeSetting>
+    { setErrors, setStatus, setSubmitting }: FormikHelpers<ManagedLinodeSetting>
   ) => {
     // It probably isn't possible to end up here without linodeSetting,
     // but we'll include an early return to make TypeScript happy.
@@ -75,7 +75,7 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
       String(values.ssh.port) !== '' ? values.ssh.port : DEFAULTS.port;
 
     updateLinodeSettings({
-      ssh: { ...values.ssh, user, port },
+      ssh: { ...values.ssh, port, user },
     })
       .then(() => {
         setSubmitting(false);
@@ -104,24 +104,24 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
               // These values are nested this way to mach the API request/response.
               ssh: {
                 access: linodeSetting.ssh.access,
-                user: linodeSetting.ssh.user,
                 ip: linodeSetting.ssh.ip,
                 port: linodeSetting.ssh.port,
+                user: linodeSetting.ssh.user,
               },
             }}
             onSubmit={onSubmit}
           >
             {({
-              values,
               errors,
-              status,
-              handleChange,
               handleBlur,
+              handleChange,
               handleSubmit,
               isSubmitting,
               setFieldValue,
+              status,
+              values,
             }) => {
-              const { access, user, ip, port } = values.ssh;
+              const { access, ip, port, user } = values.ssh;
 
               const userError = errors['ssh.user'];
 

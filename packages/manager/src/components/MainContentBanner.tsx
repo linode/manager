@@ -9,36 +9,36 @@ import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bannerOuter: {
+    alignItems: 'center',
     backgroundColor: theme.bg.mainContentBanner,
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing(2),
     position: 'sticky',
     top: 0,
     zIndex: 1110,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  closeIcon: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: theme.palette.text.primary,
+    cursor: 'pointer',
+    position: 'absolute',
+    right: 4,
   },
   header: {
-    width: '65%',
+    color: '#fff',
+    textAlign: 'center',
     [theme.breakpoints.down('md')]: {
       width: '90%',
     },
-    color: '#fff',
-    textAlign: 'center',
     [theme.breakpoints.only('xs')]: {
       paddingRight: 30,
     },
+    width: '65%',
   },
   link: {
     color: '#74AAE6',
-  },
-  closeIcon: {
-    position: 'absolute',
-    right: 4,
-    cursor: 'pointer',
-    border: 'none',
-    color: theme.palette.text.primary,
-    backgroundColor: 'transparent',
   },
 }));
 
@@ -51,7 +51,7 @@ interface Props {
 }
 
 const MainContentBanner: React.FC<Props> = (props) => {
-  const { bannerText, url, linkText, bannerKey, onClose } = props;
+  const { bannerKey, bannerText, linkText, onClose, url } = props;
 
   const { refetch: refetchPrefrences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();

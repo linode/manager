@@ -33,13 +33,13 @@ const reducer = reducerWithInitialState(defaultState)
   })
   .caseWithAction(
     requestClientStats.done,
-    (state, { payload: { result, params } }) => ({
+    (state, { payload: { params, result } }) => ({
       ...state,
       [params.clientID]: {
         data: result,
-        loading: false,
         error: undefined,
         lastUpdated: Date.now(),
+        loading: false,
       },
     })
   )
@@ -57,8 +57,8 @@ const reducer = reducerWithInitialState(defaultState)
         : {
             ...state,
             [params.clientID]: {
-              loading: false,
               error,
+              loading: false,
             },
           };
     }

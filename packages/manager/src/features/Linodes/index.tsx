@@ -39,7 +39,7 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
     { status: { '+or': ['pending, started'] } }
   );
 
-  const { data: linodes, isLoading, error } = useAllLinodesQuery();
+  const { data: linodes, error, isLoading } = useAllLinodesQuery();
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(
     (thisAccountMaintenance) => thisAccountMaintenance.entity.type === 'linode'

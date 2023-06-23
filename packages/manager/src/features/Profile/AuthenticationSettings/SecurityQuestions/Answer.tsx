@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const Answer = (props: Props) => {
-  const { isReadOnly, questionResponse, index, handleChange } = props;
+  const { handleChange, index, isReadOnly, questionResponse } = props;
   const label = `Answer ${index + 1}`;
   const name = `security_questions[${index}].response`;
 

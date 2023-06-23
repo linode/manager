@@ -17,7 +17,7 @@ interface Props {
 export type CombinedProps = Props;
 
 export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
-  const { linodeSettings, loading, openDrawer, error } = props;
+  const { error, linodeSettings, loading, openDrawer } = props;
 
   if (loading) {
     return <TableRowLoading columns={6} />;

@@ -7,20 +7,20 @@ afterAll(async (done) => {
 });
 
 const baseProps: Props = {
-  isSwap: false,
   childOf: false,
-  loading: false,
-  timezone: 'GMT',
-  sysInfoType: 'helloworld',
-  iFree: [],
-  isMounted: true,
-  iTotal: [],
-  total: [],
-  free: [],
   diskLabel: 'helloworld',
-  startTime: 0,
   endTime: 0,
+  free: [],
+  iFree: [],
+  iTotal: [],
+  isMounted: true,
+  isSwap: false,
+  loading: false,
   reads: [],
+  startTime: 0,
+  sysInfoType: 'helloworld',
+  timezone: 'GMT',
+  total: [],
   writes: [],
 };
 

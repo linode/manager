@@ -117,8 +117,8 @@ export const InvoiceDetail = () => {
                 >
                   <KeyboardArrowLeft
                     sx={{
-                      width: 34,
                       height: 34,
+                      width: 34,
                     }}
                   />
                 </IconButton>
@@ -224,12 +224,12 @@ export const InvoiceDetail = () => {
 export default InvoiceDetail;
 
 const csvHeaders = [
-  { label: 'Description', key: 'label' },
-  { label: 'From', key: 'from' },
-  { label: 'To', key: 'to' },
-  { label: 'Quantity', key: 'quantity' },
-  { label: 'Unit Price', key: 'unit_price' },
-  { label: 'Amount (USD)', key: 'amount' },
-  { label: 'Tax (USD)', key: 'tax' },
-  { label: 'Total (USD)', key: 'total' },
+  { key: 'label', label: 'Description' },
+  { key: 'from', label: 'From' },
+  { key: 'to', label: 'To' },
+  { key: 'quantity', label: 'Quantity' },
+  { key: 'unit_price', label: 'Unit Price' },
+  { key: 'amount', label: 'Amount (USD)' },
+  { key: 'tax', label: 'Tax (USD)' },
+  { key: 'total', label: 'Total (USD)' },
 ];

@@ -47,46 +47,6 @@ import SizeField from '../VolumeDrawer/SizeField';
 import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  copy: {
-    marginBottom: theme.spacing(),
-    maxWidth: 680,
-  },
-  notice: {
-    borderColor: theme.color.green,
-    fontSize: 15,
-    lineHeight: '18px',
-  },
-  select: {
-    width: 320,
-  },
-  tooltip: {
-    '& .MuiTooltip-tooltip': {
-      minWidth: 320,
-    },
-  },
-  labelTooltip: {
-    '& .MuiTooltip-tooltip': {
-      minWidth: 220,
-    },
-  },
-  size: {
-    width: 160,
-  },
-  linodeConfigSelectWrapper: {
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-    },
-  },
-  linodeSelect: {
-    marginRight: theme.spacing(4),
-  },
-  buttonGroup: {
-    marginTop: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-end',
-    },
-  },
   agreement: {
     maxWidth: '70%',
     [theme.breakpoints.down('sm')]: {
@@ -97,6 +57,46 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
+    },
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-end',
+    },
+  },
+  copy: {
+    marginBottom: theme.spacing(),
+    maxWidth: 680,
+  },
+  labelTooltip: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 220,
+    },
+  },
+  linodeConfigSelectWrapper: {
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'column',
+    },
+  },
+  linodeSelect: {
+    marginRight: theme.spacing(4),
+  },
+  notice: {
+    borderColor: theme.color.green,
+    fontSize: 15,
+    lineHeight: '18px',
+  },
+  select: {
+    width: 320,
+  },
+  size: {
+    width: 160,
+  },
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 320,
     },
   },
 }));
@@ -116,7 +116,7 @@ type CombinedProps = Props & StateProps;
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const theme = useTheme();
   const classes = useStyles();
-  const { onSuccess, origin, history } = props;
+  const { history, onSuccess, origin } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -172,9 +172,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
       validationSchema={CreateVolumeSchema}
       onSubmit={(
         values,
-        { resetForm, setSubmitting, setStatus, setErrors }
+        { resetForm, setErrors, setStatus, setSubmitting }
       ) => {
-        const { label, size, region, linode_id, config_id } = values;
+        const { config_id, label, linode_id, region, size } = values;
 
         setSubmitting(true);
 
@@ -182,18 +182,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         setStatus(undefined);
 
         createVolume({
-          label,
-          size: maybeCastToNumber(size),
-          region:
-            isNilOrEmpty(region) || region === 'none' ? undefined : region,
-          linode_id:
-            linode_id === initialValueDefaultId
-              ? undefined
-              : maybeCastToNumber(linode_id),
           config_id:
             config_id === initialValueDefaultId
               ? undefined
               : maybeCastToNumber(config_id),
+          label,
+          linode_id:
+            linode_id === initialValueDefaultId
+              ? undefined
+              : maybeCastToNumber(linode_id),
+          region:
+            isNilOrEmpty(region) || region === 'none' ? undefined : region,
+          size: maybeCastToNumber(size),
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
             if (hasSignedAgreement) {
@@ -238,10 +238,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         isSubmitting,
         setFieldValue,
         status,
-        values,
         touched,
+        values,
       }) => {
-        const { linode_id, config_id } = values;
+        const { config_id, linode_id } = values;
 
         const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
@@ -433,11 +433,11 @@ interface FormState {
 }
 
 const initialValues: FormState = {
-  label: '',
-  size: 20,
-  region: '',
-  linode_id: initialValueDefaultId,
   config_id: initialValueDefaultId,
+  label: '',
+  linode_id: initialValueDefaultId,
+  region: '',
+  size: 20,
 };
 
 interface StateProps {

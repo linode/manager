@@ -88,8 +88,8 @@ describe('UserSSHKeyPanel', () => {
         rest.get('*/account/users', (req, res, ctx) => {
           const users = [
             accountUserFactory.build({
-              username: 'test-user',
               ssh_keys: ['ssh-key'],
+              username: 'test-user',
             }),
           ];
           return res(ctx.json(makeResourcePage(users)));
@@ -101,7 +101,7 @@ describe('UserSSHKeyPanel', () => {
         setAuthorizedUsers: jest.fn(),
       };
 
-      const { getByText, getByRole } = renderWithTheme(
+      const { getByRole, getByText } = renderWithTheme(
         <UserSSHKeyPanel {...props} />,
         { queryClient: new QueryClient() }
       );

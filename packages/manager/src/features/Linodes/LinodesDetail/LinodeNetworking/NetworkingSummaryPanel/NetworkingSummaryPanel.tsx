@@ -9,6 +9,15 @@ import TransferHistory from './TransferHistory';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  dnsResolverContainer: {
+    display: 'flex',
+    [theme.breakpoints.down('md')]: {
+      order: 2,
+    },
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-start',
+    },
+  },
   root: {
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -22,15 +31,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   transferHistoryContainer: {
     [theme.breakpoints.down('md')]: {
       order: 3,
-    },
-  },
-  dnsResolverContainer: {
-    display: 'flex',
-    [theme.breakpoints.down('md')]: {
-      order: 2,
-    },
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-start',
     },
   },
 }));

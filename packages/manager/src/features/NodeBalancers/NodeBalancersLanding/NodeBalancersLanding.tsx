@@ -34,20 +34,20 @@ export const NodeBalancersLanding = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'asc',
+      orderBy: 'label',
     },
     preferenceKey
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
-  const { data, isLoading, error } = useNodeBalancersQuery(
+  const { data, error, isLoading } = useNodeBalancersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

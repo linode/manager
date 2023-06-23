@@ -59,8 +59,8 @@ export const sortByCluster = (a: Scope, b: Scope) => {
 export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
   buckets
     .map((thisBucket) => ({
-      cluster: thisBucket.cluster,
       bucket_name: thisBucket.label,
+      cluster: thisBucket.cluster,
       permissions: 'none' as AccessType,
     }))
     .sort(sortByCluster);
@@ -68,11 +68,11 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
 export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const {
     isRestrictedUser,
-    open,
-    onClose,
-    onSubmit,
     mode,
     objectStorageKey,
+    onClose,
+    onSubmit,
+    open,
   } = props;
 
   const {
@@ -81,8 +81,8 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   } = useObjectStorageClusters();
   const {
     data: objectStorageBucketsResponse,
-    isLoading: areBucketsLoading,
     error: bucketsError,
+    isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(objectStorageClusters);
   const { data: accountSettings } = useAccountSettings();
 
@@ -110,8 +110,8 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     !createMode && objectStorageKey ? objectStorageKey.label : '';
 
   const initialValues: FormState = {
-    label: initialLabelValue,
     bucket_access: getDefaultScopes(buckets),
+    label: initialLabelValue,
   };
 
   const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
@@ -146,14 +146,14 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
         >
           {(formikProps) => {
             const {
-              values,
               errors,
-              handleChange,
               handleBlur,
+              handleChange,
               handleSubmit,
-              setFieldValue,
               isSubmitting,
+              setFieldValue,
               status,
+              values,
             } = formikProps;
 
             const beforeSubmit = () => {

@@ -25,10 +25,10 @@ export interface State {
 }
 
 export const defaultState: State = {
-  events: [],
-  mostRecentEventTime: epoch,
   countUnseenEvents: 0,
+  events: [],
   inProgressEvents: {},
+  mostRecentEventTime: epoch,
   pollingInterval: 1,
   requestDeadline: Date.now(),
 };
@@ -45,21 +45,21 @@ const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
 
     return {
       ...state,
+      countUnseenEvents: getNumUnseenEvents(updatedEvents),
       events: updatedEvents,
+      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
       mostRecentEventTime: events.reduce(
         mostRecentCreated,
         mostRecentEventTime
       ),
-      countUnseenEvents: getNumUnseenEvents(updatedEvents),
-      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
     };
   }
 
   if (isType(action, updateEventsAsSeen)) {
     return {
       ...state,
-      events: state.events.map((event) => ({ ...event, seen: true })),
       countUnseenEvents: 0,
+      events: state.events.map((event) => ({ ...event, seen: true })),
     };
   }
 

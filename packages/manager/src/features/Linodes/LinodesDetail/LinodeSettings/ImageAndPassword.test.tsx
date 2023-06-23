@@ -8,18 +8,18 @@ const normalizedImages = normalizeEntities(imageFactory.buildList(10));
 import { ImageAndPassword } from './ImageAndPassword';
 
 const props = {
+  authorizedUsers: [],
   classes: { root: '' },
   images: normalizedImages,
-  imagesLoading: false,
-  imagesError: {},
   imagesData: {},
+  imagesError: {},
   imagesLastUpdated: 0,
+  imagesLoading: false,
   onImageChange: jest.fn(),
-  password: '',
   onPasswordChange: jest.fn(),
-  authorizedUsers: [],
-  setAuthorizedUsers: jest.fn(),
+  password: '',
   permissions: null,
+  setAuthorizedUsers: jest.fn(),
 };
 
 const component = shallow(wrapWithTheme(<ImageAndPassword {...props} />));

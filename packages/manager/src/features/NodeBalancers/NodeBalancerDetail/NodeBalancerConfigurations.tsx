@@ -147,7 +147,7 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
       }
       return acc;
     },
-    { UP: 0, DOWN: 0, unknown: 0 }
+    { DOWN: 0, UP: 0, unknown: 0 }
   );
 
   return `Backend status: ${statuses.UP} up, ${statuses.DOWN} down${
@@ -156,19 +156,19 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
 };
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   static defaultDeleteConfigConfirmDialogState = {
-    submitting: false,
-    open: false,
     errors: undefined,
     idxToDelete: undefined,
+    open: false,
     portToDelete: undefined,
+    submitting: false,
   };
 
   static defaultDeleteNodeConfirmDialogState = {
-    submitting: false,
-    open: false,
-    errors: undefined,
     configIdxToDelete: undefined,
+    errors: undefined,
     nodeIdxToDelete: undefined,
+    open: false,
+    submitting: false,
   };
 
   static defaultFieldsStates = {
@@ -176,15 +176,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
-    configs: pathOr([], ['response'], this.props.configs),
     configErrors: [],
     configSubmitting: [],
-    panelMessages: [],
-    panelNodeMessages: [],
+    configs: pathOr([], ['response'], this.props.configs),
     deleteConfigConfirmDialog: clone(
       NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState
     ),
     hasUnsavedConfig: false,
+    panelMessages: [],
+    panelNodeMessages: [],
   };
 
   resetSubmitting = (configIdx: number) => {
@@ -236,11 +236,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         return [
           ...acc,
           {
-            path: [+match[1], 'errors'],
             error: {
               field: match[2],
               reason: error.reason,
             },
+            path: [+match[1], 'errors'],
           },
         ];
       }
@@ -329,9 +329,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         newSubmitting[idx] = false;
 
         this.setState({
-          configs: newConfigs,
           configErrors: newErrors,
           configSubmitting: newSubmitting,
+          configs: newConfigs,
         });
         /* Return true as a Promise for the sake of aggregating results */
         return true;
@@ -448,8 +448,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
         this.setState(
           {
-            configs: newConfigs,
             configErrors: newErrors,
+            configs: newConfigs,
           },
           () => {
             // replace success message with a new one
@@ -622,8 +622,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           {
             deleteConfigConfirmDialog: {
               ...this.state.deleteConfigConfirmDialog,
-              submitting: false,
               errors: err,
+              submitting: false,
             },
           },
           () => {
@@ -841,9 +841,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   addNodeBalancerConfig = () => {
     this.setState({
-      configs: append(createNewNodeBalancerConfig(false), this.state.configs),
       configErrors: append([], this.state.configErrors),
       configSubmitting: append(false, this.state.configSubmitting),
+      configs: append(createNewNodeBalancerConfig(false), this.state.configs),
       hasUnsavedConfig: true,
     });
   };
@@ -945,8 +945,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         ...clone(
           NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState
         ),
-        open: true,
         idxToDelete: idx,
+        open: true,
         portToDelete: port,
       },
     });
@@ -976,19 +976,19 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     const L = {
       algorithmLens: lensTo(['algorithm']),
-      checkPassiveLens: lensTo(['check_passive']),
       checkBodyLens: lensTo(['check_body']),
+      checkPassiveLens: lensTo(['check_passive']),
       checkPathLens: lensTo(['check_path']),
-      portLens: lensTo(['port']),
-      protocolLens: lensTo(['protocol']),
-      proxyProtocolLens: lensTo(['proxy_protocol']),
-      healthCheckTypeLens: lensTo(['check']),
       healthCheckAttemptsLens: lensTo(['check_attempts']),
       healthCheckIntervalLens: lensTo(['check_interval']),
       healthCheckTimeoutLens: lensTo(['check_timeout']),
+      healthCheckTypeLens: lensTo(['check']),
+      portLens: lensTo(['port']),
+      privateKeyLens: lensTo(['ssl_key']),
+      protocolLens: lensTo(['protocol']),
+      proxyProtocolLens: lensTo(['proxy_protocol']),
       sessionStickinessLens: lensTo(['stickiness']),
       sslCertificateLens: lensTo(['ssl_cert']),
-      privateKeyLens: lensTo(['ssl_key']),
     };
 
     return (
@@ -1103,11 +1103,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   render() {
     const { nodeBalancerLabel } = this.props;
     const {
-      configs,
       configErrors,
       configSubmitting,
-      panelMessages,
+      configs,
       hasUnsavedConfig,
+      panelMessages,
     } = this.state;
 
     return (

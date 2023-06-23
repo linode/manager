@@ -24,13 +24,13 @@ export const addNotificationsToLinodes = (
       ? {
           ...eachLinode,
           maintenance: {
+            type: foundNotification.label as Type,
+            until: foundNotification.until,
             /**
              * "when" and "until" are not guaranteed to exist
              * if we have a maintenance notification
              */
             when: foundNotification.when,
-            until: foundNotification.until,
-            type: foundNotification.label as Type,
           },
         }
       : {

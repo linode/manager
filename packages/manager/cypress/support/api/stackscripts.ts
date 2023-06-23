@@ -29,7 +29,7 @@ const userStackScriptFilter: Filter = {
  */
 export const deleteAllTestStackScripts = async (): Promise<void> => {
   const stackScripts = await depaginate<StackScript>((page: number) =>
-    getStackScripts({ page_size: pageSize, page }, userStackScriptFilter)
+    getStackScripts({ page, page_size: pageSize }, userStackScriptFilter)
   );
 
   const deletionPromises = stackScripts

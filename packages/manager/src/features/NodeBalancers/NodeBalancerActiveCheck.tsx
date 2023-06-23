@@ -72,14 +72,14 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
       value: 'connection',
     },
     {
+      disabled: protocol === 'tcp',
       label: 'HTTP Status',
       value: 'http',
-      disabled: protocol === 'tcp',
     },
     {
+      disabled: protocol === 'tcp',
       label: 'HTTP Body',
       value: 'http_body',
-      disabled: protocol === 'tcp',
     },
   ];
 

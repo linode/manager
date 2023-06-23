@@ -22,11 +22,11 @@ it('Displays credit card type and last four digits when payment method is Google
 
 it('Displays PayPal email address when payment method type is PayPal', () => {
   const payPalPaymentMethod = paymentMethodFactory.build({
-    is_default: false,
     data: {
-      paypal_id: '123456',
       email: 'testpaypaluser@example.com',
+      paypal_id: '123456',
     },
+    is_default: false,
     type: 'paypal',
   });
 

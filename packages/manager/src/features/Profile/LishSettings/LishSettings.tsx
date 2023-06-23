@@ -40,8 +40,8 @@ export const LishSettings = () => {
     : '';
   const hasErrorFor = getAPIErrorFor(
     {
-      lish_auth_method: 'authentication method',
       authorized_keys: 'ssh public keys',
+      lish_auth_method: 'authentication method',
     },
     errors
   );
@@ -51,9 +51,9 @@ export const LishSettings = () => {
 
   const modeOptions = [
     {
+      isDisabled: profile?.authentication_type !== 'password',
       label: 'Allow both password and key authentication',
       value: 'password_keys',
-      isDisabled: profile?.authentication_type !== 'password',
     },
     {
       label: 'Allow key authentication only',
@@ -83,8 +83,8 @@ export const LishSettings = () => {
     setSubmitting(false);
 
     updateProfile({
-      lish_auth_method: lishAuthMethod as any,
       authorized_keys: keys,
+      lish_auth_method: lishAuthMethod as any,
     })
       .then((profileData) => {
         setSubmitting(false);

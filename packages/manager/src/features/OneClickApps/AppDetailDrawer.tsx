@@ -13,32 +13,26 @@ import { OCA } from 'src/features/OneClickApps/oneClickApps';
 import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  logoContainer: {
-    height: 225,
-    padding: theme.spacing(2),
-    gap: theme.spacing(),
-  },
   appName: {
-    fontSize: '2.2rem',
-    fontFamily: theme.font.bold,
     color: '#fff !important',
+    fontFamily: theme.font.bold,
+    fontSize: '2.2rem',
     lineHeight: '2.5rem',
     textAlign: 'center',
   },
-  description: {
-    lineHeight: 1.5,
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  image: {
-    width: 50,
-  },
-  wrapLogo: {
-    marginLeft: `-${theme.spacing(3)}`,
-  },
-  wrapAppName: {
-    maxWidth: 'fit-content',
-    minWidth: 170,
+  button: {
+    '& :hover, & :focus, & :active': {
+      backgroundColor: 'unset !important',
+      color: 'white',
+    },
+    backgroundColor: 'unset !important',
+    borderRadius: '50%',
+    color: 'white',
+    margin: theme.spacing(2),
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: theme.spacing(2),
+    position: 'absolute',
   },
   container: {
     display: 'flex',
@@ -46,30 +40,36 @@ const useStyles = makeStyles((theme: Theme) => ({
     gap: theme.spacing(2),
     padding: theme.spacing(4),
   },
-  paper: {
-    width: 300,
-    [theme.breakpoints.up('sm')]: {
-      width: 480,
-    },
+  description: {
+    lineHeight: 1.5,
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  image: {
+    width: 50,
   },
   link: {
     fontSize: '0.875rem',
-    wordBreak: 'break-word',
     lineHeight: '24px',
+    wordBreak: 'break-word',
   },
-  button: {
-    position: 'absolute',
-    minWidth: 'auto',
-    minHeight: 'auto',
-    margin: theme.spacing(2),
+  logoContainer: {
+    gap: theme.spacing(),
+    height: 225,
     padding: theme.spacing(2),
-    color: 'white',
-    borderRadius: '50%',
-    backgroundColor: 'unset !important',
-    '& :hover, & :focus, & :active': {
-      color: 'white',
-      backgroundColor: 'unset !important',
+  },
+  paper: {
+    [theme.breakpoints.up('sm')]: {
+      width: 480,
     },
+    width: 300,
+  },
+  wrapAppName: {
+    maxWidth: 'fit-content',
+    minWidth: 170,
+  },
+  wrapLogo: {
+    marginLeft: `-${theme.spacing(3)}`,
   },
 }));
 
@@ -80,7 +80,7 @@ interface Props {
 }
 
 export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
-  const { stackScriptLabel, open, onClose } = props;
+  const { onClose, open, stackScriptLabel } = props;
   const classes = useStyles();
   const { oneClickAppsDocsOverride } = useFlags();
 
@@ -219,7 +219,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
-          style={{ height: '100%', gap: 10 }}
+          style={{ gap: 10, height: '100%' }}
         >
           <Typography variant="h2">App Details Not Found</Typography>
           <Typography>

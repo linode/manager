@@ -35,16 +35,16 @@ export interface Props {
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
-    pools,
-    submitting,
     createCluster,
-    removePool,
-    updatePool,
-    highAvailability,
-    setHighAvailability,
-    region,
     hasAgreed,
+    highAvailability,
+    pools,
+    region,
+    removePool,
+    setHighAvailability,
+    submitting,
     toggleHasAgreed,
+    updatePool,
   } = props;
 
   // Show a warning if any of the pools have fewer than 3 nodes

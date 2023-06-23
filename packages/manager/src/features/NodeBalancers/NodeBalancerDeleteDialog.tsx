@@ -15,10 +15,10 @@ interface Props {
 export const NodeBalancerDeleteDialog = ({
   id,
   label,
-  open,
   onClose,
+  open,
 }: Props) => {
-  const { mutateAsync, isLoading, error } = useNodebalancerDeleteMutation(id);
+  const { error, isLoading, mutateAsync } = useNodebalancerDeleteMutation(id);
   const { push } = useHistory();
 
   const onDelete = async () => {
@@ -31,8 +31,8 @@ export const NodeBalancerDeleteDialog = ({
     <TypeToConfirmDialog
       title={`Delete ${label}?`}
       entity={{
-        type: 'NodeBalancer',
         label,
+        type: 'NodeBalancer',
       }}
       open={open}
       loading={isLoading}

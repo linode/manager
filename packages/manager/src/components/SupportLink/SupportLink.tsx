@@ -20,17 +20,17 @@ export interface EntityForTicketDetails {
 }
 
 const SupportLink = (props: SupportLinkProps) => {
-  const { description, text, title, entity, ticketType, onClick } = props;
+  const { description, entity, onClick, text, ticketType, title } = props;
   return (
     <Link
       to={{
         pathname: '/support/tickets',
         state: {
-          open: true,
-          title,
           description,
           entity,
+          open: true,
           ticketType,
+          title,
         },
       }}
       onClick={onClick}

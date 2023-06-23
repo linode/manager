@@ -111,33 +111,33 @@ export const linodeDetailContextFactory = (
   const { id: linodeId } = linode;
 
   return {
-    updateLinode: (data: Partial<Linode>) =>
-      dispatch(_updateLinode({ linodeId, ...data })),
-
-    /** Linode Config actions */
-    getLinodeConfig: (configId) =>
-      dispatch(_getLinodeConfig({ linodeId, configId })),
-    getLinodeConfigs: () =>
-      dispatch(_getLinodeConfigs({ linodeId })).then(({ data }) => data),
-    updateLinodeConfig: (configId, data) =>
-      dispatch(_updateLinodeConfig({ linodeId, configId, ...data })),
     createLinodeConfig: (data) =>
       dispatch(_createLinodeConfig({ linodeId, ...data })),
-    deleteLinodeConfig: (configId) =>
-      dispatch(_deleteLinodeConfig({ linodeId, configId })),
 
-    /** Linode Disk actions */
-    getLinodeDisk: (diskId) => dispatch(_getLinodeDisk({ linodeId, diskId })),
-    getLinodeDisks: () => dispatch(_getLinodeDisks({ linodeId })),
-    updateLinodeDisk: (diskId, data) =>
-      dispatch(_updateLinodeDisk({ linodeId, diskId, ...data })),
     createLinodeDisk: (data) =>
       dispatch(_createLinodeDisk({ linodeId, ...data })),
+    deleteLinodeConfig: (configId) =>
+      dispatch(_deleteLinodeConfig({ configId, linodeId })),
     deleteLinodeDisk: (diskId) =>
-      dispatch(_deleteLinodeDisk({ linodeId, diskId })),
-    resizeLinodeDisk: (diskId, size) =>
-      dispatch(_resizeLinodeDisk({ linodeId, diskId, size })),
+      dispatch(_deleteLinodeDisk({ diskId, linodeId })),
+    /** Linode Config actions */
+    getLinodeConfig: (configId) =>
+      dispatch(_getLinodeConfig({ configId, linodeId })),
+    getLinodeConfigs: () =>
+      dispatch(_getLinodeConfigs({ linodeId })).then(({ data }) => data),
+
+    /** Linode Disk actions */
+    getLinodeDisk: (diskId) => dispatch(_getLinodeDisk({ diskId, linodeId })),
+    getLinodeDisks: () => dispatch(_getLinodeDisks({ linodeId })),
     linode,
+    resizeLinodeDisk: (diskId, size) =>
+      dispatch(_resizeLinodeDisk({ diskId, linodeId, size })),
+    updateLinode: (data: Partial<Linode>) =>
+      dispatch(_updateLinode({ linodeId, ...data })),
+    updateLinodeConfig: (configId, data) =>
+      dispatch(_updateLinodeConfig({ configId, linodeId, ...data })),
+    updateLinodeDisk: (diskId, data) =>
+      dispatch(_updateLinodeDisk({ diskId, linodeId, ...data })),
   };
 };
 

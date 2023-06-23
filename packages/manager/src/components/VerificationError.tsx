@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const VerificationError: React.FC<Props> = (props) => {
-  const { title, description } = props;
+  const { description, title } = props;
   return (
     <Typography>
       Additional verification is required to add this service. Please {` `}

@@ -11,37 +11,37 @@ import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles<void, 'icon'>()(
   (theme: Theme, _params, classes) => ({
-    icon: {
-      fontSize: 18,
-      fill: theme.color.grey1,
-    },
-    backupScheduledOrNever: {
-      marginRight: theme.spacing(),
-    },
-    backupNotApplicable: {
-      marginRight: theme.spacing(),
-    },
-    wrapper: {
-      display: 'flex',
-      alignContent: 'center',
-    },
-    tooltip: {
-      maxWidth: 275,
-    },
-    withTooltipIcon: {
-      display: 'flex',
-      alignItems: 'center',
-    },
     backupLink: {
-      display: 'flex',
       '&:hover': {
         [`& .${classes.icon}`]: {
           fill: theme.palette.primary.main,
         },
       },
+      display: 'flex',
+    },
+    backupNotApplicable: {
+      marginRight: theme.spacing(),
+    },
+    backupScheduledOrNever: {
+      marginRight: theme.spacing(),
     },
     backupText: {
       whiteSpace: 'nowrap',
+    },
+    icon: {
+      fill: theme.color.grey1,
+      fontSize: 18,
+    },
+    tooltip: {
+      maxWidth: 275,
+    },
+    withTooltipIcon: {
+      alignItems: 'center',
+      display: 'flex',
+    },
+    wrapper: {
+      alignContent: 'center',
+      display: 'flex',
     },
   })
 );
@@ -55,10 +55,10 @@ interface Props {
 
 const BackupStatus = (props: Props) => {
   const {
-    mostRecentBackup,
-    linodeId,
     backupsEnabled,
     isBareMetalInstance,
+    linodeId,
+    mostRecentBackup,
   } = props;
 
   const { classes } = useStyles();

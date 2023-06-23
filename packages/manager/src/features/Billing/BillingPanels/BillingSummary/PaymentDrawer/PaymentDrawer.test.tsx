@@ -11,9 +11,9 @@ import PaymentDrawer, { getMinimumPayment } from './PaymentDrawer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
-  paymentMethods: [],
-  open: true,
   onClose: jest.fn(),
+  open: true,
+  paymentMethods: [],
 };
 
 describe('Make a Payment Panel', () => {

@@ -20,61 +20,61 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
-  userWrapper: {
-    marginTop: theme.spacing(0.5),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '50%',
-    width: 32,
-    height: 32,
-    position: 'relative',
-    top: -2,
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(),
-    },
-    [theme.breakpoints.up('sm')]: {
-      marginRight: theme.spacing(1),
-      width: 40,
-      height: 40,
-    },
-  },
-  leftIcon: {
-    width: '100%',
-    height: '100%',
-    borderRadius: '50%',
-    color: theme.palette.text.primary,
-  },
   content: {
-    width: '100%',
-    marginTop: theme.spacing(1),
-    marginRight: theme.spacing(2),
-    padding: theme.spacing(1),
     backgroundColor: theme.color.white,
     border: `1px solid ${theme.color.grey2}`,
     borderRadius: theme.shape.borderRadius,
-  },
-  header: {
-    padding: `0 ${theme.spacing(1)}`,
-    minHeight: 40,
-    backgroundColor: theme.color.grey2,
-    borderTopLeftRadius: theme.shape.borderRadius,
-    borderTopRightRadius: theme.shape.borderRadius,
-  },
-  headerInner: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
-    color: theme.color.headline,
-    marginRight: 4,
+    marginRight: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(1),
+    width: '100%',
   },
   expert: {
     marginRight: 4,
     whiteSpace: 'nowrap',
+  },
+  header: {
+    backgroundColor: theme.color.grey2,
+    borderTopLeftRadius: theme.shape.borderRadius,
+    borderTopRightRadius: theme.shape.borderRadius,
+    minHeight: 40,
+    padding: `0 ${theme.spacing(1)}`,
+  },
+  headerInner: {
+    alignItems: 'center',
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  leftIcon: {
+    borderRadius: '50%',
+    color: theme.palette.text.primary,
+    height: '100%',
+    width: '100%',
+  },
+  userName: {
+    color: theme.color.headline,
+    fontFamily: 'LatoWebBold', // we keep this bold at all times
+    marginRight: 4,
+    whiteSpace: 'nowrap',
+  },
+  userWrapper: {
+    alignItems: 'center',
+    borderRadius: '50%',
+    display: 'flex',
+    height: 32,
+    justifyContent: 'center',
+    marginTop: theme.spacing(0.5),
+    position: 'relative',
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: theme.spacing(),
+    },
+    [theme.breakpoints.up('sm')]: {
+      height: 40,
+      marginRight: theme.spacing(1),
+      width: 40,
+    },
+    top: -2,
+    width: 32,
   },
 }));
 
@@ -102,7 +102,7 @@ interface Data {
 export const ExpandableTicketPanel = React.memo((props: Props) => {
   const classes = useStyles();
 
-  const { parentTicket, ticket, open, reply, ticketUpdated } = props;
+  const { open, parentTicket, reply, ticket, ticketUpdated } = props;
 
   const [data, setData] = React.useState<Data | undefined>(undefined);
 
@@ -112,27 +112,27 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
     }
     if (ticket) {
       return setData({
-        ticket_id: String(ticket.id),
-        reply_id: '',
-        gravatar_id: ticket.gravatar_id,
         date: ticket.opened,
         description: ticket.description,
-        username: ticket.opened_by,
-        from_linode: false,
         friendly_name: ticket.opened_by,
+        from_linode: false,
+        gravatar_id: ticket.gravatar_id,
+        reply_id: '',
+        ticket_id: String(ticket.id),
         updated: ticket.updated,
+        username: ticket.opened_by,
       });
     } else if (reply) {
       return setData({
-        ticket_id: parentTicket ? String(parentTicket) : '',
-        reply_id: String(reply.id),
-        gravatar_id: reply.gravatar_id,
         date: reply.created,
         description: reply.description,
-        username: reply.created_by,
-        from_linode: reply.from_linode,
         friendly_name: reply.friendly_name,
+        from_linode: reply.from_linode,
+        gravatar_id: reply.gravatar_id,
+        reply_id: String(reply.id),
+        ticket_id: parentTicket ? String(parentTicket) : '',
         updated: ticketUpdated!,
+        username: reply.created_by,
       });
     }
   }, [parentTicket, reply, ticket, ticketUpdated]);

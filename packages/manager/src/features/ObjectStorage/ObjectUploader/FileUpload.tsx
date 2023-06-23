@@ -35,14 +35,14 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
 
   const resumeUpload = () =>
     props.dispatch({
-      type: 'RESUME_UPLOAD',
       fileName: props.fileName,
+      type: 'RESUME_UPLOAD',
     });
 
   const cancelOverwrite = () =>
     props.dispatch({
-      type: 'CANCEL_OVERWRITE',
       fileName: props.fileName,
+      type: 'CANCEL_OVERWRITE',
     });
 
   const handleClickRow = () => {
@@ -63,8 +63,8 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
         variant="determinate"
         value={props.percentCompleted}
         classes={{
-          root: classes.progressBar,
           barColorPrimary: classes.barColorPrimary,
+          root: classes.progressBar,
         }}
         className={classes.progressBar}
       />
@@ -97,8 +97,8 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
           ) : props.error || props.overwriteNotice ? (
             <CautionIcon
               className={cx({
-                [classes.iconRight]: true,
                 [classes.error]: props.error !== '',
+                [classes.iconRight]: true,
               })}
               height={22}
               width={22}

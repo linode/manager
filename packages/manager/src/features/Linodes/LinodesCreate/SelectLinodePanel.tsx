@@ -21,13 +21,13 @@ type ClassNames = 'root' | 'panelBody';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-      width: '100%',
-      backgroundColor: theme.color.white,
-    },
     panelBody: {
       padding: `${theme.spacing(2)} 0 0`,
+    },
+    root: {
+      backgroundColor: theme.color.white,
+      flexGrow: 1,
+      width: '100%',
     },
   });
 
@@ -52,7 +52,7 @@ type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
   renderCard(linode: ExtendedLinode) {
-    const { selectedLinodeID, handleSelection, disabled } = this.props;
+    const { disabled, handleSelection, selectedLinodeID } = this.props;
     return (
       <SelectionCard
         key={`selection-card-${linode.id}`}
@@ -68,7 +68,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { error, classes, linodes, header, notice, disabled } = this.props;
+    const { classes, disabled, error, header, linodes, notice } = this.props;
 
     return (
       <Paginate data={linodes}>

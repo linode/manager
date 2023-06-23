@@ -7,43 +7,43 @@ import { sanitizeUrl } from '@braintree/sanitize-url';
 
 const useStyles = makeStyles<void, 'icon'>()(
   (theme: Theme, _params, classes) => ({
-    root: {
-      color:
-        theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
-      display: 'inline-flex',
-      alignItems: 'baseline',
-      '&:hover': {
-        [`& .${classes.icon}`]: {
-          opacity: 1,
-        },
-      },
-    },
-    icon: {
-      color: theme.palette.primary.main,
-      position: 'relative',
-      left: theme.spacing(1),
-      opacity: 0,
-      width: 14,
-      height: 14,
-    },
     absoluteIcon: {
-      display: 'inline',
-      position: 'relative',
-      paddingRight: 26,
       [`& .${classes.icon}`]: {
+        bottom: 2,
+        left: 'initial',
+        opacity: 0,
         position: 'absolute',
         right: 0,
-        bottom: 2,
-        opacity: 0,
-        left: 'initial',
       },
+      display: 'inline',
+      paddingRight: 26,
+      position: 'relative',
+    },
+    black: {
+      color: theme.palette.text.primary,
     },
     fixedIcon: {
       display: 'inline-block',
       fontSize: '0.8em',
     },
-    black: {
-      color: theme.palette.text.primary,
+    icon: {
+      color: theme.palette.primary.main,
+      height: 14,
+      left: theme.spacing(1),
+      opacity: 0,
+      position: 'relative',
+      width: 14,
+    },
+    root: {
+      '&:hover': {
+        [`& .${classes.icon}`]: {
+          opacity: 1,
+        },
+      },
+      alignItems: 'baseline',
+      color:
+        theme.name === 'dark' ? theme.textColors.linkActiveLight : undefined,
+      display: 'inline-flex',
     },
   })
 );
@@ -62,14 +62,14 @@ interface Props {
 const ExternalLink = (props: Props) => {
   const { classes, cx } = useStyles();
   const {
-    link,
-    text,
-    className,
     absoluteIcon,
     black,
+    className,
     fixedIcon,
     hideIcon,
+    link,
     onClick,
+    text,
   } = props;
 
   return (

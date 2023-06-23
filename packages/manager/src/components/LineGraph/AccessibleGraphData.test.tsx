@@ -8,20 +8,20 @@ const chartInstance = {
     data: {
       datasets: [
         {
-          label: 'Dataset 1',
           data: [
             { t: 1631026800000, y: 10 },
             { t: 1631030400000, y: 20 },
             { t: 1631034000000, y: 30 },
           ],
+          label: 'Dataset 1',
         },
         {
-          label: 'Dataset 2',
           data: [
             { t: 1631026800000, y: 5 },
             { t: 1631030400000, y: 15 },
             { t: 1631034000000, y: 25 },
           ],
+          label: 'Dataset 2',
         },
       ],
     },

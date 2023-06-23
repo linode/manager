@@ -34,21 +34,21 @@ interface Props {
 
 export const KubernetesPlansPanel = ({
   copy,
+  currentPlanHeading,
   disabled,
   error,
+  getTypeCount,
   hasSelectedRegion,
   header,
   isPlanPanelDisabled,
   isSelectedRegionEligibleForPlan,
   onAdd,
-  regionsData,
-  updatePlanCount,
-  types,
-  resetValues,
-  currentPlanHeading,
-  getTypeCount,
   onSelect,
+  regionsData,
+  resetValues,
   selectedID,
+  types,
+  updatePlanCount,
 }: Props) => {
   const plans = getPlanSelectionsByPlanType(types);
 

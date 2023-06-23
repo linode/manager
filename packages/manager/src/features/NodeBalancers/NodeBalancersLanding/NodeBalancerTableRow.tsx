@@ -16,7 +16,7 @@ interface Props extends NodeBalancer {
 }
 
 export const NodeBalancerTableRow = (props: Props) => {
-  const { id, label, transfer, ipv4, region, onDelete } = props;
+  const { id, ipv4, label, onDelete, region, transfer } = props;
 
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
 
@@ -44,7 +44,7 @@ export const NodeBalancerTableRow = (props: Props) => {
         <TableCell>
           {!configs ? <Skeleton /> : null}
           {configs?.length === 0 && 'None'}
-          {configs?.map(({ port, id: configId }, i) => (
+          {configs?.map(({ id: configId, port }, i) => (
             <React.Fragment key={configId}>
               <Link to={`/nodebalancers/${id}/configurations/${configId}`}>
                 {port}

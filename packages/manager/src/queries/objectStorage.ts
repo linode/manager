@@ -145,7 +145,7 @@ export const useObjectBucketDetailsInfiniteQuery = (
   useInfiniteQuery<ObjectStorageObjectListResponse, APIError[]>(
     [queryKey, cluster, bucket, 'objects', ...prefixToQueryKey(prefix)],
     ({ pageParam }) =>
-      getObjectList(cluster, bucket, { marker: pageParam, delimiter, prefix }),
+      getObjectList(cluster, bucket, { delimiter, marker: pageParam, prefix }),
     {
       getNextPageParam: (lastPage) => lastPage.next_marker,
     }
@@ -164,8 +164,8 @@ export const getAllBucketsFromClusters = async (
     )()
       .then((data) => data.data)
       .catch((error) => ({
-        error,
         cluster,
+        error,
       }))
   );
 
@@ -251,7 +251,7 @@ export const useCreateObjectUrlMutation = (
       method: 'GET' | 'PUT' | 'POST' | 'DELETE';
       options?: ObjectStorageObjectURLOptions;
     }
-  >(({ name, method, options }) =>
+  >(({ method, name, options }) =>
     getObjectURL(clusterId, bucketName, name, method, options)
   );
 

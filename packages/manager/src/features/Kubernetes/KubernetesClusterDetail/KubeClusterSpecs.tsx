@@ -19,15 +19,9 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
-  },
-  mainGridContainer: {
-    position: 'relative',
-    [theme.breakpoints.up('lg')]: {
-      justifyContent: 'space-between',
-    },
+  iconTextOuter: {
+    flexBasis: '72%',
+    minWidth: 115,
   },
   item: {
     '&:first-of-type': {
@@ -36,12 +30,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:last-of-type': {
       paddingBottom: 0,
     },
-    paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
   },
-  iconTextOuter: {
-    flexBasis: '72%',
-    minWidth: 115,
+  mainGridContainer: {
+    position: 'relative',
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'space-between',
+    },
+  },
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
   },
 }));
 
@@ -55,7 +55,7 @@ export const KubeClusterSpecs = (props: Props) => {
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
 
-  const { RAM, CPU, Storage } = getTotalClusterMemoryCPUAndStorage(
+  const { CPU, RAM, Storage } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],
     types ?? []
   );

@@ -47,10 +47,10 @@ export const deriveTypeFromValuesAndIPs = (
   const protocol = values.protocol as FirewallRuleProtocol;
 
   const predefinedFirewall = predefinedFirewallFromRule({
+    action: 'ACCEPT',
+    addresses: formValueToIPs(values.addresses, ips),
     ports: values.ports,
     protocol,
-    addresses: formValueToIPs(values.addresses, ips),
-    action: 'ACCEPT',
   });
 
   if (predefinedFirewall) {
@@ -136,12 +136,12 @@ export const classifyIPs = (ips: ExtendedIP[]) => {
 
 const initialValues: FormState = {
   action: 'ACCEPT',
-  type: '',
-  ports: '',
   addresses: '',
-  protocol: '',
-  label: '',
   description: '',
+  label: '',
+  ports: '',
+  protocol: '',
+  type: '',
 };
 
 export const getInitialFormValues = (
@@ -153,12 +153,12 @@ export const getInitialFormValues = (
 
   return {
     action: ruleToModify.action,
+    addresses: getInitialAddressFormValue(ruleToModify.addresses),
+    description: ruleToModify?.description || '',
+    label: ruleToModify?.label || '',
     ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
-    addresses: getInitialAddressFormValue(ruleToModify.addresses),
     type: predefinedFirewallFromRule(ruleToModify) || '',
-    label: ruleToModify?.label || '',
-    description: ruleToModify?.description || '',
   };
 };
 
@@ -292,11 +292,11 @@ export const portStringToItems = (
 };
 
 export const validateForm = ({
-  protocol,
-  ports,
-  label,
-  description,
   addresses,
+  description,
+  label,
+  ports,
+  protocol,
 }: Partial<FormState>) => {
   const errors: Partial<FormState> = {};
 

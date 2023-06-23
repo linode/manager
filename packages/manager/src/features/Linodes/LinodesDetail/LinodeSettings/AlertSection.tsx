@@ -28,16 +28,16 @@ interface Props {
 export const AlertSection = (props: Props) => {
   const theme = useTheme();
   const {
-    title,
-    textTitle,
     copy,
-    state,
-    value,
+    endAdornment,
+    error,
     onStateChange,
     onValueChange,
-    error,
-    endAdornment,
     readOnly,
+    state,
+    textTitle,
+    title,
+    value,
   } = props;
 
   return (
@@ -47,15 +47,15 @@ export const AlertSection = (props: Props) => {
         data-qa-alerts-panel
         spacing={2}
         sx={{
-          alignItems: 'flex-start',
-          flex: 1,
-          marginBottom: theme.spacing(2),
           '&:last-of-type': {
             marginBottom: 0,
           },
           '&:last-of-type + hr': {
             display: 'none',
           },
+          alignItems: 'flex-start',
+          flex: 1,
+          marginBottom: theme.spacing(2),
         }}
       >
         <Grid
@@ -79,11 +79,11 @@ export const AlertSection = (props: Props) => {
               label={title}
               data-qa-alert={title}
               sx={{
-                '.MuiFormControlLabel-label': {
-                  paddingLeft: '12px',
-                },
                 '& > span:last-child': {
                   ...theme.typography.h3,
+                },
+                '.MuiFormControlLabel-label': {
+                  paddingLeft: '12px',
                 },
               }}
             />
@@ -104,8 +104,8 @@ export const AlertSection = (props: Props) => {
           md={3}
           lg={5}
           sx={{
-            paddingTop: '0',
             paddingBottom: '0',
+            paddingTop: '0',
             [theme.breakpoints.down('md')]: {
               paddingLeft: '78px',
             },

@@ -4,34 +4,34 @@ import { StackScriptForm } from './StackScriptForm';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
+  currentUser: 'mmckenna',
+  description: {
+    handler: jest.fn(),
+    value: '',
+  },
+  disableSubmit: false,
+  errors: [],
   images: {
     available: [],
     selected: [],
   },
-  currentUser: 'mmckenna',
+  isSubmitting: false,
   label: {
-    value: '',
     handler: jest.fn(),
-  },
-  description: {
     value: '',
-    handler: jest.fn(),
   },
+  mode: 'create' as any,
+  onCancel: jest.fn(),
+  onSelectChange: jest.fn(),
+  onSubmit: jest.fn(),
   revision: {
-    value: '',
     handler: jest.fn(),
+    value: '',
   },
   script: {
-    value: '',
     handler: jest.fn(),
+    value: '',
   },
-  onSelectChange: jest.fn(),
-  errors: [],
-  onSubmit: jest.fn(),
-  onCancel: jest.fn(),
-  isSubmitting: false,
-  mode: 'create' as any,
-  disableSubmit: false,
 };
 
 describe('StackScriptCreate', () => {

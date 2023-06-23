@@ -8,7 +8,7 @@ import { RescueDialog, Props } from './RescueDialog';
 import { QueryClient } from 'react-query';
 
 const standard = typeFactory.build({ id: 'g6-standard-1' });
-const metal = typeFactory.build({ id: 'g6-metal-alpha-2', class: 'metal' });
+const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
 
 const normalLinode = linodeFactory.build({ type: 'g6-standard-1' });
 const metalLinode = linodeFactory.build({ type: 'g6-metal-alpha-2' });
@@ -29,7 +29,7 @@ describe('RescueDialog', () => {
         return res(ctx.json(normalLinode));
       })
     );
-    const { queryByTestId, getByText } = renderWithTheme(
+    const { getByText, queryByTestId } = renderWithTheme(
       <RescueDialog {...props} />,
       {
         queryClient: new QueryClient(),
@@ -52,7 +52,7 @@ describe('RescueDialog', () => {
         return res(ctx.json(metalLinode));
       })
     );
-    const { queryByTestId, getByText } = renderWithTheme(
+    const { getByText, queryByTestId } = renderWithTheme(
       <RescueDialog {...props} linodeId={metalLinode.id} />,
       {
         queryClient: new QueryClient(),

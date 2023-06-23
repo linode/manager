@@ -6,19 +6,19 @@ import React from 'react';
 export const SelectedIcon = styled(DoneIcon, {
   shouldForwardProp: (prop) => prop != 'visible',
 })<{ visible: boolean }>(({ visible }) => ({
-  width: 17,
   height: 17,
-  marginRight: '5px',
   marginLeft: '-2px',
+  marginRight: '5px',
   visibility: visible ? 'visible' : 'hidden',
+  width: 17,
 }));
 
 export const RemoveIcon = styled(CloseIcon, {
   shouldForwardProp: (prop) => prop != 'visible',
 })<{ visible: boolean }>(({ visible }) => ({
-  width: 18,
   height: 18,
   visibility: visible ? 'visible' : 'hidden',
+  width: 18,
 }));
 
 export const CustomPopper = (props: PopperProps) => {
@@ -26,7 +26,7 @@ export const CustomPopper = (props: PopperProps) => {
     <Popper
       {...props}
       data-qa-autocomplete-popper
-      modifiers={[{ name: 'preventOverflow', enabled: false }]}
+      modifiers={[{ enabled: false, name: 'preventOverflow' }]}
       style={{
         ...(props.style ?? {}),
         ...(props.style?.width

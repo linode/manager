@@ -15,12 +15,12 @@ import { useRegionsQuery } from 'src/queries/regions';
 // import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({
+  chipWrapper: {
+    alignSelf: 'center',
+  },
   volumePath: {
     width: '35%',
     wordBreak: 'break-all',
-  },
-  chipWrapper: {
-    alignSelf: 'center',
   },
 });
 
@@ -56,33 +56,33 @@ export const isVolumeUpdating = (e?: Event) => {
 
 export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   active: 'active',
-  resizing: 'other',
-  migrating: 'other',
   creating: 'other',
+  migrating: 'other',
   offline: 'inactive',
+  resizing: 'other',
 };
 
 export const VolumeTableRow = React.memo((props: CombinedProps) => {
   const classes = useStyles();
   const { data: regions } = useRegionsQuery();
   const {
-    isDetailsPageRow,
-    openForClone,
-    openForConfig,
-    openForEdit,
-    openForResize,
+    filesystem_path: filesystemPath,
     handleAttach,
     handleDelete,
     handleDetach,
     id,
+    isDetailsPageRow,
     label,
+    linode_id: linodeId,
+    linode_label,
+    openForClone,
+    openForConfig,
+    openForEdit,
+    openForResize,
+    region,
+    size,
     status,
     tags,
-    size,
-    region,
-    filesystem_path: filesystemPath,
-    linode_label,
-    linode_id: linodeId,
   } = props;
 
   const isVolumesLanding = !isDetailsPageRow;

@@ -25,7 +25,7 @@ export const BucketBreadcrumb = (props: Props) => {
     timeout = setTimeout(() => setCopied(false), 1500);
     copy(value);
   };
-  const { prefix, bucketName, history } = props;
+  const { bucketName, history, prefix } = props;
   const { width } = useWindowDimensions();
 
   React.useEffect(() => {

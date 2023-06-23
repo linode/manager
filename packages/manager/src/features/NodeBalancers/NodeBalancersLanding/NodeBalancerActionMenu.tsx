@@ -19,26 +19,26 @@ export const NodeBalancerActionMenu = (props: Props) => {
 
   const history = useHistory();
 
-  const { nodeBalancerId, toggleDialog, label } = props;
+  const { label, nodeBalancerId, toggleDialog } = props;
 
   const actions: Action[] = [
     {
-      title: 'Configurations',
       onClick: () => {
         history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
       },
+      title: 'Configurations',
     },
     {
-      title: 'Settings',
       onClick: () => {
         history.push(`/nodebalancers/${nodeBalancerId}/settings`);
       },
+      title: 'Settings',
     },
     {
-      title: 'Delete',
       onClick: () => {
         toggleDialog(nodeBalancerId, label);
       },
+      title: 'Delete',
     },
   ];
 

@@ -12,13 +12,13 @@ interface Props {
 
 export const UserDataAccordionHeading = ({ createType }: Props) => {
   const warningMessageMap: Record<CreateTypes, string | null> = {
+    fromApp: null,
     fromBackup:
       'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.',
+    fromImage: null,
     fromLinode:
       'Existing user data is not cloned. You may add new user data now.',
-    fromApp: null,
     fromStackScript: null,
-    fromImage: null,
   };
 
   const warningMessage = createType ? warningMessageMap[createType] : null;
@@ -28,7 +28,7 @@ export const UserDataAccordionHeading = ({ createType }: Props) => {
       <Box display="flex">
         Add User Data <BetaChip component="span" />
         <TooltipIcon
-          sxTooltipIcon={{ padding: '0 8px', alignItems: 'baseline' }}
+          sxTooltipIcon={{ alignItems: 'baseline', padding: '0 8px' }}
           text={
             <>
               User data is a virtual machine&rsquo;s cloud-init metadata

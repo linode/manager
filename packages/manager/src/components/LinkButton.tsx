@@ -6,13 +6,13 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  link: {
-    ...theme.applyLinkStyles,
-  },
   disabled: {
     color: theme.palette.text.primary,
-    pointerEvents: 'none',
     cursor: 'default',
+    pointerEvents: 'none',
+  },
+  link: {
+    ...theme.applyLinkStyles,
   },
   spinner: {
     marginLeft: theme.spacing(),
@@ -31,11 +31,11 @@ interface Props {
 export const LinkButton = (props: Props) => {
   const classes = useStyles();
   const {
-    isLoading = false,
-    isDisabled = false,
-    onClick,
-    className,
     children,
+    className,
+    isDisabled = false,
+    isLoading = false,
+    onClick,
     style,
   } = props;
 

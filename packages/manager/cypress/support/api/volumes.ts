@@ -13,7 +13,7 @@ import { depaginate } from 'support/util/paginate';
  */
 export const deleteAllTestVolumes = async (): Promise<void> => {
   const volumes = await depaginate<Volume>((page: number) =>
-    getVolumes({ page_size: pageSize, page })
+    getVolumes({ page, page_size: pageSize })
   );
 
   const detachDeletePromises = volumes

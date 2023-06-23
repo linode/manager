@@ -113,7 +113,7 @@ export const testItem = (item: SearchableItem, query: string) => {
     return searchDefaultFields(item, query);
   }
 
-  const { fieldName, searchTerms, isNegated } = getQueryInfo(parsedQuery);
+  const { fieldName, isNegated, searchTerms } = getQueryInfo(parsedQuery);
 
   const matchedSearchTerms = searchTerms.map((searchTerm) => {
     const isMatch = doesSearchTermMatchItemField(searchTerm, item, fieldName);
@@ -196,9 +196,9 @@ export const getQueryInfo = (parsedQuery: any) => {
   const searchTerms: string[] = fields[searchField] || [];
 
   return {
-    searchTerms,
     fieldName,
     isNegated,
+    searchTerms,
   };
 };
 
@@ -212,12 +212,12 @@ export const getRealEntityKey = (key: string): SearchField | string => {
   const TYPE: SearchField = 'type';
 
   const substitutions = {
-    tag: TAGS,
     group: TAGS,
-    name: LABEL,
-    title: LABEL,
     ip: IPS,
     is: TYPE,
+    name: LABEL,
+    tag: TAGS,
+    title: LABEL,
   };
 
   return substitutions[key] || key;

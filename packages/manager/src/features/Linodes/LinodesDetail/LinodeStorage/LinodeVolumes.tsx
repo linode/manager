@@ -38,25 +38,25 @@ import {
 } from 'src/store/volumeForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    width: '100%',
-  },
-  headline: {
-    marginTop: 8,
-    marginBottom: 8,
-    marginLeft: 15,
-    lineHeight: '1.5rem',
-  },
   addNewWrapper: {
+    '&.MuiGrid-item': {
+      padding: 5,
+    },
     [theme.breakpoints.down('sm')]: {
       marginLeft: `-${theme.spacing(1.5)}`,
       marginTop: `-${theme.spacing(1)}`,
     },
-    '&.MuiGrid-item': {
-      padding: 5,
-    },
+  },
+  headline: {
+    lineHeight: '1.5rem',
+    marginBottom: 8,
+    marginLeft: 15,
+    marginTop: 8,
+  },
+  root: {
+    backgroundColor: theme.color.white,
+    margin: 0,
+    width: '100%',
   },
   volumesPanel: {
     marginTop: '20px',
@@ -90,11 +90,11 @@ interface DispatchProps {
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
+      openForClone,
+      openForConfig,
+      openForCreating,
       openForEdit,
       openForResize,
-      openForClone,
-      openForCreating,
-      openForConfig,
     },
     dispatch
   );
@@ -107,11 +107,11 @@ export const preferenceKey = 'linode-volumes';
 
 export const LinodeVolumes = connected((props: Props) => {
   const {
-    openForConfig,
     openForClone,
+    openForConfig,
+    openForCreating,
     openForEdit,
     openForResize,
-    openForCreating,
   } = props;
 
   const { linodeId } = useParams<{ linodeId: string }>();
@@ -119,17 +119,17 @@ export const LinodeVolumes = connected((props: Props) => {
 
   const { data: linode } = useLinodeQuery(id);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'desc',
+      orderBy: 'label',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
   const pagination = usePagination(1, preferenceKey);
@@ -138,7 +138,7 @@ export const LinodeVolumes = connected((props: Props) => {
 
   const regions = useRegionsQuery().data ?? [];
 
-  const { data, isLoading, error } = useLinodeVolumesQuery(
+  const { data, error, isLoading } = useLinodeVolumesQuery(
     id,
     {
       page: pagination.page,
@@ -148,10 +148,10 @@ export const LinodeVolumes = connected((props: Props) => {
   );
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
+    linodeRegion: '',
     open: false,
     volumeId: 0,
     volumeLabel: '',
-    linodeRegion: '',
   });
 
   const [destructiveDialog, setDestructiveDialog] = React.useState<{
@@ -161,11 +161,11 @@ export const LinodeVolumes = connected((props: Props) => {
     volumeLabel: string;
     linodeLabel: string;
   }>({
-    open: false,
+    linodeLabel: '',
     mode: 'detach',
+    open: false,
     volumeId: 0,
     volumeLabel: '',
-    linodeLabel: '',
   });
 
   const handleCloseAttachDrawer = () => {
@@ -178,10 +178,10 @@ export const LinodeVolumes = connected((props: Props) => {
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
     setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
+      linodeRegion: regionID,
       open: true,
       volumeId,
       volumeLabel: label,
-      linodeRegion: regionID,
     }));
   };
 
@@ -193,25 +193,25 @@ export const LinodeVolumes = connected((props: Props) => {
   ) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: true,
+      error: '',
+      linodeId,
+      linodeLabel,
       mode: 'detach',
+      open: true,
       volumeId,
       volumeLabel,
-      linodeLabel,
-      linodeId,
-      error: '',
     }));
   };
 
   const handleDelete = (volumeId: number, volumeLabel: string) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: true,
+      error: '',
+      linodeLabel: '',
       mode: 'delete',
+      open: true,
       volumeId,
       volumeLabel,
-      linodeLabel: '',
-      error: '',
     }));
   };
 
@@ -241,13 +241,13 @@ export const LinodeVolumes = connected((props: Props) => {
   }
 
   const handlers: VolumeHandlers = {
+    handleAttach,
+    handleDelete,
+    handleDetach,
+    openForClone,
     openForConfig,
     openForEdit,
     openForResize,
-    openForClone,
-    handleAttach,
-    handleDetach,
-    handleDelete,
   };
 
   const renderTableContent = () => {

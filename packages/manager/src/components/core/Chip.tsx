@@ -6,9 +6,9 @@ import { default as _Chip, ChipProps as _ChipProps } from '@mui/material/Chip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inTable: {
-    marginTop: 0,
     marginBottom: 0,
     marginLeft: theme.spacing(2),
+    marginTop: 0,
     minHeight: theme.spacing(2),
     paddingLeft: theme.spacing(0.5),
     paddingRight: theme.spacing(0.5),
@@ -28,9 +28,9 @@ export interface ChipProps extends _ChipProps {
 }
 
 const Chip: React.FC<ChipProps> = ({
-  outlineColor = 'gray',
   className,
   inTable,
+  outlineColor = 'gray',
   ...props
 }) => {
   const classes = useStyles();

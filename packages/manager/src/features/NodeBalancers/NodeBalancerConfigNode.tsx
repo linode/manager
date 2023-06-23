@@ -34,17 +34,17 @@ export interface NodeBalancerConfigNodeProps {
 export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
     const {
-      disabled,
-      node,
-      idx,
-      forEdit,
       configIdx,
+      disabled,
+      forEdit,
+      idx,
+      node,
       nodeBalancerRegion,
       onNodeAddressChange,
       onNodeLabelChange,
       onNodeModeChange,
-      onNodeWeightChange,
       onNodePortChange,
+      onNodeWeightChange,
       removeNode,
     } = props;
 
@@ -65,8 +65,8 @@ export const NodeBalancerConfigNode = React.memo(
             <Grid xs={12}>
               <Divider
                 style={{
-                  marginTop: forEdit ? 8 : 24,
                   marginBottom: 24,
+                  marginTop: forEdit ? 8 : 24,
                 }}
               />
             </Grid>
@@ -211,19 +211,19 @@ export const NodeBalancerConfigNode = React.memo(
 );
 
 const StyledActionsPanel = styled(ActionsPanel)(({ theme }) => ({
-  display: 'flex',
+  '& .remove': {
+    margin: 0,
+    padding: theme.spacing(2.5),
+  },
   alignItems: 'flex-end',
-  paddingLeft: theme.spacing(2),
+  display: 'flex',
   marginLeft: `-${theme.spacing()}`,
+  paddingLeft: theme.spacing(2),
   [theme.breakpoints.down('lg')]: {
     marginTop: `-${theme.spacing()}`,
   },
   [theme.breakpoints.down('sm')]: {
     marginTop: 0,
-  },
-  '& .remove': {
-    margin: 0,
-    padding: theme.spacing(2.5),
   },
 }));
 

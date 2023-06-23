@@ -49,12 +49,12 @@ interface Props {
 const PREFERENCE_KEY = 'api-tokens';
 
 export const APITokenTable = (props: Props) => {
-  const { type, title } = props;
+  const { title, type } = props;
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'created',
       order: 'desc',
+      orderBy: 'created',
     },
     `${PREFERENCE_KEY}-order}`,
     type === 'OAuth Client Token' ? 'oauth' : 'token'
@@ -68,7 +68,7 @@ export const APITokenTable = (props: Props) => {
 
   const useTokenQuery = queryMap[type];
 
-  const { data, isLoading, error } = useTokenQuery(
+  const { data, error, isLoading } = useTokenQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

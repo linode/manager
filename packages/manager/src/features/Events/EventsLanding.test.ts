@@ -4,43 +4,43 @@ import { reducer, ReducerActions, ReducerState } from './EventsLanding';
 
 const someEvent: Event[] = [
   {
-    id: 1234,
-    time_remaining: null,
-    secondary_entity: null,
-    seen: true,
-    created: '2018-12-02T20:23:43',
     action: 'linode_boot',
-    read: false,
-    percent_complete: 100,
-    username: 'test',
-    rate: null,
+    created: '2018-12-02T20:23:43',
+    duration: 0,
     entity: {
       id: 11440645,
       label: 'linode11440645',
       type: 'linode',
       url: '/v4/linode/instances/11440645',
     },
-    status: 'finished',
-    duration: 0,
+    id: 1234,
     message: null,
+    percent_complete: 100,
+    rate: null,
+    read: false,
+    secondary_entity: null,
+    seen: true,
+    status: 'finished',
+    time_remaining: null,
+    username: 'test',
   },
 ];
 
 const currentState: ReducerState = {
-  reactStateEvents: uniqueEvents,
   eventsFromRedux: [],
   inProgressEvents: { 123: 50 },
   mostRecentEventTime: 'hello world',
+  reactStateEvents: uniqueEvents,
 };
 
 const appendPayload: ReducerActions = {
-  type: 'append',
   payload: currentState,
+  type: 'append',
 };
 
 const prependPayloadNoChange: ReducerActions = {
-  type: 'prepend',
   payload: currentState,
+  type: 'prepend',
 };
 
 describe('utility functions', () => {
@@ -71,17 +71,17 @@ describe('utility functions', () => {
         ...prependPayloadNoChange,
         payload: {
           ...prependPayloadNoChange.payload,
-          mostRecentEventTime: 'ahhhhhhhh',
           eventsFromRedux: [reduxEvent],
+          mostRecentEventTime: 'ahhhhhhhh',
         },
       })
     ).toEqual({
-      reactStateEvents: [reduxEvent, ...uniqueEvents],
       eventsFromRedux: [reduxEvent],
       inProgressEvents: {
         123: 50,
       },
       mostRecentEventTime: 'ahhhhhhhh',
+      reactStateEvents: [reduxEvent, ...uniqueEvents],
     });
 
     expect(
@@ -89,15 +89,15 @@ describe('utility functions', () => {
         ...prependPayloadNoChange,
         payload: {
           ...prependPayloadNoChange.payload,
-          inProgressEvents: { 123: 70 },
           eventsFromRedux: [reduxEvent],
+          inProgressEvents: { 123: 70 },
         },
       })
     ).toEqual({
-      reactStateEvents: [reduxEvent, ...uniqueEvents],
       eventsFromRedux: [reduxEvent],
       inProgressEvents: { 123: 70 },
       mostRecentEventTime: 'hello world',
+      reactStateEvents: [reduxEvent, ...uniqueEvents],
     });
   });
 

@@ -27,8 +27,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   copy: {
     lineHeight: '20px',
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(2),
     },
@@ -39,20 +39,20 @@ const AccountLogins = () => {
   const { classes } = useStyles();
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'datetime',
       order: 'desc',
+      orderBy: 'datetime',
     },
     `${preferenceKey}-order}`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
-  const { data, isLoading, error } = useAccountLoginsQuery(
+  const { data, error, isLoading } = useAccountLoginsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

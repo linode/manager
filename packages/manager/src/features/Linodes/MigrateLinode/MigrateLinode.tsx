@@ -40,24 +40,11 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  details: {
-    marginTop: theme.spacing(2),
-  },
   actionWrapper: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  },
-  vlanHelperText: {
-    marginTop: theme.spacing(0.5),
-  },
-  buttonGroup: {
-    marginTop: theme.spacing(3),
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'flex-end',
-      flexWrap: 'wrap',
-    },
+    marginTop: theme.spacing(2),
   },
   agreement: {
     maxWidth: '70%',
@@ -69,6 +56,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(2),
     },
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
+      flexWrap: 'wrap',
+      justifyContent: 'flex-end',
+    },
+  },
+  details: {
+    marginTop: theme.spacing(2),
+  },
+  vlanHelperText: {
+    marginTop: theme.spacing(0.5),
   },
 }));
 
@@ -110,9 +110,9 @@ export const MigrateLinode = React.memo((props: Props) => {
     : [];
 
   const {
-    mutateAsync: migrateLinode,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: migrateLinode,
     reset,
   } = useLinodeMigrateMutation(linodeId ?? -1);
 
@@ -192,8 +192,8 @@ export const MigrateLinode = React.memo((props: Props) => {
         region,
         selectedRegion,
         +formatDate(new Date().toISOString(), {
-          timezone: profile?.timezone,
           format: 'H',
+          timezone: profile?.timezone,
         })
       );
       enqueueSnackbar(

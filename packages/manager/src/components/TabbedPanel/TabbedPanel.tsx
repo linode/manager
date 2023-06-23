@@ -35,16 +35,16 @@ interface TabbedPanelProps {
 
 const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   const {
-    header,
-    error,
     copy,
+    docsLink,
+    error,
+    handleTabChange,
+    header,
+    initTab,
+    innerClass,
     rootClass,
     sx,
-    innerClass,
     tabs,
-    handleTabChange,
-    docsLink,
-    initTab,
     ...rest
   } = props;
 
@@ -124,9 +124,6 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 
 const StyledTabList = styled(TabList)(({ theme }) => ({
   'div &[data-reach-tab-list]': {
-    boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
-    marginTop: 22,
-    marginBottom: theme.spacing(3),
     '&button': {
       '&:focus': {
         backgroundColor: theme.bg.tableHeader,
@@ -135,6 +132,9 @@ const StyledTabList = styled(TabList)(({ theme }) => ({
         backgroundColor: `red !important`,
       },
     },
+    boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
+    marginBottom: theme.spacing(3),
+    marginTop: 22,
   },
 }));
 

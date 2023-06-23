@@ -19,9 +19,9 @@ const props = {
     'file6.txt',
     'file7.pdf',
   ],
+  classes: { attachmentPaperWrapper: '', root: '' },
   showMoreAttachments: false,
   toggle: jest.fn(),
-  classes: { root: '', attachmentPaperWrapper: '' },
 };
 
 const component = shallow(<TicketAttachmentList {...props} />);

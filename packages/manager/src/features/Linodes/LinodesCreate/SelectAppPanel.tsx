@@ -16,16 +16,16 @@ type ClassNames = 'panel' | 'loading';
 
 const styles = (theme: Theme) =>
   createStyles({
-    panel: {
-      marginBottom: theme.spacing(3),
-      height: 450,
-      overflowY: 'auto',
-      boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
-    },
     loading: {
       '& >div:first-of-type': {
         height: 450,
       },
+    },
+    panel: {
+      boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
+      height: 450,
+      marginBottom: theme.spacing(3),
+      overflowY: 'auto',
     },
   });
 
@@ -50,7 +50,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SelectAppPanel extends React.PureComponent<CombinedProps> {
   clickAppIfQueryParamExists = () => {
-    const { handleClick, appInstances } = this.props;
+    const { appInstances, handleClick } = this.props;
     const appIDFromURL = getQueryParamFromQueryString(location.search, 'appID');
     const matchedApp = appInstances
       ? appInstances.find((eachApp) => eachApp.id === +appIDFromURL)
@@ -106,18 +106,18 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
 
   render() {
     const {
-      disabled,
-      selectedStackScriptID,
-      classes,
-      error,
       appInstances,
       appInstancesError,
       appInstancesLoading,
+      classes,
+      disabled,
+      error,
       handleClick,
-      openDrawer,
-      isSearching,
       isFiltering,
+      isSearching,
+      openDrawer,
       searchValue,
+      selectedStackScriptID,
     } = this.props;
 
     if (appInstancesError) {

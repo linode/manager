@@ -20,12 +20,12 @@ interface Props {
 }
 
 export const CloneDomainDrawer = (props: Props) => {
-  const { onClose: _onClose, open, domain } = props;
+  const { domain, onClose: _onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const { mutateAsync: cloneDomain, error, reset } = useCloneDomainMutation(
+  const { error, mutateAsync: cloneDomain, reset } = useCloneDomainMutation(
     domain?.id ?? 0
   );
 

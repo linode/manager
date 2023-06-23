@@ -27,25 +27,6 @@ import ActionMenu from './UsersActionMenu';
 import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  userLandingHeader: {
-    margin: 0,
-    width: '100%',
-  },
-  headline: {
-    marginTop: 8,
-    marginBottom: 8,
-    marginLeft: 15,
-    lineHeight: '1.5rem',
-  },
-  addNewWrapper: {
-    '&.MuiGrid-item': {
-      paddingTop: 0,
-      paddingRight: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-  },
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -54,32 +35,51 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
-  title: {
-    marginBottom: theme.spacing(2),
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      paddingRight: 0,
+      paddingTop: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
+    },
   },
   avatar: {
+    animation: '$fadeIn 150ms linear forwards',
     borderRadius: '50%',
-    width: 30,
     height: 30,
     marginRight: theme.spacing(2),
-    animation: '$fadeIn 150ms linear forwards',
+    width: 30,
   },
   emptyImage: {
     display: 'inline',
-    width: 30,
     height: 30,
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
-      width: 40,
       height: 40,
+      width: 40,
     },
+    width: 30,
+  },
+  headline: {
+    lineHeight: '1.5rem',
+    marginBottom: 8,
+    marginLeft: 15,
+    marginTop: 8,
+  },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  userLandingHeader: {
+    margin: 0,
+    width: '100%',
   },
 }));
 
 const UsersLanding = () => {
   const { data: profile } = useProfile();
   const pagination = usePagination(1, 'account-users');
-  const { data: users, isLoading, error, refetch } = useAccountUsers({
+  const { data: users, error, isLoading, refetch } = useAccountUsers({
     page: pagination.page,
     page_size: pagination.pageSize,
   });

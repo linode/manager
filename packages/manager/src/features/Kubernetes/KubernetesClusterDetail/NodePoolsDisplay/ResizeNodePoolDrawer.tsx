@@ -16,16 +16,16 @@ import { pluralize } from 'src/utilities/pluralize';
 import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  summary: {
-    fontWeight: 'bold',
-    lineHeight: '20px',
-    fontSize: '16px',
-  },
   helperText: {
     paddingBottom: `calc(${theme.spacing(2)} + 1px)`,
   },
   section: {
     paddingBottom: theme.spacing(3),
+  },
+  summary: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    lineHeight: '20px',
   },
 }));
 
@@ -40,7 +40,7 @@ const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool.`;
 
 export const ResizeNodePoolDrawer = (props: Props) => {
-  const { nodePool, onClose, open, kubernetesClusterId } = props;
+  const { kubernetesClusterId, nodePool, onClose, open } = props;
   const classes = useStyles();
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
@@ -50,9 +50,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     : undefined;
 
   const {
-    mutateAsync: updateNodePool,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(

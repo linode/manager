@@ -22,10 +22,10 @@ export const useStyles = makeStyles((theme: Theme) => ({
     )}`,
   },
   smallGraph: {
+    marginTop: `calc(${theme.spacing(6)} + 3px)`,
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(3.25),
     },
-    marginTop: `calc(${theme.spacing(6)} + 3px)`,
   },
 }));
 
@@ -43,7 +43,7 @@ type CombinedProps = Props & WithTheme;
 
 export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { data, error, loading, isToday, timezone, start, end, theme } = props;
+  const { data, end, error, isToday, loading, start, theme, timezone } = props;
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
   const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
@@ -69,11 +69,11 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
   const memoryUnit = readableBytes(statMax(_data.mem ?? []) * 1024).unit;
 
   const graphProps = {
-    timezone,
-    showToday: isToday,
-    loading,
     error,
+    loading,
     nativeLegend: true,
+    showToday: isToday,
+    timezone,
   };
 
   return (
@@ -88,10 +88,10 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               ariaLabel="CPU Usage Graph"
               data={[
                 {
-                  label: 'CPU',
-                  borderColor: 'transparent',
                   backgroundColor: theme.graphs.cpu.percent,
+                  borderColor: 'transparent',
                   data: _convertData(cpu, start, end),
+                  label: 'CPU',
                 },
               ]}
               {...graphProps}
@@ -108,10 +108,10 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               formatTooltip={(value: number) => readableBytes(value).formatted}
               data={[
                 {
-                  label: 'RAM',
-                  borderColor: 'transparent',
                   backgroundColor: theme.graphs.ram,
+                  borderColor: 'transparent',
                   data: _convertData(memory, start, end, formatMemory),
+                  label: 'RAM',
                 },
               ]}
               {...graphProps}
@@ -133,16 +133,16 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               formatTooltip={(value: number) => readableBytes(value).formatted}
               data={[
                 {
-                  label: 'Read',
-                  borderColor: 'transparent',
                   backgroundColor: theme.graphs.diskIO.read,
+                  borderColor: 'transparent',
                   data: _convertData(diskRead, start, end),
+                  label: 'Read',
                 },
                 {
-                  label: 'Write',
-                  borderColor: 'transparent',
                   backgroundColor: theme.graphs.diskIO.write,
+                  borderColor: 'transparent',
                   data: _convertData(diskWrite, start, end),
+                  label: 'Write',
                 },
               ]}
               {...graphProps}
@@ -155,10 +155,10 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               suggestedMax={maxProcessCount}
               data={[
                 {
-                  label: 'Count',
-                  borderColor: 'transparent',
                   backgroundColor: theme.graphs.processCount,
+                  borderColor: 'transparent',
                   data: _convertData(processCount, start, end),
+                  label: 'Count',
                 },
               ]}
               {...graphProps}

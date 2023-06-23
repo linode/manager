@@ -33,7 +33,7 @@ export const getAPIErrorOrDefault = (
   field?: string
 ): APIError[] => {
   const _defaultError = field
-    ? [{ reason: defaultError, field }]
+    ? [{ field, reason: defaultError }]
     : [{ reason: defaultError }];
 
   return isDefaultError(errorResponse) ? _defaultError : errorResponse;

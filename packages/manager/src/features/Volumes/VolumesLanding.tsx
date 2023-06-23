@@ -81,20 +81,20 @@ export const VolumesLanding = (props: CombinedProps) => {
 
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'desc',
+      orderBy: 'label',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
-  const { data: volumes, isLoading, error } = useVolumesQuery(
+  const { data: volumes, error, isLoading } = useVolumesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -102,7 +102,7 @@ export const VolumesLanding = (props: CombinedProps) => {
     filter
   );
 
-  const { openForConfig, openForClone, openForEdit, openForResize } = props;
+  const { openForClone, openForConfig, openForEdit, openForResize } = props;
 
   const [upgradeVolumeDialog, setUpgradeVolumeDialog] = React.useState({
     open: false,
@@ -111,10 +111,10 @@ export const VolumesLanding = (props: CombinedProps) => {
   });
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
+    linodeRegion: '',
     open: false,
     volumeId: 0,
     volumeLabel: '',
-    linodeRegion: '',
   });
 
   const [destructiveDialog, setDestructiveDialog] = React.useState<{
@@ -125,12 +125,12 @@ export const VolumesLanding = (props: CombinedProps) => {
     linodeLabel?: string;
     linodeId?: number;
   }>({
-    open: false,
-    mode: 'detach',
-    volumeId: 0,
-    volumeLabel: '',
     linodeId: undefined,
     linodeLabel: undefined,
+    mode: 'detach',
+    open: false,
+    volumeId: 0,
+    volumeLabel: '',
   });
 
   const handleCloseAttachDrawer = () => {
@@ -147,10 +147,10 @@ export const VolumesLanding = (props: CombinedProps) => {
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
     setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
+      linodeRegion: regionID,
       open: true,
       volumeId,
       volumeLabel: label,
-      linodeRegion: regionID,
     }));
   };
 
@@ -162,25 +162,25 @@ export const VolumesLanding = (props: CombinedProps) => {
   ) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: true,
+      error: '',
+      linodeId,
+      linodeLabel,
       mode: 'detach',
+      open: true,
       volumeId,
       volumeLabel,
-      linodeLabel,
-      linodeId,
-      error: '',
     }));
   };
 
   const handleDelete = (volumeId: number, volumeLabel: string) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: true,
+      error: '',
+      linodeLabel: '',
       mode: 'delete',
+      open: true,
       volumeId,
       volumeLabel,
-      linodeLabel: '',
-      error: '',
     }));
   };
 
@@ -217,14 +217,14 @@ export const VolumesLanding = (props: CombinedProps) => {
   }
 
   const handlers: VolumeHandlers = {
+    handleAttach,
+    handleDelete,
+    handleDetach,
+    handleUpgrade,
+    openForClone,
     openForConfig,
     openForEdit,
     openForResize,
-    openForClone,
-    handleAttach,
-    handleDetach,
-    handleDelete,
-    handleUpgrade,
   };
 
   return (
@@ -311,11 +311,11 @@ export const VolumesLanding = (props: CombinedProps) => {
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
+      openForClone,
+      openForConfig,
+      openForCreating,
       openForEdit,
       openForResize,
-      openForClone,
-      openForCreating,
-      openForConfig,
     },
     dispatch
   );

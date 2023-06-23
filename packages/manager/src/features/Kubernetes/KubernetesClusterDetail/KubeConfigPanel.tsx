@@ -14,27 +14,12 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: `calc(${theme.spacing(3)} + 5px) calc(${theme.spacing(
-      3
-    )} + 1px) calc(${theme.spacing(2)} - 3px)`,
-    [theme.breakpoints.up('md')]: {
-      marginTop: 66,
-    },
-  },
-  item: {
-    paddingBottom: theme.spacing(2),
-    [theme.breakpoints.up('xl')]: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-    },
-  },
   button: {
-    padding: `calc(${theme.spacing(2)} - 2px)`,
     display: 'block',
     fontSize: '0.9rem',
     marginRight: 12,
     minWidth: 124,
+    padding: `calc(${theme.spacing(2)} - 2px)`,
     [theme.breakpoints.down('xl')]: {
       marginBottom: theme.spacing(2),
       marginRight: 0,
@@ -49,6 +34,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     marginLeft: `calc(${theme.spacing(1)} + 3px)`,
+  },
+  item: {
+    paddingBottom: theme.spacing(2),
+    [theme.breakpoints.up('xl')]: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+    },
+  },
+  root: {
+    padding: `calc(${theme.spacing(3)} + 5px) calc(${theme.spacing(
+      3
+    )} + 1px) calc(${theme.spacing(2)} - 3px)`,
+    [theme.breakpoints.up('md')]: {
+      marginTop: 66,
+    },
   },
 }));
 

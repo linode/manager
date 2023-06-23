@@ -6,20 +6,20 @@ import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import { ResultRow } from './ResultRow';
 
 const classes = {
-  root: '',
-  labelCell: '',
-  regionCell: '',
   createdCell: '',
-  tagCell: '',
-  tag: '',
+  labelCell: '',
   link: '',
+  regionCell: '',
+  root: '',
+  tag: '',
+  tagCell: '',
 };
 
 const props = {
-  result: searchbarResult1,
-  redirect: jest.fn(),
-  openDomainDrawerForEditing: jest.fn(),
   classes,
+  openDomainDrawerForEditing: jest.fn(),
+  redirect: jest.fn(),
+  result: searchbarResult1,
 };
 
 describe('ResultRow component', () => {

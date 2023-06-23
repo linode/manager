@@ -18,49 +18,21 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    position: 'relative',
-  },
-  inner: {
-    paddingTop: 0,
-  },
-  graphControls: {
-    position: 'relative',
-    '&:before': {
-      content: '""',
-      position: 'absolute',
-      left: 0,
-      top: 52,
-      height: 'calc(100% - 102px);',
-      width: 1,
-      backgroundColor: theme.palette.divider,
-      [theme.breakpoints.down('sm')]: {
-        display: 'none',
-      },
-    },
-    /**
-     * hacky solution to solve for a bug where
-     * the canvas element under the chart kept ending up with a 0px height
-     * so that it was not appearing
-     */
-    '& canvas': {
-      height: `300px !important`,
-    },
-  },
   canvasContainer: {
     marginTop: theme.spacing(3),
   },
+  caption: {},
   chartSelect: {
     maxWidth: 150,
+    [theme.breakpoints.down('lg')]: {
+      marginBottom: theme.spacing(3),
+      marginLeft: theme.spacing(3),
+    },
     [theme.breakpoints.up('lg')]: {
       position: 'absolute !important' as 'absolute',
       right: 24,
       top: 0,
       zIndex: 2,
-    },
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: theme.spacing(3),
-      marginBottom: theme.spacing(3),
     },
   },
   chartSelectCompact: {
@@ -69,7 +41,35 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: -6,
     },
   },
-  caption: {},
+  graphControls: {
+    /**
+     * hacky solution to solve for a bug where
+     * the canvas element under the chart kept ending up with a 0px height
+     * so that it was not appearing
+     */
+    '& canvas': {
+      height: `300px !important`,
+    },
+    '&:before': {
+      backgroundColor: theme.palette.divider,
+      content: '""',
+      height: 'calc(100% - 102px);',
+      left: 0,
+      position: 'absolute',
+      [theme.breakpoints.down('sm')]: {
+        display: 'none',
+      },
+      top: 52,
+      width: 1,
+    },
+    position: 'relative',
+  },
+  inner: {
+    paddingTop: 0,
+  },
+  root: {
+    position: 'relative',
+  },
 }));
 
 type CombinedProps = WithTheme;
@@ -126,8 +126,8 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.cpu.percent,
+                    borderColor: 'transparent',
                     data: formatData(data.cpu),
                     label: 'CPU %',
                   },
@@ -157,14 +157,14 @@ const createTabs = (
                 formatTooltip={_formatTooltip}
                 data={[
                   {
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
+                    borderColor: 'transparent',
                     data: formatData(data.net_in),
                     label: 'Network Traffic In',
                   },
                   {
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
+                    borderColor: 'transparent',
                     data: formatData(data.net_out),
                     label: 'Network Traffic Out',
                   },
@@ -190,8 +190,8 @@ const createTabs = (
                 accessibleDataTable={{ unit: 'op/s' }}
                 data={[
                   {
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.yellow,
+                    borderColor: 'transparent',
                     data: formatData(data.disk),
                     label: 'Disk I/O',
                   },
@@ -211,7 +211,7 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
-  const { data, isLoading, error } = useManagedStatsQuery();
+  const { data, error, isLoading } = useManagedStatsQuery();
 
   if (error) {
     return (

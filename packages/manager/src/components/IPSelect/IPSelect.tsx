@@ -11,9 +11,9 @@ interface Props {
 }
 
 export const IPSelect = (props: Props) => {
-  const { linodeId, value, handleChange, customizeOptions } = props;
+  const { customizeOptions, handleChange, linodeId, value } = props;
 
-  const { data: linode, isLoading, error } = useLinodeQuery(linodeId);
+  const { data: linode, error, isLoading } = useLinodeQuery(linodeId);
 
   const ips: string[] = [];
 
@@ -28,7 +28,7 @@ export const IPSelect = (props: Props) => {
   }
 
   // Create React-Select-friendly options.
-  let options: Item<string>[] = ips.map((ip) => ({ value: ip, label: ip }));
+  let options: Item<string>[] = ips.map((ip) => ({ label: ip, value: ip }));
 
   // If a customizeOptions function was provided, apply it here.
   if (customizeOptions) {

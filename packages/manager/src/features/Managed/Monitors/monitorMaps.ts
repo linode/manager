@@ -5,15 +5,15 @@ import Good from 'src/assets/icons/monitor-ok.svg';
 import Pending from 'src/assets/icons/pending.svg';
 
 export const statusIconMap: Record<MonitorStatus, any> = {
-  ok: Good,
-  problem: Bad,
   disabled: Disabled,
+  ok: Good,
   pending: Pending,
+  problem: Bad,
 };
 
 export const statusTextMap: Record<MonitorStatus, string> = {
-  ok: 'Verified',
-  problem: 'Failed',
-  pending: 'Pending',
   disabled: 'Disabled',
+  ok: 'Verified',
+  pending: 'Pending',
+  problem: 'Failed',
 };

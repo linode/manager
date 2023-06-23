@@ -15,19 +15,19 @@ import NetworkGraph from './NetworkGraph';
 import { GraphProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  paperSection: {
-    padding: `calc(${theme.spacing(3)} + 1px)`,
-    marginBottom: `calc(${theme.spacing(1)} + 3px)`,
-  },
-  selectTimeRange: {
-    width: 150,
-  },
   headerOuter: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: theme.spacing(1.25),
+  },
+  paperSection: {
+    marginBottom: `calc(${theme.spacing(1)} + 3px)`,
+    padding: `calc(${theme.spacing(3)} + 1px)`,
+  },
+  selectTimeRange: {
+    width: 150,
   },
   spacing: {
     [theme.breakpoints.down('lg')]: {
@@ -51,24 +51,24 @@ export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
     end: 0,
+    start: 0,
   });
 
   const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
+    setTimeBox({ end, start });
   };
 
   const isToday = _isToday(time.start, time.end);
 
   const graphProps: GraphProps = {
     clientAPIKey,
-    timezone,
-    isToday,
-    start: time.start,
     end: time.end,
-    lastUpdatedError,
+    isToday,
     lastUpdated,
+    lastUpdatedError,
+    start: time.start,
+    timezone,
   };
 
   return (

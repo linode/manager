@@ -59,19 +59,19 @@ export const usePagination = (
     setPage(1);
     if (preferenceKey) {
       updatePreferences({
-        [preferenceKey]: undefined, // This may seem weird, but this cleans up the old format so user's preferences don't get too big
         pageSizes: {
           ...(preferences?.pageSizes ?? {}),
           [preferenceKey]: newPageSize,
         },
+        [preferenceKey]: undefined, // This may seem weird, but this cleans up the old format so user's preferences don't get too big
       });
     }
   };
 
   return {
-    page,
-    pageSize,
     handlePageChange: setPage,
     handlePageSizeChange,
+    page,
+    pageSize,
   };
 };

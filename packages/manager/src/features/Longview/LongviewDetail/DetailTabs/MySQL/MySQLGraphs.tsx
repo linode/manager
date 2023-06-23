@@ -29,16 +29,16 @@ type CombinedProps = Props & WithTheme;
 export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
+    end,
     error,
     isToday,
     loading,
-    timezone,
-    start,
-    end,
     processesData,
-    processesLoading,
     processesError,
+    processesLoading,
+    start,
     theme,
+    timezone,
   } = props;
 
   const classes = useStyles();
@@ -56,7 +56,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
   const inbound = data?.Bytes_received ?? [];
   const outbound = data?.Bytes_sent ?? [];
 
-  const { maxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
+  const { formatNetwork, maxUnit } = getMaxUnitAndFormatNetwork(
     inbound,
     outbound
   );
@@ -76,28 +76,28 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
             timezone={timezone}
             data={[
               {
-                label: 'SELECT',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.select,
+                borderColor: 'transparent',
                 data: _convertData(selectQueries, start, end),
+                label: 'SELECT',
               },
               {
-                label: 'UPDATE',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.update,
+                borderColor: 'transparent',
                 data: _convertData(updateQueries, start, end),
+                label: 'UPDATE',
               },
               {
-                label: 'INSERT',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.insert,
+                borderColor: 'transparent',
                 data: _convertData(insertQueries, start, end),
+                label: 'INSERT',
               },
               {
-                label: 'DELETE',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.delete,
+                borderColor: 'transparent',
                 data: _convertData(deleteQueries, start, end),
+                label: 'DELETE',
               },
             ]}
           />
@@ -119,16 +119,16 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 timezone={timezone}
                 data={[
                   {
-                    label: 'Inbound',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
+                    borderColor: 'transparent',
                     data: _convertData(inbound, start, end),
+                    label: 'Inbound',
                   },
                   {
-                    label: 'Outbound',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
+                    borderColor: 'transparent',
                     data: _convertData(outbound, start, end),
+                    label: 'Outbound',
                   },
                 ]}
               />
@@ -146,10 +146,10 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 timezone={timezone}
                 data={[
                   {
-                    label: 'Connections',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.accepted,
+                    borderColor: 'transparent',
                     data: _convertData(connections, start, end),
+                    label: 'Connections',
                   },
                 ]}
               />
@@ -169,10 +169,10 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 timezone={timezone}
                 data={[
                   {
-                    label: 'Slow Queries',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.slowQueries,
+                    borderColor: 'transparent',
                     data: _convertData(slowQueries, start, end),
+                    label: 'Slow Queries',
                   },
                 ]}
               />
@@ -188,26 +188,26 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 timezone={timezone}
                 data={[
                   {
-                    label: 'Connections',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.aborted.connections,
+                    borderColor: 'transparent',
                     data: _convertData(
                       abortedConnections,
                       start,
                       end,
                       formatAborted
                     ),
+                    label: 'Connections',
                   },
                   {
-                    label: 'Clients',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.aborted.clients,
+                    borderColor: 'transparent',
                     data: _convertData(
                       abortedClients,
                       start,
                       end,
                       formatAborted
                     ),
+                    label: 'Clients',
                   },
                 ]}
               />

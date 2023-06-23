@@ -31,8 +31,8 @@ const StyledCopy = styled(Typography, {
   label: 'StyledCopy',
 })(({ theme }) => ({
   lineHeight: '20px',
-  marginTop: theme.spacing(),
   marginBottom: theme.spacing(),
+  marginTop: theme.spacing(),
 }));
 
 const StyledLink = styled(Link, {

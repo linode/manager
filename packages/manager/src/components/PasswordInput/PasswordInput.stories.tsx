@@ -4,8 +4,8 @@ import { Meta, StoryObj } from '@storybook/react';
 import PasswordInput from './PasswordInput';
 
 const meta: Meta<typeof PasswordInput> = {
-  title: 'Components/Password Input',
   component: PasswordInput,
+  title: 'Components/Password Input',
 };
 
 type Story = StoryObj<typeof PasswordInput>;

@@ -9,7 +9,7 @@ export interface StatusProps {
 }
 
 const StatusIcon = React.memo((props: StatusProps) => {
-  const { status, pulse } = props;
+  const { pulse, status } = props;
 
   const shouldPulse =
     pulse === undefined
@@ -23,13 +23,13 @@ const StatusIcon = React.memo((props: StatusProps) => {
 export { StatusIcon };
 
 const StyledDiv = styled('div')<StatusProps>(({ theme, ...props }) => ({
-  display: 'inline-block',
   borderRadius: '50%',
+  display: 'inline-block',
   height: '16px',
-  width: '16px',
   marginRight: theme.spacing(),
   position: 'relative',
   transition: theme.transitions.create(['color']),
+  width: '16px',
   ...(props.status === 'active' && {
     backgroundColor: theme.color.teal,
   }),

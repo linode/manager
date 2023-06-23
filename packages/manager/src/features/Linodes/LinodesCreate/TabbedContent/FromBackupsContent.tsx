@@ -57,12 +57,12 @@ export type CombinedProps = Props &
   WithStyles<ClassNames>;
 
 const errorResources = {
-  type: 'A plan selection',
-  region: 'A region selection',
+  backup_id: 'Backup ID',
   label: 'A label',
+  region: 'A region selection',
   root_pass: 'A root password',
   tags: 'Tags for this Linode',
-  backup_id: 'Backup ID',
+  type: 'A plan selection',
 };
 
 const filterLinodesWithBackups = (linodes: Linode[]) =>
@@ -88,8 +88,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     }
 
     this.setState({
-      isGettingBackups: true,
       backupsError: undefined,
+      isGettingBackups: true,
     });
 
     getLinodeBackups(linodeId)
@@ -107,13 +107,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           currentBackups: { ...backups },
         };
 
-        this.setState({ selectedLinodeWithBackups, isGettingBackups: false });
+        this.setState({ isGettingBackups: false, selectedLinodeWithBackups });
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .catch((err) => {
         this.setState({
-          isGettingBackups: false,
           backupsError: 'Error retrieving backups for this Linode.',
+          isGettingBackups: false,
         });
       });
   };
@@ -170,11 +170,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       errors,
       imagesData,
       linodesData,
+      regionsData,
       selectedBackupID,
       selectedLinodeID,
       setBackupID,
       typesData,
-      regionsData,
     } = this.props;
 
     const extendedTypes = typesData?.map(extendType);

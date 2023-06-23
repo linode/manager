@@ -29,7 +29,7 @@ export const NavTabs = React.memo((props: NavTabsProps) => {
   const history = useHistory();
   const reactRouterLocation = useLocation();
 
-  const { tabs, navToTabRouteOnChange } = props;
+  const { navToTabRouteOnChange, tabs } = props;
 
   // Defaults to `true`.
   const _navToTabRouteOnChange = navToTabRouteOnChange ?? true;
@@ -91,8 +91,8 @@ export const getTabMatch = (tabs: NavTab[], pathname: string) => {
   return tabs.reduce(
     (acc, thisTab, i) => {
       const match = matchPath(pathname, {
-        path: thisTab.routeName,
         exact: false,
+        path: thisTab.routeName,
       });
 
       if (match) {

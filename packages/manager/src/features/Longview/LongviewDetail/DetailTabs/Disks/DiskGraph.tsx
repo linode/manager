@@ -18,12 +18,12 @@ type CombinedProps = Props;
 const DiskGraph: React.FC<CombinedProps> = (props) => {
   const {
     diskLabel,
-    loading,
-    stats,
-    timezone,
-    sysInfoType,
-    startTime,
     endTime,
+    loading,
+    startTime,
+    stats,
+    sysInfoType,
+    timezone,
   } = props;
 
   const isSwap = stats?.isswap ?? 0;

@@ -17,13 +17,10 @@ import { useProfile } from 'src/queries/profile';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(1),
-    paddingRight: theme.spacing(2),
-    margin: `${theme.spacing(1)} 0 ${theme.spacing(3)} 0`,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  closeIcon: {
+    ...theme.applyLinkStyles,
+    lineHeight: '0.5rem',
+    marginLeft: 12,
   },
   enableButton: {
     height: 40,
@@ -33,10 +30,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   enableText: {
     ...theme.applyLinkStyles,
   },
-  closeIcon: {
-    ...theme.applyLinkStyles,
-    marginLeft: 12,
-    lineHeight: '0.5rem',
+  root: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: `${theme.spacing(1)} 0 ${theme.spacing(3)} 0`,
+    padding: theme.spacing(1),
+    paddingRight: theme.spacing(2),
   },
 }));
 
@@ -44,8 +44,8 @@ type CombinedProps = StateProps & DispatchProps;
 
 const BackupsCTA: React.FC<CombinedProps> = (props) => {
   const {
-    linodesWithoutBackups,
     actions: { openBackupsDrawer },
+    linodesWithoutBackups,
   } = props;
   const classes = useStyles();
 

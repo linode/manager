@@ -12,9 +12,9 @@ const mockStats = [
 
 const mockProcess = Factory.Sync.makeFactory<ProcessStats>({
   count: mockStats,
+  cpu: mockStats,
   ioreadkbytes: mockStats,
   iowritekbytes: mockStats,
-  cpu: mockStats,
   mem: mockStats,
 });
 

@@ -18,31 +18,31 @@ import TabbedReply from './TabbedReply';
 import { useSupportTicketReplyMutation } from 'src/queries/support';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  replyContainer: {
-    paddingLeft: theme.spacing(8),
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(6),
-    },
-  },
   expPanelSummary: {
     backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
     borderTop: `1px solid ${theme.bg.main}`,
     paddingTop: theme.spacing(),
+  },
+  reference: {
+    [theme.breakpoints.down('sm')]: {
+      padding: `${theme.spacing(2)} !important`,
+    },
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: 4,
+      marginRight: 4,
+      marginTop: theme.spacing(7),
+      padding: `0 !important`,
+    },
   },
   referenceRoot: {
     '& > p': {
       marginBottom: theme.spacing(),
     },
   },
-  reference: {
-    [theme.breakpoints.up('sm')]: {
-      marginTop: theme.spacing(7),
-      marginRight: 4,
-      marginLeft: 4,
-      padding: `0 !important`,
-    },
+  replyContainer: {
+    paddingLeft: theme.spacing(8),
     [theme.breakpoints.down('sm')]: {
-      padding: `${theme.spacing(2)} !important`,
+      paddingLeft: theme.spacing(6),
     },
   },
 }));
@@ -58,7 +58,7 @@ interface Props {
 export const ReplyContainer = (props: Props) => {
   const classes = useStyles();
 
-  const { onSuccess, reloadAttachments, lastReply, ...rest } = props;
+  const { lastReply, onSuccess, reloadAttachments, ...rest } = props;
 
   const { mutateAsync: createReply } = useSupportTicketReplyMutation();
 
@@ -124,8 +124,8 @@ export const ReplyContainer = (props: Props) => {
             .then(() => {
               const nullFileState = {
                 file: null,
-                uploading: false,
                 uploaded: true,
+                uploading: false,
               };
 
               setFiles(set(lensPath([idx]), nullFileState));

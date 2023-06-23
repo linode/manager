@@ -9,9 +9,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { ExtendedIssue } from 'src/queries/managed/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(),
-    textAlign: 'center',
+  happyTicket: {
+    color: theme.color.grey1,
   },
   openTicketButton: {
     [theme.breakpoints.down('md')]: {
@@ -19,8 +18,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: 12,
     },
   },
-  happyTicket: {
-    color: theme.color.grey1,
+  root: {
+    padding: theme.spacing(),
+    textAlign: 'center',
   },
   sadTicket: {
     color: theme.color.red,

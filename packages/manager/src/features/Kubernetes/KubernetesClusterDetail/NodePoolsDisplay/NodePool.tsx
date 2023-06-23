@@ -25,16 +25,16 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  autoscaleText: {
+    alignSelf: 'center',
+    paddingRight: theme.spacing(2),
+  },
   button: {
     paddingRight: 8,
   },
-  autoscaleText: {
-    paddingRight: theme.spacing(2),
-    alignSelf: 'center',
-  },
   deletePoolBtn: {
-    paddingRight: 8,
     marginBottom: 3,
+    paddingRight: 8,
   },
 }));
 
@@ -42,14 +42,14 @@ const NodePool: React.FC<Props> = (props) => {
   const {
     autoscaler,
     handleClickResize,
+    isOnlyNodePool,
+    nodes,
     openAutoscalePoolDialog,
     openDeletePoolDialog,
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
-    nodes,
-    typeLabel,
     poolId,
-    isOnlyNodePool,
+    typeLabel,
   } = props;
 
   const classes = useStyles();

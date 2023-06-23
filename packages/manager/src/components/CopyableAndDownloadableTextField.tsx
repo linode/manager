@@ -7,19 +7,19 @@ import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  removeDisabledStyles: {
-    '&.Mui-disabled': {
-      borderColor: theme.name === 'light' ? '#ccc' : '#222',
-      color: theme.name === 'light' ? 'inherit' : '#fff !important',
-      background: theme.bg.main,
-      opacity: 1,
-    },
-  },
   copyIcon: {
-    marginRight: theme.spacing(0.5),
     '& svg': {
       height: 14,
       top: 1,
+    },
+    marginRight: theme.spacing(0.5),
+  },
+  removeDisabledStyles: {
+    '&.Mui-disabled': {
+      background: theme.bg.main,
+      borderColor: theme.name === 'light' ? '#ccc' : '#222',
+      color: theme.name === 'light' ? 'inherit' : '#fff !important',
+      opacity: 1,
     },
   },
 }));
@@ -34,7 +34,7 @@ export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
   props
 ) => {
   const classes = useStyles();
-  const { value, className, hideIcon, ...restProps } = props;
+  const { className, hideIcon, value, ...restProps } = props;
 
   const fileName = props.fileName ?? snakeCase(props.label);
 

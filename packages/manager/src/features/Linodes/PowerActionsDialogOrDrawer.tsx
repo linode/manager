@@ -21,22 +21,22 @@ import { resetEventsPolling } from 'src/eventsPolling';
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(1.25),
-    alignItems: 'center',
-    lineHeight: '1.25rem',
-    fontSize: '0.875rem',
-  },
   dialog: {
     '& .dialog-content': {
-      paddingTop: 0,
       paddingBottom: 0,
+      paddingTop: 0,
     },
   },
   notice: {
     '& .noticeText': {
       fontSize: '0.875rem !important',
     },
+  },
+  root: {
+    alignItems: 'center',
+    fontSize: '0.875rem',
+    lineHeight: '1.25rem',
+    marginBottom: theme.spacing(1.25),
   },
 }));
 
@@ -59,7 +59,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { onClose, linodeId, isOpen, action } = props;
+  const { action, isOpen, linodeId, onClose } = props;
   const classes = useStyles();
 
   const { data: linode } = useLinodeQuery(
@@ -69,29 +69,29 @@ export const PowerActionsDialog = (props: Props) => {
 
   const {
     data: configs,
-    isLoading: configsLoading,
     error: configsError,
+    isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(
     linodeId ?? -1,
     linodeId !== undefined && isOpen
   );
 
   const {
-    mutateAsync: bootLinode,
-    isLoading: isBooting,
     error: bootError,
+    isLoading: isBooting,
+    mutateAsync: bootLinode,
   } = useBootLinodeMutation(linodeId ?? -1);
 
   const {
-    mutateAsync: rebootLinode,
-    isLoading: isRebooting,
     error: rebootError,
+    isLoading: isRebooting,
+    mutateAsync: rebootLinode,
   } = useRebootLinodeMutation(linodeId ?? -1);
 
   const {
-    mutateAsync: shutdownLinode,
-    isLoading: isShuttingDown,
     error: shutdownError,
+    isLoading: isShuttingDown,
+    mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
 
   const [selectedConfigID, setSelectConfigID] = React.useState<number | null>(
@@ -99,21 +99,21 @@ export const PowerActionsDialog = (props: Props) => {
   );
 
   const mutationMap = {
-    Reboot: rebootLinode,
     'Power Off': shutdownLinode,
     'Power On': bootLinode,
+    Reboot: rebootLinode,
   } as const;
 
   const errorMap = {
-    Reboot: rebootError,
     'Power Off': shutdownError,
     'Power On': bootError,
+    Reboot: rebootError,
   };
 
   const loadingMap = {
-    Reboot: isRebooting,
     'Power Off': isShuttingDown,
     'Power On': isBooting,
+    Reboot: isRebooting,
   };
 
   const error = errorMap[action];

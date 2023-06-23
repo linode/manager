@@ -18,13 +18,13 @@ interface Props {
 }
 
 export const EditIPRDNSDrawer = (props: Props) => {
-  const { open, onClose, ip } = props;
+  const { ip, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: updateIP,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: updateIP,
     reset,
   } = useLinodeIPMutation();
 

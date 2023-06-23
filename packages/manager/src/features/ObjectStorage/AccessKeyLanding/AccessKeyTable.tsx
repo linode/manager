@@ -106,12 +106,12 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
 };
 
 const StyledCopyIcon = styled(CopyTooltip)(({ theme }) => ({
-  marginLeft: theme.spacing(),
   '& svg': {
+    height: 12,
     top: 1,
     width: 12,
-    height: 12,
   },
+  marginLeft: theme.spacing(),
 }));
 
 const StyledLabelCell = styled(TableCell)(() => ({

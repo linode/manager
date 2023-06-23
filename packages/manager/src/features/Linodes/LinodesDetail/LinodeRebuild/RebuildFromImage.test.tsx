@@ -8,11 +8,11 @@ jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
 
 const props = {
-  linodeId: 1234,
-  passwordHelperText: '',
   disabled: false,
   handleRebuildError: jest.fn(),
+  linodeId: 1234,
   onClose: jest.fn(),
+  passwordHelperText: '',
   ...reactRouterProps,
 };
 

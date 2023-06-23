@@ -18,10 +18,10 @@ const limitedAddresses = {
 
 describe('predefinedFirewallFromRule', () => {
   const rule: FirewallRuleType = {
+    action: 'ACCEPT',
+    addresses,
     ports: '',
     protocol: 'TCP',
-    addresses,
-    action: 'ACCEPT',
   };
 
   it('handles SSH', () => {
@@ -48,31 +48,31 @@ describe('predefinedFirewallFromRule', () => {
   it('returns `undefined` when given an unrecognizable rule', () => {
     expect(
       predefinedFirewallFromRule({
+        action: 'ACCEPT',
+        addresses,
         // Test another port
         ports: '22-24',
         protocol: 'TCP',
-        addresses,
-        action: 'ACCEPT',
       })
     ).toBeUndefined();
 
     expect(
       predefinedFirewallFromRule({
+        action: 'ACCEPT',
+        addresses,
         ports: '22',
         // Test another protocol
         protocol: 'UDP',
-        addresses,
-        action: 'ACCEPT',
       })
     ).toBeUndefined();
 
     expect(
       predefinedFirewallFromRule({
-        ports: '22',
-        protocol: 'TCP',
+        action: 'ACCEPT',
         // Test other addresses
         addresses: limitedAddresses,
-        action: 'ACCEPT',
+        ports: '22',
+        protocol: 'TCP',
       })
     ).toBeUndefined();
   });

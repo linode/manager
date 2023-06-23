@@ -8,7 +8,7 @@ export interface DisplaySectionProps {
 }
 
 const DisplaySection = React.memo((props: DisplaySectionProps) => {
-  const { title, details } = props;
+  const { details, title } = props;
 
   return (
     <StyledCheckoutSection>

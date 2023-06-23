@@ -11,8 +11,8 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 const mockOpenDrawer = jest.fn();
 
 const props: Props = {
-  linodeId: 1,
   isEnabled: true,
+  linodeId: 1,
   linodeLabel: 'label',
   openDrawer: mockOpenDrawer,
 };

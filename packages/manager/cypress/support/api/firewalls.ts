@@ -10,7 +10,7 @@ import { Firewall, getFirewalls, deleteFirewall } from '@linode/api-v4';
  */
 export const deleteAllTestFirewalls = async (): Promise<void> => {
   const firewalls = await depaginate<Firewall>((page: number) =>
-    getFirewalls({ page_size: pageSize, page })
+    getFirewalls({ page, page_size: pageSize })
   );
 
   const deletionPromises = firewalls

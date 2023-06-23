@@ -7,14 +7,14 @@ import { Theme } from '@mui/material/styles';
 export const RenderEventStyledBox = styled(Box, {
   label: 'StyledBox',
 })(({ theme }) => ({
-  color: theme.textColors.tableHeader,
-  paddingLeft: '20px',
-  paddingRight: '20px',
   '&:hover': {
     backgroundColor: theme.bg.app,
   },
+  color: theme.textColors.tableHeader,
   gap: 16,
   paddingBottom: 12,
+  paddingLeft: '20px',
+  paddingRight: '20px',
   paddingTop: 12,
   width: '100%',
 }));

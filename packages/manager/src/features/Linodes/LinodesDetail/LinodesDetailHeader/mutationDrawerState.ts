@@ -22,12 +22,6 @@ export default withStateHandlers<State, Handlers>(
     mutationDrawerOpen: false,
   }),
   {
-    openMutationDrawer: (state) => () => ({
-      mutationDrawerError: '',
-      mutationDrawerLoading: false,
-      mutationDrawerOpen: true,
-    }),
-
     closeMutationDrawer: (state) => () => ({
       ...state,
       mutationDrawerOpen: false,
@@ -35,6 +29,12 @@ export default withStateHandlers<State, Handlers>(
 
     mutationFailed: (state) => (error: string) => ({
       mutationDrawerError: error,
+      mutationDrawerLoading: false,
+      mutationDrawerOpen: true,
+    }),
+
+    openMutationDrawer: (state) => () => ({
+      mutationDrawerError: '',
       mutationDrawerLoading: false,
       mutationDrawerOpen: true,
     }),

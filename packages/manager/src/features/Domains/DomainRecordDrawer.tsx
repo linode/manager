@@ -113,27 +113,27 @@ class DomainRecordDrawer extends React.Component<Props, State> {
    * editable data or defaults.
    */
   static defaultFieldsState = (props: Partial<Props>) => ({
+    axfr_ips: getInitialIPs(props.axfr_ips),
+    domain: props.domain,
+    expire_sec: props.expire_sec ?? 0,
     id: props.id,
     name: props.name ?? '',
     port: props.port ?? '80',
     priority: props.priority ?? '10',
     protocol: props.protocol ?? 'tcp',
+    refresh_sec: props.refresh_sec ?? 0,
+    retry_sec: props.retry_sec ?? 0,
     service: props.service ?? '',
+    soa_email: props.soa_email ?? '',
     tag: props.tag ?? 'issue',
     target: props.target ?? '',
     ttl_sec: props.ttl_sec ?? 0,
     weight: props.weight ?? '5',
-    domain: props.domain,
-    soa_email: props.soa_email ?? '',
-    axfr_ips: getInitialIPs(props.axfr_ips),
-    refresh_sec: props.refresh_sec ?? 0,
-    retry_sec: props.retry_sec ?? 0,
-    expire_sec: props.expire_sec ?? 0,
   });
 
   state: State = {
-    submitting: false,
     fields: DomainRecordDrawer.defaultFieldsState(this.props),
+    submitting: false,
   };
 
   updateField = (
@@ -148,22 +148,22 @@ class DomainRecordDrawer extends React.Component<Props, State> {
   setExpireSec = this.updateField('expire_sec');
 
   static errorFields = {
+    axfr_ips: 'domain transfers',
+    domain: 'domain',
+    expire_sec: 'expire rate',
     name: 'name',
     port: 'port',
     priority: 'priority',
     protocol: 'protocol',
+    refresh_sec: 'refresh rate',
+    retry_sec: 'retry rate',
     service: 'service',
+    soa_email: 'SOA email address',
     tag: 'tag',
     target: 'target',
     ttl_sec: 'ttl_sec',
     type: 'type',
     weight: 'weight',
-    domain: 'domain',
-    soa_email: 'SOA email address',
-    axfr_ips: 'domain transfers',
-    refresh_sec: 'refresh rate',
-    retry_sec: 'retry rate',
-    expire_sec: 'expire rate',
   };
 
   handleTransferUpdate = (transferIPs: ExtendedIP[]) => {
@@ -173,11 +173,11 @@ class DomainRecordDrawer extends React.Component<Props, State> {
   };
 
   TextField = ({
-    label,
     field,
     helperText,
-    placeholder,
+    label,
     multiline,
+    placeholder,
   }: AdjustedTextFieldProps) => (
     <TextField
       label={label}
@@ -199,7 +199,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
     />
   );
 
-  NumberField = ({ label, field, ...rest }: NumberFieldProps) => {
+  NumberField = ({ field, label, ...rest }: NumberFieldProps) => {
     return (
       <TextField
         label={label}
@@ -219,8 +219,8 @@ class DomainRecordDrawer extends React.Component<Props, State> {
   };
 
   NameOrTargetField = ({
-    label,
     field,
+    label,
     multiline,
   }: {
     label: string;
@@ -309,9 +309,9 @@ class DomainRecordDrawer extends React.Component<Props, State> {
   };
 
   MSSelect = ({
-    label,
     field,
     fn,
+    label,
   }: {
     label: string;
     field: keyof EditableRecordFields | keyof EditableDomainFields;
@@ -460,7 +460,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
 
   onDomainEdit = () => {
     const { domainId, type, updateDomain } = this.props;
-    this.setState({ submitting: true, errors: undefined });
+    this.setState({ errors: undefined, submitting: true });
 
     const data = {
       ...this.filterDataByType(this.state.fields, type),
@@ -485,14 +485,14 @@ class DomainRecordDrawer extends React.Component<Props, State> {
   };
 
   onRecordCreate = () => {
-    const { records, domain, type } = this.props;
+    const { domain, records, type } = this.props;
 
     /** Appease TS ensuring we won't use it during Record create. */
     if (type === 'master' || type === 'slave') {
       return;
     }
 
-    this.setState({ submitting: true, errors: undefined });
+    this.setState({ errors: undefined, submitting: true });
     const _data = {
       type,
       ...this.filterDataByType(this.state.fields, type),
@@ -528,7 +528,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
   };
 
   onRecordEdit = () => {
-    const { type, id, domain, domainId } = this.props;
+    const { domain, domainId, id, type } = this.props;
     const fields = this.state.fields as EditableRecordFields;
 
     /** Appease TS ensuring we won't use it during Record create. */
@@ -536,7 +536,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
       return;
     }
 
-    this.setState({ submitting: true, errors: undefined });
+    this.setState({ errors: undefined, submitting: true });
 
     const _data = {
       ...this.filterDataByType(fields, type),
@@ -620,27 +620,6 @@ class DomainRecordDrawer extends React.Component<Props, State> {
     ])();
 
   types = {
-    master: {
-      fields: [
-        (idx: number) => (
-          <this.TextField field="domain" label="Domain" key={idx} />
-        ),
-        (idx: number) => (
-          <this.TextField field="soa_email" label="SOA Email" key={idx} />
-        ),
-        (idx: number) => <this.DomainTransferField key={idx} />,
-        (idx: number) => <this.DefaultTTLField key={idx} />,
-        (idx: number) => <this.RefreshRateField key={idx} />,
-        (idx: number) => <this.RetryRateField key={idx} />,
-        (idx: number) => <this.ExpireField key={idx} />,
-      ],
-    },
-    // slave: {
-    //   fields: [
-    //     (idx: number) => <this.NameField label="Hostname" key={idx} />,
-    //     (idx: number) => <this.TargetField label="IP Address" key={idx} />,
-    //     (idx: number) => <this.TTLField label="TTL" key={idx} />,
-    //   ],
     // },
     AAAA: {
       fields: [
@@ -653,19 +632,34 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         (idx: number) => <this.TTLField key={idx} />,
       ],
     },
-    NS: {
+    // slave: {
+    //   fields: [
+    //     (idx: number) => <this.NameField label="Hostname" key={idx} />,
+    //     (idx: number) => <this.TargetField label="IP Address" key={idx} />,
+    //     (idx: number) => <this.TTLField label="TTL" key={idx} />,
+    //   ],
+    CAA: {
       fields: [
         (idx: number) => (
-          <this.NameOrTargetField
-            label="Name Server"
-            field="target"
-            key={idx}
-          />
+          <this.NameOrTargetField label="Name" field="name" key={idx} />
         ),
+        (idx: number) => <this.TagField key={idx} />,
         (idx: number) => (
-          <this.NameOrTargetField label="Subdomain" field="name" key={idx} />
+          <this.NameOrTargetField label="Value" field="target" key={idx} />
         ),
         (idx: number) => <this.TTLField key={idx} />,
+      ],
+    },
+    CNAME: {
+      fields: [
+        (idx: number) => (
+          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="Alias to" field="target" key={idx} />
+        ),
+        (idx: number) => <this.TTLField key={idx} />,
+        ,
       ],
     },
     MX: {
@@ -687,30 +681,17 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         ),
       ],
     },
-    CNAME: {
+    NS: {
       fields: [
-        (idx: number) => (
-          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
-        ),
-        (idx: number) => (
-          <this.NameOrTargetField label="Alias to" field="target" key={idx} />
-        ),
-        (idx: number) => <this.TTLField key={idx} />,
-        ,
-      ],
-    },
-    TXT: {
-      fields: [
-        (idx: number) => (
-          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
-        ),
         (idx: number) => (
           <this.NameOrTargetField
-            label="Value"
+            label="Name Server"
             field="target"
-            multiline
             key={idx}
           />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="Subdomain" field="name" key={idx} />
         ),
         (idx: number) => <this.TTLField key={idx} />,
       ],
@@ -730,25 +711,44 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         (idx: number) => <this.TTLField key={idx} />,
       ],
     },
-    CAA: {
+    TXT: {
       fields: [
         (idx: number) => (
-          <this.NameOrTargetField label="Name" field="name" key={idx} />
+          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
         ),
-        (idx: number) => <this.TagField key={idx} />,
         (idx: number) => (
-          <this.NameOrTargetField label="Value" field="target" key={idx} />
+          <this.NameOrTargetField
+            label="Value"
+            field="target"
+            multiline
+            key={idx}
+          />
         ),
         (idx: number) => <this.TTLField key={idx} />,
+      ],
+    },
+    master: {
+      fields: [
+        (idx: number) => (
+          <this.TextField field="domain" label="Domain" key={idx} />
+        ),
+        (idx: number) => (
+          <this.TextField field="soa_email" label="SOA Email" key={idx} />
+        ),
+        (idx: number) => <this.DomainTransferField key={idx} />,
+        (idx: number) => <this.DefaultTTLField key={idx} />,
+        (idx: number) => <this.RefreshRateField key={idx} />,
+        (idx: number) => <this.RetryRateField key={idx} />,
+        (idx: number) => <this.ExpireField key={idx} />,
       ],
     },
   };
 
   onClose = () => {
     this.setState({
-      submitting: false,
       errors: undefined,
       fields: DomainRecordDrawer.defaultFieldsState({}),
+      submitting: false,
     });
     this.props.onClose();
   };
@@ -764,7 +764,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
 
   render() {
     const { submitting } = this.state;
-    const { open, mode, type, records } = this.props;
+    const { mode, open, records, type } = this.props;
     const { fields } = this.types[type];
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
@@ -778,6 +778,7 @@ class DomainRecordDrawer extends React.Component<Props, State> {
 
     const buttonProps: ButtonProps = {
       buttonType: 'primary',
+      children: 'Save',
       disabled: submitting,
       loading: submitting,
       onClick: isDomain
@@ -785,7 +786,6 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         : isCreating
         ? this.onRecordCreate
         : this.onRecordEdit,
-      children: 'Save',
     };
 
     const otherErrors = [
@@ -829,8 +829,6 @@ const modeMap = {
 };
 
 const typeMap = {
-  master: 'SOA',
-  slave: 'SOA',
   A: 'A',
   AAAA: 'A/AAAA',
   CAA: 'CAA',
@@ -840,6 +838,8 @@ const typeMap = {
   PTR: 'PTR',
   SRV: 'SRV',
   TXT: 'TXT',
+  master: 'SOA',
+  slave: 'SOA',
 };
 
 export const shouldResolve = (type: string, field: string) => {

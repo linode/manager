@@ -13,14 +13,14 @@ export interface DateTimeDisplayProps {
 }
 
 const DateTimeDisplay = (props: DateTimeDisplayProps) => {
-  const { format, humanizeCutoff, displayTime, value, className } = props;
+  const { className, displayTime, format, humanizeCutoff, value } = props;
   const { data: profile } = useProfile();
   return (
     <Typography style={props.styles} component="span" className={className}>
       {formatDate(value, {
+        displayTime,
         format,
         humanizeCutoff,
-        displayTime,
         timezone: profile?.timezone,
       })}
     </Typography>

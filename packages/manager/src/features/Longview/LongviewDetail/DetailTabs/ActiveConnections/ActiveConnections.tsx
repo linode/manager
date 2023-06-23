@@ -55,7 +55,7 @@ export const ActiveConnections: React.FC<TableProps> = (props) => {
   );
 };
 export const ConnectionsTable: React.FC<TableProps> = (props) => {
-  const { connections, connectionsLoading, connectionsError } = props;
+  const { connections, connectionsError, connectionsLoading } = props;
 
   return (
     <OrderBy
@@ -67,8 +67,8 @@ export const ConnectionsTable: React.FC<TableProps> = (props) => {
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData} pageSize={25}>
           {({
-            data: paginatedData,
             count,
+            data: paginatedData,
             handlePageChange,
             handlePageSizeChange,
             page,

@@ -55,7 +55,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
       ) : null}
       <Typography
         data-qa-prodedi
-        sx={{ marginTop: theme.spacing(1), marginBottom: theme.spacing(3) }}
+        sx={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }}
       >
         {planTabInfoContent[planType]?.typography}
       </Typography>

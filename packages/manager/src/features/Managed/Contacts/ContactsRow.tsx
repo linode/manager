@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const ContactsRow: React.FunctionComponent<Props> = (props) => {
-  const { contact, openDrawer, openDialog } = props;
+  const { contact, openDialog, openDrawer } = props;
 
   return (
     <TableRow ariaLabel={`Contact ${contact.id}`} key={contact.id}>

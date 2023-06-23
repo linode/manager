@@ -12,16 +12,16 @@ import { queryClientFactory } from 'src/queries/base';
 const store = storeFactory(queryClientFactory());
 
 const mockProps: CombinedProps = {
-  updateDiskSize: jest.fn(),
-  updateImageID: jest.fn(),
-  updateLinodeID: jest.fn(),
-  updateRegionID: jest.fn(),
-  updateTypeID: jest.fn(),
   accountBackupsEnabled: false,
   imagesData: {},
   linodesData: linodes,
   regionsData: [],
   typesData: [],
+  updateDiskSize: jest.fn(),
+  updateImageID: jest.fn(),
+  updateLinodeID: jest.fn(),
+  updateRegionID: jest.fn(),
+  updateTypeID: jest.fn(),
   userCannotCreateLinode: false,
 };
 

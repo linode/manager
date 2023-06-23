@@ -5,9 +5,6 @@ import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    width: '100% !important',
-  },
   container: {
     marginTop: theme.spacing(3),
   },
@@ -16,10 +13,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingBottom: 0,
   },
   headerAction: {
-    position: 'relative',
-    top: 6,
     left: `-${theme.spacing(2)}`,
     marginLeft: theme.spacing(0.5),
+    position: 'relative',
+    top: 6,
+  },
+  root: {
+    width: '100% !important',
   },
 }));
 
@@ -37,19 +37,19 @@ const DashboardCard: React.FC<Props> = (props) => {
 
   const {
     alignHeader,
-    title,
+    alignItems,
+    className,
     headerAction,
     noHeaderActionStyles,
-    className,
-    alignItems,
+    title,
   } = props;
 
   return (
     <Grid
       container
       className={cx(className, {
-        [classes.root]: true,
         [classes.container]: true,
+        [classes.root]: true,
       })}
       data-qa-card={title}
       spacing={2}

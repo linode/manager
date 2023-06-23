@@ -7,8 +7,8 @@ export const queryKey = [accountQueryKey, 'notifications'];
 
 export const useNotificationsQuery = () =>
   useQuery<Notification[], APIError[]>({
-    queryKey,
     queryFn: getAllNotifications,
+    queryKey,
   });
 
 export const getAllNotifications = () =>

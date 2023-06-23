@@ -28,58 +28,58 @@ const cachedTypesData = (data.data as LinodeType[]).map(
 ) as ExtendedType[];
 
 const linode1 = linodeFactory.build({
+  backups: {
+    enabled: true,
+    last_successful: null,
+    schedule: {
+      day: 'Saturday',
+      window: 'W2',
+    },
+  },
   specs: {
-    transfer: 1000,
-    memory: 1024,
-    vcpus: 1,
     disk: 20480,
     gpus: 0,
+    memory: 1024,
+    transfer: 1000,
+    vcpus: 1,
   },
   type: 'g6-nanode-1',
-  backups: {
-    schedule: {
-      window: 'W2',
-      day: 'Saturday',
-    },
-    enabled: true,
-    last_successful: null,
-  },
 });
 const linode2 = linodeFactory.build({
-  specs: {
-    transfer: 2000,
-    memory: 2048,
-    vcpus: 1,
-    disk: 30720,
-    gpus: 0,
-  },
-  type: 'g6-standard-1',
   backups: {
-    schedule: {
-      window: 'Scheduling',
-      day: 'Scheduling',
-    },
     enabled: true,
     last_successful: null,
+    schedule: {
+      day: 'Scheduling',
+      window: 'Scheduling',
+    },
   },
+  specs: {
+    disk: 30720,
+    gpus: 0,
+    memory: 2048,
+    transfer: 2000,
+    vcpus: 1,
+  },
+  type: 'g6-standard-1',
 });
 const linode3 = linodeFactory.build({
-  specs: {
-    transfer: 4000,
-    memory: 4096,
-    vcpus: 2,
-    disk: 81920,
-    gpus: 0,
-  },
-  type: 'g6-standard-2',
   backups: {
-    schedule: {
-      window: 'Scheduling',
-      day: 'Scheduling',
-    },
     enabled: false,
     last_successful: null,
+    schedule: {
+      day: 'Scheduling',
+      window: 'Scheduling',
+    },
   },
+  specs: {
+    disk: 81920,
+    gpus: 0,
+    memory: 4096,
+    transfer: 4000,
+    vcpus: 2,
+  },
+  type: 'g6-standard-2',
 });
 
 const linodes = [linode1, linode3];
@@ -93,20 +93,20 @@ const linode1Type = getTypeInfo(linode1.type, cachedTypesData);
 const linode2Type = getTypeInfo(linode2.type, cachedTypesData);
 
 const extendedLinodes: ExtendedLinode[] = [
-  { ...linode1, typeInfo: linode1Type, linodeError: error },
-  { ...linode2, typeInfo: linode2Type, linodeError: error },
+  { ...linode1, linodeError: error, typeInfo: linode1Type },
+  { ...linode2, linodeError: error, typeInfo: linode2Type },
 ];
 
 // Props for shallow rendering
 
 const actions = {
-  enable: jest.fn(),
-  getLinodesWithoutBackups: jest.fn(),
+  clearSidebar: jest.fn(),
   close: jest.fn(),
   dismissError: jest.fn(),
   dismissSuccess: jest.fn(),
-  clearSidebar: jest.fn(),
+  enable: jest.fn(),
   enroll: jest.fn(),
+  getLinodesWithoutBackups: jest.fn(),
   toggle: jest.fn(),
 };
 
@@ -115,25 +115,25 @@ const classes = { root: '' };
 const props = {
   accountBackups: false,
   actions,
-  classes,
-  open: true,
-  loading: false,
-  enabling: false,
-  backupLoadError: '',
-  linodesWithoutBackups: [],
-  backupsLoading: false,
-  enableSuccess: false,
-  enableErrors: [],
-  typesLoading: false,
-  requestedTypesData: cachedTypesData,
-  setRequestedTypes: jest.fn(),
-  enrolling: false,
   autoEnroll: false,
   autoEnrollError: undefined,
+  backupLoadError: '',
+  backupsLoading: false,
+  classes,
+  enableErrors: [],
+  enableSuccess: false,
+  enabling: false,
+  enrolling: false,
+  linodesWithoutBackups: [],
+  loading: false,
+  open: true,
+  requestedTypesData: cachedTypesData,
+  setRequestedTypes: jest.fn(),
+  typesLoading: false,
   updatedCount: 0,
 };
 
-const { rerender, getByTestId, findByTestId, queryByTestId } = render(
+const { findByTestId, getByTestId, queryByTestId, rerender } = render(
   wrapWithTheme(
     <BackupDrawer
       closeSnackbar={jest.fn()}
@@ -179,8 +179,8 @@ describe('BackupDrawer component', () => {
     });
     it('should set typeInfo and linodeError to undefined if nothing matches', () => {
       expect(enhanceLinodes(linodes, [], [])).toEqual([
-        { ...linode1, typeInfo: undefined, linodeError: undefined },
-        { ...linode3, typeInfo: undefined, linodeError: undefined },
+        { ...linode1, linodeError: undefined, typeInfo: undefined },
+        { ...linode3, linodeError: undefined, typeInfo: undefined },
       ]);
     });
   });
@@ -194,8 +194,8 @@ describe('BackupDrawer component', () => {
     it('should ignore Linodes with undefined typeInfo or backup pricing', () => {
       extendedLinodes.push({
         ...linode3,
-        typeInfo: undefined,
         linodeError: error,
+        typeInfo: undefined,
       });
       expect(getTotalPrice(extendedLinodes)).toEqual(price);
     });

@@ -32,7 +32,7 @@ type CombinedProps = Props;
 
 export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { onSelect, selectedId, data, isSorting, disabled } = props;
+  const { data, disabled, isSorting, onSelect, selectedId } = props;
 
   const { data: profile } = useProfile();
 

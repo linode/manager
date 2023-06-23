@@ -19,10 +19,10 @@ type commbinedProps = Props & WithTheme & LVDataProps;
 
 const RAMGauge: React.FC<commbinedProps> = (props) => {
   const {
+    lastUpdatedError,
+    longviewClientData,
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData,
-    lastUpdatedError,
   } = props;
 
   const usedMemory = pathOr(

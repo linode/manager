@@ -25,10 +25,12 @@ export const NodeBalancerConfigPanel = (
   const {
     algorithm,
     configIdx,
+    disabled,
     errors,
     forEdit,
-    nodes,
     nodeMessage,
+    nodes,
+    onSave,
     port,
     privateKey,
     protocol,
@@ -36,8 +38,6 @@ export const NodeBalancerConfigPanel = (
     sessionStickiness,
     sslCertificate,
     submitting,
-    disabled,
-    onSave,
   } = props;
 
   const onAlgorithmChange = (e: Item<string>) =>
@@ -390,7 +390,7 @@ export const NodeBalancerConfigPanel = (
               // is the Save/Delete ActionsPanel showing?
               style={
                 forEdit || configIdx !== 0
-                  ? { marginTop: 0, marginBottom: -16 }
+                  ? { marginBottom: -16, marginTop: 0 }
                   : { marginTop: 16 }
               }
             >

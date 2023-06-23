@@ -3,7 +3,7 @@ import { longviewLoad, systemInfo } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import Load from './Load';
 
-const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];
+const mockError = [{ CODE: 0, SEVERITY: 3, TEXT: 'no reason' }];
 
 const loadingStore = {
   longviewStats: {
@@ -16,11 +16,11 @@ const loadingStore = {
 const dataStore = {
   longviewStats: {
     123: {
-      loading: false,
       data: {
         ...longviewLoad,
         ...systemInfo,
       },
+      loading: false,
     },
   },
 };
@@ -28,8 +28,8 @@ const dataStore = {
 const errorStore = {
   longviewStats: {
     123: {
-      loading: false,
       error: mockError,
+      loading: false,
     },
   },
 };

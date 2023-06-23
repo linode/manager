@@ -10,7 +10,7 @@ interface Props {
   networkHelperEnabled: boolean;
 }
 
-const NetworkHelper = ({ onChange, networkHelperEnabled }: Props) => {
+const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
   return (
     <Accordion heading="Network Helper" defaultExpanded={true}>
       <Grid container direction="column" spacing={2}>

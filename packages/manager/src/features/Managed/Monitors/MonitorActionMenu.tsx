@@ -51,20 +51,19 @@ export const MonitorActionMenu: React.FC<Props> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'View Issue History',
       onClick: () => {
         openHistoryDrawer(monitorID, label);
       },
+      title: 'View Issue History',
     },
     {
-      title: 'Edit',
       onClick: () => {
         openMonitorDrawer(monitorID, 'edit');
       },
+      title: 'Edit',
     },
     status === 'disabled'
       ? {
-          title: 'Enable',
           onClick: () => {
             enableServiceMonitor()
               .then(() => {
@@ -76,9 +75,9 @@ export const MonitorActionMenu: React.FC<Props> = (props) => {
                 handleError('Error enabling this Service Monitor.', e);
               });
           },
+          title: 'Enable',
         }
       : {
-          title: 'Disable',
           onClick: () => {
             disableServiceMonitor()
               .then(() => {
@@ -90,12 +89,13 @@ export const MonitorActionMenu: React.FC<Props> = (props) => {
                 handleError('Error disabling this Service Monitor.', e);
               });
           },
+          title: 'Disable',
         },
     {
-      title: 'Delete',
       onClick: () => {
         openDialog(monitorID, label);
       },
+      title: 'Delete',
     },
   ];
 

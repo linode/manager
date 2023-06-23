@@ -14,12 +14,12 @@ interface Props {
   onClose: () => void;
 }
 
-const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
+const CreateSSHKeyDrawer = ({ onClose, open }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
-    mutateAsync: createSSHKey,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createSSHKey,
   } = useCreateSSHKeyMutation();
 
   const formik = useFormik<{ label: string; ssh_key: string }>({

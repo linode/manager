@@ -7,9 +7,9 @@ const message = 'this is a message.';
 const props: RowProps = {
   action: 'linode_boot',
   message,
+  timestamp: DateTime.now(),
   type: 'linode',
   username: null,
-  timestamp: DateTime.now(),
 };
 
 describe('EventRow component', () => {

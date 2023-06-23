@@ -19,13 +19,13 @@ import { renderUnitPrice } from 'src/features/Billing/billingUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   table: {
-    border: `1px solid ${theme.borderColors.borderTable}`,
     '& thead th': {
-      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
       '&:last-of-type': {
         paddingRight: 15,
       },
+      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     },
+    border: `1px solid ${theme.borderColors.borderTable}`,
   },
 }));
 
@@ -38,7 +38,7 @@ interface Props {
 const InvoiceTable = (props: Props) => {
   const { classes } = useStyles();
 
-  const { loading, errors, items } = props;
+  const { errors, items, loading } = props;
 
   return (
     <Table aria-label="Invoice Details" className={classes.table} noBorder>
@@ -76,8 +76,8 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
   return (
     <Paginate data={items} pageSize={25}>
       {({
-        data: paginatedData,
         count,
+        data: paginatedData,
         handlePageChange,
         handlePageSizeChange,
         page,
@@ -85,7 +85,7 @@ const RenderData = (props: { items: InvoiceItem[] }) => {
       }) => (
         <React.Fragment>
           {paginatedData.map(
-            ({ label, from, to, quantity, unit_price, amount, tax, total }) => (
+            ({ amount, from, label, quantity, tax, to, total, unit_price }) => (
               <TableRow key={`${label}-${from}-${to}`}>
                 <TableCell parentColumn="Description" data-qa-description>
                   {label}
@@ -144,7 +144,7 @@ const MaybeRenderContent = (props: {
   errors?: APIError[];
   items?: any[];
 }) => {
-  const { loading, errors, items } = props;
+  const { errors, items, loading } = props;
 
   if (loading) {
     return <TableRowLoading columns={8} />;

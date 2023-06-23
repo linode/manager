@@ -18,12 +18,12 @@ interface Props {
 type CombinedProps = Props;
 
 const LabelField: React.FC<CombinedProps> = ({
-  name,
-  value,
   error,
+  name,
   onBlur,
   onChange,
   textFieldStyles,
+  value,
   ...rest
 }) => {
   return (

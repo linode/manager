@@ -11,8 +11,8 @@ import recentEventForLinode from './recentEventForLinode';
 
 export const initReselectDevtools = () => {
   registerSelectors({
-    entityErrors,
     entitiesLoading,
+    entityErrors,
     inProgressEventForLinode,
     inProgressEvents,
     recentEventForLinode,

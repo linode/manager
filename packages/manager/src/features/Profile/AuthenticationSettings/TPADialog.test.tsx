@@ -12,15 +12,15 @@ jest.mock('src/hooks/useFlags', () => ({
     tpaProviders: [
       {
         displayName: 'Google',
-        name: 'google',
         href: 'https://google.com',
         icon: '"GoogleIcon"',
+        name: 'google',
       },
       {
         displayName: 'GitHub',
-        name: 'github',
         href: 'https://github.com',
         icon: 'GitHubIcon',
+        name: 'github',
       },
     ],
   }),
@@ -34,8 +34,8 @@ const props: TPADialogProps = {
     name: 'google',
   },
   newProvider: 'password',
-  open: true,
   onClose: jest.fn(),
+  open: true,
 };
 
 describe('TPADialog', () => {

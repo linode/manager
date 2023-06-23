@@ -33,20 +33,20 @@ interface MultiProps extends BaseProps {
 
 export const ImageSelect = (props: Props | MultiProps) => {
   const {
+    anyAllOption,
+    disabled,
     helperText,
-    images,
     imageError,
     imageFieldError,
+    images,
     isMulti,
     label,
     onSelect,
-    value,
-    disabled,
     required,
-    anyAllOption,
+    value,
   } = props;
 
-  const { isLoading: imagesLoading, isError, error } = useAllImagesQuery(
+  const { error, isError, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     {}
   );
@@ -141,9 +141,9 @@ export const getImagesOptions = (images: Image[]) => {
 export const groupNameMap = {
   _default: 'Other',
   deleted: 'Recently Deleted Disks',
-  recommended: '64-bit Distributions - Recommended',
-  older: 'Older Distributions',
   images: 'Images',
+  older: 'Older Distributions',
+  recommended: '64-bit Distributions - Recommended',
 };
 
 const getDisplayNameForGroup = (key: string) =>

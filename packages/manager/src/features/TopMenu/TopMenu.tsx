@@ -18,18 +18,18 @@ import UserMenu from './UserMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    height: 50,
-    color: theme.palette.text.primary,
     backgroundColor: theme.bg.bgPaper,
-    position: 'relative',
-    paddingRight: '0 !important',
+    color: theme.palette.text.primary,
     display: 'flex',
-    justifyContent: 'center',
     flexDirection: 'row',
+    height: 50,
+    justifyContent: 'center',
+    paddingRight: '0 !important',
+    position: 'relative',
   },
   toolbar: {
-    padding: 0,
     height: `50px !important`,
+    padding: 0,
     width: '100%',
   },
 }));
@@ -44,11 +44,11 @@ interface Props {
 
 const TopMenu = (props: Props) => {
   const {
+    desktopMenuToggle,
+    isLoggedInAsCustomer,
     isSideMenuOpen,
     openSideMenu,
     username,
-    isLoggedInAsCustomer,
-    desktopMenuToggle,
   } = props;
 
   const theme = useTheme();
@@ -74,7 +74,7 @@ const TopMenu = (props: Props) => {
             textAlign: 'center',
           }}
         >
-          <Typography style={{ fontSize: '1.2em', color: 'black' }}>
+          <Typography style={{ color: 'black', fontSize: '1.2em' }}>
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
         </div>

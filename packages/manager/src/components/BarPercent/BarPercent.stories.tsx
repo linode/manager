@@ -14,8 +14,8 @@ export const Narrow: StoryObj<BarPercentProps> = {
 };
 
 const meta: Meta<BarPercentProps> = {
-  title: 'Components/Loading States/Bar Percent',
-  component: BarPercent,
   args: { max: 100, value: 60 },
+  component: BarPercent,
+  title: 'Components/Loading States/Bar Percent',
 };
 export default meta;

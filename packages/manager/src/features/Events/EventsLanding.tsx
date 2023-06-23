@@ -28,28 +28,28 @@ import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  columnHeader: {
+    color: theme.textColors.tableHeader,
+    fontFamily: theme.font.bold,
+    fontSize: '0.875rem',
+  },
   header: {
     marginBottom: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
-  noMoreEvents: {
-    padding: theme.spacing(4),
-    textAlign: 'center',
-  },
   labelCell: {
-    width: '60%',
     minWidth: 200,
     paddingLeft: 10,
     [theme.breakpoints.down('sm')]: {
       width: '70%',
     },
+    width: '60%',
   },
-  columnHeader: {
-    fontFamily: theme.font.bold,
-    fontSize: '0.875rem',
-    color: theme.textColors.tableHeader,
+  noMoreEvents: {
+    padding: theme.spacing(4),
+    textAlign: 'center',
   },
 }));
 
@@ -95,11 +95,11 @@ type EventsReducer = React.Reducer<ReducerState, ReducerActions>;
 export const reducer: EventsReducer = (state, action) => {
   const {
     payload: {
+      entityId,
       eventsFromRedux: nextReduxEvents,
       inProgressEvents: nextInProgressEvents,
-      reactStateEvents: nextReactEvents,
       mostRecentEventTime: nextMostRecentEventTime,
-      entityId,
+      reactStateEvents: nextReactEvents,
     },
   } = action;
 
@@ -108,12 +108,12 @@ export const reducer: EventsReducer = (state, action) => {
       if (
         shouldUpdateEvents(
           {
-            mostRecentEventTime: state.mostRecentEventTime,
             inProgressEvents: state.inProgressEvents,
+            mostRecentEventTime: state.mostRecentEventTime,
           },
           {
-            mostRecentEventTime: nextMostRecentEventTime,
             inProgressEvents: nextInProgressEvents,
+            mostRecentEventTime: nextMostRecentEventTime,
           }
         )
       ) {
@@ -153,20 +153,20 @@ export const reducer: EventsReducer = (state, action) => {
       }
       return {
         eventsFromRedux: nextReduxEvents,
-        reactStateEvents: nextReactEvents,
         inProgressEvents: nextInProgressEvents,
         mostRecentEventTime: nextMostRecentEventTime,
+        reactStateEvents: nextReactEvents,
       };
     case 'append':
     default:
       return {
+        eventsFromRedux: nextReduxEvents,
+        inProgressEvents: nextInProgressEvents,
+        mostRecentEventTime: nextMostRecentEventTime,
         reactStateEvents: appendToEvents(
           state.reactStateEvents,
           nextReactEvents
         ),
-        eventsFromRedux: nextReduxEvents,
-        inProgressEvents: nextInProgressEvents,
-        mostRecentEventTime: nextMostRecentEventTime,
       };
   }
 };
@@ -182,10 +182,10 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
   const [initialLoaded, setInitialLoaded] = React.useState<boolean>(false);
 
   const [events, dispatch] = React.useReducer<EventsReducer>(reducer, {
-    inProgressEvents: props.inProgressEvents,
     eventsFromRedux: props.eventsFromRedux,
-    reactStateEvents: [],
+    inProgressEvents: props.inProgressEvents,
     mostRecentEventTime: props.mostRecentEventTime,
+    reactStateEvents: [],
   });
 
   const getNext = () => {
@@ -212,14 +212,14 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     setLoadMoreEvents(true);
     /** append our events to component state */
     dispatch({
-      type: 'append',
       payload: {
-        eventsFromRedux: props.eventsFromRedux,
-        reactStateEvents: response.data,
         entityId: props.entityId,
+        eventsFromRedux: props.eventsFromRedux,
         inProgressEvents: props.inProgressEvents,
         mostRecentEventTime: props.mostRecentEventTime,
+        reactStateEvents: response.data,
       },
+      type: 'append',
     });
     setLoading(false);
     setRequesting(false);
@@ -253,14 +253,14 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     const { eventsFromRedux, inProgressEvents } = props;
     /** in this case, we're getting new events from Redux, so we want to prepend */
     dispatch({
-      type: 'prepend',
       payload: {
+        entityId: props.entityId,
         eventsFromRedux,
         inProgressEvents,
-        reactStateEvents: events.reactStateEvents,
-        entityId: props.entityId,
         mostRecentEventTime: props.mostRecentEventTime,
+        reactStateEvents: events.reactStateEvents,
       },
+      type: 'prepend',
     });
   }, [
     events.reactStateEvents,
@@ -269,7 +269,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     props.inProgressEvents,
   ]);
 
-  const { entitiesLoading, errorMessage, entityId, emptyMessage } = props;
+  const { emptyMessage, entitiesLoading, entityId, errorMessage } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
@@ -396,8 +396,8 @@ interface StateProps {
 
 const mapStateToProps = (state: ApplicationState) => ({
   entitiesLoading: areEntitiesLoading(state.__resources),
-  inProgressEvents: state.events.inProgressEvents,
   eventsFromRedux: state.events.events,
+  inProgressEvents: state.events.inProgressEvents,
   mostRecentEventTime: state.events.mostRecentEventTime,
 });
 

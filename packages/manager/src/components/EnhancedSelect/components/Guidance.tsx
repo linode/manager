@@ -31,9 +31,9 @@ const StyledTypography = styled(Typography)(() => ({
 }));
 
 const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
-  width: 16,
   height: 16,
+  marginRight: theme.spacing(1),
   position: 'relative',
   top: 3,
-  marginRight: theme.spacing(1),
+  width: 16,
 }));

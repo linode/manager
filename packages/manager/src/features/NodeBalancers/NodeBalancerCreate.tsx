@@ -56,17 +56,17 @@ interface NodeBalancerFieldsState {
 }
 
 const errorResources = {
+  address: 'address',
   label: 'label',
   region: 'region',
-  address: 'address',
   tags: 'tags',
 };
 
 const defaultDeleteConfigConfirmDialogState = {
-  submitting: false,
-  open: false,
   errors: undefined,
   idxToDelete: undefined,
+  open: false,
+  submitting: false,
 };
 
 const defaultFieldsStates = {
@@ -80,9 +80,9 @@ const NodeBalancerCreate = () => {
   const { data: regions } = useRegionsQuery();
 
   const {
-    mutateAsync: createNodeBalancer,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
   const history = useHistory();
@@ -282,8 +282,8 @@ const NodeBalancerCreate = () => {
   const onDeleteConfig = (configIdx: number) => () =>
     setDeleteConfigConfirmDialog({
       ...clone(defaultDeleteConfigConfirmDialogState),
-      open: true,
       idxToDelete: configIdx,
+      open: true,
     });
 
   const onRemoveConfig = () => {
@@ -391,10 +391,10 @@ const NodeBalancerCreate = () => {
       <LandingHeader
         title="Create"
         breadcrumbProps={{
-          pathname: '/nodebalancers/create',
           breadcrumbDataAttrs: {
             'data-qa-create-nodebalancer-header': true,
           },
+          pathname: '/nodebalancers/create',
         }}
       />
       {generalError && !disabled && (
@@ -535,13 +535,13 @@ const NodeBalancerCreate = () => {
         displaySections={[
           { title: '$10/month' },
           { title: regionLabel },
-          { title: 'Configs', details: nodeBalancerFields.configs.length },
+          { details: nodeBalancerFields.configs.length, title: 'Configs' },
           {
-            title: 'Nodes',
             details: nodeBalancerFields.configs.reduce(
               (acc, config) => acc + config.nodes.length,
               0
             ),
+            title: 'Nodes',
           },
         ].filter((item) => Boolean(item.title))}
       />

@@ -7,30 +7,30 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    margin: `${theme.spacing(6)} 0`,
-  },
-  postTitle: {
-    marginBottom: theme.spacing(2),
-  },
   post: {
     marginBottom: theme.spacing(0.5),
     ...theme.typography.body1,
   },
   postLink: {
-    color: theme.textColors.linkActiveLight,
     '&:hover': {
       color: theme.palette.primary.main,
       textDecoration: 'underline',
     },
+    color: theme.textColors.linkActiveLight,
+  },
+  postTitle: {
+    marginBottom: theme.spacing(2),
+  },
+  root: {
+    margin: `${theme.spacing(6)} 0`,
   },
   withSeparator: {
     borderLeft: `1px solid ${theme.palette.divider}`,
     paddingLeft: theme.spacing(4),
     [theme.breakpoints.down('sm')]: {
       borderLeft: 'none',
-      paddingLeft: 0,
       marginTop: theme.spacing(4),
+      paddingLeft: 0,
     },
   },
 }));

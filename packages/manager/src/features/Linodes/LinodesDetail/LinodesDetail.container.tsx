@@ -32,7 +32,7 @@ export const LinodesDetailContainer = () => {
   const { configs, disks } = useSelector((state: ApplicationState) => {
     const disks = state.__resources.linodeDisks[linodeId];
     const configs = state.__resources.linodeConfigs[linodeId];
-    return { disks, configs };
+    return { configs, disks };
   });
 
   React.useEffect(() => {

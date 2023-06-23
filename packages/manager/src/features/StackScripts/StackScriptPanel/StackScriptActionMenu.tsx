@@ -35,16 +35,16 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
 
   const {
-    stackScriptID,
-    stackScriptUsername,
+    canAddLinodes,
+    canModify,
+    category,
     history,
+    isPublic,
+    stackScriptID,
+    stackScriptLabel,
+    stackScriptUsername,
     triggerDelete,
     triggerMakePublic,
-    stackScriptLabel,
-    canModify,
-    isPublic,
-    category,
-    canAddLinodes,
   } = props;
 
   const readonlyProps = {
@@ -68,13 +68,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
         }
       : null,
     {
-      title: 'Deploy New Linode',
       disabled: !canAddLinodes,
-      tooltip: matchesSmDown
-        ? !canAddLinodes
-          ? "You don't have permissions to add Linodes"
-          : undefined
-        : undefined,
       onClick: () => {
         history.push(
           getStackScriptUrl(
@@ -84,6 +78,12 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
           )
         );
       },
+      title: 'Deploy New Linode',
+      tooltip: matchesSmDown
+        ? !canAddLinodes
+          ? "You don't have permissions to add Linodes"
+          : undefined
+        : undefined,
     },
     !isPublic
       ? {

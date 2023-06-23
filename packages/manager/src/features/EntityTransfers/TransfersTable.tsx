@@ -21,24 +21,24 @@ import TransferDetailsDialog from './EntityTransfersLanding/TransferDetailsDialo
 import RenderTransferRow from './RenderTransferRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(2),
-    '& .MuiAccordionDetails-root': {
-      padding: 0,
-    },
-    '& .MuiAccordion-root table': {
-      border: 'none',
-    },
-  },
-  table: {
-    width: '100%',
-  },
   cellContents: {
     paddingLeft: '1rem',
   },
   link: {
     ...theme.applyLinkStyles,
     fontSize: '0.875rem',
+  },
+  root: {
+    '& .MuiAccordion-root table': {
+      border: 'none',
+    },
+    '& .MuiAccordionDetails-root': {
+      padding: 0,
+    },
+    marginBottom: theme.spacing(2),
+  },
+  table: {
+    width: '100%',
   },
 }));
 
@@ -58,15 +58,15 @@ type CombinedProps = Props;
 
 export const TransfersTable: React.FC<CombinedProps> = (props) => {
   const {
-    transferType,
-    isLoading,
     error,
-    transfers,
-    results,
-    page,
-    pageSize,
     handlePageChange,
     handlePageSizeChange,
+    isLoading,
+    page,
+    pageSize,
+    results,
+    transferType,
+    transfers,
   } = props;
 
   const classes = useStyles();

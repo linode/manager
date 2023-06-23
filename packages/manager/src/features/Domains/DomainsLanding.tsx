@@ -41,6 +41,10 @@ import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  importButton: {
+    marginLeft: `-${theme.spacing()}`,
+    whiteSpace: 'nowrap',
+  },
   root: {
     // Adds spacing when the docs button wraps to make it look a little less awkward
     [theme.breakpoints.down(380)]: {
@@ -48,10 +52,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingBottom: theme.spacing(2),
       },
     },
-  },
-  importButton: {
-    marginLeft: `-${theme.spacing()}`,
-    whiteSpace: 'nowrap',
   },
 }));
 
@@ -73,17 +73,17 @@ export const DomainsLanding: React.FC<Props> = (props) => {
 
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'domain',
       order: 'asc',
+      orderBy: 'domain',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
   const { data: domains, error, isLoading } = useDomainsQuery(
@@ -113,9 +113,9 @@ export const DomainsLanding: React.FC<Props> = (props) => {
   >();
 
   const {
-    mutateAsync: deleteDomain,
-    isLoading: isDeleting,
     error: deleteError,
+    isLoading: isDeleting,
+    mutateAsync: deleteDomain,
   } = useDeleteDomainMutation(selectedDomain?.id ?? 0);
 
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
@@ -186,9 +186,9 @@ export const DomainsLanding: React.FC<Props> = (props) => {
 
   const handlers: DomainHandlers = {
     onClone,
+    onDisableOrEnable,
     onEdit,
     onRemove,
-    onDisableOrEnable,
   };
 
   if (isLoading) {

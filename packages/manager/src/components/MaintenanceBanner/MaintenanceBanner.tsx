@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const MaintenanceBanner = React.memo((props: Props) => {
-  const { type, maintenanceEnd, maintenanceStart } = props;
+  const { maintenanceEnd, maintenanceStart, type } = props;
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
@@ -25,8 +25,8 @@ export const MaintenanceBanner = React.memo((props: Props) => {
 
   const {
     data: profile,
-    isLoading: profileLoading,
     error: profileError,
+    isLoading: profileLoading,
   } = useProfile();
 
   const getTimezoneMessage = () => {

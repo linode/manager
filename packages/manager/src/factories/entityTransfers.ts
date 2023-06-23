@@ -13,11 +13,11 @@ export const transferEntitiesFactory = Factory.Sync.makeFactory<TransferEntities
 );
 
 export const entityTransferFactory = Factory.Sync.makeFactory<EntityTransfer>({
-  token: Factory.each(() => v4()),
-  is_sender: true,
+  created: DateTime.utc().toISO(),
   entities: transferEntitiesFactory.build(),
   expiry: DateTime.utc().plus({ days: 1 }).toISO(),
-  created: DateTime.utc().toISO(),
-  updated: DateTime.utc().toISO(),
+  is_sender: true,
   status: 'pending',
+  token: Factory.each(() => v4()),
+  updated: DateTime.utc().toISO(),
 });

@@ -36,9 +36,9 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets(clusters);
   const {
-    mutateAsync: createBucket,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: createBucket,
     reset,
   } = useCreateBucketMutation();
   const { data: agreements } = useAccountAgreements();
@@ -50,8 +50,13 @@ export const CreateBucketDrawer = (props: Props) => {
 
   const formik = useFormik({
     initialValues: {
-      label: '',
       cluster: '',
+      label: '',
+    },
+    async onSubmit(values) {
+      await createBucket(values);
+      sendCreateBucketEvent(values.cluster);
+      onClose();
     },
     validate(values) {
       reset();
@@ -65,11 +70,6 @@ export const CreateBucketDrawer = (props: Props) => {
         };
       }
       return {};
-    },
-    async onSubmit(values) {
-      await createBucket(values);
-      sendCreateBucketEvent(values.cluster);
-      onClose();
     },
   });
 
@@ -162,6 +162,6 @@ export const CreateBucketDrawer = (props: Props) => {
 const StyledEUAgreementCheckbox = styled(EUAgreementCheckbox, {
   label: 'StyledEUAgreementCheckbox',
 })(({ theme }) => ({
-  marginTop: theme.spacing(3),
   marginButton: theme.spacing(3),
+  marginTop: theme.spacing(3),
 }));

@@ -21,31 +21,31 @@ interface Props {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   snapshotFormControl: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
     '& > div': {
-      width: 'auto',
       marginRight: theme.spacing(2),
+      width: 'auto',
     },
     '& button': {
       marginTop: theme.spacing(4),
     },
+    alignItems: 'flex-end',
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   snapshotNameField: {
     minWidth: 275,
   },
 }));
 
-export const CaptureSnapshot = ({ linodeId, isReadOnly }: Props) => {
+export const CaptureSnapshot = ({ isReadOnly, linodeId }: Props) => {
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutateAsync: takeSnapshot,
     error: snapshotError,
     isLoading: isSnapshotLoading,
+    mutateAsync: takeSnapshot,
   } = useLinodeBackupSnapshotMutation(linodeId);
 
   const [

@@ -19,8 +19,8 @@ export const NodeBalancerLandingEmptyState = () => {
         icon={NodeBalancer}
         buttonProps={[
           {
-            onClick: () => history.push('/nodebalancers/create'),
             children: 'Create NodeBalancer',
+            onClick: () => history.push('/nodebalancers/create'),
           },
         ]}
         showTransferDisplay

@@ -32,8 +32,6 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
 
   const tabs: NavTab[] = [
     {
-      title: 'Capture Image',
-      routeName: `${props.match.url}/disk`,
       render: (
         <CreateImageTab
           label={label}
@@ -44,10 +42,10 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
           changeIsCloudInit={() => setIsCloudInit(!isCloudInit)}
         />
       ),
+      routeName: `${props.match.url}/disk`,
+      title: 'Capture Image',
     },
     {
-      title: 'Upload Image',
-      routeName: `${props.match.url}/upload`,
       render: (
         <ImageUpload
           label={label}
@@ -58,6 +56,8 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
           isCloudInit={isCloudInit}
         />
       ),
+      routeName: `${props.match.url}/upload`,
+      title: 'Upload Image',
     },
   ];
 

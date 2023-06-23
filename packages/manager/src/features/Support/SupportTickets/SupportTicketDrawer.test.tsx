@@ -3,9 +3,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import SupportTicketDrawer, { Props } from './SupportTicketDrawer';
 
 const props: Props = {
-  open: true,
   onClose: jest.fn(),
   onSuccess: jest.fn(),
+  open: true,
 };
 
 // Mock React-Select

@@ -13,7 +13,7 @@ interface Props {
 
 class ScratchCodeDialog extends React.PureComponent<Props, {}> {
   render() {
-    const { open, closeDialog, scratchCode } = this.props;
+    const { closeDialog, open, scratchCode } = this.props;
 
     return (
       <ConfirmationDialog

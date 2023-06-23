@@ -87,31 +87,31 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    form: {
-      width: '100%',
-    },
-    stackScriptWrapper: {
-      '& [role="tablist"]': {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(),
-      },
-    },
-    imageSelect: {
-      '& .MuiPaper-root': {
-        padding: 0,
-      },
-    },
     buttonGroup: {
       marginTop: theme.spacing(3),
       [theme.breakpoints.down('sm')]: {
         justifyContent: 'flex-end',
       },
     },
+    createButton: {
+      marginLeft: theme.spacing(1),
+      [theme.breakpoints.down('md')]: {
+        marginRight: theme.spacing(1),
+      },
+    },
+    form: {
+      width: '100%',
+    },
+    imageSelect: {
+      '& .MuiPaper-root': {
+        padding: 0,
+      },
+    },
     messageGroup: {
       display: 'flex',
       flexDirection: 'column',
-      gap: theme.spacing(2),
       flexGrow: 1,
+      gap: theme.spacing(2),
       [(theme.breakpoints.down('sm'), theme.breakpoints.down('md'))]: {
         margin: theme.spacing(1),
       },
@@ -122,11 +122,11 @@ const styles = (theme: Theme) =>
         maxWidth: 'unset',
       },
     },
-    createButton: {
-      [theme.breakpoints.down('md')]: {
-        marginRight: theme.spacing(1),
+    stackScriptWrapper: {
+      '& [role="tablist"]': {
+        marginBottom: theme.spacing(),
+        marginTop: theme.spacing(2),
       },
-      marginLeft: theme.spacing(1),
     },
   });
 interface Props {
@@ -241,13 +241,13 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     this.state = {
+      numberOfNodes: 0,
+      planKey: v4(),
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
       stackScriptSelectedTab:
         preSelectedTab === 2 && location.search.search('Community') > -1
           ? 1
           : 0,
-      planKey: v4(),
-      numberOfNodes: 0,
     };
   }
 
@@ -267,8 +267,8 @@ export class LinodeCreate extends React.PureComponent<
     /** Reset the plan panel since types may have shifted */
 
     this.setState({
-      selectedTab: index,
       planKey: v4(),
+      selectedTab: index,
     });
   };
 
@@ -290,47 +290,47 @@ export class LinodeCreate extends React.PureComponent<
 
   tabs: CreateTab[] = [
     {
+      routeName: `${this.props.match.url}?type=Distributions`,
       title: 'Distributions',
       type: 'fromImage',
-      routeName: `${this.props.match.url}?type=Distributions`,
     },
     {
+      routeName: `${this.props.match.url}?type=One-Click`,
       title: 'Marketplace',
       type: 'fromApp',
-      routeName: `${this.props.match.url}?type=One-Click`,
     },
     {
+      routeName: `${this.props.match.url}?type=StackScripts`,
       title: 'StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts`,
     },
     {
+      routeName: `${this.props.match.url}?type=Images`,
       title: 'Images',
       type: 'fromImage',
-      routeName: `${this.props.match.url}?type=Images`,
     },
     {
+      routeName: `${this.props.match.url}?type=Backups`,
       title: 'Backups',
       type: 'fromBackup',
-      routeName: `${this.props.match.url}?type=Backups`,
     },
     {
+      routeName: `${this.props.match.url}?type=Clone%20Linode`,
       title: 'Clone Linode',
       type: 'fromLinode',
-      routeName: `${this.props.match.url}?type=Clone%20Linode`,
     },
   ];
 
   stackScriptTabs: CreateTab[] = [
     {
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`,
       title: 'Account StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`,
     },
     {
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
       title: 'Community StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
     },
   ];
 
@@ -346,23 +346,23 @@ export class LinodeCreate extends React.PureComponent<
       'Vlans'
     );
     const payload = {
+      authorized_users: this.props.authorized_users,
+      backup_id: this.props.selectedBackupID,
+      backups_enabled: this.props.backupsEnabled,
+      booted: true,
       image: this.props.selectedImageID,
-      region: this.props.selectedRegionID,
-      type: this.props.selectedTypeID,
       label: this.props.label,
+      private_ip: this.props.privateIPEnabled,
+      region: this.props.selectedRegionID,
+      root_pass: this.props.password,
+      stackscript_data: this.props.selectedUDFs,
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
-      root_pass: this.props.password,
-      authorized_users: this.props.authorized_users,
-      booted: true,
-      backups_enabled: this.props.backupsEnabled,
-      backup_id: this.props.selectedBackupID,
-      private_ip: this.props.privateIPEnabled,
-
-      // StackScripts
-      stackscript_id: this.props.selectedStackScriptID,
-      stackscript_data: this.props.selectedUDFs,
+      type: this.props.selectedTypeID,
     };
 
     if (
@@ -375,9 +375,9 @@ export class LinodeCreate extends React.PureComponent<
       const interfaces = [defaultPublicInterface];
       if (Boolean(this.props.vlanLabel)) {
         interfaces.push({
-          purpose: 'vlan',
-          label: this.props.vlanLabel,
           ipam_address: this.props.ipamAddress,
+          label: this.props.vlanLabel,
+          purpose: 'vlan',
         });
       }
       payload['interfaces'] = interfaces;
@@ -399,23 +399,23 @@ export class LinodeCreate extends React.PureComponent<
 
   handleClickCreateUsingCommandLine = () => {
     const payload = {
+      authorized_users: this.props.authorized_users,
+      backup_id: this.props.selectedBackupID,
+      backups_enabled: this.props.backupsEnabled,
+      booted: true,
       image: this.props.selectedImageID,
-      region: this.props.selectedRegionID,
-      type: this.props.selectedTypeID,
       label: this.props.label,
+      private_ip: this.props.privateIPEnabled,
+      region: this.props.selectedRegionID,
+      root_pass: this.props.password,
+      stackscript_data: this.props.selectedUDFs,
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
-      root_pass: this.props.password,
-      authorized_users: this.props.authorized_users,
-      booted: true,
-      backups_enabled: this.props.backupsEnabled,
-      backup_id: this.props.selectedBackupID,
-      private_ip: this.props.privateIPEnabled,
-
-      // StackScripts
-      stackscript_id: this.props.selectedStackScriptID,
-      stackscript_data: this.props.selectedUDFs,
+      type: this.props.selectedTypeID,
     };
     sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
     this.props.checkValidation(payload);
@@ -425,24 +425,24 @@ export class LinodeCreate extends React.PureComponent<
     const { selectedTab, stackScriptSelectedTab } = this.state;
 
     const {
-      classes,
-      formIsSubmitting,
-      linodesData,
-      linodesLoading,
-      linodesError,
-      imagesData,
-      imageDisplayInfo,
-      imagesError,
-      imagesLoading,
-      regionsError,
-      regionsData,
-      regionDisplayInfo,
       accountBackupsEnabled,
       backupsMonthlyPrice,
+      classes,
       errors,
+      formIsSubmitting,
       handleAgreementChange,
       handleShowApiAwarenessModal,
+      imageDisplayInfo,
+      imagesData,
+      imagesError,
+      imagesLoading,
       label,
+      linodesData,
+      linodesError,
+      linodesLoading,
+      regionDisplayInfo,
+      regionsData,
+      regionsError,
       regionsLoading,
       selectedRegionID,
       showAgreement,
@@ -480,10 +480,10 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     const tagsInputProps = {
-      value: tags || [],
+      disabled: userCannotCreateLinode,
       onChange: updateTags,
       tagError: hasErrorFor.tags,
-      disabled: userCannotCreateLinode,
+      value: tags || [],
     };
 
     const hasBackups = Boolean(
@@ -497,8 +497,8 @@ export class LinodeCreate extends React.PureComponent<
 
     if (regionDisplayInfo) {
       displaySections.push({
-        title: regionDisplayInfo.title,
         details: regionDisplayInfo.details,
+        title: regionDisplayInfo.title,
       });
     }
 
@@ -506,7 +506,7 @@ export class LinodeCreate extends React.PureComponent<
       const typeDisplayInfoCopy = cloneDeep(typeDisplayInfo);
 
       if (this.props.createType === 'fromApp' && this.state.numberOfNodes > 0) {
-        const { monthlyPrice, hourlyPrice } = getMonthlyAndHourlyNodePricing(
+        const { hourlyPrice, monthlyPrice } = getMonthlyAndHourlyNodePricing(
           typeDisplayInfoCopy.monthly,
           typeDisplayInfoCopy.hourly,
           this.state.numberOfNodes
@@ -729,11 +729,11 @@ export class LinodeCreate extends React.PureComponent<
           <LabelAndTagsPanel
             data-qa-label-and-tags-panel
             labelFieldProps={{
-              label: 'Linode Label',
-              value: label || '',
-              onChange: updateLabel,
-              errorText: hasErrorFor.label,
               disabled: userCannotCreateLinode,
+              errorText: hasErrorFor.label,
+              label: 'Linode Label',
+              onChange: updateLabel,
+              value: label || '',
             }}
             tagsInputProps={
               this.props.createType !== 'fromLinode'
@@ -862,9 +862,9 @@ export class LinodeCreate extends React.PureComponent<
 }
 
 const defaultPublicInterface: InterfacePayload = {
-  purpose: 'public',
-  label: '',
   ipam_address: '',
+  label: '',
+  purpose: 'public',
 };
 
 interface DispatchProps {

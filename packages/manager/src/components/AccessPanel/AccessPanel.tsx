@@ -13,15 +13,15 @@ const PasswordInput = React.lazy(
 
 const useStyles = makeStyles<void, 'passwordInputOuter'>()(
   (theme: Theme, _params, classes) => ({
-    root: {
-      marginTop: theme.spacing(3),
-    },
     isOptional: {
       [`& .${classes.passwordInputOuter}`]: {
         marginTop: 0,
       },
     },
     passwordInputOuter: {},
+    root: {
+      marginTop: theme.spacing(3),
+    },
   })
 );
 
@@ -47,21 +47,21 @@ interface Props {
 
 const AccessPanel = (props: Props) => {
   const {
-    error,
-    label,
-    required,
-    placeholder,
+    authorizedUsers,
+    className,
     disabled,
     disabledReason,
-    tooltipInteractive,
-    hideStrengthLabel,
-    className,
-    isOptional,
-    passwordHelperText,
-    password,
+    error,
     handleChange: _handleChange,
+    hideStrengthLabel,
+    isOptional,
+    label,
+    password,
+    passwordHelperText,
+    placeholder,
+    required,
     setAuthorizedUsers,
-    authorizedUsers,
+    tooltipInteractive,
   } = props;
 
   const { classes, cx } = useStyles();
@@ -73,8 +73,8 @@ const AccessPanel = (props: Props) => {
     <Paper
       className={cx(
         {
-          [classes.root]: true,
           [classes.isOptional]: isOptional,
+          [classes.root]: true,
         },
         className
       )}

@@ -135,11 +135,11 @@ describe('conversion helper functions', () => {
 
     it('allows custom unit labels', () => {
       const unitLabels: ReadableBytesOptions['unitLabels'] = {
-        bytes: 'B',
+        GB: 'Gigabytes',
         KB: 'Kilobytes',
         MB: 'Megabytes',
-        GB: 'Gigabytes',
         TB: 'Terabytes',
+        bytes: 'B',
       };
       expect(readableBytes(1, { unitLabels }).unit).toBe('B');
       expect(readableBytes(1024, { unitLabels }).unit).toBe('Kilobytes');

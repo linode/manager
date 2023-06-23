@@ -21,17 +21,17 @@ import SSHAccessTableContent from './SSHAccessTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(4),
     '&:before': {
       display: 'none',
     },
+    marginTop: theme.spacing(4),
   },
 }));
 
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data: settings, isLoading, error } = useAllLinodeSettingsQuery();
+  const { data: settings, error, isLoading } = useAllLinodeSettingsQuery();
 
   const data = settings || [];
 

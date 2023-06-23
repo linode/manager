@@ -21,42 +21,42 @@ import { makeStyles } from 'tss-react/mui';
 // import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  topSection: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('lg')]: {
-      flexDirection: 'column',
+  formControlDropdown: {
+    '& label': {
+      overflow: 'visible',
+    },
+    marginRight: '3rem',
+  },
+  sectionButton: {
+    alignSelf: 'end',
+    marginBottom: '1rem',
+    marginTop: '1rem',
+    minWidth: 214,
+    [theme.breakpoints.down('md')]: {
+      alignSelf: 'flex-start',
     },
   },
-  sectionTitleAndText: {
-    width: '100%',
-  },
-  sectionTitle: {
-    marginBottom: '0.25rem',
-  },
   sectionText: {
-    width: '65%',
     [theme.breakpoints.down('md')]: {
       marginBottom: '1rem',
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
+    width: '65%',
   },
-  sectionButton: {
-    minWidth: 214,
-    marginTop: '1rem',
-    marginBottom: '1rem',
-    alignSelf: 'end',
-    [theme.breakpoints.down('md')]: {
-      alignSelf: 'flex-start',
-    },
+  sectionTitle: {
+    marginBottom: '0.25rem',
   },
-  formControlDropdown: {
-    marginRight: '3rem',
-    '& label': {
-      overflow: 'visible',
+  sectionTitleAndText: {
+    width: '100%',
+  },
+  topSection: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('lg')]: {
+      flexDirection: 'column',
     },
   },
 }));
@@ -154,17 +154,17 @@ export const MaintenanceWindow = (props: Props) => {
   };
 
   const {
-    values,
     errors,
-    touched,
-    isSubmitting,
     handleSubmit,
+    isSubmitting,
     setFieldValue,
+    touched,
+    values,
   } = useFormik({
     initialValues: {
+      day_of_week: database.updates?.day_of_week ?? 1,
       frequency: database.updates?.frequency ?? 'weekly',
       hour_of_day: database.updates?.hour_of_day ?? 20,
-      day_of_week: database.updates?.day_of_week ?? 1,
       week_of_month: getInitialWeekOfMonth(),
     },
     // validationSchema: updateDatabaseSchema,
@@ -227,7 +227,7 @@ export const MaintenanceWindow = (props: Props) => {
               />
             </FormControl>
             <FormControl className={classes.formControlDropdown}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ alignItems: 'center', display: 'flex' }}>
                 <Select
                   textFieldProps={{
                     dataAttrs: {
@@ -259,8 +259,8 @@ export const MaintenanceWindow = (props: Props) => {
                   status="help"
                   interactive
                   sxTooltipIcon={{
-                    padding: '0px 8px',
                     marginTop: '1.25rem',
+                    padding: '0px 8px',
                   }}
                   text={
                     <Typography>
@@ -298,7 +298,7 @@ export const MaintenanceWindow = (props: Props) => {
             }}
           >
             <RadioGroup
-              style={{ marginTop: 0, marginBottom: 0 }}
+              style={{ marginBottom: 0, marginTop: 0 }}
               value={values.frequency}
             >
               {maintenanceFrequencyMap.map((option) => (

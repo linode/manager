@@ -14,10 +14,10 @@ interface Props {
 }
 
 export const DeleteIPDialog = (props: Props) => {
-  const { open, onClose, linodeId, address } = props;
+  const { address, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: removeIP, isLoading, error } = useLinodeIPDeleteMutation(
+  const { error, isLoading, mutateAsync: removeIP } = useLinodeIPDeleteMutation(
     linodeId,
     address
   );

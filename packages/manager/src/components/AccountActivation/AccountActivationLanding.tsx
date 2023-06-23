@@ -9,15 +9,15 @@ import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTick
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  cta: {
+    ...theme.applyLinkStyles,
+  },
   errorHeading: {
     marginBottom: theme.spacing(2),
   },
   subheading: {
     margin: '0 auto',
     maxWidth: '60%',
-  },
-  cta: {
-    ...theme.applyLinkStyles,
   },
 }));
 

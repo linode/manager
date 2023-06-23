@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const BareMetalRescue = (props: Props) => {
-  const { isOpen, onClose, linodeId } = props;
+  const { isOpen, linodeId, onClose } = props;
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const { enqueueSnackbar } = useSnackbar();

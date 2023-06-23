@@ -26,16 +26,16 @@ type CombinedProps = Props & WithTheme;
 export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
+    end,
     error,
     isToday,
     loading,
-    timezone,
-    start,
-    end,
     processesData,
-    processesLoading,
     processesError,
+    processesLoading,
+    start,
     theme,
+    timezone,
   } = props;
 
   const classes = useStyles();
@@ -44,10 +44,10 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
 
   const graphProps = {
     error,
-    timezone,
     loading,
-    showToday: isToday,
     nativeLegend: true,
+    showToday: isToday,
+    timezone,
   };
 
   return (
@@ -61,10 +61,10 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
             ariaLabel="Requests Per Second Graph"
             data={[
               {
-                label: 'Requests',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
+                borderColor: 'transparent',
                 data: _convertData(data?.requests ?? [], start, end),
+                label: 'Requests',
               },
             ]}
             {...graphProps}
@@ -80,16 +80,16 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
                 ariaLabel="Connections Per Second Graph"
                 data={[
                   {
-                    label: 'Accepted',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.accepted,
+                    borderColor: 'transparent',
                     data: _convertData(data?.accepted_cons ?? [], start, end),
+                    label: 'Accepted',
                   },
                   {
-                    label: 'Handled',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.handled,
+                    borderColor: 'transparent',
                     data: _convertData(data?.handled_cons ?? [], start, end),
+                    label: 'Handled',
                   },
                 ]}
                 {...graphProps}
@@ -101,22 +101,22 @@ export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
                 ariaLabel="Workers Graph"
                 data={[
                   {
-                    label: 'Waiting',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.waiting,
+                    borderColor: 'transparent',
                     data: _convertData(data?.waiting ?? [], start, end),
+                    label: 'Waiting',
                   },
                   {
-                    label: 'Reading',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.reading,
+                    borderColor: 'transparent',
                     data: _convertData(data?.reading ?? [], start, end),
+                    label: 'Reading',
                   },
                   {
-                    label: 'Writing',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.writing,
+                    borderColor: 'transparent',
                     data: _convertData(data?.writing ?? [], start, end),
+                    label: 'Writing',
                   },
                 ]}
                 {...graphProps}

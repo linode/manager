@@ -8,7 +8,6 @@ type StyledDisabledTableRowProps = Pick<TableRowProps, 'disabled'>;
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
-  fontSize: '0.9em',
   '& a': {
     color: theme.textColors.linkActiveLight,
   },
@@ -18,6 +17,7 @@ export const StyledTypography = styled(Typography, {
   '& p': {
     fontFamily: '"LatoWebBold", sans-serif',
   },
+  fontSize: '0.9em',
 }));
 
 export const StyledDisabledTableRow = styled(TableRow, {

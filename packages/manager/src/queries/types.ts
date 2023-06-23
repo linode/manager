@@ -41,9 +41,9 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
   const queryClient = useQueryClient();
   return useQueries(
     types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
-      queryKey: specificTypesQueryKey(type),
-      queryFn: () => getSingleType(type, queryClient),
       enabled,
+      queryFn: () => getSingleType(type, queryClient),
+      queryKey: specificTypesQueryKey(type),
       ...queryPresets.oneTimeFetch,
     }))
   );
@@ -51,8 +51,8 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
 
 export const useTypeQuery = (type: string, enabled = true) => {
   return useQuery<LinodeType, APIError[]>({
-    queryKey: specificTypesQueryKey(type),
     queryFn: () => getType(type),
+    queryKey: specificTypesQueryKey(type),
     ...queryPresets.oneTimeFetch,
     enabled: enabled && Boolean(type),
   });

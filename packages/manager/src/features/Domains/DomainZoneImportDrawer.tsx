@@ -17,13 +17,13 @@ interface Props {
 }
 
 const DomainZoneImportDrawer = (props: Props) => {
-  const { open, onClose: _onClose } = props;
+  const { onClose: _onClose, open } = props;
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
   const history = useHistory();
 
-  const { mutateAsync: importZone, error, reset } = useImportZoneMutation();
+  const { error, mutateAsync: importZone, reset } = useImportZoneMutation();
 
   const formik = useFormik<ImportZonePayload>({
     initialValues: {

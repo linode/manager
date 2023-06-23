@@ -16,14 +16,14 @@ interface Props {
 }
 
 export const DeleteLinodeDialog = (props: Props) => {
-  const { linodeId, open, onClose, onSuccess } = props;
+  const { linodeId, onClose, onSuccess, open } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined && open
   );
 
-  const { mutateAsync, error, isLoading, reset } = useDeleteLinodeMutation(
+  const { error, isLoading, mutateAsync, reset } = useDeleteLinodeMutation(
     linodeId ?? -1
   );
 
@@ -46,7 +46,7 @@ export const DeleteLinodeDialog = (props: Props) => {
   return (
     <TypeToConfirmDialog
       title={`Delete ${linode?.label ?? ''}?`}
-      entity={{ type: 'Linode', label: linode?.label }}
+      entity={{ label: linode?.label, type: 'Linode' }}
       open={open}
       loading={isLoading}
       errors={error}

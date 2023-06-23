@@ -3,14 +3,14 @@ import { getTabMatch, NavTab } from './NavTabs';
 describe('getTabMatch', () => {
   const tabs: NavTab[] = [
     {
-      title: 'Backups',
-      routeName: '/databases/1234/backups',
       component: null as any,
+      routeName: '/databases/1234/backups',
+      title: 'Backups',
     },
     {
-      title: 'Settings',
-      routeName: '/databases/1234/settings',
       component: null as any,
+      routeName: '/databases/1234/settings',
+      title: 'Settings',
     },
   ];
 

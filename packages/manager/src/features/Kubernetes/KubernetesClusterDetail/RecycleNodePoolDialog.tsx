@@ -18,11 +18,11 @@ interface Props {
 }
 
 export const RecycleNodePoolDialog = (props: Props) => {
-  const { open, onClose, clusterId, nodePoolId } = props;
+  const { clusterId, nodePoolId, onClose, open } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useRecycleNodePoolMutation(
+  const { error, isLoading, mutateAsync } = useRecycleNodePoolMutation(
     clusterId,
     nodePoolId
   );

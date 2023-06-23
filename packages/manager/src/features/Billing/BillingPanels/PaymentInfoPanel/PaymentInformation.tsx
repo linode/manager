@@ -24,7 +24,7 @@ interface Props {
 }
 
 const PaymentInformation = (props: Props) => {
-  const { loading, error, paymentMethods, isAkamaiCustomer } = props;
+  const { error, isAkamaiCustomer, loading, paymentMethods } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(

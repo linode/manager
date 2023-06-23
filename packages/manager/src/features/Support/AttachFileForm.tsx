@@ -14,8 +14,8 @@ type ClassNames = 'attachFileButton';
 const styles = (theme: Theme) =>
   createStyles({
     attachFileButton: {
-      marginTop: theme.spacing(2),
       marginBottom: 4,
+      marginTop: theme.spacing(2),
     },
   });
 
@@ -44,7 +44,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
 
   handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files: selectedFiles } = e.target;
-    const { updateFiles, files } = this.props;
+    const { files, updateFiles } = this.props;
 
     if (selectedFiles && selectedFiles.length) {
       const reshapedFiles = reshapeFiles(selectedFiles);

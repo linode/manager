@@ -36,7 +36,7 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
         <SupportLink
           text="open a support ticket"
           title={`SMTP Restriction Removal on ${supportLink.label}`}
-          entity={{ type: 'linode_id', id: supportLink.id }}
+          entity={{ id: supportLink.id, type: 'linode_id' }}
           ticketType="smtp"
         />
       ) : (

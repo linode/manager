@@ -51,21 +51,21 @@ const withStateAndHandlers = withStateHandlers<
   {}
 >(
   {
-    loading: false,
     error: undefined,
+    loading: false,
   },
   {
-    setLoadingAndClearErrors: () => () => ({
-      loading: true,
+    clearLoadingAndErrors: () => () => ({
       error: undefined,
+      loading: false,
     }),
     setErrorAndClearLoading: () => (error: string) => ({
-      loading: false,
       error,
-    }),
-    clearLoadingAndErrors: () => () => ({
       loading: false,
+    }),
+    setLoadingAndClearErrors: () => () => ({
       error: undefined,
+      loading: true,
     }),
   }
 );

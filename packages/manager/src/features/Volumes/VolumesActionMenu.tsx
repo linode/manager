@@ -56,37 +56,37 @@ export const VolumesActionMenu = (props: Props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleShowConfig = () => {
-    const { openForConfig, label, filesystemPath } = props;
+    const { filesystemPath, label, openForConfig } = props;
     openForConfig(label, filesystemPath);
   };
 
   const handleOpenEdit = () => {
-    const { openForEdit, volumeId, label, volumeTags } = props;
+    const { label, openForEdit, volumeId, volumeTags } = props;
     openForEdit(volumeId, label, volumeTags);
   };
 
   const handleResize = () => {
-    const { openForResize, volumeId, size, label } = props;
+    const { label, openForResize, size, volumeId } = props;
     openForResize(volumeId, size, label);
   };
 
   const handleClone = () => {
-    const { openForClone, volumeId, label, size, regionID } = props;
+    const { label, openForClone, regionID, size, volumeId } = props;
     openForClone(volumeId, label, size, regionID);
   };
 
   const handleAttach = () => {
-    const { handleAttach, volumeId, label, regionID } = props;
+    const { handleAttach, label, regionID, volumeId } = props;
     handleAttach(volumeId, label, regionID);
   };
 
   const handleDetach = () => {
     const {
       handleDetach,
+      linodeId,
+      linodeLabel,
       volumeId,
       volumeLabel,
-      linodeLabel,
-      linodeId,
     } = props;
     handleDetach(volumeId, volumeLabel, linodeLabel, linodeId);
   };
@@ -98,53 +98,53 @@ export const VolumesActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Show Config',
       onClick: () => {
         handleShowConfig();
       },
+      title: 'Show Config',
     },
     {
-      title: 'Edit',
       onClick: () => {
         handleOpenEdit();
       },
+      title: 'Edit',
     },
     {
-      title: 'Resize',
       onClick: () => {
         handleResize();
       },
+      title: 'Resize',
     },
     {
-      title: 'Clone',
       onClick: () => {
         handleClone();
       },
+      title: 'Clone',
     },
   ];
 
   if (!attached && isVolumesLanding) {
     actions.push({
-      title: 'Attach',
       onClick: () => {
         handleAttach();
       },
+      title: 'Attach',
     });
   } else {
     actions.push({
-      title: 'Detach',
       onClick: () => {
         handleDetach();
       },
+      title: 'Detach',
     });
   }
 
   actions.push({
-    title: 'Delete',
+    disabled: attached,
     onClick: () => {
       handleDelete();
     },
-    disabled: attached,
+    title: 'Delete',
     tooltip: attached
       ? 'Your volume must be detached before it can be deleted.'
       : undefined,

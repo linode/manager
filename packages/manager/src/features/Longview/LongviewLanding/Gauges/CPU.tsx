@@ -21,10 +21,10 @@ export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
 
 const CPUGauge: React.FC<CombinedProps> = (props) => {
   const {
-    longviewClientDataLoading: loading,
-    longviewClientDataError: error,
-    longviewClientData,
     lastUpdatedError,
+    longviewClientData,
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
   } = props;
 
   const numberOfCores = pathOr(

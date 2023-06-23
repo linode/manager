@@ -14,16 +14,19 @@ import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  label: {
-    fontFamily: theme.font.bold,
-    width: '30%',
+  errorStatus: {
+    color: theme.color.red,
   },
   icon: {
-    alignItems: 'center',
-    transition: 'color 225ms ease-in-out',
     '&:hover': {
       color: theme.color.red,
     },
+    alignItems: 'center',
+    transition: 'color 225ms ease-in-out',
+  },
+  label: {
+    fontFamily: theme.font.bold,
+    width: '30%',
   },
   monitorDescription: {
     paddingTop: theme.spacing(0.5),
@@ -32,9 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:before': {
       display: 'none',
     },
-  },
-  errorStatus: {
-    color: theme.color.red,
   },
 }));
 
@@ -50,8 +50,8 @@ export const MonitorRow: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {
-    monitor,
     issues,
+    monitor,
     openDialog,
     openHistoryDrawer,
     openMonitorDrawer,

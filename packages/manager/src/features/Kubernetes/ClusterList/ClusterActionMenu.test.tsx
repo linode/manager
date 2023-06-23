@@ -9,10 +9,10 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 const mockGetKubeConfig = jest.spyOn<any, any>(kube, 'getKubeConfig');
 
 const props = {
+  closeSnackbar: jest.fn(),
   clusterId: 123456,
   clusterLabel: 'my-cluster',
   enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
   openDialog: jest.fn(),
   ...reactRouterProps,
 };

@@ -13,12 +13,12 @@ interface Props {
 }
 
 export const DeleteOAuthClientDialog = ({
-  open,
-  onClose,
   id,
   label,
+  onClose,
+  open,
 }: Props) => {
-  const { mutateAsync, isLoading, error } = useDeleteOAuthClientMutation(id);
+  const { error, isLoading, mutateAsync } = useDeleteOAuthClientMutation(id);
 
   const onDelete = () => {
     mutateAsync().then(() => {

@@ -22,8 +22,8 @@ import { RevokeTrustedDeviceDialog } from './RevokeTrustedDevicesDialog';
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     lineHeight: '20px',
-    marginTop: theme.spacing(),
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(),
   },
   dates: {
     minWidth: 150,
@@ -40,22 +40,22 @@ const TrustedDevices = () => {
 
   const pagination = usePagination(1, preferenceKey);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'expiry',
       order: 'asc',
+      orderBy: 'expiry',
     },
     preferenceKey
   );
 
-  const { data, isLoading, error } = useTrustedDevicesQuery(
+  const { data, error, isLoading } = useTrustedDevicesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
     {
-      '+order_by': orderBy,
       '+order': order,
+      '+order_by': orderBy,
     }
   );
 

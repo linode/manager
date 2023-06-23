@@ -29,8 +29,8 @@ export interface BackoffOptions {
  * Default backoff method options.
  */
 export const defaultBackoffOptions: BackoffOptions = {
-  maxAttempts: 10,
   initialDelay: 0,
+  maxAttempts: 10,
 };
 
 /**

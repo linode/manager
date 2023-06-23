@@ -41,19 +41,19 @@ type ClassNames = 'root' | 'panelBody' | 'wrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-      width: '100%',
-      backgroundColor: theme.color.white,
-      marginTop: theme.spacing(3),
-    },
     panelBody: {
-      width: '100%',
       padding: `${theme.spacing(2)} 0 0`,
+      width: '100%',
+    },
+    root: {
+      backgroundColor: theme.color.white,
+      flexGrow: 1,
+      marginTop: theme.spacing(3),
+      width: '100%',
     },
     wrapper: {
-      padding: theme.spacing(1),
       minHeight: 120,
+      padding: theme.spacing(1),
     },
   });
 
@@ -100,8 +100,8 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         : `From backup ${heading}`;
     return {
       heading,
-      subheading,
       infoName,
+      subheading,
     };
   }
 
@@ -114,8 +114,8 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         checked={backup.id === Number(selectedBackupID)}
         onClick={(e) => {
           const backupInfo = {
-            title: backupInfo_.infoName,
             details: backupInfo_.subheading,
+            title: backupInfo_.infoName,
           };
           this.props.handleChangeBackup(backup.id);
           this.props.handleChangeBackupInfo(backupInfo);
@@ -128,10 +128,10 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      error,
       classes,
-      selectedLinodeID,
+      error,
       loading,
+      selectedLinodeID,
       selectedLinodeWithBackups,
     } = this.props;
 

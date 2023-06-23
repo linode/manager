@@ -81,5 +81,5 @@ export const useOrder = (
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
 
-  return { order, orderBy, handleOrderChange };
+  return { handleOrderChange, order, orderBy };
 };

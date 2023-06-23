@@ -23,7 +23,7 @@ export const makeResponse = (
   statusCode: number = 200
 ): Response => {
   return {
-    statusCode,
     body,
+    statusCode,
   };
 };

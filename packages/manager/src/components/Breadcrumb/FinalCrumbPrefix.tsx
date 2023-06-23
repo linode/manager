@@ -5,9 +5,9 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles({
   prefixComponentWrapper: {
     '& svg, & img': {
-      position: 'relative',
-      marginRight: 8,
       marginLeft: 4,
+      marginRight: 8,
+      position: 'relative',
       top: -2,
     },
   },

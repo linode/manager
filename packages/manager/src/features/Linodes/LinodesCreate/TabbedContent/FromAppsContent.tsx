@@ -57,44 +57,44 @@ const appCategoryOptions = appCategories.map((categoryName) => ({
 
 const styles = (theme: Theme) =>
   createStyles({
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        marginTop: '-130px !important',
-      },
+    filter: {
+      flexGrow: 1.5,
     },
     main: {
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%',
       },
     },
-    searchAndFilter: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      gap: theme.spacing(),
-      marginTop: theme.spacing(),
-      '& > h2': {
-        width: '100%',
-      },
-    },
     search: {
-      flexGrow: 10,
       '& .input': {
         maxWidth: 'none',
       },
+      flexGrow: 10,
     },
-    filter: {
-      flexGrow: 1.5,
+    searchAndFilter: {
+      '& > h2': {
+        width: '100%',
+      },
+      display: 'flex',
+      gap: theme.spacing(),
+      justifyContent: 'space-between',
+      marginTop: theme.spacing(),
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important',
+      },
     },
   });
 
 const errorResources = {
-  type: 'A plan selection',
-  region: 'A region selection',
-  label: 'A label',
-  root_pass: 'A root password',
   image: 'Image',
-  tags: 'Tags',
+  label: 'A label',
+  region: 'A region selection',
+  root_pass: 'A root password',
   stackscript_id: 'The selected App',
+  tags: 'Tags',
+  type: 'A plan selection',
 };
 
 interface Props {
@@ -172,13 +172,13 @@ const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
 class FromAppsContent extends React.Component<CombinedProps, State> {
   state: State = {
+    categoryFilter: null,
     detailDrawerOpen: false,
-    selectedScriptForDrawer: '',
     filteredApps: [],
+    isFiltering: false,
     isSearching: false,
     query: '',
-    categoryFilter: null,
-    isFiltering: false,
+    selectedScriptForDrawer: '',
   };
 
   handleChangeUDF = (key: string, value: string) => {
@@ -216,7 +216,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
         .split(' ');
 
       const matchingOCALabels = oneClickApps.reduce(
-        (acc: string[], { categories, name, alt_name, alt_description }) => {
+        (acc: string[], { alt_description, alt_name, categories, name }) => {
           const ocaAppString = `${name} ${alt_name} ${categories.join(
             ' '
           )} ${alt_description}`.toLocaleLowerCase();
@@ -239,10 +239,10 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       });
 
       this.setState({
-        isFiltering: false,
-        filteredApps: appsMatchingQuery,
-        isSearching: true,
         categoryFilter: null,
+        filteredApps: appsMatchingQuery,
+        isFiltering: false,
+        isSearching: true,
         query,
       });
     }
@@ -263,29 +263,29 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
     }
     this.setState({
       categoryFilter: categoryItem,
-      isSearching: false,
-      query: '',
       filteredApps: didUserSelectCategory ? instancesInCategory : [],
       isFiltering: didUserSelectCategory,
+      isSearching: false,
+      query: '',
     });
   };
 
   render() {
     const {
+      appInstances,
+      appInstancesError,
+      appInstancesLoading,
+      availableStackScriptImages: compatibleImages,
+      availableUserDefinedFields: userDefinedFields,
       classes,
+      errors,
       selectedImageID,
       selectedStackScriptID,
       selectedStackScriptLabel,
       selectedUDFs: udf_data,
-      availableUserDefinedFields: userDefinedFields,
-      availableStackScriptImages: compatibleImages,
-      updateImageID,
-      errors,
-      appInstances,
-      appInstancesError,
-      appInstancesLoading,
-      userCannotCreateLinode,
       setNumberOfNodesForAppCluster,
+      updateImageID,
+      userCannotCreateLinode,
     } = this.props;
 
     // ramda's curry placeholder conflicts with lodash so the lodash curry and placeholder is used here
@@ -310,11 +310,11 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
     const appLogo = renderLogo(selectedStackScriptLabel, logoUrl);
 
     const {
+      categoryFilter,
       filteredApps,
+      isFiltering,
       isSearching,
       query,
-      categoryFilter,
-      isFiltering,
     } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);

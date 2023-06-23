@@ -57,11 +57,11 @@ export const useStackScript = (images: Image[]): UseStackScriptReturn => {
   ) => {
     setStackScript({
       id,
-      username,
-      label,
       images: getCompatibleImages(images, stackScriptImages),
-      user_defined_fields,
+      label,
       udf_data: getDefaultUDFData(user_defined_fields),
+      user_defined_fields,
+      username,
     });
   };
 
@@ -95,11 +95,11 @@ export const useStackScript = (images: Image[]): UseStackScriptReturn => {
 // =============================================================================
 const emptyStackScriptState: StackScriptState = {
   id: undefined,
-  label: '',
   images: [],
-  username: '',
-  user_defined_fields: [],
+  label: '',
   udf_data: [],
+  user_defined_fields: [],
+  username: '',
 };
 
 const getCompatibleImages = (

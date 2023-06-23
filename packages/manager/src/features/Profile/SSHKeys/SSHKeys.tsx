@@ -38,7 +38,7 @@ export const SSHKeys = () => {
     page_size: pagination.pageSize,
   };
 
-  const { data, isLoading, error } = useSSHKeysQuery(params);
+  const { data, error, isLoading } = useSSHKeysQuery(params);
 
   const selectedKey = data?.data.find((key) => key.id === selectedKeyId);
 
@@ -153,8 +153,8 @@ export const SSHKeys = () => {
 };
 
 const StyledAddNewWrapperGridItem = styled(Grid)(({ theme }) => ({
-  paddingTop: 0,
   paddingRight: 0,
+  paddingTop: 0,
 
   [theme.breakpoints.down('md')]: {
     marginRight: theme.spacing(),

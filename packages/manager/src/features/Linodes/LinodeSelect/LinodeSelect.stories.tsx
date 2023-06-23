@@ -21,7 +21,7 @@ export const MultiSelect: StoryObj<LinodeMultiSelectProps> = {
 };
 
 const meta: Meta<LinodeSingleSelectProps | LinodeMultiSelectProps> = {
-  title: 'Components/Linode Select',
   component: LinodeSelectV2,
+  title: 'Components/Linode Select',
 };
 export default meta;

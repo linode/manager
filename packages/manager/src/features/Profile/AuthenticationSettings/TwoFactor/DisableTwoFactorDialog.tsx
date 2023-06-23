@@ -26,10 +26,10 @@ class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
 
   handleDisableTFA = (deviceId: number) => {
     const {
-      setLoadingAndClearErrors,
       clearLoadingAndErrors,
-      setErrorAndClearLoading,
       closeDialog,
+      setErrorAndClearLoading,
+      setLoadingAndClearErrors,
     } = this.props;
     setLoadingAndClearErrors();
     disableTwoFactor()
@@ -47,7 +47,7 @@ class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
       });
   };
   render() {
-    const { open, closeDialog, error, loading } = this.props;
+    const { closeDialog, error, loading, open } = this.props;
 
     return (
       <ConfirmationDialog
@@ -84,7 +84,7 @@ interface ActionsProps {
 
 class DialogActions extends React.PureComponent<ActionsProps, {}> {
   handleSubmit = () => {
-    const { handleDisable, deviceId } = this.props;
+    const { deviceId, handleDisable } = this.props;
     return handleDisable(deviceId);
   };
   render() {

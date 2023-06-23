@@ -8,12 +8,12 @@ interface CurrencyFormatterProps {
 }
 
 export const Currency = (props: CurrencyFormatterProps) => {
-  const { quantity, wrapInParentheses, dataAttrs } = props;
+  const { dataAttrs, quantity, wrapInParentheses } = props;
 
   const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
     currency: 'USD',
     minimumFractionDigits: props.decimalPlaces ?? 2,
+    style: 'currency',
   });
 
   const formattedQuantity = formatter.format(Math.abs(quantity));

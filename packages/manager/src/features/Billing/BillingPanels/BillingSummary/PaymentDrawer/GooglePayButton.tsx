@@ -19,46 +19,46 @@ import { SetSuccess } from './types';
 import { QueryClient, useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    position: 'relative',
-  },
   button: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.name === 'light' ? '#000' : '#fff',
-    border: 0,
-    borderRadius: 4,
-    cursor: 'pointer',
-    height: 35,
-    width: '100%',
-    transition: theme.transitions.create(['opacity']),
-    '&:hover': {
-      opacity: 0.8,
-      transition: 'none',
-    },
     '& svg': {
       color: theme.name === 'light' ? '#fff' : '#616161',
       height: 16,
     },
+    '&:hover': {
+      opacity: 0.8,
+      transition: 'none',
+    },
+    alignItems: 'center',
+    backgroundColor: theme.name === 'light' ? '#000' : '#fff',
+    border: 0,
+    borderRadius: 4,
+    cursor: 'pointer',
+    display: 'flex',
+    height: 35,
+    justifyContent: 'center',
     [theme.breakpoints.down('md')]: {
       marginLeft: 0,
       width: '101.5%',
     },
-  },
-  loading: {
-    padding: 4,
+    transition: theme.transitions.create(['opacity']),
+    width: '100%',
   },
   disabled: {
     opacity: 0.3,
   },
+  loading: {
+    padding: 4,
+  },
   mask: {
-    width: 200,
     height: 38,
-    position: 'absolute',
-    zIndex: 10,
     left: 0,
+    position: 'absolute',
     top: 0,
+    width: 200,
+    zIndex: 10,
+  },
+  root: {
+    position: 'relative',
   },
 }));
 
@@ -74,7 +74,7 @@ interface Props {
 export const GooglePayButton = (props: Props) => {
   const { classes, cx } = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
-  const { data, isLoading, error: clientTokenError } = useClientToken();
+  const { data, error: clientTokenError, isLoading } = useClientToken();
   const queryClient = useQueryClient();
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
@@ -82,15 +82,15 @@ export const GooglePayButton = (props: Props) => {
   const { data: account } = useAccount();
 
   const {
-    transactionInfo,
     disabled: disabledDueToProcessing,
-    setSuccess,
+    renderError,
     setError,
     setProcessing,
-    renderError,
+    setSuccess,
+    transactionInfo,
   } = props;
 
-  const { min, max } = getPaymentLimits(account?.balance);
+  const { max, min } = getPaymentLimits(account?.balance);
 
   const disabledDueToPrice =
     +transactionInfo.totalPrice < min || +transactionInfo.totalPrice > max;

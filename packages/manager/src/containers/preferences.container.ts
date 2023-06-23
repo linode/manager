@@ -24,9 +24,9 @@ const withPreferences = <Props>(
 
   return React.createElement(Component, {
     ...props,
-    preferences,
     getUserPreferences: () =>
       refetch().then(({ data }) => data ?? Promise.reject()),
+    preferences,
     updateUserPreferences,
   });
 };

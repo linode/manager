@@ -16,20 +16,20 @@ import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { truncateEnd } from 'src/utilities/truncate';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(),
-  },
   button: {
     ...theme.applyLinkStyles,
     display: 'flex',
   },
-  text: {
-    fontSize: '0.875rem',
-    lineHeight: '1.25rem',
-  },
   header: {
     fontSize: '1rem',
     marginBottom: theme.spacing(),
+  },
+  root: {
+    marginBottom: theme.spacing(),
+  },
+  text: {
+    fontSize: '0.875rem',
+    lineHeight: '1.25rem',
   },
 }));
 
@@ -73,7 +73,7 @@ export interface IncidentProps {
 }
 
 export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
-  const { message, status: _status, title, impact, href } = props;
+  const { href, impact, message, status: _status, title } = props;
   const status = _status ?? '';
   const classes = useStyles();
 
@@ -92,8 +92,8 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
       className={classes.root}
       preferenceKey={preferenceKey}
       options={{
-        label: preferenceKey,
         expiry: DateTime.utc().plus({ days: 1 }).toISO(),
+        label: preferenceKey,
       }}
     >
       <Box display="flex" flexDirection="column">

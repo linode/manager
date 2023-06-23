@@ -29,23 +29,23 @@ import type { Category } from './shared';
 import { parseFirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  actions: {
+    float: 'right',
+  },
   copy: {
     fontSize: '0.875rem',
     lineHeight: 1.5,
     paddingBottom: theme.spacing(1),
-  },
-  table: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(4),
-  },
-  actions: {
-    float: 'right',
   },
   mobileSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
+  },
+  table: {
+    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -64,7 +64,7 @@ interface Drawer {
 
 const FirewallRulesLanding = (props: Props) => {
   const classes = useStyles();
-  const { firewallID, rules, disabled } = props;
+  const { disabled, firewallID, rules } = props;
   const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
     firewallID
   );
@@ -94,9 +94,9 @@ const FirewallRulesLanding = (props: Props) => {
    * Component state and handlers
    */
   const [ruleDrawer, setRuleDrawer] = React.useState<Drawer>({
-    mode: 'create',
     category: 'inbound',
     isOpen: false,
+    mode: 'create',
   });
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
@@ -114,10 +114,10 @@ const FirewallRulesLanding = (props: Props) => {
     idx?: number
   ) =>
     setRuleDrawer({
-      mode,
-      ruleIdx: idx,
       category,
       isOpen: true,
+      mode,
+      ruleIdx: idx,
     });
 
   const closeRuleDrawer = () => setRuleDrawer({ ...ruleDrawer, isOpen: false });
@@ -142,12 +142,12 @@ const FirewallRulesLanding = (props: Props) => {
 
   const handleAddRule = (category: Category, rule: FirewallRuleType) => {
     const dispatch = dispatchFromCategory(category);
-    dispatch({ type: 'NEW_RULE', rule });
+    dispatch({ rule, type: 'NEW_RULE' });
   };
 
   const handleCloneRule = (category: Category, idx: number) => {
     const dispatch = dispatchFromCategory(category);
-    dispatch({ type: 'CLONE_RULE', idx });
+    dispatch({ idx, type: 'CLONE_RULE' });
   };
 
   const handleReorder = (
@@ -156,7 +156,7 @@ const FirewallRulesLanding = (props: Props) => {
     endIdx: number
   ) => {
     const dispatch = dispatchFromCategory(category);
-    dispatch({ type: 'REORDER', startIdx, endIdx });
+    dispatch({ endIdx, startIdx, type: 'REORDER' });
   };
 
   const handleEditRule = (
@@ -170,21 +170,21 @@ const FirewallRulesLanding = (props: Props) => {
 
     const dispatch = dispatchFromCategory(category);
     dispatch({
-      type: 'MODIFY_RULE',
-      modifiedRule: rule,
       idx: ruleDrawer.ruleIdx,
+      modifiedRule: rule,
+      type: 'MODIFY_RULE',
     });
   };
 
   const handleDeleteRule = (category: Category, idx: number) => {
     const dispatch = dispatchFromCategory(category);
-    dispatch({ type: 'DELETE_RULE', idx });
+    dispatch({ idx, type: 'DELETE_RULE' });
   };
 
   const handleUndo = (category: Category, idx: number) => {
     const dispatch = dispatchFromCategory(category);
 
-    dispatch({ type: 'UNDO', idx });
+    dispatch({ idx, type: 'UNDO' });
   };
 
   const applyChanges = () => {
@@ -200,8 +200,8 @@ const FirewallRulesLanding = (props: Props) => {
 
     const finalRules = {
       inbound: preparedRules.inbound.map(stripExtendedFields),
-      outbound: preparedRules.outbound.map(stripExtendedFields),
       inbound_policy: policy.inbound,
+      outbound: preparedRules.outbound.map(stripExtendedFields),
       outbound_policy: policy.outbound,
     };
 
@@ -209,8 +209,8 @@ const FirewallRulesLanding = (props: Props) => {
       .then((_rules) => {
         setSubmitting(false);
         // Reset editor state.
-        inboundDispatch({ type: 'RESET', rules: _rules.inbound ?? [] });
-        outboundDispatch({ type: 'RESET', rules: _rules.outbound ?? [] });
+        inboundDispatch({ rules: _rules.inbound ?? [], type: 'RESET' });
+        outboundDispatch({ rules: _rules.outbound ?? [], type: 'RESET' });
       })
       .catch((err) => {
         setSubmitting(false);
@@ -228,13 +228,13 @@ const FirewallRulesLanding = (props: Props) => {
               thisError,
             ]);
           } else {
-            const { idx, category } = parsedError;
+            const { category, idx } = parsedError;
 
             const dispatch = dispatchFromCategory(category as Category);
             dispatch({
-              type: 'SET_ERROR',
-              idx,
               error: parsedError,
+              idx,
+              type: 'SET_ERROR',
             });
           }
         }
@@ -270,7 +270,7 @@ const FirewallRulesLanding = (props: Props) => {
   return (
     <>
       <Prompt when={hasUnsavedChanges} confirmWhenLeaving={true}>
-        {({ isModalOpen, handleCancel, handleConfirm }) => {
+        {({ handleCancel, handleConfirm, isModalOpen }) => {
           return (
             <ConfirmationDialog
               open={isModalOpen}
@@ -407,7 +407,7 @@ interface DiscardChangesDialogProps {
 
 export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.memo(
   (props) => {
-    const { isOpen, handleClose, handleDiscard } = props;
+    const { handleClose, handleDiscard, isOpen } = props;
 
     const actions = React.useCallback(
       () => (

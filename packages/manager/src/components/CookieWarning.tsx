@@ -25,10 +25,10 @@ const CookieWarning: React.FC<{}> = () => {
         aria-describedby="external-site"
         rel="noopener noreferrer"
         style={{
-          position: 'absolute',
           bottom: 0,
-          right: 0,
           margin: '1em',
+          position: 'absolute',
+          right: 0,
         }}
       >
         :)

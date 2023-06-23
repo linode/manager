@@ -51,7 +51,7 @@ export const SummaryPanel = () => {
             <Typography variant="body1" data-qa-ports>
               <strong>Ports: </strong>
               {configPorts?.length === 0 && 'None'}
-              {configPorts?.map(({ port, configId }, i) => (
+              {configPorts?.map(({ configId, port }, i) => (
                 <React.Fragment key={configId}>
                   <Link
                     to={`/nodebalancers/${nodebalancer?.id}/configurations/${configId}`}
@@ -132,10 +132,10 @@ const StyledSummarySectionWrapper = styled('div', {
 const StyledSummarySection = styled(Paper, {
   label: 'StyledSummarySection',
 })(({ theme }) => ({
-  padding: theme.spacing(2.5),
+  height: '93%',
   marginBottom: theme.spacing(2),
   minHeight: '160px',
-  height: '93%',
+  padding: theme.spacing(2.5),
 }));
 
 const StyledTitle = styled(Typography, {
@@ -150,20 +150,20 @@ const StyledSection = styled('div', {
   marginBottom: theme.spacing(1),
   ...theme.typography.body1,
   '& .dif': {
-    position: 'relative',
-    width: 'auto',
     '& .chip': {
       position: 'absolute',
-      top: '-4px',
       right: -10,
+      top: '-4px',
     },
+    position: 'relative',
+    width: 'auto',
   },
 }));
 
 const StyledIPGrouping = styled('div', {
   label: 'StyledIPGrouping',
 })(() => ({
-  margin: '-2px 0 0 2px',
   display: 'flex',
   flexDirection: 'column',
+  margin: '-2px 0 0 2px',
 }));

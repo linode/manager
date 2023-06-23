@@ -63,8 +63,8 @@ const connected = <OwnProps extends {}>(
 
       return {
         longviewClientData: pathOr({}, ['data'], foundClient),
-        longviewClientDataLoading: pathOr(true, ['loading'], foundClient),
         longviewClientDataError: path(['error'], foundClient),
+        longviewClientDataLoading: pathOr(true, ['loading'], foundClient),
         longviewClientLastUpdated: path(['lastUpdated'], foundClient),
       };
     },
@@ -72,8 +72,8 @@ const connected = <OwnProps extends {}>(
       getClientStats: (api_key, lastUpdated) =>
         dispatch(
           getClientStats({
-            clientID: supplyClientID(ownProps),
             api_key,
+            clientID: supplyClientID(ownProps),
             lastUpdated,
           })
         ),

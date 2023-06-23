@@ -36,9 +36,9 @@ interface Props {
 }
 
 export const PayPalChip = (props: Props) => {
-  const { onClose, disabled, setProcessing, renderError, setMessage } = props;
-  const { data, isLoading, error: clientTokenError } = useClientToken();
-  const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  const { disabled, onClose, renderError, setMessage, setProcessing } = props;
+  const { data, error: clientTokenError, isLoading } = useClientToken();
+  const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -79,9 +79,9 @@ export const PayPalChip = (props: Props) => {
         type: 'resetOptions',
         value: {
           ...options,
-          vault: true,
           commit: false,
           intent: 'tokenize',
+          vault: true,
         },
       });
     }
@@ -109,9 +109,9 @@ export const PayPalChip = (props: Props) => {
 
   const onNonce = (nonce: string, queryClient: QueryClient) => {
     addPaymentMethod({
-      type: 'payment_method_nonce',
       data: { nonce },
       is_default: true,
+      type: 'payment_method_nonce',
     })
       .then(() => {
         queryClient.invalidateQueries(`${accountPaymentKey}-all`);

@@ -24,8 +24,8 @@ beforeEach(() => {
   cy.wrap([]).as('linodeApiV4Request');
   cy.intercept(
     {
-      url: /\/v4(?:beta)?\/.*/,
       middleware: true,
+      url: /\/v4(?:beta)?\/.*/,
     },
     (req) => {
       requests++;

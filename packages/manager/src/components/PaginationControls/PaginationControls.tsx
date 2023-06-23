@@ -9,7 +9,7 @@ export interface Props {
 }
 
 export const PaginationControls = (props: Props) => {
-  const { count, page, pageSize, onClickHandler } = props;
+  const { count, onClickHandler, page, pageSize } = props;
 
   return (
     <Pagination

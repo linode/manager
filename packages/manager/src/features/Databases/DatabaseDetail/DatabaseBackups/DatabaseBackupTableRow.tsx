@@ -13,7 +13,7 @@ interface Props {
 }
 
 const BackupTableRow: React.FC<Props> = ({ backup, onRestore }) => {
-  const { id, created } = backup;
+  const { created, id } = backup;
 
   const { data: profile } = useProfile();
 

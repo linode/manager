@@ -14,10 +14,10 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(1),
       borderBottom: `1px solid ${theme.palette.divider}`,
-      width: '100%',
       margin: 0,
+      padding: theme.spacing(1),
+      width: '100%',
     },
   });
 

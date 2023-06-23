@@ -17,6 +17,8 @@ jest.mock('src/hooks/useFlags', () => ({
 
 const props = {
   entity: 'linodes',
+  groupSize: 5,
+  loading: false,
   results: [
     searchbarResult1,
     searchbarResult2,
@@ -25,16 +27,14 @@ const props = {
     searchbarResult1,
     searchbarResult2,
   ],
-  loading: false,
-  groupSize: 5,
   showMore: false,
   toggle: jest.fn(),
 };
 
 const emptyProps = {
   entity: 'linodes',
-  results: [],
   groupSize: 5,
+  results: [],
   showMore: false,
   toggle: jest.fn(),
 };

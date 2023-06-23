@@ -86,20 +86,20 @@ export const PrimaryNav = (props: Props) => {
 
   const {
     data: oneClickApps,
-    isLoading: oneClickAppsLoading,
     error: oneClickAppsError,
+    isLoading: oneClickAppsLoading,
   } = useStackScriptsOCA(enableMarketplacePrefetch);
 
   const {
     data: clusters,
-    isLoading: clustersLoading,
     error: clustersError,
+    isLoading: clustersLoading,
   } = useObjectStorageClusters(enableObjectPrefetch);
 
   const {
     data: buckets,
-    isLoading: bucketsLoading,
     error: bucketsError,
+    isLoading: bucketsLoading,
   } = useObjectStorageBuckets(clusters, enableObjectPrefetch);
 
   const allowObjPrefetch =
@@ -135,17 +135,17 @@ export const PrimaryNav = (props: Props) => {
     () => [
       [
         {
-          hide: !_isManagedAccount,
           display: 'Managed',
+          hide: !_isManagedAccount,
           href: '/managed',
           icon: <Managed />,
         },
       ],
       [
         {
+          activeLinks: ['/linodes', '/linodes/create'],
           display: 'Linodes',
           href: '/linodes',
-          activeLinks: ['/linodes', '/linodes/create'],
           icon: <Linode />,
         },
         {
@@ -169,12 +169,12 @@ export const PrimaryNav = (props: Props) => {
           icon: <StackScript />,
         },
         {
-          display: 'Images',
-          href: '/images',
           activeLinks: [
             '/images/create/create-image',
             '/images/create/upload-image',
           ],
+          display: 'Images',
+          href: '/images',
           icon: <Image />,
         },
       ],
@@ -185,28 +185,28 @@ export const PrimaryNav = (props: Props) => {
           icon: <Domain />,
         },
         {
-          hide: !showDatabases,
           display: 'Databases',
+          hide: !showDatabases,
           href: '/databases',
           icon: <Database />,
           isBeta: flags.databaseBeta,
         },
         {
+          activeLinks: ['/kubernetes/create'],
           display: 'Kubernetes',
           href: '/kubernetes/clusters',
-          activeLinks: ['/kubernetes/create'],
           icon: <Kubernetes />,
         },
         {
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
           activeLinks: [
             '/object-storage/buckets',
             '/object-storage/access-keys',
           ],
+          display: 'Object Storage',
+          href: '/object-storage/buckets',
           icon: <Storage />,
-          prefetchRequestFn: prefetchObjectStorage,
           prefetchRequestCondition: allowObjPrefetch,
+          prefetchRequestFn: prefetchObjectStorage,
         },
         {
           display: 'Longview',
@@ -214,12 +214,12 @@ export const PrimaryNav = (props: Props) => {
           icon: <Longview />,
         },
         {
+          attr: { 'data-qa-one-click-nav-btn': true },
           display: 'Marketplace',
           href: '/linodes/create?type=One-Click',
-          attr: { 'data-qa-one-click-nav-btn': true },
           icon: <OCA />,
-          prefetchRequestFn: prefetchMarketplace,
           prefetchRequestCondition: allowMarketplacePrefetch,
+          prefetchRequestFn: prefetchMarketplace,
         },
       ],
       [
@@ -286,8 +286,8 @@ export const PrimaryNav = (props: Props) => {
       </Grid>
       <div
         className={cx({
-          ['fade-in-table']: true,
           [classes.fadeContainer]: true,
+          ['fade-in-table']: true,
         })}
       >
         {primaryLinkGroups.map((thisGroup, idx) => {
@@ -304,11 +304,11 @@ export const PrimaryNav = (props: Props) => {
               />
               {filteredLinks.map((thisLink) => {
                 const props = {
-                  key: thisLink.display,
                   closeMenu,
                   isCollapsed,
-                  locationSearch: location.search,
+                  key: thisLink.display,
                   locationPathname: location.pathname,
+                  locationSearch: location.search,
                   ...thisLink,
                 };
 
@@ -354,17 +354,17 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
   const { classes, cx } = useStyles();
 
   const {
+    activeLinks,
+    attr,
+    closeMenu,
+    display,
+    href,
+    icon,
     isBeta,
     isCollapsed,
-    closeMenu,
-    href,
-    onClick,
-    attr,
-    activeLinks,
-    icon,
-    display,
-    locationSearch,
     locationPathname,
+    locationSearch,
+    onClick,
     prefetchProps,
   } = props;
 
@@ -384,8 +384,8 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
       {...prefetchProps}
       {...attr}
       className={cx({
-        [classes.listItem]: true,
         [classes.active]: isActiveLink,
+        [classes.listItem]: true,
       })}
       aria-current={isActiveLink}
       data-testid={`menu-item-${display}`}
@@ -398,8 +398,8 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
       <p
         className={cx({
           [classes.linkItem]: true,
-          primaryNavLink: true,
           hiddenWhenCollapsed: isCollapsed,
+          primaryNavLink: true,
         })}
       >
         {display}
@@ -419,16 +419,16 @@ interface PrefetchPrimaryLinkProps {
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
 export const PrefetchPrimaryLink = React.memo(
   (props: PrimaryLinkProps & PrefetchPrimaryLinkProps) => {
-    const { makeRequest, cancelRequest } = usePrefetch(
+    const { cancelRequest, makeRequest } = usePrefetch(
       props.prefetchRequestFn,
       props.prefetchRequestCondition
     );
 
     const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-      onMouseEnter: makeRequest,
-      onFocus: makeRequest,
-      onMouseLeave: cancelRequest,
       onBlur: cancelRequest,
+      onFocus: makeRequest,
+      onMouseEnter: makeRequest,
+      onMouseLeave: cancelRequest,
     };
 
     return <PrimaryLink {...props} prefetchProps={prefetchProps} />;

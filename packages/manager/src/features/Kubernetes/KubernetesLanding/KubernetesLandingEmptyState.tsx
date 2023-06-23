@@ -17,15 +17,15 @@ export const KubernetesEmptyState = () => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Cluster',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Cluster',
             });
             push('/kubernetes/create');
           },
-          children: 'Create Cluster',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

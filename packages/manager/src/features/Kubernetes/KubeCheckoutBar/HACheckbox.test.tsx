@@ -13,7 +13,7 @@ const shouldRender = HIGH_AVAILABILITY_PRICE !== undefined;
 
 describe('HACheckbox', () => {
   it('the component should render', () => {
-    const { getByTestId, container } = renderWithTheme(
+    const { container, getByTestId } = renderWithTheme(
       <HACheckbox {...props} />
     );
 

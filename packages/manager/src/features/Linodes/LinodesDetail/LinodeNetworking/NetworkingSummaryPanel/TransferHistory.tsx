@@ -26,28 +26,28 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import PendingIcon from 'src/assets/icons/pending.svg';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  arrowIconOuter: {
-    ...theme.applyLinkStyles,
-    display: 'flex',
-  },
-  arrowIconInner: {
-    fontSize: '1rem',
+  arrowIconDisabled: {
+    cursor: 'not-allowed',
+    fill: theme.color.grey1,
   },
   arrowIconForward: {
     transform: 'rotate(180deg)',
   },
-  arrowIconDisabled: {
-    fill: theme.color.grey1,
-    cursor: 'not-allowed',
+  arrowIconInner: {
+    fontSize: '1rem',
   },
-  loading: {
+  arrowIconOuter: {
+    ...theme.applyLinkStyles,
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 100,
   },
   graphHeaderContainer: {
     borderBottom: `1px solid ${theme.color.grey6}`,
+  },
+  loading: {
+    alignItems: 'center',
+    display: 'flex',
+    height: 100,
+    justifyContent: 'center',
   },
 }));
 
@@ -57,7 +57,7 @@ interface Props {
 }
 
 export const TransferHistory: React.FC<Props> = (props) => {
-  const { linodeID, linodeCreated } = props;
+  const { linodeCreated, linodeID } = props;
 
   const { classes, cx } = useStyles();
 
@@ -70,12 +70,12 @@ export const TransferHistory: React.FC<Props> = (props) => {
 
   const now = DateTime.utc();
 
-  const { year, month, humanizedDate } = parseMonthOffset(monthOffset, now);
+  const { humanizedDate, month, year } = parseMonthOffset(monthOffset, now);
 
   const {
     data: stats,
-    isLoading: statsLoading,
     error: statsError,
+    isLoading: statsLoading,
   } = useLinodeStatsByDate(linodeID, year, month, true, linodeCreated);
 
   const { data: transfer } = useLinodeTransferByDate(
@@ -188,8 +188,8 @@ export const TransferHistory: React.FC<Props> = (props) => {
         showToday={true}
         data={[
           {
-            borderColor: 'transparent',
             backgroundColor: '#5ad865',
+            borderColor: 'transparent',
             data: combinedData,
             label: 'Public Outbound Traffic',
           },
@@ -233,8 +233,8 @@ export const TransferHistory: React.FC<Props> = (props) => {
           >
             <ArrowBackIosIcon
               className={cx({
-                [classes.arrowIconInner]: true,
                 [classes.arrowIconDisabled]: monthOffset === maxMonthOffset,
+                [classes.arrowIconInner]: true,
               })}
             />
           </button>
@@ -251,9 +251,9 @@ export const TransferHistory: React.FC<Props> = (props) => {
           >
             <ArrowBackIosIcon
               className={cx({
-                [classes.arrowIconInner]: true,
-                [classes.arrowIconForward]: true,
                 [classes.arrowIconDisabled]: monthOffset === minMonthOffset,
+                [classes.arrowIconForward]: true,
+                [classes.arrowIconInner]: true,
               })}
             />
           </button>
@@ -310,7 +310,7 @@ export const parseMonthOffset = (offset: number, date: DateTime) => {
     offset === 0 ? 'Last 30 Days' : resultingDate.toFormat('LLL y');
   const longHumanizedDate =
     offset === 0 ? 'Last 30 Days' : resultingDate.toFormat('LLLL y');
-  return { year, month, humanizedDate, longHumanizedDate };
+  return { humanizedDate, longHumanizedDate, month, year };
 };
 
 // We don't want to allow the user to scroll back further than the Linode was created,

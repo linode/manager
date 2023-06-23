@@ -14,17 +14,17 @@ const StyledResourcesLinkIcon = styled('span', {
   label: 'StyledResourcesLinkIcon',
   shouldForwardProp: (prop) => isPropValid(['icon', 'iconType'], prop),
 })<ResourcesLinkIconProps>(({ theme, ...props }) => ({
-  color: theme.textColors.linkActiveLight,
-  display: 'inline-block',
-  position: 'relative',
-  // nifty trick to avoid the icon from wrapping by itself after the last word
-  marginLeft: -10,
-  transform: 'translateX(18px)',
   '& svg': {
     height: props.iconType === 'external' ? 12 : 16,
     width: props.iconType === 'external' ? 12 : 16,
   },
+  color: theme.textColors.linkActiveLight,
+  display: 'inline-block',
+  // nifty trick to avoid the icon from wrapping by itself after the last word
+  marginLeft: -10,
+  position: 'relative',
   top: props.iconType === 'pointer' ? 3 : 0,
+  transform: 'translateX(18px)',
 }));
 
 export const ResourcesLinkIcon = (props: ResourcesLinkIconProps) => {

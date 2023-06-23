@@ -57,24 +57,24 @@ export const selectStyles = {
   control: (base: any) => ({
     ...base,
     backgroundColor: '#f4f4f4',
+    border: 0,
     margin: 0,
     width: '100%',
-    border: 0,
-  }),
-  input: (base: any) => ({ ...base, margin: 0, width: '100%', border: 0 }),
-  selectContainer: (base: any) => ({
-    ...base,
-    width: '100%',
-    margin: 0,
-    border: 0,
   }),
   dropdownIndicator: () => ({ display: 'none' }),
+  input: (base: any) => ({ ...base, border: 0, margin: 0, width: '100%' }),
+  menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
   placeholder: (base: any) => ({
     ...base,
-    fontSize: '0.875rem',
     color: base?.palette?.text?.primary,
+    fontSize: '0.875rem',
   }),
-  menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
+  selectContainer: (base: any) => ({
+    ...base,
+    border: 0,
+    margin: 0,
+    width: '100%',
+  }),
 };
 
 const searchDeps: ReduxEntity[] = ['linodes'];
@@ -363,21 +363,21 @@ export const createFinalOptions = (
   error: boolean = false
 ) => {
   const redirectOption = {
-    value: 'redirect',
     data: {
       searchText,
     },
     label: `View search results page for "${searchText}"`,
+    value: 'redirect',
   };
 
   const loadingResults = {
-    value: 'info',
     label: 'Loading results...',
+    value: 'info',
   };
 
   const searchError = {
-    value: 'error',
     label: 'Error retrieving search results',
+    value: 'error',
   };
 
   // Results aren't final as we're loading data
@@ -402,11 +402,11 @@ export const createFinalOptions = (
 
   // MORE THAN 20 RESULTS:
   const lastOption = {
-    value: 'redirect',
     data: {
       searchText,
     },
     label: `View all ${results.length} results for "${searchText}"`,
+    value: 'redirect',
   };
 
   const first20Results = take(20, results);

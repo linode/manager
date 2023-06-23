@@ -27,52 +27,52 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  slash: {
-    alignSelf: 'end',
-    padding: '0px !important',
-    '& p': {
-      fontSize: '1rem',
-      padding: `${theme.spacing(2)} 0`,
-    },
-  },
-  inputContainer: {
-    '& label': {
-      marginTop: 13,
-    },
-  },
   disabled: {
     opacity: 0.5,
   },
   errorText: {
     color: theme.color.red,
   },
-  resize: {
-    fontSize: 'inherit',
-    marginTop: -3.2,
-    marginLeft: -4,
-    marginRight: 0,
-    minHeight: 0,
-    padding: 0,
+  input: {
+    '& input': {
+      width: 70,
+    },
+    minWidth: 'auto',
+  },
+  inputContainer: {
+    '& label': {
+      marginTop: 13,
+    },
   },
   notice: {
     fontFamily: theme.font.bold,
     fontSize: 15,
   },
-  input: {
-    minWidth: 'auto',
-    '& input': {
-      width: 70,
+  resize: {
+    fontSize: 'inherit',
+    marginLeft: -4,
+    marginRight: 0,
+    marginTop: -3.2,
+    minHeight: 0,
+    padding: 0,
+  },
+  slash: {
+    '& p': {
+      fontSize: '1rem',
+      padding: `${theme.spacing(2)} 0`,
     },
+    alignSelf: 'end',
+    padding: '0px !important',
   },
 }));
 
 export const AutoscalePoolDialog = (props: Props) => {
-  const { nodePool, open, handleOpenResizeDrawer, onClose, clusterId } = props;
+  const { clusterId, handleOpenResizeDrawer, nodePool, onClose, open } = props;
   const autoscaler = nodePool?.autoscaler;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isLoading, error } = useUpdateNodePoolMutation(
+  const { error, isLoading, mutateAsync } = useUpdateNodePoolMutation(
     clusterId,
     nodePool?.id ?? -1
   );
@@ -92,21 +92,21 @@ export const AutoscalePoolDialog = (props: Props) => {
   };
 
   const {
-    values,
     errors,
-    isSubmitting,
     handleChange,
     handleReset,
     handleSubmit,
+    isSubmitting,
+    values,
   } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       enabled: autoscaler?.enabled ?? false,
-      min: autoscaler?.min ?? 1,
       max: autoscaler?.max ?? 1,
+      min: autoscaler?.min ?? 1,
     },
-    enableReinitialize: true,
-    validationSchema: AutoscaleNodePoolSchema,
     onSubmit,
+    validationSchema: AutoscaleNodePoolSchema,
   });
 
   const warning =
@@ -203,8 +203,8 @@ export const AutoscalePoolDialog = (props: Props) => {
           </Grid>
           <Grid
             className={classNames({
-              [classes.slash]: true,
               [classes.disabled]: !values.enabled,
+              [classes.slash]: true,
             })}
           >
             <Typography>/</Typography>

@@ -17,23 +17,23 @@ const StyledRoot = styled('div')(() => {
     minWidth: '24px',
     [theme.breakpoints.down('md')]: {
       background: theme.color.white,
+      bottom: '0 !important' as '0',
+      left: '0 !important' as '0',
       padding: theme.spacing(2),
       position: 'relative !important' as 'relative',
-      left: '0 !important' as '0',
-      bottom: '0 !important' as '0',
     },
   };
 });
 
 const StyledCheckoutSection = styled('div')(({ theme }) => ({
   padding: '12px 0',
+  [theme.breakpoints.down('lg')]: {
+    paddingBottom: `0px !important`,
+  },
   [theme.breakpoints.down('md')]: {
     '& button': {
       marginLeft: 0,
     },
-  },
-  [theme.breakpoints.down('lg')]: {
-    paddingBottom: `0px !important`,
   },
 }));
 

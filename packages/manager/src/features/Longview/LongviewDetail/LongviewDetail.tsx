@@ -66,10 +66,10 @@ export type CombinedProps = RouteComponentProps<{ id: string }> &
 export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   const {
     client,
+    longviewClientData,
+    longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
-    longviewClientsError,
-    longviewClientData,
   } = props;
 
   const { data: profile } = useProfile();
@@ -114,50 +114,50 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
             fields: ['listeningServices', 'activeConnections'],
           }).then((response) => response.DATA)
       : null,
-    { Ports: { listening: [], active: [] } },
+    { Ports: { active: [], listening: [] } },
     [clientAPIKey, lastUpdated]
   );
 
   const tabOptions = [
     {
-      title: 'Overview',
       display: true,
       routeName: `${props.match.url}/overview`,
+      title: 'Overview',
     },
     {
-      title: 'Processes',
       display: true,
       routeName: `${props.match.url}/processes`,
+      title: 'Processes',
     },
     {
-      title: 'Network',
       display: true,
       routeName: `${props.match.url}/network`,
+      title: 'Network',
     },
     {
-      title: 'Disks',
       display: true,
       routeName: `${props.match.url}/disks`,
+      title: 'Disks',
     },
     {
-      title: 'Apache',
       display: client && client.apps.apache,
       routeName: `${props.match.url}/apache`,
+      title: 'Apache',
     },
     {
-      title: 'Nginx',
       display: client && client.apps.nginx,
       routeName: `${props.match.url}/nginx`,
+      title: 'Nginx',
     },
     {
-      title: 'MySQL',
       display: client && client.apps.mysql,
       routeName: `${props.match.url}/mysql`,
+      title: 'MySQL',
     },
     {
-      title: 'Installation',
       display: true,
       routeName: `${props.match.url}/installation`,
+      title: 'Installation',
     },
   ];
 
@@ -342,9 +342,9 @@ export default compose<CombinedProps, {}>(
       own,
       {
         longviewClientsData,
+        longviewClientsError,
         longviewClientsLastUpdated,
         longviewClientsLoading,
-        longviewClientsError,
       }
     ) => {
       // This is explicitly typed, otherwise `client` would be typed as
@@ -354,9 +354,9 @@ export default compose<CombinedProps, {}>(
 
       return {
         client,
+        longviewClientsError,
         longviewClientsLastUpdated,
         longviewClientsLoading,
-        longviewClientsError,
       };
     }
   )

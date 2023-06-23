@@ -4,9 +4,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
   count: 100,
+  onClickHandler: jest.fn(),
   page: 1,
   pageSize: 25,
-  onClickHandler: jest.fn(),
 };
 
 describe('PaginationControls', () => {

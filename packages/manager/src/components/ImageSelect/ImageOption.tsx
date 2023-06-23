@@ -12,30 +12,30 @@ import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: `2px !important`, // Revisit use of important when we refactor the Select component
-    display: 'flex',
-    '& g': {
-      fill: theme.name === 'dark' ? 'white' : '#888f91',
-    },
-  },
-  focused: {
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-    '& g': {
-      fill: 'white',
-    },
-  },
-  selected: {
-    '& g': {
-      fill: theme.palette.primary.main,
-    },
-  },
   distroIcon: {
     fontSize: '1.8em',
     margin: `0 ${theme.spacing()}`,
     [theme.breakpoints.only('xs')]: {
       fontSize: '1.52em',
+    },
+  },
+  focused: {
+    '& g': {
+      fill: 'white',
+    },
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+  },
+  root: {
+    '& g': {
+      fill: theme.name === 'dark' ? 'white' : '#888f91',
+    },
+    display: 'flex',
+    padding: `2px !important`, // Revisit use of important when we refactor the Select component
+  },
+  selected: {
+    '& g': {
+      fill: theme.palette.primary.main,
     },
   },
 }));
@@ -51,15 +51,15 @@ interface ImageOptionProps extends OptionProps<any, any> {
 
 const ImageOption = (props: ImageOptionProps) => {
   const classes = useStyles();
-  const { data, label, isFocused, isSelected } = props;
+  const { data, isFocused, isSelected, label } = props;
   const flags = useFlags();
   const hasMetadataCustomerTag = useMetadataCustomerTag();
 
   return (
     <Option
       className={classNames({
-        [classes.root]: true,
         [classes.focused]: isFocused,
+        [classes.root]: true,
         [classes.selected]: isSelected,
       })}
       value={data.value}
@@ -68,9 +68,9 @@ const ImageOption = (props: ImageOptionProps) => {
     >
       <Box
         sx={{
+          alignItems: 'center',
           display: 'flex',
           flexDirection: 'row',
-          alignItems: 'center',
           justifyContent: 'flex-start',
         }}
       >
@@ -92,11 +92,11 @@ const ImageOption = (props: ImageOptionProps) => {
 };
 
 const sxCloudInitTooltipIcon = {
-  marginLeft: 'auto',
   '& svg': {
-    width: 20,
     height: 20,
+    width: 20,
   },
+  marginLeft: 'auto',
 };
 
 export { ImageOption };

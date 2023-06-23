@@ -23,19 +23,19 @@ import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles()(() => ({
-  root: {
-    position: 'relative',
-  },
   loading: {
     padding: 4,
   },
   mask: {
-    width: 200,
     height: 38,
-    position: 'absolute',
-    zIndex: 10,
     left: 0,
+    position: 'absolute',
     top: 0,
+    width: 200,
+    zIndex: 10,
+  },
+  root: {
+    position: 'relative',
   },
 }));
 
@@ -57,23 +57,23 @@ export const PayPalButton = (props: Props) => {
   const { classes } = useStyles();
   const {
     data,
-    isLoading: clientTokenLoading,
     error: clientTokenError,
+    isLoading: clientTokenLoading,
   } = useClientToken();
-  const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
   const { data: account } = useAccount();
   const queryClient = useQueryClient();
 
   const {
-    usd,
     disabled: disabledDueToProcessing,
-    setSuccess,
+    renderError,
     setError,
     setProcessing,
-    renderError,
+    setSuccess,
+    usd,
   } = props;
 
-  const { min, max } = getPaymentLimits(account?.balance);
+  const { max, min } = getPaymentLimits(account?.balance);
 
   const disabledDueToPrice = +usd < min || +usd > max;
 
@@ -113,9 +113,9 @@ export const PayPalButton = (props: Props) => {
         type: 'resetOptions',
         value: {
           ...options,
-          vault: false,
           commit: true,
           intent: 'capture',
+          vault: false,
         },
       });
     }
@@ -147,9 +147,9 @@ export const PayPalButton = (props: Props) => {
     actions: CreateOrderBraintreeActions
   ): Promise<string> => {
     return actions.braintree.createPayment({
-      flow: 'checkout',
-      currency: 'USD',
       amount: stateRef!.current!.amount,
+      currency: 'USD',
+      flow: 'checkout',
       intent: 'capture',
     });
   };

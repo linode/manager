@@ -26,7 +26,7 @@ export const MemoryGraph: React.FC<CombinedProps> = (props) => {
     timezone,
   } = props;
 
-  const { data, loading, error, request } = useGraphs(
+  const { data, error, loading, request } = useGraphs(
     ['memory'],
     clientAPIKey,
     start,
@@ -70,28 +70,28 @@ export const MemoryGraph: React.FC<CombinedProps> = (props) => {
       nativeLegend
       data={[
         {
-          label: 'Swap',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.swap,
+          borderColor: 'transparent',
           data: _convertData(swap, start, end, formatMemory),
+          label: 'Swap',
         },
         {
-          label: 'Buffers',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.buffers,
+          borderColor: 'transparent',
           data: _convertData(buffers, start, end, formatMemory),
+          label: 'Buffers',
         },
         {
-          label: 'Cache',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.cache,
+          borderColor: 'transparent',
           data: _convertData(cache, start, end, formatMemory),
+          label: 'Cache',
         },
         {
-          label: 'Used',
-          borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.used,
+          borderColor: 'transparent',
           data: _convertData(used, start, end, formatMemory),
+          label: 'Used',
         },
       ]}
     />

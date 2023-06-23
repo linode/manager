@@ -33,9 +33,9 @@ export const useLinodeActions = (): LinodesProps => {
     dispatch(_updateLinode(params));
 
   return {
-    requestLinodes,
-    getLinode,
     deleteLinode,
+    getLinode,
+    requestLinodes,
     updateLinode,
   };
 };

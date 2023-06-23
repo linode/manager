@@ -45,7 +45,7 @@ export const useImageQuery = (imageID: string, enabled = true) =>
 export const useCreateImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Image, APIError[], CreateImagePayload>(
-    ({ diskID, label, description, cloud_init }) => {
+    ({ cloud_init, description, diskID, label }) => {
       return createImage(diskID, label, description, cloud_init);
     },
     {
@@ -64,7 +64,7 @@ export const useUpdateImageMutation = () => {
     APIError[],
     { imageId: string; label?: string; description?: string }
   >(
-    ({ imageId, label, description }) =>
+    ({ description, imageId, label }) =>
       updateImage(imageId, label, description),
     {
       onSuccess(image) {
@@ -122,7 +122,7 @@ export const useUploadImageQuery = (payload: ImageUploadPayload) =>
   useMutation<UploadImageResponse, APIError[]>(() => uploadImage(payload));
 
 export const imageEventsHandler = ({ event, queryClient }: EventWithStore) => {
-  const { action, status, entity } = event;
+  const { action, entity, status } = event;
 
   // Keep the getAll query up to date so that when we have to use it, it contains accurate data
   queryClient.invalidateQueries(`${queryKey}-all`);

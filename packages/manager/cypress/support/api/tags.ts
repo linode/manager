@@ -11,7 +11,7 @@ import { depaginate } from 'support/util/paginate';
  */
 export const deleteAllTestTags = async (): Promise<void> => {
   const tags = await depaginate<Tag>((page: number) =>
-    getTags({ page_size: pageSize, page })
+    getTags({ page, page_size: pageSize })
   );
   const testTags = tags.filter((tag: Tag) => tag.label.startsWith(entityTag));
   for (const testTag of testTags) {

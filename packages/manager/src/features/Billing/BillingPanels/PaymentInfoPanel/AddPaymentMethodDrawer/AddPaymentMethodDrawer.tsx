@@ -27,17 +27,17 @@ export interface PaymentMessage {
 }
 
 const sxBox = {
-  paddingTop: '8px',
   paddingBottom: '8px',
+  paddingTop: '8px',
 };
 
 const sxTooltipIcon = {
-  '&:hover': {
-    opacity: 0.7,
-  },
   '& svg': {
     height: '28px',
     width: '28px',
+  },
+  '&:hover': {
+    opacity: 0.7,
   },
 };
 
@@ -80,9 +80,9 @@ export const AddPaymentMethodDrawer = (props: Props) => {
       {isProcessing ? (
         <LinearProgress
           sx={{
+            height: 5,
             marginBottom: 2,
             width: '100%',
-            height: 5,
           }}
         />
       ) : null}

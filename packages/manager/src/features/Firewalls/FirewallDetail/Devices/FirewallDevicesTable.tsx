@@ -22,7 +22,7 @@ interface Props {
 }
 
 const FirewallTable = (props: Props) => {
-  const { devices, error, loading, disabled, triggerRemoveDevice } = props;
+  const { devices, disabled, error, loading, triggerRemoveDevice } = props;
 
   const _error = error
     ? // @todo change to Devices or make dynamic when NBs are possible as Devices
@@ -34,8 +34,8 @@ const FirewallTable = (props: Props) => {
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({
-            data: paginatedAndOrderedData,
             count,
+            data: paginatedAndOrderedData,
             handlePageChange,
             handlePageSizeChange,
             page,

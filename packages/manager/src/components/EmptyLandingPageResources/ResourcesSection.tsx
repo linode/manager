@@ -93,18 +93,18 @@ const YoutubeLinks = (
 
 export const ResourcesSection = (props: ResourcesSectionProps) => {
   const {
-    buttonProps,
     CustomResource = () => null,
+    buttonProps,
     descriptionMaxWidth,
     gettingStartedGuidesData,
     headers,
     icon,
     linkAnalyticsEvent,
     showTransferDisplay,
-    youtubeLinkData,
     wide = false,
+    youtubeLinkData,
   } = props;
-  const { title, subtitle, description } = headers;
+  const { description, subtitle, title } = headers;
 
   return (
     <Placeholder

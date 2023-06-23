@@ -7,34 +7,34 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  copyContainer: {
-    backgroundColor: theme.color.grey5,
-    margin: `${theme.spacing(1)} 0`,
-    borderRadius: theme.shape.borderRadius,
-    maxWidth: '100%',
+  apiKey: {
+    color: theme.color.grey1,
   },
   copyCode: {
     overflowX: 'auto',
   },
-  apiKey: {
-    color: theme.color.grey1,
+  copyContainer: {
+    backgroundColor: theme.color.grey5,
+    borderRadius: theme.shape.borderRadius,
+    margin: `${theme.spacing(1)} 0`,
+    maxWidth: '100%',
   },
   instruction: {
-    width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: 'auto',
       '&:not(:first-of-type)': {
-        position: 'relative',
-        marginLeft: theme.spacing(2),
-        paddingLeft: theme.spacing(2),
         '&:before': {
           content: "'|'",
+          left: `calc(-${theme.spacing(1)} + 2px)`,
           position: 'absolute',
           top: `calc(${theme.spacing(1)} - 3px)`,
-          left: `calc(-${theme.spacing(1)} + 2px)`,
         },
+        marginLeft: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+        position: 'relative',
       },
+      width: 'auto',
     },
+    width: '100%',
   },
 }));
 

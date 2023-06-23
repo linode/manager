@@ -28,32 +28,32 @@ interface Props {
 }
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
   '& .dif': {
-    position: 'relative',
-    width: 'auto',
     '& .MuiChip-root': {
       position: 'absolute',
-      top: '-4px',
       right: -10,
+      top: '-4px',
     },
+    position: 'relative',
+    width: 'auto',
   },
+  marginBottom: theme.spacing(1),
 }));
 
 const ContactInformation = (props: Props) => {
   const {
-    company,
-    firstName,
-    lastName,
     address1,
     address2,
     city,
-    state,
-    zip,
+    company,
     country,
     email,
+    firstName,
+    lastName,
     phone,
+    state,
     taxId,
+    zip,
   } = props;
 
   const history = useHistory<{

@@ -4,8 +4,8 @@ import { Meta, StoryObj } from '@storybook/react';
 import { HideShowText } from './HideShowText';
 
 const meta: Meta<typeof HideShowText> = {
-  title: 'Components/Hide Show Text',
   component: HideShowText,
+  title: 'Components/Hide Show Text',
 };
 
 type Story = StoryObj<typeof HideShowText>;

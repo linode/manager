@@ -27,36 +27,36 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      maxWidth: '100%',
-      display: 'flex',
       alignItems: 'center',
+      display: 'flex',
       justifyContent: 'flex-start',
+      maxWidth: '100%',
       position: 'relative',
     },
     searchBar: {
       maxWidth: '100%',
     },
     searchBoxInner: {
-      padding: theme.spacing(3),
-      backgroundColor: theme.color.grey2,
-      marginTop: 0,
       '& > div': {
         maxWidth: '100%',
       },
-    },
-    searchHeading: {
-      color: theme.color.black,
-      marginBottom: theme.spacing(2),
-      fontSize: '175%',
+      backgroundColor: theme.color.grey2,
+      marginTop: 0,
+      padding: theme.spacing(3),
     },
     searchField: {
       padding: theme.spacing(3),
     },
+    searchHeading: {
+      color: theme.color.black,
+      fontSize: '175%',
+      marginBottom: theme.spacing(2),
+    },
     searchIcon: {
-      marginRight: 0,
       '& svg': {
         color: theme.palette.text.primary,
       },
+      marginRight: 0,
     },
   });
 
@@ -165,7 +165,7 @@ export class SupportSearchLanding extends React.Component<
 }
 
 const styled = withStyles(styles);
-const searchable = withSearch({ hitsPerPage: 5, highlight: false });
+const searchable = withSearch({ highlight: false, hitsPerPage: 5 });
 const enhanced: any = compose(
   styled,
   searchable,

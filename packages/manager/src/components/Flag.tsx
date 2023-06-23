@@ -25,9 +25,9 @@ export const Flag = (props: Props) => {
 };
 
 const StyledFlag = styled('div', { label: 'StyledFlag' })(({ theme }) => ({
-  fontSize: '1.5rem',
   boxShadow:
     theme.palette.mode === 'light' ? `0px 0px 0px 1px #00000010` : undefined,
+  fontSize: '1.5rem',
   verticalAlign: 'top',
   width: '1.41rem',
 }));

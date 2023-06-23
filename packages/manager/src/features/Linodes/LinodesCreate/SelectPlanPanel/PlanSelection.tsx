@@ -134,8 +134,8 @@ export const PlanSelection = ({
               <TooltipIcon
                 status="help"
                 sxTooltipIcon={{
-                  paddingTop: '0px !important',
                   paddingBottom: '0px !important',
+                  paddingTop: '0px !important',
                 }}
                 text={tooltip}
                 tooltipPosition="right-end"

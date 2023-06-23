@@ -5,8 +5,8 @@ import FormControlLabel from '../core/FormControlLabel';
 import RadioGroup from '../core/RadioGroup';
 
 const meta: Meta<typeof Radio> = {
-  title: 'Components/Radio',
   component: Radio,
+  title: 'Components/Radio',
 };
 
 type Story = StoryObj<typeof Radio>;

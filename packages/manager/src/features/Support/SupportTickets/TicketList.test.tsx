@@ -67,7 +67,7 @@ describe('TicketList', () => {
       })
     );
 
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <TicketList filterStatus="open" />,
       {
         queryClient,

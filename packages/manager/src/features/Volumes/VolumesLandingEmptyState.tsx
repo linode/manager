@@ -17,15 +17,15 @@ export const VolumesLandingEmptyState = () => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Volume',
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Volume',
             });
             push('/volumes/create');
           },
-          children: 'Create Volume',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

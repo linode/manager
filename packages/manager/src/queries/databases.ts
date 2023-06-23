@@ -207,7 +207,7 @@ export const useRestoreFromBackupMutation = (
 
 export const databaseEventsHandler = (event: EventWithStore) => {
   const {
-    event: { action, status, entity },
+    event: { action, entity, status },
     queryClient,
   } = event;
 

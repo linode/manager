@@ -32,7 +32,7 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
-  const { onEdit, onRemove, ipType, ipAddress, readOnly } = props;
+  const { ipAddress, ipType, onEdit, onRemove, readOnly } = props;
 
   const showEdit =
     ipType !== 'IPv4 – Private' &&
@@ -48,20 +48,20 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
   const actions = [
     onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
       ? {
-          title: 'Delete',
           disabled: readOnly,
           onClick: () => {
             onRemove(ipAddress);
           },
+          title: 'Delete',
         }
       : null,
     onEdit && ipAddress && showEdit
       ? {
-          title: 'Edit RDNS',
           disabled: readOnly,
           onClick: () => {
             onEdit(ipAddress);
           },
+          title: 'Edit RDNS',
         }
       : null,
   ].filter(Boolean) as Action[];

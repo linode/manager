@@ -42,14 +42,14 @@ export const ListView: React.FC<RenderLinodesProps> = (props) => {
               openDialog('delete', linode.id, linode.label),
             onOpenMigrateDialog: () =>
               openDialog('migrate', linode.id, linode.label),
+            onOpenPowerDialog: (action) =>
+              openPowerActionDialog(action, linode.id, linode.label, []),
             onOpenRebuildDialog: () =>
               openDialog('rebuild', linode.id, linode.label),
             onOpenRescueDialog: () =>
               openDialog('rescue', linode.id, linode.label),
             onOpenResizeDialog: () =>
               openDialog('resize', linode.id, linode.label),
-            onOpenPowerDialog: (action) =>
-              openPowerActionDialog(action, linode.id, linode.label, []),
           }}
         />
       ))}

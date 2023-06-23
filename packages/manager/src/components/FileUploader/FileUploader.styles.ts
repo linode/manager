@@ -18,27 +18,27 @@ export const StyledDropZoneDiv = styled('div', {
       prop
     ),
 })<DropZoneClassProps>(({ theme, ...props }) => ({
-  position: 'relative',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
   backgroundColor: 'transparent',
   borderColor: theme.palette.primary.main,
   borderStyle: 'dashed',
   borderWidth: 1,
   color: theme.palette.primary.main,
+  display: 'flex',
+  flexDirection: 'row',
   height: '100%',
-  maxHeight: 400,
+  justifyContent: 'space-between',
   marginTop: theme.spacing(2),
+  maxHeight: 400,
   minHeight: 140,
   outline: 'none',
   overflow: 'auto',
   padding: theme.spacing(),
+  position: 'relative',
   transition: theme.transitions.create(['background-color', 'border-color']),
   ...(props.isDragActive && {
+    backgroundColor: theme.color.white,
     // The `active` class active when a user is hovering over the dropzone.
     borderColor: theme.palette.primary.light,
-    backgroundColor: theme.color.white,
   }),
   ...(props.isDragAccept && {
     // The `accept` class active when a user is hovering over the dropzone
@@ -71,9 +71,9 @@ export const StyledDropZoneContentDiv = styled('div', {
 })<{
   uploadZoneActive: boolean;
 }>(({ theme, ...props }) => ({
+  alignItems: 'center',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
   justifyContent: 'center',
   padding: theme.spacing(2),
   textAlign: 'center',

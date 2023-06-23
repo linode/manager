@@ -52,7 +52,7 @@ export const requestEvents = (
        * request response onto the stream one at a time.
        */
       reversed.forEach((event: Event) => {
-        events$.next({ event, store, queryClient });
+        events$.next({ event, queryClient, store });
       });
       inProgress = false;
     })

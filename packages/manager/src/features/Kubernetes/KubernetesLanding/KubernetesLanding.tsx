@@ -41,19 +41,19 @@ interface UpgradeDialogState {
 }
 
 const defaultDialogState = {
-  open: false,
   loading: false,
+  open: false,
   selectedClusterID: 0,
   selectedClusterLabel: '',
   selectedClusterNodePools: [],
 };
 
 const defaultUpgradeDialogState = {
+  currentVersion: '',
+  nextVersion: null,
   open: false,
   selectedClusterID: 0,
   selectedClusterLabel: '',
-  currentVersion: '',
-  nextVersion: null,
 };
 
 const preferenceKey = 'kubernetes';
@@ -71,20 +71,20 @@ export const KubernetesLanding = () => {
     setUpgradeDialogState,
   ] = React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
 
-  const { order, orderBy, handleOrderChange } = useOrder(
+  const { handleOrderChange, order, orderBy } = useOrder(
     {
-      orderBy: 'label',
       order: 'desc',
+      orderBy: 'label',
     },
     `${preferenceKey}-order`
   );
 
   const filter = {
-    ['+order_by']: orderBy,
     ['+order']: order,
+    ['+order_by']: orderBy,
   };
 
-  const { data, isLoading, error } = useKubernetesClustersQuery(
+  const { data, error, isLoading } = useKubernetesClustersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -98,10 +98,10 @@ export const KubernetesLanding = () => {
     currentVersion: string
   ) => {
     setUpgradeDialogState({
+      currentVersion,
       open: true,
       selectedClusterID: clusterID,
       selectedClusterLabel: clusterLabel,
-      currentVersion,
     });
   };
 
@@ -115,8 +115,8 @@ export const KubernetesLanding = () => {
     clusterPools: KubeNodePoolResponse[]
   ) => {
     setDialogState({
-      open: true,
       loading: false,
+      open: true,
       selectedClusterID: clusterID,
       selectedClusterLabel: clusterLabel,
       selectedClusterNodePools: clusterPools,

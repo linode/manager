@@ -19,8 +19,8 @@ import { useProfile } from 'src/queries/profile';
 export const AuthenticationSettings = () => {
   const {
     data: profile,
-    isLoading: profileLoading,
     error: profileError,
+    isLoading: profileLoading,
   } = useProfile();
   const authType = profile?.authentication_type ?? 'password';
   const twoFactor = Boolean(profile?.two_factor_auth);
@@ -98,7 +98,7 @@ export const StyledSecuritySettingsCopy = styled(Typography, {
 export const StyledMainCopy = styled(Typography, {
   label: 'StyledMainCopy',
 })(({ theme }) => ({
-  maxWidth: 960,
   lineHeight: '20px',
   marginTop: theme.spacing(),
+  maxWidth: 960,
 }));

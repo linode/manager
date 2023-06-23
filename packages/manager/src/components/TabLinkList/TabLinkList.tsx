@@ -13,7 +13,7 @@ interface TabLinkListProps {
   noLink?: boolean; // @todo: remove this prop if we use NavTab widely.
 }
 
-export const TabLinkList = ({ tabs, noLink }: TabLinkListProps) => {
+export const TabLinkList = ({ noLink, tabs }: TabLinkListProps) => {
   return (
     <TabList>
       {tabs.map((tab, _index) => {

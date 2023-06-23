@@ -45,21 +45,21 @@ interface EntityIconProps {
 }
 
 const iconMap = {
-  managed: ManagedIcon,
-  linode: LinodeIcon,
-  volume: VolumeIcon,
-  nodebalancer: NodeBalancerIcon,
-  firewall: FirewallIcon,
-  stackscript: StackScriptIcon,
-  image: ImageIcon,
-  domain: DomainIcon,
-  kubernetes: KubernetesIcon,
-  storage: StorageIcon,
-  longview: LongviewIcon,
-  marketplace: MarketplaceIcon,
-  object: ObjectIcon,
-  folder: FolderIcon,
   database: DatabaseIcon,
+  domain: DomainIcon,
+  firewall: FirewallIcon,
+  folder: FolderIcon,
+  image: ImageIcon,
+  kubernetes: KubernetesIcon,
+  linode: LinodeIcon,
+  longview: LongviewIcon,
+  managed: ManagedIcon,
+  marketplace: MarketplaceIcon,
+  nodebalancer: NodeBalancerIcon,
+  object: ObjectIcon,
+  stackscript: StackScriptIcon,
+  storage: StorageIcon,
+  volume: VolumeIcon,
 };
 
 const getIcon = (variant: EntityVariants) => {
@@ -68,13 +68,13 @@ const getIcon = (variant: EntityVariants) => {
 
 export const EntityIcon = (props: EntityIconProps) => {
   const {
-    variant,
-    status,
-    loading,
-    size,
     className,
+    loading,
     marginTop,
+    size,
+    status,
     style,
+    variant,
     ...rest
   } = props;
 

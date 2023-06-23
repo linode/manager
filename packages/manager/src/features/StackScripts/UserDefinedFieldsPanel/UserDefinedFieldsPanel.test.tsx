@@ -22,7 +22,7 @@ describe('UserDefinedFieldsPanel', () => {
         handleChange={() => null}
         udf_data={[{ name: 'cluster_size' }]}
         userDefinedFields={[
-          { name: 'cluster_size', label: 'Set Number of Nodes' },
+          { label: 'Set Number of Nodes', name: 'cluster_size' },
         ]}
         selectedLabel={''}
         selectedUsername={''}

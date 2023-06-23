@@ -12,16 +12,16 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { QueryClient } from 'react-query';
 
 const props: Props = {
+  combinedResults: [],
   entities: [],
   entitiesLoading: false,
-  searchResultsByEntity: emptyResults,
-  combinedResults: [],
-  search: jest.fn(),
   errors: {
     hasErrors: false,
     linodes: false,
     nodebalancers: false,
   },
+  search: jest.fn(),
+  searchResultsByEntity: emptyResults,
   ...reactRouterProps,
 };
 
@@ -55,7 +55,7 @@ describe('Component', () => {
       '?query=search',
       propsWithResults
     );
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <SearchLanding {...newProps} />,
       { queryClient }
     );

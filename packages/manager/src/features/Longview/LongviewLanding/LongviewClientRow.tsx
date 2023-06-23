@@ -24,16 +24,16 @@ import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  gaugeContainer: {
+    [theme.breakpoints.down('md')]: {
+      marginBottom: 30,
+    },
+  },
   root: {
     marginBottom: theme.spacing(4),
     padding: theme.spacing(3),
     [theme.breakpoints.up('md')]: {
       height: false,
-    },
-  },
-  gaugeContainer: {
-    [theme.breakpoints.down('md')]: {
-      marginBottom: 30,
     },
   },
 }));
@@ -52,19 +52,19 @@ const LongviewClientRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
-    clientID,
-    clientLabel,
     clientAPIKey,
-    triggerDeleteLongviewClient,
+    clientID,
     clientInstallKey,
+    clientLabel,
     openPackageDrawer,
+    triggerDeleteLongviewClient,
     updateLongviewClient,
   } = props;
 
   const {
+    authed,
     lastUpdated,
     lastUpdatedError,
-    authed,
   } = useClientLastUpdated(clientAPIKey, (_lastUpdated) =>
     props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
   );

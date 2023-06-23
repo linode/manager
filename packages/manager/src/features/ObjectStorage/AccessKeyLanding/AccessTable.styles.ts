@@ -25,7 +25,7 @@ export const StyledBucketCell = styled(TableCell, {
 
 export const StyledRadioRow = styled(TableRow, {
   label: 'StyledRadioRow',
-})<{ disabled: boolean; mode?: MODE }>(({ theme, disabled, mode }) => ({
+})<{ disabled: boolean; mode?: MODE }>(({ disabled, mode, theme }) => ({
   '& td ': {
     color: `${theme.palette.text.primary} !important`,
   },

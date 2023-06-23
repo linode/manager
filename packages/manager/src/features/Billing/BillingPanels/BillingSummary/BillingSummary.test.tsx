@@ -89,10 +89,10 @@ describe('BillingSummary', () => {
           balanceUninvoiced={5}
           paymentMethods={[]}
           promotions={promoFactory.buildList(1, {
-            summary: 'MY_PROMO_CODE',
+            credit_monthly_cap: '20.00',
             credit_remaining: '15.50',
             expire_dt: '2020-01-01T12:00:00',
-            credit_monthly_cap: '20.00',
+            summary: 'MY_PROMO_CODE',
           })}
         />
       </PayPalScriptProvider>
@@ -107,7 +107,7 @@ describe('BillingSummary', () => {
   it('displays promo service type unless the service type is all', () => {
     const promotions = [
       promoFactory.build(),
-      promoFactory.build({ summary: 'MY_PROMO_CODE', service_type: 'linode' }),
+      promoFactory.build({ service_type: 'linode', summary: 'MY_PROMO_CODE' }),
     ];
     renderWithTheme(
       <BillingSummary
@@ -131,7 +131,7 @@ describe('BillingSummary', () => {
   });
 
   it('opens "Make a Payment" drawer when "Make a payment." is clicked', () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>

@@ -17,8 +17,52 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    marginBottom: theme.spacing(2),
+  actionBtnsCtn: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: `${theme.spacing(1)} 0`,
+  },
+  caCertBtn: {
+    '& svg': {
+      marginRight: theme.spacing(),
+    },
+    '&:hover': {
+      backgroundColor: 'transparent',
+      opacity: 0.7,
+    },
+    '&[disabled]': {
+      '& g': {
+        stroke: '#cdd0d5',
+      },
+      '&:hover': {
+        backgroundColor: 'inherit',
+        textDecoration: 'none',
+      },
+      // Override disabled background color defined for dark mode
+      backgroundColor: 'transparent',
+      color: '#cdd0d5',
+      cursor: 'default',
+    },
+    color: theme.palette.primary.main,
+    fontFamily: theme.font.normal,
+    fontSize: '0.875rem',
+    fontWeight: theme.typography.fontWeightRegular,
+    lineHeight: '1.125rem',
+    marginLeft: theme.spacing(),
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+  },
+  connectionDetailsCtn: {
+    '& p': {
+      '& span': {
+        fontWeight: 'bold',
+      },
+      lineHeight: '1.5rem',
+    },
+    background: theme.bg.bgAccessRow,
+    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
+    padding: '8px 15px',
   },
   copyToolTip: {
     '& svg': {
@@ -28,87 +72,43 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     marginRight: 12,
   },
-  inlineCopyToolTip: {
-    display: 'inline-flex',
-    '& svg': {
-      height: `16px`,
-      width: `16px`,
-    },
-    marginLeft: 4,
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-  },
-  actionBtnsCtn: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: `${theme.spacing(1)} 0`,
-  },
-  connectionDetailsCtn: {
-    padding: '8px 15px',
-    background: theme.bg.bgAccessRow,
-    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
-    '& p': {
-      lineHeight: '1.5rem',
-      '& span': {
-        fontWeight: 'bold',
-      },
-    },
-  },
-  showBtn: {
-    color: theme.palette.primary.main,
-    marginLeft: theme.spacing(),
-    fontSize: '0.875rem',
-    minHeight: 'auto',
-    minWidth: 'auto',
-    padding: 0,
-  },
-  progressCtn: {
-    marginLeft: 22,
-    marginBottom: 2,
-    '& circle': {
-      stroke: theme.palette.primary.main,
-    },
-    alignSelf: 'flex-end',
-  },
   error: {
     color: theme.color.red,
     marginLeft: theme.spacing(2),
   },
-  caCertBtn: {
+  header: {
+    marginBottom: theme.spacing(2),
+  },
+  inlineCopyToolTip: {
     '& svg': {
-      marginRight: theme.spacing(),
+      height: `16px`,
+      width: `16px`,
     },
     '&:hover': {
-      opacity: 0.7,
       backgroundColor: 'transparent',
     },
-    color: theme.palette.primary.main,
-    marginLeft: theme.spacing(),
-    fontFamily: theme.font.normal,
-    fontWeight: theme.typography.fontWeightRegular,
-    fontSize: '0.875rem',
-    lineHeight: '1.125rem',
-    minHeight: 'auto',
-    minWidth: 'auto',
-    padding: 0,
-    '&[disabled]': {
-      // Override disabled background color defined for dark mode
-      backgroundColor: 'transparent',
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit',
-        textDecoration: 'none',
-      },
-      '& g': {
-        stroke: '#cdd0d5',
-      },
+    display: 'inline-flex',
+    marginLeft: 4,
+  },
+  progressCtn: {
+    '& circle': {
+      stroke: theme.palette.primary.main,
     },
+    alignSelf: 'flex-end',
+    marginBottom: 2,
+    marginLeft: 22,
   },
   provisioningText: {
     fontStyle: 'italic',
     fontWeight: 'lighter !important' as 'lighter',
+  },
+  showBtn: {
+    color: theme.palette.primary.main,
+    fontSize: '0.875rem',
+    marginLeft: theme.spacing(),
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
   },
 }));
 
@@ -117,8 +117,8 @@ interface Props {
 }
 
 const sxTooltipIcon = {
-  padding: '0px',
   marginLeft: '4px',
+  padding: '0px',
 };
 
 const privateHostCopy =
@@ -139,8 +139,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
 
   const {
     data: credentials,
-    isLoading: credentialsLoading,
     error: credentialsError,
+    isLoading: credentialsLoading,
     refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
@@ -327,9 +327,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                     >
                       <Typography
                         style={{
-                          marginTop: 0,
                           marginBottom: 0,
                           marginLeft: 16,
+                          marginTop: 0,
                         }}
                       >
                         <span style={{ fontWeight: 'normal' }}>{hostname}</span>

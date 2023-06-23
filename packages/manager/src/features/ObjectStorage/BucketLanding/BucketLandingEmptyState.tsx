@@ -17,16 +17,16 @@ export const BucketLandingEmptyState = () => {
     <ResourcesSection
       buttonProps={[
         {
+          children: 'Create Bucket',
+
           onClick: () => {
             sendEvent({
-              category: linkAnalyticsEvent.category,
               action: 'Click:button',
+              category: linkAnalyticsEvent.category,
               label: 'Create Bucket',
             });
             history.replace('/object-storage/buckets/create');
           },
-
-          children: 'Create Bucket',
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

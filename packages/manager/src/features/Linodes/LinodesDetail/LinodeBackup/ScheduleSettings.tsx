@@ -20,19 +20,19 @@ import {
 } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  chooseDay: {
+    '& .react-select__menu-list': {
+      maxHeight: 'none',
+    },
+    marginRight: theme.spacing(2),
+    minWidth: 150,
+  },
   scheduleAction: {
-    padding: 0,
     '& button': {
       marginLeft: 0,
       marginTop: theme.spacing(2),
     },
-  },
-  chooseDay: {
-    marginRight: theme.spacing(2),
-    minWidth: 150,
-    '& .react-select__menu-list': {
-      maxHeight: 'none',
-    },
+    padding: 0,
   },
 }));
 
@@ -41,7 +41,7 @@ interface Props {
   isReadOnly: boolean;
 }
 
-export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
+export const ScheduleSettings = ({ isReadOnly, linodeId }: Props) => {
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -49,9 +49,9 @@ export const ScheduleSettings = ({ linodeId, isReadOnly }: Props) => {
   const { data: linode } = useLinodeQuery(linodeId);
 
   const {
-    mutateAsync: updateLinode,
     error: updateLinodeError,
     isLoading: isUpdating,
+    mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
   const settingsForm = useFormik({

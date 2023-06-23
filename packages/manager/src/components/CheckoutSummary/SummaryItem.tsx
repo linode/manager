@@ -4,7 +4,7 @@ import Typography from '../core/Typography';
 import Grid from '../Grid';
 import { SummaryItem as Props } from './CheckoutSummary';
 
-export const SummaryItem = ({ title, details }: Props) => {
+export const SummaryItem = ({ details, title }: Props) => {
   return (
     <StyledGrid item>
       {title ? (
@@ -22,8 +22,8 @@ export const SummaryItem = ({ title, details }: Props) => {
 };
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
-  paddingTop: '0 !important',
-  paddingBottom: '0 !important',
-  marginTop: `${theme.spacing()} !important`,
   marginBottom: `${theme.spacing()} !important`,
+  marginTop: `${theme.spacing()} !important`,
+  paddingBottom: '0 !important',
+  paddingTop: '0 !important',
 }));

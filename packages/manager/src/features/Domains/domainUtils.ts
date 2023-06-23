@@ -69,18 +69,18 @@ export const generateDefaultDomainRecords = (
 
   const baseIPv4Requests = [
     createDomainRecord(domainID, {
-      type: 'A',
       target: ipv4,
+      type: 'A',
     }),
     createDomainRecord(domainID, {
-      type: 'A',
-      target: ipv4,
       name: 'www',
+      target: ipv4,
+      type: 'A',
     }),
     createDomainRecord(domainID, {
-      type: 'A',
-      target: ipv4,
       name: 'mail',
+      target: ipv4,
+      type: 'A',
     }),
   ];
 
@@ -90,23 +90,23 @@ export const generateDefaultDomainRecords = (
       ? [
           ...baseIPv4Requests,
           createDomainRecord(domainID, {
-            type: 'AAAA',
             target: cleanedIPv6,
+            type: 'AAAA',
           }),
           createDomainRecord(domainID, {
-            type: 'AAAA',
-            target: cleanedIPv6,
             name: 'www',
-          }),
-          createDomainRecord(domainID, {
-            type: 'AAAA',
             target: cleanedIPv6,
-            name: 'mail',
+            type: 'AAAA',
           }),
           createDomainRecord(domainID, {
-            type: 'MX',
+            name: 'mail',
+            target: cleanedIPv6,
+            type: 'AAAA',
+          }),
+          createDomainRecord(domainID, {
             priority: 10,
             target: `mail.${domain}`,
+            type: 'MX',
           }),
         ]
       : baseIPv4Requests

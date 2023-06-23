@@ -139,22 +139,22 @@ const ruleEditorReducer = (
         return;
       }
       const {
+        action: _action,
         addresses,
         description,
         label,
         ports,
         protocol,
-        action: _action,
       } = ruleToClone;
       draft.push([
         {
-          label,
-          description,
           action: _action,
           addresses,
+          description,
+          label,
+          originalIndex: draft.length,
           ports,
           protocol,
-          originalIndex: draft.length,
           status: 'NEW',
         },
       ]);

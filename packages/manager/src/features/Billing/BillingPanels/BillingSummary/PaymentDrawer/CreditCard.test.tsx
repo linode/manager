@@ -5,9 +5,9 @@ import * as React from 'react';
 
 it('Displays credit card type and last four digits', () => {
   const creditCardData: CreditCardData = {
-    last_four: '1111',
     card_type: 'Visa',
     expiry: '12/2022',
+    last_four: '1111',
   };
 
   const { getByText } = renderWithTheme(
@@ -19,9 +19,9 @@ it('Displays credit card type and last four digits', () => {
 
 it('Displays formatted expiration date for cards with expiration', () => {
   const creditCardData: CreditCardData = {
-    last_four: '1111',
     card_type: 'Visa',
     expiry: '12/2023',
+    last_four: '1111',
   };
 
   const { getByText } = renderWithTheme(
@@ -33,9 +33,9 @@ it('Displays formatted expiration date for cards with expiration', () => {
 
 it('Displays "expired" notice for cards that are expired', () => {
   const creditCardData: CreditCardData = {
-    last_four: '1111',
     card_type: 'Visa',
     expiry: '12/2021',
+    last_four: '1111',
   };
 
   const { getByText } = renderWithTheme(
@@ -47,9 +47,9 @@ it('Displays "expired" notice for cards that are expired', () => {
 
 it('Does not display expiration information for cards with no expiration date', () => {
   const creditCardData: CreditCardData = {
-    last_four: '1111',
     card_type: 'Visa',
     expiry: null,
+    last_four: '1111',
   };
 
   const { queryByText } = renderWithTheme(

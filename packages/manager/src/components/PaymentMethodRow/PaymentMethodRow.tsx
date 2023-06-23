@@ -20,8 +20,8 @@ interface Props {
 
 const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
-  const { paymentMethod, onDelete } = props;
-  const { type, is_default } = paymentMethod;
+  const { onDelete, paymentMethod } = props;
+  const { is_default, type } = paymentMethod;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -39,29 +39,29 @@ const PaymentMethodRow = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Make a Payment',
       onClick: () => {
         history.push({
           pathname: '/account/billing/make-payment/',
           state: { paymentMethod },
         });
       },
+      title: 'Make a Payment',
     },
     {
-      title: 'Make Default',
       disabled: paymentMethod.is_default,
+      onClick: () => makeDefault(paymentMethod.id),
+      title: 'Make Default',
       tooltip: paymentMethod.is_default
         ? 'This is already your default payment method.'
         : undefined,
-      onClick: () => makeDefault(paymentMethod.id),
     },
     {
-      title: 'Delete',
       disabled: paymentMethod.is_default,
+      onClick: onDelete,
+      title: 'Delete',
       tooltip: paymentMethod.is_default
         ? 'You cannot remove this payment method without setting a new default first.'
         : undefined,
-      onClick: onDelete,
     },
   ];
 
@@ -76,8 +76,8 @@ const PaymentMethodRow = (props: Props) => {
   };
 
   const sxBoxFlex = {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
   };
 
   return (
@@ -86,12 +86,12 @@ const PaymentMethodRow = (props: Props) => {
       data-testid={`payment-method-row-${paymentMethod.id}`}
       data-qa-payment-row={type}
       sx={{
-        '&:not(:last-of-type)': {
-          marginBottom: theme.spacing(),
-        },
         '&&': {
           // TODO: Remove "&&" when Paper has been refactored
           padding: 0,
+        },
+        '&:not(:last-of-type)': {
+          marginBottom: theme.spacing(),
         },
       }}
     >
@@ -108,10 +108,10 @@ const PaymentMethodRow = (props: Props) => {
         </Box>
         <Box
           sx={{
-            marginLeft: 'auto',
             '& button': {
               margin: 0,
             },
+            marginLeft: 'auto',
           }}
         >
           <ActionMenu

@@ -33,16 +33,16 @@ type CombinedProps = Props & WithTheme;
 export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
+    end,
     error,
     isToday,
     loading,
-    timezone,
-    start,
-    end,
-    theme,
     processesData,
-    processesLoading,
     processesError,
+    processesLoading,
+    start,
+    theme,
+    timezone,
   } = props;
 
   const classes = useStyles();
@@ -79,11 +79,11 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
   );
 
   const graphProps = {
-    timezone,
-    showToday: isToday,
-    loading,
     error,
+    loading,
     nativeLegend: true,
+    showToday: isToday,
+    timezone,
   };
 
   return (
@@ -96,10 +96,10 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
             ariaLabel="Requests Per Second Graph"
             data={[
               {
-                label: 'Requests',
-                borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
+                borderColor: 'transparent',
                 data: _convertData(totalAccesses, start, end),
+                label: 'Requests',
               },
             ]}
             {...graphProps}
@@ -119,15 +119,15 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
                 formatTooltip={formatNetworkTooltip}
                 data={[
                   {
-                    label: 'Throughput',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
+                    borderColor: 'transparent',
                     data: _convertData(
                       totalKBytes,
                       start,
                       end,
                       kilobytesToBytes
                     ),
+                    label: 'Throughput',
                   },
                 ]}
                 {...graphProps}
@@ -139,64 +139,64 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
                 ariaLabel="Workers Graph"
                 data={[
                   {
-                    label: 'Waiting',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.waiting,
+                    borderColor: 'transparent',
                     data: _convertData(workersWaiting, start, end),
+                    label: 'Waiting',
                   },
                   {
-                    label: 'Starting',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.starting,
+                    borderColor: 'transparent',
                     data: _convertData(workersStarting, start, end),
+                    label: 'Starting',
                   },
                   {
-                    label: 'Reading',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.reading,
+                    borderColor: 'transparent',
                     data: _convertData(workersReading, start, end),
+                    label: 'Reading',
                   },
                   {
-                    label: 'Sending',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.sending,
+                    borderColor: 'transparent',
                     data: _convertData(workersSending, start, end),
+                    label: 'Sending',
                   },
                   {
-                    label: 'Keepalive',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.keepAlive,
+                    borderColor: 'transparent',
                     data: _convertData(workersKeepAlive, start, end),
+                    label: 'Keepalive',
                   },
                   {
-                    label: 'DNS Lookup',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.DNSLookup,
+                    borderColor: 'transparent',
                     data: _convertData(workersDNSLookup, start, end),
+                    label: 'DNS Lookup',
                   },
                   {
-                    label: 'Closing',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.closing,
+                    borderColor: 'transparent',
                     data: _convertData(workersClosing, start, end),
+                    label: 'Closing',
                   },
                   {
-                    label: 'Logging',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.logging,
+                    borderColor: 'transparent',
                     data: _convertData(workersLogging, start, end),
+                    label: 'Logging',
                   },
                   {
-                    label: 'Finishing',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.finishing,
+                    borderColor: 'transparent',
                     data: _convertData(workersFinishing, start, end),
+                    label: 'Finishing',
                   },
                   {
-                    label: 'Cleanup',
-                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.cleanup,
+                    borderColor: 'transparent',
                     data: _convertData(workersCleanup, start, end),
+                    label: 'Cleanup',
                   },
                 ]}
                 {...graphProps}

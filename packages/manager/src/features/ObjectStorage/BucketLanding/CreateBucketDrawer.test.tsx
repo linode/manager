@@ -41,8 +41,8 @@ describe('CreateBucketDrawer', () => {
           ctx.json(
             makeResourcePage(
               objectStorageClusterFactory.buildList(1, {
-                region: 'us-east',
                 id: 'us-east-1',
+                region: 'us-east',
               })
             )
           )
@@ -56,10 +56,10 @@ describe('CreateBucketDrawer', () => {
     );
 
     const {
-      getByTestId,
+      findByText,
       getByLabelText,
       getByPlaceholderText,
-      findByText,
+      getByTestId,
     } = renderWithTheme(<CreateBucketDrawer {...props} />);
 
     userEvent.type(getByLabelText('Label'), 'my-test-bucket');

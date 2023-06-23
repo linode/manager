@@ -24,50 +24,16 @@ import {
 } from 'src/queries/kubernetes';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2.5)} ${theme.spacing(1)} ${theme.spacing(
-      2.5
-    )} ${theme.spacing(3)}`,
-  },
-  mainGridContainer: {
-    position: 'relative',
-  },
-  tags: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignSelf: 'stretch',
+  actionRow: {
+    '& button': {
+      alignItems: 'flex-start',
+    },
     alignItems: 'flex-end',
+    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'flex-end',
-    '&.MuiGrid-item': {
-      paddingBottom: 0,
-    },
-    // Tags Panel wrapper
-    '& > div:last-child': {
-      marginTop: 2,
-      marginBottom: 0,
-      width: '100%',
-    },
-    [theme.breakpoints.up('lg')]: {
-      '& .MuiChip-root': {
-        marginRight: 0,
-        marginLeft: 4,
-      },
-      // Add a Tag button
-      '& > div:first-of-type': {
-        justifyContent: 'flex-end',
-        marginTop: theme.spacing(4),
-      },
-      // Tags Panel wrapper
-      '& > div:last-child': {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'flex-end',
-      },
-    },
-    [theme.breakpoints.down('lg')]: {
-      width: '100%',
-    },
+    padding: '8px 0px',
   },
   dashboard: {
     '& svg': {
@@ -81,15 +47,49 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: '8px',
     },
   },
-  actionRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignSelf: 'stretch',
+  mainGridContainer: {
+    position: 'relative',
+  },
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: `${theme.spacing(2.5)} ${theme.spacing(1)} ${theme.spacing(
+      2.5
+    )} ${theme.spacing(3)}`,
+  },
+  tags: {
+    // Tags Panel wrapper
+    '& > div:last-child': {
+      marginBottom: 0,
+      marginTop: 2,
+      width: '100%',
+    },
+    '&.MuiGrid-item': {
+      paddingBottom: 0,
+    },
     alignItems: 'flex-end',
+    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'flex-end',
-    padding: '8px 0px',
-    '& button': {
-      alignItems: 'flex-start',
+    [theme.breakpoints.down('lg')]: {
+      width: '100%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      '& .MuiChip-root': {
+        marginLeft: 4,
+        marginRight: 0,
+      },
+      // Add a Tag button
+      '& > div:first-of-type': {
+        justifyContent: 'flex-end',
+        marginTop: theme.spacing(4),
+      },
+      // Tags Panel wrapper
+      '& > div:last-child': {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-end',
+      },
     },
   },
 }));
@@ -120,9 +120,9 @@ export const KubeSummaryPanel = (props: Props) => {
   } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardFeatureEnabled);
 
   const {
-    mutateAsync: resetKubeConfig,
-    isLoading: isResettingKubeConfig,
     error: resetKubeConfigError,
+    isLoading: isResettingKubeConfig,
+    mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
 
   const [

@@ -15,36 +15,33 @@ import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addIP: {
-    paddingLeft: 0,
-    paddingTop: theme.spacing(1.5),
     '& span:first-of-type': {
       justifyContent: 'flex-start',
     },
+    paddingLeft: 0,
+    paddingTop: theme.spacing(1.5),
+  },
+  button: {
+    '& :hover, & :focus': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
+    '& > span': {
+      padding: 2,
+    },
+    marginLeft: `-${theme.spacing()}`,
+    marginTop: 4,
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+  },
+  helperText: {
+    marginBottom: theme.spacing(),
   },
   input: {
     'nth-child(n+2)': {
       marginTop: theme.spacing(),
     },
-  },
-  root: {
-    marginTop: theme.spacing(),
-  },
-  button: {
-    marginTop: 4,
-    marginLeft: `-${theme.spacing()}`,
-    minWidth: 'auto',
-    minHeight: 'auto',
-    padding: 0,
-    '& > span': {
-      padding: 2,
-    },
-    '& :hover, & :focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
-    },
-  },
-  helperText: {
-    marginBottom: theme.spacing(),
   },
   ipNetmaskTooltipSection: {
     display: 'flex',
@@ -52,6 +49,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   required: {
     fontFamily: theme.font.normal,
+  },
+  root: {
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -72,17 +72,17 @@ interface Props {
 
 export const MultipleIPInput = React.memo((props: Props) => {
   const {
+    className,
     error,
-    onChange,
-    onBlur,
-    ips,
-    title,
+    forDatabaseAccessControls,
     helperText,
-    tooltip,
+    ips,
+    onBlur,
+    onChange,
     placeholder,
     required,
-    forDatabaseAccessControls,
-    className,
+    title,
+    tooltip,
   } = props;
   const { classes, cx } = useStyles();
 
@@ -129,8 +129,8 @@ export const MultipleIPInput = React.memo((props: Props) => {
           <InputLabel>{title}</InputLabel>
           <TooltipIcon
             sxTooltipIcon={{
-              marginTop: '-15px',
               marginLeft: '-4px',
+              marginTop: '-15px',
             }}
             text={tooltip}
             tooltipPosition="right"

@@ -23,16 +23,16 @@ export const UserDataAccordion = (props: Props) => {
   const {
     createType,
     disabled,
-    userData,
     onChange,
-    renderNotice,
     renderCheckbox,
+    renderNotice,
+    userData,
   } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
   const checkFormat = ({
-    userData,
     hasInputValueChanged,
+    userData,
   }: {
     userData: string;
     hasInputValueChanged: boolean;
@@ -67,8 +67,8 @@ export const UserDataAccordion = (props: Props) => {
       }}
       summaryProps={{
         sx: {
-          padding: '5px 24px 0px 24px',
           alignItems: fromBackupOrFromLinode ? 'flex-start' : 'center',
+          padding: '5px 24px 0px 24px',
         },
       }}
       detailProps={{ sx: sxDetails }}
@@ -101,13 +101,13 @@ export const UserDataAccordion = (props: Props) => {
         rows={1}
         expand
         onChange={(e) => {
-          checkFormat({ userData: e.target.value, hasInputValueChanged: true });
+          checkFormat({ hasInputValueChanged: true, userData: e.target.value });
           onChange(e.target.value);
         }}
         value={userData}
         disabled={Boolean(disabled)}
         onBlur={(e) =>
-          checkFormat({ userData: e.target.value, hasInputValueChanged: false })
+          checkFormat({ hasInputValueChanged: false, userData: e.target.value })
         }
         data-qa-user-data-input
       />

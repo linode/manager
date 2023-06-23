@@ -31,7 +31,7 @@ describe('PromotionalOfferCard', () => {
       <PromotionalOfferCard
         {...promo}
         buttons={[
-          { text: 'Button Text', href: 'javascript:alert(1)', type: 'primary' },
+          { href: 'javascript:alert(1)', text: 'Button Text', type: 'primary' },
         ]}
       />
     );

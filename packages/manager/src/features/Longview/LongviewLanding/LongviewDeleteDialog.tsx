@@ -19,8 +19,8 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
   const {
-    open,
     closeDialog,
+    open,
     selectedLongviewClientID,
     selectedLongviewClientLabel: label,
   } = props;

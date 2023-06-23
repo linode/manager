@@ -14,15 +14,15 @@ import { createDisplayPage } from 'src/components/Paginate';
 import Typography from 'src/components/core/Typography';
 
 export const entityNameMap: Record<GrantType, string> = {
-  linode: 'Linodes',
-  stackscript: 'StackScripts',
-  image: 'Images',
-  volume: 'Volumes',
-  nodebalancer: 'NodeBalancers',
-  domain: 'Domains',
-  longview: 'Longview Clients',
-  firewall: 'Firewalls',
   database: 'Databases',
+  domain: 'Domains',
+  firewall: 'Firewalls',
+  image: 'Images',
+  linode: 'Linodes',
+  longview: 'Longview Clients',
+  nodebalancer: 'NodeBalancers',
+  stackscript: 'StackScripts',
+  volume: 'Volumes',
 };
 
 interface Props {
@@ -34,27 +34,17 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  section: {
-    marginTop: theme.spacing(2),
-    paddingBottom: 0,
-  },
-  setAll: {
-    '& > div': {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-    },
-    '& label': {
-      marginTop: 6,
-    },
-    '& .react-select__menu, & .input': {
-      width: 125,
-      right: 0,
-      marginLeft: theme.spacing(1),
-      textAlign: 'left',
-    },
-    '& .react-select__menu-list': {
+  grantTable: {
+    '& td': {
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: 0,
+        paddingRight: '0 !important',
+      },
       width: '100%',
+    },
+    '& th': {
+      minWidth: 150,
+      width: '25%',
     },
   },
   label: {
@@ -64,30 +54,40 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  section: {
+    marginTop: theme.spacing(2),
+    paddingBottom: 0,
+  },
   selectAll: {
     cursor: 'pointer',
   },
-  grantTable: {
-    '& th': {
-      width: '25%',
-      minWidth: 150,
+  setAll: {
+    '& .react-select__menu, & .input': {
+      marginLeft: theme.spacing(1),
+      right: 0,
+      textAlign: 'left',
+      width: 125,
     },
-    '& td': {
+    '& .react-select__menu-list': {
       width: '100%',
-      [theme.breakpoints.down('sm')]: {
-        paddingRight: '0 !important',
-        paddingLeft: 0,
-      },
+    },
+    '& > div': {
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+    '& label': {
+      marginTop: 6,
     },
   },
   tableSubheading: {
-    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(3),
   },
 }));
 
 export const UserPermissionsEntitySection = React.memo((props: Props) => {
-  const { entity, grants, setGrantTo, entitySetAllTo, showHeading } = props;
+  const { entity, entitySetAllTo, grants, setGrantTo, showHeading } = props;
   const classes = useStyles();
 
   const pagination = usePagination(1);

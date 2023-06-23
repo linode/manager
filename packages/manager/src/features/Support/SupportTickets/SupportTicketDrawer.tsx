@@ -50,15 +50,15 @@ import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
     backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
-    paddingTop: theme.spacing(1),
     borderTop: `1px solid ${theme.bg.main}`,
+    paddingTop: theme.spacing(1),
   },
   innerReply: {
-    padding: 0,
     '& div[role="tablist"]': {
-      marginTop: theme.spacing(),
       marginBottom: theme.spacing(),
+      marginTop: theme.spacing(),
     },
+    padding: 0,
   },
   rootReply: {
     marginBottom: theme.spacing(2),
@@ -109,10 +109,6 @@ export interface Props {
 export type CombinedProps = Props;
 
 const ticketTypeMap: Record<TicketType, TicketTypeData> = {
-  smtp: {
-    dialogTitle: smtpDialogTitle,
-    helperText: smtpHelperText,
-  },
   general: {
     dialogTitle: 'Open a Support Ticket',
     helperText: (
@@ -132,46 +128,50 @@ const ticketTypeMap: Record<TicketType, TicketTypeData> = {
       </>
     ),
   },
+  smtp: {
+    dialogTitle: smtpDialogTitle,
+    helperText: smtpHelperText,
+  },
 };
 
 const entityMap: Record<string, EntityType> = {
-  Linodes: 'linode_id',
-  Volumes: 'volume_id',
-  Domains: 'domain_id',
-  NodeBalancers: 'nodebalancer_id',
-  Kubernetes: 'lkecluster_id',
   Databases: 'database_id',
+  Domains: 'domain_id',
   Firewalls: 'firewall_id',
+  Kubernetes: 'lkecluster_id',
+  Linodes: 'linode_id',
+  NodeBalancers: 'nodebalancer_id',
+  Volumes: 'volume_id',
 };
 
 const entityIdToNameMap: Partial<Record<EntityType, string>> = {
-  linode_id: 'Linode',
-  volume_id: 'Volume',
-  domain_id: 'Domain',
-  nodebalancer_id: 'NodeBalancer',
-  lkecluster_id: 'Kubernetes Cluster',
   database_id: 'Database Cluster',
+  domain_id: 'Domain',
   firewall_id: 'Firewall',
+  linode_id: 'Linode',
+  lkecluster_id: 'Kubernetes Cluster',
+  nodebalancer_id: 'NodeBalancer',
+  volume_id: 'Volume',
 };
 
 const entityIdToTypeMap: Record<EntityType, string> = {
-  linode_id: 'linodes',
-  volume_id: 'volumes',
-  domain_id: 'domains',
-  nodebalancer_id: 'nodeBalancers',
-  lkecluster_id: 'kubernetesClusters',
   database_id: 'databases',
+  domain_id: 'domains',
   firewall_id: 'firewalls',
-  none: 'linodes',
   general: 'linodes',
+  linode_id: 'linodes',
+  lkecluster_id: 'kubernetesClusters',
+  nodebalancer_id: 'nodeBalancers',
+  none: 'linodes',
+  volume_id: 'volumes',
 };
 
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
     return type === 'domain_id'
       ? // Domains don't have labels
-        { value: entity.id, label: entity.domain }
-      : { value: entity.id, label: entity.label };
+        { label: entity.domain, value: entity.id }
+      : { label: entity.label, value: entity.id };
   });
 };
 
@@ -186,9 +186,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const {
     open,
     prefilledDescription,
-    prefilledTitle,
     prefilledEntity,
     prefilledTicketType,
+    prefilledTitle,
   } = props;
 
   const { data: account } = useAccount();
@@ -214,11 +214,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   // SMTP ticket information
   const [smtpFields, setSMTPFields] = React.useState({
-    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
     companyName: '',
-    useCase: '',
+    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
     emailDomains: '',
     publicInfo: '',
+    useCase: '',
   });
 
   // Entities for populating dropdown
@@ -272,7 +272,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   );
 
   const saveText = (_title: string, _description: string) => {
-    storage.supportText.set({ title: _title, description: _description });
+    storage.supportText.set({ description: _description, title: _title });
   };
 
   // Has to be a ref or else the timeout is redone with each render
@@ -435,7 +435,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         setFiles((oldFiles: FileAttachment[]) =>
           update(
             idx,
-            { file: null, uploading: false, uploaded: true, name: '' },
+            { file: null, name: '', uploaded: true, uploading: false },
             oldFiles
           )
         );
@@ -480,8 +480,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     /* Upload each file as an attachment, and return a Promise that will resolve to
      *  an array of aggregated errors that may have occurred for individual uploads. */
     return Bluebird.reduce(filesWithTarget, attachFileReducer, {
-      success: [],
       errors: [],
+      success: [],
     });
   };
 
@@ -503,8 +503,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
     createSupportTicket({
       description: _description,
-      summary,
       [entityType]: Number(entityID),
+      summary,
     })
       .then((response) => {
         setErrors(undefined);
@@ -567,11 +567,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const getEntityOptions = (): Item<any, string>[] => {
     const reactQueryEntityDataMap = {
       database_id: databases,
-      firewall_id: firewalls,
       domain_id: domains,
-      volume_id: volumes,
+      firewall_id: firewalls,
       lkecluster_id: clusters,
       nodebalancer_id: nodebalancers,
+      volume_id: volumes,
     };
 
     if (!reactQueryEntityDataMap[entityType]) {
@@ -582,9 +582,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     // domain's don't have a label so we map the domain as the label
     if (entityType === 'domain_id') {
       return (
-        reactQueryEntityDataMap[entityType]?.map(({ id, domain }) => ({
-          value: id,
+        reactQueryEntityDataMap[entityType]?.map(({ domain, id }) => ({
           label: domain,
+          value: id,
         })) || []
       );
     }
@@ -592,8 +592,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     return (
       reactQueryEntityDataMap[entityType]?.map(
         ({ id, label }: { id: number; label: string }) => ({
-          value: id,
           label,
+          value: id,
         })
       ) || []
     );

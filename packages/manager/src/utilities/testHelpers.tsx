@@ -24,10 +24,10 @@ import {
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = jest.fn().mockImplementation((query) => {
     return {
+      addListener: jest.fn(),
       matches,
       media: query,
       onchange: null,
-      addListener: jest.fn(),
       removeListener: jest.fn(),
     };
   });
@@ -69,8 +69,8 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
         <LinodeThemeWrapper theme={options.theme}>
           <LDProvider
             value={{
-              flags: options.flags ?? {},
               flagKeyMap: {},
+              flags: options.flags ?? {},
             }}
           >
             <SnackbarProvider>
@@ -180,7 +180,7 @@ export const toPassAxeCheck = {
       // ugly trick to bypass tslint inablility to understand it s normal not to return
       continue;
     }
-    return { pass: true, message: () => '!' };
+    return { message: () => '!', pass: true };
   },
 };
 

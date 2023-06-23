@@ -17,25 +17,25 @@ const useStyles = makeStyles()((theme: Theme) => ({
   inverted: {
     transform: 'rotate(180deg)',
   },
-  notificationSpacing: {
-    marginBottom: theme.spacing(2),
-    '& > div:not(:first-child)': {
-      padding: '0 20px',
-      margin: `${theme.spacing()} 0`,
-    },
-  },
   menuItemLink: {
     ...menuLinkStyle(theme.textColors.linkActiveLight),
   },
+  notificationSpacing: {
+    '& > div:not(:first-child)': {
+      margin: `${theme.spacing()} 0`,
+      padding: '0 20px',
+    },
+    marginBottom: theme.spacing(2),
+  },
   showMore: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    paddingTop: theme.spacing(),
-    display: 'flex',
-    alignItems: 'center',
     '&:hover': {
       textDecoration: 'none',
     },
+    alignItems: 'center',
+    display: 'flex',
+    fontSize: 14,
+    fontWeight: 'bold',
+    paddingTop: theme.spacing(),
   },
 }));
 
@@ -61,11 +61,11 @@ export const NotificationSection = (props: NotificationSectionProps) => {
   const {
     content,
     count,
-    header,
     emptyMessage,
+    header,
     loading,
-    showMoreText,
     showMoreTarget,
+    showMoreText,
   } = props;
 
   const _count = count ?? 5;
@@ -152,7 +152,7 @@ interface BodyProps {
 const ContentBody = React.memo((props: BodyProps) => {
   const { classes } = useStyles();
 
-  const { header, content, count, emptyMessage, loading } = props;
+  const { content, count, emptyMessage, header, loading } = props;
 
   const [showAll, setShowAll] = React.useState(false);
 
@@ -184,8 +184,8 @@ const ContentBody = React.memo((props: BodyProps) => {
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
             sx={{
-              fontWeight: 'bold',
               color: 'primary.main',
+              fontWeight: 'bold',
               textDecoration: 'none !important',
             }}
           >
@@ -241,18 +241,18 @@ const StyledLToggleContainer = styled(Box, {
 }));
 
 const StyledNotificationItem = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'content',
   label: 'StyledNotificationItem',
+  shouldForwardProp: (prop) => prop !== 'content',
 })<NotificationSectionProps>(({ theme, ...props }) => ({
-  display: 'flex',
-  fontSize: '0.875rem',
-  justifyContent: 'space-between',
-  width: '100%',
-  padding: props.header === 'Notifications' ? `${theme.spacing(1.5)} 20px` : 0,
   '& p': {
     color: theme.textColors.headlineStatic,
     lineHeight: '1.25rem',
   },
+  display: 'flex',
+  fontSize: '0.875rem',
+  justifyContent: 'space-between',
+  padding: props.header === 'Notifications' ? `${theme.spacing(1.5)} 20px` : 0,
+  width: '100%',
 }));
 
 const StyledCaret = styled(KeyboardArrowDown)(({ theme }) => ({
@@ -261,7 +261,7 @@ const StyledCaret = styled(KeyboardArrowDown)(({ theme }) => ({
 }));
 
 const StyledEmptyMessage = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(),
   marginBottom: theme.spacing(2.5),
+  marginTop: theme.spacing(),
   padding: `0 20px`,
 }));

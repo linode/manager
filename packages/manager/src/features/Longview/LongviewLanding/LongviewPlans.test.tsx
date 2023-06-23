@@ -24,9 +24,9 @@ const props: CombinedProps = {
   subscriptionRequestHook: {
     data: mockLongviewSubscriptions,
     lastUpdated: 0,
-    update: jest.fn(),
-    transformData: jest.fn(),
     loading: false,
+    transformData: jest.fn(),
+    update: jest.fn(),
   },
 };
 

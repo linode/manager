@@ -10,8 +10,8 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 const useStyles = makeStyles(() => ({
   container: {
     '& canvas': {
-      margin: 'auto',
       display: 'block',
+      margin: 'auto',
     },
   },
   errorState: {
@@ -31,7 +31,7 @@ let monitor: WebSocket;
 
 const Glish = (props: Props) => {
   const classes = useStyles();
-  const { linode, token, refreshToken } = props;
+  const { linode, refreshToken, token } = props;
   const ref = React.useRef<VncScreenHandle>(null);
   const region = linode.region;
   const [powered, setPowered] = React.useState(linode.status === 'running');

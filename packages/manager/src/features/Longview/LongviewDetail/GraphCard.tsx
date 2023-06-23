@@ -6,14 +6,14 @@ import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(2),
-    padding: theme.spacing(2),
     '& > h6': {
-      color: theme.color.grey1,
       '& > strong': {
         color: theme.color.headline,
       },
+      color: theme.color.grey1,
     },
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
   },
 }));
 

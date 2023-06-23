@@ -72,15 +72,15 @@ export const useFormattedNotifications = (): NotificationItem[] => {
 
   if (volumeMigrationScheduledIsPresent && filteredNotifications) {
     filteredNotifications.push({
-      type: 'volume_migration_scheduled' as NotificationType,
+      body: null,
       entity: null,
-      when: null,
+      label: 'You have a scheduled Block Storage volume upgrade pending!',
       message:
         'You have pending volume migrations. Check the maintenance page for more details.',
-      label: 'You have a scheduled Block Storage volume upgrade pending!',
       severity: 'major',
+      type: 'volume_migration_scheduled' as NotificationType,
       until: null,
-      body: null,
+      when: null,
     });
   }
 
@@ -183,8 +183,8 @@ const interceptNotification = (
 
     return {
       ...notification,
+      jsx,
       label: `Maintenance Scheduled`,
-      severity: adjustSeverity(notification),
       message: notification.body
         ? linodeAttachedToNotification
           ? notification.body.replace(
@@ -193,7 +193,7 @@ const interceptNotification = (
             )
           : notification.body
         : notification.message,
-      jsx,
+      severity: adjustSeverity(notification),
     };
   }
 
@@ -348,10 +348,10 @@ const interceptNotification = (
 const StyledLink = styled(Link)<Pick<Notification, 'severity'>>(
   ({ theme, ...props }) => ({
     ...(props.severity === 'critical' && {
-      color: `${theme.color.red} !important`,
       '&:hover': {
         textDecoration: `${theme.color.red} underline`,
       },
+      color: `${theme.color.red} !important`,
     }),
   })
 );
@@ -362,9 +362,9 @@ const formatNotificationForDisplay = (
   onClose: () => void,
   shouldIncludeInCount: boolean = true
 ): NotificationItem => ({
-  id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
   countInTotal: shouldIncludeInCount,
+  id: `notification-${idx}`,
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.

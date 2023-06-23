@@ -61,12 +61,12 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      title: 'Clients',
       routeName: `${props.match.url}/clients`,
+      title: 'Clients',
     },
     {
-      title: 'Plan Details',
       routeName: `${props.match.url}/plan-details`,
+      title: 'Plan Details',
     },
   ];
 

@@ -12,29 +12,29 @@ const CredentialList = React.lazy(() => import('./Credentials/CredentialList'));
 
 const tabs: NavTab[] = [
   {
-    title: 'Summary',
-    routeName: `/managed/summary`,
     component: ManagedDashboardCard,
+    routeName: `/managed/summary`,
+    title: 'Summary',
   },
   {
-    title: 'Monitors',
-    routeName: `/managed/monitors`,
     render: <Monitors />,
+    routeName: `/managed/monitors`,
+    title: 'Monitors',
   },
   {
-    title: 'SSH Access',
-    routeName: `/managed/ssh-access`,
     component: SSHAccess,
+    routeName: `/managed/ssh-access`,
+    title: 'SSH Access',
   },
   {
-    title: 'Credentials',
-    routeName: `/managed/credentials`,
     render: <CredentialList />,
+    routeName: `/managed/credentials`,
+    title: 'Credentials',
   },
   {
-    title: 'Contacts',
-    routeName: `/managed/contacts`,
     render: <Contacts />,
+    routeName: `/managed/contacts`,
+    title: 'Contacts',
   },
 ];
 

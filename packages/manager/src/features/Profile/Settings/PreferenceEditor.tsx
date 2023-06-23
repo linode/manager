@@ -77,10 +77,10 @@ const PreferenceEditor: React.FC<DialogProps> = (props) => {
         <textarea
           value={userPrefs}
           style={{
+            fontFamily: '"Ubuntu Mono", monospace"',
+            height: 300,
             marginTop: 16,
             width: 400,
-            height: 300,
-            fontFamily: '"Ubuntu Mono", monospace"',
           }}
           onChange={(e) => setUserPrefs(e.target.value)}
         ></textarea>

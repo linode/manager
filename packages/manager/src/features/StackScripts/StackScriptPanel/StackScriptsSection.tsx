@@ -38,7 +38,7 @@ export interface Props {
 
 const StackScriptsSection: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { data, isSorting, triggerDelete, triggerMakePublic, category } = props;
+  const { category, data, isSorting, triggerDelete, triggerMakePublic } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();

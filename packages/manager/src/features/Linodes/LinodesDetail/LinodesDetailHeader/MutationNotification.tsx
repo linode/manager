@@ -48,9 +48,9 @@ export const MutationNotification = (props: Props) => {
   const [isMutationDrawerOpen, setIsMutationDrawerOpen] = React.useState(false);
 
   const {
-    mutateAsync: startMutation,
-    isLoading,
     error,
+    isLoading,
+    mutateAsync: startMutation,
   } = useStartLinodeMutationMutation(linodeId);
 
   const initMutation = () => {
@@ -73,7 +73,7 @@ export const MutationNotification = (props: Props) => {
     return null;
   }
 
-  const { vcpus, network_out, disk, transfer, memory } = currentTypeInfo;
+  const { disk, memory, network_out, transfer, vcpus } = currentTypeInfo;
 
   return (
     <>
@@ -115,28 +115,28 @@ export const MutationNotification = (props: Props) => {
           successorTypeInfo.id
         )}
         mutateInfo={{
-          vcpus:
-            successorTypeInfo.vcpus !== vcpus ? successorTypeInfo.vcpus : null,
-          network_out:
-            successorTypeInfo.network_out !== network_out
-              ? successorTypeInfo.network_out
-              : null,
           disk: successorTypeInfo.disk !== disk ? successorTypeInfo.disk : null,
-          transfer:
-            successorTypeInfo.transfer !== transfer
-              ? successorTypeInfo.transfer
-              : null,
           memory:
             successorTypeInfo.memory !== memory
               ? successorTypeInfo.memory
               : null,
+          network_out:
+            successorTypeInfo.network_out !== network_out
+              ? successorTypeInfo.network_out
+              : null,
+          transfer:
+            successorTypeInfo.transfer !== transfer
+              ? successorTypeInfo.transfer
+              : null,
+          vcpus:
+            successorTypeInfo.vcpus !== vcpus ? successorTypeInfo.vcpus : null,
         }}
         currentTypeInfo={{
-          vcpus: currentTypeInfo.vcpus,
-          transfer: currentTypeInfo.transfer,
           disk: currentTypeInfo.disk,
           memory: currentTypeInfo.memory,
           network_out,
+          transfer: currentTypeInfo.transfer,
+          vcpus: currentTypeInfo.vcpus,
         }}
         initMutation={initMutation}
       />

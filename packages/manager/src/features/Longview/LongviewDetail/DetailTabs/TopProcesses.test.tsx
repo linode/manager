@@ -6,9 +6,9 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { extendTopProcesses, Props, TopProcesses } from './TopProcesses';
 
 const props: Props = {
+  clientID: 1,
   topProcessesData: longviewTopProcessesFactory.build(),
   topProcessesLoading: false,
-  clientID: 1,
 };
 
 describe('Top Processes', () => {

@@ -56,7 +56,7 @@ export const useLinodeIPDeleteMutation = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(
-    () => removeIPAddress({ linodeID: linodeId, address }),
+    () => removeIPAddress({ address, linodeID: linodeId }),
     {
       onSuccess() {
         queryClient.invalidateQueries([queryKey]);

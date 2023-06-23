@@ -34,7 +34,7 @@ interface Props {
 }
 
 export const ObjectUploader = React.memo((props: Props) => {
-  const { clusterId, bucketName, prefix } = props;
+  const { bucketName, clusterId, prefix } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
   const queryClient = useQueryClient();
@@ -63,7 +63,7 @@ export const ObjectUploader = React.memo((props: Props) => {
     // We bind each file to the prefix at the time of onDrop. The prefix could
     // change later, if the user navigates to a different folder before the
     // upload is complete.
-    dispatch({ type: 'ENQUEUE', files, prefix });
+    dispatch({ files, prefix, type: 'ENQUEUE' });
   };
 
   // This function will be called when dropped files that are over the max size.
@@ -109,11 +109,11 @@ export const ObjectUploader = React.memo((props: Props) => {
 
     // Set status as "IN_PROGRESS" for each file.
     dispatch({
-      type: 'UPDATE_FILES',
+      data: { status: 'IN_PROGRESS' },
       filesToUpdate: nextBatch.map((fileUpload) =>
         pathOrFileName(fileUpload.file)
       ),
-      data: { status: 'IN_PROGRESS' },
+      type: 'UPDATE_FILES',
     });
 
     nextBatch.forEach((fileUpload) => {
@@ -145,22 +145,22 @@ export const ObjectUploader = React.memo((props: Props) => {
         props.maybeAddObjectToTable(fullObjectName, file.size);
 
         dispatch({
-          type: 'UPDATE_FILES',
-          filesToUpdate: [path],
           data: {
             percentComplete: 100,
             status: 'FINISHED',
           },
+          filesToUpdate: [path],
+          type: 'UPDATE_FILES',
         });
       };
 
       const handleError = () => {
         dispatch({
-          type: 'UPDATE_FILES',
-          filesToUpdate: [path],
           data: {
             status: 'ERROR',
           },
+          filesToUpdate: [path],
+          type: 'UPDATE_FILES',
         });
       };
 
@@ -175,11 +175,11 @@ export const ObjectUploader = React.memo((props: Props) => {
         getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
           content_type: file.type,
         })
-          .then(({ url, exists }) => {
+          .then(({ exists, url }) => {
             if (exists) {
               dispatch({
-                type: 'NOTIFY_FILE_EXISTS',
                 fileName: path,
+                type: 'NOTIFY_FILE_EXISTS',
                 url,
               });
               return;
@@ -212,8 +212,8 @@ export const ObjectUploader = React.memo((props: Props) => {
   const className = React.useMemo(
     () =>
       cx({
-        [classes.active]: isDragActive,
         [classes.accept]: isDragAccept,
+        [classes.active]: isDragActive,
         [classes.reject]: isDragReject,
       }),
     [isDragActive, isDragAccept, isDragReject]
@@ -285,10 +285,10 @@ export const onUploadProgressFactory = (
   fileName: string
 ) => (progressEvent: ProgressEvent) => {
   dispatch({
-    type: 'UPDATE_FILES',
-    filesToUpdate: [fileName],
     data: {
       percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
     },
+    filesToUpdate: [fileName],
+    type: 'UPDATE_FILES',
   });
 };

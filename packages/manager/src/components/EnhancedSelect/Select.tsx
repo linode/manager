@@ -42,15 +42,15 @@ export interface NoOptionsMessageProps {
 // Will override the RS defaults.
 const _components = {
   Control,
-  NoOptionsMessage,
-  Placeholder,
+  DropdownIndicator,
+  Input,
+  LoadingIndicator,
+  MenuList,
   MultiValueLabel,
   MultiValueRemove,
-  MenuList,
+  NoOptionsMessage,
   Option,
-  DropdownIndicator,
-  LoadingIndicator,
-  Input,
+  Placeholder,
 };
 
 // We extend TexFieldProps to still be able to pass
@@ -119,35 +119,35 @@ const Select = <
   const theme = useTheme<Theme>();
   const { classes } = useStyles();
   const {
+    blurInputOnSelect,
     className,
     components,
+    creatable,
+    errorGroup,
     errorText,
     filterOption,
-    label,
-    isClearable,
-    isMulti,
-    isLoading,
-    placeholder,
-    onChange,
-    onInputChange,
-    options,
-    value,
-    noOptionsMessage,
-    onMenuClose,
-    onBlur,
-    blurInputOnSelect,
-    medium,
-    small,
-    noMarginTop,
-    textFieldProps,
-    inline,
     hideLabel,
-    errorGroup,
-    onFocus,
+    inline,
     inputId,
+    isClearable,
+    isLoading,
+    isMulti,
+    label,
+    medium,
+    noMarginTop,
+    noOptionsMessage,
+    onBlur,
+    onChange,
+    onFocus,
+    onInputChange,
+    onMenuClose,
+    options,
     overflowPortal,
+    placeholder,
     required,
-    creatable,
+    small,
+    textFieldProps,
+    value,
     ...restOfProps
   } = props;
 
@@ -232,23 +232,23 @@ const Select = <
       */
       textFieldProps={{
         ...textFieldProps,
-        label,
-        hideLabel,
-        errorText,
-        errorGroup,
-        disabled: props.isDisabled || props.disabled,
-        noMarginTop,
         InputLabelProps: {
           shrink: true,
         },
         className: classNames(
           {
+            [classes.inline]: inline,
             [classes.medium]: medium,
             [classes.small]: small,
-            [classes.inline]: inline,
           },
           className
         ),
+        disabled: props.isDisabled || props.disabled,
+        errorGroup,
+        errorText,
+        hideLabel,
+        label,
+        noMarginTop,
         required,
       }}
       value={value}

@@ -49,7 +49,7 @@ const renderActions = (
 );
 
 export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
-  const { open, onClose, databaseID, databaseEngine, databaseLabel } = props;
+  const { databaseEngine, databaseID, databaseLabel, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: preferences } = usePreferences();
   const { mutateAsync: deleteDatabase } = useDeleteDatabaseMutation(

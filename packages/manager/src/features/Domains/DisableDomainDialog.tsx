@@ -13,11 +13,11 @@ interface Props {
 }
 
 const DisableDomainDialog = (props: Props) => {
-  const { domain, open, onClose } = props;
+  const { domain, onClose, open } = props;
   const {
-    mutateAsync: updateDomain,
     error,
     isLoading,
+    mutateAsync: updateDomain,
     reset,
   } = useUpdateDomainMutation();
 

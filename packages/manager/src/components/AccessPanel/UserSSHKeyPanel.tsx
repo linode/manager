@@ -23,27 +23,27 @@ import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 export const MAX_SSH_KEYS_DISPLAY = 25;
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  title: {
-    marginBottom: theme.spacing(2),
-  },
   cellCheckbox: {
-    width: 50,
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
+    width: 50,
   },
   cellUser: {
     width: '30%',
   },
-  userWrapper: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(0.5),
-  },
   gravatar: {
-    width: 24,
-    height: 24,
     borderRadius: '50%',
+    height: 24,
     marginRight: theme.spacing(1),
+    width: 24,
+  },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  userWrapper: {
+    alignItems: 'center',
+    display: 'inline-flex',
+    marginTop: theme.spacing(0.5),
   },
 }));
 
@@ -55,7 +55,7 @@ interface Props {
 
 const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
-  const { disabled, setAuthorizedUsers, authorizedUsers } = props;
+  const { authorizedUsers, disabled, setAuthorizedUsers } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -70,8 +70,8 @@ const UserSSHKeyPanel = (props: Props) => {
   // For non-restricted users, this query data will be used to render options
   const {
     data: users,
-    isLoading: isAccountUsersLoading,
     error: accountUsersError,
+    isLoading: isAccountUsersLoading,
   } = useAccountUsers(
     {
       page: pagination.page,
@@ -88,8 +88,8 @@ const UserSSHKeyPanel = (props: Props) => {
   // because we truncate the results, we don't need all items.
   const {
     data: sshKeys,
-    isLoading: isSSHKeysLoading,
     error: sshKeysError,
+    isLoading: isSSHKeysLoading,
   } = useSSHKeysQuery({}, {}, isRestricted);
 
   const sshKeyLabels = sshKeys?.data.map((key) => key.label) ?? [];

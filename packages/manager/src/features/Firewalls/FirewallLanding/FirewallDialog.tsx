@@ -17,40 +17,40 @@ interface Props {
 
 const FirewallDialog = (props: Props) => {
   const {
-    open,
-    onClose,
     mode,
+    onClose,
+    open,
     selectedFirewallID,
     selectedFirewallLabel: label,
   } = props;
 
   const {
-    mutateAsync: updateFirewall,
-    isLoading: isUpdating,
     error: updateError,
+    isLoading: isUpdating,
+    mutateAsync: updateFirewall,
   } = useMutateFirewall(selectedFirewallID ?? -1);
   const {
-    mutateAsync: deleteFirewall,
-    isLoading: isDeleting,
     error: deleteError,
+    isLoading: isDeleting,
+    mutateAsync: deleteFirewall,
   } = useDeleteFirewall(selectedFirewallID ?? -1);
 
   const requestMap = {
-    enable: () => updateFirewall({ status: 'enabled' }),
-    disable: () => updateFirewall({ status: 'disabled' }),
     delete: () => deleteFirewall(),
+    disable: () => updateFirewall({ status: 'disabled' }),
+    enable: () => updateFirewall({ status: 'enabled' }),
   };
 
   const isLoadingMap = {
-    enable: isUpdating,
-    disable: isUpdating,
     delete: isDeleting,
+    disable: isUpdating,
+    enable: isUpdating,
   };
 
   const errorMap = {
-    enable: updateError,
-    disable: updateError,
     delete: deleteError,
+    disable: updateError,
+    enable: updateError,
   };
 
   const onSubmit = async () => {

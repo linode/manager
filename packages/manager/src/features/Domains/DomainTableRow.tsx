@@ -16,9 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
   },
   labelStatusWrapper: {
+    alignItems: 'center',
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
     whiteSpace: 'nowrap',
   },
 }));
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type CombinedProps = { domain: Domain } & Handlers;
 
 const DomainTableRow: React.FC<CombinedProps> = (props) => {
-  const { domain, onDisableOrEnable, onClone, onRemove, onEdit } = props;
+  const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;
 
   const classes = useStyles();
 

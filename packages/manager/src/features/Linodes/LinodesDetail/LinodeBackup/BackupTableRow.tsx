@@ -22,27 +22,27 @@ const typeMap = {
 };
 
 const statusTextMap: Record<LinodeBackup['status'], string> = {
+  failed: 'Failed',
+  needsPostProcessing: 'Processing',
+  paused: 'Paused',
   pending: 'Pending',
   running: 'Running',
-  needsPostProcessing: 'Processing',
   successful: 'Success',
-  paused: 'Paused',
-  failed: 'Failed',
   userAborted: 'Aborted',
 };
 
 const statusIconMap: Record<LinodeBackup['status'], Status> = {
+  failed: 'error',
+  needsPostProcessing: 'other',
+  paused: 'inactive',
   pending: 'other',
   running: 'other',
-  needsPostProcessing: 'other',
   successful: 'active',
-  paused: 'inactive',
-  failed: 'error',
   userAborted: 'error',
 };
 
 const BackupTableRow = (props: Props) => {
-  const { backup, disabled, handleRestore, handleDeploy } = props;
+  const { backup, disabled, handleDeploy, handleRestore } = props;
 
   return (
     <TableRow key={backup.id} data-qa-backup>

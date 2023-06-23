@@ -7,9 +7,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import ApiAwarenessModal, { Props } from '.';
 
 const defaultProps: Props = {
-  payLoad: {},
   isOpen: false,
   onClose: jest.fn(),
+  payLoad: {},
   route: '',
 };
 

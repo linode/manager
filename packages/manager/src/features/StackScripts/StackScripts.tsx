@@ -16,8 +16,8 @@ type Props = RouteComponentProps<{}>;
 
 export const StackScripts: React.FC<Props> = (props) => {
   const {
-    match: { path },
     location: { search },
+    match: { path },
   } = props;
 
   // Redirects to prevent breaking old stackscripts?type=whatever bookmarks

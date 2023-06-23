@@ -13,7 +13,7 @@ interface Props {
 }
 
 const VolumeSelect = (props: Props) => {
-  const { error, onBlur, disabled, onChange, value, region } = props;
+  const { disabled, error, onBlur, onChange, region, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
@@ -28,15 +28,15 @@ const VolumeSelect = (props: Props) => {
 
   const {
     data,
-    isLoading,
     fetchNextPage,
     hasNextPage,
+    isLoading,
   } = useInfiniteVolumesQuery({
     ...searchFilter,
     ...(region ? { region } : {}),
+    '+order': 'asc',
     // linode_id: null,  <- if the API let us, we would do this
     '+order_by': 'label',
-    '+order': 'asc',
   });
 
   const options = data?.pages

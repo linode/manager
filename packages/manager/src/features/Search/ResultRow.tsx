@@ -12,46 +12,46 @@ import Typography from 'src/components/core/Typography';
 import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    cursor: 'pointer',
-    paddingTop: '0 !important',
-    paddingBottom: '0 !important',
-    width: '100%',
-    transition: theme.transitions.create(['background-color']),
-  },
-  labelCell: {
-    width: '60%',
-    [theme.breakpoints.up('md')]: {
-      width: '35%',
-    },
-  },
-  regionCell: {
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '15%',
-    },
-  },
   createdCell: {
-    width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '20%',
     },
-  },
-  tagCell: {
     width: '100%',
+  },
+  labelCell: {
     [theme.breakpoints.up('md')]: {
-      width: '30%',
+      width: '35%',
     },
+    width: '60%',
+  },
+  link: {
+    color: theme.textColors.linkActiveLight,
+    display: 'block',
+    fontFamily: theme.font.bold,
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+  },
+  regionCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '15%',
+    },
+    width: '100%',
+  },
+  root: {
+    cursor: 'pointer',
+    paddingBottom: '0 !important',
+    paddingTop: '0 !important',
+    transition: theme.transitions.create(['background-color']),
+    width: '100%',
   },
   tag: {
     margin: theme.spacing(0.5),
   },
-  link: {
-    display: 'block',
-    color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.bold,
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
+  tagCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '30%',
+    },
+    width: '100%',
   },
 }));
 

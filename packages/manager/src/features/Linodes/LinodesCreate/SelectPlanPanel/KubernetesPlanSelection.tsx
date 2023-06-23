@@ -49,7 +49,7 @@ export const KubernetesPlanSelection = ({
             buttonType="primary"
             onClick={() => onAdd(type.id, count)}
             disabled={count < 1 || disabled}
-            sx={{ minWidth: '85px', marginLeft: '10px' }}
+            sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
             Add
           </Button>
@@ -98,7 +98,7 @@ export const KubernetesPlanSelection = ({
                   buttonType="primary"
                   onClick={() => onAdd(type.id, count)}
                   disabled={count < 1 || disabled}
-                  sx={{ minWidth: '85px', marginLeft: '10px' }}
+                  sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
                   Add
                 </Button>

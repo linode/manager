@@ -10,36 +10,36 @@ import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 
 export const useStyles = makeStyles((theme: Theme) => ({
+  error: {
+    '&:before': {
+      backgroundColor: theme.color.red,
+      content: '""',
+      height: 3,
+      left: -30,
+      position: 'absolute',
+      top: 7,
+      width: 16,
+    },
+    '&:last-of-type': {
+      marginBottom: 0,
+    },
+    color: theme.color.headline,
+    marginBottom: `calc(${theme.spacing(2)} - 3)`,
+    position: 'relative',
+    textAlign: 'left',
+  },
+  icon: {
+    '& svg': {
+      display: 'flex',
+      height: 56,
+      width: 56,
+    },
+  },
   root: {
     padding: `0`,
     textAlign: 'center',
     [theme.breakpoints.down('lg')]: {
       padding: `${theme.spacing(2)} 0 0`,
-    },
-  },
-  icon: {
-    '& svg': {
-      display: 'flex',
-      width: 56,
-      height: 56,
-    },
-  },
-  error: {
-    position: 'relative',
-    color: theme.color.headline,
-    marginBottom: `calc(${theme.spacing(2)} - 3)`,
-    textAlign: 'left',
-    '&:before': {
-      content: '""',
-      position: 'absolute',
-      top: 7,
-      left: -30,
-      backgroundColor: theme.color.red,
-      height: 3,
-      width: 16,
-    },
-    '&:last-of-type': {
-      marginBottom: 0,
     },
   },
   text: {

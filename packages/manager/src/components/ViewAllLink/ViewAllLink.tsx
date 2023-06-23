@@ -18,6 +18,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const styles = (theme: Theme) =>
   createStyles({
+    count: {
+      marginRight: theme.spacing(0.5),
+    },
+    countNumber: {
+      fontFamily: theme.font.bold,
+    },
     link: {
       '&:hover': {
         textDecoration: 'underline',
@@ -26,16 +32,10 @@ const styles = (theme: Theme) =>
     noCount: {
       marginLeft: theme.spacing(1),
     },
-    count: {
-      marginRight: theme.spacing(0.5),
-    },
-    countNumber: {
-      fontFamily: theme.font.bold,
-    },
   });
 
 const ViewAllLink: React.FC<CombinedProps> = (props) => {
-  const { classes, count, text, link, external, className } = props;
+  const { className, classes, count, external, link, text } = props;
   return (
     <>
       {count && (

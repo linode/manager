@@ -4,10 +4,10 @@ import { createLinodeRequestFactory } from 'src/factories/linodes';
 const linodeRequest = createLinodeRequestFactory.build();
 const linodeData = {
   ...linodeRequest,
-  stackscript_id: 10079,
   stackscript_data: {
     gh_username: 'linode',
   },
+  stackscript_id: 10079,
 };
 
 const createLinodePath = '/linode/instance';

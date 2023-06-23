@@ -75,10 +75,10 @@ export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
     [queryKey, 'cluster', id, 'endpoints'],
     () => getAllAPIEndpointsForCluster(id),
     {
+      keepPreviousData: true,
+      refetchOnMount: true,
       retry: true,
       retryDelay: 5000,
-      refetchOnMount: true,
-      keepPreviousData: true,
     }
   );
 };
@@ -100,9 +100,9 @@ export const useKubenetesKubeConfigQuery = (
     },
     {
       enabled,
+      refetchOnMount: true,
       retry: true,
       retryDelay: 5000,
-      refetchOnMount: true,
     }
   );
 

@@ -35,28 +35,28 @@ const AccountLanding = () => {
 
   const tabs = [
     {
-      title: 'Billing Info',
       routeName: '/account/billing',
+      title: 'Billing Info',
     },
     {
-      title: 'Users & Grants',
       routeName: '/account/users',
+      title: 'Users & Grants',
     },
     {
-      title: 'Login History',
       routeName: '/account/login-history',
+      title: 'Login History',
     },
     {
-      title: 'Service Transfers',
       routeName: '/account/service-transfers',
+      title: 'Service Transfers',
     },
     {
-      title: 'Maintenance',
       routeName: '/account/maintenance',
+      title: 'Maintenance',
     },
     {
-      title: 'Settings',
       routeName: '/account/settings',
+      title: 'Settings',
     },
   ];
 
@@ -94,10 +94,10 @@ const AccountLanding = () => {
   const isBillingTabSelected = location.pathname.match(/billing/);
 
   const landingHeaderProps: LandingHeaderProps = {
-    title: 'Account',
     breadcrumbProps: {
       pathname: '/account',
     },
+    title: 'Account',
   };
 
   if (isBillingTabSelected) {

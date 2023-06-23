@@ -9,10 +9,10 @@ import {
 } from './DeleteKubernetesClusterDialog';
 
 const props: Props = {
-  open: true,
-  clusterLabel: 'this-cluster',
   clusterId: 1,
+  clusterLabel: 'this-cluster',
   onClose: jest.fn(),
+  open: true,
 };
 
 const queryClient = new QueryClient();
@@ -42,7 +42,7 @@ describe('Kubernetes deletion dialog', () => {
       })
     );
 
-    const { getByTestId, findByTestId } = renderWithTheme(
+    const { findByTestId, getByTestId } = renderWithTheme(
       <DeleteKubernetesClusterDialog {...props} />
     );
     const button = getByTestId('dialog-confirm');

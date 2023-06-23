@@ -8,108 +8,108 @@ import {
 } from '@mui/material/TableRow';
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  activeCaret: {
+    '&:after': {
+      background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`,
+      content: '""',
+      height: '50%',
+      left: 0,
+      position: 'absolute',
+      top: '50%',
+      width: 15,
+    },
+    '&:before': {
+      background: `linear-gradient(to right top, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`,
+      content: '""',
+      height: '50%',
+      left: 0,
+      position: 'absolute',
+      top: 0,
+      width: 15,
+    },
+  },
+  activeCaretOverlay: {
+    '&:after': {
+      background: `linear-gradient(to right bottom, ${theme.bg.lightBlue1} 0%, ${theme.bg.lightBlue1} 45%, transparent 46.1%)`,
+      bottom: 0,
+      content: '""',
+      height: '50%',
+      left: 0,
+      position: 'absolute',
+      width: 15,
+    },
+    '&:before': {
+      background: `linear-gradient(to right top, ${theme.bg.lightBlue1} 0%, ${theme.bg.lightBlue1} 45%, transparent 46.1%)`,
+      content: '""',
+      height: '50%',
+      left: 0,
+      position: 'absolute',
+      top: 0,
+      width: 15,
+    },
+  },
+  disabled: {
+    '& td': {
+      color: '#D2D3D4',
+    },
+    backgroundColor: 'rgba(247, 247, 247, 0.25)',
+  },
+  highlight: {
+    backgroundColor: theme.bg.lightBlue1,
+  },
   root: {
+    backgroundColor: theme.bg.bgPaper,
     borderLeft: `1px solid ${theme.borderColors.borderTable}`,
     borderRight: `1px solid ${theme.borderColors.borderTable}`,
-    backgroundColor: theme.bg.bgPaper,
-    transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.up('md')]: {
       boxShadow: `inset 3px 0 0 transparent`,
     },
-  },
-  withForcedIndex: {
-    '& td': {
-      transition: theme.transitions.create(['color']),
-    },
-    transition: theme.transitions.create(['border-color']),
-    '&:before': {
-      borderLeft: `1px solid transparent`,
-      paddingLeft: 4,
-    },
-    '&:hover': {
-      cursor: 'pointer',
-      '& td': {
-        color: theme.palette.primary.light,
-      },
-    },
-    '&:focus': {
-      backgroundColor: theme.bg.lightBlue1,
-    },
+    transition: theme.transitions.create(['box-shadow']),
   },
   selected: {
-    backgroundColor: theme.bg.lightBlue1,
-    transform: 'scale(1)',
-    boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue1}`,
-    '&:before': {
-      transition: 'none',
-      backgroundColor: theme.bg.lightBlue1,
-      borderColor: theme.borderColors.borderTable,
-    },
     '& td': {
-      borderTop: `1px solid ${theme.palette.primary.light}`,
-      borderBottomColor: theme.palette.primary.light,
-      position: 'relative',
       '&:first-of-type': {
         borderLeft: `1px solid ${theme.palette.primary.light}`,
       },
+      borderBottomColor: theme.palette.primary.light,
+      borderTop: `1px solid ${theme.palette.primary.light}`,
+      position: 'relative',
       [theme.breakpoints.down('lg')]: {
         '&:last-child': {
           borderRight: `1px solid ${theme.palette.primary.light}`,
         },
       },
     },
+    '&:before': {
+      backgroundColor: theme.bg.lightBlue1,
+      borderColor: theme.borderColors.borderTable,
+      transition: 'none',
+    },
+    backgroundColor: theme.bg.lightBlue1,
+    boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue1}`,
+    transform: 'scale(1)',
   },
   selectedOuter: {
     padding: 0,
   },
-  activeCaret: {
-    '&:before': {
-      content: '""',
-      width: 15,
-      height: '50%',
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      background: `linear-gradient(to right top, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`,
-    },
-    '&:after': {
-      content: '""',
-      width: 15,
-      height: '50%',
-      position: 'absolute',
-      left: 0,
-      top: '50%',
-      background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`,
-    },
-  },
-  activeCaretOverlay: {
-    '&:before': {
-      content: '""',
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      width: 15,
-      height: '50%',
-      background: `linear-gradient(to right top, ${theme.bg.lightBlue1} 0%, ${theme.bg.lightBlue1} 45%, transparent 46.1%)`,
-    },
-    '&:after': {
-      content: '""',
-      position: 'absolute',
-      left: 0,
-      bottom: 0,
-      width: 15,
-      height: '50%',
-      background: `linear-gradient(to right bottom, ${theme.bg.lightBlue1} 0%, ${theme.bg.lightBlue1} 45%, transparent 46.1%)`,
-    },
-  },
-  highlight: {
-    backgroundColor: theme.bg.lightBlue1,
-  },
-  disabled: {
-    backgroundColor: 'rgba(247, 247, 247, 0.25)',
+  withForcedIndex: {
     '& td': {
-      color: '#D2D3D4',
+      transition: theme.transitions.create(['color']),
     },
+    '&:before': {
+      borderLeft: `1px solid transparent`,
+      paddingLeft: 4,
+    },
+    '&:focus': {
+      backgroundColor: theme.bg.lightBlue1,
+    },
+    '&:hover': {
+      '& td': {
+        color: theme.palette.primary.light,
+      },
+      cursor: 'pointer',
+    },
+    transition: theme.transitions.create(['border-color']),
   },
 }));
 
@@ -129,8 +129,8 @@ export const TableRow = React.memo((props: TableRowProps) => {
   const { classes, cx } = useStyles();
 
   const {
-    className,
     ariaLabel,
+    className,
     disabled,
     domRef,
     forceIndex,
@@ -143,11 +143,11 @@ export const TableRow = React.memo((props: TableRowProps) => {
     <_TableRow
       aria-label={ariaLabel ?? `View Details`}
       className={cx(className, {
+        [classes.disabled]: disabled,
+        [classes.highlight]: highlight,
         [classes.root]: true,
         [classes.selected]: selected,
         [classes.withForcedIndex]: forceIndex,
-        [classes.highlight]: highlight,
-        [classes.disabled]: disabled,
       })}
       ref={domRef}
       {...rest}

@@ -62,11 +62,11 @@ export const MonitorTable = () => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, isLoading, error } = useAllManagedMonitorsQuery();
+  const { data, error, isLoading } = useAllManagedMonitorsQuery();
   const {
     data: issues,
-    isLoading: areIssuesLoading,
     error: issuesError,
+    isLoading: areIssuesLoading,
   } = useAllManagedIssuesQuery();
   const { data: credentials } = useAllManagedCredentialsQuery();
   const { data: contacts } = useAllManagedContactsQuery();
@@ -90,11 +90,11 @@ export const MonitorTable = () => {
   const monitors = data || [];
 
   const {
-    dialog,
-    openDialog,
     closeDialog,
-    submitDialog,
+    dialog,
     handleError,
+    openDialog,
+    submitDialog,
   } = useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
 
   const [historyDrawerOpen, setHistoryDrawerOpen] = React.useState<boolean>(
@@ -152,7 +152,7 @@ export const MonitorTable = () => {
 
   const submitMonitorForm = (
     values: ManagedServicePayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setErrors, setStatus, setSubmitting }: FormikProps
   ) => {
     const _success = () => {
       setSubmitting(false);
@@ -207,8 +207,8 @@ export const MonitorTable = () => {
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
-              data,
               count,
+              data,
               handlePageChange,
               handlePageSizeChange,
               page,

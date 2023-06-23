@@ -37,16 +37,16 @@ export const useExtendedLinodes = (linodeIds?: number[]): ExtendedLinode[] => {
   );
 
   return useSelector((state: ApplicationState) => {
-    const { events, __resources } = state;
+    const { __resources, events } = state;
     const { linodeConfigs, linodeDisks } = __resources;
 
     return linodes.map((linode) => ({
       ...linode,
-      _type: linode.type ? typeMap.get(linode.type) : null,
-      _events: eventsForLinode(events, linode.id),
       _configs: getLinodeConfigsForLinode(linodeConfigs, linode.id),
       _disks: getLinodeDisksForLinode(linodeDisks, linode.id),
+      _events: eventsForLinode(events, linode.id),
       _permissions: getPermissionsForLinode(grants ?? null, linode.id),
+      _type: linode.type ? typeMap.get(linode.type) : null,
     }));
   });
 };

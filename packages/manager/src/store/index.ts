@@ -91,9 +91,9 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
+  linodes: defaultLinodesState,
 };
 
 export interface ResourcesState {
@@ -124,17 +124,17 @@ export const defaultState: ApplicationState = {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
-  events: eventsDefaultState,
-  stackScriptDialog: stackScriptDialogDefaultState,
-  volumeDrawer: volumeDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
-  pendingUpload: pendingUploadState,
-  initialLoad: initialLoadState,
+  events: eventsDefaultState,
   featureFlagsLoad: featureFlagsLoadState,
   globalErrors: defaultGlobalErrorState,
+  initialLoad: initialLoadState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
   mockFeatureFlags: defaultMockFeatureFlagState,
+  pendingUpload: pendingUploadState,
+  stackScriptDialog: stackScriptDialogDefaultState,
+  volumeDrawer: volumeDrawerDefaultState,
 };
 
 /**
@@ -142,26 +142,26 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  linodes,
   linodeConfigs,
   linodeDisks,
+  linodes,
 });
 
 const reducers = combineReducers<ApplicationState>({
   __resources,
   authentication,
   backups,
-  stackScriptDialog,
-  volumeDrawer,
-  events,
   createLinode: linodeCreateReducer,
-  pendingUpload,
-  initialLoad,
+  events,
   featureFlagsLoad,
   globalErrors,
+  initialLoad,
   longviewClients: longview,
   longviewStats,
   mockFeatureFlags,
+  pendingUpload,
+  stackScriptDialog,
+  volumeDrawer,
 });
 
 const enhancersFactory = (queryClient: QueryClient) =>

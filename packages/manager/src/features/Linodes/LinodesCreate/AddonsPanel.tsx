@@ -16,14 +16,15 @@ import AttachVLAN from './AttachVLAN';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  vlan: {
-    marginTop: theme.spacing(3),
-  },
   addons: {
     marginTop: theme.spacing(3),
   },
-  title: {
-    marginBottom: theme.spacing(2),
+  caption: {
+    marginTop: -8,
+    paddingLeft: `calc(${theme.spacing(2)} + 18px)`, // 34,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: `calc(${theme.spacing(4)} + 18px)`, // 50
+    },
   },
   label: {
     '& > span:last-child': {
@@ -36,12 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  caption: {
-    marginTop: -8,
-    paddingLeft: `calc(${theme.spacing(2)} + 18px)`, // 34,
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: `calc(${theme.spacing(4)} + 18px)`, // 50
-    },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  vlan: {
+    marginTop: theme.spacing(3),
   },
 }));
 
@@ -70,20 +70,20 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   const {
     accountBackups,
     changeBackups,
-    togglePrivateIP,
+    createType,
     disabled,
-    vlanLabel,
-    labelError,
+    handleVLANChange,
     ipamAddress,
     ipamError,
-    handleVLANChange,
     isPrivateIPChecked,
+    labelError,
+    linodesData,
+    selectedImageID,
     selectedLinodeID,
     selectedRegionID,
-    selectedImageID,
     selectedTypeID,
-    createType,
-    linodesData,
+    togglePrivateIP,
+    vlanLabel,
   } = props;
 
   const classes = useStyles();

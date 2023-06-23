@@ -21,33 +21,32 @@ interface Props {
 }
 
 export const EditVolumeForm = (props: Props) => {
-  const { volumeId, volumeLabel, volumeTags, onClose, readOnly } = props;
+  const { onClose, readOnly, volumeId, volumeLabel, volumeTags } = props;
 
   const {
-    resetForm,
-    handleSubmit,
-    status,
+    dirty,
     errors,
-    values,
-    setFieldValue,
     handleBlur,
     handleChange,
-    touched,
+    handleSubmit,
     isSubmitting,
-    dirty,
+    resetForm,
+    setFieldValue,
+    status,
+    touched,
+    values,
   } = useFormik({
     enableReinitialize: true,
-    validationSchema: UpdateVolumeSchema,
     initialValues: { label: volumeLabel, tags: volumeTags },
-    onSubmit: (values, { resetForm, setSubmitting, setStatus, setErrors }) => {
+    onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
       const { label, tags } = values;
 
       setSubmitting(true);
 
       updateVolume({
-        volumeId,
         label,
         tags: tags.map((v) => v.value),
+        volumeId,
       })
         .then((_) => {
           resetForm();
@@ -63,6 +62,7 @@ export const EditVolumeForm = (props: Props) => {
           handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
         });
     },
+    validationSchema: UpdateVolumeSchema,
   });
 
   const { mutateAsync: updateVolume } = useUpdateVolumeMutation();

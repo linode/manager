@@ -33,7 +33,7 @@ const renderActions = (
 );
 
 export const SecretTokenDialog = (props: Props) => {
-  const { title, value, objectStorageKey, open, onClose } = props;
+  const { objectStorageKey, onClose, open, title, value } = props;
 
   const modalConfirmationButtonText = objectStorageKey
     ? 'I Have Saved My Secret Key'
@@ -98,8 +98,8 @@ const StyledNotice = styled(Notice, {
 })(() => ({
   '& .noticeText': {
     color: 'inherit',
-    lineHeight: 'inherit',
     fontFamily: 'inherit',
     fontSize: '0.875rem',
+    lineHeight: 'inherit',
   },
 }));

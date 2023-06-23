@@ -22,34 +22,34 @@ import useEvents from 'src/hooks/useEvents';
 import CodeBlock from '../CodeBlock';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  guides: {
-    marginTop: 16,
-  },
-  modalIntroTypoClass: {
-    paddingBottom: '6px',
-  },
-  modalContent: {
-    overflowX: 'hidden',
-    paddingBottom: '0px',
-  },
-  tabsStyles: {
-    marginTop: '14px',
-  },
-  tabsContainer: {
-    paddingTop: theme.spacing(),
-  },
   actionPanelStyles: {
     marginTop: '18px !important',
     paddingBottom: 0,
     paddingTop: 0,
   },
+  guides: {
+    marginTop: 16,
+  },
+  modalContent: {
+    overflowX: 'hidden',
+    paddingBottom: '0px',
+  },
+  modalIntroTypoClass: {
+    paddingBottom: '6px',
+  },
   otherTools: {
     fontFamily: theme.font.bold,
-    fontWeight: 400,
     fontSize: '14px !important',
+    fontWeight: 400,
   },
   tabDescription: {
     marginTop: theme.spacing(2),
+  },
+  tabsContainer: {
+    paddingTop: theme.spacing(),
+  },
+  tabsStyles: {
+    marginTop: '14px',
   },
 }));
 
@@ -61,7 +61,7 @@ export interface Props {
 }
 
 const ApiAwarenessModal = (props: Props) => {
-  const { isOpen, onClose, route, payLoad } = props;
+  const { isOpen, onClose, payLoad, route } = props;
 
   const classes = useStyles();
   const history = useHistory();
@@ -85,14 +85,14 @@ const ApiAwarenessModal = (props: Props) => {
 
   const tabs = [
     {
+      routeName: route,
       title: 'cURL',
       type: 'API',
-      routeName: route,
     },
     {
+      routeName: route,
       title: 'Linode CLI',
       type: 'CLI',
-      routeName: route,
     },
   ];
 

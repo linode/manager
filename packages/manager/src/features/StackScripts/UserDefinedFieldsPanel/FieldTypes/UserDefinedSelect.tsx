@@ -10,15 +10,15 @@ import { Radio } from 'src/components/Radio/Radio';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    margin: `${theme.spacing(3)} 0 0`,
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: '16px',
-  },
   radioGroupLabel: {
     display: 'block',
     marginBottom: '4px',
+  },
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: `${theme.spacing(3)} 0 0`,
+    marginTop: '16px',
   },
 }));
 
@@ -33,7 +33,7 @@ interface Props {
 export const UserDefinedSelect = (props: Props) => {
   const classes = useStyles();
 
-  const { field, value, error, isOptional, updateFormState } = props;
+  const { error, field, isOptional, updateFormState, value } = props;
 
   const [oneof, setOneof] = React.useState<string[]>(field.oneof!.split(','));
 

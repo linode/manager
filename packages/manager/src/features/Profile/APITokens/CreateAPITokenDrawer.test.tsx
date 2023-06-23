@@ -7,14 +7,14 @@ import { appTokenFactory } from 'src/factories';
 import userEvent from '@testing-library/user-event';
 
 const props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
   showSecret: jest.fn(),
 };
 
 describe('Create API Token Drawer', () => {
   it('checks API Token Drawer rendering', () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
     );
     const drawerTitle = getByText('Add Personal Access Token');

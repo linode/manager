@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const ConfigActionMenu = (props: Props) => {
-  const { readOnly, linodeId, config, onEdit, onBoot, onDelete } = props;
+  const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -31,26 +31,26 @@ export const ConfigActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      title: 'Boot',
       onClick: onBoot,
+      title: 'Boot',
     },
     {
-      title: 'Edit',
       onClick: onEdit,
+      title: 'Edit',
     },
     {
-      title: 'Clone',
+      disabled: readOnly,
       onClick: () => {
         history.push(
           `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
         );
       },
-      disabled: readOnly,
+      title: 'Clone',
     },
     {
-      title: 'Delete',
-      onClick: onDelete,
       disabled: readOnly,
+      onClick: onDelete,
+      title: 'Delete',
       tooltip,
     },
   ];

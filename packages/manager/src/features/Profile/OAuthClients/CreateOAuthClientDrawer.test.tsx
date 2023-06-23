@@ -7,8 +7,8 @@ import { rest, server } from 'src/mocks/testServer';
 import { oauthClientFactory } from 'src/factories/accountOAuth';
 
 const props = {
-  open: true,
   onClose: jest.fn(),
+  open: true,
   showSecret: jest.fn(),
 };
 
@@ -49,7 +49,7 @@ describe('Create API Token Drawer', () => {
       })
     );
 
-    const { getByText, getAllByTestId } = renderWithTheme(
+    const { getAllByTestId, getByText } = renderWithTheme(
       <CreateOAuthClientDrawer {...props} />
     );
 

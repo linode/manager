@@ -19,40 +19,40 @@ import Weblish from './Weblish';
 const AUTH_POLLING_INTERVAL = 2000;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  tabs: {
-    backgroundColor: 'black',
-    margin: 0,
-    '& [role="tablist"]': {
-      display: 'flex',
-      backgroundColor: theme.bg.offWhite,
-      margin: 0,
-      overflow: 'hidden',
+  notFound: {
+    '& h1': {
+      color: '#f4f4f4 !important',
     },
+    color: '#f4f4f4 !important',
+  },
+  progress: {
+    height: 'auto',
+  },
+  tabs: {
     '& [role="tab"]': {
+      '&[aria-selected="true"]': {
+        '&:hover': {
+          backgroundColor: theme.palette.primary.light,
+          color: 'white',
+        },
+        backgroundColor: theme.palette.primary.main,
+        borderBottom: 'none !important',
+        color: 'white !important',
+      },
       backgroundColor: theme.bg.offWhite,
       color: theme.color.tableHeaderText,
       flex: 'auto',
       margin: 0,
       maxWidth: 'none !important',
-      '&[aria-selected="true"]': {
-        backgroundColor: theme.palette.primary.main,
-        borderBottom: 'none !important',
-        color: 'white !important',
-        '&:hover': {
-          backgroundColor: theme.palette.primary.light,
-          color: 'white',
-        },
-      },
     },
-  },
-  progress: {
-    height: 'auto',
-  },
-  notFound: {
-    color: '#f4f4f4 !important',
-    '& h1': {
-      color: '#f4f4f4 !important',
+    '& [role="tablist"]': {
+      backgroundColor: theme.bg.offWhite,
+      display: 'flex',
+      margin: 0,
+      overflow: 'hidden',
     },
+    backgroundColor: 'black',
+    margin: 0,
   },
 }));
 
@@ -65,14 +65,14 @@ const Lish = () => {
 
   const {
     data: linode,
-    isLoading: isLinodeLoading,
     error: linodeError,
+    isLoading: isLinodeLoading,
   } = useLinodeQuery(id);
 
   const {
     data,
-    isLoading: isTokenLoading,
     error: tokenError,
+    isLoading: isTokenLoading,
     refetch,
   } = useLinodeLishTokenQuery(id);
 
@@ -105,13 +105,13 @@ const Lish = () => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      title: 'Weblish',
       routeName: `/linodes/${id}/lish/weblish`,
+      title: 'Weblish',
     },
     !isBareMetal
       ? {
-          title: 'Glish',
           routeName: `/linodes/${id}/lish/glish`,
+          title: 'Glish',
         }
       : null,
   ].filter(Boolean) as Tab[];

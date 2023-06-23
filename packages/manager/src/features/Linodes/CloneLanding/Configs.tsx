@@ -15,8 +15,8 @@ const useStyles = makeStyles(() => ({
   root: {
     '& td': {
       borderBottom: 'none',
-      paddingTop: 0,
       paddingBottom: 0,
+      paddingTop: 0,
     },
   },
 }));
@@ -27,19 +27,19 @@ export interface Props {
 }
 
 export const Configs: React.FC<Props> = (props) => {
-  const { configs, handleSelect, configSelection } = props;
+  const { configSelection, configs, handleSelect } = props;
 
   const classes = useStyles();
 
   return (
     <Paginate data={configs}>
       {({
+        count,
         data: paginatedData,
         handlePageChange,
         handlePageSizeChange,
         page,
         pageSize,
-        count,
       }) => {
         return (
           <div>

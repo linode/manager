@@ -13,12 +13,12 @@ interface Props extends TextFieldProps {
 
 const PasswordInput = (props: Props) => {
   const {
-    value,
-    required,
     disabledReason,
-    tooltipInteractive,
     hideStrengthLabel,
     hideValidation,
+    required,
+    tooltipInteractive,
+    value,
     ...rest
   } = props;
 

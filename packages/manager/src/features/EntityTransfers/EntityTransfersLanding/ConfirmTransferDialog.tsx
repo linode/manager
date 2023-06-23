@@ -31,27 +31,27 @@ import { useQueryClient } from 'react-query';
 import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  transferSummary: {
-    marginBottom: theme.spacing(),
-  },
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
   },
-  expiry: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
   entityTypeDisplay: {
     marginBottom: theme.spacing(),
+  },
+  expiry: {
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  list: {
+    listStyleType: 'none',
+    margin: 0,
+    paddingLeft: 0,
   },
   summary: {
     marginBottom: 4,
   },
-  list: {
-    listStyleType: 'none',
-    paddingLeft: 0,
-    margin: 0,
+  transferSummary: {
+    marginBottom: theme.spacing(),
   },
 }));
 
@@ -65,7 +65,7 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   const { onClose, open, token } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { data, isLoading, isError, error } = useTransferQuery(
+  const { data, error, isError, isLoading } = useTransferQuery(
     token ?? '',
     open
   );
@@ -189,8 +189,8 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
     entities,
     errors,
     expiry,
-    hasConfirmed,
     handleToggleConfirm,
+    hasConfirmed,
     isError,
     isLoading,
     submissionErrors,

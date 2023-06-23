@@ -17,7 +17,7 @@ afterEach(() => {
 
 describe('Add Access Controls drawer', () => {
   const database = databaseFactory.build();
-  const { getByText, getByTestId } = renderWithTheme(
+  const { getByTestId, getByText } = renderWithTheme(
     <AccessControls database={database} />
   );
   const button = getByText('Manage Access Controls');

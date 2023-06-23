@@ -39,7 +39,7 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
      *
      */
 
-    const { location, history } = this.props;
+    const { history, location } = this.props;
 
     /**
      * If the hash doesn't contain a string after the #, there's no point continuing as we dont have
@@ -56,8 +56,8 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
 
     const {
       access_token: accessToken,
-      scope: scopes,
       expires_in: expiresIn,
+      scope: scopes,
       state: nonce,
       token_type: tokenType,
     } = hashParams;
@@ -131,11 +131,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
     dispatchStartSession: (token, tokenType, scopes, expiry) =>
       dispatch(
         handleStartSession({
+          expires: expiry,
+          scopes,
           token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
             1
           )} ${token}`,
-          scopes,
-          expires: expiry,
         })
       ),
   };

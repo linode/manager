@@ -20,7 +20,7 @@ describe('Timezone change form', () => {
   );
 
   it('should render input label', async () => {
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <TimezoneForm loggedInAsCustomer={true} />,
       { queryClient }
     );
@@ -65,16 +65,16 @@ describe('formatOffset', () => {
   it('formats the offset correctly', () => {
     const testMap = [
       {
+        expectedOffset: '+0:00',
         timezone: {
           label: 'Coordinated Universal Time',
           name: 'UTC',
           offset: 0,
         },
-        expectedOffset: '+0:00',
       },
     ];
 
-    testMap.forEach(({ timezone, expectedOffset }) =>
+    testMap.forEach(({ expectedOffset, timezone }) =>
       expect(formatOffset(timezone)).toBe(
         `(GMT ${expectedOffset}) ${timezone.label}`
       )

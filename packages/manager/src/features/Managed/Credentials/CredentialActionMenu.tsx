@@ -16,7 +16,7 @@ const CredentialActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { label, credentialID, openDialog, openForEdit } = props;
+  const { credentialID, label, openDialog, openForEdit } = props;
 
   const onClickForEdit = () => {
     openForEdit(credentialID);
@@ -28,12 +28,12 @@ const CredentialActionMenu: React.FC<Props> = (props) => {
 
   const actions: Action[] = [
     {
-      title: 'Edit',
       onClick: onClickForEdit,
+      title: 'Edit',
     },
     {
-      title: 'Delete',
       onClick: onClickForDelete,
+      title: 'Delete',
     },
   ];
 

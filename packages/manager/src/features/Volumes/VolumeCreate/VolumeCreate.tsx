@@ -43,7 +43,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       message?: string
     ) => dispatch(openForConfig(volumeLabel, volumePath, message)),
     openForResizeInstructions: (volumeLabel: string, message?: string) =>
-      dispatch(viewResizeInstructions({ volumeLabel, message })),
+      dispatch(viewResizeInstructions({ message, volumeLabel })),
   },
 });
 
@@ -72,28 +72,28 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     linodeId,
     linodeLabel,
     linodeRegion,
+    message,
     mode,
     volumeId,
     volumeLabel,
+    volumePath,
     volumeRegion,
     volumeSize,
     volumeTags,
-    volumePath,
-    message,
   } = state.volumeDrawer;
 
   return {
     linode_id: linodeId,
     linodeLabel,
     linodeRegion,
+    message,
     mode,
     volumeId,
     volumeLabel,
+    volumePath,
     volumeRegion,
     volumeSize,
     volumeTags,
-    volumePath,
-    message,
   };
 };
 

@@ -35,7 +35,7 @@ interface BillingSummaryProps {
 export const BillingSummary = (props: BillingSummaryProps) => {
   const theme = useTheme();
   const { data: notifications } = useNotificationsQuery();
-  const { account, _isRestrictedUser } = useAccountManagement();
+  const { _isRestrictedUser, account } = useAccountManagement();
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
     false
@@ -52,7 +52,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
       notification.severity === 'critical'
   );
 
-  const { promotions, paymentMethods, balanceUninvoiced, balance } = props;
+  const { balance, balanceUninvoiced, paymentMethods, promotions } = props;
 
   // On-the-fly route matching so this component can open the drawer itself.
   const routeForMakePayment = '/account/billing/make-payment';
@@ -130,7 +130,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   // The layout changes if there are promotions.
   const gridDimensions: Partial<Record<Breakpoint, GridSize>> =
-    promotions && promotions.length > 0 ? { xs: 12, md: 4 } : { xs: 12, sm: 6 };
+    promotions && promotions.length > 0 ? { md: 4, xs: 12 } : { sm: 6, xs: 12 };
 
   const balanceJSX =
     balance > 0 ? (

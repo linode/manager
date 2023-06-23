@@ -12,7 +12,7 @@ interface SelectableTableRowProps {
 
 export const SelectableTableRow = React.memo(
   (props: SelectableTableRowProps) => {
-    const { isChecked, handleToggleCheck } = props;
+    const { handleToggleCheck, isChecked } = props;
 
     return (
       <TableRow
@@ -40,12 +40,12 @@ export const SelectableTableRow = React.memo(
 const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
 })({
-  textAlign: 'center',
-  width: 25,
+  '& svg': {
+    height: 20,
+    width: 20,
+  },
   paddingLeft: 0,
   paddingRight: 0,
-  '& svg': {
-    width: 20,
-    height: 20,
-  },
+  textAlign: 'center',
+  width: 25,
 });
