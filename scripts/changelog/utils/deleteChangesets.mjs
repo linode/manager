@@ -3,11 +3,12 @@ import path from 'path';
 import { logger } from './logger.mjs';
 import { promisify } from 'util';
 import { changesetDirectory } from "./constants.mjs";
-import { exec } from 'child_process';
+import simpleGit from 'simple-git';
 
 const readdir = promisify(fs.readdir);
 const unlink = promisify(fs.unlink);
-const execAsync = promisify(exec);
+
+const git = simpleGit();
 
 /**
  * Populates the changelog content with the provided entries.
@@ -24,7 +25,7 @@ export const deleteChangesets = async (linodePackage) => {
         try {
           await unlink(filePath);
           console.warn(`Deleted: ${filePath}`);
-          await execAsync(`git rm ${filePath}`);
+          await git.rm(filePath);
         } catch (error) {
           console.error(`Error occurred while deleting ${filePath}:`, error);
         }
