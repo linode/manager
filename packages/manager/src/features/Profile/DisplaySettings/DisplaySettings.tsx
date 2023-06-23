@@ -132,7 +132,7 @@ export const DisplaySettings = () => {
         inputRef={emailRef}
         type="email"
       />
-      <Divider spacingTop={24} spacingBottom={16} />
+      <Divider spacingTop={24} spacingBottom={8} />
       <TimezoneForm loggedInAsCustomer={loggedInAsCustomer} />
     </Paper>
   );
