@@ -135,9 +135,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 const engineIcons = {
-  mysql: () => <MySQLIcon width="24" height="24" />,
-  postgresql: () => <PostgreSQLIcon width="24" height="24" />,
-  mongodb: () => <MongoDBIcon width="24" height="24" />,
+  mysql: <MySQLIcon width="24" height="24" />,
+  postgresql: <PostgreSQLIcon width="24" height="24" />,
+  mongodb: <MongoDBIcon width="24" height="24" />,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
