@@ -147,9 +147,9 @@ interface TextFieldPropsOverrides extends StandardTextFieldProps {
   label: string;
 }
 
-export type Props = BaseProps & TextFieldPropsOverrides & ToolTipProps;
+export type TextFieldProps = BaseProps & TextFieldPropsOverrides & ToolTipProps;
 
-export const TextField = (props: Props) => {
+export const TextField = (props: TextFieldProps) => {
   const { classes, cx } = useStyles();
 
   const {

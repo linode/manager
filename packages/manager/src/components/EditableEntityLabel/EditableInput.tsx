@@ -8,7 +8,7 @@ import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
-import { TextField, Props as TextFieldProps } from 'src/components/TextField';
+import { TextField, TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {

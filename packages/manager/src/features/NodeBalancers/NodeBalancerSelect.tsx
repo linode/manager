@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField, Props as TextFieldProps } from 'src/components/TextField';
+import { TextField, TextFieldProps } from 'src/components/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
 import { NodeBalancer } from '@linode/api-v4';

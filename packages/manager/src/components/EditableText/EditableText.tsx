@@ -9,7 +9,7 @@ import { H1Header } from 'src/components/H1Header/H1Header';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { fadeIn } from 'src/styles/keyframes';
 import { makeStyles } from 'tss-react/mui';
-import { TextField, Props as TextFieldProps } from '../TextField';
+import { TextField, TextFieldProps } from '../TextField';
 
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({
