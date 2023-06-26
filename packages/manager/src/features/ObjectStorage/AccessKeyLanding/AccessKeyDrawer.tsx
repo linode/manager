@@ -211,6 +211,14 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                   </Typography>
                 )}
 
+                {buckets?.length <= 0 ? (
+                  <Typography sx={{ paddingTop: '10px' }}>
+                    This key will have unlimited access to all buckets on your
+                    account. The option to create a limited access key is only
+                    available after creating one or more buckets.
+                  </Typography>
+                ) : null}
+
                 <TextField
                   name="label"
                   label="Label"
