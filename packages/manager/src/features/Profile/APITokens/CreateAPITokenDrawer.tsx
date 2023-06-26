@@ -5,7 +5,7 @@ import Drawer from 'src/components/Drawer';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { DateTime } from 'luxon';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';

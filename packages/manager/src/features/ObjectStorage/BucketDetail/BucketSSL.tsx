@@ -5,7 +5,7 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';

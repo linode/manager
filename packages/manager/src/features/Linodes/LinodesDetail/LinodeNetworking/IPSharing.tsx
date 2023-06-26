@@ -15,7 +15,7 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import useFlags from 'src/hooks/useFlags';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import {

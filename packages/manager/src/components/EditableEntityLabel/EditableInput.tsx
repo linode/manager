@@ -7,9 +7,8 @@ import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import { TextFieldProps } from 'src/components/core/TextField';
 import Typography from 'src/components/core/Typography';
-import TextField from 'src/components/TextField';
+import { TextField, TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -139,7 +138,7 @@ interface Props {
   loading: boolean;
 }
 
-type PassThroughProps = Props & TextFieldProps;
+type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
 
 type FinalProps = PassThroughProps;
 

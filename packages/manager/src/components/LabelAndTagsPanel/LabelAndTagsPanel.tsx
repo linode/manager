@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import { TextField, TextFieldProps } from 'src/components/TextField';
 import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { useTheme } from '@mui/material/styles';

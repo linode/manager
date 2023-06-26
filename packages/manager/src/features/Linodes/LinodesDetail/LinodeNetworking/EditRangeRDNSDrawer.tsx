@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';

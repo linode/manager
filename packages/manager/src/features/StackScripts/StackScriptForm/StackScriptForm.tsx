@@ -11,7 +11,7 @@ import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';

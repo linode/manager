@@ -9,7 +9,7 @@ import EnhancedSelect, {
   Item,
 } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { Props as TextFieldProps } from 'src/components/TextField';
+import { TextFieldProps } from 'src/components/TextField';
 import withLinodes from 'src/containers/withLinodes.container';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useRegionsQuery } from 'src/queries/regions';

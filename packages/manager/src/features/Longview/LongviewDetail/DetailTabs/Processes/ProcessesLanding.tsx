@@ -5,7 +5,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import {
   LongviewProcesses,
   WithStartAndEnd,

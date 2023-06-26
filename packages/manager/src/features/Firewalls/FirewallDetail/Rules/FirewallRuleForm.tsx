@@ -6,7 +6,7 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { Radio } from 'src/components/Radio/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Select from 'src/components/EnhancedSelect';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { capitalize } from 'src/utilities/capitalize';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';

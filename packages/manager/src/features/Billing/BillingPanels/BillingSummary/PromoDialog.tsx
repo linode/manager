@@ -5,7 +5,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { addPromotion } from '@linode/api-v4/lib';
 import { queryKey } from 'src/queries/account';
