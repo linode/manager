@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Chip from 'src/components/core/Chip';
+import { Chip } from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
