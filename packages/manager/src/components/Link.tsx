@@ -31,6 +31,11 @@ interface Props extends LinkProps {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
 }
 
+/**
+ *
+ * A wrapper around React Router's `Link` component that will open external links in a new window when a non-relative URL is provided.
+ *
+ */
 export const Link = (props: Props) => {
   const isLinkExternal = isExternal(props.to as string);
 
