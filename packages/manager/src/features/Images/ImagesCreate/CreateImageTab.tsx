@@ -67,7 +67,9 @@ const cloudInitTooltipMessage = (
   <Typography>
     Many Linode supported distributions are compatible with cloud-init by
     default, or you may have installed cloud-init.{' '}
-    <Link to="/">Learn more.</Link>
+    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
+      Learn more.
+    </Link>
   </Typography>
 );
 
