@@ -17,8 +17,6 @@ export const deleteAllTestOAuthApps = async (): Promise<void> => {
     getOAuthClients({ page_size: pageSize, page })
   );
 
-  console.log(`oauth apps: ${JSON.stringify(oauthApps)}`);
-
   const deletionPromises = oauthApps
     .filter((oauthApp: OAuthClient) => isTestLabel(oauthApp.label))
     .map(async (oauthApp: OAuthClient) => {

@@ -7,7 +7,7 @@ import {
   mockGetOAuthApps,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
+import { randomLabel, randomSecret } from 'support/util/random';
 import { OAuthClient } from '@linode/api-v4/types';
 
 /**
@@ -104,6 +104,10 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .findByTitle('Client Secret')
     .should('be.visible')
     .within(() => {
+      cy.get('input[id="client-secret"]')
+        .should('be.visible')
+        .should('have.value', oauthApp.secret);
+
       ui.button
         .findByTitle('I Have Saved My Client Secret')
         .should('be.visible')
@@ -127,9 +131,11 @@ describe('Add OAuth Apps', () => {
     const oauthApps = oauthClientFactory.buildList(2);
     const privateOauthApp = oauthApps[0];
     privateOauthApp.label = randomLabel(5);
+    privateOauthApp.secret = randomSecret(64);
     const publicOauthApp = oauthApps[1];
     publicOauthApp.label = randomLabel(5);
     publicOauthApp.public = true;
+    publicOauthApp.secret = randomSecret(64);
 
     interceptGetProfile().as('getProfile');
     cy.visitWithLogin('/profile/clients');
@@ -145,8 +151,7 @@ describe('Add OAuth Apps', () => {
     interceptGetProfile().as('getProfile');
     mockGetOAuthApps(oauthApps).as('getOAuthApps');
     cy.visitWithLogin('/profile/clients');
-    cy.wait('@getProfile');
-    cy.wait('@getOAuthApps');
+    cy.wait(['@getProfile', '@getOAuthApps']);
     cy.findByText(privateOauthApp.label)
       .closest('tr')
       .within(() => {
