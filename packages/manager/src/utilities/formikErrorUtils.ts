@@ -44,7 +44,7 @@ export const handleGeneralErrors = (
 export const handleAPIErrors = (
   errors: APIError[],
   setFieldError: (field: string, message: string) => void,
-  setError: (message: string) => void
+  setError?: (message: string) => void
 ) => {
   errors.forEach((error: APIError) => {
     if (error.field) {
@@ -59,7 +59,9 @@ export const handleAPIErrors = (
       }
     } else {
       // Put any general API errors into a <Notice />
-      setError(error.reason);
+      if (setError) {
+        setError(error.reason);
+      }
     }
   });
 };

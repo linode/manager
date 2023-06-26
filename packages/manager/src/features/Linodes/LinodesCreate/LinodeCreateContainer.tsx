@@ -56,8 +56,11 @@ import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { sendCreateLinodeEvent, sendEvent } from 'src/utilities/ga';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import {
+  sendCreateLinodeEvent,
+  sendLinodeCreateFlowDocsClickEvent,
+} from 'src/utilities/analytics';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
@@ -157,6 +160,7 @@ const defaultState: State = {
   vlanIPAMAddress: null,
   showApiAwarenessModal: false,
   userData: undefined,
+  disabledClasses: [],
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -193,7 +197,7 @@ const isNonDefaultImageType = (prevType: string, type: string) => {
 };
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
-  params = getParamsFromUrl(this.props.location.search) as Record<
+  params = getQueryParamsFromQueryString(this.props.location.search) as Record<
     string,
     string
   >;
@@ -232,10 +236,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     // Update search params for Linode Clone
     if (prevProps.location.search !== this.props.history.location.search) {
-      this.params = getParamsFromUrl(this.props.location.search) as Record<
-        string,
-        string
-      >;
+      this.params = getQueryParamsFromQueryString(
+        this.props.location.search
+      ) as Record<string, string>;
     }
   }
 
@@ -627,7 +630,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           this.props.upsertLinode(response);
         }
 
-        /** GA creation event */
+        /** Analytics creation event */
         handleAnalytics(
           createType,
           payload,
@@ -754,24 +757,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const userCannotCreateLinode =
       Boolean(profile.data?.restricted) && !grants.data?.global.add_linodes;
 
-    // If the selected type is a GPU plan, only display region
-    // options that support GPUs.
-    const selectedType = extendedTypeData?.find(
-      (thisType) => thisType.id === this.state.selectedTypeID
-    );
-
-    const filteredRegions =
-      selectedType?.class === 'gpu'
-        ? regionsData?.filter((thisRegion) => {
-            return thisRegion.capabilities.includes('GPU Linodes');
-          })
-        : regionsData;
-
-    const regionHelperText =
-      (filteredRegions?.length ?? 0) !== (regionsData?.length ?? 0)
-        ? 'Only regions that support your selected plan are displayed.'
-        : undefined;
-
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
@@ -780,13 +765,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             title="Create"
             docsLabel="Getting Started"
             docsLink="https://www.linode.com/docs/guides/platform/get-started/"
-            onDocsClick={() => {
-              sendEvent({
-                category: 'Linode Create Flow',
-                action: 'Click:link',
-                label: 'Getting Started',
-              });
-            }}
+            onDocsClick={() =>
+              sendLinodeCreateFlowDocsClickEvent('Getting Started')
+            }
           />
           <LinodeCreate
             regionDisplayInfo={this.getRegionInfo()}
@@ -811,8 +792,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             checkValidation={this.checkValidation}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
-            regionsData={filteredRegions!}
-            regionHelperText={regionHelperText}
+            regionsData={regionsData}
             typesData={extendedTypeData}
             vlanLabel={this.state.attachedVLANLabel}
             ipamAddress={this.state.vlanIPAMAddress}

@@ -12,7 +12,6 @@ import Typography from 'src/components/core/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { addUsedDiskSpace } from 'src/features/Linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
@@ -24,7 +23,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
-import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
+import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
@@ -38,6 +37,7 @@ import useEvents from 'src/hooks/useEvents';
 import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { useImageQuery } from 'src/queries/images';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {

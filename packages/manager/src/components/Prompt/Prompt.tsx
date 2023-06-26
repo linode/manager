@@ -32,7 +32,7 @@ interface ChildrenProps {
   handleConfirm: () => void;
 }
 
-interface Props {
+interface PromptProps {
   when: boolean;
   confirmWhenLeaving?: boolean;
   children: (props: ChildrenProps) => React.ReactNode;
@@ -47,9 +47,7 @@ const handleBeforeUnload = (e: BeforeUnloadEvent) => {
   e.returnValue = '';
 };
 
-type CombinedProps = Props;
-
-const Prompt: React.FC<CombinedProps> = (props) => {
+export const Prompt = React.memo((props: PromptProps) => {
   const history = useHistory();
 
   React.useEffect(() => {
@@ -114,5 +112,4 @@ const Prompt: React.FC<CombinedProps> = (props) => {
       {props.children({ isModalOpen, handleCancel, handleConfirm })}
     </>
   );
-};
-export default React.memo(Prompt);
+});

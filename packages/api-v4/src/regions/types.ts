@@ -8,7 +8,8 @@ export type Capabilities =
   | 'Cloud Firewall'
   | 'Vlans'
   | 'Bare Metal'
-  | 'Metadata';
+  | 'Metadata'
+  | 'Premium Plans';
 
 export interface DNSResolvers {
   ipv4: string; // Comma-separated IP addresses

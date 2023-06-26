@@ -1,17 +1,12 @@
-import { shallow } from 'enzyme';
 import { APIError } from '@linode/api-v4/lib/types';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
-import { App } from './App';
+import { App, hasOauthError } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
-
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-
-import { hasOauthError } from './App';
-import { preferencesFactory } from './factories/preferences';
-import { storeFactory } from './store';
 import { queryClientFactory } from './queries/base';
+import { storeFactory } from './store';
 
 const store = storeFactory(queryClientFactory());
 
@@ -20,27 +15,7 @@ it('renders without crashing.', () => {
     <Provider store={store}>
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
-          <App
-            {...reactRouterProps}
-            linodes={[]}
-            isLoggedInAsCustomer={false}
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
-            location={{
-              pathname: '',
-              hash: '',
-              search: '',
-              state: {},
-            }}
-            appIsLoading={false}
-            preferences={preferencesFactory.build()}
-            getUserPreferences={jest.fn()}
-            updateUserPreferences={jest.fn()}
-            linodesLoading={false}
-            ldClient={{} as any}
-            featureFlagsLoading={false}
-            flags={{}}
-          />
+          <App />
         </StaticRouter>
       </LinodeThemeWrapper>
     </Provider>

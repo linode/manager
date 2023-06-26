@@ -15,7 +15,7 @@ import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { LinodeHandlers } from './LinodesLanding';
 

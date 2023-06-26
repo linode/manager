@@ -238,16 +238,7 @@ export interface Disk {
   updated: string;
 }
 
-export type DiskStatus =
-  | 'offline'
-  | 'booting'
-  | 'running'
-  | 'shutting_down'
-  | 'rebooting'
-  | 'provisioning'
-  | 'deleting'
-  | 'migrating'
-  | 'ready';
+export type DiskStatus = 'ready' | 'not ready' | 'deleting';
 
 export interface LinodeConfigCreationData {
   label: string;
@@ -370,4 +361,10 @@ export interface LinodeDiskCreationData {
   root_pass?: string;
   stackscript_id?: number;
   stackscript_data?: any;
+}
+
+export interface ResizeLinodePayload {
+  type: string;
+  /** @default true */
+  allow_auto_disk_resize?: boolean;
 }

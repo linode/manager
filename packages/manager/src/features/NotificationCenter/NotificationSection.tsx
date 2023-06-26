@@ -1,17 +1,17 @@
-import * as React from 'react';
-import Box from 'src/components/core/Box';
-import classNames from 'classnames';
-import ExtendedAccordion from 'src/components/ExtendedAccordion';
-import Hidden from 'src/components/core/Hidden';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Typography from 'src/components/core/Typography';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Link } from 'react-router-dom';
-import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
-import { makeStyles } from 'tss-react/mui';
-import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
-import { styled } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import classNames from 'classnames';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ExtendedAccordion } from 'src/components/ExtendedAccordion/ExtendedAccordion';
+import Box from 'src/components/core/Box';
+import Hidden from 'src/components/core/Hidden';
+import Typography from 'src/components/core/Typography';
+import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   inverted: {
@@ -179,7 +179,7 @@ const ContentBody = React.memo((props: BodyProps) => {
       ))}
       {content.length > count ? (
         <StyledLToggleContainer display="flex" justifyContent="flex-end">
-          <LinkStyledButton
+          <StyledLinkButton
             onClick={() => setShowAll(!showAll)}
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
@@ -195,7 +195,7 @@ const ContentBody = React.memo((props: BodyProps) => {
                 [classes.inverted]: showAll,
               })}
             />
-          </LinkStyledButton>
+          </StyledLinkButton>
         </StyledLToggleContainer>
       ) : null}
     </>

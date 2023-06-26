@@ -2,8 +2,6 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import { TableBody } from 'src/components/TableBody';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate, { PaginationProps } from 'src/components/Paginate';
@@ -13,33 +11,16 @@ import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import TableWrapper from './TableWrapper';
-import { IconButton } from 'src/components/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import GridView from 'src/assets/icons/grid-view.svg';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  controlHeader: {
-    marginBottom: 28,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    backgroundColor: theme.bg.tableHeader,
-  },
-  toggleButton: {
-    color: '#d2d3d4',
-    padding: 10,
-    '&:focus': {
-      // Browser default until we get styling direction for focus states
-      outline: '1px dotted #999',
-    },
-  },
-  table: {
-    // tableLayout: 'fixed'
-  },
-}));
+import {
+  StyledControlHeader,
+  StyledToggleButton,
+} from './DisplayLinodes.styles';
 
 export interface RenderLinodesProps extends PaginationProps {
   data: Props['data'];
@@ -71,8 +52,7 @@ interface Props {
 type CombinedProps = Props &
   OrderByProps<LinodeWithMaintenanceAndDisplayStatus>;
 
-const DisplayLinodes = (props: CombinedProps) => {
-  const classes = useStyles();
+export const DisplayLinodes = React.memo((props: CombinedProps) => {
   const {
     count,
     data,
@@ -105,7 +85,7 @@ const DisplayLinodes = (props: CombinedProps) => {
   const maxPageNumber = Math.ceil(count / pageSize);
 
   const { search } = useLocation();
-  const params = getParamsFromUrl(search);
+  const params = getQueryParamsFromQueryString(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
   return (
@@ -150,7 +130,6 @@ const DisplayLinodes = (props: CombinedProps) => {
                 linodesAreGrouped={linodesAreGrouped}
                 toggleLinodeView={toggleLinodeView}
                 toggleGroupLinodes={toggleGroupLinodes}
-                tableProps={{ tableClass: classes.table }}
               >
                 <TableBody>
                   <Component showHead {...componentProps} />
@@ -160,7 +139,7 @@ const DisplayLinodes = (props: CombinedProps) => {
             {display === 'grid' && (
               <>
                 <Grid xs={12} className={'px0'}>
-                  <div className={classes.controlHeader}>
+                  <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
                     <div
                       id="displayViewDescription"
                       className="visually-hidden"
@@ -168,16 +147,16 @@ const DisplayLinodes = (props: CombinedProps) => {
                       Currently in {linodeViewPreference} view
                     </div>
                     <Tooltip placement="top" title="List view">
-                      <IconButton
+                      <StyledToggleButton
                         aria-label="Toggle display"
                         aria-describedby={'displayViewDescription'}
-                        onClick={toggleLinodeView}
                         disableRipple
-                        className={classes.toggleButton}
+                        isActive={true}
+                        onClick={toggleLinodeView}
                         size="large"
                       >
-                        <TableView />
-                      </IconButton>
+                        <GridView />
+                      </StyledToggleButton>
                     </Tooltip>
 
                     <div id="groupByDescription" className="visually-hidden">
@@ -186,18 +165,18 @@ const DisplayLinodes = (props: CombinedProps) => {
                         : 'group by tag is currently disabled'}
                     </div>
                     <Tooltip placement="top-end" title="Group by tag">
-                      <IconButton
+                      <StyledToggleButton
                         aria-label={`Toggle group by tag`}
                         aria-describedby={'groupByDescription'}
                         onClick={toggleGroupLinodes}
                         disableRipple
-                        className={classes.toggleButton}
+                        isActive={linodesAreGrouped}
                         size="large"
                       >
                         <GroupByTag />
-                      </IconButton>
+                      </StyledToggleButton>
                     </Tooltip>
-                  </div>
+                  </StyledControlHeader>
                 </Grid>
                 <Component showHead {...componentProps} />
               </>
@@ -221,6 +200,4 @@ const DisplayLinodes = (props: CombinedProps) => {
       }}
     </Paginate>
   );
-};
-
-export default React.memo(DisplayLinodes);
+});

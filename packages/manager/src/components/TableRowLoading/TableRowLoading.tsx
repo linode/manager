@@ -1,17 +1,8 @@
 import * as React from 'react';
 import Hidden, { HiddenProps } from '../core/Hidden';
 import Skeleton from '../core/Skeleton';
-import { makeStyles } from '@mui/styles';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    '& :last-child': {
-      paddingRight: 15,
-    },
-  },
-}));
 
 export interface TableRowLoadingProps {
   columns?: number;
@@ -24,7 +15,6 @@ export const TableRowLoading = ({
   responsive,
   rows = 1,
 }: TableRowLoadingProps) => {
-  const classes = useStyles();
   const cols = [];
 
   for (let j = 0; j < columns; j++) {
@@ -51,9 +41,13 @@ export const TableRowLoading = ({
     tableRows.push(
       <TableRow
         aria-label="Table content is loading"
-        className={classes.root}
         data-testid="table-row-loading"
         key={`table-loading-row-${i}`}
+        sx={{
+          '&& :last-child': {
+            paddingRight: '15px',
+          },
+        }}
       >
         {cols}
       </TableRow>
