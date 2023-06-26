@@ -3,49 +3,20 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-  input: {
-    minWidth: 415,
-    [theme.breakpoints.down('md')]: {
-      minWidth: 'auto',
-    },
-  },
-  button: {
-    minWidth: 180,
-    [theme.breakpoints.up('md')]: {
-      marginTop: 16,
-    },
-  },
-}));
-
-export interface Props {
-  label: string;
+interface Props extends TextFieldProps {
   fieldName?: string;
   submitForm: (value: string) => Promise<any>;
   initialValue?: string;
-  disabled?: boolean;
-  tooltipText?: string;
   successMessage?: string;
   errorMessage?: string;
   successCallback?: () => void;
 }
 
-export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
-  props
-) => {
-  const classes = useStyles();
-
+export const SingleTextFieldForm = React.memo((props: Props) => {
   const {
     label,
     fieldName,
@@ -96,11 +67,20 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
       <Box
         display="flex"
         justifyContent="space-between"
-        className={classes.root}
+        sx={(theme) => ({
+          [theme.breakpoints.down('md')]: {
+            flexDirection: 'column',
+          },
+        })}
       >
         <TextField
           {...textFieldProps}
-          className={classes.input}
+          sx={(theme) => ({
+            minWidth: 415,
+            [theme.breakpoints.down('md')]: {
+              minWidth: 'auto',
+            },
+          })}
           label={label}
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -110,7 +90,12 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
         />
         <ActionsPanel>
           <Button
-            className={classes.button}
+            sx={(theme) => ({
+              minWidth: 180,
+              [theme.breakpoints.up('md')]: {
+                marginTop: 2,
+              },
+            })}
             buttonType="primary"
             onClick={handleSubmit}
             disabled={disabled || value === initialValue}
@@ -133,6 +118,4 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
       ) : null}
     </>
   );
-};
-
-export default React.memo(SingleTextFieldForm);
+});

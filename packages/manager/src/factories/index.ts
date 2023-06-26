@@ -1,6 +1,7 @@
 export * from './account';
 export * from './accountSettings';
 export * from './accountMaintenance';
+export * from './accountOAuth';
 export * from './accountPayment';
 export * from './billing';
 export * from './config';
