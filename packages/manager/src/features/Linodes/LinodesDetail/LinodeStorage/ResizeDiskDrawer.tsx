@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Code from 'src/components/Code';
+import { Code } from 'src/components/Code/Code';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles } from '@mui/styles';
