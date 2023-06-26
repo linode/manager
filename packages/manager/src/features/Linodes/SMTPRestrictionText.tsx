@@ -4,7 +4,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import { SupportLink } from 'src/components/SupportLink';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { useAccount } from 'src/queries/account';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 export interface Props {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
   supportLink?: {

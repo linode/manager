@@ -45,7 +45,7 @@ export const getPlanSelectionsByPlanType = <
     return acc;
   }, {} as PlansByType<T>);
 
-// group plans by type
+  // group plans by type
   for (const type of types) {
     switch (type.class) {
       case 'nanode':
@@ -155,7 +155,7 @@ export const planTabInfoContent = {
   },
   premium: {
     typography:
-      'Premium CPU instances guarantee a minimum processor model, AMD Epyc\u2122 7713 or higher, to ensure consistent high performance for more demanding workloads.',
+      'Premium CPU instances guarantee a minimum processor generation of AMD EPYC\u2122 Milan or newer to ensure consistent high performance for more demanding workloads.',
     title: 'Premium',
     key: 'premium',
     dataId: 'data-qa-premium',

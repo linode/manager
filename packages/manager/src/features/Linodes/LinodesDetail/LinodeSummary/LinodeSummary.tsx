@@ -9,7 +9,7 @@ import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
-import LineGraph from 'src/components/LineGraph';
+import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   STATS_NOT_READY_API_MESSAGE,

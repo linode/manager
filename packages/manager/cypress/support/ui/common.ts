@@ -18,6 +18,7 @@ import { deleteAllTestTags } from '../api/tags';
 import { cancelAllTestEntityTransfers } from '../api/entityTransfer';
 import { apiMatcher } from 'support/util/intercepts';
 import { SimpleBackoffMethod, attemptWithBackoff } from 'support/util/backoff';
+import { deleteAllTestOAuthApps } from 'support/api/profile';
 
 export const waitForAppLoad = (path = '/', withLogin = true) => {
   cy.intercept('GET', apiMatcher('linode/instances/*')).as('getLinodes');
@@ -87,6 +88,7 @@ export const deleteAllTestData = async () => {
       deleteAllTestAccessKeys(),
       deleteAllTestTags(),
       deleteAllTestVolumes(),
+      deleteAllTestOAuthApps(),
     ]);
   });
 };

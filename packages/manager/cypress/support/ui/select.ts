@@ -1,4 +1,4 @@
-import { getRegionById, getRegionByName } from 'support/util/regions';
+import { getRegionById, getRegionByLabel } from 'support/util/regions';
 
 /**
  * UI helpers for Enhanced Select component.
@@ -53,20 +53,20 @@ export const regionSelect = {
    */
   findItemByRegionId: (regionId: string) => {
     const region = getRegionById(regionId);
-    return select.findItemByText(`${region.name} (${region.id})`);
+    return select.findItemByText(`${region.label} (${region.id})`);
   },
 
   /**
-   * Finds a Region Select menu item using the name of a region.
+   * Finds a Region Select menu item using a region's label.
    *
    * This assumes that the Region Select menu is already open.
    *
-   * @param regionName - Region name.
+   * @param regionLabel - Region label.
    *
    * @returns Cypress chainable.
    */
-  findItemByRegionName: (regionName: string) => {
-    const region = getRegionByName(regionName);
-    return select.findItemByText(`${region.name} (${region.id})`);
+  findItemByRegionLabel: (regionLabel: string) => {
+    const region = getRegionByLabel(regionLabel);
+    return select.findItemByText(`${region.label} (${region.id})`);
   },
 };

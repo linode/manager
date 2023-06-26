@@ -20,9 +20,9 @@ import Typography from 'src/components/core/Typography';
 import DocsLink from 'src/components/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import { LabelAndTagsPanel } from 'src/components/LabelAndTagsPanel/LabelAndTagsPanel';
 import { Notice } from 'src/components/Notice/Notice';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import type { Tab } from 'src/components/TabLinkList/TabLinkList';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
@@ -43,8 +43,11 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { sendEvent } from 'src/utilities/ga';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import {
+  sendApiAwarenessClickEvent,
+  sendLinodeCreateFlowDocsClickEvent,
+} from 'src/utilities/analytics';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { v4 } from 'uuid';
 import { AddonsPanel } from './AddonsPanel';
 import ApiAwarenessModal from './ApiAwarenessModal';
@@ -214,7 +217,7 @@ export class LinodeCreate extends React.PureComponent<
     super(props);
 
     /** Get the query params as an object, excluding the "?" */
-    const queryParams = getParamsFromUrl(location.search);
+    const queryParams = getQueryParamsFromQueryString(location.search);
 
     const _tabs = [
       'Distributions',
@@ -414,11 +417,7 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_id: this.props.selectedStackScriptID,
       stackscript_data: this.props.selectedUDFs,
     };
-    sendEvent({
-      category: 'Linode Create API CLI Awareness Modal',
-      action: 'Click:Button',
-      label: 'Create Using Command Line',
-    });
+    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
     this.props.checkValidation(payload);
   };
 
@@ -438,26 +437,27 @@ export class LinodeCreate extends React.PureComponent<
       regionsError,
       regionsData,
       regionDisplayInfo,
-      regionsLoading,
-      typesData,
-      typeDisplayInfo,
-      typesError,
-      typesLoading,
-      label,
-      updateLabel,
-      tags,
-      updateTags,
-      errors,
-      backupsMonthlyPrice,
-      userCannotCreateLinode,
       accountBackupsEnabled,
-      showGeneralError,
-      showAgreement,
-      showApiAwarenessModal,
+      backupsMonthlyPrice,
+      errors,
       handleAgreementChange,
       handleShowApiAwarenessModal,
+      label,
+      regionsLoading,
+      selectedRegionID,
+      showAgreement,
+      showApiAwarenessModal,
+      showGeneralError,
       signedAgreement,
+      tags,
+      typeDisplayInfo,
+      typesData,
+      typesError,
+      typesLoading,
+      updateLabel,
+      updateTags,
       updateUserData,
+      userCannotCreateLinode,
       ...rest
     } = this.props;
 
@@ -708,28 +708,20 @@ export class LinodeCreate extends React.PureComponent<
             error={hasErrorFor.type}
             types={this.filterTypes()}
             onSelect={this.props.updateTypeID}
+            selectedRegionID={selectedRegionID}
             selectedID={this.props.selectedTypeID}
             linodeID={this.props.selectedLinodeID}
-            updateFor={[
-              this.props.selectedTypeID,
-              this.props.disabledClasses,
-              this.props.createType,
-              errors,
-            ]}
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
             isCreate
+            regionsData={regionsData!}
             showTransfer
             docsLink={
               <DocsLink
                 href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
                 label="Choosing a Plan"
                 onClick={() => {
-                  sendEvent({
-                    category: 'Linode Create Flow',
-                    action: 'Click:link',
-                    label: 'Choosing a Plan',
-                  });
+                  sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
                 }}
               />
             }
@@ -748,7 +740,6 @@ export class LinodeCreate extends React.PureComponent<
                 ? tagsInputProps
                 : undefined
             }
-            updateFor={[tags, label, errors]}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (

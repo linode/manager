@@ -5,7 +5,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NotFound from 'src/components/NotFound';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import { useProfile, useGrants } from 'src/queries/profile';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';

@@ -10,11 +10,11 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { CreateFolderDrawer } from './CreateFolderDrawer';
 import { debounce } from 'throttle-debounce';
 import { deleteObject as _deleteObject } from '../requests';
-import { getQueryParam } from 'src/utilities/queryParams';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 import { ObjectUploader } from '../ObjectUploader/ObjectUploader';
-import { sendDownloadObjectEvent } from 'src/utilities/ga';
+import { sendDownloadObjectEvent } from 'src/utilities/analytics';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -66,7 +66,7 @@ export const BucketDetail = () => {
   const { enqueueSnackbar } = useSnackbar();
   const bucketName = match?.params.bucketName || '';
   const clusterId = match?.params.clusterId || '';
-  const prefix = getQueryParam(location.search, 'prefix');
+  const prefix = getQueryParamFromQueryString(location.search, 'prefix');
   const queryClient = useQueryClient();
   const {
     data,

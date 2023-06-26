@@ -85,9 +85,6 @@ const StyledDialog = styled(_Dialog, {
     justifyContent: 'flex-end',
     marginTop: theme.spacing(2),
   },
-  '& .MuiBackdrop-root': {
-    backgroundColor: 'rgba(0, 0, 0, .3)',
-  },
 }));
 
 const StyledHr = styled('hr')({

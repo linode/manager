@@ -1,10 +1,9 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
 import Button from 'src/components/core/Button';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { PromotionalOffer } from 'src/featureFlags';
@@ -14,7 +13,7 @@ import {
   onSiteURL,
 } from 'src/utilities/sanitize-html/sanitizeHTML';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -87,15 +86,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props extends PromotionalOffer {
+export interface PromotionalOfferCardProps extends PromotionalOffer {
   fullWidth?: boolean;
   className?: string;
 }
 
-type CombinedProps = Props;
-
-export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const PromotionalOfferCard = (props: PromotionalOfferCardProps) => {
+  const { classes, cx } = useStyles();
 
   const { fullWidth, ...promotionalOfferAttributes } = props;
 
@@ -111,7 +108,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
 
   return (
     <Paper
-      className={classNames({
+      className={cx({
         [classes.root]: true,
         [classes.fullWidth]: props.fullWidth,
         // Inject the className if given as as prop.
@@ -122,14 +119,14 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
         <Logo className={classes.logo} width={iconSize} height={iconSize} />
       )}
       <div
-        className={classNames({
+        className={cx({
           [classes.copy]: true,
           [classes.alignLeft]: fullWidth,
         })}
       >
         <Typography
           variant="subtitle2"
-          className={classNames({
+          className={cx({
             [classes.centerText]: !fullWidth,
             [classes.capMaxWidth]: !fullWidth,
           })}
@@ -144,7 +141,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
             {offer.buttons.slice(0, 2).map((button) => (
               <Button
                 key={button.text}
-                className={classNames({
+                className={cx({
                   [classes.button]: true,
                   [classes.buttonSecondary]: button.type === 'secondary',
                 })}
@@ -159,7 +156,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
         {offer.footnote && (
           <Typography
             variant="body1"
-            className={classNames({
+            className={cx({
               [classes.footnote]: true,
               [classes.centerText]: !fullWidth,
               [classes.capMaxWidth]: !fullWidth,
@@ -172,8 +169,6 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
     </Paper>
   );
 };
-
-export default PromotionalOfferCard;
 
 // Be extra-cautious when accessing fields on promotionalOffers, since they are
 // sourced from our external feature flag service. This function ensures that
