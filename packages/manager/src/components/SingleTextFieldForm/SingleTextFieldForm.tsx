@@ -4,7 +4,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import { TextField, TextFieldProps } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props extends TextFieldProps {

@@ -10,7 +10,7 @@ import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import Typography from 'src/components/core/Typography';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 
 interface Props {

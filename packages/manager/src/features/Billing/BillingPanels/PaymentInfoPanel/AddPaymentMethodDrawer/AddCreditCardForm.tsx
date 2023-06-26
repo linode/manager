@@ -3,7 +3,7 @@ import { useFormik, yupToFormErrors } from 'formik';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { addPaymentMethod } from '@linode/api-v4/lib';

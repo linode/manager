@@ -9,7 +9,7 @@ import ReactSelect, {
 import CreatableSelect, {
   CreatableProps as CreatableSelectProps,
 } from 'react-select/creatable';
-import { Props as TextFieldProps } from 'src/components/TextField';
+import { TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 import { reactSelectStyles, useStyles } from './Select.styles';
 import { DropdownIndicator } from './components/DropdownIndicator';
