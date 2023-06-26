@@ -175,8 +175,13 @@ const databases = [
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });
+    const premiumTypes = databaseTypeFactory.buildList(7, {
+      class: 'premium',
+    });
     return res(
-      ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+      ctx.json(
+        makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
+      )
     );
   }),
 
@@ -378,6 +383,7 @@ export const handlers = [
       })
   ),
   rest.get('*/linode/instances', async (req, res, ctx) => {
+    linodeFactory.resetSequenceNumber();
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -446,6 +452,10 @@ export const handlers = [
     ];
     return res(ctx.json(makeResourcePage(linodes)));
   }),
+  rest.get('*/linode/instances/:id', async (req, res, ctx) => {
+    const id = Number(req.params.id);
+    return res(ctx.json(linodeFactory.build({ id })));
+  }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
     return res(ctx.json({}));
   }),
@@ -456,6 +466,13 @@ export const handlers = [
   rest.get('*/instances/*/disks', async (req, res, ctx) => {
     const disks = linodeDiskFactory.buildList(3);
     return res(ctx.json(makeResourcePage(disks)));
+  }),
+  rest.put('*/instances/*/disks/:id', async (req, res, ctx) => {
+    const id = Number(req.params.id);
+    const disk = linodeDiskFactory.build({ id });
+    // If you want to mock an error
+    // return res(ctx.status(400), ctx.json({ errors: [{ field: 'label', reason: 'OMG!' }] }));
+    return res(ctx.json(disk));
   }),
   rest.get('*/instances/*/transfer', async (req, res, ctx) => {
     const transfer = linodeTransferFactory.build();
@@ -755,7 +772,7 @@ export const handlers = [
       headers.status === 'completed'
         ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-            ...accountMaintenanceFactory.buildList(2, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
             ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
           ];
 
@@ -860,7 +877,22 @@ export const handlers = [
       seen: true,
       percent_complete: 100,
     });
-    return res.once(ctx.json(makeResourcePage([...events, ...oldEvents])));
+    const eventWithSpecialCharacters = eventFactory.build({
+      action: 'ticket_update',
+      status: 'notification',
+      entity: {
+        type: 'ticket',
+        label: 'Ticket name with special characters... (?)',
+        id: 10,
+      },
+      message: 'Ticket name with special characters... (?)',
+      percent_complete: 100,
+    });
+    return res.once(
+      ctx.json(
+        makeResourcePage([...events, ...oldEvents, eventWithSpecialCharacters])
+      )
+    );
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
@@ -1237,6 +1269,7 @@ export const mockDataHandlers: Record<
 > = {
   linode: (count) =>
     rest.get('*/linode/instances', async (req, res, ctx) => {
+      linodeFactory.resetSequenceNumber();
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     }),

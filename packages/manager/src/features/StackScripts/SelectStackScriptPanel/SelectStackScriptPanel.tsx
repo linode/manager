@@ -23,7 +23,7 @@ import {
   WithProfileProps,
 } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
-import { getParamFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncate } from 'src/utilities/truncate';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
@@ -111,7 +111,10 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   componentDidMount() {
-    const selected = +getParamFromUrl(location.search, 'stackScriptID');
+    const selected = +getQueryParamFromQueryString(
+      location.search,
+      'stackScriptID'
+    );
     /** '' converted to a number is 0 */
     if (!isNaN(selected) && selected !== 0) {
       this.setState({ stackScriptLoading: true });

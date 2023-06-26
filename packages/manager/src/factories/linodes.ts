@@ -198,7 +198,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   image: 'linode/debian10',
   watchdog_enabled: true,
   status: 'running',
-  ipv4: ['192.168.0.0'],
+  ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   group: '',
   alerts: linodeAlertsFactory.build(),

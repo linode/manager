@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.95.1",
+  "version": "1.96.0",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -63,7 +63,6 @@
     "react-csv": "^2.0.3",
     "react-dom": "^17.0.2",
     "react-dropzone": "~11.2.0",
-    "react-ga": "^2.5.3",
     "react-number-format": "^3.5.0",
     "react-page-visibility": "^6.2.0",
     "react-query": "^3.3.2",
@@ -80,11 +79,11 @@
     "rxjs": "^5.5.6",
     "sanitize-html": "~2.3.2",
     "search-string": "^3.1.0",
+    "simple-git": "^3.19.0",
     "throttle-debounce": "^2.0.0",
     "tss-react": "^4.8.2",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
-    "url-parse": "^1.5.9",
     "xterm": "^4.2.0",
     "yup": "^0.32.9",
     "zxcvbn": "^4.4.2"
@@ -107,9 +106,7 @@
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "release": "./scripts/release_changelog.sh",
-    "typecheck": "tsc",
-    "changeset": "node scripts/changelog/changeset.mjs",
-    "generate-changelog": "node scripts/changelog/generate-changelog.mjs"
+    "typecheck": "tsc"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
@@ -165,7 +162,6 @@
     "@types/redux-mock-store": "^1.0.1",
     "@types/sanitize-html": "1.22.0",
     "@types/throttle-debounce": "^1.0.0",
-    "@types/url-parse": "^1.4.1",
     "@types/uuid": "^3.4.3",
     "@types/yup": "^0.29.13",
     "@types/zxcvbn": "^4.4.0",

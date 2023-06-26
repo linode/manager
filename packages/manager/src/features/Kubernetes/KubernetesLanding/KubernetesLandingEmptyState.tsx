@@ -1,12 +1,12 @@
 import * as React from 'react';
 import KubernetesSvg from 'src/assets/icons/entityIcons/kubernetes.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/ga';
+import { sendEvent } from 'src/utilities/analytics';
 import { useHistory } from 'react-router-dom';
 import {
   gettingStartedGuides,
   headers,
-  linkGAEvent,
+  linkAnalyticsEvent,
   youtubeLinkData,
 } from './KubernetesLandingEmptyStateData';
 
@@ -19,7 +19,7 @@ export const KubernetesEmptyState = () => {
         {
           onClick: () => {
             sendEvent({
-              category: linkGAEvent.category,
+              category: linkAnalyticsEvent.category,
               action: 'Click:button',
               label: 'Create Cluster',
             });
@@ -31,7 +31,7 @@ export const KubernetesEmptyState = () => {
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
       icon={KubernetesSvg}
-      linkGAEvent={linkGAEvent}
+      linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />
   );

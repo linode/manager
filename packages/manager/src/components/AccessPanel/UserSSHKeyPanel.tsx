@@ -8,8 +8,8 @@ import Typography from 'src/components/core/Typography';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
@@ -114,7 +114,7 @@ const UserSSHKeyPanel = (props: Props) => {
 
     if (isRestricted && sshKeys?.results === 0) {
       return (
-        <TableRowEmptyState
+        <TableRowEmpty
           colSpan={3}
           message={"You don't have any SSH keys available."}
         />

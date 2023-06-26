@@ -1,22 +1,22 @@
-import * as React from 'react';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Grid from '@mui/material/Unstable_Grid2';
-import Paper from 'src/components/core/Paper';
-import PreferenceEditor from './PreferenceEditor';
-import RadioGroup from 'src/components/core/RadioGroup';
-import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormLabel } from '@mui/material';
-import { getQueryParam } from 'src/utilities/queryParams';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { Radio } from 'src/components/Radio/Radio';
-import { ThemeChoice } from 'src/utilities/theme';
 import { Toggle } from 'src/components/Toggle';
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Paper from 'src/components/core/Paper';
+import RadioGroup from 'src/components/core/RadioGroup';
+import Typography from 'src/components/core/Typography';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { useTheme } from '@mui/material/styles';
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
+import { ThemeChoice } from 'src/utilities/theme';
+import PreferenceEditor from './PreferenceEditor';
 
 export const ProfileSettings = () => {
   const theme = useTheme();
@@ -33,13 +33,19 @@ export const ProfileSettings = () => {
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   React.useEffect(() => {
-    if (getQueryParam(window.location.search, 'preferenceEditor') === 'true') {
+    if (
+      getQueryParamFromQueryString(
+        window.location.search,
+        'preferenceEditor'
+      ) === 'true'
+    ) {
       setPreferenceEditorOpen(true);
     }
   }, []);
 
   const preferenceEditorMode =
-    getQueryParam(window.location.search, 'preferenceEditor') === 'true';
+    getQueryParamFromQueryString(window.location.search, 'preferenceEditor') ===
+    'true';
 
   const toggle = () => {
     setSubmitting(true);

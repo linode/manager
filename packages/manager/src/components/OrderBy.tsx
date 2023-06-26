@@ -12,7 +12,7 @@ import {
   sortByUTFDate,
 } from 'src/utilities/sort-by';
 import { debounce } from 'throttle-debounce';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { useHistory, useLocation } from 'react-router-dom';
 
 export interface OrderByProps<T> extends State {
@@ -153,7 +153,7 @@ export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
   const history = useHistory();
-  const params = getParamsFromUrl(location.search);
+  const params = getQueryParamsFromQueryString(location.search);
 
   const initialValues = getInitialValuesFromUserPreferences(
     props.preferenceKey ?? '',

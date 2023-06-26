@@ -10,7 +10,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import SMTPRestrictionText from 'src/features/Linodes/SMTPRestrictionText';
@@ -23,7 +23,7 @@ const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
   () => import('./LinodeNetworking/LinodeNetworking')
 );
-const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
+const LinodeStorage = React.lazy(() => import('./LinodeStorage/LinodeStorage'));
 const LinodeConfigurations = React.lazy(
   () => import('./LinodeConfigs/LinodeConfigs')
 );

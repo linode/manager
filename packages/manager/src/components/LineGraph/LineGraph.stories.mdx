@@ -1,4 +1,4 @@
-import LineGraph from './LineGraph';
+import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 import TranferHistory from 'src/features/Linodes/LinodesDetail/LinodeNetworking/NetworkingSummaryPanel/TransferHistory';
 
@@ -68,7 +68,7 @@ export const Template = (args) => <LineGraph {...args} />;
       unit: '%',
       accessibleDataTable: {
         display: true,
-        unit: "%"
+        unit: '%',
       },
       chartHeight: undefined,
       suggestedMax: undefined,
@@ -153,7 +153,7 @@ export const Template = (args) => <LineGraph {...args} />;
   </Story>
 </Canvas>
 
-<ArgsTable story="Default" sort="requiredFirst"/>
+<ArgsTable story="Default" sort="requiredFirst" />
 
 ## Example
 

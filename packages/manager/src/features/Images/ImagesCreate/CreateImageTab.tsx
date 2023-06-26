@@ -17,7 +17,7 @@ import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
-import LinodeSelect from 'src/features/Linodes/LinodeSelect';
+import { LinodeSelectV2 } from 'src/features/Linodes/LinodeSelect/LinodeSelectV2';
 import useFlags from 'src/hooks/useFlags';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
@@ -67,7 +67,9 @@ const cloudInitTooltipMessage = (
   <Typography>
     Many Linode supported distributions are compatible with cloud-init by
     default, or you may have installed cloud-init.{' '}
-    <Link to="/">Learn more.</Link>
+    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
+      Learn more.
+    </Link>
   </Typography>
 );
 
@@ -117,10 +119,13 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         .map((thisGrant) => thisGrant.id) ?? []
     : null;
 
-  const fetchLinodeDisksOnLinodeChange = (selectedLinode: number) => {
+  React.useEffect(() => {
+    if (!selectedLinode) {
+      return;
+    }
     setSelectedDisk('');
 
-    getLinodeDisks(selectedLinode)
+    getLinodeDisks(selectedLinode.id)
       .then((response) => {
         const filteredDisks = response.data.filter(
           (disk) => disk.filesystem !== 'swap'
@@ -138,19 +143,14 @@ export const CreateImageTab: React.FC<Props> = (props) => {
           },
         ]);
       });
-  };
-
-  const changeSelectedLinode = (linode: Linode) => {
-    fetchLinodeDisksOnLinodeChange(linode.id);
-    setSelectedLinode(linode);
-  };
+  }, [selectedLinode]);
 
   const handleLinodeChange = (linode: Linode | null) => {
     if (linode !== null) {
       // Clear any errors
       setErrors(undefined);
-      changeSelectedLinode(linode);
     }
+    setSelectedLinode(linode ?? undefined);
   };
 
   const handleDiskChange = (diskID: string | null) => {
@@ -247,24 +247,15 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         <Notice error text={generalError} data-qa-notice />
       ) : null}
       {notice ? <Notice success text={notice} data-qa-notice /> : null}
-      <LinodeSelect
-        selectedLinode={selectedLinode?.id || null}
-        linodeError={linodeError}
+
+      <LinodeSelectV2
+        value={selectedLinode?.id || null}
+        errorText={linodeError}
         disabled={!canCreateImage}
-        handleChange={(linode) => handleLinodeChange(linode)}
-        filterCondition={(linode) =>
-          availableLinodesToImagize
-            ? availableLinodesToImagize.includes(linode.id)
-            : true
+        onSelectionChange={(linode) => handleLinodeChange(linode)}
+        optionsFilter={(linode) =>
+          availableLinodesToImagize?.includes(linode.id) ?? true
         }
-        updateFor={[
-          selectedLinode,
-          linodeError,
-          classes,
-          canCreateImage,
-          availableLinodesToImagize,
-        ]}
-        isClearable={false}
         required
       />
 

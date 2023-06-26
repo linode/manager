@@ -1,121 +1,36 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import classNames from 'classnames';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
+import { useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
-import { Dispatch } from 'src/hooks/types';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
-import Button from 'src/components/Button';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import {
+  StyledCopy,
+  StyledDropZoneContentDiv,
+  StyledDropZoneDiv,
+  StyledFileUploadsDiv,
+  StyledUploadButton,
+} from 'src/components/FileUploader/FileUploader.styles';
 import { uploadImageFile } from 'src/features/Images/requests';
 import { FileUpload } from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { redirectToLogin } from 'src/session';
-import { setPendingUpload } from 'src/store/pendingUpload';
-import { sendImageUploadEvent } from 'src/utilities/ga';
-import { readableBytes } from 'src/utilities/unitConversions';
 import {
-  curriedObjectUploaderReducer,
-  defaultState,
   MAX_FILE_SIZE_IN_BYTES,
   MAX_PARALLEL_UPLOADS,
+  curriedObjectUploaderReducer,
+  defaultState,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
-import { useUploadImageQuery, queryKey } from 'src/queries/images';
-import { useQueryClient } from 'react-query';
+import { Dispatch } from 'src/hooks/types';
+import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { queryKey, useUploadImageQuery } from 'src/queries/images';
+import { redirectToLogin } from 'src/session';
+import { setPendingUpload } from 'src/store/pendingUpload';
+import { sendImageUploadEvent } from 'src/utilities/analytics';
+import { readableBytes } from 'src/utilities/unitConversions';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    position: 'relative',
-  },
-  dropzone: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-    borderColor: theme.palette.primary.main,
-    borderStyle: 'dashed',
-    borderWidth: 1,
-    color: theme.palette.primary.main,
-    height: '100%',
-    maxHeight: 400,
-    marginTop: theme.spacing(2),
-    minHeight: 140,
-    outline: 'none',
-    overflow: 'auto',
-    padding: theme.spacing(),
-    transition: theme.transitions.create(['border-color', 'background-color']),
-  },
-  active: {
-    // The `active` class active when a user is hovering over the dropzone.
-    borderColor: theme.palette.primary.light,
-    backgroundColor: theme.color.white,
-    '& $uploadButton': {
-      opacity: 0.5,
-    },
-  },
-  inactive: {
-    // When the dropzone is disabled
-    borderColor: '#888',
-    '& $uploadButton': {
-      '&:hover': {
-        cursor: 'default',
-      },
-    },
-  },
-  accept: {
-    // The `accept` class active when a user is hovering over the dropzone
-    // with files that will be accepted (based on file size, number of files).
-    borderColor: theme.palette.primary.light,
-  },
-  reject: {
-    // The `reject` class active when a user is hovering over the dropzone
-    // with files that will be rejected (based on file size, number of files).
-    borderColor: theme.color.red,
-  },
-  fileUploads: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    justifyContent: 'flex-start',
-  },
-  dropzoneContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    width: '100%',
-  },
-  UploadZoneActiveButton: {
-    backgroundColor: 'transparent',
-    bottom: theme.spacing(1.5),
-    padding: 0,
-    position: 'absolute',
-    width: `calc(100% - ${theme.spacing(4)})`,
-    zIndex: 10,
-    '& $uploadButton': {
-      marginTop: 0,
-    },
-  },
-  copy: {
-    color: theme.palette.text.primary,
-    margin: '0 auto',
-  },
-  uploadButton: {
-    marginTop: theme.spacing(2),
-    opacity: 1,
-    transition: theme.transitions.create(['opacity']),
-  },
-}));
-
-interface Props {
+interface FileUploaderProps {
   label: string;
   description?: string;
   isCloudInit?: boolean;
@@ -128,9 +43,7 @@ interface Props {
   onSuccess?: () => void;
 }
 
-type CombinedProps = Props & WithSnackbarProps;
-
-const FileUploader: React.FC<CombinedProps> = (props) => {
+export const FileUploader = React.memo((props: FileUploaderProps) => {
   const {
     label,
     description,
@@ -142,6 +55,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     onSuccess,
   } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
   const queryClient = useQueryClient();
   const { mutateAsync: uploadImage } = useUploadImageQuery({
@@ -151,7 +65,6 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     cloud_init: isCloudInit ? isCloudInit : undefined,
   });
 
-  const classes = useStyles();
   const history = useHistory();
 
   // Keep track of the session token since we may need to grab the user a new
@@ -210,17 +123,17 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     }) exceeded`;
 
     if (wrongFileType) {
-      props.enqueueSnackbar(fileTypeErrorMessage, {
+      enqueueSnackbar(fileTypeErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
     } else if (moreThanOneFile) {
-      props.enqueueSnackbar(fileNumberErrorMessage, {
+      enqueueSnackbar(fileNumberErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
     } else {
-      props.enqueueSnackbar(fileSizeErrorMessage, {
+      enqueueSnackbar(fileSizeErrorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
       });
@@ -271,7 +184,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
         const successfulUploadMessage = `Image ${label} uploaded successfully. It is being processed and will be available shortly.`;
 
-        props.enqueueSnackbar(successfulUploadMessage, {
+        enqueueSnackbar(successfulUploadMessage, {
           variant: 'success',
           autoHideDuration: 6000,
         });
@@ -387,98 +300,59 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   const hideDropzoneBrowseBtn =
     (isDragAccept || acceptedFiles.length > 0) && !apiError; // Checking that there isn't an apiError set to prevent disappearance of button if image creation isn't available in a region at that moment, etc.
 
-  const className = React.useMemo(
-    () =>
-      classNames({
-        [classes.active]: isDragActive,
-        [classes.accept]: isDragAccept,
-        [classes.reject]: isDragReject,
-        [classes.inactive]: dropzoneDisabled || uploadInProgressOrFinished,
-      }),
-    [
-      isDragActive,
-      isDragAccept,
-      isDragReject,
-      dropzoneDisabled,
-      uploadInProgressOrFinished,
-    ]
-  );
-
   // const UploadZoneActive =
   //   state.files.filter((upload) => upload.status !== 'QUEUED').length !== 0;
 
-  const UploadZoneActive = state.files.length !== 0;
+  const uploadZoneActive = state.files.length !== 0;
 
   const placeholder = dropzoneDisabled
     ? 'To upload an image, complete the required fields.'
     : 'You can browse your device to upload an image file or drop it here.';
 
   return (
-    <div
-      className={classNames({
-        [classes.root]: UploadZoneActive,
-      })}
+    <StyledDropZoneDiv
+      {...getRootProps({})}
+      isDragActive={isDragActive}
+      isDragAccept={isDragAccept}
+      isDragReject={isDragReject}
+      dropzoneDisabled={dropzoneDisabled || uploadInProgressOrFinished}
     >
-      <div
-        {...getRootProps({
-          className: `${
-            dropzoneDisabled || uploadInProgressOrFinished ? 'disabled' : ''
-          } ${classes.dropzone} ${className}`,
+      <input {...getInputProps()} placeholder={placeholder} />
+      <StyledFileUploadsDiv>
+        {state.files.map((upload, idx) => {
+          const fileName = upload.file.name;
+          return (
+            <FileUpload
+              key={idx}
+              displayName={fileName}
+              fileName={fileName}
+              sizeInBytes={upload.file.size || 0}
+              percentCompleted={upload.percentComplete || 0}
+              overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
+              dispatch={dispatch}
+              error={upload.status === 'ERROR' ? 'Error uploading image.' : ''}
+              type="image"
+            />
+          );
         })}
-      >
-        <input {...getInputProps()} placeholder={placeholder} />
-
-        <div className={classes.fileUploads}>
-          {state.files.map((upload, idx) => {
-            const fileName = upload.file.name;
-            return (
-              <FileUpload
-                key={idx}
-                displayName={fileName}
-                fileName={fileName}
-                sizeInBytes={upload.file.size || 0}
-                percentCompleted={upload.percentComplete || 0}
-                overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
-                dispatch={dispatch}
-                error={
-                  upload.status === 'ERROR' ? 'Error uploading image.' : ''
-                }
-                type="image"
-              />
-            );
-          })}
-        </div>
-
-        <div
-          className={classNames({
-            [classes.dropzoneContent]: true,
-            [classes.UploadZoneActiveButton]: UploadZoneActive,
-          })}
-        >
-          {!UploadZoneActive && (
-            <Typography variant="subtitle2" className={classes.copy}>
-              {placeholder}
-            </Typography>
-          )}
-          {!hideDropzoneBrowseBtn ? (
-            <Button
-              buttonType="primary"
-              onClick={open}
-              className={classes.uploadButton}
-              disabled={dropzoneDisabled}
-            >
-              Browse Files
-            </Button>
-          ) : null}
-        </div>
-      </div>
-    </div>
+      </StyledFileUploadsDiv>
+      <StyledDropZoneContentDiv uploadZoneActive={uploadZoneActive}>
+        {!uploadZoneActive && (
+          <StyledCopy variant="subtitle2">{placeholder}</StyledCopy>
+        )}
+        {!hideDropzoneBrowseBtn ? (
+          <StyledUploadButton
+            buttonType="primary"
+            onClick={open}
+            disabled={dropzoneDisabled}
+          >
+            Browse Files
+          </StyledUploadButton>
+        ) : null}
+      </StyledDropZoneContentDiv>
+    </StyledDropZoneDiv>
   );
-};
-
-const enhanced = compose<CombinedProps, Props>(withSnackbar, React.memo);
-
-export default enhanced(FileUploader);
+});
 
 const recordImageAnalytics = (
   action: 'start' | 'success' | 'fail',

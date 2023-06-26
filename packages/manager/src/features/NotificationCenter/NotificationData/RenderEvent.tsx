@@ -2,17 +2,17 @@ import * as React from 'react';
 import Box from 'src/components/core/Box';
 import classNames from 'classnames';
 import Divider from 'src/components/core/Divider';
-import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import Typography from 'src/components/core/Typography';
 import useEventInfo from './useEventInfo';
 import { Event } from '@linode/api-v4/lib/account/types';
-import { parseAPIDate } from 'src/utilities/date';
 import {
   RenderEventGravatar,
   RenderEventStyledBox,
   useRenderEventStyles,
 } from './RenderEvent.styles';
 import { useApplicationStore } from 'src/store';
+import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 interface RenderEventProps {
   event: Event;
@@ -44,7 +44,7 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
         <Box sx={{ marginTop: '-2px' }}>
           {eventMessage}
           <Typography className={unseenEventClass}>
-            {parseAPIDate(event.created).toRelative()}
+            {getEventTimestamp(event).toRelative()}
           </Typography>
         </Box>
       </RenderEventStyledBox>

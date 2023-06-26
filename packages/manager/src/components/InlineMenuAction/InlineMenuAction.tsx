@@ -49,7 +49,7 @@ interface Props {
   tooltip?: string;
   loading?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  tooltipGAEvent?: () => void;
+  tooltipAnalyticsEvent?: () => void;
 }
 
 type CombinedProps = Props;
@@ -63,7 +63,7 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
     tooltip,
     onClick,
     loading,
-    tooltipGAEvent,
+    tooltipAnalyticsEvent,
   } = props;
 
   const classes = useStyles();
@@ -82,7 +82,7 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
         disabled={disabled}
         loading={loading}
         tooltipText={tooltip}
-        tooltipGAEvent={tooltipGAEvent}
+        tooltipAnalyticsEvent={tooltipAnalyticsEvent}
       >
         {actionText}
       </Button>

@@ -56,9 +56,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       backgroundColor: theme.palette.primary.main,
     },
   },
-  backDrop: {
-    backgroundColor: theme.color.drawerBackdrop,
-  },
 }));
 
 const Drawer = (props: Props) => {
@@ -78,11 +75,6 @@ const Drawer = (props: Props) => {
         }
       }}
       {...rest}
-      ModalProps={{
-        BackdropProps: {
-          className: classes.backDrop,
-        },
-      }}
       aria-labelledby={titleID}
       data-qa-drawer
       data-testid="drawer"
