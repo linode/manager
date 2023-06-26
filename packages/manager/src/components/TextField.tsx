@@ -1,20 +1,21 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import classNames from 'classnames';
 import { clamp } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { CircleProgress } from 'src/components/CircleProgress';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles, WithTheme } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import TextField, { TextFieldProps } from 'src/components/core/TextField';
+import {
+  default as _TextField,
+  StandardTextFieldProps,
+} from '@mui/material/TextField';
 import { TooltipProps as _TooltipProps } from 'src/components/core/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   helpWrapper: {
     display: 'flex',
     alignItems: 'flex-end',
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface BaseProps {
-  className?: any;
+  className?: string;
   dataAttrs?: Record<string, any>;
   editable?: boolean;
   errorGroup?: string;
@@ -97,20 +98,15 @@ interface ToolTipProps {
   tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
 }
 
-interface TextFieldPropsOverrides extends TextFieldProps {
+interface TextFieldPropsOverrides extends StandardTextFieldProps {
   // We override this prop to make it required
   label: string;
 }
 
-export type Props = BaseProps &
-  TextFieldProps &
-  TextFieldPropsOverrides &
-  ToolTipProps;
+export type Props = BaseProps & TextFieldPropsOverrides & ToolTipProps;
 
-type CombinedProps = Props & WithTheme;
-
-export const LinodeTextField: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const TextField = (props: Props) => {
+  const { classes, cx } = useStyles();
 
   const {
     children,
@@ -138,8 +134,6 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     optional,
     required,
     SelectProps,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    theme,
     tooltipPosition,
     tooltipText,
     tooltipClasses,
@@ -222,14 +216,14 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
 
   return (
     <div
-      className={classNames({
+      className={cx({
         [classes.helpWrapper]: Boolean(tooltipText),
         [errorScrollClassName]: !!errorText,
       })}
     >
       <InputLabel
         data-qa-textfield-label={label}
-        className={classNames({
+        className={cx({
           [classes.wrapper]: noMarginTop ? false : true,
           [classes.noTransform]: true,
           'visually-hidden': hideLabel,
@@ -253,11 +247,11 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         </FormHelperText>
       )}
       <div
-        className={classNames({
+        className={cx({
           [classes.helpWrapperContainer]: Boolean(tooltipText),
         })}
       >
-        <TextField
+        <_TextField
           {...textFieldProps}
           {...dataAttrs}
           variant="standard"
@@ -292,7 +286,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
                 <CircleProgress mini />
               </InputAdornment>
             ),
-            className: classNames(
+            className: cx(
               'input',
               {
                 [classes.expand]: expand,
@@ -312,7 +306,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             },
             ...SelectProps,
           }}
-          className={classNames(
+          className={cx(
             {
               [classes.root]: true,
               [classes.helpWrapperTextField]: Boolean(tooltipText),
@@ -322,7 +316,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
           type={type}
         >
           {children}
-        </TextField>
+        </_TextField>
         {tooltipText && (
           <TooltipIcon
             classes={{ popper: tooltipClasses }}
@@ -339,7 +333,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
       </div>
       {errorText && (
         <FormHelperText
-          className={classNames({
+          className={cx({
             [classes.errorText]: true,
             [classes.editable]: editable,
             [classes.absolute]: editable || hasAbsoluteError,
@@ -359,7 +353,3 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     </div>
   );
 };
-
-export default compose<CombinedProps, Props>(React.memo)(
-  LinodeTextField
-) as React.ComponentType<Props>;

@@ -7,10 +7,9 @@ import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import { TextFieldProps } from 'src/components/core/TextField';
 import { fadeIn } from 'src/styles/keyframes';
 import { makeStyles } from 'tss-react/mui';
-import TextField from '../TextField';
+import { TextField, Props as TextFieldProps } from '../TextField';
 
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({
@@ -111,7 +110,7 @@ interface Props {
   className?: string;
 }
 
-type PassThroughProps = Props & TextFieldProps;
+type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
 
 export const EditableText = (props: PassThroughProps) => {
   const { classes } = useStyles();

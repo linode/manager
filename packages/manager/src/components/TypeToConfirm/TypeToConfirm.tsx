@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Link from 'src/components/Link';
-import TextField, { Props } from 'src/components/TextField';
+import { TextField, Props } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 
 export interface TypeToConfirmProps extends Omit<Props, 'onChange'> {

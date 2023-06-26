@@ -3,7 +3,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
 import { useFormik } from 'formik';
 import { useUpdatePersonalAccessTokenMutation } from 'src/queries/tokens';

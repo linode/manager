@@ -11,7 +11,7 @@ import { Theme } from '@mui/material/styles';
 import Drawer from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { sendEvent } from 'src/utilities/analytics';
 import { useSnackbar } from 'notistack';
