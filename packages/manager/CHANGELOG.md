@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Dynamic Premium Plans support for Linode creation flows ([#9253](https://github.com/linode/manager/pull/9253))
 - Dynamic GPU Plans support for Linode creation flows ([#9284](https://github.com/linode/manager/pull/9284))
+- Metadata Beta docs links ([#9304](https://github.com/linode/manager/pull/9304))
 
 ### Changed:
 
