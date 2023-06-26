@@ -75,6 +75,7 @@ interface BaseProps {
   dataAttrs?: Record<string, any>;
   /**
    * Applies editable styles
+   * @default false
    */
   editable?: boolean;
   /**
@@ -87,18 +88,22 @@ interface BaseProps {
   errorText?: string;
   /**
    * Makes the TextField use 100% of the available width
+   * @default false
    */
   expand?: boolean;
   /**
    * Makes the error text have the absolute positioning
+   * @default false
    */
   hasAbsoluteError?: boolean;
   /**
    * Placement of the `helperText`
+   * @default bottom
    */
   helperTextPosition?: 'top' | 'bottom';
   /**
    * Hides the `label`
+   * @default false
    */
   hideLabel?: boolean;
   /**
@@ -107,6 +112,7 @@ interface BaseProps {
   inputId?: string;
   /**
    * Displays a loading spinner at the end of the Text Field
+   * @default false
    */
   loading?: boolean;
   /**
@@ -119,10 +125,12 @@ interface BaseProps {
   min?: number;
   /**
    * Removes the default top margin (16px)
+   * @default false
    */
   noMarginTop?: boolean;
   /**
    * Adds `(optional)` to the Label
+   * @default false
    */
   optional?: boolean;
   /**
