@@ -55,7 +55,7 @@ export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
       </Link>{' '}
       uploading an SSH key or generating a new key pair. Note that the public
       key begins with <Code>ssh-rsa</Code> and ends with{' '}
-      <Code>your_username@hostname</Code>
+      <Code>your_username@hostname</Code>.
     </Typography>
   );
 
