@@ -52,7 +52,7 @@ export const WithDeleteButton: StoryObj<ChipProps> = {
 
       return (
         <div style={{ height: 20 }}>
-          {!isDeleted ? <Chip {...args} onDelete={handleDelete} /> : null};
+          {!isDeleted ? <Chip {...args} onDelete={handleDelete} /> : null}
         </div>
       );
     };
