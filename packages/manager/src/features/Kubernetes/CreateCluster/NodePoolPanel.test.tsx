@@ -6,8 +6,8 @@ import type { NodePoolPanelProps } from './NodePoolPanel';
 
 const props: NodePoolPanelProps = {
   hasSelectedRegion: true,
-  isSelectedRegionPremium: false,
-  isPremiumPlanPanelDisabled: () => false,
+  isSelectedRegionEligibleForPlan: () => false,
+  isPlanPanelDisabled: () => false,
   regionsData: [],
   types: extendedTypes,
   typesLoading: false,

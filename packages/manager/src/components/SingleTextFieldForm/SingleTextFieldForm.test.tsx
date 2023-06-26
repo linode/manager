@@ -1,11 +1,11 @@
 import * as React from 'react';
-import SingleTextFieldForm, { Props } from './SingleTextFieldForm';
+import { SingleTextFieldForm } from './SingleTextFieldForm';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 describe('SingleTextFieldForm', () => {
-  const props: Props = {
+  const props = {
     label: 'Username',
     submitForm: jest.fn(() => Promise.resolve()),
     initialValue: 'jane-doe',
