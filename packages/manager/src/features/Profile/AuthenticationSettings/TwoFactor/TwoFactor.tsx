@@ -9,7 +9,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getTFAToken } from '@linode/api-v4/lib/profile';
 import { Notice } from 'src/components/Notice/Notice';
 import { queryKey } from 'src/queries/profile';
-import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { TwoFactorToggle } from './TwoFactorToggle';
 import { useQueryClient } from 'react-query';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
@@ -203,13 +203,13 @@ export const TwoFactor = (props: TwoFactorProps) => {
         )}
         {twoFactorEnabled && (
           <StyledCTAWrapper>
-            <LinkStyledButton onClick={toggleHidden} data-qa-hide-show-code>
+            <StyledLinkButton onClick={toggleHidden} data-qa-hide-show-code>
               {showQRCode
                 ? 'Hide QR Code'
                 : twoFactorConfirmed
                 ? 'Reset two-factor authentication'
                 : 'Show QR Code'}
-            </LinkStyledButton>
+            </StyledLinkButton>
           </StyledCTAWrapper>
         )}
         {twoFactorEnabled &&

@@ -4,7 +4,7 @@ import { WithTheme, makeStyles, withTheme } from '@mui/styles';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LineGraph from 'src/components/LineGraph';
+import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import Typography from 'src/components/core/Typography';
 import {

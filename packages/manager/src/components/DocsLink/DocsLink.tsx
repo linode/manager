@@ -2,7 +2,7 @@ import * as React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import { sendHelpButtonClickEvent } from 'src/utilities/ga';
+import { sendHelpButtonClickEvent } from 'src/utilities/analytics';
 import { IconTextLink } from '../IconTextLink/IconTextLink';
 
 const useStyles = makeStyles()((theme: Theme) => ({

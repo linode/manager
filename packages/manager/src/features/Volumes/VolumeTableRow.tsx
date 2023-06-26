@@ -62,7 +62,7 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   offline: 'inactive',
 };
 
-export const VolumeTableRow = (props: CombinedProps) => {
+export const VolumeTableRow = React.memo((props: CombinedProps) => {
   const classes = useStyles();
   const { data: regions } = useRegionsQuery();
   const {
@@ -171,6 +171,4 @@ export const VolumeTableRow = (props: CombinedProps) => {
       </TableCell>
     </TableRow>
   );
-};
-
-export default React.memo(VolumeTableRow);
+});

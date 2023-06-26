@@ -10,8 +10,8 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
@@ -77,7 +77,7 @@ const AccountLogins = () => {
       return <TableRowError colSpan={5} message={error[0].reason} />;
     }
     if (data?.results == 0) {
-      return <TableRowEmptyState message="No account logins" colSpan={5} />;
+      return <TableRowEmpty message="No account logins" colSpan={5} />;
     }
     if (data) {
       return data.data.map((item: AccountLogin) => (

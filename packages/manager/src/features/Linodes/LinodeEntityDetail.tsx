@@ -29,7 +29,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -811,7 +811,10 @@ export const Footer = React.memo((props: FooterProps) => {
                 },
               }}
             >
-              <Box sx={sxLabel}>Plan: </Box> {linodePlan}
+              <Box component="span" sx={sxLabel}>
+                Plan:{' '}
+              </Box>{' '}
+              {linodePlan}
             </Typography>
           )}
           {linodeRegionDisplay && (
@@ -820,13 +823,19 @@ export const Footer = React.memo((props: FooterProps) => {
                 ...sxListItem,
               }}
             >
-              <Box sx={sxLabel}>Region:</Box> {linodeRegionDisplay}
+              <Box component="span" sx={sxLabel}>
+                Region:
+              </Box>{' '}
+              {linodeRegionDisplay}
             </Typography>
           )}
         </Box>
         <Box sx={sxBox}>
           <Typography sx={{ ...sxListItem, ...sxListItemFirstChild }}>
-            <Box sx={sxLabel}>Linode ID:</Box> {linodeId}
+            <Box component="span" sx={sxLabel}>
+              Linode ID:
+            </Box>{' '}
+            {linodeId}
           </Typography>
           <Typography
             sx={{
@@ -834,7 +843,9 @@ export const Footer = React.memo((props: FooterProps) => {
               ...sxLastListItem,
             }}
           >
-            <Box sx={sxLabel}>Created:</Box>{' '}
+            <Box component="span" sx={sxLabel}>
+              Created:
+            </Box>{' '}
             {formatDate(linodeCreated, {
               timezone: profile?.timezone,
             })}

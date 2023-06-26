@@ -13,7 +13,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
-import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import {
@@ -29,7 +29,7 @@ import { MapState } from 'src/store/types';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode';
@@ -37,13 +37,13 @@ import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
-import DisplayLinodes from './DisplayLinodes';
+import { DisplayLinodes } from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
 import { ExtendedStatus, statusToPriority } from './utils';
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
-import LinodeResize from '../LinodesDetail/LinodeResize/LinodeResize';
+import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
@@ -127,7 +127,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   };
 
   /**
-   * when you change the linode view, send an event to google analytics, debounced.
+   * when you change the linode view, send analytics event, debounced.
    */
   changeViewDelayed = (style: 'grid' | 'list') => {
     sendLinodesViewEvent(eventCategory, style);

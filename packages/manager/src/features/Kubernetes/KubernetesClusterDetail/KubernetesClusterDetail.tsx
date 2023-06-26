@@ -16,7 +16,8 @@ import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 import LandingHeader from 'src/components/LandingHeader';
-import ProductInformationBanner from 'src/components/ProductInformationBanner';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { useRegionsQuery } from 'src/queries/regions';
 
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
@@ -25,6 +26,8 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
 
   const { data: cluster, isLoading, error } = useKubernetesClusterQuery(id);
+
+  const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
     id
@@ -108,7 +111,12 @@ export const KubernetesClusterDetail = () => {
         <KubeSummaryPanel cluster={cluster} />
       </Grid>
       <Grid>
-        <NodePoolsDisplay clusterID={cluster.id} clusterLabel={cluster.label} />
+        <NodePoolsDisplay
+          clusterID={cluster.id}
+          clusterLabel={cluster.label}
+          clusterRegionId={cluster.region}
+          regionsData={regionsData || []}
+        />
       </Grid>
       <UpgradeKubernetesClusterToHADialog
         open={isUpgradeToHAOpen}

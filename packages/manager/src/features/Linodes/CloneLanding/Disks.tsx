@@ -11,7 +11,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { DiskSelection } from './utilities';
 
 const useStyles = makeStyles(() => ({
@@ -58,7 +58,7 @@ export const Disks: React.FC<Props> = (props) => {
                   </TableHead>
                   <TableBody>
                     {paginatedData.length === 0 ? (
-                      <TableRowEmptyState colSpan={2} />
+                      <TableRowEmpty colSpan={2} />
                     ) : (
                       paginatedData.map((disk: Disk) => {
                         const isDiskSelected =

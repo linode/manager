@@ -7,7 +7,7 @@ import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { DateTime } from 'luxon';
 import { formatDate } from 'src/utilities/formatDate';
 import { Link } from 'src/components/Link';
-import { LinkStyledButton } from 'src/components/Button/LinkStyledButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { path } from 'ramda';
@@ -387,12 +387,12 @@ const ComplianceNotification: React.FC<{}> = () => {
       Please review the compliance update for guidance regarding the EU Standard
       Contractual Clauses and its application to users located in Europe as well
       as deployments in Linode’s London and Frankfurt data centers
-      <LinkStyledButton
+      <StyledLinkButton
         onClick={() => complianceModelContext.open()}
         sx={{ minHeight: 0 }}
       >
         Review compliance update.
-      </LinkStyledButton>
+      </StyledLinkButton>
     </Typography>
   );
 };

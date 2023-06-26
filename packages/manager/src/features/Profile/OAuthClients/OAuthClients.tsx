@@ -8,8 +8,8 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import ActionMenu from './OAuthClientActionMenu';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -84,7 +84,7 @@ const OAuthClients = () => {
     }
 
     if (data?.results === 0) {
-      return <TableRowEmptyState colSpan={6} />;
+      return <TableRowEmpty colSpan={6} />;
     }
 
     return data?.data.map(({ id, label, redirect_uri, public: isPublic }) => (

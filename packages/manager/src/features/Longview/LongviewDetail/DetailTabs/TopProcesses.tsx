@@ -11,8 +11,8 @@ import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import {
@@ -132,7 +132,7 @@ const renderLoadingErrorData = (
     return <TableRowLoading columns={4} />;
   }
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={4} />;
+    return <TableRowEmpty colSpan={4} />;
   }
 
   return (

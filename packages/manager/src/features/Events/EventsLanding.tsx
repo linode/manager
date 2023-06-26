@@ -16,8 +16,8 @@ import { H1Header } from 'src/components/H1Header/H1Header';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
@@ -359,7 +359,7 @@ export const renderTableBody = (
     );
   } else if (filteredEvents.length === 0) {
     return (
-      <TableRowEmptyState
+      <TableRowEmpty
         colSpan={12}
         message={emptyMessage}
         data-qa-events-table-empty

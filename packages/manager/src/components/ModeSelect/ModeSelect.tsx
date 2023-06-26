@@ -8,19 +8,14 @@ export interface Mode<modes> {
   mode: modes;
 }
 
-interface Props {
+interface ModeSelectProps {
   selected: string;
   modes: Mode<any>[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-type CombinedProps = Props;
-
-export const ModeSelect: React.FC<CombinedProps> = ({
-  modes,
-  onChange,
-  selected,
-}) => {
+export const ModeSelect = React.memo((props: ModeSelectProps) => {
+  const { modes, onChange, selected } = props;
   return (
     <RadioGroup
       aria-label="mode"
@@ -40,6 +35,4 @@ export const ModeSelect: React.FC<CombinedProps> = ({
       ))}
     </RadioGroup>
   );
-};
-
-export default React.memo(ModeSelect);
+});

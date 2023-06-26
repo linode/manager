@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { useUpdateDomainMutation } from 'src/queries/domains';
-import { sendDomainStatusChangeEvent } from 'src/utilities/ga';
+import { sendDomainStatusChangeEvent } from 'src/utilities/analytics';
 
 interface Props {
   domain: Domain | undefined;

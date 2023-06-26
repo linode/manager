@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSnackbar } from 'notistack';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
-import { sendBackupsDisabledEvent } from 'src/utilities/ga';
+import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
 import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';

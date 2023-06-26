@@ -3,12 +3,12 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Notice } from 'src/components/Notice/Notice';
 import { Region } from '@linode/api-v4/lib/regions';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import { useLocation } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 
@@ -32,7 +32,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   } = props;
   const theme = useTheme();
   const location = useLocation();
-  const params = getParamsFromUrl(location.search);
+  const params = getQueryParamsFromQueryString(location.search);
   const showCrossDataCenterCloneWarning =
     /clone/i.test(params.type) && selectedID && params.regionID !== selectedID;
 

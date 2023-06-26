@@ -207,7 +207,6 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - run: cp packages/manager/config/environments/beta packages/manager/.env
       - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib

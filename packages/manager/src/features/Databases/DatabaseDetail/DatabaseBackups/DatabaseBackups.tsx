@@ -8,8 +8,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import DatabaseBackupTableRow from './DatabaseBackupTableRow';
-import TableRowError from 'src/components/TableRowError';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import RestoreFromBackupDialog from './RestoreFromBackupDialog';
@@ -77,9 +77,7 @@ export const DatabaseBackups = () => {
       return <TableRowLoading columns={3} />;
     }
     if (backups?.results === 0) {
-      return (
-        <TableRowEmptyState message="No backups to display." colSpan={3} />
-      );
+      return <TableRowEmpty message="No backups to display." colSpan={3} />;
     }
     if (backups) {
       return backups.data
