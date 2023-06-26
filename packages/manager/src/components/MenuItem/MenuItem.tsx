@@ -73,17 +73,17 @@ type CombinedProps = MenuItemProps & WrapperMenuItemProps;
 
 export const WrapperMenuItem = (props: CombinedProps) => {
   const { classes } = useStyles();
-  const { tooltip, isLoading, ...rest } = props;
+  const { tooltip, isLoading, className, ...rest } = props;
   const shouldWrapLabel = isLoading || tooltip;
 
-  const handleClick = (e: any) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
   };
 
   return (
     <MenuItem
       {...rest}
-      className={`${classes.root} ${tooltip && 'hasTooltip'}`}
+      className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
     >
       {isLoading && (
         <CircularProgress size={20} className={classes.circleProgress} />
