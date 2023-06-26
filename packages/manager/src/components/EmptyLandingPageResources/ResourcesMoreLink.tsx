@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { styled } from '@mui/material/styles';
 import { LinkProps } from 'react-router-dom';
 

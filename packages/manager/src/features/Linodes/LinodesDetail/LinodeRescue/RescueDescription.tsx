@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useLinodeFirewalls } from 'src/queries/linodes/firewalls';

@@ -5,8 +5,9 @@ const isExternal = (href: string) => {
   return href.match(/http/) || href.match(/mailto/);
 };
 
-export const Link: React.FC<LinkProps> = (props) => {
+export const Link = (props: LinkProps) => {
   const isLinkExternal = isExternal(props.to as string);
+
   return isLinkExternal ? (
     <a
       href={props.to as string}
@@ -22,5 +23,3 @@ export const Link: React.FC<LinkProps> = (props) => {
     <RouterLink {...props} />
   );
 };
-
-export default Link;
