@@ -77,7 +77,7 @@ services:
       dockerfile: ./packages/manager/Dockerfile
       target: manager
     ports:
-      - "3000:3000"
+      - "3000"
     volumes:
       - ./packages/manager:/home/node/app/packages/manager
       - ./package.json:/home/node/app/package.json
