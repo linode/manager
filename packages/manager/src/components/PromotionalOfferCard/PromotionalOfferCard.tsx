@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
-import Button from 'src/components/core/Button';
+import Button from '@mui/material/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';

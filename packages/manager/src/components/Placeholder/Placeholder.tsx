@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import Button, { ButtonProps } from 'src/components/Button';
+import { Button, ButtonProps } from 'src/components/Button/Button';
 import { styled, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { H1Header } from 'src/components/H1Header/H1Header';

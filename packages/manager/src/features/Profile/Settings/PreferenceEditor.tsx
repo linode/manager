@@ -5,7 +5,7 @@ import {
 } from 'src/components/Dialog/Dialog';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 

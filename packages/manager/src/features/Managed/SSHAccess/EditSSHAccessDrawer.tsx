@@ -2,7 +2,7 @@ import { Formik, FormikHelpers } from 'formik';
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

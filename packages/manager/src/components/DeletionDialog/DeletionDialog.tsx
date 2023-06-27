@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';

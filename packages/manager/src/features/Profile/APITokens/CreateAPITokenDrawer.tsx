@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
