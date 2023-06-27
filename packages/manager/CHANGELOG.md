@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- Added check for null label in event entity ([#9331](https://github.com/linode/manager/pull/9331))
+- Crash when viewing notifications due to `null` label in event entity ([#9331](https://github.com/linode/manager/pull/9331))
 
 ## [2023-06-26] - v1.96.0
 
