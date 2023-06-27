@@ -6,7 +6,7 @@ import Hidden from 'src/components/core/Hidden';
 import { Currency } from 'src/components/Currency';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Radio } from 'src/components/Radio/Radio';
-import SelectionCard from 'src/components/SelectionCard';
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { ApplicationState } from 'src/store';
 import { LINODE_NETWORK_IN } from 'src/constants';

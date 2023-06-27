@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Button from 'src/components/Button';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import Hidden from 'src/components/core/Hidden';
-import SelectionCard from 'src/components/SelectionCard';
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';

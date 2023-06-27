@@ -1,7 +1,7 @@
 import * as React from 'react';
-import CardBase from './CardBase';
 import Grid from '@mui/material/Unstable_Grid2';
 import Tooltip from 'src/components/core/Tooltip';
+import { CardBase } from './CardBase';
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 
@@ -26,28 +26,7 @@ export interface Props {
   tooltip?: string;
 }
 
-const StyledGrid = styled(Grid, {
-  label: 'SelectionCardGrid',
-})<Partial<Props>>(({ ...props }) => ({
-  '&:focus': {
-    outline: '1px dotted #999',
-  },
-  '& [class^="fl-"]': {
-    transition: 'color 225ms ease-in-out',
-  },
-  ...(props.onClick &&
-    !props.disabled && {
-      cursor: 'pointer',
-    }),
-  ...(props.disabled && {
-    cursor: 'not-allowed',
-    '& > div': {
-      opacity: 0.4,
-    },
-  }),
-}));
-
-const SelectionCard = (props: Props) => {
+export const SelectionCard = React.memo((props: Props) => {
   const {
     checked,
     className,
@@ -123,6 +102,25 @@ const SelectionCard = (props: Props) => {
   }
 
   return cardGrid;
-};
+});
 
-export default React.memo(SelectionCard);
+const StyledGrid = styled(Grid, {
+  label: 'SelectionCardGrid',
+})<Partial<Props>>(({ ...props }) => ({
+  '&:focus': {
+    outline: '1px dotted #999',
+  },
+  '& [class^="fl-"]': {
+    transition: 'color 225ms ease-in-out',
+  },
+  ...(props.onClick &&
+    !props.disabled && {
+      cursor: 'pointer',
+    }),
+  ...(props.disabled && {
+    cursor: 'not-allowed',
+    '& > div': {
+      opacity: 0.4,
+    },
+  }),
+}));

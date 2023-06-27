@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import SelectionCard from 'src/components/SelectionCard';
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 export interface ExtendedLinode extends Linode {
   heading: string;

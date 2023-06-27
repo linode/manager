@@ -23,7 +23,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
-import SelectionCard from 'src/components/SelectionCard';
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Toggle } from 'src/components/Toggle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
