@@ -1,45 +1,46 @@
 import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Theme, useTheme } from '@mui/material/styles';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Hidden from 'src/components/core/Hidden';
-import Paper from 'src/components/core/Paper';
-import { makeStyles } from 'tss-react/mui';
-import { Theme, useTheme } from '@mui/material/styles';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import LinodePermissionsError from '../LinodePermissionsError';
-import AddIPDrawer from './AddIPDrawer';
-import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
-import IPSharing from './IPSharing';
-import IPTransfer from './IPTransfer';
-import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
-import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
-import { IPTypes } from './types';
-import { ViewIPDrawer } from './ViewIPDrawer';
-import { ViewRangeDrawer } from './ViewRangeDrawer';
-import ViewRDNSDrawer from './ViewRDNSDrawer';
-import Grid from '@mui/material/Unstable_Grid2';
+import Hidden from 'src/components/core/Hidden';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   useAllIPsQuery,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
-import { useParams } from 'react-router-dom';
-import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
+import { useGrants } from 'src/queries/profile';
+import { makeStyles } from 'tss-react/mui';
+import LinodePermissionsError from '../LinodePermissionsError';
+import AddIPDrawer from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
 import { DeleteRangeDialog } from './DeleteRangeDialog';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
+import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
+import IPSharing from './IPSharing';
+import IPTransfer from './IPTransfer';
+import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
+import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
+import { ViewIPDrawer } from './ViewIPDrawer';
+import ViewRDNSDrawer from './ViewRDNSDrawer';
+import { ViewRangeDrawer } from './ViewRangeDrawer';
+import { IPTypes } from './types';
 
 const useStyles = makeStyles<void, 'copy'>()(
   (theme: Theme, _params, classes) => ({
@@ -100,11 +101,15 @@ const useStyles = makeStyles<void, 'copy'>()(
 export const ipv4TableID = 'ips';
 
 const LinodeNetworking = () => {
-  const readOnly = false;
+  const { data: grants } = useGrants();
   const { classes } = useStyles();
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const { data: ips, isLoading, error } = useLinodeIPsQuery(id);
+
+  const readOnly =
+    grants !== undefined &&
+    grants.linode.some((g) => g.id === id && g.permissions === 'read_only');
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
