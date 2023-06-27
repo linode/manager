@@ -872,7 +872,7 @@ export function applyLinking(event: Event, message: string) {
 
   let newMessage = message;
 
-  if (event.entity && entityLinkTarget) {
+  if (event.entity?.label && entityLinkTarget) {
     const label = event.entity.label;
     const nonTickedLabels = new RegExp(`(?<!\`)${escapeRegExp(label)}`, 'g');
 
@@ -882,7 +882,7 @@ export function applyLinking(event: Event, message: string) {
     );
   }
 
-  if (event.secondary_entity && secondaryEntityLinkTarget) {
+  if (event.secondary_entity?.label && secondaryEntityLinkTarget) {
     newMessage = newMessage.replace(
       event.secondary_entity.label,
       `<a href="${secondaryEntityLinkTarget}">${event.secondary_entity.label}</a>`
