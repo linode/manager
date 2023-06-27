@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-06-27] - v1.96.1
+
+
+### Fixed:
+
+- Added check for null label in event entity ([#9331](https://github.com/linode/manager/pull/9331))
+
 ## [2023-06-26] - v1.96.0
 
 ### Added:
