@@ -13,7 +13,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

@@ -13,7 +13,7 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import DiskSelect from 'src/features/Linodes/DiskSelect';

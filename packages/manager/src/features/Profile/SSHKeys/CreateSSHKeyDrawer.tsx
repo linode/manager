@@ -3,8 +3,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import Link from 'src/components/Link';
+import Typography from 'src/components/core/Typography';
+import { Code } from 'src/components/Code/Code';
 import { useCreateSSHKeyMutation } from 'src/queries/profile';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -14,7 +17,7 @@ interface Props {
   onClose: () => void;
 }
 
-const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
+export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     mutateAsync: createSSHKey,
@@ -45,6 +48,17 @@ const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
 
   const generalError = hasErrorFor('none');
 
+  const SSHTextAreaHelperText = () => (
+    <Typography component="span">
+      <Link to="https://www.linode.com/docs/guides/use-public-key-authentication-with-ssh/">
+        Learn about
+      </Link>{' '}
+      uploading an SSH key or generating a new key pair. Note that the public
+      key begins with <Code>ssh-rsa</Code> and ends with{' '}
+      <Code>your_username@hostname</Code>.
+    </Typography>
+  );
+
   return (
     <Drawer open={open} title="Add SSH Key" onClose={onClose}>
       {generalError && <Notice error text={generalError} />}
@@ -64,6 +78,12 @@ const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
           value={formik.values.ssh_key}
           multiline
           rows={1.75}
+          helperText={<SSHTextAreaHelperText />}
+          onBlur={(e) => {
+            const trimmedValue = e.target.value.trim();
+            formik.setFieldValue('ssh_key', trimmedValue);
+            formik.handleBlur(e);
+          }}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose}>
@@ -81,6 +101,4 @@ const CreateSSHKeyDrawer = ({ open, onClose }: Props) => {
       </form>
     </Drawer>
   );
-};
-
-export default React.memo(CreateSSHKeyDrawer);
+});

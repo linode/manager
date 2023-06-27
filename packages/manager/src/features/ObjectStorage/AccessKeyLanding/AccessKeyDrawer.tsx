@@ -2,7 +2,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { confirmObjectStorage } from '../utilities';

@@ -254,6 +254,8 @@ export const COUNTRY_CODE_TO_CONTINENT_CODE = Object.freeze({
   ZW: 'AF',
 });
 
+export type Country = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
+
 export const CONTINENT_CODE_TO_CONTINENT = Object.freeze({
   EU: 'Europe',
   AS: 'Asia',

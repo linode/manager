@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { useSnackbar } from 'notistack';
 import { useFormik } from 'formik';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
 import Button from 'src/components/Button';
 import { resetEventsPolling } from 'src/eventsPolling';

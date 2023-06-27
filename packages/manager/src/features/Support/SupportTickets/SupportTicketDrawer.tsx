@@ -19,7 +19,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useAccount } from 'src/queries/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';

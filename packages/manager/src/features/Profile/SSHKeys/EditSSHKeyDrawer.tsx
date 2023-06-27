@@ -3,7 +3,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { useUpdateSSHKeyMutation } from 'src/queries/profile';
 import { useFormik } from 'formik';

@@ -5,7 +5,7 @@ import ClusterSelect from './ClusterSelect';
 import Drawer from 'src/components/Drawer';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { Notice } from 'src/components/Notice/Notice';

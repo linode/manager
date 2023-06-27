@@ -18,7 +18,7 @@ import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelec
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { countries } from './countries';

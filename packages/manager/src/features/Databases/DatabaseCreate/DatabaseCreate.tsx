@@ -39,7 +39,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Radio } from 'src/components/Radio/Radio';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import PlansPanel, {
@@ -135,9 +135,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 const engineIcons = {
-  mysql: () => <MySQLIcon width="24" height="24" />,
-  postgresql: () => <PostgreSQLIcon width="24" height="24" />,
-  mongodb: () => <MongoDBIcon width="24" height="24" />,
+  mysql: <MySQLIcon width="24" height="24" />,
+  postgresql: <PostgreSQLIcon width="24" height="24" />,
+  mongodb: <MongoDBIcon width="24" height="24" />,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
