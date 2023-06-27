@@ -8,7 +8,7 @@ import Box from 'src/components/core/Box';
 import Accordion from 'src/components/Accordion';
 import Paper from 'src/components/core/Paper';
 import LandingHeader from 'src/components/LandingHeader';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';

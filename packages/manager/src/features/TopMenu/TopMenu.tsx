@@ -6,7 +6,7 @@ import { IconButton } from 'src/components/IconButton';
 import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
 import clsx from 'clsx';
-import Toolbar from 'src/components/core/Toolbar';
+import { Toolbar } from 'src/components/Toolbar';
 import Typography from 'src/components/core/Typography';
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import Community from './Community';
