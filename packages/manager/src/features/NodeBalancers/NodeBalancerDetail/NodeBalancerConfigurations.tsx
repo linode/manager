@@ -26,7 +26,7 @@ import {
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as composeC } from 'recompose';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -994,14 +994,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     return (
       <Accordion
         key={`nb-config-${idx}`}
-        updateFor={[
-          idx,
-          config,
-          configSubmitting[idx],
-          configErrors[idx],
-          panelMessages[idx],
-          panelNodeMessages[idx],
-        ]}
         defaultExpanded={isNewConfig || isExpanded}
         success={panelMessages[idx]}
         heading={

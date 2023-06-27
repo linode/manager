@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { Notice } from 'src/components/Notice/Notice';

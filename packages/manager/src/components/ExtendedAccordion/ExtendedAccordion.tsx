@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Accordion, { AccordionProps } from 'src/components/Accordion';
+import { Accordion, AccordionProps } from 'src/components/Accordion';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
