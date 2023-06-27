@@ -4,9 +4,7 @@ import { Link } from 'src/components/Link';
 import type { LinkProps } from 'react-router-dom';
 import type { Meta, StoryObj } from '@storybook/react';
 
-/**
- * TODO: remove the typography component from this story once M3-6772 is handled
- */
+// TODO: remove the typography component from this story once M3-6772 is handled
 export const Default: StoryObj<LinkProps> = {
   render: (args: LinkProps) => (
     <Typography variant="body1">
@@ -17,6 +15,11 @@ export const Default: StoryObj<LinkProps> = {
   ),
 };
 
+/**
+ * **@deprecated**<br />
+ * This story is deprecated and will be removed in a future release.
+ * Please use the `ExternalLink` component when you need to render an external link.
+ */
 export const External: StoryObj<LinkProps> = {
   render: (args: LinkProps) => (
     <Typography variant="h2">
