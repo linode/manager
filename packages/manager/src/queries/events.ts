@@ -185,7 +185,7 @@ const updateEventsCache = (
         eventsCache
       );
     } else {
-      queryClient.invalidateQueries(queryKey);
+      queryClient.resetQueries(queryKey);
     }
   }
 };
