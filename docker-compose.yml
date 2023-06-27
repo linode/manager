@@ -73,15 +73,6 @@ x-e2e-runners:
   env_file: ./packages/manager/.env
   volumes: *default-volumes
 
-x-regions-runners:
-  &default-region-runner
-  build:
-    context: .
-    dockerfile: ./packages/manager/Dockerfile
-    target: e2e
-  env_file: ./packages/manager/.env
-  volumes: *default-volumes
-
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
   # Not all of the runner containers require a local instance of Cypress, but
@@ -134,8 +125,12 @@ services:
       MANAGER_OAUTH: ${MANAGER_OAUTH_4}
 
   region-1:
-    <<: *default-region-runner
-    container_name: cloud-region-1
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e
+    env_file: ./packages/manager/.env
+    volumes: *default-volumes
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH_1}
