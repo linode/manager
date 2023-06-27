@@ -372,6 +372,7 @@ export interface OAuthClient {
   thumbnail_url: string | null;
   public: boolean;
   status: 'disabled' | 'active' | 'suspended';
+  secret: string;
 }
 
 export interface OAuthClientRequest {

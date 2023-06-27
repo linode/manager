@@ -1,4 +1,3 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
@@ -12,6 +11,7 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useStartLinodeMutationMutation } from 'src/queries/linodes/actions';
 import { useEventsInfiniteQuery } from 'src/queries/events';
+import { addUsedDiskSpace } from '../LinodeStorage/LinodeDisks';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   pendingMutationLink: {
@@ -144,13 +144,6 @@ export const MutationNotification = (props: Props) => {
       />
     </>
   );
-};
-
-/**
- * add all the used disk space together
- */
-export const addUsedDiskSpace = (disks: Disk[]) => {
-  return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
 };
 
 // Hack solution to determine if a type is moving from shared CPU cores to dedicated.

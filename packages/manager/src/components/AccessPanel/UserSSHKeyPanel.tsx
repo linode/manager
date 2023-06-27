@@ -10,7 +10,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
+import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
@@ -219,7 +219,7 @@ const UserSSHKeyPanel = (props: Props) => {
       >
         Add an SSH Key
       </Button>
-      <SSHKeyCreationDrawer
+      <CreateSSHKeyDrawer
         open={isCreateDrawerOpen}
         onClose={() => setIsCreateDrawerOpen(false)}
       />

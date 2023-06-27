@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withTheme, WithTheme } from '@mui/styles';
-import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';

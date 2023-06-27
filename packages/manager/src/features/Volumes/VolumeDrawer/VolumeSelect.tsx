@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useInfiniteVolumesQuery } from 'src/queries/volumes';
 
 interface Props {

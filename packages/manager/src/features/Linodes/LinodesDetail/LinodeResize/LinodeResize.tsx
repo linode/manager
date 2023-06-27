@@ -25,6 +25,7 @@ import {
   useLinodeQuery,
   useLinodeResizeMutation,
 } from 'src/queries/linodes/linodes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { usePreferences } from 'src/queries/preferences';
@@ -83,6 +84,8 @@ export const LinodeResize = (props: Props) => {
     isLoading,
     error: resizeError,
   } = useLinodeResizeMutation(linodeId ?? -1);
+
+  const { data: regionsData } = useRegionsQuery();
 
   const formik = useFormik({
     initialValues: {
@@ -201,6 +204,8 @@ export const LinodeResize = (props: Props) => {
             onSelect={(type) => formik.setFieldValue('type', type)}
             selectedID={formik.values.type}
             disabled={tableDisabled}
+            regionsData={regionsData}
+            selectedRegionID={linode?.region}
           />
         </div>
         <Typography variant="h2" className={classes.resizeTitle}>

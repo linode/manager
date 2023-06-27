@@ -7,7 +7,10 @@ import { domainEventsHandler } from 'src/queries/domains';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { firewallEventsHandler } from 'src/queries/firewalls';
 import { imageEventsHandler } from 'src/queries/images';
-import { linodeEventsHandler } from 'src/queries/linodes/events';
+import {
+  diskEventHandler,
+  linodeEventsHandler,
+} from 'src/queries/linodes/events';
 import { nodebalanacerEventHandler } from 'src/queries/nodebalancers';
 import { sshKeyEventHandler } from 'src/queries/profile';
 import { supportTicketEventHandler } from 'src/queries/support';
@@ -15,7 +18,7 @@ import { tokenEventHandler } from 'src/queries/tokens';
 import { volumeEventsHandler } from 'src/queries/volumes';
 import { ApplicationStore, useApplicationStore } from 'src/store';
 import { configEventHandler } from 'src/store/linodes/config/config.events';
-import { diskEventHandler } from 'src/store/linodes/disk/disk.events';
+import { diskStoreEventHandler } from 'src/store/linodes/disk/disk.events';
 import { linodeStoreEventsHandler } from 'src/store/linodes/linodes.events';
 import { longviewEventHandler } from 'src/store/longview/longview.events';
 
@@ -32,75 +35,69 @@ export const useAppEventHandlers = () => {
   const eventHandlers = React.useMemo<
     {
       filter: (event: Event) => boolean;
-      handler: AppEventHandler;
+      handlers: AppEventHandler[];
     }[]
   >(
     () => [
       {
         filter: (event) => event.action.startsWith('database'),
-        handler: databaseEventsHandler,
+        handlers: [databaseEventsHandler],
       },
       {
         filter: (event) =>
           event.action.startsWith('domain') && event.entity !== null,
-        handler: domainEventsHandler,
+        handlers: [domainEventsHandler],
       },
       {
         filter: (event) => event.action.startsWith('volume'),
-        handler: volumeEventsHandler,
+        handlers: [volumeEventsHandler],
       },
       {
         filter: (event) =>
           event.action.startsWith('image') || event.action === 'disk_imagize',
-        handler: imageEventsHandler,
+        handlers: [imageEventsHandler],
       },
       {
         filter: (event) => event.action.startsWith('token'),
-        handler: tokenEventHandler,
+        handlers: [tokenEventHandler],
       },
       {
         filter: (event) => event.action.startsWith('user_ssh_key'),
-        handler: sshKeyEventHandler,
+        handlers: [sshKeyEventHandler],
       },
       {
         filter: (event) => event.action.startsWith('firewall'),
-        handler: firewallEventsHandler,
+        handlers: [firewallEventsHandler],
       },
       {
         filter: (event) => event.action.startsWith('nodebalancer'),
-        handler: nodebalanacerEventHandler,
+        handlers: [nodebalanacerEventHandler],
       },
       {
         filter: (event) => event.action.startsWith('oauth_client'),
-        handler: oauthClientsEventHandler,
+        handlers: [oauthClientsEventHandler],
       },
       {
         filter: (event) =>
           event.action.startsWith('linode') ||
           event.action.startsWith('backups'),
-        handler: linodeEventsHandler,
-      },
-      {
-        filter: (event) =>
-          event.action.startsWith('linode') ||
-          event.action.startsWith('backups'),
-        handler: linodeStoreEventsHandler,
+        handlers: [linodeEventsHandler, linodeStoreEventsHandler],
       },
       {
         filter: (event) => event.action.startsWith('ticket'),
-        handler: supportTicketEventHandler,
+        handlers: [supportTicketEventHandler],
       },
       {
         filter: (event) => event.action.startsWith('longviewclient'),
-        handler: longviewEventHandler,
+        handlers: [longviewEventHandler],
       },
       {
         filter: (event) => event.action.startsWith('disk'),
-        handler: diskEventHandler,
+        handlers: [diskEventHandler, diskStoreEventHandler],
       },
       {
         filter: (event) => event.action.startsWith('linode_config'),
-        handler: configEventHandler,
+        handlers: [configEventHandler],
       },
     ],
     []
@@ -110,7 +107,9 @@ export const useAppEventHandlers = () => {
     eventHandler: (event) => {
       eventHandlers
         .filter(({ filter }) => filter(event))
-        .forEach(({ handler }) => handler(event, queryClient, store));
+        .map(({ handlers }) => handlers)
+        .flat()
+        .forEach((handler) => handler(event, queryClient, store));
     },
   });
 };

@@ -4,7 +4,7 @@ import { AppEventHandler } from 'src/hooks/useAppEventHandlers';
 import { getAllLinodeDisks } from './disk.requests';
 import { isEntityEvent } from 'src/utilities/eventUtils';
 
-export const diskEventHandler: AppEventHandler = (event, _, store) => {
+export const diskStoreEventHandler: AppEventHandler = (event, _, store) => {
   if (!isEntityEvent(event)) {
     return;
   }

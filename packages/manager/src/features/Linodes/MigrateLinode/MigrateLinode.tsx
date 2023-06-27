@@ -11,7 +11,6 @@ import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { MBpsInterDC } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { addUsedDiskSpace } from 'src/features/Linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
@@ -37,6 +36,7 @@ import { useImageQuery } from 'src/queries/images';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { useRecentEventForLinode } from 'src/hooks/useRecentEventForLinode';
+import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {

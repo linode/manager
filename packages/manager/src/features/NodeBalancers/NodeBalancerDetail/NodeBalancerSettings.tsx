@@ -3,7 +3,7 @@ import Accordion from 'src/components/Accordion';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useTheme } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';

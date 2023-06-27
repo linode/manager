@@ -12,7 +12,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';

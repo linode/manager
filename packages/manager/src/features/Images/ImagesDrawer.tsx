@@ -13,7 +13,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
 import LinodeSelect from 'src/features/Linodes/LinodeSelect';
