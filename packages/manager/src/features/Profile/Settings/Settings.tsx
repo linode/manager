@@ -2,6 +2,7 @@ import { FormLabel } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { isOSMac } from 'src/App';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
@@ -17,6 +18,7 @@ import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { ThemeChoice } from 'src/utilities/theme';
 import PreferenceEditor from './PreferenceEditor';
+import { Code } from 'src/components/Code/Code';
 
 export const ProfileSettings = () => {
   const theme = useTheme();
@@ -93,6 +95,10 @@ export const ProfileSettings = () => {
               <FormLabel>
                 <Typography variant="h2">Theme</Typography>
               </FormLabel>
+              <Typography variant="body1">
+                You may toggle your theme with the keyboard shortcut{' '}
+                {ThemeKeyboardShortcut}.
+              </Typography>
               <RadioGroup
                 row
                 style={{ marginBottom: 0 }}
@@ -161,3 +167,9 @@ export const ProfileSettings = () => {
     </>
   );
 };
+
+const ThemeKeyboardShortcut = isOSMac ? (
+  <Code>Ctrl + Shift + L</Code>
+) : (
+  <Code>Alt + Shift + L</Code>
+);

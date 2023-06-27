@@ -70,7 +70,6 @@ const BaseApp = withFeatureFlagProvider(
     const theme = preferences?.theme;
     const keyboardListener = React.useCallback(
       (event: KeyboardEvent) => {
-        const isOSMac = navigator.userAgent.includes('Mac');
         const letterForThemeShortcut = 'L';
         const letterForGoToOpen = 'K';
         const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
@@ -315,3 +314,5 @@ export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
       : cleanedError.toLowerCase().includes('oauth');
   });
 };
+
+export const isOSMac = navigator.userAgent.includes('Mac');
