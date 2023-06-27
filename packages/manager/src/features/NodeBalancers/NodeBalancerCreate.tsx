@@ -4,7 +4,7 @@ import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Accordion from 'src/components/Accordion';
 import Paper from 'src/components/core/Paper';
 import LandingHeader from 'src/components/LandingHeader';

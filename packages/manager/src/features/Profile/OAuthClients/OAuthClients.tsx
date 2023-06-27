@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
 import { TableBody } from 'src/components/TableBody';

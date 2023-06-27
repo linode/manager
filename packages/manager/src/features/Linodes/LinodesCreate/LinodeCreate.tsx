@@ -12,7 +12,7 @@ import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import Button from 'src/components/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';

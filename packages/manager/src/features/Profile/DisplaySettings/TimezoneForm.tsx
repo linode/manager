@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Button from 'src/components/Button';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import timezones from 'src/assets/timezones/timezones';

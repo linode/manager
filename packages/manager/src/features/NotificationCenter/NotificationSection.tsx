@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ExtendedAccordion } from 'src/components/ExtendedAccordion/ExtendedAccordion';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
 import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';

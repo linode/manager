@@ -7,7 +7,7 @@ import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Form from 'src/components/core/Form';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';

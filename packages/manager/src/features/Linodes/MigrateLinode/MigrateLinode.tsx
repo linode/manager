@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Typography from 'src/components/core/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';

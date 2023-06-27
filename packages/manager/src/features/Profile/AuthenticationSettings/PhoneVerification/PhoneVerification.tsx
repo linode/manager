@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Button from 'src/components/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { TextField } from 'src/components/TextField';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Accordion from 'src/components/Accordion';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';

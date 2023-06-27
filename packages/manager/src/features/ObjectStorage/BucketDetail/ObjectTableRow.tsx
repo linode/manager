@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import Hidden from 'src/components/core/Hidden';
 import ObjectActionMenu from './ObjectActionMenu';
