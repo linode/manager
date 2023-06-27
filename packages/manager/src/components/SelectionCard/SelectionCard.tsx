@@ -7,7 +7,7 @@ import { SxProps } from '@mui/system';
 
 export interface SelectionCardProps {
   /**
-   * If true, the card will be selected feature a checked icon.
+   * If true, the card will be selected and displayed as in a selected state.
    * @default false
    */
   checked?: boolean;

@@ -24,7 +24,21 @@ const variantOptions = {
 };
 
 export const Default: StoryObj<SelectionCardProps> = {
-  render: (args) => <SelectionCard {...args} />,
+  render: (args) => {
+    const SelectionCardWrapper = () => {
+      const [checked, setChecked] = React.useState(false);
+
+      const handleChange = () => {
+        setChecked(!checked);
+      };
+
+      return (
+        <SelectionCard {...args} onClick={handleChange} checked={checked} />
+      );
+    };
+
+    return <SelectionCardWrapper />;
+  },
 };
 
 const meta: Meta<SelectionCardProps> = {
