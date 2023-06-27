@@ -72,6 +72,7 @@ x-e2e-runners:
       condition: service_healthy
   env_file: ./packages/manager/.env
   volumes: *default-volumes
+  command: ['yarn', 'cy:ci', '--record', '--parallel', "--ci-build-id=${BUILD_ID}"]
 
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
