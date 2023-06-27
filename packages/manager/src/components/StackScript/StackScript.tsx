@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Chip } from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { ScriptCode } from 'src/components/ScriptCode/ScriptCode';

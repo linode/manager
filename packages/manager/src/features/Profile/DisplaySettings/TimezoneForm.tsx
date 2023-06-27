@@ -4,7 +4,7 @@ import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import timezones from 'src/assets/timezones/timezones';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DateTime } from 'luxon';
 import { styled } from '@mui/material/styles';

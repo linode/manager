@@ -11,7 +11,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { usePagination } from 'src/hooks/usePagination';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';

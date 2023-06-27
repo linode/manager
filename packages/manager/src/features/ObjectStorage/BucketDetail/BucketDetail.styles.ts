@@ -1,5 +1,5 @@
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { styled } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';

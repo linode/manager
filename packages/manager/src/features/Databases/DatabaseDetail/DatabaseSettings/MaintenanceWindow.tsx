@@ -10,7 +10,7 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';

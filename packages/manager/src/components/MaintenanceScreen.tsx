@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Box from 'src/components/core/Box';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import BuildIcon from '@mui/icons-material/Build';

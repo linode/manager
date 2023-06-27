@@ -4,7 +4,7 @@ import Accordion from 'src/components/Accordion';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';

@@ -4,7 +4,7 @@ import { Status } from 'src/components/StatusIcon/StatusIcon';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import Box from '@mui/material/Box';
 import { TableCell } from 'src/components/TableCell';

@@ -3,7 +3,7 @@ import Box from 'src/components/core/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import Hidden from 'src/components/core/Hidden';
 import ObjectActionMenu from './ObjectActionMenu';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';

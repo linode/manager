@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 import { ResultGroup } from './ResultGroup';
 

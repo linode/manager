@@ -6,7 +6,7 @@ import { Theme } from '@mui/material/styles';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { H1Header } from 'src/components/H1Header/H1Header';
 
 const useStyles = makeStyles()((theme: Theme) => ({

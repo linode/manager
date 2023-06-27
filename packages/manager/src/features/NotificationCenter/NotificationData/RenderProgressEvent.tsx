@@ -2,7 +2,7 @@ import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import useLinodes from 'src/hooks/useLinodes';
 import { Duration } from 'luxon';
 import { Event } from '@linode/api-v4/lib/account/types';

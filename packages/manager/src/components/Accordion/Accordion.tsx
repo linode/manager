@@ -7,7 +7,7 @@ import AccordionDetails, {
 import AccordionSummary, {
   AccordionSummaryProps,
 } from 'src/components/core/AccordionSummary';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
+import { Typography, TypographyProps } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import RenderGuard from 'src/components/RenderGuard';
 import { makeStyles } from 'tss-react/mui';

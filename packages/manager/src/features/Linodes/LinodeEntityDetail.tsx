@@ -19,7 +19,7 @@ import { TagCell } from 'src/components/TagCell/TagCell';
 import Box from 'src/components/core/Box';
 import { Chip } from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
+import { Typography, TypographyProps } from 'src/components/Typography';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';

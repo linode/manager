@@ -2,7 +2,7 @@
 import * as hljs from 'highlight.js/lib/core';
 import * as React from 'react';
 import { Theme, useTheme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';

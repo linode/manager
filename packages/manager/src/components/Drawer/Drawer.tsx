@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { convertForAria } from 'src/utilities/stringUtils';
 

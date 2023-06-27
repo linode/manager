@@ -8,7 +8,7 @@ import Button from 'src/components/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Box from 'src/components/core/Box';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';

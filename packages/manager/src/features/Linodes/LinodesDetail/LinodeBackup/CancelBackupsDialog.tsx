@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
 import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Button from 'src/components/Button/Button';

@@ -8,7 +8,7 @@ import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
 import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import useFlags from 'src/hooks/useFlags';
 import { TPADialog } from './TPADialog';
 import { TPAProvider } from '@linode/api-v4/lib/profile';

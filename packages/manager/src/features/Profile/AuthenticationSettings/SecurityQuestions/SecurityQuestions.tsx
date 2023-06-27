@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
 import { Link } from 'src/components/Link';

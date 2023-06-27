@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CancelNotice } from '../CancelNotice';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';

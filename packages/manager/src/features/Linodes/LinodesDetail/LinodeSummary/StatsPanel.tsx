@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles(() => ({
   graphsUnavailable: {

@@ -16,7 +16,7 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import {
   generateAddressesLabel,

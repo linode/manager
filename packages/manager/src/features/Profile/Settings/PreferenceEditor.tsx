@@ -3,7 +3,7 @@ import {
   Dialog,
   DialogProps as _DialogProps,
 } from 'src/components/Dialog/Dialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Link from 'src/components/Link';
 import Button from 'src/components/Button';
 import { Notice } from 'src/components/Notice/Notice';
