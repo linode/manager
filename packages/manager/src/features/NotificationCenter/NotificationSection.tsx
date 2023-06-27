@@ -8,7 +8,7 @@ import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ExtendedAccordion } from 'src/components/ExtendedAccordion/ExtendedAccordion';
 import Box from 'src/components/core/Box';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import Typography from 'src/components/core/Typography';
 import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
 import { makeStyles } from 'tss-react/mui';

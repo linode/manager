@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { FolderActionMenu } from './FolderActionMenu';
 import { Link } from 'react-router-dom';

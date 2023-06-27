@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import AddNewLink from 'src/components/AddNewLink';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

@@ -2,7 +2,7 @@ import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
 import Button from 'src/components/Button';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
