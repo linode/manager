@@ -172,7 +172,12 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return toastSuccessAndFailure({
               enqueueSnackbar,
               eventStatus: event.status,
+              persistFailureMessage: true,
               failureMessage: `There was an error creating a snapshot on Linode ${label}.`,
+              link: formatLink(
+                'Learn more about limits and considerations.',
+                'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+              ),
             });
           /**
            * These create/delete failures are hypothetical.
