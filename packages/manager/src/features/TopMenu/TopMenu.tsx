@@ -1,6 +1,6 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import * as React from 'react';
-import AppBar from 'src/components/core/AppBar';
+import { AppBar } from 'src/components/AppBar';
 import Hidden from 'src/components/core/Hidden';
 import { IconButton } from 'src/components/IconButton';
 import { makeStyles } from '@mui/styles';
