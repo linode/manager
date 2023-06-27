@@ -152,6 +152,7 @@ const LinodeNetworking = () => {
 
   const renderIPRow = (ipDisplay: IPDisplay) => {
     const { address, type, gateway, subnetMask, rdns, _ip, _range } = ipDisplay;
+    const isOnlyPublicIP = ips?.ipv4.public.length === 1;
 
     return (
       <TableRow
@@ -192,6 +193,7 @@ const LinodeNetworking = () => {
               ipAddress={_ip}
               onRemove={openRemoveIPDialog}
               readOnly={readOnly}
+              isOnlyPublicIP={isOnlyPublicIP}
             />
           ) : _range ? (
             <LinodeNetworkingActionMenu
@@ -200,6 +202,7 @@ const LinodeNetworking = () => {
               onEdit={() => handleOpenEditRDNSForRange(_range)}
               onRemove={openRemoveIPRangeDialog}
               readOnly={readOnly}
+              isOnlyPublicIP={isOnlyPublicIP}
             />
           ) : null}
         </TableCell>
