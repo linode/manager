@@ -2,7 +2,6 @@ import { authenticate } from 'support/api/authentication';
 import { stackScriptFactory } from 'src/factories';
 import {
   mockDeleteStackScript,
-  interceptGetStackScripts,
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
@@ -19,7 +18,7 @@ describe('Delete stackscripts', () => {
     const stackScripts = stackScriptFactory.buildList(2, {
       is_public: false,
     });
-    interceptGetStackScripts(stackScripts).as('getStackScripts');
+    mockGetStackScripts(stackScripts).as('getStackScripts');
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
 
@@ -57,8 +56,7 @@ describe('Delete stackscripts', () => {
           .click();
       });
     mockDeleteStackScript(stackScripts[0].id).as('deleteStackScript');
-    const updateStackScript = JSON.parse(JSON.stringify(stackScripts[1]));
-    mockGetStackScripts([updateStackScript]).as('getUpdatedStackScripts');
+    mockGetStackScripts([stackScripts[1]]).as('getUpdatedStackScripts');
     ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[0].label}?`)

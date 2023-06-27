@@ -1,13 +1,14 @@
 import { authenticate } from 'support/api/authentication';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import {
-  interceptGetStackScript,
+  mockGetStackScript,
   mockUpdateStackScript,
   mockUpdateStackScriptError,
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
 import { stackScriptFactory } from '@src/factories';
+import { StackScript } from '@linode/api-v4/types';
 
 // StackScript fixture paths.
 const stackscriptNoShebangPath = 'stackscripts/stackscript-no-shebang.sh';
@@ -80,6 +81,16 @@ describe('Update stackscripts', () => {
     const stackscriptImage = 'Alpine 3.17';
 
     const stackScripts = stackScriptFactory.buildList(2);
+    // Import StackScript type from Linode API package.
+    const updatedStackScripts: StackScript[] = [
+      // Spread operator clones an object...
+      {
+        ...stackScripts[0],
+        label: stackscriptLabel,
+        description: stackscriptDesc,
+      },
+      { ...stackScripts[1] },
+    ];
     mockGetStackScripts(stackScripts).as('getStackScripts');
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
@@ -92,7 +103,7 @@ describe('Update stackscripts', () => {
           .should('be.visible')
           .click();
       });
-    interceptGetStackScript(stackScripts[0].id, stackScripts[0]).as(
+    mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
       'getStackScript'
     );
     ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
@@ -158,7 +169,6 @@ describe('Update stackscripts', () => {
         .type(stackScriptUdf);
     });
 
-    const updatedStackScripts = JSON.parse(JSON.stringify(stackScripts));
     updatedStackScripts[0].label = stackscriptLabel;
     updatedStackScripts[0].description = stackscriptDesc;
     mockGetStackScripts(updatedStackScripts).as('getStackScripts');
@@ -236,7 +246,7 @@ describe('Update stackscripts', () => {
       .findByTitle('Make StackScript Public')
       .should('be.visible')
       .click();
-    const updatedStackScript = JSON.parse(JSON.stringify(stackScripts[0]));
+    const updatedStackScript = { ...stackScripts[0] };
     updatedStackScript.is_public = true;
     mockUpdateStackScript(updatedStackScript.id, updatedStackScript).as(
       'mockUpdateStackScript'

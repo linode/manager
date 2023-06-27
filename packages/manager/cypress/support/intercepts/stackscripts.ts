@@ -41,7 +41,7 @@ export const mockGetStackScripts = (
  *
  * @returns Cypress chainable.
  */
-export const interceptGetStackScript = (
+export const mockGetStackScript = (
   id: number,
   stackscript: StackScript
 ): Cypress.Chainable<null> => {
