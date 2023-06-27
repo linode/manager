@@ -8,7 +8,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import SupportTicketDrawer from './SupportTicketDrawer';
+import { SupportTicketDrawer } from './SupportTicketDrawer';
 import TicketList from './TicketList';
 import LandingHeader from 'src/components/LandingHeader';
 

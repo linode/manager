@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import SupportTicketDrawer, { Props } from './SupportTicketDrawer';
+import {
+  SupportTicketDrawer,
+  SupportTicketDrawerProps,
+} from './SupportTicketDrawer';
 
-const props: Props = {
+const props: SupportTicketDrawerProps = {
   open: true,
   onClose: jest.fn(),
   onSuccess: jest.fn(),
