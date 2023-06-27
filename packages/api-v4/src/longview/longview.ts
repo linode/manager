@@ -38,13 +38,13 @@ export const getLongviewClients = (params?: Params, filter?: Filter) =>
 
 export const deleteLongviewClient = (id: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/longview/clients/${id}`),
+    setURL(`${API_ROOT}/longview/clients/${encodeURIComponent(id)}`),
     setMethod('DELETE')
   );
 
 export const updateLongviewClient = (id: number, label: string) => {
   return Request<LongviewClient>(
-    setURL(`${API_ROOT}/longview/clients/${id}`),
+    setURL(`${API_ROOT}/longview/clients/${encodeURIComponent(id)}`),
     setData(
       {
         label,

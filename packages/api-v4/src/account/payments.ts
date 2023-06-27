@@ -123,7 +123,7 @@ export const getPaymentMethods = (params?: Params) => {
  */
 export const getPaymentMethod = (id: number) => {
   return Request<PaymentMethod>(
-    setURL(`${API_ROOT}/account/payment-method/${id}`),
+    setURL(`${API_ROOT}/account/payment-method/${encodeURIComponent(id)}`),
     setMethod('GET')
   );
 };
@@ -175,7 +175,11 @@ export const addPaymentMethod = (data: PaymentMethodPayload) => {
  */
 export const makeDefaultPaymentMethod = (id: number) => {
   return Request<{}>(
-    setURL(`${API_ROOT}/account/payment-methods/${id}/make-default`),
+    setURL(
+      `${API_ROOT}/account/payment-methods/${encodeURIComponent(
+        id
+      )}/make-default`
+    ),
     setMethod('POST')
   );
 };
@@ -189,7 +193,7 @@ export const makeDefaultPaymentMethod = (id: number) => {
  */
 export const deletePaymentMethod = (id: number) => {
   return Request<{}>(
-    setURL(`${API_ROOT}/account/payment-methods/${id}`),
+    setURL(`${API_ROOT}/account/payment-methods/${encodeURIComponent(id)}`),
     setMethod('DELETE')
   );
 };

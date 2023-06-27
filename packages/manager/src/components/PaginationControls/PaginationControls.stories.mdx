@@ -1,5 +1,6 @@
+import React from 'react';
+import { PaginationControls } from './PaginationControls';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import PaginationControls from './PaginationControls';
 
 <Meta title="Components/Pagination Control" component={PaginationControls} />
 
@@ -17,7 +18,8 @@ export const Template = (args, context) =>
     count={250} 
     page={context.page}
     onClickHandler={context.setPage}
-    pageSize={25} />
+    pageSize={25}
+  />
 
 <Canvas>
   <Story name="Pagination Control" decorators={decorators}>

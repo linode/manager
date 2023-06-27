@@ -43,6 +43,7 @@ const DialogTitle = (props: DialogTitleProps) => {
           justifyContent: 'space-between',
           position: 'relative',
           width: '100%',
+          lineHeight: '1.5rem',
         }}
       >
         {title}
@@ -54,7 +55,6 @@ const DialogTitle = (props: DialogTitleProps) => {
             onClick={onClose}
             size="large"
             sx={{
-              position: 'absolute',
               right: '-12px',
             }}
           >

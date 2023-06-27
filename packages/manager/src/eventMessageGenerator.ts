@@ -4,9 +4,10 @@ import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import {
-  formatEventWithUsername,
   formatEventWithAppendedText,
+  formatEventWithUsername,
 } from './features/Events/Event.helpers';
+import { escapeRegExp } from './utilities/escapeRegExp';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -163,7 +164,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}scheduled for creation.`,
     started: (e) =>
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}being created.`,
-    failed: (e) => `Error creating Image ${e?.secondary_entity?.label ?? ''}.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `There was a problem creating Image ${
+          e?.secondary_entity?.label ?? ''
+        }.`,
+        'Learn more about image technical specifications',
+        'https://www.linode.com/docs/products/tools/images/#technical-specifications'
+      )}`,
     finished: (e) =>
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}has been created.`,
   },
@@ -272,7 +281,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   image_upload: {
     scheduled: (e) => `Image ${e.entity?.label ?? ''} scheduled for upload.`,
     started: (e) => `Image ${e.entity?.label ?? ''} is being uploaded.`,
-    failed: (e) => `There was a problem uploading ${e.entity?.label ?? ''}.`,
+    failed: (e) =>
+      `There was a problem uploading ${
+        e.entity?.label ?? ''
+      }: ${e?.message?.replace(/(\d+)/g, '$1 MB')}.`,
     finished: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
     notification: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
   },
@@ -862,7 +874,7 @@ export function applyLinking(event: Event, message: string) {
 
   if (event.entity && entityLinkTarget) {
     const label = event.entity.label;
-    const nonTickedLabels = new RegExp(`(?<!\`)${label}`, 'g');
+    const nonTickedLabels = new RegExp(`(?<!\`)${escapeRegExp(label)}`, 'g');
 
     newMessage = newMessage.replace(
       nonTickedLabels,

@@ -4,11 +4,11 @@ import Select, {
   Item,
 } from 'src/components/EnhancedSelect/Select';
 import * as React from 'react';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { Region } from '@linode/api-v4/lib/regions';
-import RegionOption, { RegionItem } from './RegionOption';
+import { RegionOption, RegionItem } from './RegionOption';
 import { Flag } from 'src/components/Flag';
-import { ContinentNames } from './utils';
+import { ContinentNames, Country } from './utils';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 interface Props<IsClearable extends boolean>
@@ -49,7 +49,7 @@ export const getRegionOptions = (regions: Region[]) => {
     groups[group].push({
       label: `${region.label} (${region.id})`,
       value: region.id,
-      flag: <Flag country={region.country} />,
+      flag: <Flag country={region.country as Lowercase<Country>} />,
       country: region.country,
     });
   }
@@ -133,7 +133,7 @@ export const RegionSelect = React.memo(
           placeholder="Select a Region"
           options={options}
           onChange={onChange}
-          components={{ Option: RegionOption, SingleValue }}
+          components={{ Option: RegionOption, SingleValue: _SingleValue }}
           isOptionDisabled={(option: RegionItem) =>
             Boolean(option.disabledMessage)
           }

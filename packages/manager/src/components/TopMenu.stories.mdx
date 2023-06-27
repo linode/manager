@@ -1,9 +1,7 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { profileFactory } from 'src/factories';
-import TopMenu from '/src/features/TopMenu';
+import TopMenu from 'src/features/TopMenu/TopMenu';
 import { useProfile } from 'src/queries/profile';
-
-export const mockProfile = profileFactory.build();
 
 <Meta title="Features/Navigation/Top Menu" component={TopMenu} />
 
@@ -17,7 +15,6 @@ export const mockProfile = profileFactory.build();
 - The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
 
 export const Template = () => {
-  const profileData = useProfile(mockProfile);
   return (
     <TopMenu
       isSideMenuOpen={false}

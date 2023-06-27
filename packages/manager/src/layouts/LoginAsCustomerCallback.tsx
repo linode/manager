@@ -12,7 +12,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
-import { parseQueryParams } from 'src/utilities/queryParams';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 type CombinedProps = DispatchProps & RouteComponentProps;
 
@@ -44,7 +44,7 @@ export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
       return history.push('/');
     }
 
-    const hashParams = (parseQueryParams(
+    const hashParams = (getQueryParamsFromQueryString(
       location.hash.substr(1)
     ) as unknown) as QueryParams;
 

@@ -166,7 +166,7 @@ const graphTransparency = '0.7';
 const spacing = 8;
 
 export const lightTheme: ThemeOptions = {
-  name: 'light', // we really should just leverage pallete.mode
+  name: 'light', // @todo remove this because we leverage pallete.mode now
   breakpoints,
   shadows: [
     'none',
@@ -284,8 +284,10 @@ export const lightTheme: ThemeOptions = {
     ...genericTableHeaderStyle,
   },
   palette: {
+    mode: 'light',
     divider: primaryColors.divider,
     primary: primaryColors,
+    secondary: primaryColors,
     text: {
       primary: primaryColors.text,
     },
@@ -376,19 +378,51 @@ export const lightTheme: ThemeOptions = {
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: color.drawerBackdrop,
+        },
+        invisible: {
+          backgroundColor: 'transparent',
         },
       },
     },
     MuiAutocomplete: {
       styleOverrides: {
+        option: {
+          fontSize: '0.9rem',
+          padding: '10px !important',
+          '&[aria-selected="true"]': {
+            color: primaryColors.main,
+          },
+          '&.Mui-focused, :hover': {
+            backgroundColor: `${primaryColors.main} !important`,
+            color: primaryColors.white,
+            transition: 'background-color 0.2s',
+          },
+        },
         listbox: {
           backgroundColor: bg.white,
           border: `1px solid ${primaryColors.main}`,
+          marginTop: '-1px',
+          padding: '4px',
         },
         endAdornment: {
           top: 'unset',
           paddingRight: 8,
+          '.MuiAutocomplete-clearIndicator': {
+            visibility: 'visible !important',
+          },
+          '.MuiAutocomplete-popupIndicator': {
+            svg: {
+              fontSize: '28px',
+              opacity: 0.5,
+              ':hover': {
+                opacity: 1,
+              },
+            },
+          },
+          svg: {
+            color: '#aaa',
+          },
         },
         inputRoot: {
           paddingLeft: 8,
@@ -398,6 +432,20 @@ export const lightTheme: ThemeOptions = {
         },
         noOptions: {
           border: `1px solid ${primaryColors.main}`,
+        },
+        tag: {
+          backgroundColor: bg.lightBlue1,
+          '.MuiChip-deleteIcon': {
+            borderRadius: '50%',
+            fontSize: '16px',
+            color: primaryColors.text,
+            margin: '0 4px',
+            ':hover': {
+              backgroundColor: primaryColors.main,
+              color: primaryColors.white,
+            },
+          },
+          padding: '12px 2px',
         },
       },
     },
@@ -826,6 +874,9 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         input: {
           height: 'auto',
+          '&::placeholder': {
+            opacity: 1,
+          },
         },
       },
     },
@@ -960,6 +1011,13 @@ export const lightTheme: ThemeOptions = {
           },
         },
       },
+      defaultProps: {
+        slotProps: {
+          backdrop: {
+            invisible: true,
+          },
+        },
+      },
     },
     MuiMenuItem: {
       styleOverrides: {
@@ -1016,13 +1074,36 @@ export const lightTheme: ThemeOptions = {
     },
     MuiRadio: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           '& $checked': {
             color: primaryColors.main,
           },
-          color: primaryColors.main,
-        },
-        checked: {},
+          color: '#ccc',
+          padding: '10px 10px',
+          transition: theme.transitions.create(['color']),
+          '& .defaultFill': {
+            fill: theme.color.white,
+            transition: theme.transitions.create(['fill']),
+          },
+          '&:hover': {
+            color: theme.palette.primary.main,
+            fill: theme.color.white,
+            '& .defaultFill': {
+              fill: theme.color.white,
+            },
+          },
+          '&.Mui-disabled': {
+            color: '#ccc !important',
+            fill: '#f4f4f4 !important',
+            pointerEvents: 'none',
+            '& .defaultFill': {
+              fill: '#f4f4f4',
+            },
+          },
+        }),
+        checked: ({ theme }) => ({
+          color: theme.palette.primary.main,
+        }),
         colorSecondary: {
           color: primaryColors.main,
           '&$checked': {

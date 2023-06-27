@@ -14,7 +14,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import {
   sendEntityTransferCopyDraftEmailEvent,
   sendEntityTransferCopyTokenEvent,
-} from 'src/utilities/ga';
+} from 'src/utilities/analytics';
 import { pluralize } from 'src/utilities/pluralize';
 import { debounce } from 'throttle-debounce';
 
