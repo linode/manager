@@ -89,6 +89,8 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   const buckets = objectStorageBucketsResponse?.buckets || [];
 
+  const hasBuckets = buckets?.length > 0;
+
   const hidePermissionsTable =
     bucketsError || objectStorageBucketsResponse?.buckets.length === 0;
 
@@ -138,7 +140,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
       title={title}
       open={open}
       onClose={onClose}
-      wide={createMode && buckets?.length > 0}
+      wide={createMode && hasBuckets}
     >
       {areBucketsLoading || areClustersLoading ? (
         <CircleProgress />
@@ -211,7 +213,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                   </Typography>
                 )}
 
-                {buckets?.length <= 0 ? (
+                {!hasBuckets ? (
                   <Typography sx={{ paddingTop: '10px' }}>
                     This key will have unlimited access to all buckets on your
                     account. The option to create a limited access key is only
