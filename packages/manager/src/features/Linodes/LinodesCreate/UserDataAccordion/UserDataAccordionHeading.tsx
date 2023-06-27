@@ -33,7 +33,9 @@ export const UserDataAccordionHeading = ({ createType }: Props) => {
             <>
               User data is a virtual machine&rsquo;s cloud-init metadata
               relating to a user&rsquo;s local account.{' '}
-              <Link to="/">Learn more.</Link>
+              <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
+                Learn more.
+              </Link>
             </>
           }
           status="help"
