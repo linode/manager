@@ -35,6 +35,7 @@ x-e2e-env:
   # Cloud Manager-specific test configuration.
   CY_TEST_SUITE: ${CY_TEST_SUITE}
   CY_TEST_REGION: ${CY_TEST_REGION}
+  CY_LOG_TEST_USER: ${CY_LOG_TEST_USER}
 
   # Cloud Manager build environment.
   HOME: /home/node
