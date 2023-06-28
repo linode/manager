@@ -1,6 +1,6 @@
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { Typography } from 'src/components/Typography';

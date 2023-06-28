@@ -33,7 +33,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TableCell } from 'src/components/TableCell';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { CloneDomainDrawer } from './CloneDomainDrawer';
 import { EditDomainDrawer } from './EditDomainDrawer';
 import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';

@@ -3,7 +3,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';

@@ -7,8 +7,8 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Tags } from 'src/components/Tags/Tags';
-import Hidden from 'src/components/core/Hidden';
 import { Typography } from 'src/components/Typography';
+import { Hidden } from 'src/components/Hidden';
 import RegionIndicator from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 const useStyles = makeStyles((theme: Theme) => ({

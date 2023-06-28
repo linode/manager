@@ -23,7 +23,7 @@ import { filterUDFErrors } from './formUtilities';
 import { APP_ROOT } from 'src/constants';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import { Typography } from 'src/components/Typography';
 import {

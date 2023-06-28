@@ -1,4 +1,4 @@
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
