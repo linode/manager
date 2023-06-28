@@ -53,7 +53,9 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
-  containsClick(region.label);
+
+  ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
+
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
   cy.get('[id="root-password"]').type(randomString(32));
