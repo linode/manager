@@ -19,7 +19,7 @@ const props = {
   onPasswordChange: jest.fn(),
   authorizedUsers: [],
   setAuthorizedUsers: jest.fn(),
-  permissions: null,
+  linodeId: 0,
 };
 
 const component = shallow(wrapWithTheme(<ImageAndPassword {...props} />));

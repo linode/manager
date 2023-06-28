@@ -2,18 +2,16 @@ import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
 import { take } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { components } from 'react-select';
 import { compose } from 'recompose';
 import { IconButton } from 'src/components/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { REFRESH_INTERVAL } from 'src/constants';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import {
@@ -26,8 +24,6 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
-import { useSelector } from 'react-redux';
-import { ApplicationState } from 'src/store';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
@@ -36,8 +32,9 @@ import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
-type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
+type CombinedProps = SearchProps & StyleProps;
 
 const Control = (props: any) => <components.Control {...props} />;
 
@@ -77,8 +74,6 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
-const searchDeps: ReduxEntity[] = ['linodes'];
-
 export const SearchBar = (props: CombinedProps) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
@@ -89,6 +84,8 @@ export const SearchBar = (props: CombinedProps) => {
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
   const [apiError, setAPIError] = React.useState<string | null>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
+
+  const history = useHistory();
 
   const { _isLargeAccount } = useAccountManagement();
 
@@ -124,24 +121,22 @@ export const SearchBar = (props: CombinedProps) => {
     searchActive
   );
 
+  const { data: linodes, isLoading: linodesLoading } = useAllLinodesQuery(
+    {},
+    {},
+    shouldMakeRequests
+  );
+
   const { data: regions } = useRegionsQuery();
 
-  const { _loading } = useReduxLoad(
-    searchDeps,
-    REFRESH_INTERVAL,
+  const typesQuery = useSpecificTypes(
+    (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined),
     shouldMakeRequests
   );
 
-  const linodes = useSelector((state: ApplicationState) =>
-    Object.values(state.__resources.linodes.itemsById)
-  );
-  const typesQuery = useSpecificTypes(
-    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined),
-    shouldMakeRequests
-  );
   const types = extendTypesQueryResult(typesQuery);
 
-  const searchableLinodes = linodes.map((linode) => {
+  const searchableLinodes = (linodes ?? []).map((linode) => {
     const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
     return formatLinode(linode, types, imageLabel);
   });
@@ -188,7 +183,6 @@ export const SearchBar = (props: CombinedProps) => {
       );
     }
   }, [
-    _loading,
     imagesLoading,
     search,
     searchText,
@@ -235,13 +229,13 @@ export const SearchBar = (props: CombinedProps) => {
     const text = item?.data?.searchText ?? '';
 
     if (item.value === 'redirect') {
-      props.history.push({
+      history.push({
         pathname: `/search`,
         search: `?query=${encodeURIComponent(text)}`,
       });
       return;
     }
-    props.history.push(item.data.path);
+    history.push(item.data.path);
   };
 
   const onKeyDown = (e: any) => {
@@ -250,7 +244,7 @@ export const SearchBar = (props: CombinedProps) => {
       searchText !== '' &&
       (!combinedResults || combinedResults.length < 1)
     ) {
-      props.history.push({
+      history.push({
         pathname: `/search`,
         search: `?query=${encodeURIComponent(searchText)}`,
       });
@@ -282,7 +276,7 @@ export const SearchBar = (props: CombinedProps) => {
   const finalOptions = createFinalOptions(
     _isLargeAccount ? apiResults : combinedResults,
     searchText,
-    _loading || imagesLoading || apiSearchLoading,
+    apiSearchLoading || linodesLoading || imagesLoading,
     // Ignore "Unauthorized" errors, since these will always happen on LKE
     // endpoints for restricted users. It's not really an "error" in this case.
     // We still want these users to be able to use the search feature.
@@ -351,7 +345,6 @@ export const SearchBar = (props: CombinedProps) => {
 };
 
 export default compose<CombinedProps, {}>(
-  withRouter,
   withStoreSearch(),
   styled
 )(SearchBar) as React.ComponentType<{}>;

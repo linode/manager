@@ -38,12 +38,6 @@ export interface WithDisplayData {
   backupsMonthlyPrice?: number | null;
 }
 
-export interface WithLinodesProps {
-  linodesData?: Linode[];
-  linodesLoading: boolean;
-  linodesError?: APIError[];
-}
-
 /**
  * Pure Data without the loading and error
  * keys. Component with these props have already been

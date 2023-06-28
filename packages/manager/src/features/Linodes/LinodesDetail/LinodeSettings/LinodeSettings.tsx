@@ -1,5 +1,5 @@
 import * as React from 'react';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import { LinodeSettingsAlertsPanel } from './LinodeSettingsAlertsPanel';
 import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
 import { LinodeSettingsPasswordPanel } from './LinodeSettingsPasswordPanel';
