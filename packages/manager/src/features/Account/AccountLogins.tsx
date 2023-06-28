@@ -1,5 +1,5 @@
 import { AccountLogin } from '@linode/api-v4/lib/account/types';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import * as React from 'react';
 import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from 'tss-react/mui';

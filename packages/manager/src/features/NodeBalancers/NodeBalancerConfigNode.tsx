@@ -5,7 +5,7 @@ import Divider from 'src/components/core/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import MenuItem from 'src/components/core/MenuItem';
 import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Chip } from 'src/components/core/Chip';
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
 import { getErrorMap } from 'src/utilities/errorUtils';

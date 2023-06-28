@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';

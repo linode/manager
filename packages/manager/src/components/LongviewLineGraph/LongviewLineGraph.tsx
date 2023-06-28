@@ -2,7 +2,7 @@ import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   DataSet,

@@ -7,7 +7,7 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

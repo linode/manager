@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Flag from 'src/assets/icons/flag.svg';
 import { Hidden } from 'src/components/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';

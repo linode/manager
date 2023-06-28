@@ -5,8 +5,8 @@ import {
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
+import { Typography } from 'src/components/Typography';
 import { Button } from 'src/components/Button/Button';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import NodeTable from './NodeTable';
 import Tooltip from 'src/components/core/Tooltip';

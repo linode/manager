@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { AccessSelect } from './AccessSelect';
 import { styled } from '@mui/material/styles';
 import {

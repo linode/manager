@@ -7,7 +7,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Link from 'src/components/Link';
 import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { Notice } from 'src/components/Notice/Notice';

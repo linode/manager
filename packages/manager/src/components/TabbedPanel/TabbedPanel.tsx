@@ -9,7 +9,7 @@ import { TabList } from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 export interface Tab {
   title: string;

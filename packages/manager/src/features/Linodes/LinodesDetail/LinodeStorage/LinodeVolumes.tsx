@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
+import { Typography } from 'src/components/Typography';
 import { Hidden } from 'src/components/Hidden';
-import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';

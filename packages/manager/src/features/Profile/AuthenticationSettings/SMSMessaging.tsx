@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { getFormattedNumber } from './PhoneVerification/helpers';
 import { Notice } from 'src/components/Notice/Notice';

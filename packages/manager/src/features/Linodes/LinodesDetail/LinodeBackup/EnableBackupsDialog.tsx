@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import { Typography } from 'src/components/Typography';
 import { Button } from 'src/components/Button/Button';
-import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
 import { resetEventsPolling } from 'src/eventsPolling';

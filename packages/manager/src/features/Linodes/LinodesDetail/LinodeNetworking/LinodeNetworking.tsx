@@ -12,7 +12,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme, useTheme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';

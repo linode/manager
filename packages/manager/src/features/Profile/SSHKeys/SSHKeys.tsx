@@ -6,7 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Hidden } from 'src/components/Hidden';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { CreateSSHKeyDrawer } from './CreateSSHKeyDrawer';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

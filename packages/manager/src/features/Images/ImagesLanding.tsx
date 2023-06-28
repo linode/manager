@@ -10,7 +10,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import Paper from 'src/components/core/Paper';
 import produce from 'immer';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { ApplicationState } from 'src/store';
 import { CircleProgress } from 'src/components/CircleProgress';

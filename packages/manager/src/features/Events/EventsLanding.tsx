@@ -11,7 +11,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';

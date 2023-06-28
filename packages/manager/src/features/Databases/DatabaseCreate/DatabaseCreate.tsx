@@ -25,7 +25,7 @@ import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';

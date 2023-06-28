@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
 import { SuppliedMaintenanceData } from 'src/featureFlags';

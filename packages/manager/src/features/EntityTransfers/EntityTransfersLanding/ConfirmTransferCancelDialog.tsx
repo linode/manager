@@ -9,7 +9,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { queryKey } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import QRCode from 'qrcode.react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { styled } from '@mui/material/styles';
 
