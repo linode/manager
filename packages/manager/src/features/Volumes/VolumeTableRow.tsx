@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
 import { Link } from 'react-router-dom';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';

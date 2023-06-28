@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { Currency } from 'src/components/Currency';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Radio } from 'src/components/Radio/Radio';

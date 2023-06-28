@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SupportTicket } from '@linode/api-v4/lib/support';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

@@ -5,7 +5,7 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Button } from '../Button/Button';
 import Link from '../Link';
 import Box from 'src/components/core/Box';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
 
 const sxBoxFlex = {

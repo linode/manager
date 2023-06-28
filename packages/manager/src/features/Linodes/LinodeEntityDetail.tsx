@@ -18,7 +18,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import Box from 'src/components/core/Box';
 import { Chip } from 'src/components/core/Chip';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
