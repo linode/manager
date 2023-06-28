@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 import ExternalLink from 'src/components/ExternalLink';
 import FormControlLabel from 'src/components/core/FormControlLabel';

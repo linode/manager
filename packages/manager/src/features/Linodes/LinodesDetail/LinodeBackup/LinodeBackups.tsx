@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Table } from 'src/components/Table';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -9,7 +9,7 @@ import Typography from 'src/components/core/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import BackupsPlaceholder from './BackupsPlaceholder';
 import BackupTableRow from './BackupTableRow';
 import { Box, Stack } from '@mui/material';

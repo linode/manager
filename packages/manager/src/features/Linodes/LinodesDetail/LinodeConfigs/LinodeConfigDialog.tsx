@@ -8,7 +8,7 @@ import { useFormik } from 'formik';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';

@@ -9,7 +9,7 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
@@ -68,13 +68,13 @@ import {
   StackScriptFormStateHandlers,
   TypeInfo,
   WithDisplayData,
-  WithLinodesProps,
   WithTypesRegionsAndImages,
 } from './types';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { extendType } from 'src/utilities/extendType';
 import { WithTypesProps } from 'src/containers/types.container';
 import { RegionsProps } from 'src/containers/regions.container';
+import { WithLinodesProps } from 'src/containers/withLinodes.container';
 
 type ClassNames =
   | 'form'

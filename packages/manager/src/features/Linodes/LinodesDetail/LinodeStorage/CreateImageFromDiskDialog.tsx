@@ -4,7 +4,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { useCreateImageMutation } from 'src/queries/images';
 import { useSnackbar } from 'notistack';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button/Button';
+import { Button } from 'src/components/Button/Button';
 import { Typography } from '@mui/material';
 import { SupportLink } from 'src/components/SupportLink/SupportLink';
 
