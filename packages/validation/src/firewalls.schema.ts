@@ -5,7 +5,6 @@ import { array, mixed, number, object, string } from 'yup';
 
 export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
-export const CUSTOM_PORTS_VALIDATION_REGEX = /^(?:\d+|\d+-\d+|(?:\d+,\s*)*\d+)$/;
 
 export const validateIP = (ipAddress?: string | null): boolean => {
   if (!ipAddress) {
