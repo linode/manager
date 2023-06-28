@@ -1,6 +1,5 @@
 import { equals } from 'ramda';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Error from 'src/assets/icons/error.svg';
@@ -11,10 +10,8 @@ import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';
-import { REFRESH_INTERVAL } from 'src/constants';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
@@ -25,7 +22,6 @@ import {
 import { useSpecificTypes } from 'src/queries/types';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllVolumesQuery } from 'src/queries/volumes';
-import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -40,6 +36,7 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { getImageLabelForLinode } from '../Images/utils';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -152,18 +149,20 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     !_isLargeAccount
   );
 
+  const {
+    data: linodes,
+    isLoading: areLinodesLoading,
+    error: linodesError,
+  } = useAllLinodesQuery({}, {}, !_isLargeAccount);
+
   const { data: regions } = useRegionsQuery();
 
-  const linodes = useSelector((state: ApplicationState) =>
-    Object.values(state.__resources.linodes.itemsById)
-  );
-
   const typesQuery = useSpecificTypes(
-    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
+    (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
   const types = extendTypesQueryResult(typesQuery);
 
-  const searchableLinodes = linodes.map((linode) => {
+  const searchableLinodes = (linodes ?? []).map((linode) => {
     const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
     return formatLinode(linode, types, imageLabel);
   });
@@ -179,12 +178,6 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   } catch {
     queryError = true;
   }
-
-  const { _loading: reduxLoading } = useReduxLoad(
-    ['linodes'],
-    REFRESH_INTERVAL,
-    !_isLargeAccount
-  );
 
   const { searchAPI } = useAPISearch(!isNilOrEmpty(query));
 
@@ -236,11 +229,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     _privateImages,
     regions,
     nodebalancers,
+    searchableLinodes,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
     const errorString: string[] = [];
-    if (errors.linodes) {
+    if (linodesError) {
       errorString.push('Linodes');
     }
     if (domainsError) {
@@ -277,7 +271,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const resultsEmpty = equals(finalResults, emptyResults);
 
   const loading =
-    reduxLoading ||
+    areLinodesLoading ||
     areBucketsLoading ||
     areClustersLoading ||
     areDomainsLoading ||

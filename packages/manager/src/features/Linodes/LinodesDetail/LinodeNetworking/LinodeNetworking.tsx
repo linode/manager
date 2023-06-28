@@ -19,7 +19,7 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import AddIPDrawer from './AddIPDrawer';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import IPSharing from './IPSharing';
