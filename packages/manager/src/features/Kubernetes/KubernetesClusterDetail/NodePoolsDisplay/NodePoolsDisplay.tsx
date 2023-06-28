@@ -13,7 +13,7 @@ import { RecycleNodeDialog } from './RecycleNodeDialog';
 import NodePool from './NodePool';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { RecycleClusterDialog } from '../RecycleClusterDialog';

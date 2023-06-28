@@ -10,7 +10,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import * as React from 'react';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { useParams } from 'react-router-dom';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import { useTheme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';

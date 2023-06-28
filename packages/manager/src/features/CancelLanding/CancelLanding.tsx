@@ -3,10 +3,9 @@ import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import Button from 'src/components/Button';
 import { Typography } from 'src/components/Typography';
+import { Button } from 'src/components/Button/Button';
 import { H1Header } from 'src/components/H1Header/H1Header';
 
 const useStyles = makeStyles()((theme: Theme) => ({

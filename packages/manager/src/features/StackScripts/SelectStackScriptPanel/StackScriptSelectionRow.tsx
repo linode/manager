@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { withStyles, WithStyles } from '@mui/styles';
 import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';

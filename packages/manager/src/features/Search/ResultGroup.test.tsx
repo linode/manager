@@ -1,10 +1,8 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
-import Button from 'src/components/Button';
 import { Typography } from 'src/components/Typography';
-
+import { Button } from 'src/components/Button/Button';
 import { ResultGroup } from './ResultGroup';
 
 jest.mock('@mui/styles', () => ({

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button from 'src/components/core/Button';
+import Button from '@mui/material/Button';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';

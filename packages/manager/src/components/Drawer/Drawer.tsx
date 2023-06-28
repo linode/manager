@@ -1,6 +1,6 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';

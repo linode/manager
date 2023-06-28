@@ -2,7 +2,7 @@ import { Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Checkbox from 'src/components/CheckBox';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

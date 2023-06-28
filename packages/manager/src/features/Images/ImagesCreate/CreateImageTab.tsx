@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
