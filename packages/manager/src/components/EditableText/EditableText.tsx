@@ -4,7 +4,7 @@ import Edit from '@mui/icons-material/Edit';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { fadeIn } from 'src/styles/keyframes';

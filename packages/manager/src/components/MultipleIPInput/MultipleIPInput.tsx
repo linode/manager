@@ -2,7 +2,7 @@
 import { InputBaseProps } from '@mui/material/InputBase';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import ClusterSelect from './ClusterSelect';
 import Drawer from 'src/components/Drawer';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';

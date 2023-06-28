@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Divider from 'src/components/core/Divider';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from '@mui/material/Unstable_Grid2';

@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

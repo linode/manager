@@ -9,7 +9,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import EntityDetail from 'src/components/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';

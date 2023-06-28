@@ -21,7 +21,7 @@ import {
 } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button, { ButtonProps } from 'src/components/Button';
+import { Button, ButtonProps } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';

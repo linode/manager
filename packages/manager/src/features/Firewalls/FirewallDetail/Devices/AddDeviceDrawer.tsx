@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';

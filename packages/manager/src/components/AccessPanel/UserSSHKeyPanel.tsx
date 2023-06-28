@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';

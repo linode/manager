@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Chip } from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import Form from 'src/components/core/Form';
 import Paper from 'src/components/core/Paper';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Minus from 'src/assets/icons/LKEminusSign.svg';
 import Plus from 'src/assets/icons/LKEplusSign.svg';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { styled } from '@mui/material/styles';
 import { TextField } from 'src/components/TextField';
 import Box from '@mui/material/Box';
