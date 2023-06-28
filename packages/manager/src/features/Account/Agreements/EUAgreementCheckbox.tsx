@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
 import Link from 'src/components/Link';
@@ -28,7 +28,7 @@ const EUAgreementCheckbox = (props: Props) => {
       alignItems={centerCheckbox ? 'center' : 'flex-start'}
       className={className}
     >
-      <CheckBox checked={checked} onChange={onChange} style={checkboxStyle} />
+      <Checkbox checked={checked} onChange={onChange} style={checkboxStyle} />
       <Typography style={{ marginLeft: 4 }}>
         I have read and agree to the{' '}
         <Link to="https://www.linode.com/legal-privacy/">

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { FileUploader } from 'src/components/FileUploader/FileUploader';
@@ -254,7 +254,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
           />
           {flags.metadata && hasMetadataCustomerTag ? (
             <div className={classes.cloudInitCheckboxWrapper}>
-              <CheckBox
+              <Checkbox
                 checked={isCloudInit}
                 onChange={changeIsCloudInit}
                 text="This image is cloud-init compatible"

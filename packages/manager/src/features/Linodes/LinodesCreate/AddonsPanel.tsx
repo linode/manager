@@ -1,7 +1,7 @@
 import { Interface, Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
@@ -162,7 +162,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             <FormControlLabel
               className={classes.label}
               control={
-                <CheckBox
+                <Checkbox
                   checked={accountBackups || props.backups}
                   onChange={changeBackups}
                   disabled={accountBackups || disabled || isBareMetal}
@@ -205,7 +205,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             <FormControlLabel
               className={classes.label}
               control={
-                <CheckBox
+                <Checkbox
                   data-testid="private_ip"
                   checked={isPrivateIPChecked}
                   onChange={togglePrivateIP}
