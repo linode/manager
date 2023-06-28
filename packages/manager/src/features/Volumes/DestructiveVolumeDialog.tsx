@@ -6,12 +6,12 @@ import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
-import useLinodes from 'src/hooks/useLinodes';
 import {
   useDeleteVolumeMutation,
   useDetachVolumeMutation,
 } from 'src/queries/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   warningCopy: {
@@ -36,10 +36,11 @@ export const DestructiveVolumeDialog = (props: Props) => {
   const { volumeLabel: label, volumeId, linodeId, mode, open, onClose } = props;
 
   const { enqueueSnackbar } = useSnackbar();
-  const linodes = useLinodes();
 
-  const linode =
-    linodeId !== undefined ? linodes.linodes.itemsById[linodeId] : undefined;
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined
+  );
 
   const {
     mutateAsync: detachVolume,

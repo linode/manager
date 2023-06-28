@@ -17,7 +17,7 @@ import { TextField } from 'src/components/TextField';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
-import LinodeSelect from 'src/features/Linodes/LinodeSelect';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useImageAndLinodeGrantCheck } from './utils';
 import {
   useCreateImageMutation,
@@ -331,13 +331,6 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
           filterCondition={(linode) =>
             availableLinodes ? availableLinodes.includes(linode.id) : true
           }
-          updateFor={[
-            selectedLinode,
-            linodeError,
-            classes,
-            canCreateImage,
-            availableLinodes,
-          ]}
           isClearable={false}
         />
       )}

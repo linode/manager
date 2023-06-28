@@ -11,7 +11,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
-import LinodeSelect from '../LinodeSelect';
+import { LinodeSelect } from '../LinodeSelect/LinodeSelect';
 import {
   EstimatedCloneTimeMode,
   ExtendedConfig,
@@ -267,12 +267,6 @@ export const Configs: React.FC<Props> = (props) => {
         textFieldProps={{
           error: !!linodeError,
         }}
-        updateFor={[
-          selectedLinodeId,
-          shouldExcludeCurrentLinode,
-          errorMap,
-          classes,
-        ]}
         isClearable={false}
       />
 
