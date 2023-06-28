@@ -25,7 +25,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import Select, { Item } from 'src/components/EnhancedSelect';
 import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import {
   oneClickApps,
   AppCategory,

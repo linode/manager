@@ -2,7 +2,7 @@ import { Box } from 'src/components/Box';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { styled } from '@mui/material/styles';
 
 export const StyledCodeSentMessageBox = styled(Box, {

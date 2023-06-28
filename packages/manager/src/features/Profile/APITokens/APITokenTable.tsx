@@ -2,7 +2,7 @@ import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { EditAPITokenDrawer } from './EditAPITokenDrawer';

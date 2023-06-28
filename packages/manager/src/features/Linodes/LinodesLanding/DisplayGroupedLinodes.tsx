@@ -6,7 +6,7 @@ import GridView from 'src/assets/icons/grid-view.svg';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import Tooltip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';

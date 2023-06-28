@@ -7,9 +7,9 @@ import { Link } from 'react-router-dom';
 import { Accordion } from 'src/components/Accordion';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
-import Typography from 'src/components/core/Typography';
 import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
 import { makeStyles } from 'tss-react/mui';
 

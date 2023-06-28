@@ -4,7 +4,7 @@ import Divider from 'src/components/core/Divider';
 import ExternalLink from 'src/components/ExternalLink';
 import Link from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ApplicationState } from 'src/store';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';

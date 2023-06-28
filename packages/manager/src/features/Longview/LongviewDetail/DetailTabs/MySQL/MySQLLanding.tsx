@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';

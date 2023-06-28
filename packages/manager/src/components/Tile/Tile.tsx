@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 

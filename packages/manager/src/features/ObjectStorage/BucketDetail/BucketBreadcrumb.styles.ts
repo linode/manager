@@ -1,5 +1,5 @@
 import FileCopy from '@mui/icons-material/FileCopy';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { styled } from '@mui/material/styles';
 
 export const StyledRootContainer = styled('div', {

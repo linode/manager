@@ -1,8 +1,8 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
+import { Typography } from 'src/components/Typography';
 import { Hidden } from 'src/components/Hidden';
-import Typography from 'src/components/core/Typography';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';

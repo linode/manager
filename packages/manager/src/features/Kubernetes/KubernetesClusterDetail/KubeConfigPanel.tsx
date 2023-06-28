@@ -7,7 +7,7 @@ import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

@@ -8,7 +8,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DialogProps } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';

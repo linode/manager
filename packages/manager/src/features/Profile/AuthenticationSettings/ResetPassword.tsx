@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
-import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { LOGIN_ROOT } from 'src/constants';
 import { styled, useTheme } from '@mui/material/styles';

@@ -4,7 +4,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
 import { downloadFile } from 'src/utilities/downloadFile';

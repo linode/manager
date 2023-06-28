@@ -16,7 +16,7 @@ import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import DocsLink from 'src/components/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';

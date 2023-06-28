@@ -3,7 +3,7 @@ import DocsIcon from 'src/assets/icons/docs.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import PointerIcon from 'src/assets/icons/pointer.svg';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
 import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
 import { ResourcesLinkIcon } from 'src/components/EmptyLandingPageResources/ResourcesLinkIcon';

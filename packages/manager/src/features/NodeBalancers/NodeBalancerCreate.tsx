@@ -9,7 +9,7 @@ import { Accordion } from 'src/components/Accordion';
 import Paper from 'src/components/core/Paper';
 import LandingHeader from 'src/components/LandingHeader';
 import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
