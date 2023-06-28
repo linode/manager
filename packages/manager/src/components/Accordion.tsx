@@ -35,7 +35,7 @@ const useStyles = makeStyles()({
 
 export interface AccordionProps extends _AccordionProps {
   /**
-   * A header places at the top of the Accordion
+   * A header placed at the top of the Accordion
    */
   heading: string | React.ReactNode;
   /**
@@ -50,11 +50,6 @@ export interface AccordionProps extends _AccordionProps {
    * Success text that shows as a `<Notice />` at the top of the Accordion's body
    */
   success?: string;
-  /**
-   * Actually does nothing
-   * @default false
-   */
-  loading?: boolean;
   /**
    * Renders actions at the bottom of the Accordion's body
    */
