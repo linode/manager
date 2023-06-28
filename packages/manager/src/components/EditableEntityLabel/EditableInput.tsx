@@ -3,7 +3,7 @@ import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
 import classNames from 'classnames';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

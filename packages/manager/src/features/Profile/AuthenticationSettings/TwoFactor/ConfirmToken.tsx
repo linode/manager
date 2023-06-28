@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';

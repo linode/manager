@@ -6,7 +6,7 @@ import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
 import Typography from 'src/components/core/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Button from 'src/components/Button/Button';
+import { Button } from 'src/components/Button/Button';
 
 interface Props {
   isOpen: boolean;
