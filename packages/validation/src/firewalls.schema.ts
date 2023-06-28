@@ -5,8 +5,8 @@ import { array, mixed, number, object, string } from 'yup';
 
 export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
-export const CUSTOM_PORTS_ERROR_MESSAGE =
-  'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+// export const CUSTOM_PORTS_ERROR_MESSAGE =
+//   'Ports must be an integer, range of integers, or a comma-separated list of integers.';
 export const CUSTOM_PORTS_VALIDATION_REGEX = /^(?:\d+|\d+-\d+|(?:\d+,\s*)*\d+)$/;
 
 export const validateIP = (ipAddress?: string | null): boolean => {
@@ -42,10 +42,88 @@ export const ipAddress = string().test({
   test: validateIP,
 });
 
-export const validateFirewallPorts = string().matches(
-  CUSTOM_PORTS_VALIDATION_REGEX,
-  CUSTOM_PORTS_ERROR_MESSAGE
-);
+export let CUSTOM_PORTS_ERROR_MESSAGE =
+  'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+
+const validatePort = (port: string): boolean => {
+  if (!port) {
+    CUSTOM_PORTS_ERROR_MESSAGE = 'Must be 1-65535';
+    return false;
+  }
+
+  const convertedPort = parseInt(port, 10);
+  if (!(1 <= convertedPort && convertedPort <= 65535)) {
+    CUSTOM_PORTS_ERROR_MESSAGE = 'Must be 1-65535';
+    return false;
+  }
+
+  if (String(convertedPort) !== port) {
+    CUSTOM_PORTS_ERROR_MESSAGE = 'Port must not have leading zeroes';
+    return false;
+  }
+
+  return true;
+};
+
+export const runCustomPortsValidation = (value: string): boolean => {
+  const portList = value?.split(',') || [];
+  let portLimitCount = 0;
+
+  for (const port of portList) {
+    const cleanedPort = port.trim();
+
+    if (cleanedPort.includes('-')) {
+      const portRange = cleanedPort.split('-');
+
+      if (!validatePort(portRange[0]) || !validatePort(portRange[1])) {
+        return false;
+      }
+
+      if (portRange.length !== 2) {
+        CUSTOM_PORTS_ERROR_MESSAGE = 'Ranges must have 2 values';
+        return false;
+      }
+
+      if (parseInt(portRange[0], 10) >= parseInt(portRange[1], 10)) {
+        CUSTOM_PORTS_ERROR_MESSAGE =
+          'Range must start with a smaller number and end with a larger number';
+        return false;
+      }
+
+      portLimitCount += 2;
+    } else {
+      if (!validatePort(cleanedPort)) {
+        return false;
+      }
+      portLimitCount++;
+    }
+  }
+
+  if (portLimitCount > 15) {
+    CUSTOM_PORTS_ERROR_MESSAGE =
+      'Number of ports or port range endpoints exceeded. Max allowed is 15';
+    return false;
+  }
+
+  return true;
+};
+
+const validateFirewallPorts = string().test({
+  name: 'firewall-ports',
+  message: CUSTOM_PORTS_ERROR_MESSAGE,
+  test: (value) => {
+    if (!value) {
+      return false;
+    }
+
+    try {
+      runCustomPortsValidation(value);
+    } catch (err) {
+      return false;
+    }
+    return true;
+  },
+});
 
 const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP', 'IPENCAP'];
 export const FirewallRuleTypeSchema = object().shape({
