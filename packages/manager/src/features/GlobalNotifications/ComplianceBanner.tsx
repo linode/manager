@@ -1,6 +1,6 @@
 import { styled } from '@mui/system';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { Box } from 'src/components/Box';
 import Typography from 'src/components/core/Typography';

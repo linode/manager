@@ -20,11 +20,10 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { transitionText } from 'src/features/Linodes/transitions';
-import useLinodes from 'src/hooks/useLinodes';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import NodeActionMenu from './NodeActionMenu';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   table: {
@@ -80,12 +79,9 @@ export const NodeTable: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const { _loading } = useReduxLoad(['linodes']);
-  const { linodes } = useLinodes();
+  const { data: linodes, isLoading, error } = useAllLinodesQuery();
 
-  const rowData = nodes.map((thisNode) =>
-    nodeToRow(thisNode, Object.values(linodes.itemsById))
-  );
+  const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
 
   return (
     <OrderBy data={rowData} orderBy={'label'} order={'asc'}>
@@ -139,8 +135,7 @@ export const NodeTable: React.FC<Props> = (props) => {
                 <TableBody>
                   <TableContentWrapper
                     loadingProps={{ columns: 4 }}
-                    loading={linodes.loading || _loading}
-                    lastUpdated={linodes.lastUpdated}
+                    loading={isLoading}
                     length={paginatedAndOrderedData.length}
                   >
                     {paginatedAndOrderedData.map((eachRow) => {
@@ -154,7 +149,7 @@ export const NodeTable: React.FC<Props> = (props) => {
                           ip={eachRow.ip}
                           nodeStatus={eachRow.nodeStatus}
                           typeLabel={typeLabel}
-                          linodeError={linodes.error?.read}
+                          linodeError={error ?? undefined}
                           openRecycleNodeDialog={openRecycleNodeDialog}
                         />
                       );

@@ -1,6 +1,4 @@
-import { GrantLevel } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -8,8 +6,8 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { ImageSelect } from 'src/features/Images';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { withLinodeDetailContext } from '../linodeDetailContext';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
+import { useGrants } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,25 +16,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface ContextProps {
-  permissions: GrantLevel;
-}
-
 interface Props {
   onImageChange: (selected: Item<string>) => void;
   imageFieldError?: string;
-
   password: string;
   passwordError?: string;
   onPasswordChange: (password: string) => void;
-
   setAuthorizedUsers: (usernames: string[]) => void;
   authorizedUsers: string[];
+  linodeId: number;
 }
 
-type CombinedProps = Props & ContextProps;
-
-export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
+export const ImageAndPassword = (props: Props) => {
   const {
     imageFieldError,
     onImageChange,
@@ -45,8 +36,10 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
     passwordError,
     setAuthorizedUsers,
     authorizedUsers,
-    permissions,
+    linodeId,
   } = props;
+
+  const { data: grants } = useGrants();
 
   const classes = useStyles();
 
@@ -55,7 +48,9 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
     ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].reason
     : undefined;
 
-  const disabled = permissions === 'read_only';
+  const disabled =
+    grants !== undefined &&
+    grants.linode.find((g) => g.id === linodeId)?.permissions === 'read_only';
 
   return (
     <React.Fragment>
@@ -84,11 +79,3 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
     </React.Fragment>
   );
 };
-
-const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  permissions: linode._permissions,
-}));
-
-const enhanced = compose<CombinedProps, Props>(linodeContext)(ImageAndPassword);
-
-export default enhanced;

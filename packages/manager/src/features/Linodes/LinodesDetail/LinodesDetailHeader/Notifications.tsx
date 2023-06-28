@@ -6,12 +6,11 @@ import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import MigrationNotification from './MigrationNotification';
 import { useParams } from 'react-router-dom';
-import { useLinodes } from 'src/hooks/useLinodes';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const Notifications = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
-  const { linodes } = useLinodes();
-  const linode = linodes.itemsById[Number(linodeId)];
+  const { data: linode } = useLinodeQuery(Number(linodeId));
 
   const { data: notifications, refetch } = useNotificationsQuery();
 
@@ -47,7 +46,7 @@ const Notifications = () => {
         }
         return (
           <MigrationNotification
-            linodeID={linode.id}
+            linodeID={Number(linode?.id)}
             requestNotifications={refetch}
             notificationMessage={notification.message}
             notificationType={notification.type}

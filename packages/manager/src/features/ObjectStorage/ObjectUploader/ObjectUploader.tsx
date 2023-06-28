@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { debounce } from 'throttle-debounce';
 import { FileUpload } from './FileUpload';
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';

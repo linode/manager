@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Box } from 'src/components/Box';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';

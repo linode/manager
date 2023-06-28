@@ -5,7 +5,7 @@ import {
   generateCatchAllFilter,
   generateSpecificFilter,
 } from '../stackScriptUtils';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import classNames from 'classnames';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { compose } from 'recompose';

@@ -10,7 +10,7 @@ import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
-import Button from 'src/components/Button/Button';
+import { Button } from 'src/components/Button/Button';
 import Divider from 'src/components/core/Divider';
 import { Link } from 'react-router-dom';
 import {

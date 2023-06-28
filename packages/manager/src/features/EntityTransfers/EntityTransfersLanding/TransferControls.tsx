@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Button from 'src/components/Button';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
+import { Button } from 'src/components/Button/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
