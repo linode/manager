@@ -168,8 +168,9 @@ export const ProfileSettings = () => {
   );
 };
 
-const ThemeKeyboardShortcut = isOSMac ? (
-  <Code>Ctrl + Shift + L</Code>
-) : (
-  <Code>Alt + Shift + L</Code>
+const ThemeKeyboardShortcut = (
+  <>
+    <Code>{isOSMac ? 'Ctrl' : 'Alt'}</Code> + <Code>Shift</Code> +{' '}
+    <Code>D</Code>
+  </>
 );
