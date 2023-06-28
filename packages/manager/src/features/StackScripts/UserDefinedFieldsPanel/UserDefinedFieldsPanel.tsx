@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

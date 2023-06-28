@@ -8,7 +8,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';

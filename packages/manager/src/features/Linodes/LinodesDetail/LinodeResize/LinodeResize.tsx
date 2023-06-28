@@ -30,7 +30,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { usePreferences } from 'src/queries/preferences';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   resizeTitle: {

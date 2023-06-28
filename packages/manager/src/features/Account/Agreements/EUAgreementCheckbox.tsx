@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 

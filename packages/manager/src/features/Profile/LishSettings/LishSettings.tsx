@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import FormControl from 'src/components/core/FormControl';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';

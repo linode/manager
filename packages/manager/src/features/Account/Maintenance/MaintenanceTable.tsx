@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';

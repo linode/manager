@@ -1,6 +1,6 @@
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from 'src/components/core/Typography';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';

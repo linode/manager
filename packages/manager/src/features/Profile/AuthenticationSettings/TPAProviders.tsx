@@ -1,6 +1,6 @@
 import * as React from 'react';
 import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Divider from 'src/components/core/Divider';
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
 import ExternalLink from 'src/components/ExternalLink';
