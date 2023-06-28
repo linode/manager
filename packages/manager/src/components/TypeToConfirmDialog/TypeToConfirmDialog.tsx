@@ -109,7 +109,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         label={label}
         confirmationText={
           entity.subType === 'CloseAccount' ? (
-            confirmText
+            ''
           ) : (
             <span>
               To confirm {entity.action}, {typeInstructions}(
