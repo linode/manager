@@ -21,13 +21,11 @@ import {
 } from 'src/queries/accountSettings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
-interface DispatchProps {
+interface Props {
   actions: {
     openBackupsDrawer: () => void;
   };
 }
-
-type Props = DispatchProps;
 
 const GlobalSettings = (props: Props) => {
   const {
@@ -114,7 +112,7 @@ const GlobalSettings = (props: Props) => {
   );
 };
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+const mapDispatchToProps: MapDispatchToProps<Props, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => {
   return {

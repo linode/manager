@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CloneLanding = () => {
+const CloneLanding = () => {
   const { linodeId: _linodeId } = useParams<{ linodeId: string }>();
   const history = useHistory();
   const match = useRouteMatch();
