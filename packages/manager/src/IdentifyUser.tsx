@@ -64,7 +64,7 @@ export const IdentifyUser = () => {
             anonymous: true,
             country,
             taxID,
-            privateAttributeNames: ['country, taxID'],
+            privateAttributes: ['country, taxID'],
           })
           .then(() => setFeatureFlagsLoaded())
           /**
