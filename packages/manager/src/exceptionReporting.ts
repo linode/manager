@@ -1,4 +1,4 @@
-import { captureException, configureScope, withScope } from '@sentry/browser';
+import { captureException, configureScope, withScope } from '@sentry/react';
 import { SENTRY_URL } from 'src/constants';
 import { initSentry } from 'src/initSentry';
 

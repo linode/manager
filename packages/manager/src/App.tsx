@@ -34,7 +34,7 @@ import { tokenEventHandler } from './queries/tokens';
 import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
-import { ErrorBoundary } from './components/ErrorBoundary';
+import { ErrorBoundary } from '@sentry/react';
 import {
   diskEventHandler,
   linodeEventsHandler,

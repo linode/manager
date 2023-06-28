@@ -1,4 +1,9 @@
-import { BrowserOptions, Event as SentryEvent, init } from '@sentry/browser';
+import {
+  BrowserOptions,
+  BrowserTracing,
+  Event as SentryEvent,
+  init,
+} from '@sentry/react';
 import { SENTRY_URL } from 'src/constants';
 import redactAccessToken from 'src/utilities/redactAccessToken';
 import deepStringTransform from 'src/utilities/deepStringTransform';
@@ -12,6 +17,7 @@ export const initSentry = () => {
       environment: import.meta.env.PROD ? 'production' : 'development',
       beforeSend,
       autoSessionTracking: false,
+      integrations: [new BrowserTracing()],
       ignoreErrors: [
         // Random plugins/extensions
         'top.GLOBALS',
