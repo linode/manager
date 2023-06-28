@@ -4,9 +4,9 @@ import { styled } from '@mui/material/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { Accordion } from 'src/components/Accordion';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { ExtendedAccordion } from 'src/components/ExtendedAccordion/ExtendedAccordion';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
@@ -71,18 +71,6 @@ export const NotificationSection = (props: NotificationSectionProps) => {
   const _count = count ?? 5;
   const _loading = Boolean(loading); // false if not provided
 
-  const innerContent = () => {
-    return (
-      <ContentBody
-        loading={_loading}
-        count={_count}
-        content={content}
-        header={header}
-        emptyMessage={emptyMessage}
-      />
-    );
-  };
-
   const isActualNotificationContainer = header === 'Notifications';
 
   return (
@@ -123,14 +111,21 @@ export const NotificationSection = (props: NotificationSectionProps) => {
           </Hidden>
 
           <Hidden smUp>
-            <ExtendedAccordion
+            <Accordion
               heading={header}
               headingNumberCount={
                 content.length > 0 ? content.length : undefined
               }
-              renderMainContent={innerContent}
               defaultExpanded={true}
-            />
+            >
+              <ContentBody
+                loading={_loading}
+                count={_count}
+                content={content}
+                header={header}
+                emptyMessage={emptyMessage}
+              />
+            </Accordion>
           </Hidden>
         </>
       )}

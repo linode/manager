@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';

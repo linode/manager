@@ -1,19 +1,21 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
-import _Accordion, { AccordionProps } from 'src/components/core/Accordion';
+import {
+  default as _Accordion,
+  AccordionProps as _AccordionProps,
+} from '@mui/material/Accordion';
 import AccordionDetails, {
   AccordionDetailsProps,
-} from 'src/components/core/AccordionDetails';
+} from '@mui/material/AccordionDetails';
 import AccordionSummary, {
   AccordionSummaryProps,
-} from 'src/components/core/AccordionSummary';
+} from '@mui/material/AccordionSummary';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import RenderGuard from 'src/components/RenderGuard';
 import { makeStyles } from 'tss-react/mui';
 import { Notice } from 'src/components/Notice/Notice';
 
-const useStyles = makeStyles()(() => ({
+const useStyles = makeStyles()({
   itemCount: {
     display: 'flex',
     alignItems: 'center',
@@ -29,23 +31,65 @@ const useStyles = makeStyles()(() => ({
     position: 'absolute',
     right: 50,
   },
-}));
+});
 
-export interface Props extends AccordionProps {
+export interface AccordionProps extends _AccordionProps {
+  /**
+   * A header placed at the top of the Accordion
+   */
   heading: string | React.ReactNode;
+  /**
+   * Error text that shows as a `<Notice />` at the top of the Accordion's body
+   */
   error?: string;
+  /**
+   * Warning text that shows as a `<Notice />` at the top of the Accordion's body
+   */
   warning?: string;
+  /**
+   * Success text that shows as a `<Notice />` at the top of the Accordion's body
+   */
   success?: string;
-  loading?: boolean;
-  actions?: (props: AccordionProps) => null | JSX.Element;
+  /**
+   * Renders actions at the bottom of the Accordion's body
+   */
+  actions?: (props: _AccordionProps) => null | JSX.Element;
+  /**
+   * Optional className to pass to the expand icon
+   */
   expandIconClassNames?: string;
+  /**
+   * Props to pass to the underlying `AccordionSummary` MUI component
+   */
   summaryProps?: AccordionSummaryProps;
+  /**
+   * Props to pass to heading's `<Typography />` component
+   */
   headingProps?: TypographyProps;
+  /**
+   * Props to pass to the underlying `AccordionDetails` MUI component
+   */
   detailProps?: AccordionDetailsProps;
+  /**
+   * A number to display in the Accordion's heading
+   */
   headingNumberCount?: number;
 }
 
-export const Accordion = (props: Props) => {
+/**
+ * Accordions are better suited for when people need to focus on content that is key for decision making and other supplementary content can be hidden. Accordions should be avoided when users need most if not all of the content on a page. Scrolling isn't as big of an issue as once thought.
+ *
+ * ### Pros
+ * - Puts focus on the content the user is interested in
+ * - Can make pages seem less complex
+ *
+ * ### Cons
+ * - Can be cumbersome which adds to cognitive load
+ *   - “People treat clicks like currency and they don't spend it frivolously” - NNG [Citation](https://www.nngroup.com/articles/clickable-elements/)
+ * - Increases interaction cost
+ * - Accordions collapsed by default diminishes people's awareness of content
+ */
+export const Accordion = (props: AccordionProps) => {
   const { classes } = useStyles();
 
   const {
@@ -115,5 +159,3 @@ export const Accordion = (props: Props) => {
     </_Accordion>
   );
 };
-
-export default RenderGuard<Props>(Accordion);
