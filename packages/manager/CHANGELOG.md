@@ -4,8 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2023-06-27] - v1.96.1
+## [2023-06-29] - v1.96.2
 
+### Fixed:
+- Issue where Cloud Manager was not displaying all linodes capable of being "cloned" ([#9294](https://github.com/linode/manager/pull/9294))
+- Firewall custom ports validation w/ unit tests ([#9336](https://github.com/linode/manager/pull/9336))
+
+### Tech Stories:
+
+- React Query - Linodes - General Refactors ([#9294](https://github.com/linode/manager/pull/9294))
+
+## [2023-06-27] - v1.96.1
 
 ### Fixed:
 

@@ -17,8 +17,8 @@ import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/Plans
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import HostMaintenanceError from '../HostMaintenanceError';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { HostMaintenanceError } from '../HostMaintenanceError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import { extendType } from 'src/utilities/extendType';
 import { useFormik } from 'formik';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';

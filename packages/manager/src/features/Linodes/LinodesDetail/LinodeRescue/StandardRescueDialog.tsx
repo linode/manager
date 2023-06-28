@@ -17,7 +17,7 @@ import { useAllVolumesQuery } from 'src/queries/volumes';
 import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import DeviceSelection, { ExtendedDisk } from './DeviceSelection';
 import RescueDescription from './RescueDescription';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
