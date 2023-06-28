@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { confirmObjectStorage } from '../utilities';
@@ -79,6 +79,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     data: objectStorageClusters,
     isLoading: areClustersLoading,
   } = useObjectStorageClusters();
+
   const {
     data: objectStorageBucketsResponse,
     isLoading: areBucketsLoading,
@@ -87,6 +88,8 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const { data: accountSettings } = useAccountSettings();
 
   const buckets = objectStorageBucketsResponse?.buckets || [];
+
+  const hasBuckets = buckets?.length > 0;
 
   const hidePermissionsTable =
     bucketsError || objectStorageBucketsResponse?.buckets.length === 0;
@@ -133,7 +136,12 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   };
 
   return (
-    <Drawer title={title} open={open} onClose={onClose} wide={createMode}>
+    <Drawer
+      title={title}
+      open={open}
+      onClose={onClose}
+      wide={createMode && hasBuckets}
+    >
       {areBucketsLoading || areClustersLoading ? (
         <CircleProgress />
       ) : (
@@ -204,6 +212,14 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                     .
                   </Typography>
                 )}
+
+                {!hasBuckets ? (
+                  <Typography sx={{ paddingTop: '10px' }}>
+                    This key will have unlimited access to all buckets on your
+                    account. The option to create a limited access key is only
+                    available after creating one or more buckets.
+                  </Typography>
+                ) : null}
 
                 <TextField
                   name="label"

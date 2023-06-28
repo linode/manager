@@ -7,7 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme, styled } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import Typography from 'src/components/core/Typography';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 
 interface Props {

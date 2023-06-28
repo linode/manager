@@ -18,7 +18,7 @@ import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
@@ -34,12 +34,12 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
-import MultipleIPInput from 'src/components/MultipleIPInput';
+import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Radio } from 'src/components/Radio/Radio';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import PlansPanel, {
@@ -135,9 +135,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 const engineIcons = {
-  mysql: () => <MySQLIcon width="24" height="24" />,
-  postgresql: () => <PostgreSQLIcon width="24" height="24" />,
-  mongodb: () => <MongoDBIcon width="24" height="24" />,
+  mysql: <MySQLIcon width="24" height="24" />,
+  postgresql: <PostgreSQLIcon width="24" height="24" />,
+  mongodb: <MongoDBIcon width="24" height="24" />,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import Link from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 import { useExpandIconStyles } from './UserDataAccordion.styles';
@@ -88,7 +88,9 @@ export const UserDataAccordion = (props: Props) => {
         User data is a virtual machine&rsquo;s cloud-init metadata relating to a
         user&rsquo;s local account, including username and user group(s). <br />
         User data must be added before the Linode provisions.{' '}
-        <Link to="http://linode.com/docs">Learn more.</Link>{' '}
+        <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
+          Learn more.
+        </Link>{' '}
       </Typography>
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>

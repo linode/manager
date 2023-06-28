@@ -1,7 +1,7 @@
 import Box from 'src/components/core/Box';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Select from 'src/components/EnhancedSelect/Select';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { styled } from '@mui/material/styles';
 

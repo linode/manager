@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import Divider from 'src/components/core/Divider';
 import Grid from '@mui/material/Unstable_Grid2';

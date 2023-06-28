@@ -1,15 +1,14 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import Button from 'src/components/Button';
-import classNames from 'classnames';
+import { styled } from '@mui/material/styles';
+import { Button } from 'src/components/Button/Button';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import Hidden from 'src/components/core/Hidden';
 import SelectionCard from 'src/components/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
+import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 interface Props {
   disabled?: boolean;
@@ -32,8 +31,6 @@ export const KubernetesPlanSelection = ({
   type,
   updatePlanCount,
 }: Props) => {
-  const { classes } = useSelectPlanQuantityStyles();
-
   const count = getTypeCount(type.id);
 
   // We don't want network information for LKE so we remove the last two elements.
@@ -41,7 +38,7 @@ export const KubernetesPlanSelection = ({
 
   const renderVariant = () => (
     <Grid xs={12}>
-      <div className={classes.enhancedInputOuter}>
+      <StyledInputOuter>
         <EnhancedNumberInput
           value={count}
           setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
@@ -52,28 +49,24 @@ export const KubernetesPlanSelection = ({
             buttonType="primary"
             onClick={() => onAdd(type.id, count)}
             disabled={count < 1 || disabled}
-            className={classes.enhancedInputButton}
+            sx={{ minWidth: '85px', marginLeft: '10px' }}
           >
             Add
           </Button>
         )}
-      </div>
+      </StyledInputOuter>
     </Grid>
   );
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden mdDown>
-        <TableRow
+        <StyledDisabledTableRow
           data-qa-plan-row={type.formattedLabel}
           key={type.id}
-          className={classNames({
-            [classes.disabledRow]: disabled,
-          })}
+          disabled={disabled}
         >
-          <TableCell data-qa-plan-name>
-            <div className={classes.headingCellContainer}>{type.heading} </div>
-          </TableCell>
+          <TableCell data-qa-plan-name>{type.heading}</TableCell>
           <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
           <TableCell data-qa-hourly>{`$` + type.price.hourly}</TableCell>
           <TableCell center data-qa-ram>
@@ -86,7 +79,7 @@ export const KubernetesPlanSelection = ({
             {convertMegabytesTo(type.disk, true)}
           </TableCell>
           <TableCell>
-            <div className={classes.enhancedInputOuter}>
+            <StyledInputOuter>
               <EnhancedNumberInput
                 inputLabel={`edit-quantity-${type.id}`}
                 value={count}
@@ -105,14 +98,14 @@ export const KubernetesPlanSelection = ({
                   buttonType="primary"
                   onClick={() => onAdd(type.id, count)}
                   disabled={count < 1 || disabled}
-                  className={classes.enhancedInputButton}
+                  sx={{ minWidth: '85px', marginLeft: '10px' }}
                 >
                   Add
                 </Button>
               )}
-            </div>
+            </StyledInputOuter>
           </TableCell>
-        </TableRow>
+        </StyledDisabledTableRow>
       </Hidden>
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
@@ -129,3 +122,14 @@ export const KubernetesPlanSelection = ({
     </React.Fragment>
   );
 };
+
+const StyledInputOuter = styled('div', { label: 'StyledInputOuter' })(
+  ({ theme }) => ({
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start',
+    },
+  })
+);

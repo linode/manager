@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Table } from 'src/components/Table';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';

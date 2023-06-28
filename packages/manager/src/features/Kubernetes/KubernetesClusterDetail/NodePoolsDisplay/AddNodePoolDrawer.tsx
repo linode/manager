@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -15,7 +15,7 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { nodeWarning } from '../../kubeUtils';
-import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import type { Region } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -143,9 +143,9 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   const {
     hasSelectedRegion,
-    isPremiumPlanPanelDisabled,
-    isSelectedRegionPremium,
-  } = usePremiumPlansUtils({
+    isPlanPanelDisabled,
+    isSelectedRegionEligibleForPlan,
+  } = plansNoticesUtils({
     selectedRegionID: clusterRegionId,
     regionsData,
   });
@@ -174,8 +174,8 @@ export const AddNodePoolDrawer = (props: Props) => {
             }
           }}
           hasSelectedRegion={hasSelectedRegion}
-          isPremiumPlanPanelDisabled={isPremiumPlanPanelDisabled}
-          isSelectedRegionPremium={isSelectedRegionPremium}
+          isPlanPanelDisabled={isPlanPanelDisabled}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           regionsData={regionsData}
           updatePlanCount={updatePlanCount}
           addPool={handleAdd}

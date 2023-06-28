@@ -9,9 +9,6 @@ import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
-    '& .MuiPaper-root': {
-      minWidth: 480,
-    },
     '& .MuiDialogTitle-root': {
       marginBottom: 10,
     },

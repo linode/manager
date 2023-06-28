@@ -3,7 +3,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
