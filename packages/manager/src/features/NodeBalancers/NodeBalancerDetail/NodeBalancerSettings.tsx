@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Accordion } from 'src/components/Accordion';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { TextField } from 'src/components/TextField';

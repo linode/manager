@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import TicketIcon from 'src/assets/icons/ticket.svg';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';

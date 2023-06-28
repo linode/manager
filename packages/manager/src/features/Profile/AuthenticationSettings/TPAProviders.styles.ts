@@ -1,4 +1,4 @@
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
