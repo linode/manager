@@ -42,6 +42,11 @@ export const ipAddress = string().test({
 export let CUSTOM_PORTS_ERROR_MESSAGE =
   'Ports must be an integer, range of integers, or a comma-separated list of integers.';
 
+/**
+ * @param port
+ * @returns boolean
+ * @description Validates a single port or port range and sets the error message
+ */
 const validatePort = (port: string): boolean => {
   if (!port) {
     CUSTOM_PORTS_ERROR_MESSAGE = 'Must be 1-65535';
@@ -62,8 +67,13 @@ const validatePort = (port: string): boolean => {
   return true;
 };
 
-export const runCustomPortsValidation = (value: string): boolean => {
-  const portList = value?.split(',') || [];
+/**
+ * @param ports
+ * @returns boolean
+ * @description Validates a comma-separated list of ports and port ranges and sets the error message
+ */
+export const isCustomPortsValid = (ports: string): boolean => {
+  const portList = ports?.split(',') || [];
   let portLimitCount = 0;
 
   for (const port of portList) {
@@ -114,7 +124,7 @@ const validateFirewallPorts = string().test({
     }
 
     try {
-      runCustomPortsValidation(value);
+      isCustomPortsValid(value);
     } catch (err) {
       return false;
     }
