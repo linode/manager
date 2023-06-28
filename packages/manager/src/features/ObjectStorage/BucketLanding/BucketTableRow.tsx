@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import Typography from 'src/components/core/Typography';
 import { BucketActionMenu } from './BucketActionMenu';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';

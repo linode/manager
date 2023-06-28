@@ -6,7 +6,7 @@ import {
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Chip } from 'src/components/core/Chip';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';

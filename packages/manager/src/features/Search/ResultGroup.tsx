@@ -1,8 +1,8 @@
 import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
+import { Hidden } from 'src/components/Hidden';
 import { Button } from 'src/components/Button/Button';
-import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';

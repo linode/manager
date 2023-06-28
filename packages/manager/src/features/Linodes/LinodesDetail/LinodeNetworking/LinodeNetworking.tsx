@@ -6,7 +6,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'tss-react/mui';
 import { Theme, useTheme } from '@mui/material/styles';
