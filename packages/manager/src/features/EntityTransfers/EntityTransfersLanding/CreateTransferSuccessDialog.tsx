@@ -3,7 +3,7 @@ import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
 import { update } from 'ramda';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import timezones from 'src/assets/timezones/timezones';
 import Typography from 'src/components/core/Typography';

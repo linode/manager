@@ -3,7 +3,7 @@ import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';

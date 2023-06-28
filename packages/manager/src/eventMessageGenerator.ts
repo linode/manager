@@ -4,9 +4,10 @@ import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import {
-  formatEventWithUsername,
   formatEventWithAppendedText,
+  formatEventWithUsername,
 } from './features/Events/Event.helpers';
+import { escapeRegExp } from './utilities/escapeRegExp';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -873,7 +874,7 @@ export function applyLinking(event: Event, message: string) {
 
   if (event.entity && entityLinkTarget) {
     const label = event.entity.label;
-    const nonTickedLabels = new RegExp(`(?<!\`)${label}`, 'g');
+    const nonTickedLabels = new RegExp(`(?<!\`)${escapeRegExp(label)}`, 'g');
 
     newMessage = newMessage.replace(
       nonTickedLabels,

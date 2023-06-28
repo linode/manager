@@ -1,11 +1,16 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { queryKey } from './linodes';
 import { getAll } from 'src/utilities/getAll';
 import {
   APIError,
   Disk,
+  LinodeDiskCreationData,
   changeLinodeDiskPassword,
+  createLinodeDisk,
+  deleteLinodeDisk,
   getLinodeDisks,
+  resizeLinodeDisk,
+  updateLinodeDisk,
 } from '@linode/api-v4';
 
 export const useAllLinodeDisksQuery = (id: number, enabled = true) => {
@@ -28,3 +33,57 @@ export const useLinodeDiskChangePasswordMutation = (
   useMutation<Disk, APIError[], { password: string }>(({ password }) =>
     changeLinodeDiskPassword(linodeId, diskId, password)
   );
+
+export const useLinodeDeleteDiskMutation = (
+  linodeId: number,
+  diskId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(() => deleteLinodeDisk(linodeId, diskId), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
+    },
+  });
+};
+
+export const useLinodeDiskCreateMutation = (linodeId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Disk, APIError[], LinodeDiskCreationData>(
+    (data) => createLinodeDisk(linodeId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
+      },
+    }
+  );
+};
+
+export const useLinodeDiskUpdateMutation = (
+  linodeId: number,
+  diskId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<Disk, APIError[], { label: string }>(
+    (data) => updateLinodeDisk(linodeId, diskId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
+      },
+    }
+  );
+};
+
+export const useLinodeDiskResizeMutation = (
+  linodeId: number,
+  diskId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<Disk, APIError[], { size: number }>(
+    ({ size }) => resizeLinodeDisk(linodeId, diskId, size),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
+      },
+    }
+  );
+};

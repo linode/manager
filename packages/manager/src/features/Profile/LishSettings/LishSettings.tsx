@@ -1,13 +1,13 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import FormControl from 'src/components/core/FormControl';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Paper from 'src/components/core/Paper';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';

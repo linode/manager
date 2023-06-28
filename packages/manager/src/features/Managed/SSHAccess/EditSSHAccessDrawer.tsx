@@ -2,7 +2,7 @@ import { Formik, FormikHelpers } from 'formik';
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -11,7 +11,7 @@ import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import {
   handleFieldErrors,

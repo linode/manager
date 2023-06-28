@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import {
   ConfirmationDialog,
   ConfirmationDialogProps,
@@ -108,7 +108,9 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         hideInstructions={entity.subType === 'CloseAccount'}
         label={label}
         confirmationText={
-          entity.subType === 'CloseAccount' ? null : (
+          entity.subType === 'CloseAccount' ? (
+            confirmText
+          ) : (
             <span>
               To confirm {entity.action}, {typeInstructions}(
               <b>{entity.name}</b>) in the field below:

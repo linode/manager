@@ -18,7 +18,7 @@ import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelec
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
@@ -37,7 +37,7 @@ import KubeCheckoutBar from '../KubeCheckoutBar';
 import { NodePoolPanel } from './NodePoolPanel';
 import LandingHeader from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -237,9 +237,9 @@ export const CreateCluster = () => {
 
   const {
     hasSelectedRegion,
-    isPremiumPlanPanelDisabled,
-    isSelectedRegionPremium,
-  } = usePremiumPlansUtils({
+    isPlanPanelDisabled,
+    isSelectedRegionEligibleForPlan,
+  } = plansNoticesUtils({
     selectedRegionID,
     regionsData,
   });
@@ -320,9 +320,9 @@ export const CreateCluster = () => {
                   : undefined
               }
               regionsData={regionsData}
-              isPremiumPlanPanelDisabled={isPremiumPlanPanelDisabled}
+              isPlanPanelDisabled={isPlanPanelDisabled}
               hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionPremium={isSelectedRegionPremium}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
             />
           </Box>

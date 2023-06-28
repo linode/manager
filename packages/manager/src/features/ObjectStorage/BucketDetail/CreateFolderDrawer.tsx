@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import Drawer from 'src/components/Drawer/Drawer';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { useFormik } from 'formik';
 import { useCreateObjectUrlMutation } from 'src/queries/objectStorage';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 
 interface Props {
   open: boolean;

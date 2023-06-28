@@ -2,7 +2,7 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { withTheme, WithTheme } from '@mui/styles';
 import Grid from 'src/components/Grid';
-import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
   formatNetworkTooltip,
   getMaxUnitAndFormatNetwork,

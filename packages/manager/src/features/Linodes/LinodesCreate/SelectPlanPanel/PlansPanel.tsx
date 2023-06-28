@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
+import { useTheme } from '@mui/material/styles';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
 import {
@@ -8,9 +9,8 @@ import {
   planTabInfoContent,
 } from './utils';
 import { PlanContainer } from './PlanContainer';
-import { useSelectPlanPanelStyles } from './styles/plansPanelStyles';
 import { PlanInformation } from './PlanInformation';
-import { usePremiumPlansUtils } from 'src/hooks/usePremiumPlans';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import type { Region } from '@linode/api-v4';
 
 export interface PlanSelectionType extends BaseType {
@@ -62,13 +62,14 @@ export const PlansPanel = (props: Props) => {
     types,
   } = props;
 
-  const { classes } = useSelectPlanPanelStyles();
+  const theme = useTheme();
+
   const plans = getPlanSelectionsByPlanType(types);
   const {
     hasSelectedRegion,
-    isPremiumPlanPanelDisabled,
-    isSelectedRegionPremium,
-  } = usePremiumPlansUtils({
+    isPlanPanelDisabled,
+    isSelectedRegionEligibleForPlan,
+  } = plansNoticesUtils({
     selectedRegionID,
     regionsData,
   });
@@ -81,13 +82,15 @@ export const PlansPanel = (props: Props) => {
             <PlanInformation
               disabledClasses={props.disabledClasses}
               hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionPremium={isSelectedRegionPremium}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                plan
+              )}
               planType={plan}
               regionsData={regionsData || []}
             />
             <PlanContainer
               currentPlanHeading={currentPlanHeading}
-              disabled={disabled || isPremiumPlanPanelDisabled(plan)}
+              disabled={disabled || isPlanPanelDisabled(plan)}
               disabledClasses={props.disabledClasses}
               isCreate={isCreate}
               linodeID={linodeID}
@@ -112,7 +115,8 @@ export const PlansPanel = (props: Props) => {
 
   return (
     <TabbedPanel
-      rootClass={`${classes.root} ${className} tabbedPanel`}
+      rootClass={`${className} tabbedPanel`}
+      sx={{ marginTop: theme.spacing(3), width: '100%' }}
       innerClass={props.tabbedPanelInnerClass}
       error={error}
       header={header || 'Linode Plan'}

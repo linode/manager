@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import SelectionCardWrapper from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
-import Chip from 'src/components/core/Chip';
+import { Chip } from 'src/components/core/Chip';
 
 const AppPanelGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(2),

@@ -1,7 +1,7 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';

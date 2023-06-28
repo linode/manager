@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
@@ -12,7 +12,6 @@ import Typography from 'src/components/core/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { addUsedDiskSpace } from 'src/features/Linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
@@ -38,6 +37,7 @@ import useEvents from 'src/hooks/useEvents';
 import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { useImageQuery } from 'src/queries/images';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {

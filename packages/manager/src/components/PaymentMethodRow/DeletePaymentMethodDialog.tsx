@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from '../ActionsPanel';
-import Button from '../Button';
+import { Button } from '../Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';

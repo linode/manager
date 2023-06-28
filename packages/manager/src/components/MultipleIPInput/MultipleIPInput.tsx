@@ -1,20 +1,19 @@
 // @todo: this import?
 import { InputBaseProps } from '@mui/material/InputBase';
 import Close from '@mui/icons-material/Close';
-import classNames from 'classnames';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   addIP: {
     paddingLeft: 0,
     paddingTop: theme.spacing(1.5),
@@ -56,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props {
+interface Props {
   title: string;
   helperText?: string;
   tooltip?: string;
@@ -71,7 +70,7 @@ export interface Props {
   forDatabaseAccessControls?: boolean;
 }
 
-export const MultipleIPInput: React.FC<Props> = (props) => {
+export const MultipleIPInput = React.memo((props: Props) => {
   const {
     error,
     onChange,
@@ -83,8 +82,9 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
     placeholder,
     required,
     forDatabaseAccessControls,
+    className,
   } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -123,13 +123,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
   }
 
   return (
-    <div
-      className={classNames({
-        [classes.root]: true,
-        // Inject the className if given as as prop.
-        [props.className ?? '']: Boolean(props.className),
-      })}
-    >
+    <div className={cx(classes.root, className)}>
       {tooltip ? (
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
@@ -206,6 +200,4 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
       </Button>
     </div>
   );
-};
-
-export default React.memo(MultipleIPInput);
+});

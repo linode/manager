@@ -8,4 +8,5 @@ export const oauthClientFactory = Factory.Sync.makeFactory<OAuthClient>({
   redirect_uri: 'http://localhost:3000/api/auth/callback/linode',
   status: 'active',
   thumbnail_url: null,
+  secret: '<REDACTED>',
 });

@@ -3,7 +3,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from '@mui/material/Unstable_Grid2';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Select from 'src/components/EnhancedSelect/Select';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { setErrorMap } from './utils';
 import type { Item } from 'src/components/EnhancedSelect';
