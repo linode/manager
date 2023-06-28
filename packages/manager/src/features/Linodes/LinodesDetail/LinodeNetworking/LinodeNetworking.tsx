@@ -157,7 +157,8 @@ const LinodeNetworking = () => {
 
   const renderIPRow = (ipDisplay: IPDisplay) => {
     const { address, type, gateway, subnetMask, rdns, _ip, _range } = ipDisplay;
-    const isOnlyPublicIP = ips?.ipv4.public.length === 1;
+    const isOnlyPublicIP =
+      ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
 
     return (
       <TableRow
