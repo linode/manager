@@ -226,7 +226,6 @@
       "cobertura"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/config/testSetup.js",
       "<rootDir>/src/testSetup.ts"
     ],
     "testMatch": [
