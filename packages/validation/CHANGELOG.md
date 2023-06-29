@@ -1,6 +1,6 @@
-## [2023-06-29] - v0.24.1
+## [2023-06-29] - v0.25.0
 
-### Changed:
+### Fixed:
 - Firewall custom ports validation ([#9336](https://github.com/linode/manager/pull/9336))
 
 ## [2023-06-12] - v0.24.0
