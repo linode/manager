@@ -1,11 +1,6 @@
 import * as React from 'react';
-<<<<<<< HEAD
 import { Hidden } from 'src/components/Hidden';
-import Link from 'src/components/Link';
-=======
-import Hidden from 'src/components/core/Hidden';
 import { Link } from 'src/components/Link';
->>>>>>> a0f6431f5 (Refactor: [M3-6522-link] Initial commit: remoce default export and new story)
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import formatDate from 'src/utilities/formatDate';

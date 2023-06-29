@@ -1,5 +1,5 @@
 import React from 'react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Link } from 'src/components/Link';
 import type { LinkProps } from 'react-router-dom';
 import type { Meta, StoryObj } from '@storybook/react';
