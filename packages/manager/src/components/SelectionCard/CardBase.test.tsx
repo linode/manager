@@ -1,7 +1,6 @@
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import * as React from 'react';
-
-import CardBase from './index';
+import { CardBase } from './CardBase';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('CardBase component', () => {
   it('should render header decorations when supplied', () => {

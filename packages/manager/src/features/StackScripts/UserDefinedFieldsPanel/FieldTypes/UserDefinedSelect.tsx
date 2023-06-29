@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

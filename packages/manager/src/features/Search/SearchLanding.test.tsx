@@ -33,10 +33,6 @@ const propsWithResults: Props = {
 
 const queryClient = new QueryClient();
 
-jest.mock('src/hooks/useReduxLoad', () => ({
-  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false }),
-}));
-
 describe('Component', () => {
   server.use(
     rest.get('*/domains', (req, res, ctx) => {

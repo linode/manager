@@ -1,4 +1,4 @@
-import Chip from 'src/components/core/Chip';
+import { Chip } from 'src/components/core/Chip';
 import { styled } from '@mui/material/styles';
 import { TableCell } from 'src/components/TableCell';
 

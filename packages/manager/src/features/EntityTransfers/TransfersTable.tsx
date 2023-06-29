@@ -4,8 +4,8 @@ import {
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import Accordion from 'src/components/Accordion';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
+import { Accordion } from 'src/components/Accordion';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';

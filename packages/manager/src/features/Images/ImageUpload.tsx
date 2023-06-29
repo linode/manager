@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -14,9 +14,9 @@ import Link from 'src/components/Link';
 import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
@@ -69,7 +69,10 @@ const cloudInitTooltipMessage = (
   <Typography>
     Only check this box if your Custom Image is compatible with cloud-init, or
     has cloud-init installed, and the config has been changed to use our data
-    service. <Link to="/">Learn how.</Link>
+    service.{' '}
+    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
+      Learn how.
+    </Link>
   </Typography>
 );
 
