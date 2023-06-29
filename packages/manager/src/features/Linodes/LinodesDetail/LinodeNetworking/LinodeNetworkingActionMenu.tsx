@@ -1,20 +1,14 @@
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { makeStyles } from 'tss-react/mui';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { Box } from 'src/components/Box';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { IPTypes } from './types';
-
-const useStyles = makeStyles()(() => ({
-  emptyCell: {
-    height: 40,
-  },
-}));
 
 interface Props {
   onEdit?: (ip: IPAddress | IPRange) => void;
@@ -22,17 +16,23 @@ interface Props {
   ipType: IPTypes;
   ipAddress?: IPAddress | IPRange;
   readOnly: boolean;
+  isOnlyPublicIP: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
-  const { classes } = useStyles();
-
+export const LinodeNetworkingActionMenu = (props: CombinedProps) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
-  const { onEdit, onRemove, ipType, ipAddress, readOnly } = props;
+  const {
+    onEdit,
+    onRemove,
+    ipType,
+    ipAddress,
+    readOnly,
+    isOnlyPublicIP,
+  } = props;
 
   const showEdit =
     ipType !== 'IPv4 – Private' &&
@@ -45,23 +45,37 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
   // if we have a 116 we don't want to give the option to remove it
   const is116Range = ipAddress?.prefix === 116;
 
+  const readOnlyTooltip = readOnly
+    ? "You don't have permissions to perform this action"
+    : undefined;
+
+  const isOnlyPublicIPTooltip = isOnlyPublicIP
+    ? 'Linodes must have at least one public IP'
+    : undefined;
+
   const actions = [
     onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
       ? {
           title: 'Delete',
-          disabled: readOnly,
           onClick: () => {
             onRemove(ipAddress);
           },
+          disabled: readOnly || isOnlyPublicIP,
+          tooltip: readOnly
+            ? readOnlyTooltip
+            : isOnlyPublicIP
+            ? isOnlyPublicIPTooltip
+            : undefined,
         }
       : null,
     onEdit && ipAddress && showEdit
       ? {
           title: 'Edit RDNS',
-          disabled: readOnly,
           onClick: () => {
             onEdit(ipAddress);
           },
+          disabled: readOnly,
+          tooltip: readOnly ? readOnlyTooltip : undefined,
         }
       : null,
   ].filter(Boolean) as Action[];
@@ -74,8 +88,9 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
             <InlineMenuAction
               key={action.title}
               actionText={action.title}
-              disabled={readOnly}
+              disabled={action.disabled}
               onClick={action.onClick}
+              tooltip={action.tooltip}
             />
           );
         })}
@@ -87,7 +102,7 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
       )}
     </>
   ) : (
-    <span className={classes.emptyCell}></span>
+    <Box sx={{ height: 40 }}></Box>
   );
 };
 
