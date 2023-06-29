@@ -48,12 +48,13 @@ describe('linode backups', () => {
 
   it('create linode from snapshot', () => {
     createLinode({ backups_enabled: true }).then((linode) => {
-      cy.visitWithLogin(`/linodes/${linode.id}/backup`);
-      // intercept request
       cy.intercept(
         'POST',
         apiMatcher(`linode/instances/${linode.id}/backups`)
       ).as('enableBackups');
+      cy.visitWithLogin(`/linodes/${linode.id}/backup`);
+      // intercept request
+
       fbtVisible(`${linode.label}`);
       if (
         // TODO Resolve potential flake.
