@@ -39,8 +39,7 @@ export const ipAddress = string().test({
   test: validateIP,
 });
 
-export let CUSTOM_PORTS_ERROR_MESSAGE =
-  'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+export let CUSTOM_PORTS_ERROR_MESSAGE = '';
 
 /**
  * @param port
@@ -48,6 +47,9 @@ export let CUSTOM_PORTS_ERROR_MESSAGE =
  * @description Validates a single port or port range and sets the error message
  */
 const validatePort = (port: string): boolean => {
+  CUSTOM_PORTS_ERROR_MESSAGE =
+    'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+
   if (!port) {
     CUSTOM_PORTS_ERROR_MESSAGE = 'Must be 1-65535';
     return false;
@@ -59,8 +61,12 @@ const validatePort = (port: string): boolean => {
     return false;
   }
 
-  if (String(convertedPort) !== port) {
+  if (port.startsWith('0')) {
     CUSTOM_PORTS_ERROR_MESSAGE = 'Port must not have leading zeroes';
+    return false;
+  }
+
+  if (String(convertedPort) !== port) {
     return false;
   }
 
