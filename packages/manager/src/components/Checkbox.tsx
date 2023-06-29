@@ -31,7 +31,7 @@ interface Props extends CheckboxProps {
  * ## Usage
  *
  * - Used when there are lists of options and the user may select any number of choices, including none, one, or many.
- * - A stand-alone checkbox is used for a single option that the user can turn on or off (ie. accepting terms and conditions).
+ * - A standalone checkbox is used for a single option that the user can turn on or off (i.e., accepting terms and conditions).
  *
  * ## Guidelines
  *
@@ -55,7 +55,7 @@ export const Checkbox = (props: Props) => {
     />
   );
 
-  const CheckBoxComponent = props.text ? (
+  const CheckboxComponent = props.text ? (
     <StyledFormControlLabel
       control={BaseCheckbox}
       label={text}
@@ -67,7 +67,7 @@ export const Checkbox = (props: Props) => {
 
   return (
     <>
-      {CheckBoxComponent}
+      {CheckboxComponent}
       {toolTipText ? (
         <TooltipIcon
           interactive={toolTipInteractive}
