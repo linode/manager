@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import Hidden from 'src/components/core/Hidden';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+import { Hidden } from 'src/components/Hidden';
 import { BucketActionMenu } from './BucketActionMenu';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';

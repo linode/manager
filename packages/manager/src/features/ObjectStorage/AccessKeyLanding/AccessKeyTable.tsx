@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { AccessKeyMenu } from './AccessKeyMenu';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';

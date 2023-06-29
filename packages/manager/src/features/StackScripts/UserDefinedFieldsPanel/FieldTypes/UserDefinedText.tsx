@@ -4,7 +4,7 @@ import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import RenderGuard from 'src/components/RenderGuard';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
 type ClassNames = 'accessPanel' | 'marginTop';
 

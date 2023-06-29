@@ -6,7 +6,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { events$ } from 'src/events';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';

@@ -5,7 +5,7 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Tag } from 'src/components/Tag/Tag';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

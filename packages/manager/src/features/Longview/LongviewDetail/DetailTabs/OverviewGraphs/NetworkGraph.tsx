@@ -2,7 +2,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { withTheme, WithTheme } from '@mui/styles';
-import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
   formatNetworkTooltip,
   getMaxUnitAndFormatNetwork,

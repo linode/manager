@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { useHistory } from 'react-router-dom';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 
 interface Props {
   onEdit: () => void;

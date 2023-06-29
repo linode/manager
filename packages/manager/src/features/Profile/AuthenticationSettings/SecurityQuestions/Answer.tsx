@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 
 interface Props {

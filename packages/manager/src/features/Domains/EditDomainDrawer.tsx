@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Drawer from 'src/components/Drawer';
@@ -8,7 +8,7 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useFormik } from 'formik';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { getErrorMap } from 'src/utilities/errorUtils';

@@ -5,7 +5,7 @@ import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Loading from 'src/components/LandingLoading';
+import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
 import AppPanelSection from 'src/features/Linodes/LinodesCreate/AppPanelSection';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
@@ -132,7 +132,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       return (
         <Panel className={classes.panel} error={error} title="Select App">
           <span className={classes.loading}>
-            <Loading />
+            <LandingLoading />
           </span>
         </Panel>
       );

@@ -3,9 +3,9 @@ import {
   Dialog,
   DialogProps as _DialogProps,
 } from 'src/components/Dialog/Dialog';
-import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
-import Button from 'src/components/Button';
+import { Typography } from 'src/components/Typography';
+import { Button } from 'src/components/Button/Button';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 

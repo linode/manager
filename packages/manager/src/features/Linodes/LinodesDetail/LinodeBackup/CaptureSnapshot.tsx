@@ -2,15 +2,15 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { useSnackbar } from 'notistack';
 import { useFormik } from 'formik';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getErrorMap } from 'src/utilities/errorUtils';
 

@@ -1,6 +1,6 @@
 import { Region } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';

@@ -6,7 +6,7 @@ import {
 
 export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
   id: Factory.each((i) => i),
-  label: 'MySQL',
+  label: Factory.each((i) => `stackScript-${i}`),
   images: [],
   user_defined_fields: [],
   is_public: true,
