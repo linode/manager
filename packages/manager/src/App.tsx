@@ -20,7 +20,6 @@ import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
-import useLinodes from './hooks/useLinodes';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
@@ -58,12 +57,6 @@ const BaseApp = withFeatureFlagProvider(
     const { loggedInAsCustomer } = useAuthentication();
 
     const { enqueueSnackbar } = useSnackbar();
-
-    const {
-      linodes: {
-        error: { read: linodesError },
-      },
-    } = useLinodes();
 
     const [goToOpen, setGoToOpen] = React.useState(false);
 
@@ -262,15 +255,6 @@ const BaseApp = withFeatureFlagProvider(
         subscriptions.forEach((sub) => sub.unsubscribe());
       };
     }, [handleMigrationEvent]);
-
-    /**
-     * in the event that we encounter an "invalid OAuth token" error from the API,
-     * we can simply refrain from rendering any content since the user will
-     * imminently be redirected to the login page.
-     */
-    if (hasOauthError(linodesError)) {
-      return null;
-    }
 
     return (
       <ErrorBoundary fallback={<TheApplicationIsOnFire />}>

@@ -17,7 +17,7 @@ import {
   useLinodeDiskCreateMutation,
 } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
+import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   CreateLinodeDiskFromImageSchema,
@@ -179,6 +179,7 @@ export const CreateDiskDrawer = (props: Props) => {
             setAuthorizedUsers={(value) =>
               formik.setFieldValue('authorized_users', value)
             }
+            linodeId={linodeId}
           />
         )}
         <TextField
