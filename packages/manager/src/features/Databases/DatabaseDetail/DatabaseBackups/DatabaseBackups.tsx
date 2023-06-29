@@ -2,7 +2,7 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

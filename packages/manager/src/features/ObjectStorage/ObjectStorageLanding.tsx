@@ -8,7 +8,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useOpenClose from 'src/hooks/useOpenClose';

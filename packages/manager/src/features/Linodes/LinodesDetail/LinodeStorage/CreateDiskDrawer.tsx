@@ -3,12 +3,12 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { ModeSelect, Mode } from 'src/components/ModeSelect/ModeSelect';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
@@ -17,7 +17,7 @@ import {
   useLinodeDiskCreateMutation,
 } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
+import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   CreateLinodeDiskFromImageSchema,
@@ -179,6 +179,7 @@ export const CreateDiskDrawer = (props: Props) => {
             setAuthorizedUsers={(value) =>
               formik.setFieldValue('authorized_users', value)
             }
+            linodeId={linodeId}
           />
         )}
         <TextField
