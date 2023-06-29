@@ -17,7 +17,7 @@ import { Typography } from 'src/components/Typography';
 import { Currency } from 'src/components/Currency';
 import Grid from '@mui/material/Unstable_Grid2';
 import { IconButton } from 'src/components/IconButton';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import useFlags from 'src/hooks/useFlags';

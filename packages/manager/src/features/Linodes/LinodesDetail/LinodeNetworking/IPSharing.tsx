@@ -5,7 +5,7 @@ import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from 'tss-react/mui';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
 import TrustedDevices from './TrustedDevices';
 import { Typography } from 'src/components/Typography';

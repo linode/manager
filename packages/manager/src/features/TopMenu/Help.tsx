@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TooltipIcon from 'src/assets/icons/get_help.svg';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import TopMenuIcon from './TopMenuIcon';
 import { StyledTopMenuIconWrapper } from './TopMenuIcon';
 

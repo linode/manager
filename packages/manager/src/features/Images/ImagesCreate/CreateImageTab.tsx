@@ -11,7 +11,7 @@ import CheckBox from 'src/components/CheckBox';
 import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import { Typography } from 'src/components/Typography';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
