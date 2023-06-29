@@ -37,9 +37,6 @@ export const Chip = ({
 
 const StyledChip = styled(_Chip, {
   label: 'StyledChip',
-  shouldForwardProp(propName) {
-    return propName !== 'inTable' && propName !== 'outlineColor';
-  },
 })<ChipProps>(({ theme, ...props }) => ({
   ...(props.inTable && {
     marginTop: 0,
