@@ -5,8 +5,7 @@ import * as React from 'react';
 import { QueryClient } from 'react-query';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Typography from 'src/components/core/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
@@ -139,7 +138,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
     }
   }
 
-  handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  handleSubmit = () => {
     const {
       actions: { enable, enroll },
       accountSettings,
@@ -219,26 +218,18 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
             />
           </Grid>
           <Grid>
-            <ActionsPanel style={{ padding: 0, margin: 0 }}>
-              <Button
-                onClick={close}
-                buttonType="secondary"
-                className="cancel"
-                data-qa-cancel
-                data-testid={'cancel'}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={this.handleSubmit}
-                loading={loading || enabling || enrolling}
-                buttonType="primary"
-                data-qa-submit
-                data-testid={'submit'}
-              >
-                Confirm
-              </Button>
-            </ActionsPanel>
+            <ActionsPanel
+              primary
+              primaryButtonDataTestId="submit"
+              primaryButtonHandler={this.handleSubmit}
+              primaryButtonLoading={loading || enabling || enrolling}
+              primaryButtonText="Confirm"
+              secondary
+              secondaryButtonDataTestId="cancel"
+              secondaryButtonHandler={close}
+              secondaryButtonText="Cancel"
+              style={{ padding: 0, margin: 0 }}
+            />
           </Grid>
           <Grid>
             <BackupsTable linodes={extendedLinodes} loading={loading} />

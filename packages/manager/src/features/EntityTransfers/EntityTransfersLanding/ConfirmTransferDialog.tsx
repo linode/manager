@@ -5,7 +5,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { CircleProgress } from 'src/components/CircleProgress';

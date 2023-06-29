@@ -2,8 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
@@ -188,26 +187,19 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             placeholder={ipFieldPlaceholder}
             forDatabaseAccessControls
           />
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              onClick={onClose}
-              disabled={isSubmitting}
-              style={{ marginBottom: 8 }}
-              loading={false}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              buttonType="primary"
-              disabled={!formTouched}
-              style={{ marginBottom: 8 }}
-              loading={isSubmitting}
-            >
-              Update Access Controls
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primary
+            primaryButtonDisabled={!formTouched}
+            primaryButtonLoading={isSubmitting}
+            primaryButtonSx={{ marginBottom: 8 }}
+            primaryButtonText="Update Access Controls"
+            primaryButtonType="submit"
+            secondary
+            secondaryButtonDisabled={isSubmitting}
+            secondaryButtonHandler={onClose}
+            secondaryButtonSx={{ marginBottom: 8 }}
+            secondaryButtonText="Cancel"
+          />
         </form>
       </React.Fragment>
     </Drawer>

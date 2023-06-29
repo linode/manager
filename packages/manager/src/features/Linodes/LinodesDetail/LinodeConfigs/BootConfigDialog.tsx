@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from 'src/components/core/Typography';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Config } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';

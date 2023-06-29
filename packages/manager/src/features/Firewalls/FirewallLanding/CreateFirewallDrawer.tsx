@@ -2,8 +2,7 @@ import { CreateFirewallPayload } from '@linode/api-v4/lib/firewalls';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -176,21 +175,18 @@ const CreateFirewallDrawer = (props: Props) => {
           optionsFilter={(linode) => !readOnlyLinodeIds.includes(linode.id)}
           onBlur={handleBlur}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            disabled={userCannotAddFirewall}
-            loading={isSubmitting}
-            data-qa-submit
-            data-testid="create-firewall-submit"
-          >
-            Create Firewall
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonText="Cancel"
+          primary
+          primaryButtonText="Create Firewall"
+          primaryButtonDataTestId="submit"
+          primaryButtonDisabled={userCannotAddFirewall}
+          primaryButtonLoading={isSubmitting}
+          primaryButtonType="submit"
+        />
       </form>
     </Drawer>
   );

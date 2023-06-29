@@ -2,8 +2,7 @@ import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DialogProps } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
@@ -50,22 +49,20 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
   };
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={handleRestoreDatabase}
-        disabled={
-          preferences?.type_to_confirm !== false &&
-          confirmationText !== database.label
-        }
-        loading={isLoading}
-      >
-        Restore Database
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDisabled={
+        preferences?.type_to_confirm !== false &&
+        confirmationText !== database.label
+      }
+      primaryButtonHandler={handleRestoreDatabase}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Restore Database"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+      style={{ padding: 0 }}
+    />
   );
 
   React.useEffect(() => {

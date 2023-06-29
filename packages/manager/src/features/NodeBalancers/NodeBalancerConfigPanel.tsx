@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Divider from 'src/components/core/Divider';
 import FormHelperText from 'src/components/core/FormHelperText';

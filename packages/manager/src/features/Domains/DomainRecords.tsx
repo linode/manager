@@ -22,7 +22,7 @@ import {
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';

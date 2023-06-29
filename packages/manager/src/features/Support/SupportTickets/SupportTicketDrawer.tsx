@@ -8,8 +8,7 @@ import { update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import { Accordion } from 'src/components/Accordion';
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -655,26 +654,18 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
               <AttachFileForm files={files} updateFiles={updateFiles} />
             </React.Fragment>
           )}
-          <StyledActionPanel>
-            <Button
-              buttonType="secondary"
-              onClick={onCancel}
-              data-qa-cancel
-              data-testid="cancel"
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              disabled={!requirementsMet}
-              loading={submitting}
-              onClick={onSubmit}
-              data-qa-submit
-              data-testid="submit"
-            >
-              Open Ticket
-            </Button>
-          </StyledActionPanel>
+          <ActionsPanel
+            secondary
+            primary
+            secondaryButtonText=" Cancel"
+            primaryButtonText="Open Ticket"
+            primaryButtonHandler={onSubmit}
+            secondaryButtonHandler={onCancel}
+            secondaryButtonDataTestId="cancel"
+            primaryButtonDisabled={!requirementsMet}
+            primaryButtonLoading={submitting}
+            primaryButtonDataTestId="submit"
+          />
         </React.Fragment>
       )}
     </Dialog>

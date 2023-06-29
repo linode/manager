@@ -20,7 +20,7 @@ import {
   set,
 } from 'ramda';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button, ButtonProps } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import { makeStyles } from '@mui/styles';

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
@@ -41,24 +40,17 @@ export default compose<CombinedProps, Props>(React.memo)(CreditCardDialog);
 class DialogActions extends React.PureComponent<Actions> {
   render() {
     return (
-      <ActionsPanel>
-        <Button
-          buttonType="secondary"
-          onClick={this.props.cancel}
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.props.executePayment}
-          loading={this.props.isMakingPayment}
-          data-qa-submit
-          data-testid="credit-card-submit"
-        >
-          Confirm Payment
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDataTestId="submit"
+        primaryButtonHandler={this.props.executePayment}
+        primaryButtonLoading={this.props.isMakingPayment}
+        primaryButtonText="Confirm Payment"
+        secondary
+        secondaryButtonDataTestId="cancel"
+        secondaryButtonHandler={this.props.cancel}
+        secondaryButtonText="Cancel"
+      />
     );
   }
 }

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { useDeleteSSHKeyMutation } from 'src/queries/profile';
@@ -27,23 +26,16 @@ const DeleteSSHKeyDialog = ({ id, open, onClose, label }: Props) => {
       title="Delete SSH Key"
       error={error?.[0].reason}
       actions={
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            onClick={onClose}
-            data-qa-cancel-delete
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={onDelete}
-            loading={isLoading}
-            data-qa-confirm-delete
-          >
-            Delete
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="confirm-delete"
+          primaryButtonHandler={onDelete}
+          primaryButtonLoading={isLoading}
+          secondary
+          secondaryButtonDataTestId="cancel-delete"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       <Typography>Are you sure you want to delete SSH key {label}?</Typography>

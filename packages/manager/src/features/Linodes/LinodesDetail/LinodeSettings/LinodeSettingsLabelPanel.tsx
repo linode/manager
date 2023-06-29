@@ -2,8 +2,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Accordion } from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -51,17 +50,14 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
       defaultExpanded
       heading="Linode Label"
       actions={() => (
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            disabled={isReadOnly || !formik.dirty}
-            loading={isLoading}
-            onClick={() => formik.handleSubmit()}
-            data-qa-label-save
-          >
-            Save
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonHandler={formik.handleSubmit}
+          primaryButtonLoading={isLoading}
+          primaryButtonDisabled={isReadOnly || !formik.dirty}
+          primaryButtonDataTestId="label-save"
+          primaryButtonText="Save"
+        />
       )}
     >
       {Boolean(generalError) && <Notice error text={generalError} />}

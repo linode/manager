@@ -3,7 +3,7 @@ import { Disk } from '@linode/api-v4';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useSnackbar } from 'notistack';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Typography } from '@mui/material';
 import { SupportLink } from 'src/components/SupportLink/SupportLink';

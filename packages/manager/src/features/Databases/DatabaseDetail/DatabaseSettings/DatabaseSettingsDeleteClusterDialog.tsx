@@ -2,8 +2,7 @@ import { Engine } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { Notice } from 'src/components/Notice/Notice';
@@ -26,26 +25,18 @@ const renderActions = (
   onClose: () => void,
   onDelete: () => void
 ) => (
-  <ActionsPanel>
-    <Button
-      buttonType="secondary"
-      onClick={onClose}
-      data-qa-cancel
-      data-testid={'dialog-cancel'}
-    >
-      Cancel
-    </Button>
-    <Button
-      buttonType="primary"
-      onClick={onDelete}
-      disabled={disabled}
-      loading={loading}
-      data-qa-cancel
-      data-testid={'dialog-confirm'}
-    >
-      Delete Cluster
-    </Button>
-  </ActionsPanel>
+  <ActionsPanel
+    primary
+    primaryButtonDataTestId="cancel"
+    primaryButtonDisabled={disabled}
+    primaryButtonHandler={onDelete}
+    primaryButtonLoading={loading}
+    primaryButtonText="Delete Cluster"
+    secondary
+    secondaryButtonDataTestId="cancel"
+    secondaryButtonHandler={onClose}
+    secondaryButtonText="Cancel"
+  />
 );
 
 export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {

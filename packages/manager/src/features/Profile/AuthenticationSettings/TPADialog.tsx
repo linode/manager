@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Typography from 'src/components/core/Typography';
 import useFlags from 'src/hooks/useFlags';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -56,26 +55,21 @@ const handleLoginChange = (provider: TPAProvider) => {
 
 const renderActions = (onClose: () => void, provider: TPAProvider) => {
   return (
-    <ActionsPanel className="p0">
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-testid="confirm-cancel"
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={() => {
-          onClose();
-          handleLoginChange(provider);
-        }}
-        aria-describedby="external-site"
-        data-testid="confirm-login-change"
-      >
-        Change login
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      className="p0"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+      secondaryButtonDataTestId="confirm-cancel"
+      primary
+      primaryButtonDataTestId="confirm-login-change"
+      primaryButtonText="Change login"
+      primaryButtonAriaDescribedBy="external-site"
+      primaryButtonHandler={() => {
+        onClose();
+        handleLoginChange(provider);
+      }}
+    />
   );
 };
 

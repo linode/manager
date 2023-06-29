@@ -8,7 +8,7 @@ import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schem
 import { Formik } from 'formik';
 import { pickBy } from 'ramda';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Drawer from 'src/components/Drawer';

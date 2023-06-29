@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -291,19 +290,16 @@ export const CreateAPITokenDrawer = (props: Props) => {
       {errorMap.scopes && (
         <FormHelperText error>{errorMap.scopes}</FormHelperText>
       )}
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          loading={isLoading}
-          onClick={() => form.handleSubmit()}
-          data-testid="create-button"
-        >
-          Create Token
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDataTestId="create-button"
+        primaryButtonHandler={form.handleSubmit}
+        primaryButtonLoading={isLoading}
+        primaryButtonText="Create Token"
+        secondary
+        secondaryButtonHandler={onClose}
+        secondaryButtonText="Cancel"
+      />
     </Drawer>
   );
 };

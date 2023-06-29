@@ -26,7 +26,7 @@ describe('Kubernetes deletion dialog', () => {
     const { getByTestId } = renderWithTheme(
       <DeleteKubernetesClusterDialog {...props} />
     );
-    const button = getByTestId('dialog-cancel');
+    const button = getByTestId('cancel');
     fireEvent.click(button);
     expect(props.onClose).toHaveBeenCalledTimes(1);
   });
@@ -45,7 +45,7 @@ describe('Kubernetes deletion dialog', () => {
     const { getByTestId, findByTestId } = renderWithTheme(
       <DeleteKubernetesClusterDialog {...props} />
     );
-    const button = getByTestId('dialog-confirm');
+    const button = getByTestId('confirm');
 
     expect(button).toBeDisabled();
 

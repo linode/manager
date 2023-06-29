@@ -13,8 +13,7 @@ import {
   when,
 } from 'ramda';
 import * as React from 'react';
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from 'tss-react/mui';
@@ -538,25 +537,19 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           </>
         )}
       </Grid>
-      <StyledActionPanel>
-        <Button
-          buttonType="secondary"
-          disabled={submitting || linodes.length === 0}
-          onClick={onReset}
-          data-qa-ip-transfer-reset
-        >
-          Reset Form
-        </Button>
-        <Button
-          buttonType="primary"
-          loading={submitting}
-          onClick={onSubmit}
-          disabled={readOnly || linodes.length === 0}
-          data-qa-ip-transfer-save
-        >
-          Save
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDataTestId="ip-transfer-save"
+        primaryButtonDisabled={readOnly || linodes.length === 0}
+        primaryButtonHandler={onSubmit}
+        primaryButtonLoading={submitting}
+        primaryButtonText="Save"
+        secondary
+        secondaryButtonDataTestId={'ip-transfer-reset'}
+        secondaryButtonDisabled={submitting || linodes.length === 0}
+        secondaryButtonHandler={onReset}
+        secondaryButtonText="Reset Form"
+      />
     </Dialog>
   );
 };

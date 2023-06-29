@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from '../ActionsPanel';
-import { Button } from '../Button/Button';
+import ActionsPanel from '../ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
@@ -34,14 +33,16 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button buttonType="primary" onClick={onDelete} loading={loading}>
-        Delete
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonHandler={onDelete}
+      primaryButtonLoading={loading}
+      primaryButtonText="Delete"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+      style={{ padding: 0 }}
+    />
   );
 
   return (

@@ -1,6 +1,6 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';

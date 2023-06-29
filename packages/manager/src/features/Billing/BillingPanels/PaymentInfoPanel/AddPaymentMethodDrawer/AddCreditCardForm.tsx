@@ -4,8 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TextField } from 'src/components/TextField';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { addPaymentMethod } from '@linode/api-v4/lib';
 import { useSnackbar } from 'notistack';
 import { Notice } from 'src/components/Notice/Notice';
@@ -211,23 +210,18 @@ const AddCreditCardForm = (props: Props) => {
           />
         </Grid>
       </Grid>
-      <ActionsPanel style={{ marginTop: 0 }}>
-        <Button
-          onClick={onClose}
-          buttonType="secondary"
-          disabled={disableInput}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          buttonType="primary"
-          loading={isSubmitting}
-          disabled={disableAddButton}
-        >
-          Add Credit Card
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDisabled={disableAddButton}
+        primaryButtonLoading={isSubmitting}
+        primaryButtonText="Add Credit Card"
+        primaryButtonType="submit"
+        secondary
+        secondaryButtonDisabled={disableInput}
+        secondaryButtonHandler={onClose}
+        secondaryButtonText="Cancel"
+        style={{ marginTop: 0 }}
+      />
     </form>
   );
 };

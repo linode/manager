@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
@@ -137,11 +137,12 @@ const AddCertForm = (props: Props) => {
         </StyledKeyWrapper>
       </StyledFieldsWrapper>
       <Grid>
-        <ActionsPanel>
-          <Button loading={isLoading} buttonType="primary" type="submit">
-            Upload Certificate
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Upload Certificate"
+          primaryButtonType="submit"
+        />
       </Grid>
     </form>
   );

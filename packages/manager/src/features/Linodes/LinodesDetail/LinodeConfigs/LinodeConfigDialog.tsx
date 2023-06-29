@@ -7,7 +7,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
@@ -1008,19 +1008,16 @@ export const LinodeConfigDialog = (props: Props) => {
           </React.Fragment>
         </DialogContent>
       </Grid>
-      <StyledActionPanel>
-        <Button buttonType="secondary" className="cancel" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          onClick={formik.submitForm}
-          buttonType="primary"
-          disabled={isReadOnly}
-          loading={formik.isSubmitting}
-        >
-          {config ? 'Save Changes' : 'Add Configuration'}
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDisabled={isReadOnly}
+        primaryButtonHandler={formik.submitForm}
+        primaryButtonLoading={formik.isSubmitting}
+        primaryButtonText={config ? 'Save Changes' : 'Add Configuration'}
+        secondary
+        secondaryButtonHandler={onClose}
+        secondaryButtonText="cancel"
+      />
     </Dialog>
   );
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import FormControl from 'src/components/core/FormControl';

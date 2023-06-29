@@ -1,9 +1,8 @@
 import React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Typography from 'src/components/core/Typography';
 import { Token } from '@linode/api-v4/lib/profile/types';
-import { Button } from 'src/components/Button/Button';
 import { APITokenType } from './APITokenTable';
 import {
   useRevokeAppAccessTokenMutation,
@@ -43,23 +42,17 @@ export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
       title={`Revoke ${token?.label}?`}
       open={open}
       actions={
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            onClick={onClose}
-            data-testid="cancel-button"
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={onRevoke}
-            loading={isLoading}
-            data-testid="revoke-button"
-          >
-            Revoke
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="revoke-button"
+          primaryButtonHandler={onRevoke}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Revoke"
+          secondary
+          secondaryButtonDataTestId="cancel-button"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
       onClose={onClose}
       error={error?.[0].reason}

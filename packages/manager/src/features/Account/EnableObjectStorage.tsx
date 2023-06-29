@@ -4,7 +4,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Accordion } from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
@@ -105,25 +105,18 @@ export const EnableObjectStorage = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={handleClose}
-        data-testid="dialog-cancel"
-      >
-        Cancel
-      </Button>
-
-      <Button
-        buttonType="primary"
-        onClick={handleSubmit}
-        disabled={disabledConfirm}
-        loading={isLoading}
-        data-testid="dialog-confirm"
-      >
-        Confirm Cancellation
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="dialog-confirm"
+      primaryButtonDisabled={disabledConfirm}
+      primaryButtonHandler={handleSubmit}
+      primaryButtonLoading={isLoading}
+      primaryButtonText=" Confirm Cancellation"
+      secondary
+      secondaryButtonDataTestId="dialog-cancel"
+      secondaryButtonHandler={handleClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

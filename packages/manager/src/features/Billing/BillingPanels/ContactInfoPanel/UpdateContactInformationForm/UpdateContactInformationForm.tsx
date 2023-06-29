@@ -1,8 +1,7 @@
 import countryData, { Region } from 'country-region-data';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { makeStyles } from 'tss-react/mui';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -321,23 +320,18 @@ const UpdateContactInformationForm = ({ onClose, focusEmail }: Props) => {
           />
         </Grid>
       </Grid>
-      <ActionsPanel className={classes.actions}>
-        <Button
-          buttonType="secondary"
-          onClick={onClose}
-          data-qa-reset-contact-info
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          type="submit"
-          loading={isLoading}
-          data-qa-save-contact-info
-        >
-          Save Changes
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        className={classes.actions}
+        primary
+        primaryButtonDataTestId="save-contact-info"
+        primaryButtonLoading={isLoading}
+        primaryButtonText="Save Changes"
+        primaryButtonType="submit"
+        secondary
+        secondaryButtonDataTestId="reset-contact-info"
+        secondaryButtonHandler={onClose}
+        secondaryButtonText="Cancel"
+      />
     </form>
   );
 };

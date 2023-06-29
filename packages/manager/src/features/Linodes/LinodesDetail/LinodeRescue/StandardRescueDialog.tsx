@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
@@ -239,16 +239,13 @@ export const StandardRescueDialog = (props: Props) => {
             >
               Add Disk
             </Button>
-            <StyledActionPanel>
-              <Button
-                buttonType="primary"
-                disabled={disabled}
-                onClick={onSubmit}
-                data-qa-submit
-              >
-                Reboot into Rescue Mode
-              </Button>
-            </StyledActionPanel>
+            <ActionsPanel
+              primary
+              primaryButtonText="Reboot into Rescue Mode"
+              primaryButtonDisabled={disabled}
+              primaryButtonHandler={onSubmit}
+              primaryButtonDataTestId="submit"
+            />
           </Paper>
         </div>
       )}

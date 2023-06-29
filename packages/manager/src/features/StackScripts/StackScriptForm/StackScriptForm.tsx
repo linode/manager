@@ -1,7 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Paper from 'src/components/core/Paper';

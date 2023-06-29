@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { Theme } from '@mui/material/styles';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Box from 'src/components/core/Box';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField, TextFieldProps } from 'src/components/TextField';
@@ -88,22 +88,19 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
           errorText={fieldError}
           tooltipText={tooltipText ? tooltipText : undefined}
         />
-        <ActionsPanel>
-          <Button
-            sx={(theme) => ({
-              minWidth: 180,
-              [theme.breakpoints.up('md')]: {
-                marginTop: 2,
-              },
-            })}
-            buttonType="primary"
-            onClick={handleSubmit}
-            disabled={disabled || value === initialValue}
-            loading={submitting}
-          >
-            Update {label}
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDisabled={disabled || value === initialValue}
+          primaryButtonHandler={handleSubmit}
+          primaryButtonLoading={submitting}
+          primaryButtonText={`Update ${label}`}
+          primaryButtonSx={(theme: Theme) => ({
+            minWidth: 180,
+            [theme.breakpoints.up('md')]: {
+              marginTop: 2,
+            },
+          })}
+        />
       </Box>
       {success ? (
         <Notice

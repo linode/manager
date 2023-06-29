@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import CheckBox from 'src/components/CheckBox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -75,19 +74,16 @@ export const EditOAuthClientDrawer = ({ open, onClose, client }: Props) => {
             }
           />
         </FormControl>
-        <ActionsPanel>
-          <Button onClick={onClose} buttonType="secondary" className="cancel">
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={isLoading}
-            disabled={!formik.dirty}
-          >
-            Save Changes
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDisabled={!formik.dirty}
+          primaryButtonLoading={isLoading}
+          primaryButtonText=" Save Changes"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

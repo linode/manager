@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
@@ -52,26 +51,19 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onDelete}
-        disabled={disabled}
-        loading={isDeleting}
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-      >
-        Delete Cluster
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="confirm"
+      primaryButtonDisabled={disabled}
+      primaryButtonHandler={onDelete}
+      primaryButtonLoading={isDeleting}
+      primaryButtonText="Delete Cluster"
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+      style={{ padding: 0 }}
+    />
   );
 
   return (

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import CheckBox from 'src/components/CheckBox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -75,14 +74,15 @@ export const CreateOAuthClientDrawer = ({
             }
           />
         </FormControl>
-        <ActionsPanel>
-          <Button onClick={onClose} buttonType="secondary" className="cancel">
-            Cancel
-          </Button>
-          <Button buttonType="primary" type="submit" loading={isLoading}>
-            Create
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Create"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Box from 'src/components/core/Box';
 import { Hidden } from 'src/components/Hidden';
 import { Button } from 'src/components/Button/Button';

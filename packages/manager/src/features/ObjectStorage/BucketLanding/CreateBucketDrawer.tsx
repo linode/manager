@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import ClusterSelect from './ClusterSelect';
 import Drawer from 'src/components/Drawer';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
@@ -136,19 +135,17 @@ export const CreateBucketDrawer = (props: Props) => {
             }
           />
         ) : null}
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={isLoading}
-            data-testid="create-bucket-button"
-          >
-            Create Bucket
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="create-bucket-button"
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Create Bucket"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
+
         <EnableObjectStorageModal
           open={isEnableObjDialogOpen}
           onClose={() => setIsEnableObjDialogOpen(false)}

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -47,20 +46,17 @@ export const EditAPITokenDrawer = (props: Props) => {
         name="label"
         onChange={form.handleChange}
       />
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          loading={isLoading}
-          disabled={!form.dirty}
-          onClick={() => form.handleSubmit()}
-          data-testid="save-button"
-        >
-          Save
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDataTestId="save-button"
+        primaryButtonDisabled={!form.dirty}
+        primaryButtonHandler={form.handleSubmit}
+        primaryButtonLoading={isLoading}
+        primaryButtonText="Save"
+        secondary
+        secondaryButtonHandler={onClose}
+        secondaryButtonText="Cancel"
+      />
     </Drawer>
   );
 };

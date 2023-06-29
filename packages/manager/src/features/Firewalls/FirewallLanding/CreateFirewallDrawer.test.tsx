@@ -21,7 +21,7 @@ describe('Create Firewall Drawer', () => {
   it('should validate the form on submit', async () => {
     renderWithTheme(<CreateFirewallDrawer {...props} />);
     userEvent.type(screen.getByLabelText('Label'), 'a');
-    userEvent.click(screen.getByTestId('create-firewall-submit'));
+    userEvent.click(screen.getByTestId('submit'));
     const error = await screen.findByText(
       /Label must be between 3 and 32 characters./i
     );

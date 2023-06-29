@@ -1,7 +1,7 @@
 import { disableTwoFactor } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';

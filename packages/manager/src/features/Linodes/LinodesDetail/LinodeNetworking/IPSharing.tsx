@@ -3,7 +3,7 @@ import { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
-import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Link from 'src/components/Link';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -407,25 +407,19 @@ const IPSharingPanel = (props: Props) => {
           </Grid>
         </>
       </DialogContent>
-      <StyledActionPanel>
-        <Button
-          buttonType="secondary"
-          disabled={submitting || noChoices}
-          onClick={onReset}
-          data-qa-reset
-        >
-          Reset Form
-        </Button>
-        <Button
-          buttonType="primary"
-          disabled={readOnly || noChoices}
-          loading={submitting}
-          onClick={onSubmit}
-          data-qa-submit
-        >
-          Save
-        </Button>
-      </StyledActionPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDataTestId="submit"
+        primaryButtonDisabled={readOnly || noChoices}
+        primaryButtonHandler={onSubmit}
+        primaryButtonLoading={submitting}
+        primaryButtonText="Save"
+        secondary
+        secondaryButtonDataTestId="reset"
+        secondaryButtonDisabled={submitting || noChoices}
+        secondaryButtonHandler={onReset}
+        secondaryButtonText="Reset Form"
+      />
     </Dialog>
   );
 };

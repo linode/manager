@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { useUpdateDomainMutation } from 'src/queries/domains';
@@ -48,14 +47,15 @@ const DisableDomainDialog = (props: Props) => {
       onClose={onClose}
       error={error?.[0]?.reason}
       actions={
-        <ActionPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" onClick={onSubmit} loading={isLoading}>
-            Disable Domain
-          </Button>
-        </ActionPanel>
+        <ActionPanel
+          primary
+          primaryButtonHandler={onSubmit}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Disable Domain"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       Are you sure you want to disable this DNS zone?

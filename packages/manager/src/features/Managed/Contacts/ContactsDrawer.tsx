@@ -3,7 +3,7 @@ import { createContactSchema } from '@linode/validation/lib/managed.schema';
 import { Formik, FormikHelpers } from 'formik';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';

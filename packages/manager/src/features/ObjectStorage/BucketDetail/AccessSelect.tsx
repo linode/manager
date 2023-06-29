@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 import ExternalLink from 'src/components/ExternalLink';
@@ -13,7 +13,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { copy } from './AccessSelect.data';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { Notice } from 'src/components/Notice/Notice';
-import { styled } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import { Toggle } from 'src/components/Toggle';
 
 interface AccessPayload {
@@ -189,38 +189,42 @@ export const AccessSelect = React.memo((props: Props) => {
         </Typography>
       ) : null}
 
-      <ActionsPanel style={{ padding: 0 }}>
-        <StyledSubmitButton
-          buttonType="primary"
-          onClick={() => {
-            // This isn't really a sane option: open a dialog for confirmation.
-            if (selectedACL === 'public-read-write') {
-              openDialog();
-            } else {
-              handleSubmit();
-            }
-          }}
-          //  Disabled if nothing has changed.
-          disabled={aclData === selectedACL && corsData === selectedCORSOption}
-          loading={updateAccessLoading}
-        >
-          Save
-        </StyledSubmitButton>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDisabled={
+          aclData === selectedACL && corsData === selectedCORSOption
+        }
+        primaryButtonHandler={() => {
+          // This isn't really a sane option: open a dialog for confirmation.
+          if (selectedACL === 'public-read-write') {
+            openDialog();
+          } else {
+            handleSubmit();
+          }
+        }}
+        primaryButtonLoading={updateAccessLoading}
+        primaryButtonSx={(theme: Theme) => ({
+          marginTop: theme.spacing(3),
+        })}
+        primaryButtonText="Save"
+        style={{ padding: 0 }}
+      />
 
       <ConfirmationDialog
         title={`Confirm ${label} Access`}
         open={isOpen}
         onClose={closeDialog}
         actions={() => (
-          <ActionsPanel style={{ padding: 0 }}>
-            <Button buttonType="secondary" onClick={closeDialog} data-qa-cancel>
-              Cancel
-            </Button>
-            <Button buttonType="primary" onClick={handleSubmit}>
-              Confirm
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            style={{ padding: 0 }}
+            secondary
+            secondaryButtonHandler={closeDialog}
+            secondaryButtonText="Cancel"
+            secondaryButtonDataTestId="cancel"
+            primary
+            primaryButtonHandler={handleSubmit}
+            primaryButtonText="Confirm"
+          />
         )}
       >
         Are you sure you want to set access for {name} to Public Read/Write?
@@ -233,6 +237,4 @@ export const AccessSelect = React.memo((props: Props) => {
 
 export const StyledSubmitButton = styled(Button, {
   label: 'StyledFileUploadsContainer',
-})(({ theme }) => ({
-  marginTop: theme.spacing(3),
-}));
+})(({ theme }) => ({}));

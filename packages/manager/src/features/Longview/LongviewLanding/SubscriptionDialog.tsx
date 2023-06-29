@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { managedText } from './LongviewPlans';
@@ -17,15 +16,15 @@ export const SubscriptionDialog: React.FC<Props> = (props) => {
   const { clientLimit, isManaged, isOpen, onClose, onSubmit } = props;
 
   const actions = () => (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-
-      <Button buttonType="primary" onClick={onSubmit} role="link">
-        {isManaged ? 'Contact Support' : 'View upgrade options'}
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonHandler={onSubmit}
+      primaryButtonRole="link"
+      primaryButtonText={isManaged ? 'Contact Support' : 'View upgrade options'}
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   const text = isManaged ? (

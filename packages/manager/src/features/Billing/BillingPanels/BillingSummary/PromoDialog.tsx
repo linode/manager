@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from 'tss-react/mui';
 import Typography from 'src/components/core/Typography';
@@ -63,19 +62,16 @@ const PromoDialog = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={addPromo}
-        loading={loading}
-        disabled={!promoCode}
-      >
-        Apply Promo Code
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDisabled={!promoCode}
+      primaryButtonHandler={addPromo}
+      primaryButtonLoading={loading}
+      primaryButtonText="Apply Promo Code"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (
