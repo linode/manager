@@ -8,7 +8,7 @@ import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from 'src/components/Grid';
 import { IconTextLink } from 'src/components/IconTextLink/IconTextLink';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';

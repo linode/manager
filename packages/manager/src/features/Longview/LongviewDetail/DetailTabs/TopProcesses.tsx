@@ -1,11 +1,11 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { makeStyles } from '@mui/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';

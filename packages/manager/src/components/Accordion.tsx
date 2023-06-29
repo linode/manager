@@ -10,7 +10,7 @@ import AccordionDetails, {
 import AccordionSummary, {
   AccordionSummaryProps,
 } from '@mui/material/AccordionSummary';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
+import { Typography, TypographyProps } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from 'tss-react/mui';
 import { Notice } from 'src/components/Notice/Notice';

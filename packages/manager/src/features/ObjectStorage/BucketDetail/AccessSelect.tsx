@@ -4,7 +4,7 @@ import { Button } from 'src/components/Button/Button';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 import ExternalLink from 'src/components/ExternalLink';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { ACLType } from '@linode/api-v4/lib/object-storage';
 import { bucketACLOptions, objectACLOptions } from '../utilities';

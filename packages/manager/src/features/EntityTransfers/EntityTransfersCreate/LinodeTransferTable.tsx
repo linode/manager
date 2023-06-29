@@ -1,6 +1,6 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';

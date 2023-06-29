@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import { Button } from 'src/components/Button/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';

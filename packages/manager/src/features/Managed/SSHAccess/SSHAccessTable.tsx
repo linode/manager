@@ -1,7 +1,7 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import produce from 'immer';
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';

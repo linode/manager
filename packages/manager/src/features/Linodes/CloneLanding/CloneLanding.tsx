@@ -1,26 +1,20 @@
 import { castDraft } from 'immer';
-import { Event } from '@linode/api-v4/lib/account';
 import {
   cloneLinode,
   cloneLinodeDisk,
-  Config,
   Disk,
   Linode,
-  LinodeStatus,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
-  RouteComponentProps,
-  Switch,
-  withRouter,
+  useHistory,
+  useLocation,
+  useParams,
+  useRouteMatch,
 } from 'react-router-dom';
-import { compose } from 'recompose';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -28,17 +22,12 @@ import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from '@mui/material/Unstable_Grid2';
-import SuspenseLoader from 'src/components/SuspenseLoader';
-import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { ApplicationState } from 'src/store';
-import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
 import Details from './Details';
@@ -47,6 +36,12 @@ import {
   curriedCloneLandingReducer,
   defaultState,
 } from './utilities';
+import {
+  useAllLinodeConfigsQuery,
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
@@ -79,29 +74,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface WithLinodesProps {
-  linodesData: Linode[];
-  linodesLoading: boolean;
-  linodesError?: APIError[];
-}
+const CloneLanding = () => {
+  const { linodeId: _linodeId } = useParams<{ linodeId: string }>();
+  const history = useHistory();
+  const match = useRouteMatch();
+  const location = useLocation();
 
-type CombinedProps = RouteComponentProps<{}> &
-  LinodeContextProps &
-  WithLinodesProps &
-  DispatchProps;
+  const linodeId = Number(_linodeId);
 
-export const CloneLanding: React.FC<CombinedProps> = (props) => {
-  const {
-    configs,
-    disks,
-    history,
-    region,
-    requestDisks,
-    linodeId,
-    linodesData,
-  } = props;
+  const { data: _configs } = useAllLinodeConfigsQuery(linodeId);
+  const { data: _disks } = useAllLinodeDisksQuery(linodeId);
+  const { data: linodes } = useAllLinodesQuery();
+  const { data: linode } = useLinodeQuery(linodeId);
 
   const classes = useStyles();
+
+  const configs = _configs ?? [];
+  const disks = _disks ?? [];
 
   /**
    * ROUTING
@@ -110,21 +99,21 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
     // These must correspond to the routes inside the Switch
     {
       title: 'Configuration Profiles',
-      routeName: `${props.match.url}/configs`,
+      routeName: `${match.url}/configs`,
     },
     {
       title: 'Disks',
-      routeName: `${props.match.url}/disks`,
+      routeName: `${match.url}/disks`,
     },
   ];
 
   // Helper function for the <Tabs /> component
   const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
+    return Boolean(matchPath(p, { path: location.pathname }));
   };
 
   const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+    history.push(tabs[index].routeName);
   };
 
   /**
@@ -165,18 +154,18 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   // Toggle config if a valid configId is specified as a query param.
   React.useEffect(() => {
     const configFromQS = Number(queryParams.selectedConfig);
-    if (configFromQS) {
+    if (configFromQS && configs) {
       return dispatch({ type: 'toggleConfig', id: configFromQS });
     }
-  }, [queryParams]);
+  }, [queryParams, configs]);
 
   // Toggle disk if a valid diskId is specified as a query param.
   React.useEffect(() => {
     const diskFromQS = Number(queryParams.selectedDisk);
-    if (diskFromQS) {
+    if (diskFromQS && disks) {
       return dispatch({ type: 'toggleDisk', id: diskFromQS });
     }
-  }, [queryParams]);
+  }, [queryParams, disks]);
 
   // Helper functions for updating the state.
   const toggleConfig = (id: number) => {
@@ -275,7 +264,6 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
       .then(() => {
         setSubmitting(false);
         resetEventsPolling();
-        requestDisks(linodeId);
         history.push(`/linodes/${linodeId}/configurations`);
       })
       .catch((errors) => {
@@ -287,14 +275,14 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   // Cast the results of the Immer state to a mutable data structure.
   const errorMap = getErrorMap(['disk_size'], castDraft(state.errors));
 
-  const selectedLinode = linodesData.find(
+  const selectedLinode = linodes?.find(
     (eachLinode) => eachLinode.id === state.selectedLinodeId
   );
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
-      <MutationNotification linodeId={props.linodeId} />
+      <MutationNotification linodeId={linodeId} />
       <Notifications />
       <LinodesDetailHeader />
       <Grid container className={classes.root}>
@@ -380,7 +368,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
             })}
             selectedLinodeId={state.selectedLinodeId}
             selectedLinodeRegion={selectedLinodeRegion}
-            thisLinodeRegion={region}
+            thisLinodeRegion={linode?.region ?? ''}
             handleSelectLinode={setSelectedLinodeId}
             handleToggleConfig={toggleConfig}
             handleToggleDisk={toggleDisk}
@@ -391,56 +379,8 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
       </Grid>
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch />
-      </React.Suspense>
     </React.Fragment>
   );
 };
 
-interface LinodeContextProps {
-  linodeId: number;
-  configs: Config[];
-  disks: Disk[];
-  region: string;
-  label: string;
-  linodeStatus: LinodeStatus;
-  linodeEvents: Event[];
-}
-const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeId: linode.id,
-  configs: linode._configs,
-  disks: linode._disks,
-  region: linode.region,
-  label: linode.label,
-  linodeStatus: linode.status,
-  linodeEvents: linode._events,
-}));
-
-interface DispatchProps {
-  requestDisks: (linodeId: number) => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => {
-  return {
-    requestDisks: (linodeId: number) =>
-      dispatch(getAllLinodeDisks({ linodeId })),
-  };
-};
-
-const connected = connect(undefined, mapDispatchToProps);
-
-const enhanced = compose<CombinedProps, {}>(
-  connected,
-  linodeContext,
-  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    linodesData,
-    linodesLoading,
-    linodesError,
-  })),
-  withRouter
-);
-
-export default enhanced(CloneLanding);
+export default CloneLanding;

@@ -6,7 +6,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Code } from 'src/components/Code/Code';
 import { useCreateSSHKeyMutation } from 'src/queries/profile';
 import { useFormik } from 'formik';

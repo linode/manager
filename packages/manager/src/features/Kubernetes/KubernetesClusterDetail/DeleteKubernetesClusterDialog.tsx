@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
 import { KubeNodePoolResponse } from '@linode/api-v4';

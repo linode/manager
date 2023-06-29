@@ -1,7 +1,7 @@
 import * as React from 'react';
 import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';

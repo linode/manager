@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import { Typography } from 'src/components/Typography';
 import { Button } from 'src/components/Button/Button';
-import Typography from 'src/components/core/Typography';
 import useFlags from 'src/hooks/useFlags';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { LOGIN_ROOT } from 'src/constants';

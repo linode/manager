@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Accordion } from 'src/components/Accordion';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import {
