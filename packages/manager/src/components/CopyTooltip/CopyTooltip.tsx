@@ -53,6 +53,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
         onClick={handleIconClick}
         className={className}
         data-qa-copy-btn
+        {...props}
       >
         {copyableText ? text : <FileCopy />}
       </StyledCopyTooltipButton>
