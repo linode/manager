@@ -102,7 +102,6 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         type: 'AccountSetting',
         subType: 'CloseAccount',
         primaryBtnText: 'Close Account',
-        name: profile.username,
       }}
       open={open}
       onClose={closeDialog}
