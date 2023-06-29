@@ -13,8 +13,6 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@linode/api-v4": "*",
@@ -226,9 +224,6 @@
       "text",
       "lcov",
       "cobertura"
-    ],
-    "setupFiles": [
-      "<rootDir>/config/polyfills.js"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/config/testSetup.js",
