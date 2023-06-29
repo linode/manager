@@ -223,7 +223,7 @@ export interface Notification {
 
 export interface Entity {
   id: number;
-  label: string;
+  label: string | null;
   type: string;
   url: string;
 }
