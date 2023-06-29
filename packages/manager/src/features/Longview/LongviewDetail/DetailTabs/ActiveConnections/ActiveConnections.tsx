@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';

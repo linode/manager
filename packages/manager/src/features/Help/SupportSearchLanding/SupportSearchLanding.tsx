@@ -9,7 +9,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';

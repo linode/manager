@@ -3,14 +3,14 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 
 interface Props {

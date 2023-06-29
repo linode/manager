@@ -1,13 +1,13 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Divider from 'src/components/core/Divider';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import Select from 'src/components/EnhancedSelect/Select';
-import TextField from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { Notice } from 'src/components/Notice/Notice';

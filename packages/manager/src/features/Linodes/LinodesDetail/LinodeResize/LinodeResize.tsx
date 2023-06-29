@@ -2,11 +2,11 @@ import { Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Checkbox from 'src/components/CheckBox';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
@@ -30,7 +30,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { usePreferences } from 'src/queries/preferences';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   resizeTitle: {
