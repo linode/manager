@@ -2,7 +2,7 @@ import * as React from 'react';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

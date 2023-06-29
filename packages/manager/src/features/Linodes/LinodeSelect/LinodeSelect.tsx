@@ -6,8 +6,8 @@ import EnhancedSelect, {
   GroupType,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import { Props as TextFieldProps } from 'src/components/TextField';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { TextFieldProps } from 'src/components/TextField';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';

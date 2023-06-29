@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/utilities';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Notice } from 'src/components/Notice/Notice';

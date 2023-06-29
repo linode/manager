@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { withStyles, WithStyles } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

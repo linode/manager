@@ -6,7 +6,7 @@ import Error from 'src/assets/icons/error.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';

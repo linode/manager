@@ -4,7 +4,7 @@ import * as React from 'react';
 import FileDownload from 'src/assets/icons/download.svg';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import ToolTip from 'src/components/core/Tooltip';
 
 interface Props {

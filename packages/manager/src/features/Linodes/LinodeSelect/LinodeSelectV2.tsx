@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Autocomplete, Box } from '@mui/material';
 import React from 'react';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
 import { CustomPopper, RemoveIcon, SelectedIcon } from './LinodeSelect.styles';
@@ -118,6 +118,7 @@ export const LinodeSelectV2 = (
       renderInput={(params) => (
         <TextField
           label="Linodes"
+          inputId={params.id}
           placeholder={
             placeholder ?? multiple ? 'Select Linodes' : 'Select a Linode'
           }

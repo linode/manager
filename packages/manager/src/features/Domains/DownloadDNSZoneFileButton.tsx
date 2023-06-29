@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getDNSZoneFile } from '@linode/api-v4/lib/domains';
 

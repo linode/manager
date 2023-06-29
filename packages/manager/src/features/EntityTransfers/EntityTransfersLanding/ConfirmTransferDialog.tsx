@@ -6,13 +6,13 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import {

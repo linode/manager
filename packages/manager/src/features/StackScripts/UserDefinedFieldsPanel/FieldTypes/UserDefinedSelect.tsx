@@ -4,10 +4,10 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import MenuItem from 'src/components/MenuItem';
+import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -58,9 +58,9 @@ export const UserDefinedSelect = (props: Props) => {
         >
           {oneof.map((choice: string, index) => {
             return (
-              <MenuItem value={choice} key={index}>
+              <WrapperMenuItem value={choice} key={index}>
                 {choice}
-              </MenuItem>
+              </WrapperMenuItem>
             );
           })}
         </TextField>

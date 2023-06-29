@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
 type ClassNames = 'replyField';
 

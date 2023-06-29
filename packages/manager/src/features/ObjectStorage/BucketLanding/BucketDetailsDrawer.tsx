@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import Divider from 'src/components/core/Divider';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';

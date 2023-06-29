@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ControlProps } from 'react-select';
 
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
 interface Props extends ControlProps<any, any> {}
 

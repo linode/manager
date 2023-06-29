@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({

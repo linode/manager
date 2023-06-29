@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { FinalCrumb } from './FinalCrumb';
 import FinalCrumbPrefix from './FinalCrumbPrefix';
 import { EditableProps, LabelProps } from './types';
