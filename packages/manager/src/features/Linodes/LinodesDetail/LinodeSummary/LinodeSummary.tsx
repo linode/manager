@@ -5,7 +5,7 @@ import PendingIcon from 'src/assets/icons/pending.svg';
 import Paper from 'src/components/core/Paper';
 import { createStyles, makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';

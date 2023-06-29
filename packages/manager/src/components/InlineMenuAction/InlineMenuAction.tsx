@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Button from 'src/components/Button/Button';
+import { Button } from 'src/components/Button/Button';
 import { styled } from '@mui/material/styles';
 import { latoWeb } from 'src/foundations/fonts';
 

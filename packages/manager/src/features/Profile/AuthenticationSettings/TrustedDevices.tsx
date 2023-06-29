@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';

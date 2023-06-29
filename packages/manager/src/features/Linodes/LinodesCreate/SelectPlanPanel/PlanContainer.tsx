@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
 import { StyledTableCell, StyledTable } from './PlanContainer.styles';
@@ -59,14 +59,6 @@ export const PlanContainer = ({
   const shouldShowNetwork =
     showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
 
-  // Edge Case: if the user has selected a premium eligible plan, but changes the region to a non eligible premium region,
-  // we need to clear the plan selection to to keep our error handling consistent on submit.
-  React.useEffect(() => {
-    if (disabled) {
-      onSelect('');
-    }
-  }, [disabled, onSelect]);
-
   return (
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
@@ -89,7 +81,11 @@ export const PlanContainer = ({
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
-          <StyledTable aria-label="List of Linode Plans" spacingBottom={16}>
+          <StyledTable
+            aria-label="List of Linode Plans"
+            spacingBottom={16}
+            isDisabled={disabled}
+          >
             <TableHead>
               <TableRow>
                 {tableCells.map(({ cellName, testId, center, noWrap }) => {

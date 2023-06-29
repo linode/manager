@@ -1,7 +1,7 @@
 import { isPropValid } from 'src/utilities/isPropValid';
 import { styled } from '@mui/material/styles';
 import { TableRow, TableRowProps } from 'src/components/TableRow';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 type StyledDisabledTableRowProps = Pick<TableRowProps, 'disabled'>;
 

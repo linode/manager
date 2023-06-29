@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import {
   StyledButton,

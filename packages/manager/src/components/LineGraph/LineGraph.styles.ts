@@ -1,4 +1,4 @@
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { Table } from 'src/components/Table';
 import { TableHead } from 'src/components/TableHead';
 import { TableBody } from 'src/components/TableBody';

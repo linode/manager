@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/system';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginTop: 18,

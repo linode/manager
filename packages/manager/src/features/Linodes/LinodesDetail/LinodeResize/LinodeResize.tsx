@@ -2,11 +2,11 @@ import { Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Checkbox from 'src/components/CheckBox';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
@@ -17,8 +17,8 @@ import PlansPanel from 'src/features/Linodes/LinodesCreate/SelectPlanPanel/Plans
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import HostMaintenanceError from '../HostMaintenanceError';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { HostMaintenanceError } from '../HostMaintenanceError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import { extendType } from 'src/utilities/extendType';
 import { useFormik } from 'formik';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
@@ -26,10 +26,11 @@ import {
   useLinodeQuery,
   useLinodeResizeMutation,
 } from 'src/queries/linodes/linodes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { usePreferences } from 'src/queries/preferences';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   resizeTitle: {
@@ -81,6 +82,8 @@ export const LinodeResize = (props: Props) => {
     isLoading,
     error: resizeError,
   } = useLinodeResizeMutation(linodeId ?? -1);
+
+  const { data: regionsData } = useRegionsQuery();
 
   const formik = useFormik({
     initialValues: {
@@ -199,6 +202,8 @@ export const LinodeResize = (props: Props) => {
             onSelect={(type) => formik.setFieldValue('type', type)}
             selectedID={formik.values.type}
             disabled={tableDisabled}
+            regionsData={regionsData}
+            selectedRegionID={linode?.region}
           />
         </div>
         <Typography variant="h2" className={classes.resizeTitle}>

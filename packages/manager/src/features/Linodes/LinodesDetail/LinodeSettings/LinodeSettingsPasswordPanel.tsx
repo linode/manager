@@ -1,8 +1,8 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';

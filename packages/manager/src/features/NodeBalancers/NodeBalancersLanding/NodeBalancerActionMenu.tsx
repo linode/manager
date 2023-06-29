@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useHistory } from 'react-router-dom';

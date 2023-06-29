@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { OpenAccessDrawer } from './types';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';

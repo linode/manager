@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { APIError } from '@linode/api-v4/lib/types';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';

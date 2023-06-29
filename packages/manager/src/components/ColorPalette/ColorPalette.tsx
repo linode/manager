@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 
 interface Color {

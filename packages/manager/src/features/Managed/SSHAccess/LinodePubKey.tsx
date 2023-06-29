@@ -1,13 +1,13 @@
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
