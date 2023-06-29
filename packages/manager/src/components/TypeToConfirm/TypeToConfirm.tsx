@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 

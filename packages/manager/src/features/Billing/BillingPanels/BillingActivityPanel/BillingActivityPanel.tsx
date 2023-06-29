@@ -17,7 +17,7 @@ import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

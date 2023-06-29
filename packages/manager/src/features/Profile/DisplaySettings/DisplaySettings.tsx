@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import Divider from 'src/components/core/Divider';
 import ExternalLink from 'src/components/ExternalLink';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
 import { Typography } from 'src/components/Typography';
 import { ApplicationState } from 'src/store';
