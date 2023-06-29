@@ -56,7 +56,9 @@ const deleteLinodeFromActionMenu = (linodeLabel) => {
         .should('be.enabled')
         .click();
     });
+
   cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
+  cy.findByText(linodeLabel).should('not.exist');
 };
 
 const preferenceOverrides = {
