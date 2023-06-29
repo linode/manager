@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { ChartData, ChartPoint } from 'chart.js';
 import { DateTime } from 'luxon';
 import { visuallyHidden } from '@mui/utils';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 
 export interface GraphTabledDataProps {
   ariaLabel?: string;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Link } from 'react-router-dom';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import IPAddress from 'src/features/Linodes/LinodesLanding/IPAddress';

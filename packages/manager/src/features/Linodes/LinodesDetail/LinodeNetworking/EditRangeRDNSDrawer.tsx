@@ -1,12 +1,12 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';

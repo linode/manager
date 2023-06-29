@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { WithTheme, withTheme } from '@mui/styles';
 import Grid from 'src/components/Grid';
-import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { LongviewProcesses, NginxResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ProcessGraphs, { useStyles } from '../ProcessGraphs';

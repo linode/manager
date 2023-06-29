@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import { makeStyles, WithTheme, withTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
-import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import {
   convertBytesToTarget,
   readableBytes,

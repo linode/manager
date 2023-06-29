@@ -1,9 +1,9 @@
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { makeStyles } from '@mui/styles';

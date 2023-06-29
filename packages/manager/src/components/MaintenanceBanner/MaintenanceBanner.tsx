@@ -1,7 +1,7 @@
 import { AccountMaintenance } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
