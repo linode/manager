@@ -1,7 +1,7 @@
 import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { WithTheme, withTheme } from '@mui/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import { pluralize } from 'src/utilities/pluralize';
 import { CPU } from '../../request.types';

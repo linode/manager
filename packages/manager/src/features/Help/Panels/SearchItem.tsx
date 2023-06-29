@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Option from 'src/components/EnhancedSelect/components/Option';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 

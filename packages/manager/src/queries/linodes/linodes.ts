@@ -32,6 +32,8 @@ import {
   getLinodeKernel,
   resizeLinode,
   ResizeLinodePayload,
+  createLinode,
+  CreateLinodeRequest,
 } from '@linode/api-v4/lib/linodes';
 import { queryKey as accountQueryKey } from '../account';
 
@@ -161,6 +163,15 @@ const getAllLinodeConfigs = (id: number) =>
 export const useDeleteLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteLinode(id), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
+    },
+  });
+};
+
+export const useCreateLinodeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Linode, APIError[], CreateLinodeRequest>(createLinode, {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
     },

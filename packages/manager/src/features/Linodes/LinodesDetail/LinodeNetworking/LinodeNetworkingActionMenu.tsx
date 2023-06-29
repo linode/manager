@@ -6,8 +6,8 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { Box } from 'src/components/Box';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import Box from 'src/components/core/Box';
 import { IPTypes } from './types';
 
 interface Props {

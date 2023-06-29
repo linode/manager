@@ -6,10 +6,11 @@ import { IPv6, parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import AddNewLink from 'src/components/AddNewLink';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -17,9 +18,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import Hidden from 'src/components/core/Hidden';
+import { Typography } from 'src/components/Typography';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   useAllIPsQuery,
@@ -27,7 +27,7 @@ import {
 } from 'src/queries/linodes/networking';
 import { useGrants } from 'src/queries/profile';
 import { makeStyles } from 'tss-react/mui';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import AddIPDrawer from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
 import { DeleteRangeDialog } from './DeleteRangeDialog';

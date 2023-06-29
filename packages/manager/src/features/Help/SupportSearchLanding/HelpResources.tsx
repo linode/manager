@@ -5,7 +5,7 @@ import Community from 'src/assets/icons/community.svg';
 import Support from 'src/assets/icons/support.svg';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Tile } from 'src/components/Tile/Tile';
 import Grid from '@mui/material/Unstable_Grid2';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
