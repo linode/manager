@@ -33,7 +33,6 @@
     "start:manager:ci": "yarn workspace linode-manager start:ci",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
     "test": "yarn workspace linode-manager test --maxWorkers=4",
-    "package-versions": "node ./scripts/package-versions/index.js",
     "storybook": "yarn workspace linode-manager storybook",
     "cy:run": "yarn workspace linode-manager cy:run",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
