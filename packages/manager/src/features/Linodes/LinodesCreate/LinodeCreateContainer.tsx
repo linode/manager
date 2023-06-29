@@ -32,7 +32,10 @@ import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withLinodes from 'src/containers/withLinodes.container';
+import {
+  WithLinodesProps,
+  withLinodes,
+} from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
   AgreementsProps,
@@ -48,10 +51,6 @@ import {
 import { simpleMutationHandlers } from 'src/queries/base';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import {
-  LinodeActionsProps,
-  withLinodeActions,
-} from 'src/store/linodes/linode.containers';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -64,13 +63,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
-import {
-  HandleSubmit,
-  LinodeCreateValidation,
-  Info,
-  TypeInfo,
-  WithLinodesProps,
-} from './types';
+import { HandleSubmit, LinodeCreateValidation, Info, TypeInfo } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import LandingHeader from 'src/components/LandingHeader';
@@ -120,7 +113,6 @@ interface State {
 
 type CombinedProps = WithSnackbarProps &
   CreateType &
-  LinodeActionsProps &
   ImagesProps &
   WithTypesProps &
   WithLinodesProps &
@@ -830,14 +822,9 @@ const connected = connect(mapStateToProps, { upsertLinode });
 
 export default recompose<CombinedProps, {}>(
   withImages,
-  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    linodesData,
-    linodesLoading,
-    linodesError,
-  })),
+  withLinodes,
   withRegions,
   withTypes,
-  withLinodeActions,
   connected,
   withSnackbar,
   withLabelGenerator,

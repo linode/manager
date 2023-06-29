@@ -12,7 +12,7 @@ import * as React from 'react';
 import { useTheme, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AccessibleGraphData from './AccessibleGraphData';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TableRow } from 'src/components/TableRow';
 import { TableCell } from 'src/components/TableCell';
 import { setUpCharts } from 'src/utilities/charts';

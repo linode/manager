@@ -1,12 +1,12 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import LandingLoading from 'src/components/LandingLoading';
+import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';

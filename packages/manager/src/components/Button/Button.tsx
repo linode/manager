@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
-import _Button, { ButtonProps } from '@mui/material/Button';
+import _Button, { ButtonProps as _ButtonProps } from '@mui/material/Button';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { useTheme, styled, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
@@ -9,18 +9,27 @@ import { rotate360 } from '../../styles/keyframes';
 
 export type ButtonType = 'primary' | 'secondary' | 'outlined';
 
-export interface Props extends ButtonProps {
+export interface ButtonProps extends _ButtonProps {
   /** The button variant to render */
   buttonType?: ButtonType;
   /** Additional css class to pass to the component */
   className?: string;
   /** The `sx` prop can be either object or function */
   sx?: SxProps<Theme>;
-  /** Reduce the padding on the x-axis */
+  /**
+   * Reduce the padding on the x-axis
+   * @default false
+   */
   compactX?: boolean;
-  /** Reduce the padding on the y-axis */
+  /**
+   * Reduce the padding on the y-axis
+   * @default false
+   */
   compactY?: boolean;
-  /** Show a loading indicator */
+  /**
+   * Show a loading indicator
+   * @default false
+   */
   loading?: boolean;
   /** Tooltip text */
   tooltipText?: string;
@@ -31,7 +40,7 @@ export interface Props extends ButtonProps {
 const StyledButton = styled(_Button, {
   shouldForwardProp: (prop) =>
     isPropValid(['compactX', 'compactY', 'loading', 'buttonType'], prop),
-})<Props>(({ theme, ...props }) => ({
+})<ButtonProps>(({ theme, ...props }) => ({
   ...(props.buttonType === 'secondary' &&
     props.compactX && {
       minWidth: 50,
@@ -67,7 +76,7 @@ const Span = styled('span')({
   },
 });
 
-const Button = React.forwardRef<HTMLButtonElement, Props>(
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       // default to secondary as some components never define a buttonType (usually buttons with icons)
@@ -84,7 +93,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
       tooltipText,
       tooltipAnalyticsEvent,
       ...rest
-    }: Props,
+    },
     ref
   ) => {
     const theme = useTheme();
@@ -129,7 +138,3 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
     );
   }
 );
-
-Button.displayName = 'Button';
-
-export default Button;

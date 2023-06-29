@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import LandingHeader from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { CircleProgress } from 'src/components/CircleProgress';

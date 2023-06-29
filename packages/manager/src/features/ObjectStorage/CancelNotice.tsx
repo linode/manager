@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Link } from 'src/components/Link';
 
 interface Props {

@@ -9,7 +9,7 @@ import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import LandingHeader from 'src/components/LandingHeader';
 import Grid from '@mui/material/Unstable_Grid2';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import DomainRecords from '../DomainRecords';
 import DeleteDomain from '../DeleteDomain';

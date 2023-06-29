@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Hidden, { HiddenProps } from '../core/Hidden';
+import { Hidden, HiddenProps } from '../Hidden';
 import Skeleton from '../core/Skeleton';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';

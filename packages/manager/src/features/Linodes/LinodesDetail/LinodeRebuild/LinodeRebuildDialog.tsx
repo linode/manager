@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
-import HostMaintenanceError from '../HostMaintenanceError';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { HostMaintenanceError } from '../HostMaintenanceError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';

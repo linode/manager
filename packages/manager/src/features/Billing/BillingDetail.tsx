@@ -14,7 +14,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 
 export const BillingDetail = () => {
   const {

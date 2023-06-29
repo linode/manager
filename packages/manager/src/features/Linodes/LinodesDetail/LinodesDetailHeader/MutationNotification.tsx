@@ -1,7 +1,7 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { MBpsIntraDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';

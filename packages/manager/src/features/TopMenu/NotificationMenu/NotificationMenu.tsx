@@ -12,7 +12,7 @@ import {
 import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
 import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';

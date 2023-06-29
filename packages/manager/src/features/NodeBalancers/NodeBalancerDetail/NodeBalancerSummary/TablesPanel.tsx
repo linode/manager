@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';

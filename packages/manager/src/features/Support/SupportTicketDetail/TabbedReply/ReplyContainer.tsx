@@ -2,7 +2,7 @@ import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';

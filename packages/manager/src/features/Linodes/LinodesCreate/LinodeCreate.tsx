@@ -9,14 +9,14 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import DocsLink from 'src/components/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -68,13 +68,13 @@ import {
   StackScriptFormStateHandlers,
   TypeInfo,
   WithDisplayData,
-  WithLinodesProps,
   WithTypesRegionsAndImages,
 } from './types';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { extendType } from 'src/utilities/extendType';
 import { WithTypesProps } from 'src/containers/types.container';
 import { RegionsProps } from 'src/containers/regions.container';
+import { WithLinodesProps } from 'src/containers/withLinodes.container';
 
 type ClassNames =
   | 'form'

@@ -2,7 +2,7 @@ import * as React from 'react';
 import RenderGuard from 'src/components/RenderGuard';
 import { makeStyles } from 'tss-react/mui';
 import { Theme, styled } from '@mui/material/styles';
-import Box, { BoxProps } from '../core/Box';
+import { Box, BoxProps } from '../Box';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
