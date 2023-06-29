@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import {
   IncidentImpact,
   IncidentStatus,

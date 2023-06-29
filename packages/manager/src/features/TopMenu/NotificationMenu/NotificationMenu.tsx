@@ -11,7 +11,7 @@ import {
 } from 'src/features/NotificationCenter/NotificationContext';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
 import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
-import MenuItem from 'src/components/MenuItem';
+import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import { Button } from 'src/components/Button/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import MenuList from 'src/components/core/MenuList';
@@ -162,7 +162,7 @@ export const NotificationMenu = () => {
             autoFocusItem={notificationContext.menuOpen}
             onKeyDown={handleMenuListKeyDown}
           >
-            <MenuItem
+            <WrapperMenuItem
               sx={{
                 boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
                 whiteSpace: 'initial',
@@ -182,7 +182,7 @@ export const NotificationMenu = () => {
                 <Notifications />
                 <Events />
               </Paper>
-            </MenuItem>
+            </WrapperMenuItem>
           </MenuList>
         </ClickAwayListener>
       </Popper>

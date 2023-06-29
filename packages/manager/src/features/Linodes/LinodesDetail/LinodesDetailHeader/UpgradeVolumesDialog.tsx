@@ -3,7 +3,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useSnackbar } from 'notistack';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

@@ -20,7 +20,6 @@ import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
-import useLinodes from './hooks/useLinodes';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
@@ -59,18 +58,11 @@ const BaseApp = withFeatureFlagProvider(
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const {
-      linodes: {
-        error: { read: linodesError },
-      },
-    } = useLinodes();
-
     const [goToOpen, setGoToOpen] = React.useState(false);
 
     const theme = preferences?.theme;
     const keyboardListener = React.useCallback(
       (event: KeyboardEvent) => {
-        const isOSMac = navigator.userAgent.includes('Mac');
         const letterForThemeShortcut = 'D';
         const letterForGoToOpen = 'K';
         const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
@@ -263,15 +255,6 @@ const BaseApp = withFeatureFlagProvider(
       };
     }, [handleMigrationEvent]);
 
-    /**
-     * in the event that we encounter an "invalid OAuth token" error from the API,
-     * we can simply refrain from rendering any content since the user will
-     * imminently be redirected to the login page.
-     */
-    if (hasOauthError(linodesError)) {
-      return null;
-    }
-
     return (
       <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
         {/** Accessibility helper */}
@@ -312,3 +295,5 @@ export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
       : cleanedError.toLowerCase().includes('oauth');
   });
 };
+
+export const isOSMac = navigator.userAgent.includes('Mac');

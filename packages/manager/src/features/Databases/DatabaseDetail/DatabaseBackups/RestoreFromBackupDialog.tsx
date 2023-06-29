@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { DialogProps } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

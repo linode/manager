@@ -3,7 +3,7 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle';

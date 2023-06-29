@@ -7,7 +7,7 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';

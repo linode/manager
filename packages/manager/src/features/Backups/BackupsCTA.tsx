@@ -7,7 +7,7 @@ import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { handleOpen } from 'src/store/backupDrawer';

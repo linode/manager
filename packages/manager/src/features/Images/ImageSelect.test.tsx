@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { imageFactory } from 'src/factories/images';
 
-jest.mock('src/hooks/useReduxLoad', () => ({
-  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false }),
-}));
 jest.mock('src/components/EnhancedSelect/Select');
 
 import { getImagesOptions, groupNameMap, ImageSelect } from './ImageSelect';

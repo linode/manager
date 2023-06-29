@@ -5,31 +5,24 @@ import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
 import { SupportLink } from 'src/components/SupportLink';
-import withLinodes, {
-  DispatchProps,
-} from 'src/containers/withLinodes.container';
 import { pluralize } from 'src/utilities/pluralize';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
 import { useQueryClient } from 'react-query';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
 
 interface Props {
   isManaged: boolean;
 }
 
-interface StateProps {
-  linodeCount: number;
-}
-
-type CombinedProps = Props & StateProps & DispatchProps;
-
 interface ContentProps {
   isManaged: boolean;
   openConfirmationModal: () => void;
 }
+
 export const ManagedContent = (props: ContentProps) => {
   const { isManaged, openConfirmationModal } = props;
 
@@ -66,12 +59,15 @@ export const ManagedContent = (props: ContentProps) => {
   );
 };
 
-export const EnableManaged = (props: CombinedProps) => {
-  const { isManaged, linodeCount } = props;
+export const EnableManaged = (props: Props) => {
+  const { isManaged } = props;
   const queryClient = useQueryClient();
+  const { data: linodes } = useLinodesQuery();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
+
+  const linodeCount = linodes?.results ?? 0;
 
   const handleClose = () => {
     setOpen(false);
@@ -94,7 +90,7 @@ export const EnableManaged = (props: CombinedProps) => {
       .catch(handleError);
   };
 
-  const actions = () => (
+  const actions = (
     <ActionsPanel>
       <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
         Cancel
@@ -137,9 +133,3 @@ export const EnableManaged = (props: CombinedProps) => {
     </>
   );
 };
-
-export default withLinodes<StateProps, Props>(
-  (ownProps, entities, loading, error) => ({
-    linodeCount: entities.length,
-  })
-)(EnableManaged);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { TypeToConfirmDialog } from './TypeToConfirmDialog';
 

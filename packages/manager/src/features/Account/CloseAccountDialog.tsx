@@ -6,7 +6,7 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { makeStyles } from 'tss-react/mui';
 import { Theme, styled } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TextField } from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 

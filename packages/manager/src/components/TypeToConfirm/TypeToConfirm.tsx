@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'src/components/Link';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   confirmationText?: JSX.Element | string;
