@@ -37,7 +37,7 @@ const serviceTransferStatuses = [
   'failed',
   'accepted',
   'stale',
-  'cancelled',
+  'canceled',
 ];
 
 /**
@@ -214,10 +214,9 @@ describe('Account service transfers', () => {
                 cy.findByText(
                   formatDate(sentTransfer.created, dateFormatOptions)
                 ).should('be.visible');
-                cy.findByText(
-                  sentTransfer.status.replace('cancelled', 'canceled'),
-                  { exact: false }
-                ).should('be.visible');
+                cy.findByText(sentTransfer.status, { exact: false }).should(
+                  'be.visible'
+                );
               });
           });
         });
