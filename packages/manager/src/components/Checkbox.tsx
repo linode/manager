@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
@@ -8,10 +8,23 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 
 interface Props extends CheckboxProps {
+  /**
+   * Renders a `FormControlLabel` that controls the underlying Checkbox with a label of `text`
+   */
   text?: string | JSX.Element;
+  /**
+   * Renders a tooltip to the right of the Checkbox
+   */
   toolTipText?: string | JSX.Element;
+  /**
+   * Whether or not the tooltip is interactive
+   * @default false
+   */
   toolTipInteractive?: boolean;
-  sxFormLabel?: SxProps;
+  /**
+   * Styles applied to the `FormControlLabel`. Only works when `text` is defined.
+   */
+  sxFormLabel?: SxProps<Theme>;
 }
 
 /**
