@@ -10,7 +10,10 @@ import { rotate360 } from '../../styles/keyframes';
 export type ButtonType = 'primary' | 'secondary' | 'outlined';
 
 export interface ButtonProps extends _ButtonProps {
-  /** The button variant to render */
+  /**
+   * The button variant to render
+   * * @default 'secondary'
+   * */
   buttonType?: ButtonType;
   /** Additional css class to pass to the component */
   className?: string;
@@ -41,18 +44,16 @@ const StyledButton = styled(_Button, {
   shouldForwardProp: (prop) =>
     isPropValid(['compactX', 'compactY', 'loading', 'buttonType'], prop),
 })<ButtonProps>(({ theme, ...props }) => ({
-  ...(props.buttonType === 'secondary' &&
-    props.compactX && {
-      minWidth: 50,
-      paddingRight: 0,
-      paddingLeft: 0,
-    }),
-  ...(props.buttonType === 'secondary' &&
-    props.compactY && {
-      minHeight: 20,
-      paddingTop: 0,
-      paddingBottom: 0,
-    }),
+  ...(props.compactX && {
+    minWidth: 50,
+    paddingRight: 0,
+    paddingLeft: 0,
+  }),
+  ...(props.compactY && {
+    minHeight: 20,
+    paddingTop: 0,
+    paddingBottom: 0,
+  }),
   ...(props.loading && {
     '& svg': {
       animation: `${rotate360} 2s linear infinite`,

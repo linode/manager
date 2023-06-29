@@ -1,9 +1,8 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'src/components/Button/Button';
+import { StyledActionButton } from 'src/components/Button/StyledActionButton';
 import { styled } from '@mui/material/styles';
-import { latoWeb } from 'src/foundations/fonts';
 
 interface InlineMenuActionProps {
   actionText: string;
@@ -36,23 +35,17 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
     );
   } else {
     return (
-      <Button
+      <StyledActionButton
+        // TODO: We need to define what buttonType this will be in the future for now 'secondary' works...
         buttonType="secondary"
         onClick={onClick}
         disabled={disabled}
         loading={loading}
         tooltipText={tooltip}
         tooltipAnalyticsEvent={tooltipAnalyticsEvent}
-        compactX
-        sx={{
-          // TODO: We need to better define our button guidelines for this type of usage
-          fontFamily: latoWeb.normal,
-          fontSize: '14px',
-          padding: '12px 10px',
-        }}
       >
         {actionText}
-      </Button>
+      </StyledActionButton>
     );
   }
 };
