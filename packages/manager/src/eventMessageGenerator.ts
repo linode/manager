@@ -52,7 +52,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `${formatEventWithAppendedText(
         e,
         `Backup restoration failed for ${e.entity!.label}.`,
-        'Learn more about limits and considerations.',
+        'Learn more about limits and considerations',
         'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
       )}`,
     finished: (e) => `Backup restoration completed for ${e.entity!.label}.`,
@@ -518,7 +518,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `${formatEventWithAppendedText(
         e,
         `Snapshot backup failed on Linode ${e.entity!.label}.`,
-        'Learn more about limits and considerations.',
+        'Learn more about limits and considerations',
         'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
       )}`,
     finished: (e) =>
