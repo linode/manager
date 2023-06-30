@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NoticeProps } from 'react-select/src/components/Menu';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 interface Props extends NoticeProps<any, any> {}
 

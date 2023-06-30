@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -16,7 +16,7 @@ import { useAllVolumesQuery } from 'src/queries/volumes';
 import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
-import LinodePermissionsError from '../LinodePermissionsError';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import DeviceSelection, { ExtendedDisk } from './DeviceSelection';
 import RescueDescription from './RescueDescription';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';

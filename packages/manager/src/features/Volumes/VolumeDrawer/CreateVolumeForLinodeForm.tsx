@@ -10,7 +10,7 @@ import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TagsInput, Tag } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useGrants, useProfile } from 'src/queries/profile';

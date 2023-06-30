@@ -1,15 +1,15 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 import LandingHeader from 'src/components/LandingHeader';
 import Paper from 'src/components/core/Paper';
 import produce from 'immer';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';

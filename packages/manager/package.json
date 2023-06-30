@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.96.1",
+  "version": "1.96.2",
   "private": true,
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -13,8 +13,6 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@linode/api-v4": "*",
@@ -89,7 +87,6 @@
   },
   "scripts": {
     "postinstall": "patch-package",
-    "compare": "./scripts/jira-changelog.sh",
     "start": "concurrently --raw \"vite\" \"tsc --watch --preserveWatchOutput\"",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
     "start:ci": "yarn serve ./build -p 3000 -s --cors",
@@ -105,7 +102,6 @@
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
-    "release": "./scripts/release_changelog.sh",
     "typecheck": "tsc"
   },
   "lint-staged": {
@@ -228,11 +224,7 @@
       "lcov",
       "cobertura"
     ],
-    "setupFiles": [
-      "<rootDir>/config/polyfills.js"
-    ],
     "setupFilesAfterEnv": [
-      "<rootDir>/config/testSetup.js",
       "<rootDir>/src/testSetup.ts"
     ],
     "testMatch": [

@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import LinodeEntityDetail from 'src/features/Linodes/LinodeEntityDetail';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';

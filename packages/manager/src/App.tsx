@@ -1,9 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
 import 'highlight.js/styles/a11y-dark.css';
 import 'highlight.js/styles/a11y-light.css';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -20,7 +18,6 @@ import { reportException } from './exceptionReporting';
 import { useAppEventHandlers } from './hooks/useAppEventHandlers';
 import { useAuthentication } from './hooks/useAuthentication';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
-import useLinodes from './hooks/useLinodes';
 import { loadScript } from './hooks/useScript';
 import { useToastNotifications } from './hooks/useToastNotifications';
 import { useMutatePreferences, usePreferences } from './queries/preferences';
@@ -46,18 +43,11 @@ const BaseApp = withFeatureFlagProvider(
     useAppEventHandlers();
     useToastNotifications();
 
-    const {
-      linodes: {
-        error: { read: linodesError },
-      },
-    } = useLinodes();
-
     const [goToOpen, setGoToOpen] = React.useState(false);
 
     const theme = preferences?.theme;
     const keyboardListener = React.useCallback(
       (event: KeyboardEvent) => {
-        const isOSMac = navigator.userAgent.includes('Mac');
         const letterForThemeShortcut = 'D';
         const letterForGoToOpen = 'K';
         const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
@@ -136,15 +126,6 @@ const BaseApp = withFeatureFlagProvider(
       };
     }, [keyboardListener]);
 
-    /**
-     * in the event that we encounter an "invalid OAuth token" error from the API,
-     * we can simply refrain from rendering any content since the user will
-     * imminently be redirected to the login page.
-     */
-    if (hasOauthError(linodesError)) {
-      return null;
-    }
-
     return (
       <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
         {/** Accessibility helper */}
@@ -173,15 +154,4 @@ const BaseApp = withFeatureFlagProvider(
   })
 );
 
-export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
-  return args.some((eachError) => {
-    const cleanedError: string | JSX.Element = pathOr(
-      '',
-      [0, 'reason'],
-      eachError
-    );
-    return typeof cleanedError !== 'string'
-      ? false
-      : cleanedError.toLowerCase().includes('oauth');
-  });
-};
+export const isOSMac = navigator.userAgent.includes('Mac');

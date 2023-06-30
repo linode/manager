@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Select from 'src/components/EnhancedSelect/Select';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+import { Button } from 'src/components/Button/Button';
 import ExternalLink from 'src/components/ExternalLink';
 import { Notice } from 'src/components/Notice/Notice';
 import { Config } from '@linode/api-v4/lib/linodes';

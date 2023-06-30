@@ -74,7 +74,7 @@ export const useToastNotifications = () => {
             ),
           });
         case 'image_upload':
-          const isDeletion = event.message === 'Upload cancelled.';
+          const isDeletion = event.message === 'Upload canceled.';
           toastSuccessAndFailure({
             enqueueSnackbar,
             eventStatus: event.status,
@@ -82,9 +82,10 @@ export const useToastNotifications = () => {
             successMessage: `Image ${label} is now available.`,
             failureMessage: isDeletion
               ? undefined
-              : `There was a problem uploading image ${label}: ${event.message
-                  ?.replace('cancelled', 'canceled')
-                  .replace(/(\d+)/g, '$1 MB')}`,
+              : `There was a problem uploading image ${label}: ${event.message?.replace(
+                  /(\d+)/g,
+                  '$1 MB'
+                )}`,
           });
           break;
         case 'image_delete':

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useSnackbar } from 'notistack';
 import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
 import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Button from 'src/components/Button/Button';
 import { useEventsInfiniteQuery } from 'src/queries/events';
+import { Button } from 'src/components/Button/Button';
 
 interface Props {
   isOpen: boolean;

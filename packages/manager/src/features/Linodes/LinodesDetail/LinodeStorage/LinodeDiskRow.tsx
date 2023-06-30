@@ -1,7 +1,7 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';

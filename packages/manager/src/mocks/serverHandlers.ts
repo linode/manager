@@ -123,11 +123,16 @@ const entityTransfers = [
       is_sender: true,
       status: 'pending',
     });
+    const transfer5 = entityTransferFactory.build({
+      is_sender: true,
+      status: 'canceled',
+    });
 
     const combinedTransfers = transfers1.concat(
       transfers2,
       transfers3,
-      transfer4
+      transfer4,
+      transfer5
     );
     return res(ctx.json(makeResourcePage(combinedTransfers)));
   }),

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 interface Props {

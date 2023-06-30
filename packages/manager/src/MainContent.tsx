@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import Logo from 'src/assets/logo/akamai-logo.svg';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
