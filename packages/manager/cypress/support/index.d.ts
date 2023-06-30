@@ -15,11 +15,14 @@ declare global {
       ): Chainable<any>;
 
       /**
-       * Custom command to get a Cypress Promise that can be used in place of the given Promise.
+       * Yields a Cypress Promise from the given native Promise.
        *
        * @example cy.defer(new Promise('value')).then((val) => {...})
        */
-      defer(promise: Promise<any>): Chainable<>;
+      defer<T>(
+        promise: Promise<T>,
+        options?: Partial<Cypress.Loggable & Cypress.Timeoutable>
+      ): Chainable<>;
 
       //mockCommonRequests(options?: CommonRequestMockOptions | undefined): Chainable<>;
 

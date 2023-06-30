@@ -28,22 +28,21 @@ import 'cypress-axe';
 import './login';
 
 /**
- * Returns a Cypress Promise that can be used in place of the given Promise.
+ * Yields a Cypress Promise that can be used in place of the given Promise.
  *
- * @param {Promise<any>} promise - Promise with result to await.
+ * @param promise - Promise with result to await.
+ * @param options - Defer options.
  *
- * @returns {any} Promise result.
+ * @returns Promise result.
  */
-Cypress.Commands.add('defer', (promise: Promise<any>) => {
-  return new Cypress.Promise((resolve, reject) => {
-    promise
-      .then((...data) => {
-        resolve(...data);
-      })
-      .catch((...data) => {
-        reject(...data);
-      });
-  });
-});
+Cypress.Commands.add(
+  'defer',
+  <T>(
+    promise: Promise<T>,
+    options?: Partial<Cypress.Loggable & Cypress.Timeoutable>
+  ) => {
+    return cy.wrap<Promise<T>, T>(promise, options);
+  }
+);
 
 import '@testing-library/cypress/add-commands';
