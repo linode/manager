@@ -85,6 +85,22 @@ describe('create linode', () => {
         ].forEach((line: string) =>
           cy.findByText(line, { exact: false }).should('be.visible')
         );
+
+        cy.findByText('Linode CLI').should('be.visible').click();
+
+        [
+          `--region ${linodeRegion.id}`,
+          '--type g6-dedicated-2',
+          `--label ${linodeLabel}`,
+          `--root_pass ${linodePass}`,
+          `--booted true`,
+        ].forEach((line: string) => cy.contains(line).should('be.visible'));
+
+        ui.buttonGroup
+          .findButtonByTitle('Close')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
   });
 });
