@@ -173,7 +173,18 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               enqueueSnackbar,
               eventStatus: event.status,
               persistFailureMessage: true,
-              failureMessage: `There was an error creating a snapshot on Linode ${label}.`,
+              failureMessage: `Snapshot backup failed on Linode ${label}.`,
+              link: formatLink(
+                'Learn more about limits and considerations.',
+                'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+              ),
+            });
+          case 'backups_restore':
+            return toastSuccessAndFailure({
+              enqueueSnackbar,
+              eventStatus: event.status,
+              persistFailureMessage: true,
+              failureMessage: `Backup restoration failed for ${label}.`,
               link: formatLink(
                 'Learn more about limits and considerations.',
                 'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
