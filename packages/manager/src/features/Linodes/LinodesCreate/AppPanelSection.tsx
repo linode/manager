@@ -1,12 +1,12 @@
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
 import { decode } from 'he';
 import * as React from 'react';
-import Divider from 'src/components/Divider';
-import { styled } from '@mui/material/styles';
+import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-import SelectionCardWrapper from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
 import { Chip } from 'src/components/core/Chip';
+import SelectionCardWrapper from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
 
 const AppPanelGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(2),
