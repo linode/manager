@@ -13,7 +13,6 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
 import chaiString from 'chai-string';
 import { authenticate } from './api/authentication';
 import { deleteAllTestData } from './ui/common';
@@ -30,7 +29,7 @@ import './request-tracking';
 
 // Runs before each test file.
 before(() => {
-  cy.wrap(deleteAllTestData(), {
+  cy.defer(deleteAllTestData(), {
     // Make sure there's enough time to accommodate retries when necessary.
     timeout: 120000,
   });
