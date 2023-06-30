@@ -86,3 +86,15 @@ export const isEventInProgressDiskImagize = (event: Event): boolean => {
 export const isEventImageUpload = (event: Event): boolean => {
   return event.action === 'image_upload';
 };
+
+/**
+ * Compare the latestTime with the given Linode's created time and return the most recent.
+ *
+ */
+export const mostRecentCreated = (
+  latestTime: number,
+  current: Pick<Event, 'created'>
+) => {
+  const time: number = parseAPIDate(current.created).valueOf(); // Unix time (milliseconds)
+  return latestTime > time ? latestTime : time;
+};

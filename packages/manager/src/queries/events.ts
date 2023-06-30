@@ -1,9 +1,4 @@
-import {
-  Event,
-  getEvents,
-  markEventRead,
-  markEventSeen,
-} from '@linode/api-v4/lib/account';
+import { Event, getEvents, markEventSeen } from '@linode/api-v4/lib/account';
 import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -21,8 +16,8 @@ import {
   INTERVAL,
   ISO_DATETIME_NO_TZ_FORMAT,
 } from 'src/constants';
-import { isInProgressEvent } from 'src/utilities/eventUtils';
-import { generateInFilter } from 'src/utilities/requestFilters';
+import { isInProgressEvent, mostRecentCreated } from 'src/utilities/eventUtils';
+import { generatePollingFilter } from 'src/utilities/requestFilters';
 
 const queryKey = 'events';
 const eventsPollingQueryKey = (filter?: Filter) => [
@@ -53,9 +48,9 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
   const queryClient = useQueryClient();
   const queryKey = infiniteEventsQueryKey(filter);
 
-  const eventsCache = queryClient.getQueryData<
-    InfiniteData<ResourcePage<Event>>
-  >(queryKey);
+  const { data: eventsCache } = useQuery<InfiniteData<ResourcePage<Event>>>(
+    queryKey
+  );
 
   const incompleteEvents = React.useMemo(
     () =>
@@ -65,42 +60,27 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
     [eventsCache]
   );
 
-  const pollingEventHandler = (event: Event) => {
-    updateEventsCache(queryClient, queryKey, event);
-    if (eventHandler) {
-      eventHandler(event);
-    }
-  };
+  const pollingEventHandler = React.useCallback(
+    (event: Event) => {
+      updateEventsCache(queryClient, queryKey, event);
+      if (eventHandler) {
+        eventHandler(event);
+      }
+    },
+    [eventHandler, queryClient, queryKey]
+  );
 
-  // Poll for new events
-  const { resetEventsPolling: resetNewEventsPolling } = useEventsPolling({
+  // Poll for new events and updates to in-progress events
+  const { resetEventsPolling } = useEventsPolling(
+    incompleteEvents ?? [],
     enabled,
-    eventHandler: pollingEventHandler,
-    filter,
-  });
-
-  // Poll in-progress events for updates
-  const { resetEventsPolling: resetInProgressEventsPolling } = useEventsPolling(
-    {
-      enabled: enabled && incompleteEvents && incompleteEvents.length > 0,
-      eventHandler: pollingEventHandler,
-      filter: {
-        created: undefined,
-        '+or': [
-          ...generateInFilter(
-            'id',
-            incompleteEvents?.map((event) => event.id) ?? []
-          ),
-        ],
-      },
-    }
+    pollingEventHandler,
+    filter
   );
 
   // Pages start from the first fetched event, so new
   // events don't offset subsequent pages
-  const firstEventCreated = queryClient.getQueryData<
-    InfiniteData<ResourcePage<Event>>
-  >(queryKey)?.pages[0]?.data[0]?.created;
+  const firstEventCreated = eventsCache?.pages[0]?.data[0]?.created;
 
   const queryResult = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     queryKey,
@@ -108,7 +88,9 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
       getEvents(
         { page: pageParam, page_size: 25 },
         {
-          created: { '+lte': firstEventCreated },
+          created: firstEventCreated
+            ? { '+lte': firstEventCreated }
+            : undefined,
           ...filter,
         }
       ),
@@ -119,7 +101,7 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
   );
 
   // Prepend page zero
-  const pageZeroEvents = queryClient.getQueryData<Event[]>(
+  const { data: pageZeroEvents } = useQuery<Event[]>(
     pageZeroQueryKey(queryKey)
   );
 
@@ -132,7 +114,7 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
       }
     : undefined;
 
-  const data = {
+  const results = {
     pages: [
       ...(pageZero ? [pageZero] : []),
       ...(queryResult.data?.pages ?? []),
@@ -145,12 +127,12 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
 
   return {
     ...queryResult,
-    data,
-    events: data.pages.reduce((events, page) => [...events, ...page.data], []),
-    resetEventsPolling: () => {
-      resetNewEventsPolling();
-      resetInProgressEventsPolling();
-    },
+    results,
+    events: results.pages.reduce(
+      (events, page) => [...events, ...page.data],
+      []
+    ),
+    resetEventsPolling,
   };
 };
 
@@ -165,31 +147,34 @@ export const useMarkEventsAsSeen = () => {
   );
 };
 
-const useEventsPolling = (options: EventsQueryOptions = {}) => {
-  const { enabled = true, eventHandler, filter } = options;
-
+const useEventsPolling = (
+  inProgressEvents: Event[],
+  enabled: boolean,
+  eventHandler: (event: Event) => void,
+  customFilter: Filter = {}
+) => {
   const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
-  const [mountTime] = React.useState(Date.now);
+  const [mostRecentEventTime, setMostRecentEventTime] = React.useState(
+    Date.now
+  );
+
+  const { data: prevEvents } = useQuery<Event[]>(
+    eventsPollingQueryKey(customFilter)
+  );
 
   useQuery<Event[], APIError[]>(
-    eventsPollingQueryKey(filter),
-    async () => {
-      const events = await getEvents(
-        { page_size: 25 },
-        {
-          read: false,
-          created: {
-            '+gte': DateTime.fromMillis(mountTime, { zone: 'utc' }).toFormat(
-              ISO_DATETIME_NO_TZ_FORMAT
-            ),
-          },
-          ...filter,
-        }
-      ).then((response) => response.data);
-      await markCompletedEventsAsRead(events);
-      setIntervalMultiplier(Math.min(intervalMultiplier + 1, 16));
-      return events;
-    },
+    eventsPollingQueryKey(customFilter),
+    () =>
+      getEvents(
+        undefined,
+        generatePollingFilter(
+          DateTime.fromMillis(mostRecentEventTime, { zone: 'utc' }).toFormat(
+            ISO_DATETIME_NO_TZ_FORMAT
+          ),
+          inProgressEvents.map((event) => event.id),
+          prevEvents?.map((event) => event.id)
+        )
+      ).then((response) => response.data),
     {
       enabled,
       refetchInterval: DISABLE_EVENT_THROTTLE
@@ -198,8 +183,13 @@ const useEventsPolling = (options: EventsQueryOptions = {}) => {
       retryDelay: 5000,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      onSuccess: (events) =>
-        eventHandler && events.reverse().forEach(eventHandler),
+      onSuccess: (events) => {
+        setIntervalMultiplier(Math.min(intervalMultiplier + 1, 16));
+        setMostRecentEventTime(
+          events.reduce(mostRecentCreated, mostRecentEventTime)
+        );
+        events.reverse().forEach(eventHandler);
+      },
     }
   );
 
@@ -271,11 +261,6 @@ const incompleteEvent = (event: Event) =>
   // We need to keep polling the event for any database that is still creating.
   // The same event will change its status from `notification` to `finished`.
   (event.action === 'database_create' && event.status === 'notification');
-
-const markCompletedEventsAsRead = async (events: Event[]) => {
-  const completedEvents = events.filter((event) => !incompleteEvent(event));
-  await Promise.all(completedEvents.map((event) => markEventRead(event.id)));
-};
 
 const updateSeenEvents = (latestId: number, queryClient: QueryClient) => {
   for (const [queryKey, data] of queryClient.getQueriesData<
