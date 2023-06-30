@@ -2,7 +2,7 @@ import { NotificationType } from '@linode/api-v4/lib/account';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import * as React from 'react';
-import Divider from 'src/components/Divider';
+import { Divider } from 'src/components/Divider';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
 import Box from '@mui/material/Box';

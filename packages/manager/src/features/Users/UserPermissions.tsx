@@ -13,7 +13,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Divider from 'src/components/Divider';
+import { Divider } from 'src/components/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { withStyles } from 'tss-react/mui';

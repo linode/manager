@@ -4,7 +4,7 @@ import Paper from 'src/components/core/Paper';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { makeStyles } from 'tss-react/mui';
-import Divider from '../Divider';
+import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 const PasswordInput = React.lazy(

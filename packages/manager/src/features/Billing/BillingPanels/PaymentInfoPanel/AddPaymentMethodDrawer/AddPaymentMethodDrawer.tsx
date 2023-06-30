@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PaymentMethod } from '@linode/api-v4/lib/account';
 import { VariantType } from 'notistack';
-import Divider from 'src/components/Divider';
+import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';

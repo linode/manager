@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Divider from 'src/components/Divider';
+import { Divider } from 'src/components/Divider';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
 import formatDate from 'src/utilities/formatDate';

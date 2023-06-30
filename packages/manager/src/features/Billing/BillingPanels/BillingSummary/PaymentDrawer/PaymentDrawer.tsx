@@ -4,7 +4,7 @@ import { APIWarning } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
-import Divider from 'src/components/Divider';
+import { Divider } from 'src/components/Divider';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
