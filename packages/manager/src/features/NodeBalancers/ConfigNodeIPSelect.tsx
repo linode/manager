@@ -1,8 +1,8 @@
 import * as React from 'react';
-import LinodeSelect from 'src/features/Linodes/LinodeSelect';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { privateIPRegex } from 'src/utilities/ipUtils';
-import type { Props as TextFieldProps } from 'src/components/TextField';
+import type { TextFieldProps } from 'src/components/TextField';
 
 interface ConfigNodeIPSelectProps {
   selectedRegion?: string;

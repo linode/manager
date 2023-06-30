@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CSVLink } from 'react-csv';
 import { SxProps } from '@mui/system';
 import type { ButtonType } from 'src/components/Button/Button';

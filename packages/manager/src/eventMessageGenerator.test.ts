@@ -141,5 +141,18 @@ describe('Event message generation', () => {
         'created entity <a href="/linodes/10">Weird label with special characters.(?)</a> '
       );
     });
+
+    it('should work when label is null', () => {
+      const mockEvent = eventFactory.build({
+        entity: entityFactory.build({
+          id: 10,
+          label: null,
+        }),
+      });
+      const message = 'created entity Null label';
+      const result = applyLinking(mockEvent, message);
+
+      expect(result).toEqual('created entity Null label');
+    });
   });
 });

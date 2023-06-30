@@ -1,4 +1,4 @@
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { IconButton } from 'src/components/IconButton';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { styled } from '@mui/material/styles';
