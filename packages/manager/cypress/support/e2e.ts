@@ -30,6 +30,9 @@ import './request-tracking';
 // Runs before each test file.
 before(() => {
   cy.defer(deleteAllTestData(), {
+    // Describe action in Cypress output.
+    label: 'Cleaning up test resources',
+
     // Make sure there's enough time to accommodate retries when necessary.
     timeout: 120000,
   });

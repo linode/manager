@@ -1,5 +1,6 @@
 import type { LinodeVisitOptions } from './login.ts';
 import type { CommonRequestMockOptions } from './intercepts/common';
+import { Labelable } from './commands';
 
 declare global {
   namespace Cypress {
@@ -21,7 +22,7 @@ declare global {
        */
       defer<T>(
         promise: Promise<T>,
-        options?: Partial<Cypress.Loggable & Cypress.Timeoutable>
+        options?: Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
       ): Chainable<>;
 
       //mockCommonRequests(options?: CommonRequestMockOptions | undefined): Chainable<>;

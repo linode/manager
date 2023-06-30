@@ -28,6 +28,13 @@ import 'cypress-axe';
 import './login';
 
 /**
+ * Describes an object which can contain a label.
+ */
+export interface Labelable {
+  label: string;
+}
+
+/**
  * Yields a Cypress Promise that can be used in place of the given Promise.
  *
  * @param promise - Promise with result to await.
@@ -37,11 +44,37 @@ import './login';
  */
 Cypress.Commands.add(
   'defer',
+  { prevSubject: false },
   <T>(
     promise: Promise<T>,
-    options?: Partial<Cypress.Loggable & Cypress.Timeoutable>
+    options?: Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
   ) => {
-    return cy.wrap<Promise<T>, T>(promise, options);
+    const commandLog = Cypress.log({
+      name: 'defer',
+      message: options?.label ?? 'Resolving Promise',
+      autoEnd: false,
+      end: false,
+    });
+
+    const wrapOptions = {
+      ...(options ?? {}),
+      log: false,
+    };
+
+    // Wraps the given promise in order to update Cypress's log on completion.
+    const wrapPromise = async (): Promise<T> => {
+      let result: T;
+      try {
+        result = await promise;
+      } catch (e) {
+        commandLog.end();
+        throw e;
+      }
+      commandLog.end();
+      return result;
+    };
+
+    return cy.wrap<Promise<T>, T>(wrapPromise(), wrapOptions);
   }
 );
 
