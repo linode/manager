@@ -47,19 +47,43 @@ Cypress.Commands.add(
   { prevSubject: false },
   <T>(
     promise: Promise<T>,
-    options?: Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
+    labelOrOptions?:
+      | string
+      | Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
   ) => {
+    // Gets the label that will used as the description for Cypress's log.
+    const commandLabel = (() => {
+      if (typeof labelOrOptions === 'string') {
+        return labelOrOptions;
+      }
+      return labelOrOptions?.label ?? 'waiting for promise';
+    })();
+
+    // Gets the options object that will be passed to `cy.wrap`.
+    const wrapOptions = (() => {
+      if (typeof labelOrOptions !== 'string') {
+        return {
+          ...(labelOrOptions ?? {}),
+          log: false,
+        };
+      }
+      return { log: false };
+    })();
+
+    const timeout = (() => {
+      if (typeof labelOrOptions !== 'string') {
+        return labelOrOptions?.timeout;
+      }
+      return undefined;
+    })();
+
     const commandLog = Cypress.log({
       name: 'defer',
-      message: options?.label ?? 'Resolving Promise',
+      message: commandLabel,
       autoEnd: false,
       end: false,
+      timeout,
     });
-
-    const wrapOptions = {
-      ...(options ?? {}),
-      log: false,
-    };
 
     // Wraps the given promise in order to update Cypress's log on completion.
     const wrapPromise = async (): Promise<T> => {
