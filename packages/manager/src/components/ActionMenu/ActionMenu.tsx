@@ -134,7 +134,8 @@ const ActionMenu = (props: Props) => {
       color: '#4d99f1',
     },
     padding: '0 0 0 8px',
-    '& svg': {
+    '& .MuiSvgIcon-root': {
+      fill: '#fff',
       height: '20px',
       width: '20px',
     },
