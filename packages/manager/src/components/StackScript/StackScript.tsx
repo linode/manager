@@ -6,7 +6,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Chip } from 'src/components/core/Chip';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { H1Header } from 'src/components/H1Header/H1Header';

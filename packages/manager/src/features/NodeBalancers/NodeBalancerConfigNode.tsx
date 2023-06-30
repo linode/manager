@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import MenuItem from 'src/components/core/MenuItem';
 import { TextField } from 'src/components/TextField';

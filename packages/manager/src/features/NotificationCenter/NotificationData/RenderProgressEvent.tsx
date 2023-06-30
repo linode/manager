@@ -1,7 +1,7 @@
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import { Duration } from 'luxon';
 import { Event } from '@linode/api-v4/lib/account/types';

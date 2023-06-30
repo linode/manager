@@ -15,7 +15,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { Box } from 'src/components/Box';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';

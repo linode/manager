@@ -1,7 +1,7 @@
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { decode } from 'he';
 import * as React from 'react';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import { styled } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';

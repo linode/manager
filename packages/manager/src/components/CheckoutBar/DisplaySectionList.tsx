@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Divider from '../core/Divider';
+import Divider from '../Divider';
 import { DisplaySection } from './DisplaySection';
 
 interface DisplaySectionListProps {

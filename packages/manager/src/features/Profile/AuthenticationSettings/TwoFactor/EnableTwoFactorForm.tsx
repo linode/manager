@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CircleProgress } from 'src/components/CircleProgress';

@@ -11,7 +11,7 @@ import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import { Button } from 'src/components/Button/Button';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import { Link } from 'react-router-dom';
 import {
   Box,
@@ -126,6 +126,12 @@ export const AddNewMenu = () => {
           // UX requested a drop shadow that didn't affect the button.
           // If we revise our theme's shadows, we could consider removing
           sx: { boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)' },
+        }}
+        sx={{
+          '& hr': {
+            marginTop: '0 !important',
+            marginBottom: '0 !important',
+          },
         }}
       >
         {links.map((link, i) => [

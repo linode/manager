@@ -2,7 +2,7 @@ import { Interface, Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CheckBox from 'src/components/CheckBox';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';

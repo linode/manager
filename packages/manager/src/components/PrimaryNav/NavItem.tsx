@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Divider from 'src/components/core/Divider';
+import Divider from 'src/components/Divider';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
 import Tooltip from 'src/components/core/Tooltip';
