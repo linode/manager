@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Divider from 'src/components/Divider';
+import { Divider } from 'src/components/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { Typography } from 'src/components/Typography';

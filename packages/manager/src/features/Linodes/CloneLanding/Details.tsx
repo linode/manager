@@ -2,7 +2,7 @@ import { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
-import Divider from 'src/components/Divider';
+import { Divider } from 'src/components/Divider';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
