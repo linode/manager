@@ -2,7 +2,7 @@ import countryData, { Region } from 'country-region-data';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { makeStyles } from 'tss-react/mui';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';

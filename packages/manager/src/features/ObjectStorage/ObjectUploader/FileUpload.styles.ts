@@ -1,7 +1,7 @@
 import type { Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import UploadPending from 'src/assets/icons/uploadPending.svg';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { rotate360 } from 'src/styles/keyframes';
 import { makeStyles } from 'tss-react/mui';
 import type { FileUploadProps } from './FileUpload';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableHead } from 'src/components/TableHead';

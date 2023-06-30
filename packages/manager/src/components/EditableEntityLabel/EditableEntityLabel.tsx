@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 import Grid from '@mui/material/Unstable_Grid2';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DisableTwoFactorDialog } from './DisableTwoFactorDialog';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { ScratchCodeDialog } from './ScratchCodeDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { EnableTwoFactorForm } from './EnableTwoFactorForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

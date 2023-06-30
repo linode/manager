@@ -121,7 +121,8 @@ describe('utilities', () => {
         label: 'Firewalllabel',
         addresses: 'All IPv4',
       };
-      expect(validateForm({ protocol: 'TCP', ports: '1', ...rest })).toEqual(
+      // SUCCESS CASES
+      expect(validateForm({ protocol: 'TCP', ports: '1234', ...rest })).toEqual(
         {}
       );
       expect(
@@ -134,28 +135,46 @@ describe('utilities', () => {
         {}
       );
       expect(
-        validateForm({ protocol: 'TCP', ports: 'abc', ...rest })
-      ).toHaveProperty(
-        'ports',
-        'Ports must be an integer, range of integers, or a comma-separated list of integers.'
-      );
-      expect(
-        validateForm({ protocol: 'TCP', ports: '1--20', ...rest })
-      ).toHaveProperty(
-        'ports',
-        'Ports must be an integer, range of integers, or a comma-separated list of integers.'
-      );
+        validateForm({
+          protocol: 'TCP',
+          ports: '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15',
+          ...rest,
+        })
+      ).toEqual({});
       expect(
         validateForm({ protocol: 'TCP', ports: '1-2,3-4', ...rest })
+      ).toEqual({});
+      expect(
+        validateForm({ protocol: 'TCP', ports: '1,5-12', ...rest })
+      ).toEqual({});
+      // FAILURE CASES
+      expect(
+        validateForm({ protocol: 'TCP', ports: '1,21-12', ...rest })
       ).toHaveProperty(
         'ports',
-        'Ports must be an integer, range of integers, or a comma-separated list of integers.'
+        'Range must start with a smaller number and end with a larger number'
       );
       expect(
+        validateForm({ protocol: 'TCP', ports: '1-21-45', ...rest })
+      ).toHaveProperty('ports', 'Ranges must have 2 values');
+      expect(
+        validateForm({ protocol: 'TCP', ports: 'abc', ...rest })
+      ).toHaveProperty('ports', 'Must be 1-65535');
+      expect(
+        validateForm({ protocol: 'TCP', ports: '1--20', ...rest })
+      ).toHaveProperty('ports', 'Must be 1-65535');
+      expect(
         validateForm({ protocol: 'TCP', ports: '-20', ...rest })
+      ).toHaveProperty('ports', 'Must be 1-65535');
+      expect(
+        validateForm({
+          protocol: 'TCP',
+          ports: '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16',
+          ...rest,
+        })
       ).toHaveProperty(
         'ports',
-        'Ports must be an integer, range of integers, or a comma-separated list of integers.'
+        'Number of ports or port range endpoints exceeded. Max allowed is 15'
       );
     });
     it('validates label', () => {

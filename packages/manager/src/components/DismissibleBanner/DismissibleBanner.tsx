@@ -5,7 +5,7 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 import type { NoticeProps } from 'src/components/Notice/Notice';
 import { Notice } from 'src/components/Notice/Notice';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import useDismissibleNotifications, {
   DismissibleNotificationOptions,
 } from 'src/hooks/useDismissibleNotifications';

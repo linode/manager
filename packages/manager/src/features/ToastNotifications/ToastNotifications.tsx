@@ -6,7 +6,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { events$ } from 'src/events';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';
@@ -139,7 +139,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               ),
             });
           case 'image_upload':
-            const isDeletion = event.message === 'Upload cancelled.';
+            const isDeletion = event.message === 'Upload canceled.';
             return toastSuccessAndFailure({
               enqueueSnackbar,
               eventStatus: event.status,
@@ -147,9 +147,10 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               successMessage: `Image ${label} is now available.`,
               failureMessage: isDeletion
                 ? undefined
-                : `There was a problem uploading image ${label}: ${event.message
-                    ?.replace('cancelled', 'canceled')
-                    .replace(/(\d+)/g, '$1 MB')}`,
+                : `There was a problem uploading image ${label}: ${event.message?.replace(
+                    /(\d+)/g,
+                    '$1 MB'
+                  )}`,
             });
           case 'image_delete':
             return toastSuccessAndFailure({

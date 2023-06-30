@@ -5,7 +5,7 @@ import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Box from '@mui/material/Box';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 

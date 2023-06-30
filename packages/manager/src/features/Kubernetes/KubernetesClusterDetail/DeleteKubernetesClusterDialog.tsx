@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Notice } from 'src/components/Notice/Notice';
 import { usePreferences } from 'src/queries/preferences';

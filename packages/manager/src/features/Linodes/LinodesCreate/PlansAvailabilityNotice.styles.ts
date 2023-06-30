@@ -1,5 +1,5 @@
 import List from 'src/components/core/List';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { styled } from '@mui/material/styles';
 import { TextTooltip } from 'src/components/TextTooltip';
 import type { Theme } from '@mui/material/styles';
