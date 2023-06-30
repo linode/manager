@@ -104,7 +104,10 @@ export const MigrateLinode = React.memo((props: Props) => {
 
   const { resetEventsPolling } = useEventsInfiniteQuery({ enabled: false });
 
-  const recentEvent = useRecentEventForLinode(linodeId ?? -1);
+  const recentEvent = useRecentEventForLinode(
+    linodeId ?? -1,
+    linodeId !== undefined
+  );
 
   const {
     mutateAsync: migrateLinode,

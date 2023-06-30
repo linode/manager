@@ -215,7 +215,10 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
 
   const classes = useStyles();
 
-  const recentEvent = useRecentEventForLinode(instanceId ?? -1);
+  const recentEvent = useRecentEventForLinode(
+    instanceId ?? -1,
+    instanceId !== undefined
+  );
 
   const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
 

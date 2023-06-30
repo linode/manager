@@ -21,16 +21,17 @@ const unwantedEvents: EventAction[] = [
 ];
 
 export const useEventNotifications = () => {
-  const { data: eventsData } = useEventsInfiniteQuery();
-  const events = removeBlocklistedEvents(
-    eventsData?.pages
-      .reduce((events, page) => [...events, ...page.data], [])
-      .slice(0, 25),
+  const { events } = useEventsInfiniteQuery();
+  const filteredEvents = removeBlocklistedEvents(
+    events?.slice(0, 25),
     unwantedEvents
   );
   const notificationContext = React.useContext(_notificationContext);
 
-  const [inProgress, completed] = partition<Event>(isInProgressEvent, events);
+  const [inProgress, completed] = partition<Event>(
+    isInProgressEvent,
+    filteredEvents
+  );
 
   const allEvents = [
     ...inProgress.map((thisEvent) =>

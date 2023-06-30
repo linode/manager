@@ -5,27 +5,15 @@ import {
   isInProgressEvent,
 } from 'src/utilities/eventUtils';
 
-export const useRecentEventForLinode = (linodeId: number) => {
-  const { data: eventsData } = useEventsInfiniteQuery({
-    filter: {
-      'entity.type': 'linode',
-      'entity.id': linodeId,
-    },
-  });
+export const useRecentEventForLinode = (linodeId: number, enabled = true) => {
+  const { events } = useEventsInfiniteQuery({ enabled });
 
-  const pages = eventsData?.pages;
-
-  return React.useMemo(() => {
-    for (const page of pages ?? []) {
-      for (const event of page.data) {
-        if (
-          isInProgressEvent(event) &&
-          isEventRelevantToLinode(event, linodeId)
-        ) {
-          return event;
-        }
-      }
-    }
-    return undefined;
-  }, [pages, linodeId]);
+  return React.useMemo(
+    () =>
+      events.find(
+        (event) =>
+          isInProgressEvent(event) && isEventRelevantToLinode(event, linodeId)
+      ),
+    [events, linodeId]
+  );
 };
