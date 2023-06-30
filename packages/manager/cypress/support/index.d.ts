@@ -22,7 +22,9 @@ declare global {
        */
       defer<T>(
         promise: Promise<T>,
-        options?: Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
+        labelOrOptions?:
+          | string
+          | Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
       ): Chainable<>;
 
       //mockCommonRequests(options?: CommonRequestMockOptions | undefined): Chainable<>;
