@@ -8,7 +8,7 @@ import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
 const LinodesLanding = React.lazy(
   () => import('./LinodesLanding/LinodesLanding')
 );
-const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
+const LinodesDetail = React.lazy(() => import('./LinodesDetail/LinodesDetail'));
 const LinodesCreate = React.lazy(
   () => import('./LinodesCreate/LinodeCreateContainer')
 );

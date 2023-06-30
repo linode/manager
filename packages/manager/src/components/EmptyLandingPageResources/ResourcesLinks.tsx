@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';

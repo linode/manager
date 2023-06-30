@@ -1,6 +1,6 @@
 import * as React from 'react';
 import RenderNotification from './RenderNotification';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';

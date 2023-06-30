@@ -1,4 +1,4 @@
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import { makeStyles } from 'tss-react/mui';
 import { styled } from '@mui/material/styles';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import Paginate from 'src/components/Paginate';
 import { BucketTableRow } from './BucketTableRow';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';

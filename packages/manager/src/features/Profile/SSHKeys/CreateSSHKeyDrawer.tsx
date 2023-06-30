@@ -1,13 +1,13 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Code } from 'src/components/Code/Code';
+import { Link } from 'src/components/Link';
 import { useCreateSSHKeyMutation } from 'src/queries/profile';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';

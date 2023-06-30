@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
 import { PlanSelection, PlanSelectionType } from './PlanSelection';
 import { StyledTableCell, StyledTable } from './PlanContainer.styles';

@@ -11,7 +11,7 @@ import { TableBody } from 'src/components/TableBody';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { usePagination } from 'src/hooks/usePagination';
 import { createDisplayPage } from 'src/components/Paginate';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 export const entityNameMap: Record<GrantType, string> = {
   linode: 'Linodes',

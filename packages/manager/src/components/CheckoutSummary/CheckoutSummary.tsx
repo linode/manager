@@ -3,8 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import Paper from '../core/Paper';
-
-import Typography from '../core/Typography';
+import { Typography } from '../Typography';
 import Grid from '../Grid';
 import { SummaryItem } from './SummaryItem';
 

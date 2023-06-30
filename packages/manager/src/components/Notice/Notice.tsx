@@ -6,7 +6,7 @@ import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
+import { Typography, TypographyProps } from 'src/components/Typography';
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles<

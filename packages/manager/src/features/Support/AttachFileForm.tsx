@@ -2,7 +2,7 @@ import AttachFile from '@mui/icons-material/AttachFile';
 import { equals, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import AttachFileListItem from './AttachFileListItem';
