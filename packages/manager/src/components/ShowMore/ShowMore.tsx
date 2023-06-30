@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Chip, ChipProps } from 'src/components/core/Chip';
+import { Chip, ChipProps } from 'src/components/Chip';
 import Popover from '@mui/material/Popover';
 import { styled, useTheme } from '@mui/material/styles';
 

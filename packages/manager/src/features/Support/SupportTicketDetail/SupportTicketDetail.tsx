@@ -3,7 +3,7 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Chip } from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';

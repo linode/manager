@@ -3,7 +3,7 @@ import Alarm from '@mui/icons-material/Alarm';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import DE from 'flag-icons/flags/4x3/de.svg';
 import US from 'flag-icons/flags/4x3/us.svg';
-import { Chip } from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import { SelectionCard } from './SelectionCard';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { SelectionCardProps } from './SelectionCard';

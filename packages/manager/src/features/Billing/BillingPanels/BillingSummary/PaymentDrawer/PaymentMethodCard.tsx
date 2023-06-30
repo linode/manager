@@ -1,6 +1,6 @@
 import { PaymentMethod, PaymentType } from '@linode/api-v4';
 import * as React from 'react';
-import { Chip } from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   getIcon as getTPPIcon,
