@@ -1,6 +1,6 @@
 import React from 'react';
-import { Chip } from 'src/components/core/Chip';
-import type { ChipProps } from './core/Chip';
+import { Chip } from './Chip';
+import type { ChipProps } from './Chip';
 import type { Meta, StoryObj } from '@storybook/react';
 
 export const Default: StoryObj<ChipProps> = {

@@ -6,7 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import MenuItem from 'src/components/core/MenuItem';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { Chip } from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { NodeBalancerConfigNodeFields } from './types';
