@@ -83,9 +83,6 @@ describe('object storage access keys smoke tests', () => {
    * - Confirms access key is no longer listed in table.
    */
   it('can revoke access key - smoke', () => {
-    const keyId = randomNumber(1, 99999);
-    const keyLabel = randomLabel();
-
     const accessKey = objectStorageKeyFactory.build({
       label: randomLabel(),
       id: randomNumber(1, 99999),
@@ -95,21 +92,21 @@ describe('object storage access keys smoke tests', () => {
 
     // Mock initial GET request to include an access key.
     mockGetAccessKeys([accessKey]).as('getKeys');
-    mockDeleteAccessKey(keyId).as('deleteKey');
+    mockDeleteAccessKey(accessKey.id).as('deleteKey');
 
     cy.visitWithLogin('/object-storage/access-keys');
     cy.wait('@getKeys');
 
     cy.findByLabelText('List of Object Storage Access Keys').within(() => {
-      cy.findByText(keyLabel).should('be.visible');
-      cy.findByText(accessKey).should('be.visible');
+      cy.findByText(accessKey.label).should('be.visible');
+      cy.findByText(accessKey.access_key).should('be.visible');
       cy.findByText('Revoke').should('be.visible').click();
     });
 
     // Mock next GET request to respond with no data to reflect key revocation.
     mockGetAccessKeys([]).as('getKeys');
 
-    ui.dialog.findByTitle(`Revoking ${keyLabel}`).within(() => {
+    ui.dialog.findByTitle(`Revoking ${accessKey.label}`).within(() => {
       ui.buttonGroup
         .findButtonByTitle('Revoke')
         .should('be.visible')
