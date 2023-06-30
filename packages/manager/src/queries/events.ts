@@ -35,6 +35,11 @@ const infiniteEventsQueryKey = (filter: Filter | undefined = {}) => [
   'infinite',
   ...(filter ? [filter] : []),
 ];
+const pageZeroQueryKey = (infiniteEventsQueryKey: QueryKey) => [
+  queryKey,
+  'pageZero',
+  infiniteEventsQueryKey,
+];
 
 export interface EventsQueryOptions {
   enabled?: boolean;
@@ -91,21 +96,57 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
     }
   );
 
+  // Pages start from the first fetched event, so new
+  // events don't offset subsequent pages
+  const firstEventCreated = queryClient.getQueryData<
+    InfiniteData<ResourcePage<Event>>
+  >(queryKey)?.pages[0]?.data[0]?.created;
+
   const queryResult = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     queryKey,
-    ({ pageParam }) => getEvents({ page: pageParam, page_size: 25 }, filter),
+    ({ pageParam }) =>
+      getEvents(
+        { page: pageParam, page_size: 25 },
+        {
+          created: { '+lte': firstEventCreated },
+          ...filter,
+        }
+      ),
     {
       getNextPageParam: ({ page, pages }) =>
         page < pages ? page + 1 : undefined,
     }
   );
 
+  // Prepend page zero
+  const pageZeroEvents = queryClient.getQueryData<Event[]>(
+    pageZeroQueryKey(queryKey)
+  );
+
+  const pageZero = pageZeroEvents
+    ? {
+        data: pageZeroEvents,
+        page: 0,
+        pages: queryResult.data?.pages.length ?? 0,
+        results: pageZeroEvents?.length,
+      }
+    : undefined;
+
+  const data = {
+    pages: [
+      ...(pageZero ? [pageZero] : []),
+      ...(queryResult.data?.pages ?? []),
+    ],
+    pageParams: [
+      ...(pageZeroEvents ? [0] : []),
+      ...(queryResult.data?.pageParams ?? []),
+    ],
+  };
+
   return {
     ...queryResult,
-    events: queryResult.data?.pages.reduce(
-      (events, page) => [...events, ...page.data],
-      []
-    ),
+    data,
+    events: data.pages.reduce((events, page) => [...events, ...page.data], []),
     resetEventsPolling: () => {
       resetNewEventsPolling();
       resetInProgressEventsPolling();
@@ -185,9 +226,27 @@ const updateEventsCache = (
         eventsCache
       );
     } else {
-      queryClient.resetQueries(queryKey);
+      addEventToPageZero(queryClient, pageZeroQueryKey(queryKey), event);
     }
   }
+};
+
+// Add new events to a 'page zero' so we don't
+// offset the sequence of events in subsequently
+// fetched pages
+const addEventToPageZero = (
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  event: Event
+) => {
+  const pageZero = queryClient.getQueryData<Event[]>(queryKey) ?? [];
+  const eventIdx = pageZero.findIndex((thisEvent) => thisEvent.id == event.id);
+  if (eventIdx >= 0) {
+    pageZero[eventIdx] = event;
+  } else {
+    pageZero.unshift(event);
+  }
+  queryClient.setQueryData<Event[]>(queryKey, pageZero);
 };
 
 type EventLocation = { pageIdx: number; eventIdx: number };
