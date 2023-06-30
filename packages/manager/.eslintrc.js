@@ -181,6 +181,7 @@ module.exports = {
           },
           value: {
             lodash: 'lodash',
+            ramda: 'ramda',
             react: ['react', 'react-*'],
           },
         },
@@ -189,6 +190,7 @@ module.exports = {
           'internal-type',
           ['parent-type', 'sibling-type', 'index-type'],
           'react',
+          'ramda',
           [('builtin', 'external')],
           'internal',
           ['parent', 'sibling', 'index'],
