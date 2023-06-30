@@ -1,18 +1,22 @@
 import type {
+  FirewallRuleDrawerProps,
+  FormState,
+} from './FirewallRuleDrawer.types';
+import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import type {
-  FirewallRuleDrawerProps,
-  FormState,
-} from './FirewallRuleDrawer.types';
+
 import * as React from 'react';
+
 import { Formik } from 'formik';
+
 import Drawer from 'src/components/Drawer';
 import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
+
 import {
   formValueToIPs,
   getInitialFormValues,

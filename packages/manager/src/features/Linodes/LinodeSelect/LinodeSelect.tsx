@@ -1,7 +1,10 @@
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { Region } from '@linode/api-v4/lib/regions';
+
 import * as React from 'react';
+
 import { groupBy } from 'ramda';
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
+
 import EnhancedSelect, {
   GroupType,
   Item,

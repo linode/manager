@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import MUIDialog from 'src/components/core/Dialog';
+
 import useAccountManagement from './hooks/useAccountManagement';
 import useFlags from './hooks/useFlags';
 
