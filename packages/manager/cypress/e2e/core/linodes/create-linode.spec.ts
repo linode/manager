@@ -33,7 +33,7 @@ describe('create linode', () => {
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
   });
 
-  it.only('creates a linode via CLI', () => {
+  it('creates a linode via CLI', () => {
     const linodeLabel = randomLabel();
     const linodePass = randomString(32);
     const linodeRegion = chooseRegion();
