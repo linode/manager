@@ -239,10 +239,15 @@ export const BillingActivityPanel = (props: Props) => {
       pdfLoading.add(id);
 
       getAllInvoiceItems(invoiceId)
-        .then((invoiceItems) => {
+        .then(async (invoiceItems) => {
           pdfLoading.delete(id);
 
-          const result = printInvoice(account!, invoice, invoiceItems, taxes);
+          const result = await printInvoice(
+            account!,
+            invoice,
+            invoiceItems,
+            taxes
+          );
 
           if (result.status === 'error') {
             pdfErrors.add(id);

@@ -44,6 +44,9 @@ const StyledButton = styled(_Button, {
   shouldForwardProp: (prop) =>
     isPropValid(['compactX', 'compactY', 'loading', 'buttonType'], prop),
 })<ButtonProps>(({ theme, ...props }) => ({
+  ...(props.buttonType === 'secondary' && {
+    color: theme.textColors.linkActiveLight,
+  }),
   ...(props.compactX && {
     minWidth: 50,
     paddingRight: 0,

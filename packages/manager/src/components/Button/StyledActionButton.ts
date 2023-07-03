@@ -18,6 +18,6 @@ export const StyledActionButton = styled(Button, {
   padding: '12px 10px',
   '&:hover': {
     backgroundColor: theme.palette.primary.main,
-    color: theme.color.white,
+    color: theme.name === 'dark' ? theme.color.black : theme.color.white,
   },
 }));
