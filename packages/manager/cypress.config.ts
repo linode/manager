@@ -10,6 +10,7 @@ import { regionOverrideCheck } from './cypress/support/plugins/region-override-c
 import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
 import { oauthTokenCheck } from './cypress/support/plugins/oauth-token-check';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
+import { splitCypressRun } from './cypress/support/plugins/split-run';
 
 /**
  * Exports a Cypress configuration object.
@@ -56,6 +57,7 @@ export default defineConfig({
         discardPassedTestRecordings,
         fetchLinodeRegions,
         regionOverrideCheck,
+        splitCypressRun,
       ]);
     },
   },
