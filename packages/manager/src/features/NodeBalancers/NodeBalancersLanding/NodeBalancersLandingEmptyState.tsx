@@ -4,7 +4,7 @@ import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { styled } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 export const NodeBalancerLandingEmptyState = () => {

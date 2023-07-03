@@ -88,7 +88,7 @@ let cachedGetProfile = {};
 
 // Fetch and cache real profile object.
 beforeEach(() => {
-  cy.defer(getProfile()).then((profile: Profile) => {
+  cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
     cachedGetProfile = profile;
   });
 });

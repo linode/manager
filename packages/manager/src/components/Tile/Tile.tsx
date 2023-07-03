@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import { Link } from 'src/components/Link';
 import { makeStyles } from 'tss-react/mui';
+import { Notice } from 'src/components/Notice/Notice';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
-import Link from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 
 const useStyles = makeStyles<void, 'icon' | 'buttonTitle'>()(
   (theme: Theme, _params, classes) => ({
