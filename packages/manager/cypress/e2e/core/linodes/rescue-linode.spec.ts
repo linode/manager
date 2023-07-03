@@ -49,7 +49,7 @@ describe('Rescue Linodes', () => {
    * - Confirms that toast appears confirming successful reboot into rescue mode.
    */
   it('Can reboot a Linode into rescue mode', () => {
-    cy.wrap<Promise<Linode>, Linode>(createAndBootLinode()).then(
+    cy.defer(createAndBootLinode(), 'creating and booting Linode').then(
       (linode: Linode) => {
         // mock 200 response
         interceptGetLinodeDetails(linode.id).as('getLinode');
@@ -89,7 +89,7 @@ describe('Rescue Linodes', () => {
       region: chooseRegion().id,
     });
 
-    cy.wrap<Promise<Linode>, Linode>(createLinode(linodeRequest)).then(
+    cy.defer(createLinode(linodeRequest), 'creating Linode').then(
       (linode: Linode) => {
         interceptGetLinodeDetails(linode.id).as('getLinode');
         interceptRebootLinodeIntoRescueMode(linode.id).as(
