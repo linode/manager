@@ -147,9 +147,9 @@ export const TPAProviders = (props: Props) => {
             </StyledCopy>
             <StyledCopy variant="body1" style={{ marginBottom: 8 }}>
               To disable {currentProvider.displayName} authentication and log in
-              using your Linode credentials, click the Linode button above.
-              We&rsquo;ll send you an e-mail with instructions on how to reset
-              your password.
+              using your Cloud Manager credentials, click the Cloud Manager
+              button above. We&rsquo;ll send you an e-mail with instructions on
+              how to reset your password.
             </StyledCopy>
           </div>
         ) : null}
