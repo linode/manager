@@ -88,7 +88,6 @@ const FirewallLinodesLanding = (props: Props) => {
             buttonType="primary"
             disabled={disabled}
             onClick={() => setDeviceDrawerOpen(true)}
-            compactX
           >
             Add Linodes to Firewall
           </Button>

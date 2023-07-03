@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Action } from 'src/components/ActionMenu';
 import { makeStyles } from '@mui/styles';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles(() => ({
   root: {
