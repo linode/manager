@@ -1,7 +1,7 @@
 import * as React from 'react';
-import DisableTwoFactorDialog from './DisableTwoFactorDialog';
+import { DisableTwoFactorDialog } from './DisableTwoFactorDialog';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import ScratchDialog from './ScratchCodeDialog';
+import { ScratchCodeDialog } from './ScratchCodeDialog';
 import { Typography } from 'src/components/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { EnableTwoFactorForm } from './EnableTwoFactorForm';
@@ -71,8 +71,6 @@ export const TwoFactor = (props: TwoFactorProps) => {
    * success when TFA is disabled
    */
   const handleDisableSuccess = () => {
-    // Refetch Profile with React Query so profile is up to date
-    queryClient.invalidateQueries(queryKey);
     setErrors(undefined);
     setSuccess('Two-factor authentication has been disabled.');
     setTwoFactorEnabled(false);
@@ -227,15 +225,15 @@ export const TwoFactor = (props: TwoFactorProps) => {
             />
           )}
       </StyledRootContainer>
-      <ScratchDialog
+      <ScratchCodeDialog
         open={scratchDialogOpen}
-        closeDialog={toggleScratchDialog}
+        onClose={toggleScratchDialog}
         scratchCode={scratchCode}
       />
       <DisableTwoFactorDialog
         onSuccess={handleDisableSuccess}
         open={disable2FAOpen}
-        closeDialog={toggleDisable2FA}
+        onClose={toggleDisable2FA}
       />
     </React.Fragment>
   );

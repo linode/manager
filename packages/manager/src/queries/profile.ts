@@ -16,6 +16,7 @@ import {
   getTrustedDevices,
   TrustedDevice,
   deleteTrustedDevice,
+  disableTwoFactor,
 } from '@linode/api-v4/lib/profile';
 import {
   QueryClient,
@@ -167,6 +168,15 @@ export const useRevokeTrustedDeviceMutation = (id: number) => {
   return useMutation<{}, APIError[]>(() => deleteTrustedDevice(id), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'trusted-devices']);
+    },
+  });
+};
+
+export const useDisableTwoFactorMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>(disableTwoFactor, {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey]);
     },
   });
 };

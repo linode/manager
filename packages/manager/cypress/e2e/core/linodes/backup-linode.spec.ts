@@ -13,7 +13,6 @@ import { apiMatcher } from 'support/util/intercepts';
 describe('linode backups', () => {
   it('enable backups', () => {
     createLinode().then((linode) => {
-      cy.visitWithLogin(`/dashboard`);
       // intercept request
       cy.intercept(
         'POST',
@@ -21,7 +20,7 @@ describe('linode backups', () => {
       ).as('enableBackups');
       // intercept response
       cy.intercept(apiMatcher('account/settings')).as('getSettings');
-      cy.visit(`/linodes/${linode.id}/backup`);
+      cy.visitWithLogin(`/linodes/${linode.id}/backup`);
       // if account is managed, test will pass but skip enabling backups
       containsVisible(`${linode.label}`);
       cy.wait('@getSettings').then((xhr) => {
@@ -48,14 +47,14 @@ describe('linode backups', () => {
   });
 
   it('create linode from snapshot', () => {
-    cy.visitWithLogin('/dashboard');
     createLinode({ backups_enabled: true }).then((linode) => {
-      cy.visit(`/linodes/${linode.id}/backup`);
-      // intercept request
       cy.intercept(
         'POST',
         apiMatcher(`linode/instances/${linode.id}/backups`)
       ).as('enableBackups');
+      cy.visitWithLogin(`/linodes/${linode.id}/backup`);
+      // intercept request
+
       fbtVisible(`${linode.label}`);
       if (
         // TODO Resolve potential flake.
@@ -77,7 +76,6 @@ describe('linode backups', () => {
 
   // this test has become irrelevant for now
   it.skip('cant snapshot while booting linode', () => {
-    cy.visitWithLogin('/dashboard');
     createLinode({ backups_enabled: true }).then((linode) => {
       cy.visit(`/linodes/${linode.id}/backup`);
       fbtClick('Take Snapshot');

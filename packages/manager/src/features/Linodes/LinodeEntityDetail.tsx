@@ -17,7 +17,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableRow } from 'src/components/TableRow';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Box } from 'src/components/Box';
-import { Chip } from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import { Typography, TypographyProps } from 'src/components/Typography';
 import { Hidden } from 'src/components/Hidden';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
