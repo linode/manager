@@ -16,7 +16,12 @@ import {
   INTERVAL,
   ISO_DATETIME_NO_TZ_FORMAT,
 } from 'src/constants';
-import { isInProgressEvent, mostRecentCreated } from 'src/utilities/eventUtils';
+import { parseAPIDate } from 'src/utilities/date';
+import {
+  isInProgressEvent,
+  isLongPendingEvent,
+  mostRecentCreated,
+} from 'src/utilities/eventUtils';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 
 const queryKey = 'events';
@@ -154,13 +159,12 @@ const useEventsPolling = (
   customFilter: Filter = {}
 ) => {
   const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
-  const [mostRecentEventTime, setMostRecentEventTime] = React.useState(
-    Date.now
-  );
 
-  const { data: prevEvents } = useQuery<Event[]>(
-    eventsPollingQueryKey(customFilter)
-  );
+  // This solves the 'split-second' problem:
+  // We overlap the filter by 1 second to avoid missing events that occurred just after we polled (during the same second).
+  // We keep track of the latest completed events and specifically filter them out to avoid duplication.
+  const [latestEventTime, setLatestEventTime] = React.useState(Date.now);
+  const [ignoreEvents, setIgnoreEvents] = React.useState<Event[]>();
 
   useQuery<Event[], APIError[]>(
     eventsPollingQueryKey(customFilter),
@@ -168,11 +172,11 @@ const useEventsPolling = (
       getEvents(
         undefined,
         generatePollingFilter(
-          DateTime.fromMillis(mostRecentEventTime, { zone: 'utc' }).toFormat(
+          DateTime.fromMillis(latestEventTime, { zone: 'utc' }).toFormat(
             ISO_DATETIME_NO_TZ_FORMAT
           ),
           inProgressEvents.map((event) => event.id),
-          prevEvents?.map((event) => event.id)
+          ignoreEvents?.map((event) => event.id)
         )
       ).then((response) => response.data),
     {
@@ -185,9 +189,21 @@ const useEventsPolling = (
       refetchOnWindowFocus: false,
       onSuccess: (events) => {
         setIntervalMultiplier(Math.min(intervalMultiplier + 1, 16));
-        setMostRecentEventTime(
-          events.reduce(mostRecentCreated, mostRecentEventTime)
+        const newLatestEventTime = events.reduce(
+          mostRecentCreated,
+          latestEventTime
         );
+
+        setLatestEventTime(newLatestEventTime);
+        setIgnoreEvents(
+          [...(ignoreEvents ?? []), ...events].filter(
+            (event) =>
+              parseAPIDate(event.created).valueOf() === newLatestEventTime &&
+              !isInProgressEvent(event) &&
+              !isLongPendingEvent(event)
+          )
+        );
+
         events.reverse().forEach(eventHandler);
       },
     }
