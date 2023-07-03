@@ -1,8 +1,8 @@
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 interface Props {
   className?: string;

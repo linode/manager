@@ -70,7 +70,7 @@ describe('create firewall', () => {
       label: randomLabel(),
     };
 
-    cy.defer(createLinode(linodeRequest)).then((linode) => {
+    cy.defer(createLinode(linodeRequest), 'creating Linode').then((linode) => {
       interceptCreateFirewall().as('createFirewall');
       cy.visitWithLogin('/firewalls/create');
 

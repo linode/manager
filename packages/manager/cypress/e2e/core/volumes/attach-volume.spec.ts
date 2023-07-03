@@ -66,66 +66,14 @@ describe('volume attach and detach flows', () => {
       createLinode(linodeRequest),
     ]);
 
-    cy.defer(entityPromise).then(([volume, linode]: [Volume, Linode]) => {
-      interceptAttachVolume(volume.id).as('attachVolume');
-      cy.visitWithLogin('/volumes', {
-        localStorageOverrides: pageSizeOverride,
-      });
-
-      // Confirm that volume is listed, initiate attachment.
-      cy.findByText(volume.label)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          cy.findByLabelText(`Action menu for Volume ${volume.label}`).click();
-        });
-
-      cy.get('[data-qa-action-menu-item="Attach"]:visible')
-        .should('be.visible')
-        .click();
-
-      // Input Linode label and submit.
-      cy.get(`[data-qa-drawer-title="Attach Volume ${volume.label}"]`)
-        .closest('[data-qa-drawer="true"]')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText('Select a Linode')
-            .click()
-            .type(`${linode.label}{enter}`);
-          cy.findByTestId('input-loading').should('not.exist');
-          cy.get('[data-qa-buttons="true"]').within(() => {
-            cy.findByText('Attach').should('be.visible').click();
-          });
-        });
-
-      // Confirm that volume has been attached to Linode.
-      cy.wait('@attachVolume').its('response.statusCode').should('eq', 200);
-      ui.toast.assertMessage(`Volume ${volume.label} successfully attached.`);
-      cy.findByText(volume.label)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          cy.findByText(linode.label).should('be.visible');
-        });
-    });
-  });
-
-  // TODO Unskip once volume detach issue is resolved.
-  /*
-   * - Clicks "Detach" action menu item for volume.
-   * - Confirms that volume detach toast appears and that Linode is no longer listed as attached for Volume.
-   */
-  it.skip('detaches a volume from a Linode', () => {
-    cy.defer(createLinodeAndAttachVolume()).then(
-      ([linode, volume]: [Linode, Volume]) => {
-        interceptDetachVolume(volume.id).as('detachVolume');
-
-        // @TODO Wait for Linode to finish provisioning before initiating detach.
+    cy.defer(entityPromise, 'creating Volume and Linode').then(
+      ([volume, linode]: [Volume, Linode]) => {
+        interceptAttachVolume(volume.id).as('attachVolume');
         cy.visitWithLogin('/volumes', {
           localStorageOverrides: pageSizeOverride,
         });
 
-        // Confirm that volume is listed, initiate detachment.
+        // Confirm that volume is listed, initiate attachment.
         cy.findByText(volume.label)
           .should('be.visible')
           .closest('tr')
@@ -135,30 +83,85 @@ describe('volume attach and detach flows', () => {
             ).click();
           });
 
-        cy.get('[data-qa-action-menu-item="Detach"]:visible')
+        cy.get('[data-qa-action-menu-item="Attach"]:visible')
           .should('be.visible')
           .click();
 
-        cy.findByText(`Detach Volume ${volume.label}?`)
+        // Input Linode label and submit.
+        cy.get(`[data-qa-drawer-title="Attach Volume ${volume.label}"]`)
+          .closest('[data-qa-drawer="true"]')
           .should('be.visible')
-          .closest('[role="dialog"]')
           .within(() => {
-            cy.findByText('Detach Volume').should('be.visible').click();
+            cy.findByText('Select a Linode')
+              .click()
+              .type(`${linode.label}{enter}`);
+            cy.findByTestId('input-loading').should('not.exist');
+            cy.get('[data-qa-buttons="true"]').within(() => {
+              cy.findByText('Attach').should('be.visible').click();
+            });
           });
 
-        // Confirm that volume has been detached.
-        cy.wait('@detachVolume').its('response.statusCode').should('eq', 200);
-        // @TODO Improve toast check.
-        cy.findByText(`Volume ${volume.label} successfully detached.`);
+        // Confirm that volume has been attached to Linode.
+        cy.wait('@attachVolume').its('response.statusCode').should('eq', 200);
+        ui.toast.assertMessage(`Volume ${volume.label} successfully attached.`);
         cy.findByText(volume.label)
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('Unattached').should('be.visible');
-            cy.findByText(linode.label).should('not.exist');
+            cy.findByText(linode.label).should('be.visible');
           });
       }
     );
+  });
+
+  // TODO Unskip once volume detach issue is resolved.
+  /*
+   * - Clicks "Detach" action menu item for volume.
+   * - Confirms that volume detach toast appears and that Linode is no longer listed as attached for Volume.
+   */
+  it.skip('detaches a volume from a Linode', () => {
+    cy.defer(
+      createLinodeAndAttachVolume(),
+      'creating attached Volume and Linode'
+    ).then(([linode, volume]: [Linode, Volume]) => {
+      interceptDetachVolume(volume.id).as('detachVolume');
+
+      // @TODO Wait for Linode to finish provisioning before initiating detach.
+      cy.visitWithLogin('/volumes', {
+        localStorageOverrides: pageSizeOverride,
+      });
+
+      // Confirm that volume is listed, initiate detachment.
+      cy.findByText(volume.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByLabelText(`Action menu for Volume ${volume.label}`).click();
+        });
+
+      cy.get('[data-qa-action-menu-item="Detach"]:visible')
+        .should('be.visible')
+        .click();
+
+      cy.findByText(`Detach Volume ${volume.label}?`)
+        .should('be.visible')
+        .closest('[role="dialog"]')
+        .within(() => {
+          cy.findByText('Detach Volume').should('be.visible').click();
+        });
+
+      // Confirm that volume has been detached.
+      cy.wait('@detachVolume').its('response.statusCode').should('eq', 200);
+      // @TODO Improve toast check.
+      cy.findByText(`Volume ${volume.label} successfully detached.`);
+      cy.findByText(volume.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Unattached').should('be.visible');
+          cy.findByText(linode.label).should('not.exist');
+        });
+    });
   });
 
   // TODO Unskip once volume detach issue is resolved.
@@ -168,51 +171,52 @@ describe('volume attach and detach flows', () => {
    * - Confirms that Linode is no longer listed as attached to Volume on Volumes landing page.
    */
   it.skip('detaches a volume from a Linode via Linode details page', () => {
-    cy.defer(createLinodeAndAttachVolume()).then(
-      ([linode, volume]: [Linode, Volume]) => {
-        // Wait for Linode to finish provisioning and booting.
-        cy.visitWithLogin(`/linodes/${linode.id}/storage`);
-        cy.get('[data-qa-linode-status="true"]').within(() => {
-          cy.findByText('RUNNING').should('be.visible');
-        });
+    cy.defer(
+      createLinodeAndAttachVolume(),
+      'creating attached Volume and Linode'
+    ).then(([linode, volume]: [Linode, Volume]) => {
+      // Wait for Linode to finish provisioning and booting.
+      cy.visitWithLogin(`/linodes/${linode.id}/storage`);
+      cy.get('[data-qa-linode-status="true"]').within(() => {
+        cy.findByText('RUNNING').should('be.visible');
+      });
 
-        // Confirm that Volume is listed on Linode details page and initiate detachment.
-        cy.findByLabelText('List of volume').within(() => {
-          cy.findByText(volume.label)
-            .closest('tr')
-            .within(() => {
-              cy.findByLabelText(`Action menu for Volume ${volume.label}`)
-                .should('be.visible')
-                .click();
-            });
-        });
-
-        cy.get('[data-qa-action-menu-item="Detach"]:visible')
-          .should('be.visible')
-          .click();
-
-        cy.findByText(`Detach Volume ${volume.label}?`)
-          .should('be.visible')
-          .closest('[role="dialog"]')
-          .within(() => {
-            cy.findByText('Detach Volume').should('be.visible').click();
-          });
-
-        // Confirm that Volume is no longer listed on Linode details page.
-        cy.findByLabelText('List of volume').within(() => {
-          cy.findByText(volume.label).should('not.exist');
-        });
-
-        // Confirm that Volume is no longer shown as attached on Volumes landing page.
-        cy.visitWithLogin('/volumes');
+      // Confirm that Volume is listed on Linode details page and initiate detachment.
+      cy.findByLabelText('List of volume').within(() => {
         cy.findByText(volume.label)
-          .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('Unattached').should('be.visible');
-            cy.findByText(linode.label).should('not.to.exist');
+            cy.findByLabelText(`Action menu for Volume ${volume.label}`)
+              .should('be.visible')
+              .click();
           });
-      }
-    );
+      });
+
+      cy.get('[data-qa-action-menu-item="Detach"]:visible')
+        .should('be.visible')
+        .click();
+
+      cy.findByText(`Detach Volume ${volume.label}?`)
+        .should('be.visible')
+        .closest('[role="dialog"]')
+        .within(() => {
+          cy.findByText('Detach Volume').should('be.visible').click();
+        });
+
+      // Confirm that Volume is no longer listed on Linode details page.
+      cy.findByLabelText('List of volume').within(() => {
+        cy.findByText(volume.label).should('not.exist');
+      });
+
+      // Confirm that Volume is no longer shown as attached on Volumes landing page.
+      cy.visitWithLogin('/volumes');
+      cy.findByText(volume.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Unattached').should('be.visible');
+          cy.findByText(linode.label).should('not.to.exist');
+        });
+    });
   });
 });

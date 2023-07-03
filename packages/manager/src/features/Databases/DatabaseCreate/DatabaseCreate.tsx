@@ -33,7 +33,7 @@ import { RegionOption } from 'src/components/EnhancedSelect/variants/RegionSelec
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Grid from '@mui/material/Unstable_Grid2';
 import LandingHeader from 'src/components/LandingHeader';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';

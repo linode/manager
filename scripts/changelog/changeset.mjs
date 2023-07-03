@@ -5,7 +5,6 @@ import { getPullRequestId } from "./utils/getPullRequestId.mjs";
 import { promisify } from "util";
 import { logger } from "./utils/logger.mjs";
 import {
-  changelogPath,
   changesetDirectory,
   CHANGESET_TYPES,
   PACKAGES,

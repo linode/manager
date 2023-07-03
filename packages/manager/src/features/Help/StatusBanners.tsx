@@ -4,8 +4,8 @@ import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import Link from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
+import { Link } from 'src/components/Link';
 import {
   IncidentImpact,
   IncidentStatus,

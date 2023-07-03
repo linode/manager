@@ -167,7 +167,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
       ) : null}
       {transferTypeIsSent ? (
         <TableCell className={classes.cellContents}>
-          {capitalize(status?.replace('cancelled', 'canceled') ?? '')}
+          {capitalize(status ?? '')}
         </TableCell>
       ) : null}
     </TableRow>

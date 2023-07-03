@@ -54,13 +54,10 @@ const pastDueExpiry = 'Expired 07/20';
 const braintreeURL = 'https://client-analytics.braintreegateway.com/*';
 
 describe('Google Pay', () => {
-  beforeEach(() => {
-    cy.visitWithLogin('/account/billing');
-  });
-
   it('adds google pay method', () => {
     cy.intercept(braintreeURL).as('braintree');
     mockGetPaymentMethods(mockPaymentMethods).as('getPaymentMethods');
+    cy.visitWithLogin('/account/billing');
     cy.wait('@getPaymentMethods');
     cy.findByText('Add Payment Method').should('be.visible').click();
     cy.get('[data-qa-button="gpayChip"]').should('be.visible').click();
@@ -70,6 +67,7 @@ describe('Google Pay', () => {
   it('tests make payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     mockGetPaymentMethods(mockPaymentMethods).as('getPaymentMethods');
+    cy.visitWithLogin('/account/billing');
     cy.wait('@getPaymentMethods');
 
     ui.actionMenu
@@ -103,6 +101,7 @@ describe('Google Pay', () => {
   it('tests payment flow with expired card - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     mockGetPaymentMethods(mockPaymentMethodsExpired).as('getPaymentMethods');
+    cy.visitWithLogin('/account/billing');
     cy.wait('@getPaymentMethods');
 
     cy.get('[data-qa-payment-row="google_pay"]').within(() => {

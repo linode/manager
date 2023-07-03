@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import Tooltip from 'src/components/core/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { makeStyles } from 'tss-react/mui';
 
