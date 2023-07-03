@@ -1,16 +1,17 @@
-import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import CloseSnackbar from './CloseSnackbar';
+import {
+  MaterialDesignContent,
+  SnackbarProvider,
+  SnackbarProviderProps,
+} from 'notistack';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& div': {
-      backgroundColor: `${theme.bg.white} !important`,
-      color: theme.palette.text.primary,
-      fontSize: '0.875rem',
-    },
+const StyledVariants = styled(MaterialDesignContent)(({ theme }) => ({
+  '&.notistack-MuiContent': {
+    backgroundColor: `${theme.bg.white}`,
+    color: theme.palette.text.primary,
+    fontSize: '0.875rem',
     [theme.breakpoints.down('md')]: {
       '& .SnackbarItem-contentRoot': {
         flexWrap: 'nowrap',
@@ -25,24 +26,27 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  info: {
-    borderLeft: `6px solid ${theme.palette.primary.main}`,
-  },
-  success: {
-    borderLeft: `6px solid ${theme.palette.primary.main}`,
-  },
-  error: {
+  '&.notistack-MuiContent-error': {
     borderLeft: `6px solid ${theme.palette.error.dark}`,
   },
-  warning: {
+  '&.notistack-MuiContent-info': {
+    borderLeft: `6px solid ${theme.palette.primary.main}`,
+  },
+  '&.notistack-MuiContent-success': {
+    borderLeft: `6px solid ${theme.color.green}`,
+  },
+  '&.notistack-MuiContent-warning': {
     borderLeft: `6px solid ${theme.palette.warning.dark}`,
   },
 }));
 
-type CombinedProps = SnackbarProviderProps;
+interface CustomSnackbarProps extends SnackbarProviderProps {
+  'data-qa-toast'?: boolean;
+}
 
-const SnackBar: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const Snackbar = (props: SnackbarProviderProps) => {
+  const { children, ...rest } = props;
+
   /**
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
@@ -54,29 +58,26 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const { children, ...rest } = props;
-
   return (
     <SnackbarProvider
-      ref={notistackRef}
       {...rest}
-      classes={{
-        root: classes.root,
-        variantSuccess: classes.success,
-        variantError: classes.error,
-        variantWarning: classes.warning,
-        variantInfo: classes.info,
-      }}
+      ref={notistackRef}
+      SnackbarProps={{ 'data-qa-toast': true } as CustomSnackbarProps}
       action={(key) => (
         <CloseSnackbar
           onClick={onClickDismiss(key)}
           text="Dismiss Notification"
         />
       )}
+      Components={{
+        default: StyledVariants,
+        error: StyledVariants,
+        info: StyledVariants,
+        success: StyledVariants,
+        warning: StyledVariants,
+      }}
     >
       {children}
     </SnackbarProvider>
   );
 };
-
-export default SnackBar;

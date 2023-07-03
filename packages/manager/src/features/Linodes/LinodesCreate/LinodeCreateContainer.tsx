@@ -12,7 +12,7 @@ import {
 import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -111,8 +111,7 @@ interface State {
   userData: string | undefined;
 }
 
-type CombinedProps = WithSnackbarProps &
-  CreateType &
+type CombinedProps = CreateType &
   ImagesProps &
   WithTypesProps &
   WithLinodesProps &
@@ -630,12 +629,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         );
 
         /** show toast */
-        this.props.enqueueSnackbar(
-          `Your Linode ${response.label} is being created.`,
-          {
-            variant: 'success',
-          }
-        );
+        enqueueSnackbar(`Your Linode ${response.label} is being created.`, {
+          variant: 'success',
+        });
 
         /** reset the Events polling */
         resetEventsPolling();
@@ -826,7 +822,6 @@ export default recompose<CombinedProps, {}>(
   withRegions,
   withTypes,
   connected,
-  withSnackbar,
   withLabelGenerator,
   withFlags,
   withProfile,
