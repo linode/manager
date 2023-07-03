@@ -1,5 +1,5 @@
 import { Event, EventStatus } from '@linode/api-v4/lib/account/types';
-import { enqueueSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
@@ -12,22 +12,18 @@ import { events$ } from 'src/events';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';
 
 interface ToastOptions {
-  /** The status of the event that triggered the toast */
+  enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'];
   eventStatus: EventStatus;
-  /** Whether or not to persist the failure message */
   persistSuccessMessage?: boolean;
-  /** Whether or not to persist the failure message */
   persistFailureMessage?: boolean;
-  /** The success message to display */
   successMessage?: string;
-  /** The failure message to display */
   failureMessage?: string;
-  /** A link to display in the failure message */
   link?: JSX.Element;
 }
 
 const toastSuccessAndFailure = (options: ToastOptions) => {
   const {
+    enqueueSnackbar,
     eventStatus,
     persistSuccessMessage,
     persistFailureMessage,
@@ -73,42 +69,48 @@ export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
   event.secondary_entity?.label ?? '';
 
-class ToastNotifications extends React.PureComponent {
+class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
   subscription: Subscription;
 
   componentDidMount() {
     this.subscription = events$
       .filter(({ event }) => !event._initial)
       .map(({ event }) => {
+        const { enqueueSnackbar } = this.props;
         const label = getLabel(event);
         const secondaryLabel = getSecondaryLabel(event);
         switch (event.action) {
           case 'volume_attach':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Volume ${label} successfully attached.`,
               failureMessage: `Error attaching Volume ${label}.`,
             });
           case 'volume_detach':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Volume ${label} successfully detached.`,
               failureMessage: `Error detaching Volume ${label}.`,
             });
           case 'volume_create':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Volume ${label} successfully created.`,
               failureMessage: `Error creating Volume ${label}.`,
             });
           case 'volume_delete':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Volume successfully deleted.`,
               failureMessage: `Error deleting Volume.`,
             });
           case 'disk_imagize':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               persistFailureMessage: true,
               successMessage: `Image ${secondaryLabel} created successfully.`,
@@ -120,6 +122,7 @@ class ToastNotifications extends React.PureComponent {
             });
           case 'disk_resize':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               persistFailureMessage: true,
               successMessage: `Disk ${secondaryLabel} resized successfully.`,
@@ -138,6 +141,7 @@ class ToastNotifications extends React.PureComponent {
           case 'image_upload':
             const isDeletion = event.message === 'Upload canceled.';
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               persistFailureMessage: true,
               successMessage: `Image ${label} is now available.`,
@@ -150,12 +154,14 @@ class ToastNotifications extends React.PureComponent {
             });
           case 'image_delete':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Image ${label} deleted successfully.`,
               failureMessage: `Error deleting Image ${label}.`,
             });
           case 'disk_delete':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Disk ${secondaryLabel} deleted successfully.`,
               failureMessage: `Unable to delete disk ${secondaryLabel} ${
@@ -164,6 +170,7 @@ class ToastNotifications extends React.PureComponent {
             });
           case 'linode_snapshot':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               failureMessage: `There was an error creating a snapshot on Linode ${label}.`,
             });
@@ -174,16 +181,19 @@ class ToastNotifications extends React.PureComponent {
            */
           case 'linode_config_delete':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               failureMessage: `Error deleting config ${secondaryLabel}.`,
             });
           case 'linode_config_create':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               failureMessage: `Error creating config ${secondaryLabel}.`,
             });
           case 'linode_clone':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Linode ${label} has been cloned successfully to ${secondaryLabel}.`,
               failureMessage: `Error cloning Linode ${label}.`,
@@ -191,43 +201,51 @@ class ToastNotifications extends React.PureComponent {
           case 'linode_migrate_datacenter':
           case 'linode_migrate':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Linode ${label} has been migrated successfully.`,
               failureMessage: `Error migrating Linode ${label}.`,
             });
           case 'linode_resize':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Linode ${label} has been resized successfully.`,
               failureMessage: `Error resizing Linode ${label}.`,
             });
           case 'firewall_enable':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               failureMessage: `Error enabling Firewall ${label}.`,
             });
           case 'firewall_disable':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               failureMessage: `Error disabling Firewall ${label}.`,
             });
           case 'firewall_delete':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               failureMessage: `Error deleting Firewall ${label}.`,
             });
           case 'firewall_device_add':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               failureMessage: `Error adding ${secondaryLabel} to Firewall ${label}.`,
             });
           case 'firewall_device_remove':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               failureMessage: `Error removing ${secondaryLabel} from Firewall ${label}.`,
             });
           case 'longviewclient_create':
             return toastSuccessAndFailure({
+              enqueueSnackbar,
               eventStatus: event.status,
               successMessage: `Longview Client ${label} successfully created.`,
               failureMessage: `Error creating Longview Client ${label}.`,
@@ -259,7 +277,7 @@ class ToastNotifications extends React.PureComponent {
   }
 }
 
-export default ToastNotifications;
+export default withSnackbar(ToastNotifications);
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (

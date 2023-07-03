@@ -1,5 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { enqueueSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
@@ -72,6 +72,7 @@ interface StateProps {
 
 type CombinedProps = DispatchProps &
   StateProps &
+  WithSnackbarProps &
   WithSpecificTypesProps &
   WithQueryClientProps &
   WithAccountSettingsProps;
@@ -123,7 +124,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
         ? `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups, and
         all new Linodes will automatically be backed up.`
         : `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups.`;
-      enqueueSnackbar(text, {
+      this.props.enqueueSnackbar(text, {
         variant: 'success',
       });
       dismissSuccess();
@@ -331,6 +332,7 @@ const enhanced = compose<CombinedProps, {}>(
   // this awkward line avoids fetching all types until this dialog is opened
   (comp: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
     withSpecificTypes(comp, props.open)(props),
+  withSnackbar,
   withAccountSettings,
   withQueryClient
 );

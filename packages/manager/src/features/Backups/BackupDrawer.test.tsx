@@ -136,6 +136,8 @@ const props = {
 const { rerender, getByTestId, findByTestId, queryByTestId } = render(
   wrapWithTheme(
     <BackupDrawer
+      closeSnackbar={jest.fn()}
+      enqueueSnackbar={jest.fn()}
       queryClient={queryClient}
       accountSettings={
         { data: accountSettingsFactory.build() } as UseQueryResult<
@@ -207,6 +209,8 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
+            closeSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
             {...props}
             enableErrors={[error]}
             queryClient={queryClient}
@@ -226,6 +230,8 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
+            closeSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
             {...props}
             enableErrors={[error]}
             updatedCount={2}
@@ -247,6 +253,8 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
+            closeSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
             queryClient={queryClient}
             accountSettings={
               { data: accountSettingsFactory.build() } as UseQueryResult<
@@ -267,6 +275,8 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
+            closeSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
             queryClient={queryClient}
             accountSettings={
               { data: accountSettingsFactory.build() } as UseQueryResult<

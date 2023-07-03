@@ -37,7 +37,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import { Tab } from 'src/components/core/ReachTab';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
 import { TabList } from 'src/components/core/ReachTabList';
-import { enqueueSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import {
   withQueryClient,
   WithQueryClientProps,
@@ -126,7 +126,7 @@ interface State {
   tabs?: string[];
 }
 
-type CombinedProps = Props & WithQueryClientProps;
+type CombinedProps = Props & WithSnackbarProps & WithQueryClientProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
@@ -257,7 +257,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           const { tabs } = this.getTabInformation(grantsResponse);
           this.setState({ isSavingGlobal: false, tabs });
 
-          enqueueSnackbar('Successfully saved global permissions', {
+          this.props.enqueueSnackbar('Successfully saved global permissions', {
             variant: 'success',
           });
         })
@@ -309,9 +309,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         if (updateFns.length) {
           this.setState((compose as any)(...updateFns));
         }
-        enqueueSnackbar('Successfully saved entity-specific permissions', {
-          variant: 'success',
-        });
+        this.props.enqueueSnackbar(
+          'Successfully saved entity-specific permissions',
+          { variant: 'success' }
+        );
         // In the chance a new type entity was added to the account, re-calculate what tabs need to be shown.
         const { tabs } = this.getTabInformation(grantsResponse);
         this.setState({ isSavingEntity: false, tabs });
@@ -760,6 +761,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 }
 
-export default recompose<CombinedProps, Props>(withQueryClient)(
-  withStyles(UserPermissions, styles)
-);
+export default recompose<CombinedProps, Props>(
+  withSnackbar,
+  withQueryClient
+)(withStyles(UserPermissions, styles));
