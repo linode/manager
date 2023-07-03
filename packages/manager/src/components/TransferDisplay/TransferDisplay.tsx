@@ -66,7 +66,9 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const quota = data?.quota ?? 0;
   const used = data?.used ?? 0;
 
-  const poolUsagePct = used < quota ? (used / quota) * 100 : 100;
+  // Usage percentage should not be 100% if there has been no usage or usage has not exceeded quota.
+  const poolUsagePct =
+    used < quota ? (used / quota) * 100 : used === 0 ? 0 : 100;
 
   if (isError) {
     // We may want to add an error state for this but I think that would clutter
