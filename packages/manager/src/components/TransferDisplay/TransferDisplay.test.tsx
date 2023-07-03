@@ -1,8 +1,7 @@
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { fireEvent } from '@testing-library/react';
 import { TransferDisplay } from './TransferDisplay';
-import { QueryClient } from 'react-query';
 
 const MockData = {
   used: 0,
@@ -23,9 +22,7 @@ jest.mock('../../queries/accountTransfer', () => {
 
 describe('TransferDisplay', () => {
   it('renders the MNTP button display text and opens the TransferDialog on click', async () => {
-    const { getByText, getByTestId } = renderWithTheme(<TransferDisplay />, {
-      queryClient: new QueryClient(),
-    });
+    const { getByText, getByTestId } = renderWithTheme(<TransferDisplay />);
 
     expect(
       getByText(transferDisplayButtonSubstring, { exact: false })
@@ -41,9 +38,7 @@ describe('TransferDisplay', () => {
   });
 
   it('displays a percentage of 0.00% for no usage', async () => {
-    const { getByText } = renderWithTheme(<TransferDisplay />, {
-      queryClient: new QueryClient(),
-    });
+    const { getByText } = renderWithTheme(<TransferDisplay />);
 
     const usage = getByText(transferDisplayPercentageSubstring, {
       exact: false,
