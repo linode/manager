@@ -59,11 +59,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
   } = props;
 
   const classes = useStyles();
-  const { data: eventsData } = useEventsInfiniteQuery({
-    filter: {
-      'secondary_entity.id': disk.id,
-    },
-  });
+  const { data: eventsData } = useEventsInfiniteQuery();
 
   const diskEventLabelMap = {
     disk_create: 'Creating',
