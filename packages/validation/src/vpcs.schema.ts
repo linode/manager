@@ -1,0 +1,22 @@
+import { array, object, string } from 'yup';
+
+const LABEL_MESSAGE = 'VPC label must be between 1 and 64 characters.';
+
+export const createVPCSchema = object({
+  label: string()
+    .required('Label is required')
+    .min(1, LABEL_MESSAGE)
+    .max(64, LABEL_MESSAGE)
+    .matches(
+      /[a-zA-Z0-9-]+/,
+      'Must include only ASCII letters, numbers, and dashes'
+    ),
+  description: string(),
+  region: string().required('Region is required'),
+  subnets: array().of(object()),
+});
+
+export const updateVPCSchema = object({
+  label: string().notRequired().min(3, LABEL_MESSAGE).max(32, LABEL_MESSAGE),
+  description: string().notRequired(),
+});
