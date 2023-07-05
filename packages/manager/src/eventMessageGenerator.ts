@@ -54,19 +54,19 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   community_question_reply: {
     notification: (e) =>
-      e.entity
+      e.entity?.label
         ? `There has been a reply to your thread "${e.entity.label}".`
         : `There has been a reply to your thread.`,
   },
   community_like: {
     notification: (e) =>
-      e.entity
+      e.entity?.label
         ? `A post on "${e.entity.label}" has been liked.`
         : `There has been a like on your community post.`,
   },
   community_mention: {
     notification: (e) =>
-      e.entity
+      e.entity?.label
         ? `You have been mentioned in a Community post: ${e.entity.label}.`
         : `You have been mentioned in a Community post.`,
   },
@@ -790,7 +790,7 @@ export default (e: Event): string => {
     /** finally return some default fallback text */
     return e.message
       ? formatEventWithAPIMessage(e)
-      : `${e.action}${e.entity ? ` on ${e.entity.label}` : ''}`;
+      : `${e.action}${e.entity?.label ? ` on ${e.entity.label}` : ''}`;
   }
 
   let message = '';
@@ -872,7 +872,7 @@ export function applyLinking(event: Event, message: string) {
 
   let newMessage = message;
 
-  if (event.entity && entityLinkTarget) {
+  if (event.entity?.label && entityLinkTarget) {
     const label = event.entity.label;
     const nonTickedLabels = new RegExp(`(?<!\`)${escapeRegExp(label)}`, 'g');
 
@@ -882,7 +882,7 @@ export function applyLinking(event: Event, message: string) {
     );
   }
 
-  if (event.secondary_entity && secondaryEntityLinkTarget) {
+  if (event.secondary_entity?.label && secondaryEntityLinkTarget) {
     newMessage = newMessage.replace(
       event.secondary_entity.label,
       `<a href="${secondaryEntityLinkTarget}">${event.secondary_entity.label}</a>`

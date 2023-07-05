@@ -71,7 +71,6 @@ export const DatabaseSettingsMenuItem = (props: Props) => {
         disabled={disabled}
         buttonType="primary"
         onClick={onClick}
-        compactX
       >
         {buttonText}
       </Button>
