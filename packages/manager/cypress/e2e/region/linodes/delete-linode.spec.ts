@@ -14,7 +14,7 @@ import { resolveInBatches } from 'support/util/promises';
  * Creates a Linode for each testable region, and waits for each to boot.
  */
 const createLinodesAndWait = async () => {
-  const createLinodePromises = getTestableRegions()
+  const createLinodePromiseGenerators = getTestableRegions()
     .map((region: Region) => {
       const linodeRequest = createLinodeRequestFactory.build({
         label: randomLabel(),
@@ -22,11 +22,11 @@ const createLinodesAndWait = async () => {
         root_password: randomString(32),
       });
 
-      return createLinode(linodeRequest);
+      return () => createLinode(linodeRequest);
     });
 
   //const newLinodes = await Promise.all(createLinodePromises);
-  const newLinodes = await resolveInBatches(createLinodePromises, 2, 15000);
+  const newLinodes = await resolveInBatches(createLinodePromiseGenerators, 2, 6500);
   const checkLinodeStatuses = (allLinodes: Linode[]) => {
     return allLinodes
       .filter((linode) => newLinodes.some((newLinode) => newLinode.label === linode.label))
@@ -46,7 +46,11 @@ describe('Delete Linodes', () => {
   // Create Linodes to delete first.
   let linodes: Linode[];
   before(() => {
-    cy.defer(createLinodesAndWait()).then((newLinodes: Linode[]) => {
+    const deferOptions = {
+      label: 'creating Linodes to delete',
+      timeout: 180000,
+    };
+    cy.defer(createLinodesAndWait(), deferOptions).then((newLinodes: Linode[]) => {
       linodes = newLinodes;
     });
   });

@@ -7,32 +7,26 @@ import { timeout } from './backoff';
 /**
  * Resolves all of the given Promises in batches.
  *
- * @param promises - Promises to resolve.
+ * @param promiseGenerators - Functions that return Promises to resolve.
  * @param promisesPerPatch - How many Promises to attempt to resolve at once.
  * @param delayMs - Time in milliseconds to wait between batches.
  */
 export const resolveInBatches = async <T>(
-  promises: Promise<T>[],
+  promiseGenerators: (() => Promise<T>)[],
   promisesPerBatch: number = 3,
   delayMs: number = 1000): Promise<T[]> => {
     let results: T[] = [];
-    const unhandledPromises = [...promises];
-    console.log('a...');
+    const unhandledPromises = [...promiseGenerators];
     while (unhandledPromises.length >= promisesPerBatch) {
-      console.log('b...');
-      const batchPromises = unhandledPromises.splice(0, promisesPerBatch);
-      console.log({promiseLength: batchPromises.length});
-      results.push(...await Promise.all(batchPromises));
+      const batchGenerators = unhandledPromises.splice(0, promisesPerBatch);
+      results.push(...await Promise.all(batchGenerators.map((promiseGenerator) => promiseGenerator())));
       if (unhandledPromises.length > 0) {
-        console.log('timin out bro');
         await timeout(delayMs);
       }
     }
-    console.log('c...');
     // Resolve leftover promises.
     if (unhandledPromises.length > 0) {
-      results.push(...await Promise.all(promises));
+      results.push(...await Promise.all(unhandledPromises.map((promiseGenerator) => promiseGenerator())));
     }
-    console.log('d...');
     return results;
 }
