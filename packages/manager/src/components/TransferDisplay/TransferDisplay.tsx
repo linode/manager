@@ -134,6 +134,8 @@ export const TransferDialog = React.memo((props: DialogProps) => {
   const { isOpen, onClose, poolUsagePct, quota, used } = props;
   const { classes } = useStyles();
   const daysRemainingInMonth = getDaysRemaining();
+  // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
+  const isEmptyPool = quota === 0;
 
   return (
     <Dialog
@@ -151,26 +153,36 @@ export const TransferDialog = React.memo((props: DialogProps) => {
         spacing={2}
       >
         <Grid style={{ marginRight: 10 }}>
-          <Typography>{used} GB Used</Typography>
+          {!isEmptyPool ? (
+            <Typography>{used} GB Used</Typography>
+          ) : (
+            <Typography>
+              Create a resource to start using Monthly Network Transfer.
+            </Typography>
+          )}
         </Grid>
         <Grid>
-          <Typography>
-            {quota >= used ? (
-              <span>{quota - used} GB Available</span>
-            ) : (
-              <span>
-                {(quota - used).toString().replace(/\-/, '')} GB Over Quota
-              </span>
-            )}
-          </Typography>
+          {!isEmptyPool ? (
+            <Typography>
+              {quota >= used ? (
+                <span>{quota - used} GB Available</span>
+              ) : (
+                <span>
+                  {(quota - used).toString().replace(/\-/, '')} GB Over Quota
+                </span>
+              )}
+            </Typography>
+          ) : null}
         </Grid>
       </Grid>
-      <BarPercent
-        max={100}
-        value={Math.ceil(poolUsagePct)}
-        className={classes.poolUsageProgress}
-        rounded
-      />
+      {!isEmptyPool ? (
+        <BarPercent
+          max={100}
+          value={Math.ceil(poolUsagePct)}
+          className={classes.poolUsageProgress}
+          rounded
+        />
+      ) : null}
 
       <Typography className={classes.proratedNotice}>
         <strong>
