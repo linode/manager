@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { omit } from 'lodash';
 import {
   TableProps as _TableProps,
   default as _Table,
@@ -60,11 +61,20 @@ export interface TableProps extends _TableProps {
 export const Table = (props: TableProps) => {
   const { className, tableClass, colCount, rowCount, ...rest } = props;
 
+  const tableProps = omit(rest, [
+    'colCounts',
+    'noBorder',
+    'noOverflow',
+    'rowCount',
+    'spacingBottom',
+    'spacingTop',
+  ]);
+
   return (
     <StyledTableWrapper className={className} {...props}>
       <_Table
         className={tableClass}
-        {...rest}
+        {...tableProps}
         aria-colcount={colCount}
         aria-rowcount={rowCount}
         role="table"
