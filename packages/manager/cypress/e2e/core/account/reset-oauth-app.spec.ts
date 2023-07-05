@@ -1,4 +1,4 @@
-import { fbtVisible, fbtClick, fbltClick } from 'support/helpers';
+import { fbtVisible, fbtClick } from 'support/helpers';
 import { oauthClientFactory } from '@src/factories';
 import 'cypress-file-upload';
 import {
@@ -7,7 +7,7 @@ import {
   mockResetOAuthApps,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { randomLabel, randomSecret } from 'support/util/random';
+import { randomLabel, randomHex } from 'support/util/random';
 
 describe('Reset OAuth Apps', () => {
   /*
@@ -16,15 +16,13 @@ describe('Reset OAuth Apps', () => {
    * - Confirms that the oauth app is reset correctly on OAuth Apps landing page.
    */
   it('Resets an OAuth App', () => {
-    const oauthApps = oauthClientFactory.buildList(2);
-    const privateOauthApp = oauthApps[0];
-    privateOauthApp.label = randomLabel(5);
-    const publicOauApp = oauthApps[1];
-    publicOauApp.label = randomLabel(5);
-    publicOauApp.public = true;
+    const privateOauthApp = oauthClientFactory.build({
+      label: randomLabel(5),
+      secret: randomHex(64),
+    });
 
     interceptGetProfile().as('getProfile');
-    mockGetOAuthApps(oauthApps).as('getOAuthApps');
+    mockGetOAuthApps([privateOauthApp]).as('getOAuthApps');
     cy.visitWithLogin('/profile/clients');
     cy.wait('@getProfile');
     cy.wait('@getOAuthApps');
@@ -57,7 +55,7 @@ describe('Reset OAuth Apps', () => {
         fbtVisible('Reset');
         fbtClick('Reset');
       });
-    privateOauthApp['secret'] = randomSecret(64);
+
     mockResetOAuthApps(privateOauthApp.id, privateOauthApp).as('resetOAuthApp');
     ui.dialog
       .findByTitle(`Reset secret for ${privateOauthApp.label}?`)

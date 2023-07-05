@@ -14,16 +14,12 @@ import { authenticate } from 'support/api/authentication';
 
 authenticate();
 describe('Third party access tokens', () => {
-  let tokenLabel: string;
-  let tokenSecret: string;
   let token: Token;
 
   beforeEach(() => {
-    tokenLabel = randomLabel();
-    tokenSecret = randomString(64);
     token = appTokenFactory.build({
-      label: tokenLabel,
-      token: tokenSecret,
+      label: randomLabel(),
+      token: randomString(64),
     });
 
     mockGetPersonalAccessTokens([]).as('getTokens');
@@ -38,10 +34,10 @@ describe('Third party access tokens', () => {
    * - Confirms that third party apps are listed with expected information.
    */
   it('Third party access tokens are listed with expected information', () => {
-    cy.findByText(tokenLabel)
+    cy.findByText(token.label)
       .closest('tr')
       .within(() => {
-        cy.findByText(tokenLabel).should('be.visible');
+        cy.findByText(token.label).should('be.visible');
         cy.defer(getProfile()).then((profile: Profile) => {
           const dateFormatOptions = { timezone: profile.timezone };
           cy.findByText(formatDate(token.created, dateFormatOptions)).should(
@@ -61,13 +57,13 @@ describe('Third party access tokens', () => {
       Linodes: 2,
     });
 
-    cy.findByText(tokenLabel)
+    cy.findByText(token.label)
       .closest('tr')
       .within(() => {
         ui.button.findByTitle('View Scopes').should('be.visible').click();
       });
     ui.drawer
-      .findByTitle(tokenLabel)
+      .findByTitle(token.label)
       .should('be.visible')
       .within(() => {
         Object.keys(access).forEach((key) => {
@@ -88,13 +84,13 @@ describe('Third party access tokens', () => {
    */
   it('Revokes a third party access token', () => {
     // Cancelling will keep the list unchanged.
-    cy.findByText(tokenLabel)
+    cy.findByText(token.label)
       .closest('tr')
       .within(() => {
         ui.button.findByTitle('Revoke').should('be.visible').click();
       });
     ui.dialog
-      .findByTitle(`Revoke ${tokenLabel}?`)
+      .findByTitle(`Revoke ${token.label}?`)
       .should('be.visible')
       .within(() => {
         ui.buttonGroup
@@ -106,13 +102,13 @@ describe('Third party access tokens', () => {
 
     // Confirms revoke will remove the third party app.
     mockRevokeAppToken(token.id).as('deleteAppToken');
-    cy.findByText(tokenLabel)
+    cy.findByText(token.label)
       .closest('tr')
       .within(() => {
         ui.button.findByTitle('Revoke').should('be.visible').click();
       });
     ui.dialog
-      .findByTitle(`Revoke ${tokenLabel}?`)
+      .findByTitle(`Revoke ${token.label}?`)
       .should('be.visible')
       .within(() => {
         ui.buttonGroup
@@ -127,6 +123,6 @@ describe('Third party access tokens', () => {
     mockGetAppTokens([]).as('getAppTokens');
     cy.visitWithLogin('/profile/tokens');
     cy.wait(['@getTokens', '@getAppTokens']);
-    cy.findByText(tokenLabel).should('not.exist');
+    cy.findByText(token.label).should('not.exist');
   });
 });
