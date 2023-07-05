@@ -1,7 +1,7 @@
 import { Event, getEvents, markEventSeen } from '@linode/api-v4/lib/account';
 import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   InfiniteData,
   QueryClient,
@@ -53,16 +53,12 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
   const queryClient = useQueryClient();
   const queryKey = infiniteEventsQueryKey(filter);
 
-  const { data: eventsCache } = useQuery<InfiniteData<ResourcePage<Event>>>(
-    queryKey
-  );
+  const [incompleteEvents, setIncompleteEvents] = useState<Event[]>([]);
 
-  const incompleteEvents = React.useMemo(
-    () =>
-      eventsCache?.pages
-        .reduce((events, page) => [...events, ...page.data], [])
-        .filter(incompleteEvent),
-    [eventsCache]
+  const [mountTimestamp] = useState<string>(() =>
+    DateTime.fromMillis(Date.now(), { zone: 'utc' }).toFormat(
+      ISO_DATETIME_NO_TZ_FORMAT
+    )
   );
 
   const pollingEventHandler = React.useCallback(
@@ -83,19 +79,13 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
     filter
   );
 
-  // Pages start from the first fetched event, so new
-  // events don't offset subsequent pages
-  const firstEventCreated = eventsCache?.pages[0]?.data[0]?.created;
-
   const queryResult = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     queryKey,
     ({ pageParam }) =>
       getEvents(
         { page: pageParam, page_size: 25 },
         {
-          created: firstEventCreated
-            ? { '+lte': firstEventCreated }
-            : undefined,
+          created: { '+lte': mountTimestamp }, // Exclude new events as these will offset the page ordering
           ...filter,
         }
       ),
@@ -130,13 +120,23 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
     ],
   };
 
+  const events = results.pages.reduce(
+    (events, page) => [...events, ...page.data],
+    []
+  );
+
+  const newIncompleteEvents = events.filter(incompleteEvent);
+  if (
+    JSON.stringify(newIncompleteEvents.map((event) => event.id)) !==
+    JSON.stringify(incompleteEvents.map((event) => event.id))
+  ) {
+    setIncompleteEvents(newIncompleteEvents);
+  }
+
   return {
     ...queryResult,
     results,
-    events: results.pages.reduce(
-      (events, page) => [...events, ...page.data],
-      []
-    ),
+    events,
     resetEventsPolling,
   };
 };
@@ -283,21 +283,18 @@ const updateSeenEvents = (latestId: number, queryClient: QueryClient) => {
     InfiniteData<ResourcePage<Event>>
   >(infiniteEventsQueryKey(undefined))) {
     let foundLatestSeenEvent = false;
-    const updatedData = {
-      ...data,
-      pages: data.pages.map((page) => ({
-        ...page,
-        data: page.data.map((event) =>
-          foundLatestSeenEvent || event.id === latestId
-            ? ((foundLatestSeenEvent = true), { ...event, seen: true })
-            : event
-        ),
-      })),
-    };
 
-    queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
-      queryKey,
-      updatedData
+    data.pages.forEach((page) =>
+      page.data.forEach((event) => {
+        if (event.id === latestId) {
+          foundLatestSeenEvent = true;
+        }
+        if (foundLatestSeenEvent) {
+          event.seen = true;
+        }
+      })
     );
+
+    queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(queryKey, data);
   }
 };
