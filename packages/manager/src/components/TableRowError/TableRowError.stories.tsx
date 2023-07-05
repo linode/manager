@@ -4,11 +4,11 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { TableRowEmptyProps } from './TableRowEmpty';
+import type { TableRowErrorProps } from './TableRowError';
 
-export const Default: StoryObj<TableRowEmptyProps> = {
+export const Default: StoryObj<TableRowErrorProps> = {
   render: (args) => {
     const fields = [];
     for (let i = 0; i < args.colSpan; i++) {
@@ -20,19 +20,19 @@ export const Default: StoryObj<TableRowEmptyProps> = {
           <TableRow>{fields}</TableRow>
         </TableHead>
         <TableBody>
-          <TableRowEmpty {...args} />
+          <TableRowError {...args} />
         </TableBody>
       </Table>
     );
   },
 };
 
-const meta: Meta<TableRowEmptyProps> = {
-  title: 'Components/Table/TableRowEmpty',
-  component: TableRowEmpty,
+const meta: Meta<TableRowErrorProps> = {
+  title: 'Components/Table/TableRowError',
+  component: TableRowError,
   args: {
     colSpan: 3,
-    message: 'No items to display.',
+    message: 'Table data is unavailable.',
   },
 };
 export default meta;
