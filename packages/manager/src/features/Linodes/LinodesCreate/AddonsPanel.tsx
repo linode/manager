@@ -95,9 +95,6 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     Boolean(selectedImageID)
   );
 
-  // The backups warning is shown when the user checks to enable backups, but they are using a custom image that may not be compatible.
-  const [showBackupsWarning, setShowBackupsWarning] = React.useState(false);
-
   // The VLAN section is shown when the user is not creating by cloning (cloning copies the network interfaces)
   const showVlans = createType !== 'fromLinode';
 
@@ -126,6 +123,29 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     );
   };
 
+  const getShouldShowBackupsWarning = () => {
+    if (accountBackups || props.backups) {
+      if (selectedLinodeID) {
+        const selectedLinode = linodesData?.find(
+          (linode) => linode.id === selectedLinodeID
+        );
+        if (
+          selectedLinode?.image?.includes('private/') ||
+          !selectedLinode?.image
+        ) {
+          return true;
+        }
+      } else if (selectedImageID && !image?.is_public) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  // The backups warning is shown when the user checks to enable backups, but they are using a custom image that may not be compatible.
+  const showBackupsWarning = getShouldShowBackupsWarning();
+
   // Check whether the source Linode has been allocated a private IP to select/unselect the 'Private IP' checkbox.
   React.useEffect(() => {
     if (selectedLinodeID) {
@@ -143,34 +163,6 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
       }
     }
   }, [selectedLinodeID]);
-
-  // Check whether the source Linode has a private image to display the backups warning message.
-  React.useEffect(() => {
-    if (accountBackups || props.backups) {
-      if (selectedLinodeID) {
-        const selectedLinode = linodesData?.find(
-          (image) => image.id === selectedLinodeID
-        );
-        if (
-          selectedLinode?.image?.includes('private/') ||
-          !selectedLinode?.image
-        ) {
-          setShowBackupsWarning(true);
-        }
-      } else if (selectedImageID && !image?.is_public) {
-        setShowBackupsWarning(true);
-      }
-    } else {
-      setShowBackupsWarning(false);
-    }
-  }, [
-    accountBackups,
-    props.backups,
-    image,
-    linodesData,
-    selectedLinodeID,
-    selectedImageID,
-  ]);
 
   return (
     <>
