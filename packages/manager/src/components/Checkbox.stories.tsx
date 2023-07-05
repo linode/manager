@@ -11,6 +11,21 @@ type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
   render: (args) => <Checkbox {...args} />,
+  args: {
+    checked: false,
+  },
+  argTypes: {
+    toolTipText: {
+      control: {
+        type: 'text',
+      },
+    },
+    text: {
+      control: {
+        type: 'text',
+      },
+    },
+  },
 };
 
 export const Checked: Story = {
