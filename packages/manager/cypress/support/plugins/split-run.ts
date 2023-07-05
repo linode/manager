@@ -3,6 +3,7 @@
  */
 
 import type { CypressPlugin } from './plugin';
+import { globSync } from 'glob';
 
 export const splitCypressRun: CypressPlugin = (on, config) => {
   const splitRunEnabled = config?.env?.['CY_SPLIT_RUN'];
@@ -24,56 +25,31 @@ export const splitCypressRun: CypressPlugin = (on, config) => {
 
     const totalRunners = parseInt(splitRunTotalRunners, 10);
     const runner = parseInt(splitRunRunnerIndex, 10);
+
+    // Override configuration spec pattern to reflect test subset for this runner.
+    const specs = globSync(config.specPattern);
+    // Sort spec filenames deterministically.
+    // Or at least as deterministically as we can in a pinch...
+    specs.sort((a: string, b: string): number => {
+      if (a.toLowerCase() < b.toLowerCase()) {
+        return -1;
+      } else if (a.toLowerCase() > b.toLowerCase()) {
+        return 1;
+      }
+      return 0;
+    });
+
+    // Only include every Nth spec, where N is the total number of runners.
+    config.specPattern = specs.filter((spec: string, index: number) => {
+      return (index + runner - 1) % totalRunners === 0;
+    });
+
     console.info('Cypress split running is enabled.');
     console.table({
       Runner: runner,
       'Total Runners': totalRunners,
-    });
-
-    console.log(config?.specs);
-    console.log(config?.spec);
-    console.log(config?.specPattern);
-
-    config.specs = [
-      {
-        // name: string // "config_passing_spec.js"
-        // relative: string // "cypress/integration/config_passing_spec.js" or "__all" if clicked all specs button
-        // absolute: string // "/Users/janelane/app/cypress/integration/config_passing_spec.js"
-        // specFilter?: string // optional spec filter used by the user
-        // specType?: CypressSpecType
-
-        name: 'add-oauth-app.spec.ts',
-        relative: 'cypress/e2e/core/account/add-oauth-app.spec.ts',
-        absolute:
-          '/Users/jdamore/Projects/manager/packages/manager/cypress/e2e/core/account/add-oauth-app.spec.ts',
-      },
-    ];
-
-    config.spec = {
-      // name: string // "config_passing_spec.js"
-      // relative: string // "cypress/integration/config_passing_spec.js" or "__all" if clicked all specs button
-      // absolute: string // "/Users/janelane/app/cypress/integration/config_passing_spec.js"
-      // specFilter?: string // optional spec filter used by the user
-      // specType?: CypressSpecType
-
-      name: 'add-oauth-app.spec.ts',
-      relative: 'cypress/e2e/core/account/add-oauth-app.spec.ts',
-      absolute:
-        '/Users/jdamore/Projects/manager/packages/manager/cypress/e2e/core/account/add-oauth-app.spec.ts',
-    };
-
-    config.specPattern = '';
-
-    on('before:run', (runDetails) => {
-      if (runDetails.specs) {
-        console.log(runDetails.specs);
-        // runDetails.specs.sort((a: Cypress.Spec, b: Cypress.Spec): number => {
-        //   return a.name.localeCompare(b.name);
-        // });
-
-        // runDetails.specs = runDetails.specs.filter((spec: Cypress.Spec, index: number) => (index + (runner - 1)) % totalRunners === 0);
-        // runDetails.parallel = true;
-      }
+      '# of Specs for This Run': config.specPattern.length,
+      '# of Specs Total': specs.length,
     });
 
     return config;
