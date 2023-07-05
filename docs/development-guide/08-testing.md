@@ -194,6 +194,15 @@ These environment variables are used by Cloud Manager's UI tests to override reg
 |----------------------|-------------------------------------------------|-----------|---------------------------------------|
 | `CY_TEST_REGION`     | ID of region to test (as used by Linode APIv4). | `us-east` | Unset; regions are selected at random |
 
+###### Run Splitting
+These environment variables facilitate splitting the Cypress run between multiple runners without the use of any third party services. This can be useful for improving Cypress test performance in some circumstances.
+
+| Environment Variable | Description                                | Example        | Default                    |
+|----------------------|--------------------------------------------|----------------|----------------------------|
+| `CY_SPLIT_RUN`       | Enable run splitting                       | `1`            | Unset; disabled by default |
+| `CY_SPLIT_RUN_INDEX` | Numeric index for each Cypress test runner | `1`, `2`, etc. | Unset                      |
+| `CY_SPLIT_RUN_TOTAL` | Total number of runners for the tests      | `2`            | Unset                      |
+
 ### Writing End-to-End Tests
 
 1. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
