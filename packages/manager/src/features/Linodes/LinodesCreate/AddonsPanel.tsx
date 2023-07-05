@@ -14,6 +14,8 @@ import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { useImageQuery } from 'src/queries/images';
+import { Notice } from 'src/components/Notice/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   vlan: {
@@ -88,6 +90,14 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   const classes = useStyles();
 
+  const { data: image } = useImageQuery(
+    selectedImageID ?? '',
+    Boolean(selectedImageID)
+  );
+
+  // The backups warning is shown when the user checks to enable backups, but they are using a custom image that may not be compatible.
+  const [showBackupsWarning, setShowBackupsWarning] = React.useState(false);
+
   // The VLAN section is shown when the user is not creating by cloning (cloning copies the network interfaces)
   const showVlans = createType !== 'fromLinode';
 
@@ -134,6 +144,34 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     }
   }, [selectedLinodeID]);
 
+  // Check whether the source Linode has a private image to display the backups warning message.
+  React.useEffect(() => {
+    if (accountBackups || props.backups) {
+      if (selectedLinodeID) {
+        const selectedLinode = linodesData?.find(
+          (image) => image.id === selectedLinodeID
+        );
+        if (
+          selectedLinode?.image?.includes('private/') ||
+          !selectedLinode?.image
+        ) {
+          setShowBackupsWarning(true);
+        }
+      } else if (selectedImageID && !image?.is_public) {
+        setShowBackupsWarning(true);
+      }
+    } else {
+      setShowBackupsWarning(false);
+    }
+  }, [
+    accountBackups,
+    props.backups,
+    image,
+    linodesData,
+    selectedLinodeID,
+    selectedImageID,
+  ]);
+
   return (
     <>
       {showVlans ? (
@@ -158,6 +196,12 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           ) : null}
         </Typography>
         <Grid container>
+          {showBackupsWarning && (
+            <Notice warning>
+              Linodes must have a disk formatted with an EXT3 or EXT4 file
+              system to use the backup service.
+            </Notice>
+          )}
           <Grid xs={12}>
             <FormControlLabel
               className={classes.label}
