@@ -3,7 +3,7 @@ export interface Loadbalancer {
   tags: string[];
   name: string;
   regions: string[];
-  'entry-points': string[];
+  entrypoints: string[];
 }
 
 export interface CreateLoadbalancerPayload {
@@ -20,17 +20,23 @@ export interface UpdateLoadbalancerPayload {
 
 type Protocol = 'TCP' | 'HTTP' | 'HTTPS';
 
+type Policy = 'ROUND_ROBIN';
+
+export interface RoutePayload {
+  name: string;
+  rules: Rule[];
+}
+
+export interface Route extends RoutePayload {
+  id: number;
+}
+
 export interface EntrypointPayload {
   name: string;
   port: number;
   protocol: Protocol;
   certificate_table: CertificateTable[];
   routes: RoutePayload[];
-}
-
-export interface RoutePayload {
-  name: string;
-  rules: Rule[];
 }
 
 export interface Entrypoint {
@@ -47,27 +53,21 @@ export interface CertificateTable {
   certificate_id: string;
 }
 
-export interface Route extends RoutePayload {
-  id: number;
-}
-
 export interface Rule {
-  match: Match;
+  match_condition: Match;
   service_targets: ServiceTargetPayload[];
+  default_target: ServiceTargetPayload;
 }
 
 export interface Match {
-  hostname: string;
-  matchField: string;
-  matchValue: string;
+  path: string;
 }
 
 export interface ServiceTargetPayload {
   name: string;
-  service_target_percentage: number;
   endpoints: Endpoint[];
   ca_certificate: string;
-  load_balancing_policy: string;
+  load_bal_policy: Policy;
   health_check_interval: number;
   health_check_timeout: number;
   health_check_unhealthy_thresh: number;
@@ -81,10 +81,8 @@ export interface ServiceTarget extends ServiceTargetPayload {
 }
 
 export interface Endpoint {
-  endpoint_IP?: string;
-  endpoint_port?: number;
-  endpoint_rate_capacity: number;
-  endpoint_rate_limit: number;
-  endpoint_host?: string;
-  endpoint_dns_name?: string;
+  ip?: string;
+  port?: number;
+  capacity: number;
+  hard_rate_limit: number;
 }
