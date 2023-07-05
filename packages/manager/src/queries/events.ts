@@ -35,11 +35,6 @@ const infiniteEventsQueryKey = (filter: Filter | undefined = {}) => [
   'infinite',
   ...(filter ? [filter] : []),
 ];
-const pageZeroQueryKey = (infiniteEventsQueryKey: QueryKey) => [
-  queryKey,
-  'pageZero',
-  infiniteEventsQueryKey,
-];
 
 export interface EventsQueryOptions {
   enabled?: boolean;
@@ -98,40 +93,12 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
     }
   );
 
-  // Prepend page zero
-  const { data: pageZeroEvents } = useQuery<Event[]>(
-    pageZeroQueryKey(queryKey)
-  );
-
-  const pageZero = pageZeroEvents
-    ? {
-        data: pageZeroEvents,
-        page: 0,
-        pages: queryResult.data?.pages.length ?? 0,
-        results: pageZeroEvents?.length,
-      }
-    : undefined;
-
-  const results = {
-    pages: [
-      ...(pageZero ? [pageZero] : []),
-      ...(queryResult.data?.pages ?? []),
-    ],
-    pageParams: [
-      ...(pageZeroEvents ? [0] : []),
-      ...(queryResult.data?.pageParams ?? []),
-    ],
-  };
-
-  const events = results.pages.reduce(
-    (events, page) => [...events, ...page.data],
-    []
-  );
-
   return {
     ...queryResult,
-    results,
-    events,
+    events: queryResult.data?.pages.reduce(
+      (events, page) => [...events, ...page.data],
+      []
+    ),
     resetEventsPolling,
   };
 };
