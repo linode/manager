@@ -73,7 +73,9 @@ describe('create linode', () => {
       .should('be.visible')
       .within(() => {
         // Switch to cURL view if necessary.
-        cy.findByText('cURL').should('be.visible').click();
+        cy.findByText('cURL')
+          .should('be.visible')
+          .should('have.attr', 'data-selected');
 
         // Confirm that cURL command has expected details.
         [
