@@ -10,7 +10,7 @@ export const useRecentEventForLinode = (linodeId: number, enabled = true) => {
 
   return React.useMemo(
     () =>
-      events.find(
+      events?.find(
         (event) =>
           isInProgressEvent(event) && isEventRelevantToLinode(event, linodeId)
       ),
