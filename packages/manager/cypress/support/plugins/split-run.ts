@@ -6,20 +6,20 @@ import type { CypressPlugin } from './plugin';
 import { globSync } from 'glob';
 
 export const splitCypressRun: CypressPlugin = (on, config) => {
-  const splitRunEnabled = config?.env?.['CY_SPLIT_RUN'];
-  const splitRunTotalRunners = config?.env?.['CY_SPLIT_RUN_TOTAL'];
-  const splitRunRunnerIndex = config?.env?.['CY_SPLIT_RUN_INDEX'];
+  const splitRunEnabled = config?.env?.['CY_TEST_SPLIT_RUN'];
+  const splitRunTotalRunners = config?.env?.['CY_TEST_SPLIT_RUN_TOTAL'];
+  const splitRunRunnerIndex = config?.env?.['CY_TEST_SPLIT_RUN_INDEX'];
 
   // If split running is enabled, total and index must be defined.
   if (splitRunEnabled) {
     if (!splitRunTotalRunners || !splitRunRunnerIndex) {
       throw new Error(
-        'CY_SPLIT_RUN is enabled, but CY_SPLIT_RUN_TOTAL and CY_SPLIT_RUN_INDEX are not defined.'
+        'CY_TEST_SPLIT_RUN is enabled, but CY_TEST_SPLIT_RUN_TOTAL and CY_TEST_SPLIT_RUN_INDEX are not defined.'
       );
     }
     if (isNaN(splitRunTotalRunners) || isNaN(splitRunRunnerIndex)) {
       throw new Error(
-        'CY_SPLIT_RUN_TOTAL and CY_SPLIT_RUN_INDEX must be numeric.'
+        'CY_TEST_SPLIT_RUN_TOTAL and CY_TEST_SPLIT_RUN_INDEX must be numeric.'
       );
     }
 

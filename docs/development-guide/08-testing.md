@@ -197,11 +197,11 @@ These environment variables are used by Cloud Manager's UI tests to override reg
 ###### Run Splitting
 These environment variables facilitate splitting the Cypress run between multiple runners without the use of any third party services. This can be useful for improving Cypress test performance in some circumstances.
 
-| Environment Variable | Description                                | Example        | Default                    |
-|----------------------|--------------------------------------------|----------------|----------------------------|
-| `CY_SPLIT_RUN`       | Enable run splitting                       | `1`            | Unset; disabled by default |
-| `CY_SPLIT_RUN_INDEX` | Numeric index for each Cypress test runner | `1`, `2`, etc. | Unset                      |
-| `CY_SPLIT_RUN_TOTAL` | Total number of runners for the tests      | `2`            | Unset                      |
+| Environment Variable      | Description                                | Example        | Default                    |
+|---------------------------|--------------------------------------------|----------------|----------------------------|
+| `CY_TEST_SPLIT_RUN`       | Enable run splitting                       | `1`            | Unset; disabled by default |
+| `CY_TEST_SPLIT_RUN_INDEX` | Numeric index for each Cypress test runner | `1`, `2`, etc. | Unset                      |
+| `CY_TEST_SPLIT_RUN_TOTAL` | Total number of runners for the tests      | `2`            | Unset                      |
 
 ### Writing End-to-End Tests
 
