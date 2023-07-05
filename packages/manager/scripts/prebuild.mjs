@@ -58,7 +58,7 @@ async function prebuild() {
     await Promise.all(requests);
     console.log('Caching successful');
   } catch (error) {
-    console.error('Caching failed', e);
+    console.error('Caching failed', error);
   }
 }
 

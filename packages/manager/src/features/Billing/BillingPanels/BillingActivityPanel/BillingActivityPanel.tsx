@@ -16,7 +16,7 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
