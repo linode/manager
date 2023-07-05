@@ -2,7 +2,6 @@ import { CredentialPayload } from '@linode/api-v4/lib/managed';
 import { Formik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -95,19 +94,17 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                   data-qa-add-password
                 />
               </React.Suspense>
-              <ActionsPanel>
-                <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-                  Cancel
-                </Button>
-                <Button
-                  buttonType="primary"
-                  loading={isSubmitting}
-                  onClick={() => handleSubmit()}
-                  data-qa-submit
-                >
-                  Add Credential
-                </Button>
-              </ActionsPanel>
+              <ActionsPanel
+                primary
+                primaryButtonDataTestId="submit"
+                primaryButtonHandler={() => handleSubmit()}
+                primaryButtonLoading={isSubmitting}
+                primaryButtonText="Add Credential"
+                secondary
+                secondaryButtonDataTestId="cancel"
+                secondaryButtonHandler={onClose}
+                secondaryButtonText="Cancel"
+              />
             </form>
           </>
         )}

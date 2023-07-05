@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
@@ -34,23 +33,17 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={() => setIsDialogOpen(false)}
-        data-qa-dialog-cancel
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={closeTicket}
-        loading={isLoading}
-        data-qa-dialog-submit
-      >
-        Confirm
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="dialog-submit"
+      primaryButtonHandler={closeTicket}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Confrim"
+      secondary
+      secondaryButtonDataTestId="dialog-cancel"
+      secondaryButtonHandler={() => setIsDialogOpen(false)}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

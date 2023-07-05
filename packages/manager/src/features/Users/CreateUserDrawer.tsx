@@ -3,7 +3,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
@@ -148,19 +147,17 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
             text="The user will be sent an email to set their password"
           />
         </div>
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={this.onSubmit}
-            loading={submitting}
-            data-qa-submit
-          >
-            Add User
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit"
+          primaryButtonHandler={this.onSubmit}
+          primaryButtonLoading={submitting}
+          primaryButtonText="Add User"
+          secondary
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </Drawer>
     );
   }

@@ -570,22 +570,16 @@ const NodeBalancerCreate = () => {
         title={'Delete this configuration?'}
         error={confirmationConfigError()}
         actions={
-          <ActionsPanel style={{ padding: 0 }}>
-            <Button
-              buttonType="secondary"
-              onClick={onCloseConfirmation}
-              className="cancel"
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              onClick={onRemoveConfig}
-              loading={deleteConfigConfirmDialog.submitting}
-            >
-              Delete
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            style={{ padding: 0 }}
+            primary
+            primaryButtonHandler={onRemoveConfig}
+            primaryButtonLoading={deleteConfigConfirmDialog.submitting}
+            primaryButtonText="Delete"
+            secondary
+            secondaryButtonHandler={onCloseConfirmation}
+            secondaryButtonText="Cancel"
+          />
         }
         open={deleteConfigConfirmDialog.open}
       >

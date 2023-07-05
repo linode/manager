@@ -1,7 +1,6 @@
 import { Engine } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
@@ -21,25 +20,17 @@ const renderActions = (
   loading: boolean
 ) => {
   return (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onConfirm}
-        data-qa-confirm
-        data-testid="dialog-confrim"
-        loading={loading}
-      >
-        Reset Root Password
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="confirm"
+      primaryButtonHandler={onConfirm}
+      primaryButtonLoading={loading}
+      primaryButtonText="Reset Root Password"
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 };
 

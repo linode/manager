@@ -4,7 +4,6 @@ import { TextField } from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { useFormik } from 'formik';
 import { useCreateObjectUrlMutation } from 'src/queries/objectStorage';
-import { Button } from 'src/components/Button/Button';
 
 interface Props {
   open: boolean;
@@ -85,14 +84,15 @@ export const CreateFolderDrawer = (props: Props) => {
           onChange={formik.handleChange}
           errorText={formik.errors.name ?? error?.[0]?.reason}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" buttonType="primary" loading={isLoading}>
-            Create
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Create"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

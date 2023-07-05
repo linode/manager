@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
@@ -68,26 +67,18 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onUpgrade}
-        disabled={!checked}
-        loading={submitting}
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-      >
-        Upgrade to HA
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="confirm"
+      primaryButtonDisabled={!checked}
+      primaryButtonHandler={onUpgrade}
+      primaryButtonLoading={submitting}
+      primaryButtonText="Upgrade to HA"
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useSnackbar } from 'notistack';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useLinodeRemoveRangeMutation } from 'src/queries/linodes/networking';
@@ -38,18 +37,15 @@ export const DeleteRangeDialog = (props: Props) => {
       error={error?.[0].reason}
       title={`Delete ${range.range}/${range.prefix}?`}
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={handleDeleteIP}
-            loading={isLoading}
-          >
-            Delete Range
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonHandler={handleDeleteIP}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Delete Range"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       <Typography>

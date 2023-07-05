@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Divider from 'src/components/core/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import MenuItem from 'src/components/core/MenuItem';
@@ -189,20 +188,18 @@ export const NodeBalancerConfigNode = React.memo(
                 </TextField>
               </Grid>
             )}
-            <StyledActionsPanel>
-              {(forEdit || idx !== 0) && (
-                <Button
-                  buttonType="secondary"
-                  data-node-idx={idx}
-                  onClick={removeNode}
-                  data-qa-remove-node
-                  disabled={disabled}
-                  sx={{ minWidth: 'auto', padding: 0, top: 8 }}
-                >
-                  Remove
-                </Button>
-              )}
-            </StyledActionsPanel>
+            {(forEdit || idx !== 0) && (
+              <StyledActionsPanel
+                secondary
+                //What is purpose of this attribute?
+                // data-node-idx={idx}
+                secondaryButtonDataTestId="remove-node"
+                secondaryButtonDisabled={disabled}
+                secondaryButtonHandler={removeNode}
+                secondaryButtonSx={{ minWidth: 'auto', padding: 0, top: 8 }}
+                secondaryButtonText="Remove"
+              />
+            )}
           </Grid>
         </Grid>
       </React.Fragment>

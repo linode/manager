@@ -2,7 +2,6 @@ import * as React from 'react';
 import Select from 'src/components/EnhancedSelect/Select';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Typography } from 'src/components/Typography';
-import { Button } from 'src/components/Button/Button';
 import ExternalLink from 'src/components/ExternalLink';
 import { Notice } from 'src/components/Notice/Notice';
 import { Config } from '@linode/api-v4/lib/linodes';
@@ -152,14 +151,15 @@ export const PowerActionsDialog = (props: Props) => {
       onClose={onClose}
       error={error?.[0].reason}
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={props.onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" onClick={onSubmit} loading={isLoading}>
-            {props.action} Linode
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonHandler={onSubmit}
+          primaryButtonLoading={isLoading}
+          primaryButtonText={`${props.action} Lindoe`}
+          secondary
+          secondaryButtonHandler={props.onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       {props.action === 'Power On' ? (

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 interface Props {
@@ -19,22 +18,17 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
       onClose={onCancel}
       open={open}
       actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            buttonType="secondary"
-            onClick={onCancel}
-            data-qa-cancel-delete
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={onDelete}
-            data-qa-confirm-delete
-          >
-            Delete
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          style={{ padding: 0 }}
+          primary
+          primaryButtonDataTestId="confirm-delete"
+          primaryButtonHandler={onDelete}
+          primaryButtonText="Delete"
+          secondary
+          secondaryButtonDataTestId="cancel-delete"
+          secondaryButtonHandler={onCancel}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       User {username} will be permanently deleted. Are you sure?

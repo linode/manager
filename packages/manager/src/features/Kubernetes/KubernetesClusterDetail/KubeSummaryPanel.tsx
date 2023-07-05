@@ -226,21 +226,15 @@ export const KubeSummaryPanel = (props: Props) => {
         onClose={() => setResetKubeConfigDialogOpen(false)}
         title="Reset Cluster Kubeconfig?"
         actions={
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              onClick={() => setResetKubeConfigDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              onClick={() => handleResetKubeConfig()}
-              loading={isResettingKubeConfig}
-            >
-              Reset Kubeconfig
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primary
+            primaryButtonHandler={() => handleResetKubeConfig()}
+            primaryButtonLoading={isResettingKubeConfig}
+            primaryButtonText="Reset Kubeconfig"
+            secondary
+            secondaryButtonHandler={() => setResetKubeConfigDialogOpen(false)}
+            secondaryButtonText="Cancel"
+          />
         }
         error={
           resetKubeConfigError && resetKubeConfigError.length > 0

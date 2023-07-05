@@ -9,7 +9,6 @@ import { Formik } from 'formik';
 import { pickBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -280,24 +279,19 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                 }}
                 onBlur={handleBlur}
               />
-              <ActionsPanel>
-                <Button
-                  onClick={onClose}
-                  data-qa-cancel
-                  buttonType="secondary"
-                  className="cancel"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  buttonType="primary"
-                  onClick={() => handleSubmit()}
-                  loading={isSubmitting}
-                  data-qa-submit
-                >
-                  {mode === 'create' ? 'Add Monitor' : 'Save Changes'}
-                </Button>
-              </ActionsPanel>
+              <ActionsPanel
+                primary
+                primaryButtonDataTestId="submit"
+                primaryButtonHandler={() => handleSubmit()}
+                primaryButtonLoading={isSubmitting}
+                primaryButtonText={
+                  mode === 'create' ? 'Add Monitor' : 'Save Changes'
+                }
+                secondary
+                secondaryButtonDataTestId="cancel"
+                secondaryButtonHandler={onClose}
+                secondaryButtonText="Cancel"
+              />
             </form>
           </>
         )}

@@ -81,7 +81,7 @@ interface ActionPanelProps extends BoxProps {
   /**
    * Callback for secondary type actionable button to be executed when it is clicked.
    */
-  secondaryButtonHandler?: () => void;
+  secondaryButtonHandler?: (e?: React.MouseEvent<HTMLElement>) => void;
 
   /**
    * The secondary button sx props.

@@ -2,7 +2,6 @@ import { CredentialPayload } from '@linode/api-v4/lib/managed';
 import { Formik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -80,16 +79,13 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                 data-qa-add-label
               />
 
-              <ActionsPanel>
-                <Button
-                  buttonType="primary"
-                  loading={isSubmitting}
-                  onClick={() => handleSubmit()}
-                  data-qa-submit
-                >
-                  Update label
-                </Button>
-              </ActionsPanel>
+              <ActionsPanel
+                primary
+                primaryButtonDataTestId="submit"
+                primaryButtonHandler={() => handleSubmit()}
+                primaryButtonLoading={isSubmitting}
+                primaryButtonText="Update label"
+              />
             </form>
           </>
         )}
@@ -162,16 +158,13 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                   data-qa-add-password
                 />
               </React.Suspense>
-              <ActionsPanel>
-                <Button
-                  buttonType="primary"
-                  onClick={() => handleSubmit()}
-                  loading={isSubmitting}
-                  data-qa-submit
-                >
-                  Update credentials
-                </Button>
-              </ActionsPanel>
+              <ActionsPanel
+                primary
+                primaryButtonDataTestId="submit"
+                primaryButtonHandler={() => handleSubmit()}
+                primaryButtonLoading={isSubmitting}
+                primaryButtonText="Update credentials"
+              />
             </form>
           </div>
         )}

@@ -1,13 +1,12 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import timezones from 'src/assets/timezones/timezones';
 import { Typography } from 'src/components/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DateTime } from 'luxon';
-import { styled } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { useSnackbar } from 'notistack';
 
@@ -97,17 +96,20 @@ export const TimezoneForm = (props: Props) => {
           options={timezoneList}
           placeholder={'Choose a Timezone'}
         />
-        <ActionsPanel>
-          <StyledButton
-            buttonType="primary"
-            data-qa-tz-submit
-            disabled={disabled}
-            loading={isLoading}
-            onClick={onSubmit}
-          >
-            Update Timezone
-          </StyledButton>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="tz-submit"
+          primaryButtonDisabled={disabled}
+          primaryButtonHandler={onSubmit}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Update Timezone"
+          primaryButtonSx={{
+            minWidth: 180,
+            marginTop: (theme: Theme) => theme.breakpoints.up('md') && 16,
+            backgroundColor: 'red',
+            color: 'white',
+          }}
+        />
       </StyledRootContainer>
     </>
   );
@@ -118,15 +120,6 @@ const StyledRootContainer = styled(Box, {
 })(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
-  },
-}));
-
-const StyledButton = styled(Button, {
-  label: 'StyledButton',
-})(({ theme }) => ({
-  minWidth: 180,
-  [theme.breakpoints.up('md')]: {
-    marginTop: 16,
   },
 }));
 

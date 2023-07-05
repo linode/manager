@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 
 interface Props {
   isSubmitting: boolean;
@@ -20,24 +19,19 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
   submitText,
 }) => {
   return (
-    <ActionsPanel>
-      {onCancel && (
-        <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
-          Cancel
-        </Button>
-      )}
-      {onSubmit && (
-        <Button
-          buttonType="primary"
-          disabled={disabled}
-          loading={isSubmitting}
-          onClick={onSubmit}
-          data-qa-submit
-        >
-          {submitText ?? 'Submit'}
-        </Button>
-      )}
-    </ActionsPanel>
+    //We could remove this with ActionsPanel component.
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="submit"
+      primaryButtonDisabled={disabled}
+      primaryButtonHandler={onSubmit}
+      primaryButtonLoading={isSubmitting}
+      primaryButtonText={submitText ?? 'Submit'}
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onCancel}
+      secondaryButtonText="Cancel"
+    />
   );
 };
 

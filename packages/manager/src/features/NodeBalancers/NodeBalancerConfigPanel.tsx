@@ -417,29 +417,19 @@ export const NodeBalancerConfigPanel = (
             alignItems="center"
             spacing={2}
           >
-            <StyledActionsPanel>
-              {(forEdit || configIdx !== 0) && (
-                <Button
-                  buttonType="secondary"
-                  onClick={props.onDelete}
-                  disabled={disabled}
-                  data-qa-delete-config
-                >
-                  Delete
-                </Button>
-              )}
-              {forEdit && (
-                <Button
-                  buttonType="primary"
-                  onClick={onSave}
-                  disabled={disabled}
-                  loading={submitting}
-                  data-qa-save-config
-                >
-                  Save
-                </Button>
-              )}
-            </StyledActionsPanel>
+            <StyledActionsPanel
+              primary={forEdit}
+              primaryButtonDataTestId="save-config"
+              primaryButtonDisabled={disabled}
+              primaryButtonHandler={onSave}
+              primaryButtonLoading={submitting}
+              primaryButtonText="Save"
+              secondary={forEdit || configIdx !== 0}
+              secondaryButtonDataTestId="delete-config"
+              secondaryButtonDisabled={disabled}
+              secondaryButtonHandler={props.onDelete}
+              secondaryButtonText="Delete"
+            />
           </Grid>
         </React.Fragment>
       )}

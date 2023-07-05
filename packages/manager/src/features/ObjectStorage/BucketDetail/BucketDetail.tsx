@@ -2,7 +2,6 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
-import { Button } from 'src/components/Button/Button';
 import ObjectTableContent from './ObjectTableContent';
 import produce from 'immer';
 import { BucketBreadcrumb } from './BucketBreadcrumb';
@@ -403,23 +402,17 @@ export const BucketDetail = () => {
             : 'Delete object'
         }
         actions={() => (
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              onClick={closeDeleteObjectDialog}
-              data-qa-cancel
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              onClick={deleteObject}
-              loading={deleteObjectLoading}
-              data-qa-submit-rebuild
-            >
-              Delete
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primary
+            primaryButtonDataTestId="submit-rebuild"
+            primaryButtonHandler={deleteObject}
+            primaryButtonLoading={deleteObjectLoading}
+            primaryButtonText="Delete"
+            secondary
+            secondaryButtonDataTestId="cancel"
+            secondaryButtonHandler={closeDeleteObjectDialog}
+            secondaryButtonText="Cancel"
+          />
         )}
         error={deleteObjectError}
       >

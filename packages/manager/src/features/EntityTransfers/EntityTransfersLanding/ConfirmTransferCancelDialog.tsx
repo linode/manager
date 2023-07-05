@@ -6,7 +6,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
 import { Typography } from 'src/components/Typography';
@@ -81,19 +80,17 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
   };
 
   const actions = (
-    <ActionsPanel className={classes.actions}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Keep Service Transfer
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={handleCancelTransfer}
-        disabled={submitting}
-        loading={submitting}
-      >
-        Cancel Service Transfer
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      className={classes.actions}
+      primary
+      primaryButtonDisabled={submitting}
+      primaryButtonHandler={handleCancelTransfer}
+      primaryButtonLoading={submitting}
+      primaryButtonText="Cancel Service Transfer"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Keep Service Transfer"
+    />
   );
 
   // TS safety hatch (not possible in practice).

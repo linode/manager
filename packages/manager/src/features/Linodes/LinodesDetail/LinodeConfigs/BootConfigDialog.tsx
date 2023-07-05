@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography } from 'src/components/Typography';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { Config } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -31,14 +30,16 @@ export const BootConfigDialog = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button onClick={onClose} buttonType="secondary">
-        Cancel
-      </Button>
-      <Button buttonType="primary" loading={isLoading} onClick={onBoot}>
-        Boot
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      style={{ padding: 0 }}
+      primary
+      primaryButtonHandler={onBoot}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Boot"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

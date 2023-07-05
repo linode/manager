@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Typography } from 'src/components/Typography';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -56,19 +55,18 @@ export const EnableBackupsDialog = (props: Props) => {
   }, [open]);
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel-cancel>
-        Close
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={handleEnableBackups}
-        loading={isLoading}
-        data-qa-confirm-enable-backups
-      >
-        Enable Backups
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      style={{ padding: 0 }}
+      primary
+      primaryButtonDataTestId="confirm-enable-backups"
+      primaryButtonHandler={handleEnableBackups}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Enable Backups"
+      secondary
+      secondaryButtonDataTestId="cancel-cance"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Close"
+    />
   );
 
   return (

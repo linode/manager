@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -75,19 +74,16 @@ const DomainZoneImportDrawer = (props: Props) => {
           errorText={remoteNameserverError}
           disabled={noPermission}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            disabled={!formik.dirty}
-            loading={formik.isSubmitting}
-            type="submit"
-          >
-            Import
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonType="submit"
+          primaryButtonDisabled={!formik.dirty}
+          primaryButtonLoading={formik.isSubmitting}
+          primaryButtonText="Import"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

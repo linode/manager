@@ -12,7 +12,6 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
@@ -388,22 +387,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   renderDialogActions = () => {
     return (
-      <ActionsPanel>
-        <Button
-          buttonType="secondary"
-          onClick={this.handleCloseDialog}
-          data-qa-cancel-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={() => this.resetAllFields(this.state.apiResponse)}
-          data-qa-confirm-cancel
-        >
-          Reset
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDataTestId="confirm-cancel"
+        primaryButtonHandler={() => this.resetAllFields(this.state.apiResponse)}
+        primaryButtonText="Reset"
+        secondary
+        secondaryButtonDataTestId="cancel-cancel"
+        secondaryButtonHandler={this.handleCloseDialog}
+        secondaryButtonText="Cancel"
+      />
     );
   };
 

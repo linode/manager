@@ -11,7 +11,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -489,23 +488,20 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const classes = withStyles.getClasses(this.props);
     return (
       <ActionsPanel
-        display="flex"
         alignItems="center"
-        justifyContent="flex-end"
         className={classes.section}
-      >
-        <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
-          Reset
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={onConfirm}
-          loading={loading}
-          data-qa-submit
-        >
-          Save
-        </Button>
-      </ActionsPanel>
+        display="flex"
+        justifyContent="flex-end"
+        primary
+        primaryButtonDataTestId="submit"
+        primaryButtonHandler={onConfirm}
+        primaryButtonLoading={loading}
+        primaryButtonText="Save"
+        secondary
+        secondaryButtonDataTestId="cancel"
+        secondaryButtonHandler={onCancel}
+        secondaryButtonText="Reset"
+      />
     );
   };
 

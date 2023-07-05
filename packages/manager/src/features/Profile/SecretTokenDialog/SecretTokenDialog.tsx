@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
@@ -20,16 +19,12 @@ const renderActions = (
   onClose: () => void,
   modalConfirmationButtonText: string
 ) => (
-  <ActionsPanel>
-    <Button
-      buttonType="primary"
-      data-qa-confirm
-      data-testid="dialog-confirm"
-      onClick={onClose}
-    >
-      {modalConfirmationButtonText}
-    </Button>
-  </ActionsPanel>
+  <ActionsPanel
+    primary
+    primaryButtonDataTestId="confirm"
+    primaryButtonHandler={onClose}
+    primaryButtonText={modalConfirmationButtonText}
+  />
 );
 
 export const SecretTokenDialog = (props: Props) => {

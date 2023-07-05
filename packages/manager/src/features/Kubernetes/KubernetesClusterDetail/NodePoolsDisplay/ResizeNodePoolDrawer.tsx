@@ -1,7 +1,6 @@
 import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -139,17 +138,14 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
         {updatedCount < 3 && <Notice important warning text={nodeWarning} />}
 
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            disabled={updatedCount === nodePool.count}
-            onClick={handleSubmit}
-            data-qa-submit
-            loading={isLoading}
-          >
-            Save Changes
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit"
+          primaryButtonDisabled={updatedCount === nodePool.count}
+          primaryButtonHandler={handleSubmit}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Save Changes"
+        />
       </form>
     </Drawer>
   );

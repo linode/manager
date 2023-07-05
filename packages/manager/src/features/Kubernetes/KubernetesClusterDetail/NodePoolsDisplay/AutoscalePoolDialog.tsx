@@ -121,31 +121,24 @@ export const AutoscalePoolDialog = (props: Props) => {
       onClose={handleClose}
       error={error?.[0].reason}
       actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            buttonType="secondary"
-            onClick={handleClose}
-            data-qa-cancel
-            data-testid="dialog-cancel"
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={() => handleSubmit()}
-            loading={isLoading || isSubmitting}
-            disabled={
-              (values.enabled === autoscaler?.enabled &&
-                values.min === autoscaler?.min &&
-                values.max === autoscaler?.max) ||
-              Object.keys(errors).length !== 0
-            }
-            data-qa-confirm
-            data-testid="dialog-confirm"
-          >
-            Save Changes
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          style={{ padding: 0 }}
+          primary
+          primaryButtonHandler={() => handleSubmit()}
+          primaryButtonLoading={isLoading || isSubmitting}
+          primaryButtonDisabled={
+            (values.enabled === autoscaler?.enabled &&
+              values.min === autoscaler?.min &&
+              values.max === autoscaler?.max) ||
+            Object.keys(errors).length !== 0
+          }
+          primaryButtonDataTestId="confirm"
+          primaryButtonText="Save Changes"
+          secondary
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonHandler={handleClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       {warning ? (

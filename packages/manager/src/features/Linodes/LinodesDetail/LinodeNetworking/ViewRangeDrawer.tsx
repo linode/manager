@@ -1,7 +1,6 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
@@ -57,15 +56,12 @@ export const ViewRangeDrawer = (props: Props) => {
             </Typography>
           </div>
 
-          <ActionsPanel>
-            <Button
-              buttonType="secondary"
-              onClick={props.onClose}
-              data-qa-cancel
-            >
-              Close
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            secondary
+            secondaryButtonDataTestId="cancel"
+            secondaryButtonHandler={props.onClose}
+            secondaryButtonText="Close"
+          />
         </React.Fragment>
       )}
     </Drawer>

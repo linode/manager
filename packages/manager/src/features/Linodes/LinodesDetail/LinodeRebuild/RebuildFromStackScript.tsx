@@ -8,7 +8,6 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -334,7 +333,14 @@ export const RebuildFromStackScript = (props: Props) => {
                 data-qa-access-panel
                 passwordHelperText={passwordHelperText}
               />
-              <ActionsPanel className={classes.actionPanel}>
+              <ActionsPanel
+                className={classes.actionPanel}
+                primary
+                primaryButtonDataTestId="rebuild"
+                primaryButtonDisabled={submitButtonDisabled}
+                primaryButtonHandler={handleRebuildButtonClick}
+                primaryButtonText="Rebuild Linode"
+              >
                 <TypeToConfirm
                   confirmationText={
                     <span>
@@ -353,15 +359,6 @@ export const RebuildFromStackScript = (props: Props) => {
                   visible={preferences?.type_to_confirm}
                   textFieldStyle={{ marginBottom: 16 }}
                 />
-                <Button
-                  buttonType="primary"
-                  disabled={submitButtonDisabled}
-                  onClick={handleRebuildButtonClick}
-                  data-qa-rebuild
-                  data-testid="rebuild-button"
-                >
-                  Rebuild Linode
-                </Button>
               </ActionsPanel>
             </form>
             <StackScriptDialog />

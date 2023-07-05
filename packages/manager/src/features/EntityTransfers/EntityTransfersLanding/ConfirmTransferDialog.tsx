@@ -6,7 +6,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -133,19 +132,17 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   };
 
   const actions = (
-    <ActionsPanel className={classes.actions}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={handleAcceptTransfer}
-        disabled={!hasConfirmed || isLoading || isError}
-        loading={submitting}
-      >
-        Accept Transfer
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      className={classes.actions}
+      primary
+      primaryButtonDisabled={!hasConfirmed || isLoading || isError}
+      primaryButtonHandler={handleAcceptTransfer}
+      primaryButtonLoading={submitting}
+      primaryButtonText="Accept Transfer"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

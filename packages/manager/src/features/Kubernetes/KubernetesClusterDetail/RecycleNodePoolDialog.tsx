@@ -1,7 +1,6 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import {
@@ -37,25 +36,18 @@ export const RecycleNodePoolDialog = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onRecycle}
-        loading={isLoading}
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-      >
-        Recycle Pool Nodes
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      style={{ padding: 0 }}
+      primary
+      primaryButtonDataTestId="confirm"
+      primaryButtonHandler={onRecycle}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Recycle Pool Nodes"
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

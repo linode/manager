@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { ModeSelect, Mode } from 'src/components/ModeSelect/ModeSelect';
@@ -199,19 +198,16 @@ export const CreateDiskDrawer = (props: Props) => {
         <FormHelperText style={{ marginTop: 8 }}>
           Maximum size: {maximumSize} MB
         </FormHelperText>
-        <ActionsPanel>
-          <Button onClick={onClose} buttonType="secondary" className="cancel">
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={formik.isSubmitting}
-            data-testid="submit-disk-form"
-          >
-            Create
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit-disk-form"
+          primaryButtonLoading={formik.isSubmitting}
+          primaryButtonText="Create"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

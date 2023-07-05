@@ -5,7 +5,6 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -204,15 +203,14 @@ export const ImageUpload: React.FC<Props> = (props) => {
               onClose={handleCancel}
               title="Leave this page?"
               actions={() => (
-                <ActionsPanel>
-                  <Button buttonType="secondary" onClick={handleCancel}>
-                    Cancel
-                  </Button>
-
-                  <Button buttonType="primary" onClick={handleConfirm}>
-                    Leave Page
-                  </Button>
-                </ActionsPanel>
+                <ActionsPanel
+                  primary
+                  primaryButtonHandler={handleConfirm}
+                  primaryButtonText="Leave Page"
+                  secondary
+                  secondaryButtonHandler={handleCancel}
+                  secondaryButtonText="Cancel"
+                />
               )}
             >
               <Typography variant="subtitle1">

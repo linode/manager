@@ -1,7 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 interface Props {
@@ -82,19 +81,16 @@ interface ActionsProps {
 
 const Actions: React.FC<ActionsProps> = (props) => {
   return (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={props.onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.isDeleting}
-        data-testid="delete-button"
-      >
-        Delete
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="delete-button"
+      primaryButtonHandler={props.onSubmit}
+      primaryButtonLoading={props.isDeleting}
+      primaryButtonText="Delete"
+      secondary
+      secondaryButtonHandler={props.onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 };
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
@@ -65,18 +64,15 @@ const FirewallDialog = (props: Props) => {
       onClose={onClose}
       error={errorMap[mode]?.[0].reason}
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={onSubmit}
-            loading={isLoadingMap[mode]}
-          >
-            {capitalize(mode)} Firewall
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonHandler={onSubmit}
+          primaryButtonLoading={isLoadingMap[mode]}
+          primaryButtonText={`${capitalize(mode)} Firewall`}
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       Are you sure you want to {mode} this Firewall?

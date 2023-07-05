@@ -2,7 +2,6 @@ import { Disk } from '@linode/api-v4/lib/linodes';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -78,19 +77,16 @@ export const RenameDiskDrawer = (props: Props) => {
           errorGroup="linode-disk-drawer"
           data-qa-label
         />
-        <ActionsPanel>
-          <Button onClick={onClose} buttonType="secondary" className="cancel">
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={formik.isSubmitting}
-            data-testid="submit-disk-form"
-          >
-            Rename
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit-disk-form"
+          primaryButtonLoading={formik.isSubmitting}
+          primaryButtonText="Rename"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

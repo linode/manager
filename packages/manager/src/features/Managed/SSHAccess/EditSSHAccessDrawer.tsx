@@ -2,7 +2,6 @@ import { Formik, FormikHelpers } from 'formik';
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -212,15 +211,12 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                         />
                       </Grid>
                     </Grid>
-                    <ActionsPanel>
-                      <Button
-                        buttonType="primary"
-                        onClick={() => handleSubmit()}
-                        loading={isSubmitting}
-                      >
-                        Save Changes
-                      </Button>
-                    </ActionsPanel>
+                    <ActionsPanel
+                      primary
+                      primaryButtonHandler={() => handleSubmit()}
+                      primaryButtonLoading={isSubmitting}
+                      primaryButtonText="Save Changes"
+                    />
                   </form>
                 </>
               );

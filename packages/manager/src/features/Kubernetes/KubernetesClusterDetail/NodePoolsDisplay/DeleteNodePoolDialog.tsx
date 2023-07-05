@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { pluralize } from 'src/utilities/pluralize';
@@ -31,25 +30,18 @@ export const DeleteNodePoolDialog = (props: Props) => {
   const nodeCount = nodePool?.count ?? 0;
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onDelete}
-        loading={isLoading}
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-      >
-        Delete
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      style={{ padding: 0 }}
+      primary
+      primaryButtonDataTestId="confirm"
+      primaryButtonHandler={onDelete}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Delete"
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

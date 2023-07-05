@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography } from 'src/components/Typography';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { Config } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -30,14 +29,16 @@ export const DeleteConfigDialog = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button buttonType="primary" onClick={onDelete} loading={isLoading}>
-        Delete
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      style={{ padding: 0 }}
+      primary
+      primaryButtonHandler={onDelete}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Delete"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

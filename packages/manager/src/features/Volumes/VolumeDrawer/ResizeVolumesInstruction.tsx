@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -86,11 +85,11 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
           hideLabel
         />
       </div>
-      <ActionsPanel>
-        <Button onClick={onClose} buttonType="primary">
-          Close
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonHandler={onClose}
+        primaryButtonText="Close"
+      />
     </React.Fragment>
   );
 };

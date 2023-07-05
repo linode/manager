@@ -1,7 +1,6 @@
 import { FirewallDevice } from '@linode/api-v4';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
@@ -34,25 +33,18 @@ export const RemoveDeviceDialog = (props: Props) => {
       onClose={onClose}
       error={error?.[0]?.reason}
       actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            buttonType="secondary"
-            onClick={onClose}
-            data-qa-cancel
-            data-testid={'dialog-cancel'}
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={onDelete}
-            loading={isLoading}
-            data-qa-confirm
-            data-testid={'dialog-confirm'}
-          >
-            Remove
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          style={{ padding: 0 }}
+          primary
+          primaryButtonDataTestId="confirm"
+          primaryButtonHandler={onDelete}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Remove"
+          secondary
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       <Typography>

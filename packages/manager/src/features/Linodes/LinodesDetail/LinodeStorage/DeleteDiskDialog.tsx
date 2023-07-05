@@ -1,6 +1,5 @@
 import React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useLinodeDeleteDiskMutation } from 'src/queries/linodes/disks';
 import type { Disk } from '@linode/api-v4';
@@ -40,23 +39,18 @@ export const DeleteDiskDialog = (props: Props) => {
       onClose={onClose}
       error={error?.[0].reason}
       actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            buttonType="secondary"
-            onClick={onClose}
-            data-qa-cancel-delete
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={onDelete}
-            loading={isLoading}
-            data-qa-confirm-delete
-          >
-            Delete
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          style={{ padding: 0 }}
+          primary
+          primaryButtonDataTestId="confirm-delete"
+          primaryButtonHandler={onDelete}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Delete"
+          secondary
+          secondaryButtonDataTestId="cancel-delete"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       Are you sure you want to delete {disk?.label}?

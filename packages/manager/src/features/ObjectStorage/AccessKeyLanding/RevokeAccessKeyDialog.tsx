@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Typography } from 'src/components/Typography';
-import { Button } from 'src/components/Button/Button';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CancelNotice } from '../CancelNotice';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -29,14 +28,16 @@ export const RevokeAccessKeyDialog = (props: RevokeKeysDialogProps) => {
   } = props;
 
   const actions = () => (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
-        Cancel
-      </Button>
-      <Button buttonType="primary" onClick={handleSubmit} loading={isLoading}>
-        Revoke
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonHandler={handleSubmit}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Revoke"
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={handleClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

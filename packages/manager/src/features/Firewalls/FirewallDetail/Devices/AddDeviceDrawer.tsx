@@ -2,7 +2,6 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -140,20 +139,18 @@ export const AddDeviceDrawer = (props: Props) => {
           disabled={currentDevicesLoading}
           loading={currentDevicesLoading}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={handleSubmit}
-            disabled={selectedLinodeIds.length === 0}
-            loading={isLoading}
-            data-qa-submit
-          >
-            Add
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit"
+          primaryButtonDisabled={selectedLinodeIds.length === 0}
+          primaryButtonHandler={handleSubmit}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Add"
+          secondary
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

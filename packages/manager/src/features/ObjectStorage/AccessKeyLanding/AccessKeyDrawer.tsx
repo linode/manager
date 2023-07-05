@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -241,28 +240,23 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                     checked={limitedAccessChecked}
                   />
                 ) : null}
-                <ActionsPanel>
-                  <Button
-                    buttonType="secondary"
-                    onClick={onClose}
-                    data-qa-cancel
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    buttonType="primary"
-                    disabled={
-                      isRestrictedUser ||
-                      (mode !== 'creating' &&
-                        values.label === initialLabelValue)
-                    }
-                    loading={isSubmitting}
-                    onClick={beforeSubmit}
-                    data-qa-submit
-                  >
-                    {createMode ? 'Create Access Key' : 'Save Changes'}
-                  </Button>
-                </ActionsPanel>
+                <ActionsPanel
+                  primary
+                  primaryButtonHandler={beforeSubmit}
+                  primaryButtonDisabled={
+                    isRestrictedUser ||
+                    (mode !== 'creating' && values.label === initialLabelValue)
+                  }
+                  primaryButtonLoading={isSubmitting}
+                  primaryButtonDataTestId="submit"
+                  primaryButtonText={
+                    createMode ? 'Create Access Key' : 'Save Changes'
+                  }
+                  secondary
+                  secondaryButtonHandler={onClose}
+                  secondaryButtonDataTestId="cancel"
+                  secondaryButtonText="Cancel"
+                />
                 <EnableObjectStorageModal
                   open={dialogOpen}
                   onClose={() => setDialogOpen(false)}

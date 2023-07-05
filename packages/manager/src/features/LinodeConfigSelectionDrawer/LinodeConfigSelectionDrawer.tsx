@@ -2,7 +2,6 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
@@ -51,14 +50,15 @@ const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
           />
         ))}
       </Grid>
-      <ActionsPanel>
-        <Button buttonType="primary" onClick={onSubmit} loading={props.loading}>
-          Submit
-        </Button>
-        <Button onClick={onClose} buttonType="secondary" className="cancel">
-          Cancel
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonHandler={onSubmit}
+        primaryButtonLoading={props.loading}
+        primaryButtonText="Submit"
+        secondary
+        secondaryButtonHandler={onClose}
+        secondaryButtonText="Cancel"
+      />
     </Drawer>
   );
 };

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
@@ -89,34 +88,23 @@ export const UpgradeDialog = (props: Props) => {
     ? `Step 2: Recycle All Cluster Nodes`
     : `Step 1: Upgrade ${clusterLabel} to Kubernetes ${nextVersion}`;
 
-  const actions = hasUpdatedSuccessfully ? (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onSubmitRecycleDialog}
-        loading={submitting}
-        data-qa-confirm
-      >
-        Recycle All Nodes
-      </Button>
-    </ActionsPanel>
-  ) : (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onSubmitUpgradeDialog}
-        loading={submitting}
-        data-qa-confirm
-      >
-        Upgrade Version
-      </Button>
-    </ActionsPanel>
+  const actions = (
+    <ActionsPanel
+      style={{ padding: 0 }}
+      primary
+      primaryButtonDataTestId="confirm"
+      primaryButtonHandler={
+        hasUpdatedSuccessfully ? onSubmitRecycleDialog : onSubmitUpgradeDialog
+      }
+      primaryButtonLoading={submitting}
+      primaryButtonText={
+        hasUpdatedSuccessfully ? 'Recycle All Nodes' : 'Upgrade Version'
+      }
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { IPAddress } from '@linode/api-v4/lib/networking';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Typography } from 'src/components/Typography';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { TextField } from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -71,24 +70,16 @@ export const EditIPRDNSDrawer = (props: Props) => {
         <Typography variant="body1">
           Leave this field blank to reset RDNS
         </Typography>
-        <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            buttonType="secondary"
-            className="cancel"
-            onClick={onClose}
-            data-qa-cancel
-          >
-            Close
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={isLoading}
-            data-qa-submit
-          >
-            Save
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          style={{ marginTop: 16 }}
+          primary
+          primaryButtonDataTestId="submit"
+          primaryButtonLoading={isLoading}
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="cancel"
+        />
       </form>
     </Drawer>
   );

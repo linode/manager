@@ -91,19 +91,17 @@ export const EnableManaged = (props: Props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={handleSubmit}
-        loading={isLoading}
-        data-qa-submit-managed-enrollment
-      >
-        Add Linode Managed
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="submit-managed-enrollment"
+      primaryButtonHandler={handleSubmit}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Add Linode Managed"
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={handleClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

@@ -2,7 +2,6 @@ import { Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
@@ -203,26 +202,22 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         disabled={disabled}
         data-qa-stackscript-revision
       />
-      <ActionsPanel className={classes.actions}>
-        <Button
-          onClick={onCancel}
-          buttonType="secondary"
-          className="cancel"
-          disabled={disabled}
-          data-qa-cancel
-        >
-          Reset
-        </Button>
-        <Button
-          onClick={onSubmit}
-          buttonType="primary"
-          loading={isSubmitting}
-          disabled={disabled || disableSubmit}
-          data-qa-save
-        >
-          {mode === 'edit' ? 'Save Changes' : 'Create StackScript'}
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        className={classes.actions}
+        primary
+        primaryButtonDataTestId="save"
+        primaryButtonDisabled={disabled || disableSubmit}
+        primaryButtonHandler={onSubmit}
+        primaryButtonLoading={isSubmitting}
+        primaryButtonText={
+          mode === 'edit' ? 'Save Changes' : 'Create StackScript'
+        }
+        secondary
+        secondaryButtonDataTestId="cancel"
+        secondaryButtonDisabled={disabled}
+        secondaryButtonHandler={onCancel}
+        secondaryButtonText="Reset"
+      />
     </Paper>
   );
 };

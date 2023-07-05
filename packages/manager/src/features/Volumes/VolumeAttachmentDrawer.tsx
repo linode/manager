@@ -2,7 +2,6 @@ import { Grant } from '@linode/api-v4/lib/account';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Drawer from 'src/components/Drawer';
@@ -159,20 +158,18 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
             isLoading={configsLoading}
           />
         </FormControl>
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={formik.isSubmitting}
-            disabled={disabled || readOnly}
-            data-qa-submit
-          >
-            Attach
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit"
+          primaryButtonDisabled={disabled || readOnly}
+          primaryButtonLoading={formik.isSubmitting}
+          primaryButtonText="Attach"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonHandler={handleClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

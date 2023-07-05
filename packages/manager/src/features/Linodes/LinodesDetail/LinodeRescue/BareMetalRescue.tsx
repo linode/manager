@@ -2,7 +2,6 @@ import { rescueMetalLinode } from '@linode/api-v4/lib/linodes/actions';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -53,14 +52,16 @@ export const BareMetalRescue = (props: Props) => {
   };
 
   const actions = () => (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-        Cancel
-      </Button>
-      <Button buttonType="primary" onClick={handleSubmit} loading={loading}>
-        Reboot into Rescue Mode
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonHandler={handleSubmit}
+      primaryButtonLoading={loading}
+      primaryButtonText="Reboot into Rescue Mode"
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

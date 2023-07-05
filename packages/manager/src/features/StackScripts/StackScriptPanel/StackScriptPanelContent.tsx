@@ -7,7 +7,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { StackScriptsRequest } from 'src/features/StackScripts/types';
@@ -167,31 +166,28 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
 
   const renderConfirmDeleteActions = () => {
     return (
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={handleCloseDialog}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={handleDeleteStackScript}
-          loading={dialog.delete.submitting}
-        >
-          Delete StackScript
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonHandler={handleDeleteStackScript}
+        primaryButtonLoading={dialog.delete.submitting}
+        primaryButtonText="Delete StackScript"
+        secondary
+        secondaryButtonHandler={handleCloseDialog}
+        secondaryButtonText="Cancel"
+      />
     );
   };
 
   const renderConfirmMakePublicActions = () => {
     return (
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={handleCloseDialog}>
-          Cancel
-        </Button>
-        <Button buttonType="primary" onClick={handleMakePublic}>
-          Yes, make me a star!
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonHandler={handleMakePublic}
+        primaryButtonText="Yes, make me a star!"
+        secondary
+        secondaryButtonHandler={handleCloseDialog}
+        secondaryButtonText="Cancel"
+      />
     );
   };
 

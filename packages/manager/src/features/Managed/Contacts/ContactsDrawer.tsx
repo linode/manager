@@ -4,7 +4,6 @@ import { Formik, FormikHelpers } from 'formik';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -203,15 +202,12 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                   errorText={errors.group}
                 />
 
-                <ActionsPanel>
-                  <Button
-                    buttonType="primary"
-                    loading={isSubmitting}
-                    onClick={() => handleSubmit()}
-                  >
-                    {isEditing ? 'Save Changes' : 'Add Contact'}
-                  </Button>
-                </ActionsPanel>
+                <ActionsPanel
+                  primary
+                  primaryButtonHandler={() => handleSubmit()}
+                  primaryButtonLoading={isSubmitting}
+                  primaryButtonText={isEditing ? 'Save Changes' : 'Add Contact'}
+                />
               </form>
             </>
           );

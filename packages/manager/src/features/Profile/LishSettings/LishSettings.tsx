@@ -188,20 +188,17 @@ export const LishSettings = () => {
             </Button>
           </>
         )}
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            data-qa-save
-            disabled={
-              lishAuthMethod === profile?.lish_auth_method &&
-              equals(authorizedKeys, profile?.authorized_keys)
-            }
-            loading={submitting}
-            onClick={onSubmit}
-          >
-            Save
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDisabled={
+            lishAuthMethod === profile?.lish_auth_method &&
+            equals(authorizedKeys, profile?.authorized_keys)
+          }
+          primaryButtonDataTestId="save"
+          primaryButtonHandler={onSubmit}
+          primaryButtonLoading={submitting}
+          primaryButtonText="Save"
+        />
       </Paper>
     </>
   );

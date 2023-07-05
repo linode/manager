@@ -126,17 +126,14 @@ const UserProfile: React.FC<Props> = (props) => {
             errorText={hasAccountErrorFor('username')}
             data-qa-username
           />
-          <ActionsPanel>
-            <Button
-              buttonType="primary"
-              disabled={username === originalUsername}
-              loading={accountSaving}
-              onClick={saveAccount}
-              data-qa-submit
-            >
-              Save
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primary
+            primaryButtonDataTestId="submit"
+            primaryButtonDisabled={username === originalUsername}
+            primaryButtonHandler={saveAccount}
+            primaryButtonLoading={accountSaving}
+            primaryButtonText="Save"
+          />
         </Paper>
         <Paper className={classes.wrapper}>
           {profileSuccess && (
@@ -161,21 +158,17 @@ const UserProfile: React.FC<Props> = (props) => {
             errorText={hasProfileErrorFor('email')}
             data-qa-email
           />
-          <ActionsPanel>
-            <Button
-              // This should be disabled if this is NOT the current user.
-              disabled={
-                profile?.username !== originalUsername ||
-                email === originalEmail
-              }
-              buttonType="primary"
-              loading={profileSaving}
-              onClick={saveProfile}
-              data-qa-submit
-            >
-              Save
-            </Button>
-          </ActionsPanel>
+          <ActionsPanel
+            primary
+            primaryButtonDataTestId="submit"
+            // This should be disabled if this is NOT the current user.
+            primaryButtonDisabled={
+              profile?.username !== originalUsername || email === originalEmail
+            }
+            primaryButtonHandler={saveProfile}
+            primaryButtonLoading={profileSaving}
+            primaryButtonText="Save"
+          />
         </Paper>
       </>
     );

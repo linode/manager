@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import imageEvents from 'src/store/selectors/imageEvents';
@@ -349,19 +348,21 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const getActions = () => {
     return (
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={closeDialog} data-qa-cancel>
-          {dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'}
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={handleRemoveImage}
-          loading={dialog.submitting}
-          data-qa-submit
-        >
-          {dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'}
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonHandler={handleRemoveImage}
+        primaryButtonLoading={dialog.submitting}
+        primaryButtonDataTestId="submit"
+        primaryButtonText={
+          dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'
+        }
+        secondary
+        secondaryButtonHandler={closeDialog}
+        secondaryButtonText={
+          dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'
+        }
+        secondaryButtonDataTestId="cancel"
+      />
     );
   };
 

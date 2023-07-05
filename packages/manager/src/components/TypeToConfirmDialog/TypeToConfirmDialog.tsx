@@ -1,7 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import {
   ConfirmationDialog,
   ConfirmationDialogProps,
@@ -57,22 +56,23 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   }, [open]);
 
   const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onClick}
-        loading={loading}
-        disabled={disabled}
-        data-qa-confirm
-      >
-        {entity.type === 'Volume' && title.startsWith('Detach')
+    <ActionsPanel
+      style={{ padding: 0 }}
+      primary
+      primaryButtonDataTestId="confirm"
+      primaryButtonDisabled={disabled}
+      primaryButtonHandler={onClick}
+      primaryButtonLoading={loading}
+      primaryButtonText={
+        entity.type === 'Volume' && title.startsWith('Detach')
           ? 'Detach'
-          : 'Delete'}
-      </Button>
-    </ActionsPanel>
+          : 'Delete'
+      }
+      secondary
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -144,23 +143,17 @@ export const RestoreToLinodeDrawer = (props: Props) => {
             }`}
           />
         )}
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            onClick={onClose}
-            data-qa-restore-cancel
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={isLoading}
-            data-qa-restore-submit
-          >
-            Restore
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonType="submit"
+          primaryButtonLoading={isLoading}
+          primaryButtonDataTestId="restore-submit"
+          primaryButtonText="Restore"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonDataTestId="restore-cancel"
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

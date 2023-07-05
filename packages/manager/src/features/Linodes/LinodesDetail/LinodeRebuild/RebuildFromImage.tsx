@@ -12,7 +12,6 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import CheckBox from 'src/components/CheckBox';
 import { Box } from 'src/components/Box';
 import Divider from 'src/components/core/Divider';
@@ -275,7 +274,14 @@ export const RebuildFromImage = (props: Props) => {
                   />
                 </>
               ) : null}
-              <ActionsPanel className={classes.actionPanel}>
+              <ActionsPanel
+                className={classes.actionPanel}
+                primary
+                primaryButtonDataTestId="rebuild-button"
+                primaryButtonDisabled={submitButtonDisabled || disabled}
+                primaryButtonHandler={handleRebuildButtonClick}
+                primaryButtonText="Rebuild Linode"
+              >
                 <TypeToConfirm
                   confirmationText={
                     <span>
@@ -294,14 +300,6 @@ export const RebuildFromImage = (props: Props) => {
                   label="Linode Label"
                   textFieldStyle={{ marginBottom: 16 }}
                 />
-                <Button
-                  disabled={submitButtonDisabled || disabled}
-                  buttonType="primary"
-                  onClick={handleRebuildButtonClick}
-                  data-testid="rebuild-button"
-                >
-                  Rebuild Linode
-                </Button>
               </ActionsPanel>
             </form>
           </Grid>

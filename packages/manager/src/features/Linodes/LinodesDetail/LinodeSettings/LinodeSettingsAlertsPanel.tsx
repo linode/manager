@@ -4,7 +4,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import {
   useLinodeQuery,
@@ -209,17 +208,14 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const renderExpansionActions = () => {
     return (
-      <ActionsPanel>
-        <Button
-          buttonType="primary"
-          onClick={() => formik.handleSubmit()}
-          disabled={isReadOnly || !formik.dirty}
-          loading={isLoading}
-          data-qa-alerts-save
-        >
-          Save
-        </Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonDataTestId="alerts-save"
+        primaryButtonDisabled={isReadOnly || !formik.dirty}
+        primaryButtonHandler={() => formik.handleSubmit()}
+        primaryButtonLoading={isLoading}
+        primaryButtonText="Save"
+      />
     );
   };
 

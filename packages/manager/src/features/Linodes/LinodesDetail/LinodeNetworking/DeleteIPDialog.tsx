@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useSnackbar } from 'notistack';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useLinodeIPDeleteMutation } from 'src/queries/linodes/networking';
@@ -35,18 +34,15 @@ export const DeleteIPDialog = (props: Props) => {
       error={error?.[0].reason}
       title={`Delete ${address}?`}
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={handleDeleteIP}
-            loading={isLoading}
-          >
-            Delete IP
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonHandler={handleDeleteIP}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Delete IP"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       <Typography>

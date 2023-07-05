@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Radio } from 'src/components/Radio/Radio';
@@ -337,15 +336,12 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           </RadioGroup>
         </div>
 
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            onClick={() => handleSubmit()}
-            data-qa-submit
-          >
-            {mode === 'create' ? 'Add Rule' : 'Add Changes'}
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit"
+          primaryButtonHandler={() => handleSubmit()}
+          primaryButtonText={mode === 'create' ? 'Add Rule' : 'Add Changes'}
+        />
       </form>
     );
   }

@@ -21,7 +21,6 @@ import {
 } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button, ButtonProps } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
@@ -776,18 +775,6 @@ class DomainRecordDrawer extends React.Component<Props, State> {
     const noARecordsNoticeText =
       'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
-    const buttonProps: ButtonProps = {
-      buttonType: 'primary',
-      disabled: submitting,
-      loading: submitting,
-      onClick: isDomain
-        ? this.onDomainEdit
-        : isCreating
-        ? this.onRecordCreate
-        : this.onRecordEdit,
-      children: 'Save',
-    };
-
     const otherErrors = [
       getAPIErrorsFor({}, this.state.errors)('_unknown'),
       getAPIErrorsFor({}, this.state.errors)('none'),
@@ -808,16 +795,24 @@ class DomainRecordDrawer extends React.Component<Props, State> {
         )}
         {fields.map((field: any, idx: number) => field(idx))}
 
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            onClick={this.onClose}
-            data-qa-record-cancel
-          >
-            Cancel
-          </Button>
-          <Button {...buttonProps} data-qa-record-save />
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonHandler={
+            isDomain
+              ? this.onDomainEdit
+              : isCreating
+              ? this.onRecordCreate
+              : this.onRecordEdit
+          }
+          primaryButtonText="Save"
+          primaryButtonDisabled={submitting}
+          primaryButtonLoading={submitting}
+          primaryButtonDataTestId="save"
+          secondary
+          secondaryButtonHandler={this.onClose}
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonText="Cancel"
+        />
       </Drawer>
     );
   }

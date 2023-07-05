@@ -2,7 +2,6 @@ import { Disk } from '@linode/api-v4/lib/linodes';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { Code } from 'src/components/Code/Code';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
@@ -143,19 +142,16 @@ export const ResizeDiskDrawer = (props: Props) => {
             tooltipText={MaxSizeTooltipText}
           />
         </FormHelperText>
-        <ActionsPanel>
-          <Button onClick={onClose} buttonType="secondary" className="cancel">
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            buttonType="primary"
-            loading={formik.isSubmitting}
-            data-testid="submit-disk-form"
-          >
-            Resize
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit-disk-form"
+          primaryButtonLoading={formik.isSubmitting}
+          primaryButtonText="Resize"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

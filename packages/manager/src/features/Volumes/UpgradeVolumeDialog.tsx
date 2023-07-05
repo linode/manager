@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { Link } from 'src/components/Link';
@@ -61,14 +60,15 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
   };
 
   const actions = (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button buttonType="primary" onClick={onSubmit} loading={isLoading}>
-        Enter Upgrade Queue
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonHandler={onSubmit}
+      primaryButtonLoading={isLoading}
+      primaryButtonText="Enter Upgrade Queue"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonText="Cancel"
+    />
   );
 
   return (

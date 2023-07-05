@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 
@@ -20,25 +19,18 @@ const renderActions = (
   onResize: () => void
 ) => {
   return (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'resize-dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onResize}
-        loading={loading}
-        data-qa-confirm
-        data-testid={'resize-dialog-confirm'}
-      >
-        Resize
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      style={{ padding: 0 }}
+      primary
+      primaryButtonHandler={onResize}
+      primaryButtonLoading={loading}
+      primaryButtonDataTestId="confirm"
+      primaryButtonText="Resize"
+      secondary
+      secondaryButtonHandler={onClose}
+      secondaryButtonDataTestId="cancel"
+      secondaryButtonText="Cancel"
+    />
   );
 };
 

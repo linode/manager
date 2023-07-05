@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Drawer from 'src/components/Drawer';
@@ -199,21 +198,18 @@ export const EditDomainDrawer = (props: Props) => {
           tagError={errorMap.tags}
           disabled={disabled}
         />
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            disabled={disabled || !formik.dirty}
-            loading={formik.isSubmitting}
-            type="submit"
-            data-qa-submit
-            data-testid="create-domain-submit"
-          >
-            Save Changes
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit"
+          primaryButtonDisabled={disabled || !formik.dirty}
+          primaryButtonLoading={formik.isSubmitting}
+          primaryButtonText="Save Changes"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       </form>
     </Drawer>
   );

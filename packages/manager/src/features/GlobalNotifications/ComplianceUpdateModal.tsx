@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { SupportLink } from 'src/components/SupportLink';
@@ -46,26 +45,20 @@ const ComplianceUpdateModal = () => {
       onClose={complianceModelContext.close}
       title="Compliance Update"
       actions={() => (
-        <ActionsPanel>
-          <Button
-            buttonType="secondary"
-            onClick={() => {
-              setChecked(false);
-              complianceModelContext.close();
-            }}
-            data-qa-cancel
-          >
-            Close
-          </Button>
-          <Button
-            buttonType="primary"
-            onClick={handleAgree}
-            loading={isLoading}
-            disabled={!checked}
-          >
-            Agree
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonHandler={handleAgree}
+          primaryButtonLoading={isLoading}
+          primaryButtonDisabled={!checked}
+          primaryButtonText="Agree"
+          secondary
+          secondaryButtonHandler={() => {
+            setChecked(false);
+            complianceModelContext.close();
+          }}
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonText="Close"
+        />
       )}
       error={error}
     >

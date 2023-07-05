@@ -4,7 +4,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { useCreateImageMutation } from 'src/queries/images';
 import { useSnackbar } from 'notistack';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { Typography } from '@mui/material';
 import { SupportLink } from 'src/components/SupportLink/SupportLink';
 
@@ -53,14 +52,15 @@ export const CreateImageFromDiskDialog = (props: Props) => {
       onClose={onClose}
       error={error?.[0].reason}
       actions={
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" onClick={onCreate} loading={isLoading}>
-            Create Image
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonHandler={onCreate}
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Create Image"
+          secondary
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Cancel"
+        />
       }
     >
       <Typography>

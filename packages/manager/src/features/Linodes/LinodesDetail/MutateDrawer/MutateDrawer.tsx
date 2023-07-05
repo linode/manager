@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import ListItem from 'src/components/core/ListItem';
 import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
@@ -167,15 +166,14 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           </strong>
           , but that may vary based on host and network load.
         </Typography>
-        <ActionsPanel style={{ marginTop: 32 }}>
-          <Button
-            loading={loading}
-            onClick={this.props.initMutation}
-            buttonType="primary"
-          >
-            Enter the Upgrade Queue
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          style={{ marginTop: 32 }}
+          primary
+          primaryButtonHandler={this.props.initMutation}
+          primaryButtonLoading={loading}
+          primaryButtonText="Enter the Upgrade Queue"
+        />
+
         {/*
          * Show when the relevant docs exist
          */}
