@@ -81,8 +81,8 @@ export interface ServiceTarget extends ServiceTargetPayload {
 }
 
 export interface Endpoint {
-  ip?: string;
-  port?: number;
+  ip: string;
+  port: number;
   capacity: number;
   hard_rate_limit: number;
 }
