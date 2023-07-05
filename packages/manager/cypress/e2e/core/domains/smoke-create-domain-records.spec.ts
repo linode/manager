@@ -91,7 +91,7 @@ const createRecords = () => [
 authenticate();
 describe('Creates Domains record with Form', () => {
   beforeEach(() => {
-    cy.wrap(deleteAllTestDomains());
+    cy.defer(deleteAllTestDomains(), 'cleaning up test domains');
   });
 
   createRecords().forEach((rec) => {

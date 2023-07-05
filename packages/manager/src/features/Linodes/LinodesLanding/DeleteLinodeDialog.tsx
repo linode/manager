@@ -48,7 +48,13 @@ export const DeleteLinodeDialog = (props: Props) => {
   return (
     <TypeToConfirmDialog
       title={`Delete ${linode?.label ?? ''}?`}
-      entity={{ type: 'Linode', label: linode?.label }}
+      label={'Linode Label'}
+      entity={{
+        type: 'Linode',
+        action: 'deletion',
+        name: linode?.label,
+        primaryBtnText: 'Delete',
+      }}
       open={open}
       loading={isLoading}
       errors={error}
