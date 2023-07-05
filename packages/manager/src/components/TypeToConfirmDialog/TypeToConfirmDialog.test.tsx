@@ -14,8 +14,14 @@ describe('TypeToConfirmDialog Component', () => {
     const { getByText } = renderWithTheme(
       <TypeToConfirmDialog
         title="Delete Linode test?"
+        label={'Linode Label'}
         open={true}
-        entity={{ type: 'Linode', label: 'test' }}
+        entity={{
+          type: 'Linode',
+          name: 'test',
+          action: 'deletion',
+          primaryBtnText: 'Delete',
+        }}
         loading={false}
         {...props}
       >
