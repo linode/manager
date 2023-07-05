@@ -76,14 +76,14 @@ export const InvoiceDetail = () => {
     requestData();
   }, []);
 
-  const printInvoicePDF = (
+  const printInvoicePDF = async (
     account: Account,
     invoice: Invoice,
     items: InvoiceItem[]
   ) => {
     const taxes =
       flags[getShouldUseAkamaiBilling(invoice.date) ? 'taxes' : 'taxBanner'];
-    const result = printInvoice(account, invoice, items, taxes);
+    const result = await printInvoice(account, invoice, items, taxes);
 
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };

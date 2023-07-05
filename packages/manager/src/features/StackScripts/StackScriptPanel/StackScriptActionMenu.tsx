@@ -6,7 +6,7 @@ import { Hidden } from 'src/components/Hidden';
 import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useProfile } from 'src/queries/profile';
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 

@@ -7,8 +7,12 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-import { Token } from '@linode/api-v4/types';
+import { Token, Profile } from '@linode/api-v4/types';
+import { getProfile } from '@linode/api-v4/lib/profile';
+import { formatDate } from 'src/utilities/formatDate';
+import { authenticate } from 'support/api/authentication';
 
+authenticate();
 describe('Third party access tokens', () => {
   let token: Token;
 
@@ -34,7 +38,12 @@ describe('Third party access tokens', () => {
       .closest('tr')
       .within(() => {
         cy.findByText(token.label).should('be.visible');
-        cy.findByText('2020-01-01 12:00').should('be.visible');
+        cy.defer(getProfile()).then((profile: Profile) => {
+          const dateFormatOptions = { timezone: profile.timezone };
+          cy.findByText(formatDate(token.created, dateFormatOptions)).should(
+            'be.visible'
+          );
+        });
         cy.findByText('never').should('be.visible');
       });
   });
