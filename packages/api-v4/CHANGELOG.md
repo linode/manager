@@ -1,3 +1,10 @@
+## [2023-06-27] - v0.95.1
+
+
+### Fixed:
+
+- Updated Entity interface to reflect the possibility of a null label ([#9331](https://github.com/linode/manager/pull/9331))
+
 ## [2023-06-26] - v0.95.0
 
 ### Added:

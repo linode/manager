@@ -1,8 +1,8 @@
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import Divider from 'src/components/core/Divider';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Duration } from 'luxon';
 import { Event } from '@linode/api-v4/lib/account/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';

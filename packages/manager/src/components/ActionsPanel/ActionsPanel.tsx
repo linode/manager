@@ -3,7 +3,7 @@ import { Button } from 'src/components/Button/Button';
 import cx from 'classnames';
 import RenderGuard from 'src/components/RenderGuard';
 import { styled, SxProps } from '@mui/material/styles';
-import Box, { BoxProps } from '../core/Box';
+import { Box, BoxProps } from '../Box';
 
 interface ActionPanelProps extends BoxProps {
   /**

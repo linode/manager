@@ -1,8 +1,8 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
+import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';

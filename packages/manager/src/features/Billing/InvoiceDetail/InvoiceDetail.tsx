@@ -13,11 +13,11 @@ import { useParams } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
 import { useTheme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Currency } from 'src/components/Currency';
 import Grid from '@mui/material/Unstable_Grid2';
 import { IconButton } from 'src/components/IconButton';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import useFlags from 'src/hooks/useFlags';
@@ -76,14 +76,14 @@ export const InvoiceDetail = () => {
     requestData();
   }, []);
 
-  const printInvoicePDF = (
+  const printInvoicePDF = async (
     account: Account,
     invoice: Invoice,
     items: InvoiceItem[]
   ) => {
     const taxes =
       flags[getShouldUseAkamaiBilling(invoice.date) ? 'taxes' : 'taxBanner'];
-    const result = printInvoice(account, invoice, items, taxes);
+    const result = await printInvoice(account, invoice, items, taxes);
 
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };

@@ -6,11 +6,11 @@ import { QueryClient } from 'react-query';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import {
   withAccountSettings,

@@ -1,12 +1,12 @@
 import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
+import { Box } from 'src/components/Box';
 import { Button } from '../Button/Button';
-import Link from '../Link';
-import Box from 'src/components/core/Box';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from '../Link';
 import LinodeActionMenu from 'src/features/Linodes/LinodesLanding/LinodeActionMenu';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const sxBoxFlex = {
   alignItems: 'center',

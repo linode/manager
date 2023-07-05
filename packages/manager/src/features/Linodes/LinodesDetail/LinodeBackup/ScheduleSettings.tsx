@@ -6,7 +6,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';

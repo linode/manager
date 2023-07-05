@@ -9,7 +9,7 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { StackScriptsRequest } from 'src/features/StackScripts/types';
 import StackScriptBase, {
   StateProps,

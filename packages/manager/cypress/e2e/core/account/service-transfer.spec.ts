@@ -37,7 +37,7 @@ const serviceTransferStatuses = [
   'failed',
   'accepted',
   'stale',
-  'cancelled',
+  'canceled',
 ];
 
 /**
@@ -164,7 +164,7 @@ describe('Account service transfers', () => {
     cy.wait(['@getTransfers', '@getTransfers', '@getTransfers']);
 
     // Confirm that pending transfers are displayed in "Pending Service Transfers" panel.
-    cy.defer(getProfile()).then((profile: Profile) => {
+    cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
       const dateFormatOptions = { timezone: profile.timezone };
       cy.get('[data-qa-panel="Pending Service Transfers"]')
         .should('be.visible')
@@ -214,10 +214,9 @@ describe('Account service transfers', () => {
                 cy.findByText(
                   formatDate(sentTransfer.created, dateFormatOptions)
                 ).should('be.visible');
-                cy.findByText(
-                  sentTransfer.status.replace('cancelled', 'canceled'),
-                  { exact: false }
-                ).should('be.visible');
+                cy.findByText(sentTransfer.status, { exact: false }).should(
+                  'be.visible'
+                );
               });
           });
         });
@@ -249,116 +248,118 @@ describe('Account service transfers', () => {
       return linode;
     };
 
-    cy.defer(setupLinode()).then((linode: Linode) => {
-      interceptInitiateEntityTransfer().as('initiateTransfer');
+    cy.defer(setupLinode(), 'creating and booting Linode').then(
+      (linode: Linode) => {
+        interceptInitiateEntityTransfer().as('initiateTransfer');
 
-      // Navigate to Service Transfer landing page, initiate transfer.
-      cy.visitWithLogin(serviceTransferLandingUrl);
-      ui.button
-        .findByTitle('Make a Service Transfer')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-
-      cy.findByText('Make a Service Transfer').should('be.visible');
-      cy.url().should('endWith', serviceTransferCreateUrl);
-      initiateLinodeTransfer(linode.label);
-
-      cy.wait('@initiateTransfer').then((response) => {
-        const token = response?.response?.body.token;
-        if (!token) {
-          throw new Error(
-            'Failed to retrieve generated transfer token from API response.'
-          );
-        }
-
-        ui.dialog
-          .findByTitle('Service Transfer Token')
-          .should('be.visible')
-          .within(() => {
-            // Confirm that user is advised to transfer token using a secure means,
-            // and that they are informed that the transfer may take up to an hour.
-            cy.findByText('secure delivery method', { exact: false }).should(
-              'be.visible'
-            );
-            cy.findByText('may take up to an hour', { exact: false }).should(
-              'be.visible'
-            );
-
-            cy.findByDisplayValue(token).should('be.visible');
-
-            // Close dialog.
-            cy.findByLabelText('Close').should('be.visible').click();
-          });
-
-        // Confirm token is listed on landing page and that correct information
-        // is shown in modal when token is clicked.
-        cy.findByText(token)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText(token).should('be.visible').click();
-          });
-
-        ui.dialog
-          .findByTitle('Service Transfer Details')
-          .should('be.visible')
-          .within(() => {
-            cy.findByText(token).should('be.visible');
-            cy.findByText(linode.id).should('be.visible');
-            cy.get('[data-qa-close-drawer]').should('be.visible').click();
-          });
-
-        // Attempt to receive the an invalid token.
-        redeemToken(randomUuid());
-        assertReceiptError('Not found');
-
-        // Attempt to receive previously generated token.
-        redeemToken(token);
-        assertReceiptError(
-          'You cannot initiate a transfer to another user on your account.'
-        );
-
-        // Attempt to generate a new token for the same Linode.
+        // Navigate to Service Transfer landing page, initiate transfer.
+        cy.visitWithLogin(serviceTransferLandingUrl);
         ui.button
           .findByTitle('Make a Service Transfer')
           .should('be.visible')
           .should('be.enabled')
           .click();
 
+        cy.findByText('Make a Service Transfer').should('be.visible');
+        cy.url().should('endWith', serviceTransferCreateUrl);
         initiateLinodeTransfer(linode.label);
-        const errorMessage = `Cannot transfer Linode(s) with ID(s) ${linode.id}: Already pending another transfer request.`;
-        cy.findByText(errorMessage).should('be.visible');
 
-        // Navigate back to landing page and cancel transfer.
-        cy.contains('a', 'Service Transfers').should('be.visible').click();
-        cy.url().should('endWith', serviceTransferLandingUrl);
+        cy.wait('@initiateTransfer').then((response) => {
+          const token = response?.response?.body.token;
+          if (!token) {
+            throw new Error(
+              'Failed to retrieve generated transfer token from API response.'
+            );
+          }
 
-        cy.findByText(token)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            ui.button
-              .findByTitle('Cancel')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
+          ui.dialog
+            .findByTitle('Service Transfer Token')
+            .should('be.visible')
+            .within(() => {
+              // Confirm that user is advised to transfer token using a secure means,
+              // and that they are informed that the transfer may take up to an hour.
+              cy.findByText('secure delivery method', { exact: false }).should(
+                'be.visible'
+              );
+              cy.findByText('may take up to an hour', { exact: false }).should(
+                'be.visible'
+              );
 
-        ui.dialog
-          .findByTitle('Cancel this Service Transfer?')
-          .should('be.visible')
-          .within(() => {
-            ui.buttonGroup
-              .findButtonByTitle('Cancel Service Transfer')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
+              cy.findByDisplayValue(token).should('be.visible');
 
-        ui.toast.assertMessage('Service transfer canceled successfully.');
-      });
-    });
+              // Close dialog.
+              cy.findByLabelText('Close').should('be.visible').click();
+            });
+
+          // Confirm token is listed on landing page and that correct information
+          // is shown in modal when token is clicked.
+          cy.findByText(token)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.findByText(token).should('be.visible').click();
+            });
+
+          ui.dialog
+            .findByTitle('Service Transfer Details')
+            .should('be.visible')
+            .within(() => {
+              cy.findByText(token).should('be.visible');
+              cy.findByText(linode.id).should('be.visible');
+              cy.get('[data-qa-close-drawer]').should('be.visible').click();
+            });
+
+          // Attempt to receive the an invalid token.
+          redeemToken(randomUuid());
+          assertReceiptError('Not found');
+
+          // Attempt to receive previously generated token.
+          redeemToken(token);
+          assertReceiptError(
+            'You cannot initiate a transfer to another user on your account.'
+          );
+
+          // Attempt to generate a new token for the same Linode.
+          ui.button
+            .findByTitle('Make a Service Transfer')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          initiateLinodeTransfer(linode.label);
+          const errorMessage = `Cannot transfer Linode(s) with ID(s) ${linode.id}: Already pending another transfer request.`;
+          cy.findByText(errorMessage).should('be.visible');
+
+          // Navigate back to landing page and cancel transfer.
+          cy.contains('a', 'Service Transfers').should('be.visible').click();
+          cy.url().should('endWith', serviceTransferLandingUrl);
+
+          cy.findByText(token)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              ui.button
+                .findByTitle('Cancel')
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+            });
+
+          ui.dialog
+            .findByTitle('Cancel this Service Transfer?')
+            .should('be.visible')
+            .within(() => {
+              ui.buttonGroup
+                .findButtonByTitle('Cancel Service Transfer')
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+            });
+
+          ui.toast.assertMessage('Service transfer canceled successfully.');
+        });
+      }
+    );
   });
 
   /*

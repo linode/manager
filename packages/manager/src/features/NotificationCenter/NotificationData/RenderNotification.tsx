@@ -4,7 +4,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { useTheme, styled } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Box from '@mui/material/Box';
 import { Link } from 'src/components/Link';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';

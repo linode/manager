@@ -3,7 +3,7 @@ import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { confirmObjectStorage } from '../utilities';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';

@@ -8,7 +8,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { TextField } from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';

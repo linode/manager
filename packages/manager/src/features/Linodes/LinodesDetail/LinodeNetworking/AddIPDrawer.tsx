@@ -9,10 +9,10 @@ import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import ExternalLink from 'src/components/Link';
+import { Link as ExternalLink } from 'src/components/Link';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,

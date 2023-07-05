@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useLinodeIPDeleteMutation } from 'src/queries/linodes/networking';
 
 interface Props {

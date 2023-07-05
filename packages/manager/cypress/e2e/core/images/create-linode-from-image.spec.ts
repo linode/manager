@@ -4,6 +4,7 @@ import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { imageFactory, linodeFactory } from '@src/factories';
 import { chooseRegion } from 'support/util/regions';
+import { ui } from 'support/ui';
 
 const region = chooseRegion();
 
@@ -18,7 +19,7 @@ const mockImage = imageFactory.build({
   id: `private/${randomNumber()}`,
 });
 
-const createLinodeWithImageMock = (preselectedImage: boolean) => {
+const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   mockGetAllImages([mockImage]).as('mockImage');
 
   cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
@@ -36,6 +37,8 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
     }
   ).as('mockLinodeResponse');
 
+  cy.visitWithLogin(url);
+
   cy.wait('@mockImage');
   if (!preselectedImage) {
     cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
@@ -50,7 +53,9 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
-  containsClick(region.label);
+
+  ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
+
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
   cy.get('[id="root-password"]').type(randomString(32));
@@ -85,12 +90,13 @@ describe('create linode from image, mocked data', () => {
   });
 
   it('creates linode from image on images tab', () => {
-    cy.visitWithLogin('/linodes/create?type=Images');
-    createLinodeWithImageMock(false);
+    createLinodeWithImageMock('/linodes/create?type=Images', false);
   });
 
   it('creates linode from preselected image on images tab', () => {
-    cy.visitWithLogin(`/linodes/create/?type=Images&imageID=${mockImage.id}`);
-    createLinodeWithImageMock(true);
+    createLinodeWithImageMock(
+      `/linodes/create/?type=Images&imageID=${mockImage.id}`,
+      true
+    );
   });
 });

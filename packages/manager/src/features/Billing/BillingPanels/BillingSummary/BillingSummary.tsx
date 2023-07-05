@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import Divider from 'src/components/core/Divider';
@@ -7,7 +7,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
 import { BillingPaper } from '../../BillingDetail';
