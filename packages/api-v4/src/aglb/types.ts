@@ -43,8 +43,8 @@ export interface Entrypoint {
 }
 
 export interface CertificateTable {
-  sniHostname: string;
-  certificateId: string;
+  sni_hostname: string;
+  certificate_id: string;
 }
 
 export interface Route extends RoutePayload {
@@ -85,9 +85,6 @@ export interface Endpoint {
   endpoint_port?: number;
   endpoint_rate_capacity: number;
   endpoint_rate_limit: number;
-  host?: string;
-  port?: number;
   endpoint_host?: string;
   endpoint_dns_name?: string;
-  dnsName?: string;
 }
