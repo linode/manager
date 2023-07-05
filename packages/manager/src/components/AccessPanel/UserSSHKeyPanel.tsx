@@ -214,7 +214,6 @@ const UserSSHKeyPanel = (props: Props) => {
       <Button
         buttonType="outlined"
         onClick={() => setIsCreateDrawerOpen(true)}
-        compactX
         disabled={disabled}
       >
         Add an SSH Key

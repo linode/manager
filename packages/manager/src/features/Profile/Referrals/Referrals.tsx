@@ -1,7 +1,7 @@
 import * as React from 'react';
 import CircularProgress from 'src/components/core/CircularProgress';
 import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';

@@ -12,8 +12,8 @@ import {
   predefinedFirewallFromRule,
 } from 'src/features/Firewalls/shared';
 import {
-  CUSTOM_PORTS_VALIDATION_REGEX,
   CUSTOM_PORTS_ERROR_MESSAGE,
+  isCustomPortsValid,
 } from '@linode/validation';
 import type {
   FirewallRuleProtocol,
@@ -332,7 +332,7 @@ export const validateForm = ({
 
   if ((protocol === 'ICMP' || protocol === 'IPENCAP') && ports) {
     errors.ports = `Ports are not allowed for ${protocol} protocols.`;
-  } else if (ports && !ports.match(CUSTOM_PORTS_VALIDATION_REGEX)) {
+  } else if (ports && !isCustomPortsValid(ports)) {
     errors.ports = CUSTOM_PORTS_ERROR_MESSAGE;
   }
 

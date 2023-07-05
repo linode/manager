@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Checkbox } from 'src/components/Checkbox';
 import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 
 interface Props {
   className?: string;
