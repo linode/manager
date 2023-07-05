@@ -53,13 +53,16 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
   const queryClient = useQueryClient();
   const queryKey = infiniteEventsQueryKey(filter);
 
-  const [incompleteEvents, setIncompleteEvents] = useState<Event[]>([]);
-
   const [mountTimestamp] = useState<string>(() =>
     DateTime.fromMillis(Date.now(), { zone: 'utc' }).toFormat(
       ISO_DATETIME_NO_TZ_FORMAT
     )
   );
+
+  const incompleteEvents = queryClient
+    .getQueryData<InfiniteData<ResourcePage<Event>>>(queryKey)
+    ?.pages.reduce((events, page) => [...events, ...page.data], [])
+    .filter(incompleteEvent);
 
   const pollingEventHandler = React.useCallback(
     (event: Event) => {
@@ -83,7 +86,7 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
     queryKey,
     ({ pageParam }) =>
       getEvents(
-        { page: pageParam, page_size: 25 },
+        { page: pageParam ?? 0, page_size: 25 },
         {
           created: { '+lte': mountTimestamp }, // Exclude new events as these will offset the page ordering
           ...filter,
@@ -124,14 +127,6 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
     (events, page) => [...events, ...page.data],
     []
   );
-
-  const newIncompleteEvents = events.filter(incompleteEvent);
-  if (
-    JSON.stringify(newIncompleteEvents.map((event) => event.id)) !==
-    JSON.stringify(incompleteEvents.map((event) => event.id))
-  ) {
-    setIncompleteEvents(newIncompleteEvents);
-  }
 
   return {
     ...queryResult,
@@ -221,38 +216,22 @@ const updateEventsCache = (
     InfiniteData<ResourcePage<Event>>
   >(queryKey);
 
-  if (eventsCache) {
+  if (eventsCache?.pages.length) {
     const eventLocation = locateEvent(eventsCache, event.id);
     if (eventLocation) {
       eventsCache.pages[eventLocation.pageIdx].data[
         eventLocation.eventIdx
       ] = event;
-      queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
-        queryKey,
-        eventsCache
-      );
     } else {
-      addEventToPageZero(queryClient, pageZeroQueryKey(queryKey), event);
+      eventsCache.pages[0].data.unshift(event);
+      eventsCache.pages[0].results++;
     }
-  }
-};
 
-// Add new events to a 'page zero' so we don't
-// offset the sequence of events in subsequently
-// fetched pages
-const addEventToPageZero = (
-  queryClient: QueryClient,
-  queryKey: QueryKey,
-  event: Event
-) => {
-  const pageZero = queryClient.getQueryData<Event[]>(queryKey) ?? [];
-  const eventIdx = pageZero.findIndex((thisEvent) => thisEvent.id == event.id);
-  if (eventIdx >= 0) {
-    pageZero[eventIdx] = event;
-  } else {
-    pageZero.unshift(event);
+    queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
+      queryKey,
+      eventsCache
+    );
   }
-  queryClient.setQueryData<Event[]>(queryKey, pageZero);
 };
 
 type EventLocation = { pageIdx: number; eventIdx: number };
