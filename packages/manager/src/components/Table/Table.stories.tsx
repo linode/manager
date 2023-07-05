@@ -12,7 +12,7 @@ export const Default: StoryObj<TableProps> = {
 };
 
 const meta: Meta<TableProps> = {
-  title: 'Components/Table',
+  title: 'Components/table/BasicTable',
   component: Table,
   args: {
     children: (
@@ -45,6 +45,7 @@ const meta: Meta<TableProps> = {
     ),
     noBorder: false,
     padding: 'normal',
+    size: 'medium',
     spacingBottom: 0,
     spacingTop: 0,
   },
