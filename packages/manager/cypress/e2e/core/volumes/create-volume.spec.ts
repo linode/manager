@@ -79,7 +79,7 @@ describe('volume create flow', () => {
       regionLabel: region.label,
     };
 
-    cy.defer(createLinode(linodeRequest)).then((linode) => {
+    cy.defer(createLinode(linodeRequest), 'creating Linode').then((linode) => {
       interceptCreateVolume().as('createVolume');
       cy.visitWithLogin('/volumes/create', {
         localStorageOverrides: pageSizeOverride,
@@ -131,51 +131,53 @@ describe('volume create flow', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createLinode(linodeRequest)).then((linode: Linode) => {
-      const volume = {
-        label: randomLabel(),
-        size: `${randomNumber(10, 250)}`,
-      };
+    cy.defer(createLinode(linodeRequest), 'creating Linode').then(
+      (linode: Linode) => {
+        const volume = {
+          label: randomLabel(),
+          size: `${randomNumber(10, 250)}`,
+        };
 
-      cy.visitWithLogin(`/linodes/${linode.id}/storage`, {
-        localStorageOverrides: pageSizeOverride,
-      });
+        cy.visitWithLogin(`/linodes/${linode.id}/storage`, {
+          localStorageOverrides: pageSizeOverride,
+        });
 
-      // Click "Create Volume" button, fill out and submit volume create drawer form.
-      fbtClick('Create Volume');
-      cy.get('[data-qa-drawer="true"]').within(() => {
-        fbtVisible(`Create Volume for ${linode.label}`);
-        containsClick('Create and Attach Volume');
-        containsClick('Label').type(volume.label);
-        containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
+        // Click "Create Volume" button, fill out and submit volume create drawer form.
         fbtClick('Create Volume');
-      });
-
-      // Confirm volume configuration drawer opens, then close it.
-      cy.get('[data-qa-drawer="true"]').within(() => {
-        fbtVisible('Volume scheduled for creation.');
-        getClick('[data-qa-close-drawer="true"]');
-      });
-
-      // Confirm that volume is listed on Linode 'Storage' details page.
-      cy.findByText(volume.label)
-        .closest('tr')
-        .within(() => {
-          fbtVisible(volume.label);
-          fbtVisible(`${volume.size} GB`);
+        cy.get('[data-qa-drawer="true"]').within(() => {
+          fbtVisible(`Create Volume for ${linode.label}`);
+          containsClick('Create and Attach Volume');
+          containsClick('Label').type(volume.label);
+          containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
+          fbtClick('Create Volume');
         });
 
-      // Confirm that volume is listed on landing page with expected configuration.
-      cy.visitWithLogin('/volumes', {
-        localStorageOverrides: pageSizeOverride,
-      });
-      cy.findByText(volume.label)
-        .closest('tr')
-        .within(() => {
-          cy.findByText(volume.label).should('be.visible');
-          cy.findByText(`${volume.size} GB`).should('be.visible');
-          cy.findByText(linode.label).should('be.visible');
+        // Confirm volume configuration drawer opens, then close it.
+        cy.get('[data-qa-drawer="true"]').within(() => {
+          fbtVisible('Volume scheduled for creation.');
+          getClick('[data-qa-close-drawer="true"]');
         });
-    });
+
+        // Confirm that volume is listed on Linode 'Storage' details page.
+        cy.findByText(volume.label)
+          .closest('tr')
+          .within(() => {
+            fbtVisible(volume.label);
+            fbtVisible(`${volume.size} GB`);
+          });
+
+        // Confirm that volume is listed on landing page with expected configuration.
+        cy.visitWithLogin('/volumes', {
+          localStorageOverrides: pageSizeOverride,
+        });
+        cy.findByText(volume.label)
+          .closest('tr')
+          .within(() => {
+            cy.findByText(volume.label).should('be.visible');
+            cy.findByText(`${volume.size} GB`).should('be.visible');
+            cy.findByText(linode.label).should('be.visible');
+          });
+      }
+    );
   });
 });
