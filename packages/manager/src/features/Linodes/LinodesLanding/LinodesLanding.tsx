@@ -5,14 +5,14 @@ import type { MapState } from 'src/store/types';
 
 import * as React from 'react';
 import { QueryClient } from 'react-query';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { MapDispatchToProps, connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
+import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import Grid from '@mui/material/Unstable_Grid2';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -22,8 +22,8 @@ import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
-  withProfile,
   WithProfileProps,
+  withProfile,
 } from 'src/containers/profile.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { BackupsCTA } from 'src/features/Backups';
@@ -41,7 +41,7 @@ import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackups
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
-import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
+import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';

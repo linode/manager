@@ -182,7 +182,7 @@ module.exports = {
           },
           value: {
             react: ['react', 'react-*'],
-            src: ['@mui/**/*', 'src/**/*'],
+            src: ['src/**/*'],
           },
         },
         groups: [
@@ -208,7 +208,7 @@ module.exports = {
     'perfectionist/sort-jsx-props': 'warn',
     'perfectionist/sort-map-elements': 'warn',
     'perfectionist/sort-named-exports': 'warn',
-    'perfectionist/sort-named-imports': 'off',
+    'perfectionist/sort-named-imports': 'warn',
     'perfectionist/sort-object-types': 'warn',
     'perfectionist/sort-objects': 'warn',
     'perfectionist/sort-union-types': 'warn',
