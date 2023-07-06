@@ -74,29 +74,29 @@ const TopMenu = (props: Props) => {
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar} variant="dense">
           <Hidden mdDown>
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              onClick={desktopMenuToggle}
-              size="large"
-              data-testid="open-nav-menu"
-            >
-              <TopMenuIcon title={navHoverText} key={navHoverText}>
+            <TopMenuIcon title={navHoverText} key={navHoverText}>
+              <IconButton
+                color="inherit"
+                aria-label="open menu"
+                onClick={desktopMenuToggle}
+                size="large"
+                data-testid="open-nav-menu"
+              >
                 <MenuIcon />
-              </TopMenuIcon>
-            </IconButton>
+              </IconButton>
+            </TopMenuIcon>
           </Hidden>
           <Hidden mdUp>
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              onClick={openSideMenu}
-              size="large"
-            >
-              <TopMenuIcon title={navHoverText} key={navHoverText}>
+            <TopMenuIcon title={navHoverText} key={navHoverText}>
+              <IconButton
+                color="inherit"
+                aria-label="open menu"
+                onClick={openSideMenu}
+                size="large"
+              >
                 <MenuIcon />
-              </TopMenuIcon>
-            </IconButton>
+              </IconButton>
+            </TopMenuIcon>
           </Hidden>
           <AddNewMenu />
           <SearchBar />
