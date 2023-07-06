@@ -18,3 +18,4 @@ export * from './support.schema';
 export * from './transfers.schema';
 export * from './twofactor.schema';
 export * from './volumes.schema';
+export * from './vpcs.schema';
