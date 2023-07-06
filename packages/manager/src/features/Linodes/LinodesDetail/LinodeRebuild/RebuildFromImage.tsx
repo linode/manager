@@ -15,7 +15,7 @@ import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
@@ -264,7 +264,7 @@ export const RebuildFromImage = (props: Props) => {
                     }
                     renderCheckbox={
                       <Box>
-                        <CheckBox
+                        <Checkbox
                           checked={shouldReuseUserData}
                           onChange={handleShouldReuseUserDataChange}
                           text={`Reuse user data previously provided for ${linodeLabel}`}

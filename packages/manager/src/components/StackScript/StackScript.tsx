@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Chip } from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';

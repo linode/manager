@@ -4,7 +4,17 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
 import CheckBox from 'src/components/CheckBox';
+=======
+import { Checkbox } from 'src/components/Checkbox';
+import Divider from 'src/components/core/Divider';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Paper from 'src/components/core/Paper';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import { Typography } from 'src/components/Typography';
+>>>>>>> develop
 import { Currency } from 'src/components/Currency';
 import { Divider } from 'src/components/Divider';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
@@ -162,7 +172,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             <FormControlLabel
               className={classes.label}
               control={
-                <CheckBox
+                <Checkbox
                   checked={accountBackups || props.backups}
                   onChange={changeBackups}
                   disabled={accountBackups || disabled || isBareMetal}
@@ -205,7 +215,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             <FormControlLabel
               className={classes.label}
               control={
-                <CheckBox
+                <Checkbox
                   data-testid="private_ip"
                   checked={isPrivateIPChecked}
                   onChange={togglePrivateIP}

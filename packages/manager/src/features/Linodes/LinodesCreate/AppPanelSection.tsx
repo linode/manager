@@ -5,7 +5,7 @@ import { decode } from 'he';
 import * as React from 'react';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
-import { Chip } from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import SelectionCardWrapper from 'src/features/Linodes/LinodesCreate/SelectionCardWrapper';
 
 const AppPanelGrid = styled(Grid)(({ theme }) => ({

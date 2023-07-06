@@ -1,14 +1,12 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -19,15 +17,12 @@ interface Props {
   openDialog: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
-
-export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const ClusterActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
+  const { enqueueSnackbar } = useSnackbar();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { clusterId, clusterLabel, enqueueSnackbar, openDialog } = props;
+  const { clusterId, clusterLabel, openDialog } = props;
 
   const actions: Action[] = [
     {
@@ -91,7 +86,3 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = (
     </>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(withSnackbar, withRouter);
-
-export default enhanced(ClusterActionMenu);
