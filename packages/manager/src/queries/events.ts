@@ -81,7 +81,7 @@ export const useEventsInfiniteQuery = (options: EventsQueryOptions = {}) => {
     queryKey,
     ({ pageParam }) =>
       getEvents(
-        { page: pageParam ?? 0, page_size: 25 },
+        { page: pageParam, page_size: 25 },
         {
           created: { '+lte': mountTimestamp }, // Exclude new events as these will offset the page ordering
           ...filter,
