@@ -1,10 +1,10 @@
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import CloseSnackbar from './CloseSnackbar';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     '& div': {
       backgroundColor: `${theme.bg.white} !important`,
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `6px solid ${theme.palette.primary.main}`,
   },
   success: {
-    borderLeft: `6px solid ${theme.palette.primary.main}`,
+    borderLeft: `6px solid ${theme.color.green}`,
   },
   error: {
     borderLeft: `6px solid ${theme.palette.error.dark}`,
@@ -39,10 +39,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = SnackbarProviderProps;
-
-const SnackBar: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const Snackbar = (props: SnackbarProviderProps) => {
+  const { classes } = useStyles();
   /**
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
@@ -78,5 +76,3 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
     </SnackbarProvider>
   );
 };
-
-export default SnackBar;
