@@ -1,13 +1,13 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
 
-<Meta title="Elements/Tooltip/Help Icon" component={TooltipIcon} />
+<Meta title="Components/Tooltip/Tooltip Icon" component={TooltipIcon} />
 
 export const Template = (args) => {
   return <TooltipIcon {...args} />;
 };
 
-# Help Icon
+# Tooltip Icon
 
 ## Usage
 
@@ -26,6 +26,7 @@ Tooltips can be attached to any active element (text fields, buttons, etc.) on a
     args={{
       text: 'Hello World',
       tooltipPosition: 'bottom',
+      status: 'info',
     }}
     argTypes={{
       text: {
@@ -50,7 +51,7 @@ Tooltips can be attached to any active element (text fields, buttons, etc.) on a
 </Canvas>
 
 <ArgsTable
-  story="Help Icon"
+  story="Tooltip Icon"
   exclude={['className', 'classes', 'ref']}
   sort="requiredFirst"
 />

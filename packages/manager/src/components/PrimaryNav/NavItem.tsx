@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Divider from 'src/components/core/Divider';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 
 interface Props extends PrimaryLink {
   closeMenu: () => void;

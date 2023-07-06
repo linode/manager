@@ -2,7 +2,7 @@ import Backup from '@mui/icons-material/Backup';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
