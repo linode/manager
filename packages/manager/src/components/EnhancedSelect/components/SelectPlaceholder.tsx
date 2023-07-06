@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { PlaceholderProps } from 'react-select';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 interface Props extends PlaceholderProps<any, any> {}
 

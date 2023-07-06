@@ -180,7 +180,10 @@ describe('object storage end-to-end tests', () => {
       { path: 'object-storage-files/2.jpg', name: '2.jpg' },
     ];
 
-    cy.defer(setUpBucket(bucketLabel, bucketCluster)).then(() => {
+    cy.defer(
+      setUpBucket(bucketLabel, bucketCluster),
+      'creating Object Storage bucket'
+    ).then(() => {
       interceptUploadBucketObjectS3(
         bucketLabel,
         bucketCluster,

@@ -8,9 +8,9 @@ import { makeStyles } from '@mui/styles';
 import * as Bluebird from 'bluebird';
 import { update } from 'ramda';
 import * as React from 'react';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorBoundary } from 'src/components/ErrorBoundary';
@@ -18,14 +18,14 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import FormHelperText from 'src/components/core/FormHelperText';
-import Typography from 'src/components/core/Typography';
-import useEntities, { Entity } from 'src/hooks/useEntities';
 import { useAccount } from 'src/queries/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import {
@@ -142,7 +142,7 @@ const entityMap: Record<string, EntityType> = {
   Firewalls: 'firewall_id',
 };
 
-const entityIdToNameMap: Partial<Record<EntityType, string>> = {
+const entityIdToNameMap: Record<EntityType, string> = {
   linode_id: 'Linode',
   volume_id: 'Volume',
   domain_id: 'Domain',
@@ -150,18 +150,8 @@ const entityIdToNameMap: Partial<Record<EntityType, string>> = {
   lkecluster_id: 'Kubernetes Cluster',
   database_id: 'Database Cluster',
   firewall_id: 'Firewall',
-};
-
-const entityIdToTypeMap: Record<EntityType, string> = {
-  linode_id: 'linodes',
-  volume_id: 'volumes',
-  domain_id: 'domains',
-  nodebalancer_id: 'nodeBalancers',
-  lkecluster_id: 'kubernetesClusters',
-  database_id: 'databases',
-  firewall_id: 'firewalls',
-  none: 'linodes',
-  general: 'linodes',
+  none: '',
+  general: '',
 };
 
 export const entitiesToItems = (type: string, entities: any) => {
@@ -219,16 +209,10 @@ export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
     publicInfo: '',
   });
 
-  // Entities for populating dropdown
-  const [data, setData] = React.useState<Item<any>[]>([]);
-  const [entitiesLoading, setLoading] = React.useState<boolean>(false);
-
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-
-  const entities = useEntities();
 
   const classes = useStyles();
 
@@ -236,38 +220,49 @@ export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
     if (!open) {
       resetDrawer();
     }
-    if (prefilledEntity) {
-      loadSelectedEntities(prefilledEntity.type);
-    }
   }, [open]);
 
   // React Query entities
-  const { data: databases, isLoading: databasesLoading } = useAllDatabasesQuery(
-    entityType === 'database_id'
-  );
+  const {
+    data: databases,
+    isLoading: databasesLoading,
+    error: databasesError,
+  } = useAllDatabasesQuery(entityType === 'database_id');
 
-  const { data: firewalls, isLoading: firewallsLoading } = useAllFirewallsQuery(
-    entityType === 'firewall_id'
-  );
+  const {
+    data: firewalls,
+    isLoading: firewallsLoading,
+    error: firewallsError,
+  } = useAllFirewallsQuery(entityType === 'firewall_id');
 
-  const { data: domains, isLoading: domainsLoading } = useAllDomainsQuery(
-    entityType === 'domain_id'
-  );
+  const {
+    data: domains,
+    isLoading: domainsLoading,
+    error: domainsError,
+  } = useAllDomainsQuery(entityType === 'domain_id');
   const {
     data: nodebalancers,
     isLoading: nodebalancersLoading,
+    error: nodebalancersError,
   } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
 
   const {
     data: clusters,
     isLoading: clustersLoading,
+    error: clustersError,
   } = useAllKubernetesClustersQuery(entityType === 'lkecluster_id');
 
-  const { data: volumes, isLoading: volumesLoading } = useAllVolumesQuery(
-    {},
-    {},
-    entityType === 'volume_id'
-  );
+  const {
+    data: linodes,
+    isLoading: linodesLoading,
+    error: linodesError,
+  } = useAllLinodesQuery({}, {}, entityType === 'linode_id');
+
+  const {
+    data: volumes,
+    isLoading: volumesLoading,
+    error: volumesError,
+  } = useAllVolumesQuery({}, {}, entityType === 'volume_id');
 
   const saveText = (_title: string, _description: string) => {
     storage.supportText.set({ title: _title, description: _description });
@@ -280,56 +275,6 @@ export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
     // Store in-progress work to localStorage
     debouncedSave(summary, description);
   }, [summary, description]);
-
-  const handleSetOrRequestEntities = (
-    _entity: Entity<any>,
-    _entityType: string
-  ) => {
-    if (_entity.lastUpdated === 0) {
-      setLoading(true);
-      setErrors(undefined);
-      _entity
-        .request()
-        .then((response) => {
-          setLoading(false);
-          setData(entitiesToItems(_entityType, response));
-        })
-        .catch((_) => setLoading(false)); // Errors through Redux
-    } else {
-      setData(entitiesToItems(_entityType, _entity.data));
-    }
-  };
-
-  /**
-   * When a new entity type is selected,
-   * 1. check to see if we have data for that type.
-   * 2. If we don't, request it and assign the result to the selectedEntities state
-   * 3. If we do, directly assign the data from Redux to the selectedEntities state
-   *
-   * NOTE: Using a switch here rather than the entities[entityIdToTypeMap] logic
-   * used for error handling below; it's more explicit and safer.
-   */
-  const loadSelectedEntities = (_entityType: EntityType) => {
-    switch (_entityType) {
-      case 'linode_id': {
-        handleSetOrRequestEntities(entities.linodes, _entityType);
-        return;
-      }
-      case 'nodebalancer_id':
-      case 'lkecluster_id':
-      case 'volume_id':
-      case 'firewall_id':
-      case 'domain_id':
-      case 'database_id': {
-        // intentionally do nothing for React Query entities
-        return;
-      }
-      default: {
-        setData([]);
-        return;
-      }
-    }
-  };
 
   const resetTicket = (clearValues: boolean = false) => {
     /**
@@ -350,7 +295,6 @@ export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
-    setData([]);
     resetTicket(clearValues);
     setFiles([]);
 
@@ -375,10 +319,6 @@ export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
     }
     setEntityType(e.value as EntityType);
     setEntityID('');
-    setErrors(undefined);
-    setData([]);
-
-    loadSelectedEntities(e.value as EntityType);
   };
 
   const handleEntityIDChange = (selected: Item | null) => {
@@ -549,10 +489,6 @@ export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
   const generalError = hasErrorFor.none;
   const inputError = hasErrorFor.input;
 
-  const entityError = Boolean(entities[entityIdToTypeMap[entityType]]?.error)
-    ? `Error loading ${entityIdToNameMap[entityType]}s`
-    : undefined;
-
   const topicOptions = [
     { label: 'General/Account/Billing', value: 'general' },
     ...renderEntityTypes(),
@@ -570,11 +506,11 @@ export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
       volume_id: volumes,
       lkecluster_id: clusters,
       nodebalancer_id: nodebalancers,
+      linode_id: linodes,
     };
 
     if (!reactQueryEntityDataMap[entityType]) {
-      // We are dealing with an entity found in Redux. Return the data from state.
-      return data;
+      return [];
     }
 
     // domain's don't have a label so we map the domain as the label
@@ -597,30 +533,35 @@ export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
     );
   };
 
-  const getAreEntitiesLoading = () => {
-    if (entityType === 'database_id') {
-      return databasesLoading;
-    }
-    if (entityType === 'firewall_id') {
-      return firewallsLoading;
-    }
-    if (entityType === 'domain_id') {
-      return domainsLoading;
-    }
-    if (entityType === 'volume_id') {
-      return volumesLoading;
-    }
-    if (entityType === 'lkecluster_id') {
-      return clustersLoading;
-    }
-    if (entityType === 'nodebalancer_id') {
-      return nodebalancersLoading;
-    }
-    return entitiesLoading;
+  const loadingMap: Record<EntityType, boolean> = {
+    database_id: databasesLoading,
+    firewall_id: firewallsLoading,
+    domain_id: domainsLoading,
+    volume_id: volumesLoading,
+    lkecluster_id: clustersLoading,
+    nodebalancer_id: nodebalancersLoading,
+    linode_id: linodesLoading,
+    none: false,
+    general: false,
+  };
+
+  const errorMap: Record<EntityType, APIError[] | null> = {
+    database_id: databasesError,
+    firewall_id: firewallsError,
+    domain_id: domainsError,
+    volume_id: volumesError,
+    lkecluster_id: clustersError,
+    nodebalancer_id: nodebalancersError,
+    linode_id: linodesError,
+    none: null,
+    general: null,
   };
 
   const entityOptions = getEntityOptions();
-  const areEntitiesLoading = getAreEntitiesLoading();
+  const areEntitiesLoading = loadingMap[entityType];
+  const entityError = Boolean(errorMap[entityType])
+    ? `Error loading ${entityIdToNameMap[entityType]}s`
+    : undefined;
 
   const selectedEntity =
     entityOptions.find((thisEntity) => String(thisEntity.value) === entityID) ||

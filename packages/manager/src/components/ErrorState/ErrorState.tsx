@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { useTheme, styled } from '@mui/material/styles';

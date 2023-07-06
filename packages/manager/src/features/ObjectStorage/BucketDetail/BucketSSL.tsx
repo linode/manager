@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
 import { TextField } from 'src/components/TextField';
@@ -187,7 +187,7 @@ const RemoveCertForm = (props: Props) => {
 
   return (
     <>
-      <Notice success spacingTop={8}>
+      <Notice info spacingTop={8}>
         A TLS certificate has already been uploaded for this Bucket. To upload a
         new certificate, remove the current certificate.{` `}
       </Notice>

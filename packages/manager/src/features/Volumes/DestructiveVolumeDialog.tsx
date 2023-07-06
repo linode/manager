@@ -2,16 +2,16 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
-import useLinodes from 'src/hooks/useLinodes';
 import {
   useDeleteVolumeMutation,
   useDetachVolumeMutation,
 } from 'src/queries/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   warningCopy: {
@@ -36,10 +36,11 @@ export const DestructiveVolumeDialog = (props: Props) => {
   const { volumeLabel: label, volumeId, linodeId, mode, open, onClose } = props;
 
   const { enqueueSnackbar } = useSnackbar();
-  const linodes = useLinodes();
 
-  const linode =
-    linodeId !== undefined ? linodes.linodes.itemsById[linodeId] : undefined;
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined
+  );
 
   const {
     mutateAsync: detachVolume,
@@ -77,17 +78,6 @@ export const DestructiveVolumeDialog = (props: Props) => {
     delete: onDelete,
   }[props.mode];
 
-  const action = {
-    detach: {
-      verb: 'Detach',
-      noun: 'detachment',
-    },
-    delete: {
-      verb: 'Delete',
-      noun: 'deletion',
-    },
-  }[props.mode];
-
   const loading = {
     detach: detachLoading,
     delete: deleteLoading,
@@ -110,17 +100,17 @@ export const DestructiveVolumeDialog = (props: Props) => {
   return (
     <TypeToConfirmDialog
       title={title}
-      entity={{ type: 'Volume', label }}
+      label={'Volume Label'}
+      entity={{
+        type: 'Volume',
+        action: mode === 'detach' ? 'detachment' : 'deletion',
+        name: label,
+        primaryBtnText: mode === 'detach' ? 'Detach' : 'Delete',
+      }}
       open={open}
       loading={loading}
       onClose={onClose}
       onClick={method}
-      confirmationText={
-        <span>
-          To confirm {action.noun}, type the name of the Volume (<b>{label}</b>)
-          in the field below:
-        </span>
-      }
       typographyStyle={{ marginTop: '10px' }}
     >
       {error && <Notice error text={error} />}

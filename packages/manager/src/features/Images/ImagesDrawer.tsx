@@ -7,17 +7,17 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import Drawer from 'src/components/Drawer';
 import { ErrorBoundary } from 'src/components/ErrorBoundary';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
-import LinodeSelect from 'src/features/Linodes/LinodeSelect';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useCreateImageMutation,
   useUpdateImageMutation,
@@ -332,13 +332,6 @@ export const ImagesDrawer = (props: CombinedProps) => {
             filterCondition={(linode) =>
               availableLinodes ? availableLinodes.includes(linode.id) : true
             }
-            updateFor={[
-              selectedLinode,
-              linodeError,
-              classes,
-              canCreateImage,
-              availableLinodes,
-            ]}
             isClearable={false}
           />
         )}

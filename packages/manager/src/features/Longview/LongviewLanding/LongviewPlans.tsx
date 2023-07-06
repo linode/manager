@@ -6,8 +6,8 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import * as React from 'react';
-import Button from 'src/components/Button';
-import { Chip } from 'src/components/core/Chip';
+import { Button } from 'src/components/Button/Button';
+import { Chip } from 'src/components/Chip';
 import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';

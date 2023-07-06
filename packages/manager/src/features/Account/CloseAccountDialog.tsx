@@ -2,14 +2,11 @@ import { cancelAccount } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import { Notice } from 'src/components/Notice/Notice';
-import Typography from 'src/components/core/Typography';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+import { Typography } from 'src/components/Typography';
 import { TextField } from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 
@@ -21,6 +18,7 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   dontgo: {
     marginTop: theme.spacing(2),
+    order: 1,
   },
 }));
 
@@ -32,7 +30,6 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   const [comments, setComments] = React.useState<string>('');
   const [inputtedUsername, setUsername] = React.useState<string>('');
   const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
-
   const { classes } = useStyles();
   const history = useHistory();
   const { data: profile } = useProfile();
@@ -98,86 +95,64 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   }
 
   return (
-    <ConfirmationDialog
-      open={open}
+    <TypeToConfirmDialog
       title="Are you sure you want to close your Linode account?"
+      label={`Please enter your Username (${profile.username}) to confirm.`}
+      entity={{
+        type: 'AccountSetting',
+        subType: 'CloseAccount',
+        primaryBtnText: 'Close Account',
+        name: profile.username,
+      }}
+      open={open}
       onClose={closeDialog}
-      error={errors ? errors[0].reason : ''}
-      actions={
-        <Actions
-          onClose={closeDialog}
-          isCanceling={isClosingAccount}
-          onSubmit={handleCancelAccount}
-          disabled={!canSubmit}
-        />
-      }
+      onClick={handleCancelAccount}
+      loading={isClosingAccount}
+      inputRef={inputRef}
+      disabled={!canSubmit}
+      textFieldStyle={{ maxWidth: '415px' }}
     >
-      <Notice warning>
-        <Typography style={{ fontSize: '0.875rem' }}>
-          <strong>Warning:</strong> Please note this is an extremely destructive
-          action. Closing your account means that all services including
-          Linodes, Volumes, DNS Records, etc will be lost and may not be able to
-          be restored.
-        </Typography>
-      </Notice>
-      <TypeToConfirm
-        label={`Please enter your username (${profile.username}) to confirm.`}
-        onChange={(input) => setUsername(input)}
-        inputRef={inputRef}
-        aria-label="username field"
-        value={inputtedUsername}
-        visible
-        hideInstructions
-        placeholder="Username"
-      />
+      {errors ? <Notice error text={errors ? errors[0].reason : ''} /> : null}
+      <StyledNoticeWrapper>
+        <Notice warning spacingBottom={12}>
+          <Typography sx={{ fontSize: '0.875rem' }}>
+            <strong>Warning:</strong> Please note this is an extremely
+            destructive action. Closing your account means that all services
+            Linodes, Volumes, DNS Records, etc will be lost and may not be able
+            be restored.
+          </Typography>
+        </Notice>
+      </StyledNoticeWrapper>
       <Typography className={classes.dontgo}>
         We&rsquo;d hate to see you go. Please let us know what we could be doing
         better in the comments section below. After your account is closed,
         you&rsquo;ll be directed to a quick survey so we can better gauge your
         feedback.
       </Typography>
-      <TextField
-        label="Comments"
-        multiline
-        onChange={(e) => setComments(e.target.value)}
-        optional
-        placeholder="Provide Feedback"
-        rows={1}
-        value={comments}
-        aria-label="Optional comments field"
-      />
-    </ConfirmationDialog>
+      <StyledCommentSectionWrapper>
+        <TextField
+          label="Comments"
+          multiline
+          onChange={(e) => setComments(e.target.value)}
+          optional
+          placeholder="Provide Feedback"
+          rows={1}
+          value={comments}
+          aria-label="Optional comments field"
+        />
+      </StyledCommentSectionWrapper>
+    </TypeToConfirmDialog>
   );
 };
 
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  isCanceling: boolean;
-  disabled: boolean;
-}
+// The order property helps inject the TypeToConfirm input field in the TypeToConfirmDialog when the components
+// below are passed in as the children prop.
+const StyledNoticeWrapper = styled('div')(() => ({
+  order: 0,
+}));
 
-const Actions = ({
-  disabled,
-  isCanceling,
-  onClose,
-  onSubmit,
-}: ActionsProps) => {
-  return (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onSubmit}
-        disabled={disabled}
-        loading={isCanceling}
-      >
-        Close Account
-      </Button>
-    </ActionsPanel>
-  );
-};
+const StyledCommentSectionWrapper = styled('div')(() => ({
+  order: 2,
+}));
 
 export default React.memo(CloseAccountDialog);

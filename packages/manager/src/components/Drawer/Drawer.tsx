@@ -1,10 +1,10 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { IconButton } from 'src/components/IconButton';
 import _Drawer, { DrawerProps } from 'src/components/core/Drawer';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { convertForAria } from 'src/utilities/stringUtils';
 
@@ -86,6 +86,9 @@ const Drawer = (props: Props) => {
         alignItems="flex-start"
         justifyContent="space-between"
         wrap="nowrap"
+        sx={{
+          position: 'relative',
+        }}
       >
         <Grid>
           <Typography
@@ -99,15 +102,20 @@ const Drawer = (props: Props) => {
           </Typography>
         </Grid>
         <Grid>
-          <Button
-            className={classes.button}
-            buttonType="secondary"
-            onClick={onClose as (e: any) => void}
+          <IconButton
+            color="primary"
             aria-label="Close drawer"
             data-qa-close-drawer
+            onClick={onClose as (e: any) => void}
+            size="large"
+            sx={{
+              position: 'absolute',
+              top: '-12px',
+              right: '-12px',
+            }}
           >
             <Close />
-          </Button>
+          </IconButton>
         </Grid>
       </Grid>
       {children}

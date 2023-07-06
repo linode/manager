@@ -6,12 +6,12 @@ import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Button from 'src/components/Button';
-import CheckBox from 'src/components/CheckBox';
-import Box from 'src/components/core/Box';
+import { Button } from 'src/components/Button/Button';
+import { Checkbox } from 'src/components/Checkbox';
+import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -246,7 +246,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       {generalError ? (
         <Notice error text={generalError} data-qa-notice />
       ) : null}
-      {notice ? <Notice success text={notice} data-qa-notice /> : null}
+      {notice ? <Notice info text={notice} data-qa-notice /> : null}
 
       <LinodeSelectV2
         value={selectedLinode?.id || null}
@@ -278,7 +278,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       {isRawDisk ? rawDiskWarning : null}
       {flags.metadata && hasMetadataCustomerTag ? (
         <Box className={classes.cloudInitCheckboxWrapper}>
-          <CheckBox
+          <Checkbox
             checked={isCloudInit}
             onChange={changeIsCloudInit}
             text="This image is cloud-init compatible"

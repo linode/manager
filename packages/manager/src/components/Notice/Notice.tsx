@@ -6,7 +6,7 @@ import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
+import { Typography, TypographyProps } from 'src/components/Typography';
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles<
@@ -100,6 +100,16 @@ export const useStyles = makeStyles<
   successList: {
     borderLeft: `5px solid ${theme.palette.success.dark}`,
   },
+  info: {
+    animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.info.dark}`,
+    [`&.${classes.important}`]: {
+      borderLeftWidth: 32,
+    },
+  },
+  infoList: {
+    borderLeft: `5px solid ${theme.palette.info.dark}`,
+  },
   marketing: {
     borderLeft: `5px solid ${theme.color.green}`,
   },
@@ -115,6 +125,7 @@ export interface NoticeProps extends Grid2Props {
   important?: boolean;
   warning?: boolean;
   success?: boolean;
+  info?: boolean;
   marketing?: boolean;
   typeProps?: TypographyProps;
   className?: string;
@@ -131,25 +142,26 @@ export interface NoticeProps extends Grid2Props {
 
 export const Notice = (props: NoticeProps) => {
   const {
-    className,
-    important,
-    text,
-    error,
     breakWords,
-    errorGroup,
-    warning,
-    success,
-    marketing,
-    typeProps,
     children,
+    className,
+    dataTestId,
+    error,
+    errorGroup,
     flag,
+    important,
+    info,
+    marketing,
     notificationList,
     onClick,
-    spacingTop,
     spacingBottom,
     spacingLeft,
-    dataTestId,
+    spacingTop,
+    success,
     sx,
+    text,
+    typeProps,
+    warning,
   } = props;
 
   const { classes, cx } = useStyles();
@@ -206,6 +218,8 @@ export const Notice = (props: NoticeProps) => {
         [classes.errorList]: error && notificationList,
         [classes.success]: success && !notificationList,
         [classes.successList]: success && notificationList,
+        [classes.info]: info && !notificationList,
+        [classes.infoList]: info && notificationList,
         [classes.warning]: warning && !notificationList,
         [classes.marketing]: marketing,
         [classes.warningList]: warning && notificationList,
@@ -228,7 +242,7 @@ export const Notice = (props: NoticeProps) => {
       )}
       {important &&
         ((success && <Check className={classes.icon} data-qa-success-img />) ||
-          (warning && (
+          ((warning || info) && (
             <Warning className={classes.icon} data-qa-warning-img />
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}

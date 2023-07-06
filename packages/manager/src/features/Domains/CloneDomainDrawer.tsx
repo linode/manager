@@ -5,7 +5,7 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import { TextField } from 'src/components/TextField';
 import { Radio } from 'src/components/Radio/Radio';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import Button from 'src/components/Button/Button';
+import { Button } from 'src/components/Button/Button';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useFormik } from 'formik';
 import { Domain } from '@linode/api-v4';

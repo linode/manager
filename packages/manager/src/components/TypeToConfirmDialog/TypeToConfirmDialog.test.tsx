@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { TypeToConfirmDialog } from './TypeToConfirmDialog';
 
@@ -14,8 +14,14 @@ describe('TypeToConfirmDialog Component', () => {
     const { getByText } = renderWithTheme(
       <TypeToConfirmDialog
         title="Delete Linode test?"
+        label={'Linode Label'}
         open={true}
-        entity={{ type: 'Linode', label: 'test' }}
+        entity={{
+          type: 'Linode',
+          name: 'test',
+          action: 'deletion',
+          primaryBtnText: 'Delete',
+        }}
         loading={false}
         {...props}
       >

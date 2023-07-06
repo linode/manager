@@ -7,7 +7,7 @@ import {
   mockGetOAuthApps,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { randomLabel, randomSecret } from 'support/util/random';
+import { randomLabel, randomHex } from 'support/util/random';
 import { OAuthClient } from '@linode/api-v4/types';
 
 /**
@@ -128,14 +128,20 @@ describe('Add OAuth Apps', () => {
    * - Confirms that the oauth app is listed correctly on OAuth Apps landing page.
    */
   it('Adds an OAuth App', () => {
-    const oauthApps = oauthClientFactory.buildList(2);
+    const oauthApps = [
+      oauthClientFactory.build({
+        label: randomLabel(),
+        secret: randomHex(64),
+      }),
+      oauthClientFactory.build({
+        label: randomLabel(),
+        secret: randomHex(64),
+        public: true,
+      }),
+    ];
+
     const privateOauthApp = oauthApps[0];
-    privateOauthApp.label = randomLabel(5);
-    privateOauthApp.secret = randomSecret(64);
     const publicOauthApp = oauthApps[1];
-    publicOauthApp.label = randomLabel(5);
-    publicOauthApp.public = true;
-    publicOauthApp.secret = randomSecret(64);
 
     interceptGetProfile().as('getProfile');
     cy.visitWithLogin('/profile/clients');

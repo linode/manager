@@ -1,6 +1,6 @@
 import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
-import InlineAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(() => ({
@@ -30,7 +30,7 @@ const DatabaseBackupActionMenu = (props: Props) => {
   return (
     <div className={classes.inlineActions}>
       {actions.map((thisAction) => (
-        <InlineAction
+        <InlineMenuAction
           key={thisAction.title}
           actionText={thisAction.title}
           onClick={thisAction.onClick}
