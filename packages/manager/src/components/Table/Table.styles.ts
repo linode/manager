@@ -8,6 +8,7 @@ export const StyledTableWrapper = styled('div', {
     isPropValid(
       [
         'colCount',
+        'data-testid',
         'noBorder',
         'rowCount',
         'spacingBottom',
