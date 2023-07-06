@@ -10,6 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 const options: { label: string; flag: keyof Flags }[] = [
   { label: 'Metadata', flag: 'metadata' },
   { label: 'Database Beta', flag: 'databaseBeta' },
+  { label: 'VPC', flag: 'vpc' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {
