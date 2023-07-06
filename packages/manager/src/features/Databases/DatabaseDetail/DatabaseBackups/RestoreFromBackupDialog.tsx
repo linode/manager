@@ -2,14 +2,11 @@ import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { DialogProps } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
-import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
-import { usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -22,14 +19,9 @@ interface Props extends Omit<DialogProps, 'title'> {
 }
 
 export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
-  const { database, backup, onClose, open, ...rest } = props;
-
+  const { database, backup, onClose, open } = props;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-
-  const [confirmationText, setConfirmationText] = React.useState('');
-
-  const { data: preferences } = usePreferences();
   const { data: profile } = useProfile();
 
   const {
@@ -48,38 +40,23 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
     });
   };
 
-  const actions = (
-    <ActionsPanel
-      primary
-      primaryButtonDisabled={
-        preferences?.type_to_confirm !== false &&
-        confirmationText !== database.label
-      }
-      primaryButtonHandler={handleRestoreDatabase}
-      primaryButtonLoading={isLoading}
-      primaryButtonText="Restore Database"
-      secondary
-      secondaryButtonHandler={onClose}
-      secondaryButtonText="Cancel"
-      style={{ padding: 0 }}
-    />
-  );
-
-  React.useEffect(() => {
-    if (open) {
-      setConfirmationText('');
-    }
-  }, [open]);
-
   return (
-    <ConfirmationDialog
-      {...rest}
+    <TypeToConfirmDialog
       title={`Restore from Backup ${formatDate(backup.created, {
         timezone: profile?.timezone,
       })}`}
+      label={'Database Label'}
+      entity={{
+        type: 'Database',
+        subType: 'Cluster',
+        action: 'restoration',
+        name: database.label,
+        primaryBtnText: 'Restore Database',
+      }}
       open={open}
       onClose={onClose}
-      actions={actions}
+      onClick={handleRestoreDatabase}
+      loading={isLoading}
     >
       {error ? (
         <Notice
@@ -96,20 +73,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
           existing data on this cluster.
         </Typography>
       </Notice>
-      <TypeToConfirm
-        confirmationText={
-          <span>
-            To confirm restoration, type the name of the database cluster (
-            <strong>{database.label}</strong>) in the field below.
-          </span>
-        }
-        onChange={(input) => setConfirmationText(input)}
-        value={confirmationText}
-        label="Database Label"
-        visible={preferences?.type_to_confirm}
-        placeholder={database.label}
-      />
-    </ConfirmationDialog>
+    </TypeToConfirmDialog>
   );
 };
 
