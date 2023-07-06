@@ -4,8 +4,15 @@ import { useSnackbar } from 'notistack';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import { Button } from 'src/components/Button/Button';
 
+/**
+ * #### Timing
+ * - Default timing for toast notifications is 5 seconds.
+ * - If the message is longer, more complex, or very important, consider increasing the display time accordingly.
+ * - If the message is critical (e.g., an Image failed to upload), consider making it persistent until dismissed by the user.
+ */
+
 const meta: Meta<typeof Snackbar> = {
-  title: 'Components/Notifications/Toasts',
+  title: 'Components/Notifications/Snackbar - Toast',
   component: Snackbar,
   argTypes: {
     anchorOrigin: {
@@ -27,14 +34,6 @@ const meta: Meta<typeof Snackbar> = {
 export default meta;
 
 type Story = StoryObj<typeof Snackbar>;
-
-/**
- * # Toasts
- * ### Timing
- * - Default timing for toast notifications is 5 seconds.
- * - If the message is longer, more complex, or very important, consider increasing the display time accordingly.
- * - If the message is critical (e.g., an Image failed to upload), consider making it persistent until dismissed by the user.
- */
 
 export const Default: Story = {
   args: {
