@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { TransferDisplay } from './TransferDisplay';
 
@@ -12,37 +13,65 @@ const MockData = {
 const transferDisplayPercentageSubstring = /You have used \d+\.\d\d%/;
 const transferDisplayButtonSubstring = /Monthly Network Transfer Pool/;
 
-jest.mock('../../queries/accountTransfer', () => {
-  return {
-    useAccountTransfer: jest.fn(() => {
-      return { data: MockData };
-    }),
-  };
-});
-
 describe('TransferDisplay', () => {
-  it('renders the MNTP button display text and opens the TransferDialog on click', async () => {
-    const { getByText, getByTestId } = renderWithTheme(<TransferDisplay />);
+  it('renders transfer display text and opens the transfer dialog, with GB data stats, on click', async () => {
+    server.use(
+      rest.get('*/account/transfer', (req, res, ctx) => {
+        return res(
+          ctx.json({
+            used: 50,
+            quota: 11347,
+            billable: 0,
+          })
+        );
+      })
+    );
 
-    expect(
-      getByText(transferDisplayButtonSubstring, { exact: false })
-    ).toBeInTheDocument();
-    expect(
-      getByText(transferDisplayPercentageSubstring, { exact: false })
-    ).toBeInTheDocument();
+    const { findByText, getByTestId } = renderWithTheme(<TransferDisplay />);
+    const transferButton = await findByText(transferDisplayButtonSubstring, {
+      exact: false,
+    });
 
-    fireEvent.click(getByText(transferDisplayButtonSubstring));
+    expect(transferButton).toBeInTheDocument();
+    expect(
+      await findByText(transferDisplayPercentageSubstring, { exact: false })
+    ).toBeInTheDocument();
+    fireEvent.click(transferButton);
 
     const transferDialog = getByTestId('drawer');
-    expect(transferDialog).toBeInTheDocument();
+    expect(transferDialog.innerHTML).toMatch(/GB/);
   });
 
-  it('displays a percentage of 0.00% for no usage', async () => {
-    const { getByText } = renderWithTheme(<TransferDisplay />);
+  it('renders transfer display text with a percentage of 0.00% if no usage', async () => {
+    server.use(
+      rest.get('*/account/transfer', (req, res, ctx) => {
+        return res(ctx.json(MockData));
+      })
+    );
 
-    const usage = getByText(transferDisplayPercentageSubstring, {
+    const { findByText } = renderWithTheme(<TransferDisplay />);
+    const usage = await findByText(transferDisplayPercentageSubstring, {
       exact: false,
-    }).innerHTML;
-    expect(usage).toMatch(/0.00%/);
+    });
+
+    expect(usage.innerHTML).toMatch(/0.00%/);
+  });
+
+  it('renders transfer display dialog without usage or quota data if no quota/resources', async () => {
+    server.use(
+      rest.get('*/account/transfer', (req, res, ctx) => {
+        return res(ctx.json(MockData));
+      })
+    );
+
+    const { findByText, getByTestId } = renderWithTheme(<TransferDisplay />);
+    const transferButton = await findByText(transferDisplayButtonSubstring);
+    fireEvent.click(transferButton);
+
+    const transferDialog = getByTestId('drawer');
+    expect(transferDialog.innerHTML).toMatch(
+      /Create a resource to start using Monthly Network Transfer./
+    );
+    expect(transferDialog.innerHTML).not.toMatch(/GB/);
   });
 });
