@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -23,7 +23,7 @@ export const SelectableTableRow = React.memo(
         }}
       >
         <StyledTableCell>
-          <CheckBox
+          <Checkbox
             checked={isChecked}
             onChange={handleToggleCheck}
             inputProps={{
