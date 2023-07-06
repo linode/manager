@@ -94,8 +94,23 @@ export const chooseRegion = (): Region => {
 /**
  * Executes a test for each Linode region exposed to Cypress.
  */
-export const testRegions = (description: string, testCallback: (region: Region) => void) => {
+export const testRegions = (
+  description: string,
+  testCallback: (region: Region) => void
+) => {
   getTestableRegions().forEach((region: Region) => {
     it(`${description} (${region.id})`, () => testCallback(region));
+  });
+};
+
+/**
+ * Describes a group of test runs for each Linode region exposed to Cypress.
+ */
+export const describeRegions = (
+  description: string,
+  describeCallback: (region: Region) => void
+) => {
+  getTestableRegions().forEach((region: Region) => {
+    describe(`${description} (${region.id})`, () => describeCallback(region));
   });
 };
