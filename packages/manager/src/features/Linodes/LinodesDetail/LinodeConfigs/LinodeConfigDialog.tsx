@@ -11,7 +11,7 @@ import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Box } from 'src/components/Box';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormGroup from 'src/components/core/FormGroup';

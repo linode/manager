@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box } from 'src/components/Box';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import ExternalLink from 'src/components/ExternalLink';
 import { Link } from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
