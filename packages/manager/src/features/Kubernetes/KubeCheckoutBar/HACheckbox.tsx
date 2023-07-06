@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { Box } from 'src/components/Box';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -58,7 +58,7 @@ const HACheckbox: React.FC<Props> = (props) => {
   return (
     <Box>
       <Box display="flex" flexDirection="row" alignItems="flex-start">
-        <CheckBox
+        <Checkbox
           checked={checked}
           onChange={onChange}
           className={classes.checkbox}

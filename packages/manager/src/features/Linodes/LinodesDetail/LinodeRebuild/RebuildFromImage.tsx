@@ -13,7 +13,7 @@ import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { Box } from 'src/components/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -264,7 +264,7 @@ export const RebuildFromImage = (props: Props) => {
                     }
                     renderCheckbox={
                       <Box>
-                        <CheckBox
+                        <Checkbox
                           checked={shouldReuseUserData}
                           onChange={handleShouldReuseUserDataChange}
                           text={`Reuse user data previously provided for ${linodeLabel}`}

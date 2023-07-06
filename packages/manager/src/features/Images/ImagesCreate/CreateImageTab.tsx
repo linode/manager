@@ -7,7 +7,7 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { Box } from 'src/components/Box';
 import Paper from 'src/components/core/Paper';
 import { Typography } from 'src/components/Typography';
@@ -278,7 +278,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       {isRawDisk ? rawDiskWarning : null}
       {flags.metadata && hasMetadataCustomerTag ? (
         <Box className={classes.cloudInitCheckboxWrapper}>
-          <CheckBox
+          <Checkbox
             checked={isCloudInit}
             onChange={changeIsCloudInit}
             text="This image is cloud-init compatible"
