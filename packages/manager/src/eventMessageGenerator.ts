@@ -811,9 +811,26 @@ export default (e: Event): string => {
     message
   );
 
-  /** return either the formatted message or an empty string */
-  const formattedMessage = applyLinking(e, messageWithUsername);
-  return applyBolding(e, formattedMessage);
+  /**
+   * return either the formatted message or an empty string
+   * fails gracefully if the message we encounter a formatting error
+   * */
+  try {
+    const formattedMessage = applyLinking(e, messageWithUsername);
+    return applyBolding(e, formattedMessage);
+  } catch (error) {
+    console.warn('Error with formatting the event message', {
+      event_data: e,
+      error,
+    });
+
+    reportException('Error with formatting the event message', {
+      event_data: e,
+      error,
+    });
+
+    return messageWithUsername;
+  }
 };
 
 function applyBolding(event: Event, message: string) {
@@ -874,11 +891,14 @@ export function applyLinking(event: Event, message: string) {
 
   if (event.entity?.label && entityLinkTarget) {
     const label = event.entity.label;
-    const nonTickedLabels = new RegExp(`(?<!\`)${escapeRegExp(label)}`, 'g');
+    const nonTickedLabels = new RegExp(
+      `(^|[^\\\`])${escapeRegExp(label)}`,
+      'g'
+    );
 
     newMessage = newMessage.replace(
       nonTickedLabels,
-      `<a href="${entityLinkTarget}">${label}</a> `
+      ` <a href="${entityLinkTarget}">${label}</a> `
     );
   }
 
