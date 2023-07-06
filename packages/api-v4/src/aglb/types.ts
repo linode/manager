@@ -6,15 +6,17 @@ export interface Loadbalancer {
   entrypoints: string[];
 }
 
-export interface CreateLoadbalancerPayload {
+interface LoadbalancerPayload {
   name: string;
   regions: string[];
+  tags: string[];
+}
+
+export interface CreateLoadbalancerPayload extends LoadbalancerPayload {
   entrypoints: EntrypointPayload[];
 }
 
-export interface UpdateLoadbalancerPayload {
-  name: string;
-  regions: string[];
+export interface UpdateLoadbalancerPayload extends LoadbalancerPayload {
   entrypoints: number[];
 }
 
