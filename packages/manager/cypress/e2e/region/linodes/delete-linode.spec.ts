@@ -1,5 +1,5 @@
 import { createLinodeRequestFactory } from '@src/factories';
-import { testRegions } from 'support/util/regions';
+import { describeRegions } from 'support/util/regions';
 import { randomLabel, randomString } from 'support/util/random';
 import { Region } from '@linode/api-v4';
 import { createLinode } from '@linode/api-v4';
@@ -12,8 +12,13 @@ import {
 } from 'support/intercepts/linodes';
 
 authenticate();
-describe('Delete Linodes', () => {
-  testRegions('can delete a Linode', (region: Region) => {
+describeRegions('Delete Linodes', (region: Region) => {
+  /*
+   * - Navigates to a Linode details page.
+   * - Deletes the Linode via the "Delete" action menu item.
+   * - Navigates back to Linode landing page, confirms deleted Linode is not shown.
+   */
+  it('can delete a Linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: region.id,
