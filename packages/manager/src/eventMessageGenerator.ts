@@ -48,7 +48,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   backups_restore: {
     scheduled: (e) => `Backup restoration scheduled for ${e.entity!.label}`,
     started: (e) => `Backup restoration started for ${e.entity!.label}`,
-    failed: (e) => `Backup restoration failed for ${e.entity!.label}.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `Backup restoration failed for ${e.entity!.label}.`,
+        'Learn more about limits and considerations',
+        'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+      )}`,
     finished: (e) => `Backup restoration completed for ${e.entity!.label}.`,
     notification: (e) => `Backup restoration completed for ${e.entity!.label}.`,
   },
@@ -508,7 +514,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Linode ${e.entity!.label} is scheduled for a snapshot backup.`,
     started: (e) =>
       `A snapshot backup is being created for Linode ${e.entity!.label}.`,
-    failed: (e) => `Snapshot backup failed on Linode ${e.entity!.label}.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `Snapshot backup failed on Linode ${e.entity!.label}.`,
+        'Learn more about limits and considerations',
+        'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+      )}`,
     finished: (e) =>
       `A snapshot backup has been created for ${e.entity!.label}.`,
   },

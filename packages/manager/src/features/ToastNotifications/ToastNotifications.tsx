@@ -1,4 +1,5 @@
 import { Event, EventStatus } from '@linode/api-v4/lib/account/types';
+import { styled } from '@mui/material/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
@@ -172,7 +173,23 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return toastSuccessAndFailure({
               enqueueSnackbar,
               eventStatus: event.status,
-              failureMessage: `There was an error creating a snapshot on Linode ${label}.`,
+              persistFailureMessage: true,
+              failureMessage: `Snapshot backup failed on Linode ${label}.`,
+              link: formatLink(
+                'Learn more about limits and considerations.',
+                'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+              ),
+            });
+          case 'backups_restore':
+            return toastSuccessAndFailure({
+              enqueueSnackbar,
+              eventStatus: event.status,
+              persistFailureMessage: true,
+              failureMessage: `Backup restoration failed for ${label}.`,
+              link: formatLink(
+                'Learn more about limits and considerations.',
+                'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+              ),
             });
           /**
            * These create/delete failures are hypothetical.
@@ -281,8 +298,14 @@ export default withSnackbar(ToastNotifications);
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
-    <Link to={link} onClick={handleClick}>
+    <StyledToastNotificationLink to={link} onClick={handleClick}>
       {text}
-    </Link>
+    </StyledToastNotificationLink>
   );
 };
+
+export const StyledToastNotificationLink = styled(Link, {
+  label: 'StyledToastNotificationLink',
+})(({ theme }) => ({
+  color: theme.textColors.linkActiveLight,
+}));
