@@ -123,7 +123,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     );
   };
 
-  const getShouldShowBackupsWarning = () => {
+  const checkBackupsWarning = () => {
     if (accountBackups || props.backups) {
       if (selectedLinodeID) {
         const selectedLinode = linodesData?.find(
@@ -144,7 +144,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   };
 
   // The backups warning is shown when the user checks to enable backups, but they are using a custom image that may not be compatible.
-  const showBackupsWarning = getShouldShowBackupsWarning();
+  const showBackupsWarning = checkBackupsWarning();
 
   // Check whether the source Linode has been allocated a private IP to select/unselect the 'Private IP' checkbox.
   React.useEffect(() => {
@@ -190,7 +190,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
         <Grid container>
           {showBackupsWarning && (
             <Notice warning>
-              Linodes must have a disk formatted with an EXT3 or EXT4 file
+              Linodes must have a disk formatted with an ext3 or ext4 file
               system to use the backup service.
             </Notice>
           )}
