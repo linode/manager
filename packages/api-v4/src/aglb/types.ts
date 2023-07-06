@@ -1,13 +1,13 @@
 export interface Loadbalancer {
   id: number;
   tags: string[];
-  name: string;
+  label: string;
   regions: string[];
   entrypoints: string[];
 }
 
 interface LoadbalancerPayload {
-  name: string;
+  label: string;
   regions: string[];
   tags?: string[];
 }
@@ -25,7 +25,7 @@ type Protocol = 'TCP' | 'HTTP' | 'HTTPS';
 type Policy = 'ROUND_ROBIN';
 
 export interface RoutePayload {
-  name: string;
+  label: string;
   rules: Rule[];
 }
 
@@ -34,7 +34,7 @@ export interface Route extends RoutePayload {
 }
 
 export interface EntrypointPayload {
-  name: string;
+  label: string;
   port: number;
   protocol: Protocol;
   certificate_table: CertificateTable[];
@@ -45,7 +45,7 @@ export type CreateEntrypointPayload = Omit<EntrypointPayload, 'routes'>;
 
 export interface Entrypoint {
   id: number;
-  name: string;
+  label: string;
   port: number;
   protocol: Protocol;
   certificate_table: CertificateTable[];
@@ -68,7 +68,7 @@ export interface Match {
 }
 
 export interface ServiceTargetPayload {
-  name: string;
+  label: string;
   endpoints: Endpoint[];
   ca_certificate: string;
   load_balancing_policy: Policy;
