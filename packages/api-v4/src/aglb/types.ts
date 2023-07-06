@@ -9,11 +9,11 @@ export interface Loadbalancer {
 interface LoadbalancerPayload {
   name: string;
   regions: string[];
-  tags: string[];
+  tags?: string[];
 }
 
 export interface CreateLoadbalancerPayload extends LoadbalancerPayload {
-  entrypoints: EntrypointPayload[];
+  entrypoints?: EntrypointPayload[];
 }
 
 export interface UpdateLoadbalancerPayload extends LoadbalancerPayload {
