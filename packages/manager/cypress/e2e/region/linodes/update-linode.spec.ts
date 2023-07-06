@@ -96,7 +96,7 @@ describeRegions('Can update Linodes', (region) => {
       return [linode, disks[0]];
     };
 
-    cy.defer(createLinodeAndGetDisk()).then(
+    cy.defer(createLinodeAndGetDisk(), 'creating Linode').then(
       ([linode, disk]: [Linode, Disk]) => {
         // Navigate to Linode details page.
         interceptGetLinodeDetails(linode.id).as('getLinode');
