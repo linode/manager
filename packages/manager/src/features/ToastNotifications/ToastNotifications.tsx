@@ -1,4 +1,5 @@
 import { Event, EventStatus } from '@linode/api-v4/lib/account/types';
+import { styled } from '@mui/material/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
@@ -297,8 +298,14 @@ export default withSnackbar(ToastNotifications);
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
-    <Link to={link} onClick={handleClick}>
+    <StyledToastNotificationLink to={link} onClick={handleClick}>
       {text}
-    </Link>
+    </StyledToastNotificationLink>
   );
 };
+
+export const StyledToastNotificationLink = styled(Link, {
+  label: 'StyledToastNotificationLink',
+})(({ theme }) => ({
+  color: theme.textColors.linkActiveLight,
+}));
