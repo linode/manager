@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
-  SupportTicketDrawer,
-  SupportTicketDrawerProps,
-} from './SupportTicketDrawer';
+  SupportTicketDialog,
+  SupportTicketDialogProps,
+} from './SupportTicketDialog';
 
-const props: SupportTicketDrawerProps = {
+const props: SupportTicketDialogProps = {
   open: true,
   onClose: jest.fn(),
   onSuccess: jest.fn(),
@@ -16,7 +16,7 @@ jest.mock('src/components/EnhancedSelect/Select');
 
 describe('Support Ticket Drawer', () => {
   it('should render', () => {
-    const { getByText } = renderWithTheme(<SupportTicketDrawer {...props} />);
+    const { getByText } = renderWithTheme(<SupportTicketDialog {...props} />);
     expect(getByText('Open a Support Ticket'));
   });
 });

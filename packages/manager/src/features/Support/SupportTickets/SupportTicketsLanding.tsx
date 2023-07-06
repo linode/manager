@@ -8,7 +8,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import { SupportTicketDrawer } from './SupportTicketDrawer';
+import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
 import LandingHeader from 'src/components/LandingHeader';
 
@@ -91,7 +91,7 @@ const SupportTicketsLanding = () => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <SupportTicketDrawer
+      <SupportTicketDialog
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         onSuccess={handleAddTicketSuccess}

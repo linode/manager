@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
-import { SupportTicketDrawer } from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -62,7 +62,7 @@ const AccountActivationLanding = () => {
             </button>
             .
           </Typography>
-          <SupportTicketDrawer
+          <SupportTicketDialog
             open={supportDrawerIsOpen}
             onClose={() => toggleSupportDrawer(false)}
             onSuccess={handleTicketSubmitSuccess}

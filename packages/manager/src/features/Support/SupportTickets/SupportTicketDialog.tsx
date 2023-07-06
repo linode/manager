@@ -94,7 +94,7 @@ interface TicketTypeData {
   helperText: string | JSX.Element;
 }
 
-export interface SupportTicketDrawerProps {
+export interface SupportTicketDialogProps {
   open: boolean;
   prefilledTitle?: string;
   prefilledDescription?: string;
@@ -104,6 +104,7 @@ export interface SupportTicketDrawerProps {
   onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
   keepOpenOnSuccess?: boolean;
   hideProductSelection?: boolean;
+  children?: React.ReactNode;
 }
 
 const ticketTypeMap: Record<TicketType, TicketTypeData> = {
@@ -170,7 +171,7 @@ export const getInitialValue = (
   return fromProps ?? fromStorage ?? '';
 };
 
-export const SupportTicketDrawer = (props: SupportTicketDrawerProps) => {
+export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const {
     open,
     prefilledDescription,
