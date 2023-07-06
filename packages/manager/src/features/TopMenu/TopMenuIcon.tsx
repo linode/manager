@@ -3,7 +3,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import { styled } from '@mui/material/styles';
 
 interface Props {
-  title: string;
+  title?: string;
   children: JSX.Element;
 }
 
@@ -34,7 +34,7 @@ export const StyledTopMenuIconWrapper = styled('div')(({ theme }) => ({
   },
 }));
 
-export const TopMenuIcon = ({ title, children }: Props) => {
+export const TopMenuIcon = React.memo(({ title, children }: Props) => {
   return (
     <Tooltip
       title={title}
@@ -46,6 +46,4 @@ export const TopMenuIcon = ({ title, children }: Props) => {
       <div>{children}</div>
     </Tooltip>
   );
-};
-
-export default React.memo(TopMenuIcon);
+});

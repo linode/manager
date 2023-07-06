@@ -1,23 +1,30 @@
 import * as React from 'react';
-import TooltipIcon from 'src/assets/icons/get_help.svg';
+import HelpSVGIcon from 'src/assets/icons/get_help.svg';
 import { Link } from 'src/components/Link';
-import TopMenuIcon from './TopMenuIcon';
-import { StyledTopMenuIconWrapper } from './TopMenuIcon';
+import { TopMenuIcon, StyledTopMenuIconWrapper } from './TopMenuIcon';
+import { Button } from 'src/components/Button/Button';
 
 export const Help = () => {
   return (
-    <Link aria-label="Link to Linode Support" to="/support">
-      <StyledTopMenuIconWrapper
+    <TopMenuIcon title="Help & Support">
+      <Button
+        aria-label="Help & Support"
         sx={{
-          marginLeft: [null, null, '8px'],
+          margin: 0,
+          padding: 0,
+          minWidth: 'unset',
+          '&:hover': {
+            backgroundColor: 'unset',
+          },
         }}
+        disableRipple
       >
-        <TopMenuIcon title={'Help & Support'}>
-          <TooltipIcon status="help" />
-        </TopMenuIcon>
-      </StyledTopMenuIconWrapper>
-    </Link>
+        <Link aria-label="Link to Linode Support" to="/support">
+          <StyledTopMenuIconWrapper sx={{ marginLeft: [null, null, '8px'] }}>
+            <HelpSVGIcon status="help" />
+          </StyledTopMenuIconWrapper>
+        </Link>
+      </Button>
+    </TopMenuIcon>
   );
 };
-
-export default React.memo(Help);
