@@ -7,12 +7,10 @@ export const StyledTableWrapper = styled('div', {
   shouldForwardProp: (prop) =>
     isPropValid(
       [
-        'aria-colcount',
-        'aria-rowcount',
+        'aria-label',
         'colCount',
         'data-testid',
         'noBorder',
-        'role',
         'rowCount',
         'spacingBottom',
         'spacingTop',
