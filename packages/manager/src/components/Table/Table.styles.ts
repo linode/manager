@@ -6,16 +6,7 @@ export const StyledTableWrapper = styled('div', {
   label: 'StyledTableWrapper',
   shouldForwardProp: (prop) =>
     isPropValid(
-      [
-        'aria-label',
-        'colCount',
-        'data-testid',
-        'noBorder',
-        'rowCount',
-        'spacingBottom',
-        'spacingTop',
-        'stickyHeader',
-      ],
+      ['noBorder', 'noOverflow', 'spacingBottom', 'spacingTop'],
       prop
     ),
 })<TableProps>(({ theme, ...props }) => ({
