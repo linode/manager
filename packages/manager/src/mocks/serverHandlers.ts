@@ -893,19 +893,9 @@ export const handlers = [
       message: 'Ticket name with special characters... (?)',
       percent_complete: 100,
     });
-    const failedBackupRestoreEvent = eventFactory.build({
-      action: 'backups_restore',
-      status: 'failed',
-      percent_complete: 100,
-    });
     return res.once(
       ctx.json(
-        makeResourcePage([
-          ...events,
-          ...oldEvents,
-          eventWithSpecialCharacters,
-          failedBackupRestoreEvent,
-        ])
+        makeResourcePage([...events, ...oldEvents, eventWithSpecialCharacters])
       )
     );
   }),
