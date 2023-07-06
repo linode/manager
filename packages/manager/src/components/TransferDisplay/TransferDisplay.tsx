@@ -157,7 +157,8 @@ export const TransferDialog = React.memo((props: DialogProps) => {
             <Typography>{used} GB Used</Typography>
           ) : (
             <Typography>
-              Create a resource to start using Monthly Network Transfer.
+              Your monthly network transfer will be shown when you create a
+              resource.
             </Typography>
           )}
         </Grid>
