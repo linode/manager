@@ -11,6 +11,7 @@ const options: { label: string; flag: keyof Flags }[] = [
   { label: 'Metadata', flag: 'metadata' },
   { label: 'Database Beta', flag: 'databaseBeta' },
   { label: 'VPC', flag: 'vpc' },
+  { label: 'AGLB', flag: 'aglb' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {

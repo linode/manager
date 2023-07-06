@@ -57,6 +57,7 @@ export interface Flags {
   databaseBeta: boolean;
   metadata: boolean;
   vpc: boolean;
+  aglb: boolean;
 }
 
 type PromotionalOfferFeature =
