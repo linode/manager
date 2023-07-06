@@ -39,7 +39,6 @@ import {
   diskEventHandler,
   linodeEventsHandler,
 } from './queries/linodes/events';
-import { useVPCsQuery } from './queries/vpcs';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -50,8 +49,6 @@ const BaseApp = withFeatureFlagProvider(
 
     const { data: preferences } = usePreferences();
     const { mutateAsync: updateUserPreferences } = useMutatePreferences();
-
-    const { data: vpcData } = useVPCsQuery({}, {});
 
     const { featureFlagsLoading } = useFeatureFlagsLoad();
     const appIsLoading = useSelector(
