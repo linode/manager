@@ -562,7 +562,7 @@ const DatabaseCreate = () => {
           </FormControl>
           <Grid xs={12} md={8}>
             {flags.databaseBeta ? (
-              <Notice success className={classes.notice}>
+              <Notice info className={classes.notice}>
                 <strong>
                   Notice: There is no charge for database clusters during beta.
                 </strong>{' '}

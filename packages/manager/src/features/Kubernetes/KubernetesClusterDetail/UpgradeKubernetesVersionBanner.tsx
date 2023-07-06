@@ -30,7 +30,7 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
       {nextVersion ? (
         <DismissibleBanner
           preferenceKey={`${clusterID}-${currentVersion}`}
-          success
+          info
           actionButton={actionButton}
         >
           <Grid

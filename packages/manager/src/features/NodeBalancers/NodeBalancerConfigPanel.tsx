@@ -351,7 +351,7 @@ export const NodeBalancerConfigPanel = (
         <Grid xs={12}>
           {nodeMessage && (
             <Grid xs={12}>
-              <Notice text={nodeMessage} success />
+              <Notice text={nodeMessage} info />
             </Grid>
           )}
           <Typography variant="h2" data-qa-backend-ip-header>

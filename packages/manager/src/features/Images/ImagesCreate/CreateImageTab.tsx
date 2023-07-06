@@ -246,7 +246,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
       {generalError ? (
         <Notice error text={generalError} data-qa-notice />
       ) : null}
-      {notice ? <Notice success text={notice} data-qa-notice /> : null}
+      {notice ? <Notice info text={notice} data-qa-notice /> : null}
 
       <LinodeSelectV2
         value={selectedLinode?.id || null}
