@@ -26,7 +26,7 @@ interface Props {
    */
   onClickCallback?: () => void;
   /**
-   * The filename of the downloaded file. `.text` is automatically appended.
+   * The filename of the downloaded file. `.txt` is automatically appended.
    */
   fileName: string;
 }
