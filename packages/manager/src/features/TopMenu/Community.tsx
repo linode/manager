@@ -1,27 +1,33 @@
 import * as React from 'react';
-import Community from 'src/assets/icons/community_nav.svg';
+import CommunitySVGIcon from 'src/assets/icons/community_nav.svg';
 import { Link } from 'src/components/Link';
-import TopMenuIcon from './TopMenuIcon';
-import { StyledTopMenuIconWrapper } from './TopMenuIcon';
+import { TopMenuIcon, StyledTopMenuIconWrapper } from './TopMenuIcon';
+import { Button } from 'src/components/Button/Button';
 
-type Props = {
-  className?: string;
-};
-
-export const Help = ({ className }: Props) => {
+export const Community = () => {
   return (
-    <Link
-      className={className}
-      aria-label="Link to Linode Community site"
-      to="https://linode.com/community"
-    >
-      <StyledTopMenuIconWrapper>
-        <TopMenuIcon title="Linode Cloud Community">
-          <Community />
-        </TopMenuIcon>
-      </StyledTopMenuIconWrapper>
-    </Link>
+    <TopMenuIcon title="Linode Cloud Community (opens in new tab)">
+      <Button
+        aria-label="Linode Cloud Community (opens in new tab)"
+        sx={{
+          margin: 0,
+          padding: 0,
+          minWidth: 'unset',
+          '&:hover': {
+            backgroundColor: 'unset',
+          },
+        }}
+        disableRipple
+      >
+        <Link
+          aria-label="Link to Linode Community site"
+          to="https://linode.com/community"
+        >
+          <StyledTopMenuIconWrapper>
+            <CommunitySVGIcon status="community" />
+          </StyledTopMenuIconWrapper>
+        </Link>
+      </Button>
+    </TopMenuIcon>
   );
 };
-
-export default React.memo(Help);
