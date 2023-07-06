@@ -59,19 +59,33 @@ export interface TableProps extends _TableProps {
  * - **Disclaimer:** The UX team is in the process of assessing the usability of all of the above
  */
 export const Table = (props: TableProps) => {
-  const { className, tableClass, colCount, rowCount, ...rest } = props;
+  const {
+    className,
+    colCount,
+    noBorder,
+    noOverflow,
+    rowCount,
+    spacingBottom,
+    spacingTop,
+    tableClass,
+    ...rest
+  } = props;
 
   const tableProps = omit(rest, [
-    'colCounts',
     'noBorder',
     'noOverflow',
-    'rowCount',
     'spacingBottom',
     'spacingTop',
   ]);
 
   return (
-    <StyledTableWrapper className={className} {...props}>
+    <StyledTableWrapper
+      className={className}
+      noBorder={noBorder}
+      noOverflow={noOverflow}
+      spacingBottom={spacingBottom}
+      spacingTop={spacingTop}
+    >
       <_Table
         className={tableClass}
         {...tableProps}
