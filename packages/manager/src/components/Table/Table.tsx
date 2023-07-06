@@ -27,6 +27,11 @@ export interface TableProps extends _TableProps {
    */
   rowCount?: number;
   /**
+   * Optional boolean to add hover state to the table rows
+   * @default true
+   */
+  rowHoverState?: boolean;
+  /**
    * Optional spacing to add to the bottom of the table
    * @default 0
    */
@@ -65,6 +70,7 @@ export const Table = (props: TableProps) => {
     noBorder,
     noOverflow,
     rowCount,
+    rowHoverState = true,
     spacingBottom,
     spacingTop,
     tableClass,
@@ -74,6 +80,7 @@ export const Table = (props: TableProps) => {
   const tableProps = omit(rest, [
     'noBorder',
     'noOverflow',
+    'rowHoverState',
     'spacingBottom',
     'spacingTop',
   ]);
@@ -83,6 +90,7 @@ export const Table = (props: TableProps) => {
       className={className}
       noBorder={noBorder}
       noOverflow={noOverflow}
+      rowHoverState={rowHoverState}
       spacingBottom={spacingBottom}
       spacingTop={spacingTop}
     >

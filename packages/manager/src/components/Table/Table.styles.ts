@@ -6,7 +6,13 @@ export const StyledTableWrapper = styled('div', {
   label: 'StyledTableWrapper',
   shouldForwardProp: (prop) =>
     isPropValid(
-      ['noBorder', 'noOverflow', 'spacingBottom', 'spacingTop'],
+      [
+        'noBorder',
+        'noOverflow',
+        'rowHoverState',
+        'spacingBottom',
+        'spacingTop',
+      ],
       prop
     ),
 })<TableProps>(({ theme, ...props }) => ({
@@ -38,6 +44,13 @@ export const StyledTableWrapper = styled('div', {
   ...(props.noBorder && {
     '& thead th': {
       border: 0,
+    },
+  }),
+  ...(props.rowHoverState && {
+    '& tbody tr': {
+      '&:hover': {
+        backgroundColor: theme.bg.lightBlue1,
+      },
     },
   }),
 }));
