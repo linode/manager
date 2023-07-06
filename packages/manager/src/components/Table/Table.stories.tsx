@@ -45,6 +45,7 @@ const meta: Meta<TableProps> = {
     ),
     noBorder: false,
     padding: 'normal',
+    rowHoverState: true,
     size: 'medium',
     spacingBottom: 0,
     spacingTop: 0,
