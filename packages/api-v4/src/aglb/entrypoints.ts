@@ -1,7 +1,11 @@
 import Request, { setData, setMethod, setURL } from '../request';
 import { ResourcePage } from 'src/types';
 import { BETA_API_ROOT } from 'src/constants';
-import type { Entrypoint, EntrypointPayload } from './types';
+import type {
+  CreateEntrypointPayload,
+  Entrypoint,
+  EntrypointPayload,
+} from './types';
 
 /**
  * getEntrypoints
@@ -30,7 +34,7 @@ export const getEntrypoint = (id: number) =>
  *
  * Creates an Akamai Global Load Balancer entry point
  */
-export const createEntrypoint = (data: EntrypointPayload) =>
+export const createEntrypoint = (data: CreateEntrypointPayload) =>
   Request<Entrypoint>(
     setURL(`${BETA_API_ROOT}/aglb/entrypoints`),
     setData(data),

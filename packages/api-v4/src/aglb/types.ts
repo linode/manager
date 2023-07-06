@@ -39,6 +39,8 @@ export interface EntrypointPayload {
   routes: RoutePayload[];
 }
 
+export type CreateEntrypointPayload = Omit<EntrypointPayload, 'routes'>;
+
 export interface Entrypoint {
   id: number;
   name: string;
@@ -67,7 +69,7 @@ export interface ServiceTargetPayload {
   name: string;
   endpoints: Endpoint[];
   ca_certificate: string;
-  load_bal_policy: Policy;
+  load_balancing_policy: Policy;
   health_check_interval: number;
   health_check_timeout: number;
   health_check_unhealthy_thresh: number;
