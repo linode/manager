@@ -9,7 +9,7 @@ import { ApplicationState } from 'src/store';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { TimezoneForm } from './TimezoneForm';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { updateUser } from '@linode/api-v4/lib/account';
 import { useLocation } from 'react-router-dom';
 import { useMutateProfile, useProfile } from 'src/queries/profile';

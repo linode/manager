@@ -1,7 +1,7 @@
 import * as React from 'react';
 import copy from 'copy-to-clipboard';
 import FileCopy from 'src/assets/icons/copy.svg';
-import ToolTip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { isPropValid } from 'src/utilities/isPropValid';
 import { styled } from '@mui/material/styles';
 
@@ -45,7 +45,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   };
 
   return (
-    <ToolTip title={copied ? 'Copied!' : 'Copy'} placement="top" data-qa-copied>
+    <Tooltip title={copied ? 'Copied!' : 'Copy'} placement="top" data-qa-copied>
       <StyledCopyTooltipButton
         aria-label={`Copy ${text} to clipboard`}
         name={text}
@@ -57,7 +57,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       >
         {copyableText ? text : <FileCopy />}
       </StyledCopyTooltipButton>
-    </ToolTip>
+    </Tooltip>
   );
 };
 

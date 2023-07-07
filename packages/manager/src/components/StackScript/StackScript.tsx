@@ -15,7 +15,7 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { makeStyles } from 'tss-react/mui';
-import TooltipIcon from '../TooltipIcon';
+import { TooltipIcon } from '../TooltipIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

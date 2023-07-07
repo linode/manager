@@ -3,7 +3,7 @@ import CautionIcon from 'src/assets/icons/caution.svg';
 import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
 import { Button } from 'src/components/Button/Button';
 import { LinearProgress } from 'src/components/LinearProgress';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { readableBytes } from 'src/utilities/unitConversions';
 import {

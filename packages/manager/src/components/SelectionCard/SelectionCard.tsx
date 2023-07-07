@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { CardBase } from './CardBase';
 import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';

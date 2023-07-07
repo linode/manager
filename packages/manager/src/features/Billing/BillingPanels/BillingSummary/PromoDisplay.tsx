@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useTheme } from '@mui/material/styles';
 import {

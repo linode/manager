@@ -14,7 +14,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';

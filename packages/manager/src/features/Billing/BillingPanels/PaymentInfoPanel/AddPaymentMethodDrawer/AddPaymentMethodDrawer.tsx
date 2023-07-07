@@ -12,7 +12,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import Box from '@mui/material/Box';
 
 interface Props {
