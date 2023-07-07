@@ -56,8 +56,8 @@ export const DisplaySettings = () => {
   const tooltipIconText = (
     <>
       Go to <Link to="https://en.gravatar.com/">gravatar.com</Link> and register
-      an account using the same email address as your Linode account. Upload
-      your desired profile image to your Gravatar account and it will be
+      an account using the same email address as your Cloud Manager account.
+      Upload your desired profile image to your Gravatar account and it will be
       automatically linked.
     </>
   );
