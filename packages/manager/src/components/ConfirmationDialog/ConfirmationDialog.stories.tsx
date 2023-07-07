@@ -1,6 +1,5 @@
 import React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -34,10 +33,12 @@ const meta: Meta<typeof ConfirmationDialog> = {
   },
   args: {
     actions: (
-      <ActionsPanel>
-        <Button>Cancel</Button>
-        <Button buttonType="primary">Continue</Button>
-      </ActionsPanel>
+      <ActionsPanel
+        primary
+        primaryButtonText="Continue"
+        secondary
+        secondaryButtonText="Cancel"
+      />
     ),
     children:
       'This confirmation modal is making sure you really want to do this.',
