@@ -14,7 +14,7 @@ export const QRCodeForm = (props: Props) => {
   return (
     <React.Fragment>
       <StyledInstructions variant="h3" data-qa-copy>
-        Scan this QR code to add your Linode account to your 2FA app:
+        Scan this QR code to add your Cloud Manager account to your 2FA app:
       </StyledInstructions>
       <StyledQRCodeContainer>
         <QRCode
