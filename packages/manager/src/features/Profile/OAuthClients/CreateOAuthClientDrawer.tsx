@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Drawer from 'src/components/Drawer';
@@ -66,7 +66,7 @@ export const CreateOAuthClientDrawer = ({
           <FormControlLabel
             label="Public"
             control={
-              <CheckBox
+              <Checkbox
                 name="public"
                 onChange={formik.handleChange}
                 checked={formik.values.public}

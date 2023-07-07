@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Drawer from 'src/components/Drawer';
@@ -70,7 +70,7 @@ export const EditOAuthClientDrawer = ({ open, onClose, client }: Props) => {
           <FormControlLabel
             label="Public"
             control={
-              <CheckBox name="public" checked={client?.public} disabled />
+              <Checkbox name="public" checked={client?.public} disabled />
             }
           />
         </FormControl>

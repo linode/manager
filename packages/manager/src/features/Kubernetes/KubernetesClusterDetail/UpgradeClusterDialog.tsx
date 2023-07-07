@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
@@ -107,7 +107,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
           </li>
         </ul>
       </Notice>
-      <CheckBox
+      <Checkbox
         checked={checked}
         onChange={toggleChecked}
         text="I agree to the additional fee on my monthly bill and understand HA upgrade can only be reversed by deleting my cluster."

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'src/components/Link';
@@ -351,7 +351,7 @@ export const NodeBalancerConfigPanel = (
         <Grid xs={12}>
           {nodeMessage && (
             <Grid xs={12}>
-              <Notice text={nodeMessage} success />
+              <Notice text={nodeMessage} info />
             </Grid>
           )}
           <Typography variant="h2" data-qa-backend-ip-header>
