@@ -52,7 +52,7 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
       }
       primaryButtonLoading={loading}
       primaryButtonDataTestId="confirm"
-      primaryButtonText={` Delete {titlecase(entity)}`}
+      primaryButtonText={` Delete ${titlecase(entity)}`}
     />
   );
 
