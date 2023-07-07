@@ -2,7 +2,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -97,22 +96,19 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
   }, [diskOptions]);
 
   const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="primary"
-        onClick={onSubmit}
-        loading={isLoading}
-        disabled={isReadOnly || linode?.status !== 'offline'}
-        data-qa-password-save
-        tooltipText={
-          linode?.status !== 'offline'
-            ? 'Your Linode must be fully powered down in order to change your root password'
-            : ''
-        }
-      >
-        Save
-      </Button>
-    </ActionsPanel>
+    <ActionsPanel
+      primary
+      primaryButtonDataTestId="password-save"
+      primaryButtonDisabled={isReadOnly || linode?.status !== 'offline'}
+      primaryButtonHandler={onSubmit}
+      primaryButtonLoading={isLoading}
+      primaryButtonToolTip={
+        linode?.status !== 'offline'
+          ? 'Your Linode must be fully powered down in order to change your root password'
+          : ''
+      }
+      primaryButtonText="Save"
+    />
   );
 
   return (

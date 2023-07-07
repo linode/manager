@@ -2,7 +2,6 @@ import { IPv6Prefix } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
@@ -178,26 +177,6 @@ const AddIPDrawer = (props: Props) => {
         : tooltipCopy[selectedIPv4]
       : null;
 
-  const buttonJSX = (type: 'IPv4' | 'IPv6') => {
-    const IPv4 = type === 'IPv4';
-
-    const onClick = IPv4 ? handleAllocateIPv4 : handleCreateIPv6Range;
-    const disabled = IPv4 ? disabledIPv4 : disabledIPv6;
-    const submitting = IPv4 ? ipv4Loading : ipv6Loading;
-
-    return (
-      <Button
-        buttonType="primary"
-        onClick={onClick}
-        disabled={disabled}
-        style={{ marginBottom: 8 }}
-        loading={submitting}
-      >
-        Allocate
-      </Button>
-    );
-  };
-
   return (
     <Drawer open={open} onClose={onClose} title="Add an IP Address">
       <React.Fragment>
@@ -231,15 +210,30 @@ const AddIPDrawer = (props: Props) => {
             {explainerCopy[selectedIPv4]}
           </Typography>
         )}
-        <ActionsPanel>
-          {_tooltipCopy ? (
-            <Tooltip title={_tooltipCopy}>
-              <div style={{ display: 'inline' }}>{buttonJSX('IPv4')}</div>
-            </Tooltip>
-          ) : (
-            buttonJSX('IPv4')
-          )}
-        </ActionsPanel>
+
+        {_tooltipCopy ? (
+          <Tooltip placement="bottom-end" title={_tooltipCopy}>
+            <div style={{ display: 'inline' }}>
+              <ActionsPanel
+                primary
+                primaryButtonDisabled={disabledIPv4}
+                primaryButtonHandler={handleAllocateIPv4}
+                primaryButtonLoading={ipv4Loading}
+                primaryButtonSx={{ marginBottom: 8 }}
+                primaryButtonText="Allocate"
+              />
+            </div>
+          </Tooltip>
+        ) : (
+          <ActionsPanel
+            primary
+            primaryButtonDisabled={disabledIPv4}
+            primaryButtonHandler={handleAllocateIPv4}
+            primaryButtonLoading={ipv4Loading}
+            primaryButtonSx={{ marginBottom: 8 }}
+            primaryButtonText="Allocate"
+          />
+        )}
         <Typography variant="h2" className={classes.ipv6}>
           IPv6
         </Typography>
@@ -280,7 +274,14 @@ const AddIPDrawer = (props: Props) => {
           </ExternalLink>
           .
         </Typography>
-        <ActionsPanel>{buttonJSX('IPv6')}</ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDisabled={disabledIPv6}
+          primaryButtonHandler={handleCreateIPv6Range}
+          primaryButtonLoading={ipv6Loading}
+          primaryButtonSx={{ marginBottom: 8 }}
+          primaryButtonText="Allocate"
+        />
       </React.Fragment>
     </Drawer>
   );

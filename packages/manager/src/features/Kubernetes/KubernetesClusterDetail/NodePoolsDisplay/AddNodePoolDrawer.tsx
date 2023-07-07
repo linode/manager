@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
@@ -40,10 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: 0,
       },
     },
-  },
-  button: {
-    paddingTop: 0,
-    marginTop: '0 !important',
   },
   priceDisplay: {
     color: theme.color.headline,
@@ -193,36 +188,35 @@ export const AddNodePoolDrawer = (props: Props) => {
               spacingBottom={16}
             />
           )}
-        <ActionsPanel className={classes.button}>
-          <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
-            className={classes.boxOuter}
-          >
-            {selectedTypeInfo && (
-              <Typography className={classes.priceDisplay}>
-                This pool will add{' '}
-                <strong>
-                  ${selectedTypeInfo.count * pricePerNode}/month (
-                  {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
-                  {pricePerNode}
-                  /month)
-                </strong>{' '}
-                to this cluster.
-              </Typography>
-            )}
-            <Button
-              buttonType="primary"
-              onClick={handleAdd}
-              disabled={!selectedTypeInfo}
-              loading={isLoading}
-            >
-              Add pool
-            </Button>
-          </Box>
-        </ActionsPanel>
+
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          justifyContent={selectedTypeInfo ? 'space-between' : 'flex-end'}
+          className={classes.boxOuter}
+        >
+          {selectedTypeInfo && (
+            <Typography className={classes.priceDisplay}>
+              This pool will add{' '}
+              <strong>
+                ${selectedTypeInfo.count * pricePerNode}/month (
+                {pluralize('node', 'nodes', selectedTypeInfo.count)} at $
+                {pricePerNode}
+                /month)
+              </strong>{' '}
+              to this cluster.
+            </Typography>
+          )}
+          <ActionsPanel
+            primary
+            primaryButtonHandler={handleAdd}
+            primaryButtonDisabled={!selectedTypeInfo}
+            primaryButtonLoading={isLoading}
+            primaryButtonText="Add pool"
+            primaryButtonSx={{ paddingTop: 0, marginTop: '0 !important' }}
+          />
+        </Box>
       </form>
     </Drawer>
   );

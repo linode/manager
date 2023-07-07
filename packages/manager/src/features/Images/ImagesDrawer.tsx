@@ -6,7 +6,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
@@ -392,26 +391,18 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
           label,
           description,
         ]}
-      >
-        <Button
-          onClick={close}
-          buttonType="secondary"
-          className="cancel"
-          disabled={!canCreateImage}
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={onSubmit}
-          disabled={requirementsMet || !canCreateImage}
-          loading={submitting}
-          buttonType="primary"
-          data-qa-submit
-        >
-          {buttonTextMap[mode] ?? 'Submit'}
-        </Button>
-      </ActionsPanel>
+        primary
+        primaryButtonDataTestId="submit"
+        primaryButtonDisabled={requirementsMet || !canCreateImage}
+        primaryButtonHandler={onSubmit}
+        primaryButtonLoading={submitting}
+        primaryButtonText={buttonTextMap[mode] ?? 'Submit'}
+        secondary
+        secondaryButtonDataTestId="cancel"
+        secondaryButtonDisabled={!canCreateImage}
+        secondaryButtonHandler={close}
+        secondaryButtonText="Cancel"
+      />
     </Drawer>
   );
 };

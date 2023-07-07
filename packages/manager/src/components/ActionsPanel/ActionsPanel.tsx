@@ -68,6 +68,11 @@ interface ActionPanelProps extends BoxProps {
   primaryButtonCompactY?: boolean;
 
   /**
+   * The text for primary type actionable button tooltip.
+   */
+  primaryButtonToolTip?: string;
+
+  /**
    * Renders secondary type actionable button.
    */
   secondary?: boolean;
@@ -109,22 +114,27 @@ interface ActionPanelProps extends BoxProps {
    * @default false
    */
   secondaryButtonCompactY?: boolean;
+
+  /**
+   * The text for secondary type actionable button tooltip.
+   */
+  secondaryButtonToolTip?: string;
 }
 
 const ActionsPanel = (props: ActionPanelProps) => {
   const {
-    children,
     className,
     primary,
     primaryButtonAriaDescribedBy,
     primaryButtonDataTestId,
     primaryButtonDisabled,
     primaryButtonHandler,
-    primaryButtonRole,
     primaryButtonLoading,
-    primaryButtonText,
-    primaryButtonType,
+    primaryButtonRole,
     primaryButtonSx,
+    primaryButtonText,
+    primaryButtonToolTip,
+    primaryButtonType,
     secondary,
     secondaryButtonCompactX,
     secondaryButtonCompactY,
@@ -169,9 +179,10 @@ const ActionsPanel = (props: ActionPanelProps) => {
           disabled={primaryButtonDisabled}
           loading={primaryButtonLoading}
           onClick={primaryButtonHandler}
-          type={primaryButtonType}
-          sx={primaryButtonSx}
           role={primaryButtonRole}
+          sx={primaryButtonSx}
+          tooltipText={primaryButtonToolTip}
+          type={primaryButtonType}
         >
           {primaryButtonText}
         </Button>
