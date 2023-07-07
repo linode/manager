@@ -11,8 +11,8 @@ import {
   default as _TextField,
   StandardTextFieldProps,
 } from '@mui/material/TextField';
-import { TooltipProps as _TooltipProps } from 'src/components/core/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipProps as _TooltipProps } from 'src/components/Tooltip';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 const useStyles = makeStyles()((theme: Theme) => ({

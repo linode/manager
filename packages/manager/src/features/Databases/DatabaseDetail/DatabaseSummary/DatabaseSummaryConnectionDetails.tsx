@@ -9,7 +9,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';

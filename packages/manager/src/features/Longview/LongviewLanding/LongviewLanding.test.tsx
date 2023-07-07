@@ -39,8 +39,6 @@ const props: CombinedProps = {
   deleteLongviewClient: jest.fn(),
   getLongviewClients: jest.fn().mockResolvedValue([]),
   updateLongviewClient: jest.fn(),
-  enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
   activeSubscription: longviewSubscriptionFactory.build(),
   lvClientData: {},
   handleAddClient: jest.fn(),

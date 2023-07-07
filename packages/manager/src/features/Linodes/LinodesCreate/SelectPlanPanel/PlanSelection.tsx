@@ -4,7 +4,7 @@ import { BaseType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
 import { Currency } from 'src/components/Currency';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';

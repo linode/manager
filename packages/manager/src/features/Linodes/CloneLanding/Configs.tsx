@@ -1,6 +1,6 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { makeStyles } from '@mui/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -51,7 +51,7 @@ export const Configs: React.FC<Props> = (props) => {
                   paginatedData.map((config: Config) => (
                     <TableRow key={config.id} data-qa-config={config.label}>
                       <TableCell>
-                        <CheckBox
+                        <Checkbox
                           checked={
                             configSelection[config.id] &&
                             configSelection[config.id].isSelected

@@ -316,7 +316,7 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
       ) : null}
       {generalError && <Notice error text={generalError} data-qa-notice />}
 
-      {notice && <Notice success text={notice} data-qa-notice />}
+      {notice && <Notice info text={notice} data-qa-notice />}
 
       {['create', 'restore'].includes(mode) && (
         <LinodeSelect

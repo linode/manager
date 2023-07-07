@@ -5,6 +5,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -12,11 +13,10 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import CheckBox from 'src/components/CheckBox';
 import { Box } from 'src/components/Box';
-import Divider from 'src/components/core/Divider';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button } from 'src/components/Button/Button';
+import { Checkbox } from 'src/components/Checkbox';
+import { Divider } from 'src/components/Divider';
 import ImageSelect from 'src/components/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 
@@ -264,7 +264,7 @@ export const RebuildFromImage = (props: Props) => {
                     }
                     renderCheckbox={
                       <Box>
-                        <CheckBox
+                        <Checkbox
                           checked={shouldReuseUserData}
                           onChange={handleShouldReuseUserDataChange}
                           text={`Reuse user data previously provided for ${linodeLabel}`}

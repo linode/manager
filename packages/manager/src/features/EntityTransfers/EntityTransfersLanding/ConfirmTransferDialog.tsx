@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { makeStyles } from '@mui/styles';
@@ -267,7 +267,7 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
         <Typography className={classes.expiry}>{timeRemaining}</Typography>
       ) : null}
       <div>
-        <CheckBox
+        <Checkbox
           checked={hasConfirmed}
           onChange={handleToggleConfirm}
           text="I accept responsibility for the billing of services listed above."
