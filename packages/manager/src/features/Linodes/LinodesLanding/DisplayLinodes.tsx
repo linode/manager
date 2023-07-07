@@ -11,7 +11,7 @@ import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import TableWrapper from './TableWrapper';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import GridView from 'src/assets/icons/grid-view.svg';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';

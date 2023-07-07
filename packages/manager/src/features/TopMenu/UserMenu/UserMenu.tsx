@@ -13,7 +13,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import useAccountManagement from 'src/hooks/useAccountManagement';
