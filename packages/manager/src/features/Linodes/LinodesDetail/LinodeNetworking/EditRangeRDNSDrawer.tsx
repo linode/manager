@@ -1,7 +1,6 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
@@ -124,24 +123,18 @@ export const EditRangeRDNSDrawer = (props: Props) => {
         <Typography variant="body1">
           Leave this field blank to reset RDNS
         </Typography>
-        <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            buttonType="secondary"
-            className="cancel"
-            onClick={onClose}
-            data-qa-cancel
-          >
-            Close
-          </Button>
-          <Button
-            buttonType="primary"
-            type="submit"
-            loading={isLoading}
-            data-qa-submit
-          >
-            Save
-          </Button>
-        </ActionsPanel>
+        <ActionsPanel
+          primary
+          primaryButtonDataTestId="submit"
+          primaryButtonLoading={isLoading}
+          primaryButtonText="Save"
+          primaryButtonType="submit"
+          secondary
+          secondaryButtonDataTestId="cancel"
+          secondaryButtonHandler={onClose}
+          secondaryButtonText="Close"
+          style={{ marginTop: 16 }}
+        />
       </form>
       {range && ips && ips.length > 0 && (
         <div className={classes.section}>
