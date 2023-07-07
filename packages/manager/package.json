@@ -45,7 +45,7 @@
     "ipaddr.js": "^1.9.1",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
-    "launchdarkly-react-client-sdk": "^2.29.1",
+    "launchdarkly-react-client-sdk": "^3.0.6",
     "libphonenumber-js": "^1.10.6",
     "lodash": "^4.17.21",
     "logic-query-parser": "^0.0.5",
