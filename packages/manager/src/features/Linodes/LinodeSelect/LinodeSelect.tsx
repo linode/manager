@@ -1,25 +1,15 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
-import { APIError } from '@linode/api-v4/lib/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import EnhancedSelect, {
   GroupType,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { Props as TextFieldProps } from 'src/components/TextField';
-import withLinodes from 'src/containers/withLinodes.container';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { TextFieldProps } from 'src/components/TextField';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-interface WithLinodesProps {
-  linodesData: Linode[];
-  linodesLoading: boolean;
-  linodesError?: APIError[];
-}
 
 type Override = keyof Linode | ((linode: Linode) => any);
 
@@ -51,17 +41,12 @@ interface Props {
   required?: boolean;
 }
 
-type CombinedProps = Props & WithLinodesProps;
-
-const LinodeSelect: React.FC<CombinedProps> = (props) => {
+export const LinodeSelect = (props: Props) => {
   const {
     disabled,
     generalError,
     handleChange,
     linodeError,
-    linodesError,
-    linodesLoading,
-    linodesData,
     region,
     selectedLinode,
     groupByRegion,
@@ -78,6 +63,8 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
     ...rest
   } = props;
 
+  const { data: allLinodes, isLoading, error } = useAllLinodesQuery();
+
   const { data: regions } = useRegionsQuery();
 
   const onChange = React.useCallback(
@@ -91,7 +78,7 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
     [handleChange]
   );
 
-  const { _loading } = useReduxLoad(['linodes']);
+  const linodesData = allLinodes ?? [];
 
   const linodes = region
     ? linodesData.filter((thisLinode) => thisLinode.region === region)
@@ -108,7 +95,7 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
     : linodesToItems(linodes, valueOverride, labelOverride, filterCondition);
 
   const defaultNoOptionsMessage =
-    !linodeError && !linodesLoading && options.length === 0
+    !linodeError && !isLoading && options.length === 0
       ? 'You have no Linodes to choose from'
       : 'No Options';
 
@@ -133,11 +120,11 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
         options={options}
         disabled={disabled}
         small={props.small}
-        isLoading={linodesLoading || _loading}
+        isLoading={isLoading}
         inputId={inputId}
         onChange={onChange}
         errorText={getErrorStringOrDefault(
-          generalError || linodeError || linodesError || ''
+          generalError || linodeError || error || ''
         )}
         isClearable={isClearable}
         textFieldProps={props.textFieldProps}
@@ -147,15 +134,6 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
     </div>
   );
 };
-
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    linodesData,
-    linodesLoading,
-    linodesError,
-  }))
-)(LinodeSelect);
 
 /**
  * UTILITIES

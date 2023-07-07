@@ -1,111 +1,151 @@
+## [2023-06-27] - v0.95.1
+
+
+### Fixed:
+
+- Updated Entity interface to reflect the possibility of a null label ([#9331](https://github.com/linode/manager/pull/9331))
+
+## [2023-06-26] - v0.95.0
+
+### Added:
+
+- New Region Capability (Premium Plans) ([#9253](https://github.com/linode/manager/pull/9253))
+- Database APIv4 types to support Premium plans ([#9257](https://github.com/linode/manager/pull/9257))
+
+### Removed:
+
+- References to deprecated Google Tag Manager ([#9266](https://github.com/linode/manager/pull/9266))
+
 ## [2023-06-12] - v0.94.0
 
 ### Changed:
+
 - Corrected `getLinodeKernel` return type from `ResourcePage<Kernel>` to `Kernel` #9198
 - Corrected the return type of `deleteSSLCert` from `ObjectStorageBucketSSLResponse` to `{}` #9167
 - Updated `lint-staged` to `^13.2.2` #9156
 - Removed unused `handlebars` resolution #9156
 
 ### Fixed:
+
 - Encode `api-v4` Path Parameters #9205
 
 ## [2023-05-30] - v0.93.0
 
 ### Added:
+
 - `ticket_update` to account types ([#9105](https://github.com/linode/manager/pull/9105))
 - filtering on IPv6 ranges ([#9097](https://github.com/linode/manager/pull/9097))
 
 ## [2023-05-15] - v0.92.0
 
 ### Added:
+
 - Ability download DNS zone file #9075
 - React Query - Linodes - Landing #9062
 - Added `available` to the `LinodeBackup` type #9079
 
 ### Fixed:
+
 - Removed deprecated PayPal endpoints #9058
 
 ## [2023-05-01] - v0.91.0
 
 ### Added:
+
 - `InterfacePayload` type for network interface data when creating a Linode or a Linode configuration #9053
 - `id` to the `Interface` type #9053
 
 ## [2023-04-17] - v0.90.0
 
 ### Changed:
+
 - Accept URL query parameters for `getNodeBalancerConfigs` #8964
 - Accept `null` for `OAuthClient` thumbnail URL #8938
 
 ## [2023-04-03] - v0.89.0
 
 ### Added:
+
 - React Query for SSH Keys [#8892](https://github.com/linode/manager/pull/8892)
 - React Query for Firewalls [#8889](https://github.com/linode/manager/pull/8889)
 
 ## [2023-03-20] - v0.88.0
 
 ### Added:
+
 - `params` to regions endpoint [#8851](https://github.com/linode/manager/pull/8851)
 - `params` and `filters` to `getLinodeFirewalls` [#8848](https://github.com/linode/manager/pull/8848)
 
 ### Changed:
+
 - Updated `VolumeStatus` type [#8862](https://github.com/linode/manager/pull/8862)
 - Updated `tsup` [#8838](https://github.com/linode/manager/pull/8838)
 
 ### Removed:
+
 - Unused packages + update lint-staged [#8860](https://github.com/linode/manager/pull/8860)
 
 ## [2023-03-06] - v0.87.0
 
 ### Added:
+
 - Increased minimum acceptable password strength for Linode root passwords
 - Removed zone types for LISH URL change
 - Account Logins Show `Successful` or `Failed` Access
 
 ### Changed:
+
 - Update Node.js from 14.17.4 LTS to 18.14.1 LTS
 
 ## [2023-02-07] - v0.86.0
 
 ### Added:
+
 - Databases as a User Permissions Option
 - `label` to Region type
 - Token related events
 
 ### Fixed:
+
 - `api-v4` CommonJS not accepted by Node.js
 
 ## [2023-01-09] - v0.85.0
 
 ### Added:
+
 - Account login history endpoints
 - `completed` status to `AccountMaintenance` type
 
 ### Changed:
+
 - Updated ESLint rules to not include Material UI
 
 ## [2022-12-12] - v0.84.0
 
 ### Added:
-- `eol` field on `Image` type
 
+- `eol` field on `Image` type
 
 ## [2022-11-30] - v0.83.0
 
 ### Changed:
+
 - Updated Volume interface to include linode_label; updated VolumeStatus type to include ‘migrating’
 
 ## [2022-11-14] - v0.82.0
 
 ### Added:
+
 - Support for user-defined headers in UDF (user-defined fields) schema
 
 ## [2022-11-01] - v0.81.0
+
 ### Added:
+
 - `setUserAgentPrefix` helper function to change API request user agent prefix
 
 ### Changed:
+
 - `credentials` field on `ManagedServiceMonitor` is now an array of numbers
 - API request user agent reflects environment
 
@@ -118,12 +158,15 @@
 - SupportReply interface to include friendly_name
 
 ## [2022-10-04] - v0.79.0
+
 ### Changed:
+
 - FirewallRuleProtocol type updated to include IPENCAP
 
 ## [2202-09-19] - v0.78.0
 
 ### Changed:
+
 - LinodeConfigCreationData now includes initrd property
 
 ## [2022-09-06] - v0.77.0
@@ -135,9 +178,11 @@
 ## [2022-08-22] - v0.76.0
 
 ### Added:
+
 - `billing_source` property to `Account` type
 
 ### Changed:
+
 - `@linode/api-v4` is now built using `tsup` outputting esm, commonjs, and iife. Items can still be imported from the package root (`@linode/api-v4`) or from a subdirectory (`@linode/api-v4/lib/**`) on supported configurations.
 
 ## [2022-07-12] - v0.75.0
@@ -149,29 +194,34 @@
 ## [2022-06-23] - v0.74.0
 
 ### Added:
+
 - Types and methods for SMS phone number verification opt-in and opt-out
 - Types and methods for security question management
 
 ### Changed
-- Add `verified_phone_number` field to `Profile` type
 
+- Add `verified_phone_number` field to `Profile` type
 
 ## [2022-06-13] - v0.73.0
 
 ### Added:
+
 - Types and fields for invoice tax summaries
 
 ## [2022-06-06] - v0.72.0
 
 ### Changed
+
 - Add `replica_set` and `peers` fields to MongoDB database type
 
 ## [2022-05-16] - v0.71.0
 
 ### Changed:
+
 - Database types to support the addition of PostgreSQL and MongoDB
 
 ### Fixed
+
 - Validation package version in api-v4/package.json
 
 ## [2022-04-28] - v0.70.0

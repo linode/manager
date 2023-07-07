@@ -123,11 +123,16 @@ const entityTransfers = [
       is_sender: true,
       status: 'pending',
     });
+    const transfer5 = entityTransferFactory.build({
+      is_sender: true,
+      status: 'canceled',
+    });
 
     const combinedTransfers = transfers1.concat(
       transfers2,
       transfers3,
-      transfer4
+      transfer4,
+      transfer5
     );
     return res(ctx.json(makeResourcePage(combinedTransfers)));
   }),
@@ -466,6 +471,13 @@ export const handlers = [
   rest.get('*/instances/*/disks', async (req, res, ctx) => {
     const disks = linodeDiskFactory.buildList(3);
     return res(ctx.json(makeResourcePage(disks)));
+  }),
+  rest.put('*/instances/*/disks/:id', async (req, res, ctx) => {
+    const id = Number(req.params.id);
+    const disk = linodeDiskFactory.build({ id });
+    // If you want to mock an error
+    // return res(ctx.status(400), ctx.json({ errors: [{ field: 'label', reason: 'OMG!' }] }));
+    return res(ctx.json(disk));
   }),
   rest.get('*/instances/*/transfer', async (req, res, ctx) => {
     const transfer = linodeTransferFactory.build();
@@ -870,7 +882,22 @@ export const handlers = [
       seen: true,
       percent_complete: 100,
     });
-    return res.once(ctx.json(makeResourcePage([...events, ...oldEvents])));
+    const eventWithSpecialCharacters = eventFactory.build({
+      action: 'ticket_update',
+      status: 'notification',
+      entity: {
+        type: 'ticket',
+        label: 'Ticket name with special characters... (?)',
+        id: 10,
+      },
+      message: 'Ticket name with special characters... (?)',
+      percent_complete: 100,
+    });
+    return res.once(
+      ctx.json(
+        makeResourcePage([...events, ...oldEvents, eventWithSpecialCharacters])
+      )
+    );
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });

@@ -1,6 +1,5 @@
 import { Config } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -37,7 +36,7 @@ import { PowerActionsDialog, Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
-import DisplayLinodes from './DisplayLinodes';
+import { DisplayLinodes } from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import ListView from './ListView';
@@ -94,7 +93,6 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   StyleProps &
-  WithSnackbarProps &
   WithProfileProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
@@ -480,7 +478,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const enhanced = compose<CombinedProps, Props>(
   withRouter,
-  withSnackbar,
   connected,
   styled,
   withFeatureFlagConsumer,

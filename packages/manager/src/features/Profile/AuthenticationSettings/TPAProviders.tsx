@@ -1,14 +1,14 @@
 import * as React from 'react';
 import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveOnly.svg';
-import Box from 'src/components/core/Box';
-import Divider from 'src/components/core/Divider';
+import { Box } from 'src/components/Box';
+import { Divider } from 'src/components/Divider';
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
 import ExternalLink from 'src/components/ExternalLink';
 import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
 import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+import { Link } from 'src/components/Link';
 import useFlags from 'src/hooks/useFlags';
 import { TPADialog } from './TPADialog';
 import { TPAProvider } from '@linode/api-v4/lib/profile';
@@ -147,9 +147,9 @@ export const TPAProviders = (props: Props) => {
             </StyledCopy>
             <StyledCopy variant="body1" style={{ marginBottom: 8 }}>
               To disable {currentProvider.displayName} authentication and log in
-              using your Linode credentials, click the Linode button above.
-              We&rsquo;ll send you an e-mail with instructions on how to reset
-              your password.
+              using your Cloud Manager credentials, click the Cloud Manager
+              button above. We&rsquo;ll send you an e-mail with instructions on
+              how to reset your password.
             </StyledCopy>
           </div>
         ) : null}

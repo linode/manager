@@ -1,9 +1,8 @@
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
-import Box from 'src/components/core/Box';
-import Divider from 'src/components/core/Divider';
-import Typography from 'src/components/core/Typography';
-import useLinodes from 'src/hooks/useLinodes';
+import { Box } from 'src/components/Box';
+import { Divider } from 'src/components/Divider';
+import { Typography } from 'src/components/Typography';
 import { Duration } from 'luxon';
 import { Event } from '@linode/api-v4/lib/account/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -18,24 +17,22 @@ import {
   RenderEventStyledBox,
   useRenderEventStyles,
 } from './RenderEvent.styles';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 interface Props {
   event: Event;
   onClose: () => void;
 }
 
-export type CombinedProps = Props;
-
-export const RenderProgressEvent: React.FC<Props> = (props) => {
+export const RenderProgressEvent = (props: Props) => {
   const { classes } = useRenderEventStyles();
   const { event } = props;
-  const { linodes } = useLinodes();
-  const _linodes = Object.values(linodes.itemsById);
+  const { data: linodes } = useAllLinodesQuery();
   const typesQuery = useSpecificTypes(
-    _linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
+    (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
   const types = extendTypesQueryResult(typesQuery);
-  const message = eventMessageGenerator(event, _linodes, types);
+  const message = eventMessageGenerator(event, linodes, types);
 
   if (message === null) {
     return null;

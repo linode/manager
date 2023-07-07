@@ -1,4 +1,4 @@
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { makeStyles } from 'tss-react/mui';
 import { styled } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';

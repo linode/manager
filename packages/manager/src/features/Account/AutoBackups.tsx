@@ -1,13 +1,13 @@
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Notice } from 'src/components/Notice/Notice';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Toggle } from 'src/components/Toggle';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   footnote: {
@@ -49,7 +49,7 @@ const AutoBackups = (props: Props) => {
       <Grid container direction="column" spacing={2}>
         <Grid>
           {!!isManagedCustomer ? (
-            <Notice success spacingBottom={20}>
+            <Notice info spacingBottom={20}>
               You&rsquo;re a Managed customer, which means your Linodes are
               already automatically backed up - no need to toggle this setting.
             </Notice>

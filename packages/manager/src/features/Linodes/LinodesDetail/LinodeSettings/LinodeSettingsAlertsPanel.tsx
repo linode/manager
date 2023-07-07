@@ -2,9 +2,9 @@ import { Linode } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import Accordion from 'src/components/Accordion/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import {
   useLinodeQuery,
@@ -92,7 +92,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       ) =>
         formik.setFieldValue(
           'cpu',
-          checked ? 90 * (linode?.specs.vcpus ?? 1) : 0
+          checked
+            ? linode?.alerts.cpu
+              ? linode?.alerts.cpu
+              : 90 * (linode?.specs.vcpus ?? 1)
+            : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('cpu', e.target.valueAsNumber),
@@ -112,7 +116,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
-      ) => formik.setFieldValue('io', checked ? 10000 : 0),
+      ) =>
+        formik.setFieldValue(
+          'io',
+          checked ? (linode?.alerts.io ? linode?.alerts.io : 10000) : 0
+        ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('io', e.target.valueAsNumber),
       error: hasErrorFor('alerts.io'),
@@ -131,7 +139,15 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
-      ) => formik.setFieldValue('network_in', checked ? 10 : 0),
+      ) =>
+        formik.setFieldValue(
+          'network_in',
+          checked
+            ? linode?.alerts.network_in
+              ? linode?.alerts.network_in
+              : 10
+            : 0
+        ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('network_in', e.target.valueAsNumber),
       error: hasErrorFor('alerts.network_in'),
@@ -149,7 +165,15 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
-      ) => formik.setFieldValue('network_out', checked ? 10 : 0),
+      ) =>
+        formik.setFieldValue(
+          'network_out',
+          checked
+            ? linode?.alerts.network_out
+              ? linode?.alerts.network_out
+              : 10
+            : 0
+        ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('network_out', e.target.valueAsNumber),
       error: hasErrorFor('alerts.network_out'),
@@ -167,7 +191,15 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
-      ) => formik.setFieldValue('transfer_quota', checked ? 80 : 0),
+      ) =>
+        formik.setFieldValue(
+          'transfer_quota',
+          checked
+            ? linode?.alerts.transfer_quota
+              ? linode?.alerts.transfer_quota
+              : 80
+            : 0
+        ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         formik.setFieldValue('transfer_quota', e.target.valueAsNumber),
       error: hasErrorFor('alerts.transfer_quota'),

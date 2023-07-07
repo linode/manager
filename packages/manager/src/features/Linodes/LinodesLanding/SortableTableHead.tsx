@@ -1,29 +1,22 @@
 import * as React from 'react';
 import GridView from 'src/assets/icons/grid-view.svg';
-import Hidden from 'src/components/core/Hidden';
-import { IconButton } from 'src/components/IconButton';
+import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableHead } from 'src/components/TableHead';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
 import { OrderByProps } from 'src/components/OrderBy';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { StyledToggleButton } from './DisplayLinodes.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
     display: 'flex',
     justifyContent: 'flex-end',
     backgroundColor: theme.bg.tableHeader,
-  },
-  toggleButton: {
-    color: '#d2d3d4',
-    padding: '0 10px',
-    '&:focus': {
-      outline: '1px dotted #999',
-    },
   },
   // There's nothing very scientific about the widths across the breakpoints
   // here, just a lot of trial and error based on maximum expected column sizes.
@@ -174,22 +167,22 @@ const SortableTableHead = <T extends unknown>(props: CombinedProps<T>) => {
             </Hidden>
           </>
         )}
-        <TableCell>
+        <TableCell sx={{ padding: '0 !important' }}>
           <div className={classes.controlHeader}>
             <div id="displayViewDescription" className="visually-hidden">
               Currently in {linodeViewPreference} view
             </div>
             <Tooltip placement="top" title="Summary view">
-              <IconButton
+              <StyledToggleButton
                 aria-label="Toggle display"
                 aria-describedby={'displayViewDescription'}
                 onClick={toggleLinodeView}
                 disableRipple
-                className={classes.toggleButton}
+                isActive={linodeViewPreference === 'grid'}
                 size="large"
               >
                 <GridView />
-              </IconButton>
+              </StyledToggleButton>
             </Tooltip>
             <GroupByTagToggle
               toggleGroupByTag={toggleGroupLinodes}

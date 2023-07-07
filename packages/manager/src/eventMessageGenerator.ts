@@ -4,9 +4,10 @@ import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import {
-  formatEventWithUsername,
   formatEventWithAppendedText,
+  formatEventWithUsername,
 } from './features/Events/Event.helpers';
+import { escapeRegExp } from './utilities/escapeRegExp';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -47,25 +48,31 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   backups_restore: {
     scheduled: (e) => `Backup restoration scheduled for ${e.entity!.label}`,
     started: (e) => `Backup restoration started for ${e.entity!.label}`,
-    failed: (e) => `Backup restoration failed for ${e.entity!.label}.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `Backup restoration failed for ${e.entity!.label}.`,
+        'Learn more about limits and considerations',
+        'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+      )}`,
     finished: (e) => `Backup restoration completed for ${e.entity!.label}.`,
     notification: (e) => `Backup restoration completed for ${e.entity!.label}.`,
   },
   community_question_reply: {
     notification: (e) =>
-      e.entity
+      e.entity?.label
         ? `There has been a reply to your thread "${e.entity.label}".`
         : `There has been a reply to your thread.`,
   },
   community_like: {
     notification: (e) =>
-      e.entity
+      e.entity?.label
         ? `A post on "${e.entity.label}" has been liked.`
         : `There has been a like on your community post.`,
   },
   community_mention: {
     notification: (e) =>
-      e.entity
+      e.entity?.label
         ? `You have been mentioned in a Community post: ${e.entity.label}.`
         : `You have been mentioned in a Community post.`,
   },
@@ -507,7 +514,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Linode ${e.entity!.label} is scheduled for a snapshot backup.`,
     started: (e) =>
       `A snapshot backup is being created for Linode ${e.entity!.label}.`,
-    failed: (e) => `Snapshot backup failed on Linode ${e.entity!.label}.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `Snapshot backup failed on Linode ${e.entity!.label}.`,
+        'Learn more about limits and considerations',
+        'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+      )}`,
     finished: (e) =>
       `A snapshot backup has been created for ${e.entity!.label}.`,
   },
@@ -789,7 +802,7 @@ export default (e: Event): string => {
     /** finally return some default fallback text */
     return e.message
       ? formatEventWithAPIMessage(e)
-      : `${e.action}${e.entity ? ` on ${e.entity.label}` : ''}`;
+      : `${e.action}${e.entity?.label ? ` on ${e.entity.label}` : ''}`;
   }
 
   let message = '';
@@ -810,9 +823,26 @@ export default (e: Event): string => {
     message
   );
 
-  /** return either the formatted message or an empty string */
-  const formattedMessage = applyLinking(e, messageWithUsername);
-  return applyBolding(e, formattedMessage);
+  /**
+   * return either the formatted message or an empty string
+   * fails gracefully if the message we encounter a formatting error
+   * */
+  try {
+    const formattedMessage = applyLinking(e, messageWithUsername);
+    return applyBolding(e, formattedMessage);
+  } catch (error) {
+    console.warn('Error with formatting the event message', {
+      event_data: e,
+      error,
+    });
+
+    reportException('Error with formatting the event message', {
+      event_data: e,
+      error,
+    });
+
+    return messageWithUsername;
+  }
 };
 
 function applyBolding(event: Event, message: string) {
@@ -871,17 +901,20 @@ export function applyLinking(event: Event, message: string) {
 
   let newMessage = message;
 
-  if (event.entity && entityLinkTarget) {
+  if (event.entity?.label && entityLinkTarget) {
     const label = event.entity.label;
-    const nonTickedLabels = new RegExp(`(?<!\`)${label}`, 'g');
+    const nonTickedLabels = new RegExp(
+      `(^|[^\\\`])${escapeRegExp(label)}`,
+      'g'
+    );
 
     newMessage = newMessage.replace(
       nonTickedLabels,
-      `<a href="${entityLinkTarget}">${label}</a> `
+      ` <a href="${entityLinkTarget}">${label}</a> `
     );
   }
 
-  if (event.secondary_entity && secondaryEntityLinkTarget) {
+  if (event.secondary_entity?.label && secondaryEntityLinkTarget) {
     newMessage = newMessage.replace(
       event.secondary_entity.label,
       `<a href="${secondaryEntityLinkTarget}">${event.secondary_entity.label}</a>`

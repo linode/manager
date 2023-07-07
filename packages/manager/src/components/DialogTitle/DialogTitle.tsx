@@ -43,6 +43,7 @@ const DialogTitle = (props: DialogTitleProps) => {
           justifyContent: 'space-between',
           position: 'relative',
           width: '100%',
+          lineHeight: '1.5rem',
         }}
       >
         {title}

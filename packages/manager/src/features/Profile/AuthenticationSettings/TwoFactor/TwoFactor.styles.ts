@@ -1,4 +1,4 @@
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { styled } from '@mui/material/styles';
 import type { TwoFactorProps } from './TwoFactor';
 

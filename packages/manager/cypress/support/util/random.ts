@@ -226,3 +226,23 @@ export const randomUuid = (): string => {
     randomString(12, randomStringOptions),
   ].join('-');
 };
+
+/**
+ * Returns a random hexadecimal string of a given length.
+ *
+ * @param length - Length of the hexadecimal string.
+ *
+ * @returns Random hexadecimal string.
+ */
+export const randomHex = (length: number = 64): string => {
+  const hexNumber = '0123456789abcdef';
+
+  const characterSelection = hexNumber.split('');
+
+  let output = '';
+  for (let i = 0; i < length; i++) {
+    output += randomItem(characterSelection);
+  }
+
+  return output;
+};

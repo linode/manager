@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Button } from 'src/components/Button/Button';
+import { Checkbox } from 'src/components/Checkbox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -117,7 +117,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           <FormControlLabel
             label="Overwrite Linode"
             control={
-              <CheckBox
+              <Checkbox
                 name="overwrite"
                 checked={formik.values.overwrite}
                 onChange={formik.handleChange}

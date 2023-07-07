@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import Paper from 'src/components/core/Paper';
@@ -8,7 +9,7 @@ import { TabList } from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 
 export interface Tab {
   title: string;
@@ -20,6 +21,7 @@ interface TabbedPanelProps {
   error?: string | JSX.Element;
   copy?: string;
   rootClass?: string;
+  sx?: SxProps;
   innerClass?: string;
   tabs: Tab[];
   [index: string]: any;
@@ -37,6 +39,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
     error,
     copy,
     rootClass,
+    sx,
     innerClass,
     tabs,
     handleTabChange,
@@ -61,7 +64,11 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   }, [initTab]);
 
   return (
-    <Paper className={rootClass} sx={{ flexGrow: 1 }} data-qa-tp={header}>
+    <Paper
+      className={rootClass}
+      sx={{ flexGrow: 1, ...sx }}
+      data-qa-tp={header}
+    >
       <div className={innerClass}>
         {error && <Notice error>{error}</Notice>}
         <Grid container sx={{ display: 'flex' }}>

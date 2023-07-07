@@ -2,6 +2,7 @@ import { Region } from '@linode/api-v4';
 import {
   COUNTRY_CODE_TO_CONTINENT_CODE,
   CONTINENT_CODE_TO_CONTINENT,
+  Country,
 } from 'src/components/EnhancedSelect/variants/RegionSelect/utils';
 
 export const getRegionCountryGroup = (region: Region | undefined) => {
@@ -10,9 +11,7 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
   }
 
   const continentCode =
-    COUNTRY_CODE_TO_CONTINENT_CODE[
-      region.country.toUpperCase() as keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE
-    ];
+    COUNTRY_CODE_TO_CONTINENT_CODE[region.country.toUpperCase() as Country];
 
   return continentCode
     ? CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other'

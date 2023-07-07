@@ -20,15 +20,13 @@ import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from './constants';
 import { reportException } from './exceptionReporting';
 import { useAuthentication } from './hooks/useAuthentication';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
-import useLinodes from './hooks/useLinodes';
 import { loadScript } from './hooks/useScript';
 import { oauthClientsEventHandler } from './queries/accountOAuth';
 import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
 import { firewallEventsHandler } from './queries/firewalls';
-import { imageEventsHandler } from './queries/images';
-import { linodeEventsHandler } from './queries/linodes/events';
 import { nodebalanacerEventHandler } from './queries/nodebalancers';
+import { imageEventsHandler } from './queries/images';
 import { useMutatePreferences, usePreferences } from './queries/preferences';
 import { sshKeyEventHandler } from './queries/profile';
 import { supportTicketEventHandler } from './queries/support';
@@ -37,6 +35,10 @@ import { volumeEventsHandler } from './queries/volumes';
 import { ApplicationState } from './store';
 import { getNextThemeValue } from './utilities/theme';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import {
+  diskEventHandler,
+  linodeEventsHandler,
+} from './queries/linodes/events';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -56,18 +58,11 @@ const BaseApp = withFeatureFlagProvider(
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const {
-      linodes: {
-        error: { read: linodesError },
-      },
-    } = useLinodes();
-
     const [goToOpen, setGoToOpen] = React.useState(false);
 
     const theme = preferences?.theme;
     const keyboardListener = React.useCallback(
       (event: KeyboardEvent) => {
-        const isOSMac = navigator.userAgent.includes('Mac');
         const letterForThemeShortcut = 'D';
         const letterForGoToOpen = 'K';
         const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
@@ -244,6 +239,11 @@ const BaseApp = withFeatureFlagProvider(
             !event._initial && ['linode_migrate'].includes(event.action),
           handler: handleMigrationEvent,
         },
+        {
+          filter: ({ event }) =>
+            event.action.startsWith('disk') && !event._initial,
+          handler: diskEventHandler,
+        },
       ];
 
       const subscriptions = eventHandlers.map(({ filter, handler }) =>
@@ -254,15 +254,6 @@ const BaseApp = withFeatureFlagProvider(
         subscriptions.forEach((sub) => sub.unsubscribe());
       };
     }, [handleMigrationEvent]);
-
-    /**
-     * in the event that we encounter an "invalid OAuth token" error from the API,
-     * we can simply refrain from rendering any content since the user will
-     * imminently be redirected to the login page.
-     */
-    if (hasOauthError(linodesError)) {
-      return null;
-    }
 
     return (
       <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
@@ -304,3 +295,5 @@ export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
       : cleanedError.toLowerCase().includes('oauth');
   });
 };
+
+export const isOSMac = navigator.userAgent.includes('Mac');

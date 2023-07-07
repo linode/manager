@@ -4,14 +4,30 @@ import * as React from 'react';
 import FileDownload from 'src/assets/icons/download.svg';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
-import ToolTip from 'src/components/core/Tooltip';
+import { Typography } from 'src/components/Typography';
+import { Tooltip } from 'src/components/Tooltip';
 
 interface Props {
+  /**
+   * The text to be downloaded.
+   * It is also used in the `name` and `aria-label` of the underlying button.
+   */
   text: string;
+  /**
+   * Optional styles to be applied to the underlying button
+   */
   className?: string;
+  /**
+   * Optional text to show beside the download icon
+   */
   displayText?: string;
+  /**
+   * Optional callback function that is called when the download button is clicked
+   */
   onClickCallback?: () => void;
+  /**
+   * The filename of the downloaded file. `.txt` is automatically appended.
+   */
   fileName: string;
 }
 
@@ -47,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DownloadTooltip: React.FC<Props> = (props) => {
+export const DownloadTooltip = (props: Props) => {
   const classes = useStyles();
 
   const { text, className, displayText, onClickCallback, fileName } = props;
@@ -60,7 +76,7 @@ export const DownloadTooltip: React.FC<Props> = (props) => {
   };
 
   return (
-    <ToolTip title="Download" placement="top" data-qa-copied>
+    <Tooltip title="Download" placement="top" data-qa-copied>
       <button
         aria-label={`Download ${text}`}
         name={text}
@@ -76,8 +92,6 @@ export const DownloadTooltip: React.FC<Props> = (props) => {
           <Typography className={classes.displayText}>{displayText}</Typography>
         )}
       </button>
-    </ToolTip>
+    </Tooltip>
   );
 };
-
-export default DownloadTooltip;

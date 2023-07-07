@@ -4,7 +4,7 @@ import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import { useTheme } from '@mui/material/styles';
 import Paper from 'src/components/core/Paper';
 import Box from '@mui/material/Box';
-import Chip from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment from './ThirdPartyPayment';
 import ActionMenu, { Action } from 'src/components/ActionMenu';

@@ -6,19 +6,19 @@ import * as React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import Form from 'src/components/core/Form';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme, useTheme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import LinodeSelect from 'src/features/Linodes/LinodeSelect';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   reportAgreementSigningError,
   useAccountAgreements,

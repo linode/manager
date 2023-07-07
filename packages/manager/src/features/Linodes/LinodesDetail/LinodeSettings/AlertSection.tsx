@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputAdornment from 'src/components/core/InputAdornment';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle';
 import { useTheme } from '@mui/material/styles';
 import { fadeIn } from 'src/styles/keyframes';

@@ -21,7 +21,7 @@ const deleteDisk = (diskName, inUse = false) => {
             .contains('PROVISIONING', { timeout: 180000 })
             .should('not.exist') &&
           cy.contains('BOOTING', { timeout: 180000 }).should('not.exist') &&
-          cy.contains('Resizing', { timeout: 180000 }).should('not.exist')
+          cy.contains('Creating', { timeout: 180000 }).should('not.exist')
         ) {
           if (!inUse) {
             getClick(
@@ -97,7 +97,7 @@ describe('linode storage tab', () => {
       addDisk(linode.id, diskName);
       fbtVisible(diskName);
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
-      containsVisible('Resizing');
+      containsVisible('Creating');
       deleteDisk(diskName);
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.get('button[title="Add a Disk"]').should('be.enabled');
@@ -138,11 +138,11 @@ describe('linode storage tab', () => {
       addDisk(linode.id, diskName);
       fbtVisible(diskName);
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
-      containsVisible('Resizing');
+      containsVisible('Creating');
       if (
         cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
         cy.contains('BOOTING', { timeout: 180000 }).should('not.exist') &&
-        cy.contains('Resizing', { timeout: 180000 }).should('not.exist')
+        cy.contains('Creating', { timeout: 180000 }).should('not.exist')
       ) {
         cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
           fbtClick('Resize');

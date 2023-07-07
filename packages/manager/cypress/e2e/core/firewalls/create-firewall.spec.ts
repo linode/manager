@@ -33,8 +33,13 @@ describe('create firewall', () => {
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
         containsClick('Label').type(firewall.label);
-        getClick('[data-testid="create-firewall-submit"]');
+        ui.buttonGroup
+          .findButtonByTitle('Create Firewall')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
+    cy.wait('@createFirewall');
 
     // Confirm that firewall is listed on landing page with expected configuration.
     cy.findByText(firewall.label)
@@ -65,7 +70,7 @@ describe('create firewall', () => {
       label: randomLabel(),
     };
 
-    cy.defer(createLinode(linodeRequest)).then((linode) => {
+    cy.defer(createLinode(linodeRequest), 'creating Linode').then((linode) => {
       interceptCreateFirewall().as('createFirewall');
       cy.visitWithLogin('/firewalls/create');
 
@@ -75,23 +80,26 @@ describe('create firewall', () => {
         .within(() => {
           // Fill out and submit firewall create form.
           containsClick('Label').type(firewall.label);
-          cy.get('[data-testid="textfield-input"]:last')
+          cy.findByLabelText('Linodes')
             .should('be.visible')
             .click()
             .type(linode.label);
+
+          ui.autocompletePopper
+            .findByTitle(linode.label)
+            .should('be.visible')
+            .click();
+
+          cy.findByLabelText('Linodes').should('be.visible').click();
+
+          ui.buttonGroup
+            .findButtonByTitle('Create Firewall')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
-      ui.autocompletePopper
-        .findByTitle(linode.label)
-        .should('be.visible')
-        .click();
-
-      ui.drawer
-        .findByTitle('Create Firewall')
-        .should('be.visible')
-        .within(() => {
-          getClick('[data-testid="create-firewall-submit"]');
-        });
+      cy.wait('@createFirewall');
 
       // Confirm that firewall is listed on landing page with expected configuration.
       cy.findByText(firewall.label)

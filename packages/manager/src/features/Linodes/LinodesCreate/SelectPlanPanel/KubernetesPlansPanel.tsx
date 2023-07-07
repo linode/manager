@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { ExtendedType } from 'src/utilities/extendType';
-import { useSelectPlanQuantityStyles } from './styles/kubernetesPlansPanelStyles';
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -21,8 +20,8 @@ interface Props {
   getTypeCount: (planId: string) => number;
   hasSelectedRegion: boolean;
   header?: string;
-  isPremiumPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
-  isSelectedRegionPremium: boolean;
+  isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
+  isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
@@ -39,8 +38,8 @@ export const KubernetesPlansPanel = ({
   error,
   hasSelectedRegion,
   header,
-  isPremiumPlanPanelDisabled,
-  isSelectedRegionPremium,
+  isPlanPanelDisabled,
+  isSelectedRegionEligibleForPlan,
   onAdd,
   regionsData,
   updatePlanCount,
@@ -51,8 +50,6 @@ export const KubernetesPlansPanel = ({
   onSelect,
   selectedID,
 }: Props) => {
-  const { classes } = useSelectPlanQuantityStyles();
-
   const plans = getPlanSelectionsByPlanType(types);
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
@@ -63,11 +60,13 @@ export const KubernetesPlansPanel = ({
             <PlanInformation
               planType={plan}
               hasSelectedRegion={hasSelectedRegion}
-              isSelectedRegionPremium={isSelectedRegionPremium}
+              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                plan
+              )}
               regionsData={regionsData}
             />
             <KubernetesPlanContainer
-              disabled={disabled || isPremiumPlanPanelDisabled(plan)}
+              disabled={disabled || isPlanPanelDisabled(plan)}
               getTypeCount={getTypeCount}
               onAdd={onAdd}
               onSelect={onSelect}
@@ -90,12 +89,12 @@ export const KubernetesPlansPanel = ({
 
   return (
     <TabbedPanel
+      sx={{ padding: 0 }}
       copy={copy}
       error={error}
       handleTabChange={() => resetValues()}
       header={header || ' '}
       initTab={initialTab >= 0 ? initialTab : 0}
-      rootClass={classes.root}
       tabs={tabs}
     />
   );

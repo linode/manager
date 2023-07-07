@@ -223,7 +223,7 @@ export interface Notification {
 
 export interface Entity {
   id: number;
-  label: string;
+  label: string | null;
   type: string;
   url: string;
 }
@@ -373,6 +373,7 @@ export interface OAuthClient {
   thumbnail_url: string | null;
   public: boolean;
   status: 'disabled' | 'active' | 'suspended';
+  secret: string;
 }
 
 export interface OAuthClientRequest {

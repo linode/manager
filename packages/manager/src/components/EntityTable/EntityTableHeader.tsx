@@ -1,16 +1,16 @@
 import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import Hidden from 'src/components/core/Hidden';
-import { IconButton } from 'src/components/IconButton';
+import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableHead } from 'src/components/TableHead';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { OrderByProps } from 'src/components/OrderBy';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Entity, HeaderCell } from './types';
+import { StyledToggleButton } from 'src/features/Linodes/LinodesLanding/DisplayLinodes.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
@@ -155,23 +155,8 @@ interface GroupByTagToggleProps {
   isLargeAccount?: boolean;
 }
 
-const useGroupByTagToggleStyles = makeStyles(() => ({
-  toggleButton: {
-    color: '#d2d3d4',
-    padding: '0 10px',
-    '&:focus': {
-      outline: '1px dotted #999',
-    },
-    '&.Mui-disabled': {
-      display: 'none',
-    },
-  },
-}));
-
 export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
   (props) => {
-    const classes = useGroupByTagToggleStyles();
-
     const { toggleGroupByTag, isGroupedByTag, isLargeAccount } = props;
 
     return (
@@ -185,19 +170,19 @@ export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
           placement="top-end"
           title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
         >
-          <IconButton
+          <StyledToggleButton
             aria-label={`Toggle group by tag`}
             aria-describedby={'groupByDescription'}
             onClick={toggleGroupByTag}
             disableRipple
-            className={classes.toggleButton}
+            isActive={isGroupedByTag}
             // Group by Tag is not available if you have a large account.
             // See https://github.com/linode/manager/pull/6653 for more details
             disabled={isLargeAccount}
             size="large"
           >
             <GroupByTag />
-          </IconButton>
+          </StyledToggleButton>
         </Tooltip>
       </>
     );

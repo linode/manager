@@ -1,9 +1,8 @@
 import * as React from 'react';
-import Hidden, { HiddenProps } from '../core/Hidden';
+import { Hidden, HiddenProps } from '../Hidden';
 import Skeleton from '../core/Skeleton';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
-import { styled } from '@mui/material/styles';
 
 export interface TableRowLoadingProps {
   columns?: number;
@@ -40,22 +39,21 @@ export const TableRowLoading = ({
 
   for (let i = 0; i < rows; i++) {
     tableRows.push(
-      <StyledTableRow
+      <TableRow
         aria-label="Table content is loading"
         data-testid="table-row-loading"
         key={`table-loading-row-${i}`}
+        sx={{
+          '&& :last-child': {
+            paddingRight: '15px',
+          },
+        }}
       >
         {cols}
-      </StyledTableRow>
+      </TableRow>
     );
   }
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{tableRows}</>;
 };
-
-const StyledTableRow = styled(TableRow)({
-  '& :last-child': {
-    paddingRight: 15,
-  },
-});
