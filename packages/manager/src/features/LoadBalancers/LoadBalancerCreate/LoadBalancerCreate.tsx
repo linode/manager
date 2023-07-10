@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 
-export const LoadBalancerCreate = () => {
+const LoadBalancerCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Load Balancers" />
@@ -9,3 +9,5 @@ export const LoadBalancerCreate = () => {
     </>
   );
 };
+
+export default LoadBalancerCreate;

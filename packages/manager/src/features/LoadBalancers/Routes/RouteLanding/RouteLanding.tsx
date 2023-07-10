@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 
-export const RouteLanding = () => {
+const RouteLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Routes" />
@@ -9,3 +9,5 @@ export const RouteLanding = () => {
     </>
   );
 };
+
+export default RouteLanding;

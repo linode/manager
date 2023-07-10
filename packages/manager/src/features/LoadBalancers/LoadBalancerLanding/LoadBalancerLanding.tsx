@@ -1,5 +1,5 @@
 import React from 'react';
-import { matchPath, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -8,23 +8,16 @@ import { TabLinkList } from 'src/components/TabLinkList/TabLinkList';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 
-const RouteLanding = React.lazy(() =>
-  import('../Routes/RouteLanding/RouteLanding').then((module) => ({
-    default: module.RouteLanding,
-  }))
+const RouteLanding = React.lazy(
+  () => import('../Routes/RouteLanding/RouteLanding')
 );
-const EntryPointLanding = React.lazy(() =>
-  import('../EntryPoints/EntryPointLanding/EntryPointLanding').then(
-    (module) => ({
-      default: module.EntryPointLanding,
-    })
-  )
+const EntryPointLanding = React.lazy(
+  () => import('../EntryPoints/EntryPointLanding/EntryPointLanding')
 );
 
 const LoadBalancerLanding = () => {
   const history = useHistory();
   const { tab } = useParams<{
-    //action?: 'create'; // TODO: AGLB
     tab?: 'loadbalancers' | 'routes' | 'entrypoints';
   }>();
 
@@ -43,57 +36,32 @@ const LoadBalancerLanding = () => {
     },
   ];
 
-  const getDefaultTabIndex = () => {
-    const tabChoice = tabs.findIndex((tab) =>
-      Boolean(matchPath(tab.routeName, { path: location.pathname }))
-    );
-    if (tabChoice < 0) {
-      // Redirect to the landing page if the path does not exist
-      return 0;
-    } else {
-      return tabChoice;
-    }
-  };
+  const realTabs = ['loadbalancers', 'routes', 'entrypoints'];
 
   const handleTabChange = (index: number) => {
     history.push(tabs[index].routeName);
   };
 
-  // TODO: debug and cleanup
-  // const createButtonText =
-  //   tab === 'routes'
-  //     ? 'Create Route'
-  //     : 'entry-points'
-  //     ? 'Create Service Target'
-  //     : 'Create Load Balancer';
-
   const createButtonText = () => {
-    const tabChoice = location.pathname.substring(
-      location.pathname.lastIndexOf('/') + 1
-    );
     let buttonText = 'Create ';
 
-    switch (tabChoice) {
-      case 'routes':
-        buttonText += 'Route';
-        break;
-      case 'entrypoints':
-        buttonText += 'Service Target';
-        break;
-      default:
-        buttonText += 'Load Balancer';
+    if (tab === 'routes') {
+      buttonText += 'Route';
+    } else if (tab === 'entrypoints') {
+      buttonText += 'Service Target';
+    } else {
+      buttonText += 'Load Balancer';
     }
-
     return buttonText;
   };
 
   const createButtonAction = () => {
     if (tab === 'loadbalancers') {
-      history.replace(`/loadbalancers/create`);
+      history.push(`/loadbalancers/create`);
     } else if (tab === 'routes') {
-      history.replace(`/loadbalancers/routes/create`);
+      history.push(`/loadbalancers/routes/create`);
     } else if (tab === 'entrypoints') {
-      history.replace(`/loadbalancers/entrypoints/create`);
+      history.push(`/loadbalancers/entrypoints/create`);
     }
   };
 
@@ -105,11 +73,18 @@ const LoadBalancerLanding = () => {
         createButtonText={createButtonText()}
         docsLink="" // TODO: AGLB
         entity="Akamai Global Load Balancers"
-        onButtonClick={createButtonAction} // TODO: AGLB
+        onButtonClick={createButtonAction}
         removeCrumbX={1}
         title="Akamai Global Load Balancers"
       />
-      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
+      <Tabs
+        index={
+          realTabs.findIndex((t) => t === tab) !== -1
+            ? realTabs.findIndex((t) => t === tab)
+            : 0
+        }
+        onChange={handleTabChange}
+      >
         <TabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>

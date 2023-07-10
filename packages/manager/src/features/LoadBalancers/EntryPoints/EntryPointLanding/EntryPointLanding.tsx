@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 
-export const EntryPointLanding = () => {
+const EntryPointLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Service Targets" />
@@ -9,3 +9,5 @@ export const EntryPointLanding = () => {
     </>
   );
 };
+
+export default EntryPointLanding;
