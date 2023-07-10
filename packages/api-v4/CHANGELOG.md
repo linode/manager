@@ -10,6 +10,7 @@
 
 - Use 'canceled' instead of 'cancelled' for EntityTransferStatus ([#9335](https://github.com/linode/manager/pull/9335))
 
+
 ## [2023-06-27] - v0.95.1
 
 
