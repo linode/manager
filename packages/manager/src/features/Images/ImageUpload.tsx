@@ -5,18 +5,18 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Button } from 'src/components/Button/Button';
+import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { RegionSelect } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { FileUploader } from 'src/components/FileUploader/FileUploader';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
@@ -254,7 +254,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
           />
           {flags.metadata && hasMetadataCustomerTag ? (
             <div className={classes.cloudInitCheckboxWrapper}>
-              <CheckBox
+              <Checkbox
                 checked={isCloudInit}
                 onChange={changeIsCloudInit}
                 text="This image is cloud-init compatible"

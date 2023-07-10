@@ -3,7 +3,7 @@ import { clone, propOr } from 'ramda';
 import * as React from 'react';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Box from '@mui/material/Box';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';

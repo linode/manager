@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import {
   ConfirmationDialog,
   ConfirmationDialogProps,
@@ -13,16 +13,26 @@ import {
 import { usePreferences } from 'src/queries/preferences';
 
 interface EntityInfo {
-  type: 'Linode' | 'Volume' | 'NodeBalancer' | 'Bucket';
-  label: string | undefined;
+  type:
+    | 'Linode'
+    | 'Volume'
+    | 'NodeBalancer'
+    | 'Bucket'
+    | 'Database'
+    | 'Kubernetes'
+    | 'AccountSetting';
+  subType?: 'Cluster' | 'ObjectStorage' | 'CloseAccount';
+  action?: 'deletion' | 'detachment' | 'restoration' | 'cancellation';
+  name?: string | undefined;
+  primaryBtnText: string;
 }
 
 interface TypeToConfirmDialogProps {
   entity: EntityInfo;
   children: React.ReactNode;
   loading: boolean;
-  confirmationText?: string | JSX.Element;
   errors?: APIError[] | undefined | null;
+  label: string;
   onClick: () => void;
 }
 
@@ -38,17 +48,18 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     onClick,
     loading,
     entity,
+    label,
     children,
-    confirmationText,
     errors,
     typographyStyle,
+    textFieldStyle,
   } = props;
 
   const [confirmText, setConfirmText] = React.useState('');
 
   const { data: preferences } = usePreferences();
   const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== entity.label;
+    preferences?.type_to_confirm !== false && confirmText !== entity.name;
 
   React.useEffect(() => {
     if (open) {
@@ -56,9 +67,19 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     }
   }, [open]);
 
+  const typeInstructions =
+    entity.action === 'cancellation'
+      ? `type your Username `
+      : `type  the name of the ${entity.type} ${entity.subType || ''} `;
+
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+      <Button
+        buttonType="secondary"
+        onClick={onClose}
+        data-qa-cancel
+        data-testid={'dialog-cancel'}
+      >
         Cancel
       </Button>
       <Button
@@ -67,10 +88,9 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         loading={loading}
         disabled={disabled}
         data-qa-confirm
+        data-testid={'dialog-confirm'}
       >
-        {entity.type === 'Volume' && title.startsWith('Detach')
-          ? 'Detach'
-          : 'Delete'}
+        {entity.primaryBtnText}
       </Button>
     </ActionsPanel>
   );
@@ -85,25 +105,28 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     >
       {children}
       <TypeToConfirm
-        label={`${entity.type} ${entity.type !== 'Bucket' ? 'Label' : 'Name'}`}
+        hideInstructions={entity.subType === 'CloseAccount'}
+        label={label}
         confirmationText={
-          confirmationText ? (
-            confirmationText
+          entity.subType === 'CloseAccount' ? (
+            ''
           ) : (
             <span>
-              To confirm deletion, type the name of the {entity.type} (
-              <b>{entity.label}</b>) in the field below:
+              To confirm {entity.action}, {typeInstructions}(
+              <b>{entity.name}</b>) in the field below:
             </span>
           )
         }
         value={confirmText}
         typographyStyle={typographyStyle}
+        textFieldStyle={textFieldStyle}
         data-testid={'dialog-confirm-text-input'}
         expand
         onChange={(input) => {
           setConfirmText(input);
         }}
         visible={preferences?.type_to_confirm}
+        placeholder={entity.subType === 'CloseAccount' ? 'Username' : ''}
       />
     </ConfirmationDialog>
   );

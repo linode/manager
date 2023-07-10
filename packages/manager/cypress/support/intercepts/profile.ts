@@ -179,6 +179,21 @@ export const mockGetAppTokens = (tokens: Token[]): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts DELETE request to revoke a third party app token and mocks response.
+ *
+ * @param id - ID of token for intercepted revoke request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRevokeAppToken = (id: number): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`profile/apps/${id}`),
+    makeResponse({})
+  );
+};
+
+/**
  * Intercepts GET request to retrieve personal access tokens and mocks response.
  *
  * @param tokens - Array of personal access tokens with which to respond.

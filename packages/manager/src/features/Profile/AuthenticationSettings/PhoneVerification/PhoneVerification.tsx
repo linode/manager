@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
-import TextField from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { APIError } from '@linode/api-v4/lib/types';
 import { countries } from './countries';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';

@@ -2,7 +2,7 @@ import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
 import Form from 'src/components/core/Form';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useCloneVolumeMutation } from 'src/queries/volumes';
 import { getErrorMap } from 'src/utilities/errorUtils';

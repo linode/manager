@@ -1,6 +1,6 @@
 import { LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 
 interface Props {

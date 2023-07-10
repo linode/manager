@@ -1,9 +1,9 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import DismissibleBanner from './DismissibleBanner';
 import Grid from '@mui/material/Unstable_Grid2';
-import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 <Meta
   title="Components/Notifications/Dismissible Banners"
@@ -32,9 +32,7 @@ Under the hood, banners use the [Notice](/docs/components-notifications-notices-
 
 export const DismissibleBannerTemplate = (args) => {
   return (
-    <DismissibleBanner
-      {...args}
-    >
+    <DismissibleBanner {...args}>
       <Typography>This is an example of a dismissible banner.</Typography>
     </DismissibleBanner>
   );
@@ -42,10 +40,7 @@ export const DismissibleBannerTemplate = (args) => {
 
 export const CallToActionBanner = () => {
   return (
-    <DismissibleBanner
-      preferenceKey="cluster-v1"
-      success
-    >
+    <DismissibleBanner preferenceKey="cluster-v1" info>
       <Grid
         container
         direction="row"
@@ -53,9 +48,7 @@ export const CallToActionBanner = () => {
         justifyContent="space-between"
       >
         <Grid item>
-          <Typography>
-            A new version of Kubernetes is available.
-          </Typography>
+          <Typography>A new version of Kubernetes is available.</Typography>
         </Grid>
         <Grid item>
           <Button onClick={() => null} buttonType="primary">
@@ -64,8 +57,8 @@ export const CallToActionBanner = () => {
         </Grid>
       </Grid>
     </DismissibleBanner>
-  )
-}
+  );
+};
 
 export const StatusBannersTemplate = (args) => {
   const { message, title, status, impact, href } = args;
@@ -73,37 +66,33 @@ export const StatusBannersTemplate = (args) => {
 };
 
 export const BetaBanner = () => {
-    return (
-      <DismissibleBanner preferenceKey="beta-banner" success>
-        <Typography>
-          Managed Database for MySQL is available in a free, open beta period
-          until May 2nd, 2022. This is a beta environment and should not be
-          used to support production workloads. Review the{' '}
-          <Link to="https://www.linode.com/legal-eatp">
-            Early Adopter Program SLA
-          </Link>
-          .
-        </Typography>
-      </DismissibleBanner>
+  return (
+    <DismissibleBanner preferenceKey="beta-banner" info>
+      <Typography>
+        Managed Database for MySQL is available in a free, open beta period
+        until May 2nd, 2022. This is a beta environment and should not be used
+        to support production workloads. Review the{' '}
+        <Link to="https://www.linode.com/legal-eatp">
+          Early Adopter Program SLA
+        </Link>
+        .
+      </Typography>
+    </DismissibleBanner>
   );
-}
+};
 
 #### Beta Banner
 
 Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
 
 <Canvas>
-  <Story name="Beta Banner">
-    {BetaBanner.bind({})}
-  </Story>
+  <Story name="Beta Banner">{BetaBanner.bind({})}</Story>
 </Canvas>
 
 #### Call to Action Banner
 
 <Canvas>
-  <Story name="Call to Action Banner">
-    {CallToActionBanner.bind({})}
-  </Story>
+  <Story name="Call to Action Banner">{CallToActionBanner.bind({})}</Story>
 </Canvas>
 
 ### Component API
@@ -127,9 +116,11 @@ Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-s
 Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
 
 <Canvas>
-  <Story name="Beta Banners">
-    {BetaBanner.bind({})}
-  </Story>
+  <Story name="Beta Banners">{BetaBanner.bind({})}</Story>
 </Canvas>
 
-<ArgsTable story="Dismissible Banners" exclude={['className']} sort="requiredFirst" />
+<ArgsTable
+  story="Dismissible Banners"
+  exclude={['className']}
+  sort="requiredFirst"
+/>

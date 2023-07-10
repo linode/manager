@@ -1,8 +1,8 @@
 import { Database } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';

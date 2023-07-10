@@ -2,9 +2,9 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   banner: {

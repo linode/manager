@@ -2,9 +2,11 @@
  * @file Cypress intercepts and mocks for Cloud Manager Object Storage operations.
  */
 
+import type { ObjectStorageKey } from '@linode/api-v4';
 import { Response } from 'support/util/response';
 import { sequentialStub } from 'support/stubs/sequential-stub';
 import { apiMatcher } from 'support/util/intercepts';
+import { makeResponse } from 'support/util/response';
 import { paginateResponse } from 'support/util/paginate';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 
@@ -308,13 +310,13 @@ export const interceptGetAccessKeys = (): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockGetAccessKeys = (
-  response: Partial<Response>
+  accessKeys: ObjectStorageKey[]
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher('object-storage/keys*'), {
-    statusCode: 200,
-    body: {},
-    ...response,
-  });
+  return cy.intercept(
+    'GET',
+    apiMatcher('object-storage/keys*'),
+    paginateResponse(accessKeys)
+  );
 };
 
 /**
@@ -329,18 +331,18 @@ export const interceptCreateAccessKey = (): Cypress.Chainable<null> => {
 /**
  * Intercepts object storage access key POST request and mocks response.
  *
- * @param response - Mocked response.
+ * @param accessKey - Access key with which to mock response.
  *
  * @returns Cypress chainable.
  */
 export const mockCreateAccessKey = (
-  response: Partial<Response>
+  accessKey: ObjectStorageKey
 ): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('object-storage/keys'), {
-    statusCode: 200,
-    body: {},
-    ...response,
-  });
+  return cy.intercept(
+    'POST',
+    apiMatcher('object-storage/keys'),
+    makeResponse(accessKey)
+  );
 };
 
 /**

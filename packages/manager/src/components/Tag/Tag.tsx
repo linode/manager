@@ -2,7 +2,7 @@ import Close from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Chip, { ChipProps } from 'src/components/core/Chip';
+import { Chip, ChipProps } from 'src/components/Chip';
 import { truncateEnd } from 'src/utilities/truncate';
 
 type Variants = 'blue' | 'lightBlue';

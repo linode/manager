@@ -1840,7 +1840,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://prometheus.io/docs/visualization/grafana/',
-    logo_url: 'prometheus_grafana.svg',
+    logo_url: 'prometheusgrafana.svg',
     colors: {
       start: 'f9b716',
       end: 'e6522c',

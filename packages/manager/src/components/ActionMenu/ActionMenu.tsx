@@ -10,7 +10,7 @@ import '@reach/menu-button/styles.css';
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import KebabIcon from 'src/assets/icons/kebab.svg';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { makeStyles } from 'tss-react/mui';
 
 export interface Action {
@@ -134,7 +134,8 @@ const ActionMenu = (props: Props) => {
       color: '#4d99f1',
     },
     padding: '0 0 0 8px',
-    '& svg': {
+    '& .MuiSvgIcon-root': {
+      fill: '#fff',
       height: '20px',
       width: '20px',
     },

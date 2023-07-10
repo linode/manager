@@ -3,7 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import InlineAction from 'src/components/InlineMenuAction';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(() => ({
@@ -57,7 +57,7 @@ const DatabaseActionMenu = (props: CombinedProps) => {
       {!matchesSmDown &&
         actions.map((thisAction) => {
           return (
-            <InlineAction
+            <InlineMenuAction
               key={thisAction.title}
               actionText={thisAction.title}
               onClick={thisAction.onClick}

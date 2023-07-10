@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import InputLabel from 'src/components/core/InputLabel';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { LinkButton } from 'src/components/LinkButton';
 
 interface Props {

@@ -1,5 +1,5 @@
 import React from 'react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TextTooltip } from './TextTooltip';
 import type { TextTooltipProps } from './TextTooltip';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -37,7 +37,7 @@ export const Customized: StoryObj<TextTooltipProps> = {
 };
 
 const meta: Meta<TextTooltipProps> = {
-  title: 'Elements/Tooltip/Text Tooltip',
+  title: 'Components/Tooltip/Text Tooltip',
   args: {
     displayText: 'tooltip text',
     minWidth: 375,

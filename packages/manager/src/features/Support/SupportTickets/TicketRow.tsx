@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+import { Hidden } from 'src/components/Hidden';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

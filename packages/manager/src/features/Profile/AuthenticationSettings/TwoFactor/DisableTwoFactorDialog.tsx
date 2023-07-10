@@ -1,111 +1,65 @@
-import { disableTwoFactor } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
-import withLoadingAndError, {
-  Props as LoadingAndErrorProps,
-} from 'src/components/withLoadingAndError';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { Typography } from 'src/components/Typography';
+import { useDisableTwoFactorMutation } from 'src/queries/profile';
 
 interface Props {
   open: boolean;
-  closeDialog: () => void;
+  onClose: () => void;
   onSuccess: () => void;
 }
 
-type CombinedProps = Props & LoadingAndErrorProps;
+export const DisableTwoFactorDialog = (props: Props) => {
+  const { open, onClose, onSuccess } = props;
 
-class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
-  handleCloseDialog = () => {
-    this.props.clearLoadingAndErrors();
-    this.props.closeDialog();
+  const {
+    mutateAsync: disableTwoFactor,
+    error,
+    isLoading,
+    reset,
+  } = useDisableTwoFactorMutation();
+
+  const handleDisableTFA = async () => {
+    await disableTwoFactor();
+    onClose();
+    onSuccess();
   };
 
-  handleDisableTFA = (deviceId: number) => {
-    const {
-      setLoadingAndClearErrors,
-      clearLoadingAndErrors,
-      setErrorAndClearLoading,
-      closeDialog,
-    } = this.props;
-    setLoadingAndClearErrors();
-    disableTwoFactor()
-      .then(() => {
-        clearLoadingAndErrors();
-        closeDialog();
-        this.props.onSuccess();
-      })
-      .catch((e) => {
-        const errorString = getErrorStringOrDefault(
-          e,
-          'There was an error disabling 2FA.'
-        );
-        setErrorAndClearLoading(errorString);
-      });
-  };
-  render() {
-    const { open, closeDialog, error, loading } = this.props;
+  React.useEffect(() => {
+    if (open) {
+      reset();
+    }
+  }, [open]);
 
-    return (
-      <ConfirmationDialog
-        open={open}
-        title={`Disable Two-Factor Authentication`}
-        onClose={closeDialog}
-        error={error}
-        actions={
-          <DialogActions
-            closeDialog={this.handleCloseDialog}
-            loading={loading}
-            handleDisable={this.handleDisableTFA}
-          />
-        }
+  const actions = (
+    <ActionsPanel>
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        onClick={handleDisableTFA}
+        loading={isLoading}
+        data-qa-submit
       >
-        <Typography>
-          Are you sure you want to disable two-factor authentication?
-        </Typography>
-      </ConfirmationDialog>
-    );
-  }
-}
+        Disable Two-factor Authentication
+      </Button>
+    </ActionsPanel>
+  );
 
-export default compose<CombinedProps, Props>(withLoadingAndError)(
-  DisableTwoFactorDialog
-);
-
-interface ActionsProps {
-  closeDialog: () => void;
-  loading: boolean;
-  handleDisable: (deviceId?: number) => void;
-  deviceId?: number;
-}
-
-class DialogActions extends React.PureComponent<ActionsProps, {}> {
-  handleSubmit = () => {
-    const { handleDisable, deviceId } = this.props;
-    return handleDisable(deviceId);
-  };
-  render() {
-    return (
-      <ActionsPanel>
-        <Button
-          buttonType="secondary"
-          onClick={this.props.closeDialog}
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.handleSubmit}
-          loading={this.props.loading}
-          data-qa-submit
-        >
-          Disable Two-factor Authentication
-        </Button>
-      </ActionsPanel>
-    );
-  }
-}
+  return (
+    <ConfirmationDialog
+      open={open}
+      title="Disable Two-Factor Authentication"
+      onClose={onClose}
+      error={error?.[0].reason}
+      actions={actions}
+    >
+      <Typography>
+        Are you sure you want to disable two-factor authentication?
+      </Typography>
+    </ConfirmationDialog>
+  );
+};

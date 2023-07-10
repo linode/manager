@@ -1,15 +1,15 @@
 import * as React from 'react';
-import Box from 'src/components/core/Box';
-import Divider from 'src/components/core/Divider';
+import { Box } from 'src/components/Box';
+import { Divider } from 'src/components/Divider';
 import ExternalLink from 'src/components/ExternalLink';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ApplicationState } from 'src/store';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { TimezoneForm } from './TimezoneForm';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { updateUser } from '@linode/api-v4/lib/account';
 import { useLocation } from 'react-router-dom';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
@@ -56,8 +56,8 @@ export const DisplaySettings = () => {
   const tooltipIconText = (
     <>
       Go to <Link to="https://en.gravatar.com/">gravatar.com</Link> and register
-      an account using the same email address as your Linode account. Upload
-      your desired profile image to your Gravatar account and it will be
+      an account using the same email address as your Cloud Manager account.
+      Upload your desired profile image to your Gravatar account and it will be
       automatically linked.
     </>
   );
@@ -132,7 +132,7 @@ export const DisplaySettings = () => {
         inputRef={emailRef}
         type="email"
       />
-      <Divider spacingTop={24} spacingBottom={16} />
+      <Divider spacingTop={24} spacingBottom={8} />
       <TimezoneForm loggedInAsCustomer={loggedInAsCustomer} />
     </Paper>
   );

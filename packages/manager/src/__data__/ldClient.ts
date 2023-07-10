@@ -5,7 +5,7 @@ const client: LDClient = {
   waitUntilGoalsReady: jest.fn(),
   waitUntilReady: jest.fn(),
   track: jest.fn(),
-  getUser: jest.fn(),
+  getContext: jest.fn(),
   identify: jest.fn(),
   off: jest.fn(),
   on: jest.fn(),
@@ -15,7 +15,6 @@ const client: LDClient = {
   variation: jest.fn(),
   variationDetail: jest.fn(),
   close: jest.fn(),
-  alias: jest.fn(),
 };
 
 export default client;

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
 import formatDate from 'src/utilities/formatDate';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { AccessSelect } from './AccessSelect';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { readableBytes } from 'src/utilities/unitConversions';

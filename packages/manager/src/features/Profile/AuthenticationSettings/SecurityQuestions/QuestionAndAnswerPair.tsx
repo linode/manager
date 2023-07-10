@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SecurityQuestion } from '@linode/api-v4/lib/profile';
-import Box from 'src/components/core/Box';
+import { Box } from 'src/components/Box';
 import { Question } from './Question';
 import { Answer } from './Answer';
 import { Item } from 'src/components/EnhancedSelect';

@@ -29,59 +29,61 @@ describe('volume delete flow', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
-      interceptDeleteVolume(volume.id).as('deleteVolume');
-      cy.visitWithLogin('/volumes', {
-        localStorageOverrides: pageSizeOverride,
-      });
-
-      // Confirm that volume is listed and initiate deletion.
-      cy.findByText(volume.label).should('be.visible');
-      cy.findByLabelText(`Action menu for Volume ${volume.label}`).click();
-      cy.get('[data-qa-action-menu-item="Delete"]:visible')
-        .should('be.visible')
-        .click();
-
-      // Cancel deletion when prompted to confirm.
-      ui.dialog
-        .findByTitle(`Delete Volume ${volume.label}?`)
-        .should('be.visible')
-        .within(() => {
-          ui.buttonGroup
-            .findButtonByTitle('Cancel')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+    cy.defer(createVolume(volumeRequest), 'creating volume').then(
+      (volume: Volume) => {
+        interceptDeleteVolume(volume.id).as('deleteVolume');
+        cy.visitWithLogin('/volumes', {
+          localStorageOverrides: pageSizeOverride,
         });
 
-      // Confirm that volume is still listed and initiate deletion again.
-      cy.findByText(volume.label).should('be.visible');
-      cy.findByLabelText(`Action menu for Volume ${volume.label}`).click();
-      cy.get('[data-qa-action-menu-item="Delete"]:visible')
-        .should('be.visible')
-        .click();
+        // Confirm that volume is listed and initiate deletion.
+        cy.findByText(volume.label).should('be.visible');
+        cy.findByLabelText(`Action menu for Volume ${volume.label}`).click();
+        cy.get('[data-qa-action-menu-item="Delete"]:visible')
+          .should('be.visible')
+          .click();
 
-      // Confirm deletion.
-      ui.dialog
-        .findByTitle(`Delete Volume ${volume.label}?`)
-        .should('be.visible')
-        .within(() => {
-          cy.findByLabelText('Volume Label')
-            .should('be.visible')
-            .click()
-            .type(volume.label);
+        // Cancel deletion when prompted to confirm.
+        ui.dialog
+          .findByTitle(`Delete Volume ${volume.label}?`)
+          .should('be.visible')
+          .within(() => {
+            ui.buttonGroup
+              .findButtonByTitle('Cancel')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
 
-          ui.buttonGroup
-            .findButtonByTitle('Delete')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
+        // Confirm that volume is still listed and initiate deletion again.
+        cy.findByText(volume.label).should('be.visible');
+        cy.findByLabelText(`Action menu for Volume ${volume.label}`).click();
+        cy.get('[data-qa-action-menu-item="Delete"]:visible')
+          .should('be.visible')
+          .click();
 
-      // Confirm that volume is deleted.
-      cy.wait('@deleteVolume').its('response.statusCode').should('eq', 200);
-      cy.findByText(volume.label).should('not.exist');
-      ui.toast.assertMessage('Volume successfully deleted.');
-    });
+        // Confirm deletion.
+        ui.dialog
+          .findByTitle(`Delete Volume ${volume.label}?`)
+          .should('be.visible')
+          .within(() => {
+            cy.findByLabelText('Volume Label')
+              .should('be.visible')
+              .click()
+              .type(volume.label);
+
+            ui.buttonGroup
+              .findButtonByTitle('Delete')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm that volume is deleted.
+        cy.wait('@deleteVolume').its('response.statusCode').should('eq', 200);
+        cy.findByText(volume.label).should('not.exist');
+        ui.toast.assertMessage('Volume successfully deleted.');
+      }
+    );
   });
 });

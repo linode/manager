@@ -2,7 +2,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -78,17 +78,6 @@ export const DestructiveVolumeDialog = (props: Props) => {
     delete: onDelete,
   }[props.mode];
 
-  const action = {
-    detach: {
-      verb: 'Detach',
-      noun: 'detachment',
-    },
-    delete: {
-      verb: 'Delete',
-      noun: 'deletion',
-    },
-  }[props.mode];
-
   const loading = {
     detach: detachLoading,
     delete: deleteLoading,
@@ -111,17 +100,17 @@ export const DestructiveVolumeDialog = (props: Props) => {
   return (
     <TypeToConfirmDialog
       title={title}
-      entity={{ type: 'Volume', label }}
+      label={'Volume Label'}
+      entity={{
+        type: 'Volume',
+        action: mode === 'detach' ? 'detachment' : 'deletion',
+        name: label,
+        primaryBtnText: mode === 'detach' ? 'Detach' : 'Delete',
+      }}
       open={open}
       loading={loading}
       onClose={onClose}
       onClick={method}
-      confirmationText={
-        <span>
-          To confirm {action.noun}, type the name of the Volume (<b>{label}</b>)
-          in the field below:
-        </span>
-      }
       typographyStyle={{ marginTop: '10px' }}
     >
       {error && <Notice error text={error} />}

@@ -10,7 +10,7 @@ import { TableHead } from 'src/components/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
-import Loading from 'src/components/LandingLoading';
+import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
@@ -199,7 +199,7 @@ export const VolumesLanding = (props: CombinedProps) => {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return <LandingLoading />;
   }
 
   if (error) {

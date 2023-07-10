@@ -2,15 +2,15 @@
 import { InputBaseProps } from '@mui/material/InputBase';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({

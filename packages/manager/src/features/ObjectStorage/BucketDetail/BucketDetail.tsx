@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Box from 'src/components/core/Box';
-import Button from 'src/components/Button';
-import Hidden from 'src/components/core/Hidden';
+import { Box } from 'src/components/Box';
+import { Hidden } from 'src/components/Hidden';
+import { Button } from 'src/components/Button/Button';
 import ObjectTableContent from './ObjectTableContent';
 import produce from 'immer';
 import { BucketBreadcrumb } from './BucketBreadcrumb';

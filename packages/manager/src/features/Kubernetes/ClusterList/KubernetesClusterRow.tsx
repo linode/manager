@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Chip from 'src/components/core/Chip';
-import Hidden from 'src/components/core/Hidden';
+import { Chip } from 'src/components/Chip';
+import { Hidden } from 'src/components/Hidden';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import ActionMenu from './ClusterActionMenu';
+import { ClusterActionMenu } from './ClusterActionMenu';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
@@ -149,7 +149,7 @@ export const KubernetesClusterRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <ActionMenu
+        <ClusterActionMenu
           clusterId={cluster.id}
           clusterLabel={cluster.label}
           openDialog={() =>

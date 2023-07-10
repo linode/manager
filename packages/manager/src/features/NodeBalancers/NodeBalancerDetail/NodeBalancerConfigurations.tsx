@@ -26,12 +26,12 @@ import {
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as composeC } from 'recompose';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { styled } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Box from '@mui/material/Box';
 import PromiseLoader, {
@@ -994,14 +994,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     return (
       <Accordion
         key={`nb-config-${idx}`}
-        updateFor={[
-          idx,
-          config,
-          configSubmitting[idx],
-          configErrors[idx],
-          panelMessages[idx],
-          panelNodeMessages[idx],
-        ]}
         defaultExpanded={isNewConfig || isExpanded}
         success={panelMessages[idx]}
         heading={

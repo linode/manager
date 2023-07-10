@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+import { Button } from 'src/components/Button/Button';
 import { makeStyles } from 'tss-react/mui';
 
 interface Props {
@@ -71,7 +71,6 @@ export const DatabaseSettingsMenuItem = (props: Props) => {
         disabled={disabled}
         buttonType="primary"
         onClick={onClick}
-        compactX
       >
         {buttonText}
       </Button>
