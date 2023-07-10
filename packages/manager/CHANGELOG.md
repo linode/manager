@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Helper text for the Add SSH Key Drawer form ([#9290](https://github.com/linode/manager/pull/9290))
 - Improved warning and error messaging for failed backup events ([#9364](https://github.com/linode/manager/pull/9364))
 
+### Changed:
+
+- Update Metadata copy ([#9374](https://github.com/linode/manager/pull/9374))
+
 ### Fixed:
 
 - Notification menu crashing older Safari versions ([#9360](https://github.com/linode/manager/pull/9360))
