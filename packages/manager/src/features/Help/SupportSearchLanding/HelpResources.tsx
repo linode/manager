@@ -9,7 +9,7 @@ import { Typography } from 'src/components/Typography';
 import { Tile } from 'src/components/Tile/Tile';
 import Grid from '@mui/material/Unstable_Grid2';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
-import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 type ClassNames =
   | 'root'
@@ -127,7 +127,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
-        <SupportTicketDrawer
+        <SupportTicketDialog
           open={drawerOpen}
           onClose={this.closeTicketDrawer}
           onSuccess={this.onTicketCreated}
