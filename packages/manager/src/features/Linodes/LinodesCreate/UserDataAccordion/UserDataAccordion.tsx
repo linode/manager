@@ -96,7 +96,7 @@ export const UserDataAccordion = (props: Props) => {
       </Typography>
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
-          The User Data may be formatted incorrectly.
+          The user data may be formatted incorrectly.
         </Notice>
       ) : null}
       <TextField
