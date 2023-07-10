@@ -772,7 +772,7 @@ export const formatEventWithAPIMessage = (e: Event) => {
   return `${e.action}: ${e.message}`;
 };
 
-export default (e: Event): JSX.Element | string => {
+export default (e: Event, bold = false): JSX.Element | string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators
@@ -813,7 +813,7 @@ export default (e: Event): JSX.Element | string => {
     message
   );
 
-  return applyLinkingAndBolding(e, messageWithUsername);
+  return applyLinkingAndBolding(e, messageWithUsername, bold);
 };
 
 const wordsToBold: string[] = [
@@ -844,7 +844,11 @@ const wordsToBold: string[] = [
   'upgraded',
 ];
 
-export const applyLinkingAndBolding = (event: Event, message: string) => {
+export const applyLinkingAndBolding = (
+  event: Event,
+  message: string,
+  bold = false
+) => {
   if (!message) {
     return '';
   }
@@ -857,23 +861,30 @@ export const applyLinkingAndBolding = (event: Event, message: string) => {
   );
 
   if (event.entity?.label && entityLinkTarget) {
-    return createMessageJSX(message, event.entity.label, entityLinkTarget);
+    return createMessageJSX(
+      message,
+      event.entity.label,
+      entityLinkTarget,
+      bold
+    );
   }
   if (event.secondary_entity?.label && secondaryEntityLinkTarget) {
     return createMessageJSX(
       message,
       event.secondary_entity.label,
-      secondaryEntityLinkTarget
+      secondaryEntityLinkTarget,
+      bold
     );
   }
 
-  return createMessageJSX(message, '', '');
+  return createMessageJSX(message, '', '', bold);
 };
 
 const createMessageJSX = (
   message: string,
   linkLabel: string,
-  linkTarget: string
+  linkTarget: string,
+  bold = false
 ) => {
   let words;
 
@@ -909,19 +920,25 @@ const createMessageJSX = (
             </>
           );
         }
-        if (wordsToBold.includes(word)) {
+        if (bold && wordsToBold.includes(word)) {
           return <strong key={key}>{word} </strong>;
         }
         // other bolded words such as username
         if (/\*\*(.*?)\*\*/.test(word)) {
           if (word.endsWith('.')) {
+            if (bold) {
+              return (
+                <strong key={key}>{word.substring(2, word.length - 3)}.</strong>
+              );
+            }
+            return `${word.substring(2, word.length - 3)}.`;
+          }
+          if (bold) {
             return (
-              <strong key={key}>{word.substring(2, word.length - 3)}.</strong>
+              <strong key={key}>{word.substring(2, word.length - 2)} </strong>
             );
           }
-          return (
-            <strong key={key}>{word.substring(2, word.length - 2)} </strong>
-          );
+          return `${word.substring(2, word.length - 2)} `;
         }
         if (word === linkLabel) {
           return (

@@ -25,7 +25,7 @@ export const useEventInfo = (
   event: Event,
   store: ApplicationStore
 ): EventInfo => {
-  const message = eventMessageGenerator(event);
+  const message = eventMessageGenerator(event, true);
   const type = (event.entity?.type ?? 'linode') as EntityVariants;
 
   const entity = getEntityByIDFromStore(
