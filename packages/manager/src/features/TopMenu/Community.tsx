@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Community from 'src/assets/icons/community_nav.svg';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import TopMenuIcon from './TopMenuIcon';
 import { StyledTopMenuIconWrapper } from './TopMenuIcon';
 

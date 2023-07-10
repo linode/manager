@@ -1,16 +1,16 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import Button from 'src/components/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Button } from 'src/components/Button/Button';
+import { Checkbox } from 'src/components/Checkbox';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
+import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
@@ -130,7 +130,7 @@ const UserSSHKeyPanel = (props: Props) => {
       return (
         <TableRow>
           <TableCell className={classes.cellCheckbox}>
-            <CheckBox
+            <Checkbox
               disabled={disabled}
               checked={authorizedUsers.includes(profile.username)}
               onChange={() => onToggle(profile.username)}
@@ -162,7 +162,7 @@ const UserSSHKeyPanel = (props: Props) => {
     return users?.data.map((user) => (
       <TableRow key={user.username}>
         <TableCell className={classes.cellCheckbox}>
-          <CheckBox
+          <Checkbox
             disabled={disabled || user.ssh_keys.length === 0}
             checked={authorizedUsers.includes(user.username)}
             onChange={() => onToggle(user.username)}
@@ -214,12 +214,11 @@ const UserSSHKeyPanel = (props: Props) => {
       <Button
         buttonType="outlined"
         onClick={() => setIsCreateDrawerOpen(true)}
-        compactX
         disabled={disabled}
       >
         Add an SSH Key
       </Button>
-      <SSHKeyCreationDrawer
+      <CreateSSHKeyDrawer
         open={isCreateDrawerOpen}
         onClose={() => setIsCreateDrawerOpen(false)}
       />

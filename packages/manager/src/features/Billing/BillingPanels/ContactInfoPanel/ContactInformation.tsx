@@ -1,7 +1,7 @@
 import countryData from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import BillingContactDrawer from './EditBillingContactDrawer';
 import { styled } from '@mui/material/styles';

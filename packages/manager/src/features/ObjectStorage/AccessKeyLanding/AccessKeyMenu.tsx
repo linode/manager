@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu';
-import Hidden from 'src/components/core/Hidden';
-import InlineAction from 'src/components/InlineMenuAction';
+import { Hidden } from 'src/components/Hidden';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { OpenAccessDrawer } from './types';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
@@ -41,7 +41,7 @@ export const AccessKeyMenu = (props: Props) => {
     <StyledInlineActionsContainer>
       <Hidden mdDown>
         {actions.map((thisAction) => (
-          <InlineAction
+          <InlineMenuAction
             key={thisAction.title}
             actionText={thisAction.title}
             onClick={thisAction.onClick}

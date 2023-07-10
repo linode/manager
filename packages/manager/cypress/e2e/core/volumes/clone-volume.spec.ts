@@ -27,42 +27,46 @@ describe('volume clone flow', () => {
 
     const cloneVolumeLabel = randomLabel();
 
-    cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
-      interceptCloneVolume(volume.id).as('cloneVolume');
-      cy.visitWithLogin('/volumes', {
-        localStorageOverrides: pageSizeOverride,
-      });
-
-      // Confirm that volume is listed, initiate clone.
-      cy.findByText(volume.label)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          cy.findByLabelText(`Action menu for Volume ${volume.label}`).click();
+    cy.defer(createVolume(volumeRequest), 'creating volume').then(
+      (volume: Volume) => {
+        interceptCloneVolume(volume.id).as('cloneVolume');
+        cy.visitWithLogin('/volumes', {
+          localStorageOverrides: pageSizeOverride,
         });
 
-      cy.get('[data-qa-action-menu-item="Clone"]:visible')
-        .should('be.visible')
-        .click();
-
-      // Input new volume label and submit.
-      cy.get('[data-qa-drawer-title="Clone Volume"]')
-        .closest('[data-qa-drawer="true"]')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText('Label').click().type(cloneVolumeLabel);
-          cy.get('[data-qa-buttons="true"]').within(() => {
-            cy.findByText('Clone Volume').should('be.visible').click();
+        // Confirm that volume is listed, initiate clone.
+        cy.findByText(volume.label)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            cy.findByLabelText(
+              `Action menu for Volume ${volume.label}`
+            ).click();
           });
-        });
 
-      // Confirm that volume has been cloned.
-      cy.wait('@cloneVolume').its('response.statusCode').should('eq', 200);
-      cy.findByText(cloneVolumeLabel)
-        .closest('tr')
-        .within(() => {
-          cy.findByText(`${volume.size} GB`).should('be.visible');
-        });
-    });
+        cy.get('[data-qa-action-menu-item="Clone"]:visible')
+          .should('be.visible')
+          .click();
+
+        // Input new volume label and submit.
+        cy.get('[data-qa-drawer-title="Clone Volume"]')
+          .closest('[data-qa-drawer="true"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Label').click().type(cloneVolumeLabel);
+            cy.get('[data-qa-buttons="true"]').within(() => {
+              cy.findByText('Clone Volume').should('be.visible').click();
+            });
+          });
+
+        // Confirm that volume has been cloned.
+        cy.wait('@cloneVolume').its('response.statusCode').should('eq', 200);
+        cy.findByText(cloneVolumeLabel)
+          .closest('tr')
+          .within(() => {
+            cy.findByText(`${volume.size} GB`).should('be.visible');
+          });
+      }
+    );
   });
 });

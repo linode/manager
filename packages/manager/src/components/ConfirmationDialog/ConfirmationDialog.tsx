@@ -9,9 +9,6 @@ import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
-    '& .MuiPaper-root': {
-      minWidth: 480,
-    },
     '& .MuiDialogTitle-root': {
       marginBottom: 10,
     },
@@ -25,6 +22,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& button': {
       marginBottom: 0,
     },
+  },
+  dialogContent: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 }));
 
@@ -56,7 +57,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       data-testid="drawer"
     >
       <DialogTitle title={title} onClose={onClose} />
-      <DialogContent data-qa-dialog-content className="dialog-content">
+      <DialogContent data-qa-dialog-content className={classes.dialogContent}>
         {children}
         {error && (
           <DialogContentText className={`${classes.error} error-for-scroll`}>

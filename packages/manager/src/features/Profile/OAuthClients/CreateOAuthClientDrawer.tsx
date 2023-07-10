@@ -1,12 +1,12 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Button } from 'src/components/Button/Button';
+import { Checkbox } from 'src/components/Checkbox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { useFormik } from 'formik';
 import { useCreateOAuthClientMutation } from 'src/queries/accountOAuth';
@@ -67,7 +67,7 @@ export const CreateOAuthClientDrawer = ({
           <FormControlLabel
             label="Public"
             control={
-              <CheckBox
+              <Checkbox
                 name="public"
                 onChange={formik.handleChange}
                 checked={formik.values.public}

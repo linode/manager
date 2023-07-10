@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Divider from 'src/components/core/Divider';
-import Link from 'src/components/Link';
+import { Divider } from 'src/components/Divider';
+import { Link } from 'src/components/Link';
 import Paper from 'src/components/core/Paper';
 import TrustedDevices from './TrustedDevices';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';

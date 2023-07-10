@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
-import Button from '../Button';
+import { Tooltip, TooltipProps } from 'src/components/Tooltip';
+import { Button } from '../Button/Button';
 
 export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
   display?: string;

@@ -1,12 +1,12 @@
 import { PaymentMethod, PaymentType } from '@linode/api-v4';
 import * as React from 'react';
-import Chip from 'src/components/core/Chip';
+import { Chip } from 'src/components/Chip';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   getIcon as getTPPIcon,
   thirdPartyPaymentMap,
 } from 'src/components/PaymentMethodRow/ThirdPartyPayment';
-import SelectionCard from 'src/components/SelectionCard';
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import { useTheme } from '@mui/material/styles';

@@ -38,13 +38,10 @@ const gpayLastFourCcDefault = (ccDefault[1].data as CreditCardData).last_four;
 const ccLastFourGpayDefault = (gpayDefault[0].data as CreditCardData).last_four;
 
 describe('Default Payment Method', () => {
-  beforeEach(() => {
-    cy.visitWithLogin('/account/billing');
-  });
-
   it('makes google pay default', () => {
     mockGetPaymentMethods(ccDefault).as('getPaymentMethod');
     mockSetDefaultPaymentMethod(gpayIdCcDefault).as('changeDefault');
+    cy.visitWithLogin('/account/billing');
     cy.wait('@getPaymentMethod');
     cy.get(
       `[aria-label="Action menu for card ending in ${gpayLastFourCcDefault}"]`
@@ -71,7 +68,7 @@ describe('Default Payment Method', () => {
   it('makes cc default', () => {
     mockGetPaymentMethods(gpayDefault).as('getPaymentMethod');
     mockSetDefaultPaymentMethod(ccIdGpayDefault).as('changeDefault');
-
+    cy.visitWithLogin('/account/billing');
     cy.wait('@getPaymentMethod');
     cy.get(
       `[aria-label="Action menu for card ending in ${ccLastFourGpayDefault}"]`

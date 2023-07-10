@@ -5,7 +5,7 @@ import { equals, groupBy } from 'ramda';
 import * as React from 'react';
 import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';

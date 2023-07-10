@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Accordion from 'src/components/Accordion';
-import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+import { Accordion } from 'src/components/Accordion';
+import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -52,7 +52,13 @@ export const LinodeSettingsDeletePanel = ({ linodeId, isReadOnly }: Props) => {
       </Accordion>
       <TypeToConfirmDialog
         title={`Delete ${linode?.label}?`}
-        entity={{ type: 'Linode', label: linode?.label }}
+        label={'Linode Label'}
+        entity={{
+          type: 'Linode',
+          action: 'deletion',
+          name: linode?.label,
+          primaryBtnText: 'Delete',
+        }}
         open={open}
         loading={isLoading}
         errors={error}

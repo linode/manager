@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
