@@ -8,7 +8,6 @@ import {
   mockDeleteAccessKey,
   mockGetAccessKeys,
 } from 'support/intercepts/object-storage';
-import { paginateResponse } from 'support/util/paginate';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 
@@ -20,20 +19,14 @@ describe('object storage access keys smoke tests', () => {
    * - Confirms access key is listed in table.
    */
   it('can create access key - smoke', () => {
-    const keyLabel = randomLabel();
-    // Mocked key values
-    const accessKey = randomString(20);
-    const secretKey = randomString(39);
+    const mockAccessKey = objectStorageKeyFactory.build({
+      label: randomLabel(),
+      access_key: randomString(20),
+      secret_key: randomString(39),
+    });
 
-    mockGetAccessKeys(paginateResponse([])).as('getKeys');
-
-    mockCreateAccessKey({
-      body: objectStorageKeyFactory.build({
-        label: keyLabel,
-        access_key: accessKey,
-        secret_key: secretKey,
-      }),
-    }).as('createKey');
+    mockGetAccessKeys([]).as('getKeys');
+    mockCreateAccessKey(mockAccessKey).as('createKey');
 
     cy.visitWithLogin('object-storage/access-keys');
     cy.wait('@getKeys');
@@ -44,21 +37,12 @@ describe('object storage access keys smoke tests', () => {
       cy.findByText('Create Access Key').should('be.visible').click();
     });
 
-    mockGetAccessKeys(
-      paginateResponse(
-        objectStorageKeyFactory.build({
-          label: keyLabel,
-          access_key: accessKey,
-          secret_key: secretKey,
-        })
-      )
-    ).as('getKeys');
-
+    mockGetAccessKeys([mockAccessKey]).as('getKeys');
     ui.drawer
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label').click().type(keyLabel);
+        cy.findByLabelText('Label').click().type(mockAccessKey.label);
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
           .should('be.visible')
@@ -74,10 +58,10 @@ describe('object storage access keys smoke tests', () => {
       .within(() => {
         cy.get('input[id="access-key"]')
           .should('be.visible')
-          .should('have.value', accessKey);
+          .should('have.value', mockAccessKey.access_key);
         cy.get('input[id="secret-key"]')
           .should('be.visible')
-          .should('have.value', secretKey);
+          .should('have.value', mockAccessKey.secret_key);
 
         ui.buttonGroup
           .findButtonByTitle('I Have Saved My Secret Key')
@@ -87,8 +71,8 @@ describe('object storage access keys smoke tests', () => {
       });
 
     cy.findByLabelText('List of Object Storage Access Keys').within(() => {
-      cy.findByText(keyLabel).should('be.visible');
-      cy.findByText(accessKey).should('be.visible');
+      cy.findByText(mockAccessKey.label).should('be.visible');
+      cy.findByText(mockAccessKey.access_key).should('be.visible');
     });
   });
 
@@ -99,39 +83,30 @@ describe('object storage access keys smoke tests', () => {
    * - Confirms access key is no longer listed in table.
    */
   it('can revoke access key - smoke', () => {
-    const keyId = randomNumber(1, 99999);
-    const keyLabel = randomLabel();
-    // Mocked key values
-    const accessKey = randomString(20);
-    const secretKey = randomString(39);
+    const accessKey = objectStorageKeyFactory.build({
+      label: randomLabel(),
+      id: randomNumber(1, 99999),
+      access_key: randomString(20),
+      secret_key: randomString(39),
+    });
 
     // Mock initial GET request to include an access key.
-    mockGetAccessKeys(
-      paginateResponse(
-        objectStorageKeyFactory.build({
-          id: keyId,
-          label: keyLabel,
-          access_key: accessKey,
-          secret_key: secretKey,
-        })
-      )
-    ).as('getKeys');
-
-    mockDeleteAccessKey(keyId).as('deleteKey');
+    mockGetAccessKeys([accessKey]).as('getKeys');
+    mockDeleteAccessKey(accessKey.id).as('deleteKey');
 
     cy.visitWithLogin('/object-storage/access-keys');
     cy.wait('@getKeys');
 
     cy.findByLabelText('List of Object Storage Access Keys').within(() => {
-      cy.findByText(keyLabel).should('be.visible');
-      cy.findByText(accessKey).should('be.visible');
+      cy.findByText(accessKey.label).should('be.visible');
+      cy.findByText(accessKey.access_key).should('be.visible');
       cy.findByText('Revoke').should('be.visible').click();
     });
 
     // Mock next GET request to respond with no data to reflect key revocation.
-    mockGetAccessKeys(paginateResponse([])).as('getKeys');
+    mockGetAccessKeys([]).as('getKeys');
 
-    ui.dialog.findByTitle(`Revoking ${keyLabel}`).within(() => {
+    ui.dialog.findByTitle(`Revoking ${accessKey.label}`).within(() => {
       ui.buttonGroup
         .findButtonByTitle('Revoke')
         .should('be.visible')

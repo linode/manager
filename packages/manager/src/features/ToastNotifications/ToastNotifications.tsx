@@ -1,4 +1,5 @@
 import { Event, EventStatus } from '@linode/api-v4/lib/account/types';
+import { styled } from '@mui/material/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
@@ -6,7 +7,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
-import Link from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { events$ } from 'src/events';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';
@@ -139,7 +140,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               ),
             });
           case 'image_upload':
-            const isDeletion = event.message === 'Upload cancelled.';
+            const isDeletion = event.message === 'Upload canceled.';
             return toastSuccessAndFailure({
               enqueueSnackbar,
               eventStatus: event.status,
@@ -147,9 +148,10 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               successMessage: `Image ${label} is now available.`,
               failureMessage: isDeletion
                 ? undefined
-                : `There was a problem uploading image ${label}: ${event.message
-                    ?.replace('cancelled', 'canceled')
-                    .replace(/(\d+)/g, '$1 MB')}`,
+                : `There was a problem uploading image ${label}: ${event.message?.replace(
+                    /(\d+)/g,
+                    '$1 MB'
+                  )}`,
             });
           case 'image_delete':
             return toastSuccessAndFailure({
@@ -171,7 +173,23 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return toastSuccessAndFailure({
               enqueueSnackbar,
               eventStatus: event.status,
-              failureMessage: `There was an error creating a snapshot on Linode ${label}.`,
+              persistFailureMessage: true,
+              failureMessage: `Snapshot backup failed on Linode ${label}.`,
+              link: formatLink(
+                'Learn more about limits and considerations.',
+                'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+              ),
+            });
+          case 'backups_restore':
+            return toastSuccessAndFailure({
+              enqueueSnackbar,
+              eventStatus: event.status,
+              persistFailureMessage: true,
+              failureMessage: `Backup restoration failed for ${label}.`,
+              link: formatLink(
+                'Learn more about limits and considerations.',
+                'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+              ),
             });
           /**
            * These create/delete failures are hypothetical.
@@ -280,8 +298,14 @@ export default withSnackbar(ToastNotifications);
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
-    <Link to={link} onClick={handleClick}>
+    <StyledToastNotificationLink to={link} onClick={handleClick}>
       {text}
-    </Link>
+    </StyledToastNotificationLink>
   );
 };
+
+export const StyledToastNotificationLink = styled(Link, {
+  label: 'StyledToastNotificationLink',
+})(({ theme }) => ({
+  color: theme.textColors.linkActiveLight,
+}));

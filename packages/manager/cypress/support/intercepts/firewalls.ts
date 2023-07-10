@@ -10,5 +10,33 @@ import { apiMatcher } from 'support/util/intercepts';
  * @returns Cypress chainable.
  */
 export const interceptCreateFirewall = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('firewalls'));
+  return cy.intercept('POST', apiMatcher('networking/firewalls'));
+};
+
+/**
+ * Intercepts PUT request to update a Firewall's rules.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptUpdateFirewallRules = (
+  firewallId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`networking/firewalls/${firewallId}/rules`)
+  );
+};
+
+/**
+ * Intercepts POST request to update a Firewall's Linodes.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptUpdateFirewallLinodes = (
+  firewallId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`networking/firewalls/${firewallId}/devices`)
+  );
 };

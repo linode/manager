@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import Checkbox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { API_MAX_PAGE_SIZE } from 'src/constants';

@@ -1,11 +1,11 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import Accordion from 'src/components/Accordion';
+import { Accordion } from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from '@mui/material/Unstable_Grid2';
 import { SupportLink } from 'src/components/SupportLink';

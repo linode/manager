@@ -2,17 +2,18 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { useSnackbar } from 'notistack';
 import { useFormik } from 'formik';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { Box } from 'src/components/Box';
 
 interface Props {
   linodeId: number;
@@ -79,29 +80,31 @@ export const CaptureSnapshot = ({ linodeId, isReadOnly }: Props) => {
         size of your Linode and the amount of data you have stored on it. The
         manual snapshot will not be overwritten by automatic backups.
       </Typography>
-      <FormControl className={classes.snapshotFormControl}>
+      <FormControl>
         {hasErrorFor.none && (
           <Notice spacingBottom={8} error>
             {hasErrorFor.none}
           </Notice>
         )}
-        <TextField
-          errorText={hasErrorFor.label}
-          label="Name Snapshot"
-          name="label"
-          value={snapshotForm.values.label}
-          onChange={snapshotForm.handleChange}
-          data-qa-manual-name
-          className={classes.snapshotNameField}
-        />
-        <Button
-          buttonType="primary"
-          onClick={() => setIsSnapshotConfirmationDialogOpen(true)}
-          data-qa-snapshot-button
-          disabled={snapshotForm.values.label === '' || isReadOnly}
-        >
-          Take Snapshot
-        </Button>
+        <Box className={classes.snapshotFormControl}>
+          <TextField
+            errorText={hasErrorFor.label}
+            label="Name Snapshot"
+            name="label"
+            value={snapshotForm.values.label}
+            onChange={snapshotForm.handleChange}
+            data-qa-manual-name
+            className={classes.snapshotNameField}
+          />
+          <Button
+            buttonType="primary"
+            onClick={() => setIsSnapshotConfirmationDialogOpen(true)}
+            data-qa-snapshot-button
+            disabled={snapshotForm.values.label === '' || isReadOnly}
+          >
+            Take Snapshot
+          </Button>
+        </Box>
       </FormControl>
       <CaptureSnapshotConfirmationDialog
         open={isSnapshotConfirmationDialogOpen}

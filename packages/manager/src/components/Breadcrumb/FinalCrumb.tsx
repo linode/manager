@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { EditableText } from 'src/components/EditableText/EditableText';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { EditableProps, LabelProps } from './types';

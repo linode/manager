@@ -11,13 +11,13 @@ import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import InlineMenuAction from 'src/components/InlineMenuAction';
-import Link from 'src/components/Link';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -239,10 +239,15 @@ export const BillingActivityPanel = (props: Props) => {
       pdfLoading.add(id);
 
       getAllInvoiceItems(invoiceId)
-        .then((invoiceItems) => {
+        .then(async (invoiceItems) => {
           pdfLoading.delete(id);
 
-          const result = printInvoice(account!, invoice, invoiceItems, taxes);
+          const result = await printInvoice(
+            account!,
+            invoice,
+            invoiceItems,
+            taxes
+          );
 
           if (result.status === 'error') {
             pdfErrors.add(id);

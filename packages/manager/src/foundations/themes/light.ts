@@ -292,6 +292,11 @@ export const lightTheme: ThemeOptions = {
       primary: primaryColors.text,
     },
     success: {
+      light: '#00b159',
+      main: '#00b159',
+      dark: '#00b159',
+    },
+    info: {
       light: '#d7e3ef',
       main: '#d7e3ef',
       dark: '#3682dd',

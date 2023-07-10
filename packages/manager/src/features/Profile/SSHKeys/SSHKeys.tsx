@@ -3,10 +3,10 @@ import AddNewLink from 'src/components/AddNewLink';
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import EditSSHKeyDrawer from './EditSSHKeyDrawer';
 import Grid from '@mui/material/Unstable_Grid2';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
-import SSHKeyCreationDrawer from './CreateSSHKeyDrawer';
-import Typography from 'src/components/core/Typography';
+import { CreateSSHKeyDrawer } from './CreateSSHKeyDrawer';
+import { Typography } from 'src/components/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -144,7 +144,7 @@ export const SSHKeys = () => {
         onClose={() => setIsEditDrawerOpen(false)}
         sshKey={selectedKey}
       />
-      <SSHKeyCreationDrawer
+      <CreateSSHKeyDrawer
         open={isCreateDrawerOpen}
         onClose={() => setIsCreateDrawerOpen(false)}
       />

@@ -5,8 +5,8 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import Link from 'src/components/Link';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
+import { Link } from 'src/components/Link';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 import { makeStyles } from 'tss-react/mui';
 

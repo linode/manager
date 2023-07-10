@@ -1,5 +1,4 @@
 import * as React from 'react';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import Grid from '@mui/material/Unstable_Grid2';
 import { MockData, mockDataController } from './mockDataController';
 import ServiceWorkerTool from './ServiceWorkerTool';
@@ -62,4 +61,4 @@ const MockDataTool: React.FC<{}> = () => {
   );
 };
 
-export default withFeatureFlagProvider(MockDataTool);
+export default MockDataTool;
