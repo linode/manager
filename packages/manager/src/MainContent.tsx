@@ -141,6 +141,7 @@ const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile'));
+const LoadBalancers = React.lazy(() => import('src/features/LoadBalancers'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
@@ -309,6 +310,10 @@ const MainContent = (props: CombinedProps) => {
                             <Route path="/linodes" component={LinodesRoutes} />
                             <Route path="/volumes" component={Volumes} />
                             <Redirect path="/volumes*" to="/volumes" />
+                            <Route
+                              path="/loadbalancers"
+                              component={LoadBalancers}
+                            />
                             <Route
                               path="/nodebalancers"
                               component={NodeBalancers}
