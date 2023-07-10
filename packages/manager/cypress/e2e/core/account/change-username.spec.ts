@@ -36,6 +36,7 @@ describe('username', () => {
       cy.get('[data-qa-textfield-label="Username"]')
         .parent()
         .parent()
+        .parent()
         .within(() => {
           ui.button
             .findByTitle('Save')

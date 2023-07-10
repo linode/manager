@@ -1,19 +1,20 @@
 import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
 import { ErrorBoundary } from 'src/components/ErrorBoundary';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
@@ -317,7 +318,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
         ) : null}
         {generalError && <Notice error text={generalError} data-qa-notice />}
 
-        {notice && <Notice success text={notice} data-qa-notice />}
+        {notice && <Notice info text={notice} data-qa-notice />}
 
         {['create', 'restore'].includes(mode) && (
           <LinodeSelect
