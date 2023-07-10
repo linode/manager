@@ -4,7 +4,7 @@ import { Button } from 'src/components/Button/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import ImageRow, { ImageWithEvent } from './ImageRow';
-import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
+import { ImagesDrawer, DrawerMode } from './ImagesDrawer';
 import LandingHeader from 'src/components/LandingHeader';
 import Paper from 'src/components/core/Paper';
 import produce from 'immer';

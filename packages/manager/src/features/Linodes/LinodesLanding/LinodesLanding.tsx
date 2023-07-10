@@ -1,6 +1,5 @@
 import { Config } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { QueryClient } from 'react-query';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -98,7 +97,6 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   StyleProps &
-  WithSnackbarProps &
   WithProfileProps &
   WithEventsInfiniteQueryProps;
 
@@ -485,7 +483,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const enhanced = compose<CombinedProps, Props>(
   withRouter,
-  withSnackbar,
   connected,
   styled,
   withFeatureFlagConsumer,

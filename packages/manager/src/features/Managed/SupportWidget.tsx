@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import { Button } from 'src/components/Button/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 import { AttachmentError } from '../Support/SupportTicketDetail/SupportTicketDetail';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,7 +40,7 @@ export const SupportWidget: React.FC<CombinedProps> = (props) => {
       >
         Open Support Ticket
       </Button>
-      <SupportTicketDrawer
+      <SupportTicketDialog
         open={open}
         onClose={() => setOpen(false)}
         onSuccess={onTicketCreated}

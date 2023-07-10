@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { SupportLink } from 'src/components/SupportLink';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';
+import { Event } from '@linode/api-v4/lib/account/types';
+import { styled } from '@mui/material/styles';
 
 export const useToastNotifications = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -110,7 +112,24 @@ export const useToastNotifications = () => {
           toastSuccessAndFailure({
             enqueueSnackbar,
             eventStatus: event.status,
-            failureMessage: `There was an error creating a snapshot on Linode ${label}.`,
+            persistFailureMessage: true,
+            failureMessage: `Snapshot backup failed on Linode ${label}.`,
+            link: formatLink(
+              'Learn more about limits and considerations.',
+              'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+            ),
+          });
+          break;
+        case 'backups_restore':
+          toastSuccessAndFailure({
+            enqueueSnackbar,
+            eventStatus: event.status,
+            persistFailureMessage: true,
+            failureMessage: `Backup restoration failed for ${label}.`,
+            link: formatLink(
+              'Learn more about limits and considerations.',
+              'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
+            ),
           });
           break;
         /**
@@ -273,8 +292,14 @@ export const getSecondaryLabel = (event: Event) =>
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
-    <Link to={link} onClick={handleClick}>
+    <StyledToastNotificationLink to={link} onClick={handleClick}>
       {text}
-    </Link>
+    </StyledToastNotificationLink>
   );
 };
+
+export const StyledToastNotificationLink = styled(Link, {
+  label: 'StyledToastNotificationLink',
+})(({ theme }) => ({
+  color: theme.textColors.linkActiveLight,
+}));

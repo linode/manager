@@ -9,7 +9,7 @@ import {
 } from '@paypal/react-paypal-js';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Grid from '@mui/material/Unstable_Grid2';
 import { reportException } from 'src/exceptionReporting';

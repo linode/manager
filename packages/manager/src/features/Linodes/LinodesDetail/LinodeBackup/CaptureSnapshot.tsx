@@ -13,6 +13,7 @@ import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmation
 import { Button } from 'src/components/Button/Button';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { useEventsInfiniteQuery } from 'src/queries/events';
+import { Box } from 'src/components/Box';
 
 interface Props {
   linodeId: number;
@@ -81,29 +82,31 @@ export const CaptureSnapshot = ({ linodeId, isReadOnly }: Props) => {
         size of your Linode and the amount of data you have stored on it. The
         manual snapshot will not be overwritten by automatic backups.
       </Typography>
-      <FormControl className={classes.snapshotFormControl}>
+      <FormControl>
         {hasErrorFor.none && (
           <Notice spacingBottom={8} error>
             {hasErrorFor.none}
           </Notice>
         )}
-        <TextField
-          errorText={hasErrorFor.label}
-          label="Name Snapshot"
-          name="label"
-          value={snapshotForm.values.label}
-          onChange={snapshotForm.handleChange}
-          data-qa-manual-name
-          className={classes.snapshotNameField}
-        />
-        <Button
-          buttonType="primary"
-          onClick={() => setIsSnapshotConfirmationDialogOpen(true)}
-          data-qa-snapshot-button
-          disabled={snapshotForm.values.label === '' || isReadOnly}
-        >
-          Take Snapshot
-        </Button>
+        <Box className={classes.snapshotFormControl}>
+          <TextField
+            errorText={hasErrorFor.label}
+            label="Name Snapshot"
+            name="label"
+            value={snapshotForm.values.label}
+            onChange={snapshotForm.handleChange}
+            data-qa-manual-name
+            className={classes.snapshotNameField}
+          />
+          <Button
+            buttonType="primary"
+            onClick={() => setIsSnapshotConfirmationDialogOpen(true)}
+            data-qa-snapshot-button
+            disabled={snapshotForm.values.label === '' || isReadOnly}
+          >
+            Take Snapshot
+          </Button>
+        </Box>
       </FormControl>
       <CaptureSnapshotConfirmationDialog
         open={isSnapshotConfirmationDialogOpen}

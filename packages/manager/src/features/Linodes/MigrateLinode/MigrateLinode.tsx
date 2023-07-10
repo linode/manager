@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { Box } from 'src/components/Box';
 import { MBpsInterDC } from 'src/constants';

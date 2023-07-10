@@ -49,7 +49,7 @@ const AutoBackups = (props: Props) => {
       <Grid container direction="column" spacing={2}>
         <Grid>
           {!!isManagedCustomer ? (
-            <Notice success spacingBottom={20}>
+            <Notice info spacingBottom={20}>
               You&rsquo;re a Managed customer, which means your Linodes are
               already automatically backed up - no need to toggle this setting.
             </Notice>

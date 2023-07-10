@@ -5,7 +5,7 @@ import { Provider as ReduxStoreProvider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
-import SnackBar from 'src/components/SnackBar';
+import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import SplashScreen from 'src/components/SplashScreen';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
@@ -40,7 +40,7 @@ const Null = () => <span>null route</span>;
 const AppWrapper = () => (
   <>
     <SplashScreen />
-    <SnackBar
+    <Snackbar
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       maxSnack={3}
       autoHideDuration={4000}
@@ -48,7 +48,7 @@ const AppWrapper = () => (
       hideIconVariant={true}
     >
       <App />
-    </SnackBar>
+    </Snackbar>
   </>
 );
 

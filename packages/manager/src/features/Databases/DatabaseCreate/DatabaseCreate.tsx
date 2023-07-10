@@ -20,7 +20,7 @@ import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
@@ -562,7 +562,7 @@ const DatabaseCreate = () => {
           </FormControl>
           <Grid xs={12} md={8}>
             {flags.databaseBeta ? (
-              <Notice success className={classes.notice}>
+              <Notice info className={classes.notice}>
                 <strong>
                   Notice: There is no charge for database clusters during beta.
                 </strong>{' '}

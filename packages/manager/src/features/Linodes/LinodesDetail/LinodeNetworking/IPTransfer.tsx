@@ -16,7 +16,7 @@ import * as React from 'react';
 import { StyledActionPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
