@@ -1,4 +1,4 @@
-import { Event, EventStatus } from '@linode/api-v4/lib/account/types';
+import { EventStatus } from '@linode/api-v4/lib/account/types';
 import { WithSnackbarProps, useSnackbar } from 'notistack';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -11,8 +11,8 @@ export const useToastNotifications = () => {
 
   useEventsInfiniteQuery({
     eventHandler: (event) => {
-      const label = getLabel(event);
-      const secondaryLabel = getSecondaryLabel(event);
+      const label = event.entity?.label ?? '';
+      const secondaryLabel = event.secondary_entity?.label ?? '';
       switch (event.action) {
         case 'volume_attach':
           toastSuccessAndFailure({

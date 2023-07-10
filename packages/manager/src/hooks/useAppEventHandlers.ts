@@ -107,8 +107,7 @@ export const useAppEventHandlers = () => {
     eventHandler: (event) => {
       eventHandlers
         .filter(({ filter }) => filter(event))
-        .map(({ handlers }) => handlers)
-        .flat()
+        .flatMap(({ handlers }) => handlers)
         .forEach((handler) => handler(event, queryClient, store));
     },
   });
