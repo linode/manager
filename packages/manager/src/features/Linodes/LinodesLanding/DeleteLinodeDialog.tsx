@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -46,7 +46,13 @@ export const DeleteLinodeDialog = (props: Props) => {
   return (
     <TypeToConfirmDialog
       title={`Delete ${linode?.label ?? ''}?`}
-      entity={{ type: 'Linode', label: linode?.label }}
+      label={'Linode Label'}
+      entity={{
+        type: 'Linode',
+        action: 'deletion',
+        name: linode?.label,
+        primaryBtnText: 'Delete',
+      }}
       open={open}
       loading={isLoading}
       errors={error}

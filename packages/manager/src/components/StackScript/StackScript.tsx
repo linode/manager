@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import Chip from 'src/components/core/Chip';
-import Divider from 'src/components/core/Divider';
-import Typography from 'src/components/core/Typography';
+import { Chip } from 'src/components/Chip';
+import { Divider } from 'src/components/Divider';
+import { Typography } from 'src/components/Typography';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { ScriptCode } from 'src/components/ScriptCode/ScriptCode';
@@ -15,7 +15,7 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { makeStyles } from 'tss-react/mui';
-import TooltipIcon from '../TooltipIcon';
+import { TooltipIcon } from '../TooltipIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {

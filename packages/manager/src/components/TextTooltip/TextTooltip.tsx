@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ToolTip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
+import { Tooltip } from 'src/components/Tooltip';
+import { Typography } from 'src/components/Typography';
 import { styled } from '@mui/material/styles';
 import type { SxProps } from '@mui/material';
 import type { TooltipProps } from '@mui/material/Tooltip';
-import type { TypographyProps } from 'src/components/core/Typography';
+import type { TypographyProps } from 'src/components/Typography';
 
 export interface TextTooltipProps {
   /** The text to hover on to display the tooltip */
@@ -62,7 +62,7 @@ export const TextTooltip = (props: TextTooltipProps) => {
   );
 };
 
-const StyledRootTooltip = styled(ToolTip, {
+const StyledRootTooltip = styled(Tooltip, {
   label: 'StyledRootTooltip',
 })(({ theme }) => ({
   borderRadius: 4,

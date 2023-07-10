@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { compose } from 'recompose';
-import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
+import { Divider } from 'src/components/Divider';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   DataSet,
@@ -11,7 +10,7 @@ import {
   LineGraphProps,
 } from 'src/components/LineGraph/LineGraph';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   title: {
     color: theme.color.headline,
     fontWeight: 'bold',
@@ -28,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface Props extends LineGraphProps {
+export interface LongViewLineGraphProps extends LineGraphProps {
   title: string;
   subtitle?: string;
   error?: string;
@@ -36,10 +35,8 @@ export interface Props extends LineGraphProps {
   ariaLabel?: string;
 }
 
-type CombinedProps = Props;
-
-const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
+export const LongviewLineGraph = React.memo((props: LongViewLineGraphProps) => {
+  const { classes } = useStyles();
 
   const { error, loading, title, subtitle, ariaLabel, ...rest } = props;
 
@@ -74,7 +71,7 @@ const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
       </div>
     </React.Fragment>
   );
-};
+});
 
 export const isDataEmpty = (data: DataSet[]) => {
   return data.every(
@@ -84,5 +81,3 @@ export const isDataEmpty = (data: DataSet[]) => {
       thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
-
-export default compose<CombinedProps, Props>(React.memo)(LongviewLineGraph);

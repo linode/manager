@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Minus from 'src/assets/icons/LKEminusSign.svg';
 import Plus from 'src/assets/icons/LKEplusSign.svg';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { styled } from '@mui/material/styles';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import Box from '@mui/material/Box';
 
 const sxTextFieldBase = {
@@ -88,7 +88,6 @@ export const EnhancedNumberInput = React.memo(
       >
         <StyledButton
           buttonType="outlined"
-          compactX
           disabled={disabled || value === min}
           onClick={decrementValue}
           name="Subtract 1"
@@ -118,7 +117,6 @@ export const EnhancedNumberInput = React.memo(
         />
         <StyledButton
           buttonType="outlined"
-          compactX
           disabled={disabled || value === max}
           onClick={incrementValue}
           name="Add 1"

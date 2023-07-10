@@ -6,7 +6,7 @@ import {
   ActiveLongviewPlan,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
@@ -28,13 +28,12 @@ import SubscriptionDialog from './SubscriptionDialog';
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
-type CombinedProps = LongviewProps &
-  RouteComponentProps<{}> &
-  WithSnackbarProps;
+type CombinedProps = LongviewProps & RouteComponentProps<{}>;
 
 export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   props
 ) => {
+  const { enqueueSnackbar } = useSnackbar();
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
     () => getActiveLongviewPlan().then((response) => response),
     {}
@@ -93,7 +92,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
           setSubscriptionDialogOpen(true);
         } else {
           // Any network or other errors handled with a toast
-          props.enqueueSnackbar(
+          enqueueSnackbar(
             getAPIErrorOrDefault(
               errorResponse,
               'Error creating Longview client.'
@@ -180,6 +179,5 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
 };
 
 export default compose<CombinedProps, {} & RouteComponentProps>(
-  withLongviewClients(),
-  withSnackbar
+  withLongviewClients()
 )(LongviewLanding);

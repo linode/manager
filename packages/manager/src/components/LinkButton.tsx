@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import Box from './core/Box';
+import { Box } from './Box';
 import CircularProgress from './core/CircularProgress';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';

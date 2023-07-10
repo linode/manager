@@ -1,19 +1,24 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { createLinode } from '@linode/api-v4';
 import { Linode } from '@linode/api-v4/types';
-import { createLinode } from 'support/api/linodes';
+import { accountSettingsFactory } from '@src/factories/accountSettings';
+import {
+  createLinodeRequestFactory,
+  linodeFactory,
+} from '@src/factories/linodes';
+import { makeResourcePage } from '@src/mocks/serverHandlers';
 import {
   containsVisible,
   fbtVisible,
   getClick,
   getVisible,
 } from 'support/helpers';
-import { linodeFactory } from '@src/factories/linodes';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { accountSettingsFactory } from '@src/factories/accountSettings';
-import { routes } from 'support/ui/constants';
 import { ui } from 'support/ui';
+import { routes } from 'support/ui/constants';
 import { apiMatcher } from 'support/util/intercepts';
+import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+import { authenticate } from 'support/api/authentication';
 
 const mockLinodes = new Array(5).fill(null).map(
   (_item: null, index: number): Linode => {
@@ -56,7 +61,9 @@ const deleteLinodeFromActionMenu = (linodeLabel) => {
         .should('be.enabled')
         .click();
     });
+
   cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
+  cy.findByText(linodeLabel).should('not.exist');
 };
 
 const preferenceOverrides = {
@@ -70,6 +77,7 @@ const preferenceOverrides = {
   },
 };
 
+authenticate();
 describe('linode landing checks', () => {
   beforeEach(() => {
     const mockAccountSettings = accountSettingsFactory.build({
@@ -292,23 +300,32 @@ describe('linode landing actions', () => {
       managed: false,
     });
 
+    const createTwoLinodes = async (): Promise<[Linode, Linode]> => {
+      return Promise.all([
+        createLinode(
+          createLinodeRequestFactory.build({ label: randomLabel() })
+        ),
+        createLinode(
+          createLinodeRequestFactory.build({ label: randomLabel() })
+        ),
+      ]);
+    };
+
     cy.intercept('GET', apiMatcher('account/settings'), (req) => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
 
     cy.intercept('DELETE', apiMatcher('linode/instances/*')).as('deleteLinode');
-    createLinode().then((linodeA) => {
-      createLinode().then((linodeB) => {
-        cy.visitWithLogin('/linodes', { preferenceOverrides });
-        cy.wait('@getAccountSettings');
-        getVisible('[data-qa-header="Linodes"]');
-        if (!cy.get('[data-qa-sort-label="asc"]')) {
-          getClick('[aria-label="Sort by label"]');
-        }
-        deleteLinodeFromActionMenu(linodeA.label);
-        deleteLinodeFromActionMenu(linodeB.label);
-        cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');
-      });
+    cy.defer(createTwoLinodes()).then(([linodeA, linodeB]) => {
+      cy.visitWithLogin('/linodes', { preferenceOverrides });
+      cy.wait('@getAccountSettings');
+      getVisible('[data-qa-header="Linodes"]');
+      if (!cy.get('[data-qa-sort-label="asc"]')) {
+        getClick('[aria-label="Sort by label"]');
+      }
+      deleteLinodeFromActionMenu(linodeA.label);
+      deleteLinodeFromActionMenu(linodeB.label);
+      cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');
     });
   });
 });

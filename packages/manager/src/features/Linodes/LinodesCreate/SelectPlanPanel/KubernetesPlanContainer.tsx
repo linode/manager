@@ -5,7 +5,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableCell } from 'src/components/TableCell';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { ExtendedType } from 'src/utilities/extendType';
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 

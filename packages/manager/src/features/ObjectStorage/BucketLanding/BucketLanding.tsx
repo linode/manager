@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { APIError } from '@linode/api-v4/lib/types';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
@@ -203,9 +203,12 @@ export const BucketLanding = () => {
       </Grid>
       <TypeToConfirmDialog
         title={`Delete Bucket ${bucketLabel}`}
+        label={'Bucket Name'}
         entity={{
           type: 'Bucket',
-          label: bucketLabel,
+          action: 'deletion',
+          name: bucketLabel,
+          primaryBtnText: 'Delete',
         }}
         open={removeBucketConfirmationDialog.isOpen}
         loading={isLoading}

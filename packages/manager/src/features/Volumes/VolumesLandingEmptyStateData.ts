@@ -13,7 +13,7 @@ import type {
 export const headers: ResourcesHeaders = {
   description:
     'Attach scalable, fault-tolerant, and performant block storage volumes to your Linode Compute Instances or Kubernetes Clusters.',
-  subtitle: 'NVM block storage service',
+  subtitle: 'NVMe block storage service',
   title: 'Volumes',
 };
 

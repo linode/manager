@@ -6,14 +6,14 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
@@ -316,7 +316,7 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
       ) : null}
       {generalError && <Notice error text={generalError} data-qa-notice />}
 
-      {notice && <Notice success text={notice} data-qa-notice />}
+      {notice && <Notice info text={notice} data-qa-notice />}
 
       {['create', 'restore'].includes(mode) && (
         <LinodeSelect

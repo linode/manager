@@ -1,10 +1,10 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
+import { Hidden } from 'src/components/Hidden';
 import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import SelectableTableRow from 'src/components/SelectableTableRow';
+import { SelectableTableRow } from 'src/components/SelectableTableRow/SelectableTableRow';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { useSpecificTypes } from 'src/queries/types';

@@ -1,7 +1,7 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { makeStyles } from '@mui/styles';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -80,7 +80,7 @@ export const Disks: React.FC<Props> = (props) => {
                         return (
                           <TableRow key={disk.id} data-qa-disk={disk.label}>
                             <TableCell>
-                              <CheckBox
+                              <Checkbox
                                 text={disk.label}
                                 checked={isDiskSelected || isConfigSelected}
                                 disabled={isConfigSelected}

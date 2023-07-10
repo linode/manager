@@ -3,7 +3,6 @@ import {
   LongviewClient,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -11,7 +10,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -79,7 +78,6 @@ interface Props {
 export type CombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
-  WithSnackbarProps &
   StateProps;
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
@@ -334,8 +332,7 @@ const connected = connect(mapStateToProps);
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   connected,
-  withLongviewClients(),
-  withSnackbar
+  withLongviewClients()
 )(LongviewClients);
 
 /**

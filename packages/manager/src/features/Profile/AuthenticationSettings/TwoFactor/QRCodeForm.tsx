@@ -1,6 +1,6 @@
 import * as React from 'react';
 import QRCode from 'qrcode.react';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { styled } from '@mui/material/styles';
 
@@ -14,7 +14,7 @@ export const QRCodeForm = (props: Props) => {
   return (
     <React.Fragment>
       <StyledInstructions variant="h3" data-qa-copy>
-        Scan this QR code to add your Linode account to your 2FA app:
+        Scan this QR code to add your Cloud Manager account to your 2FA app:
       </StyledInstructions>
       <StyledQRCodeContainer>
         <QRCode

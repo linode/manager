@@ -3,12 +3,12 @@ import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
 import { update } from 'ramda';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import { Button } from 'src/components/Button/Button';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import ToolTip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
+import { Tooltip } from 'src/components/Tooltip';
+import { Typography } from 'src/components/Typography';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { parseAPIDate } from 'src/utilities/date';
 import {
@@ -117,7 +117,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
           fullWidth
           aria-disabled
         />
-        <ToolTip open={tooltipOpen[0]} title="Copied!">
+        <Tooltip open={tooltipOpen[0]} title="Copied!">
           <div className={classes.copyButton}>
             <Button
               buttonType="outlined"
@@ -130,7 +130,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
               Copy Token
             </Button>
           </div>
-        </ToolTip>
+        </Tooltip>
       </div>
       <div className={classes.inputSection}>
         <CopyableTextField
@@ -142,7 +142,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
           aria-disabled
           multiline
         />
-        <ToolTip open={tooltipOpen[1]} title="Copied!">
+        <Tooltip open={tooltipOpen[1]} title="Copied!">
           <div className={classes.copyButton}>
             <Button
               buttonType="primary"
@@ -155,7 +155,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
               Copy Draft Email
             </Button>
           </div>
-        </ToolTip>
+        </Tooltip>
       </div>
     </Dialog>
   );

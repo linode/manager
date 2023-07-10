@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { styled } from '@mui/material/styles';
-import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import { TextField, TextFieldProps } from 'src/components/TextField';
 
 type CopyableTextFieldProps = TextFieldProps & {
   className?: string;

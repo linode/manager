@@ -8,7 +8,7 @@ import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import Box from '@mui/material/Box';
 

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import CheckBox from 'src/components/CheckBox';
+import { Button } from 'src/components/Button/Button';
+import { Checkbox } from 'src/components/Checkbox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Drawer from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import TextField from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { useFormik } from 'formik';
 import { useUpdateOAuthClientMutation } from 'src/queries/accountOAuth';
@@ -71,7 +71,7 @@ export const EditOAuthClientDrawer = ({ open, onClose, client }: Props) => {
           <FormControlLabel
             label="Public"
             control={
-              <CheckBox name="public" checked={client?.public} disabled />
+              <Checkbox name="public" checked={client?.public} disabled />
             }
           />
         </FormControl>

@@ -23,11 +23,9 @@ describe('Personal access tokens', () => {
    * - Confirms that user can open and close "View Scopes" drawer
    */
   it('can create personal access tokens', () => {
-    const tokenLabel = randomLabel();
-    const tokenSecret = randomString(64);
     const token = appTokenFactory.build({
-      label: tokenLabel,
-      token: tokenSecret,
+      label: randomLabel(),
+      token: randomString(64),
     });
 
     mockGetPersonalAccessTokens([]).as('getTokens');
@@ -80,7 +78,7 @@ describe('Personal access tokens', () => {
           .should('be.visible')
           .should('be.enabled')
           .click()
-          .type(tokenLabel);
+          .type(token.label);
 
         ui.buttonGroup
           .findButtonByTitle('Create Token')
@@ -108,7 +106,7 @@ describe('Personal access tokens', () => {
         // Confirm that PAT is shown.
         cy.get('[data-testid="textfield-input"]')
           .should('be.visible')
-          .should('have.attr', 'value', tokenSecret);
+          .should('have.attr', 'value', token.token);
 
         ui.button
           .findByTitle('I Have Saved My Personal Access Token')
@@ -119,7 +117,7 @@ describe('Personal access tokens', () => {
 
     // Confirm that new PAT is shown in list and "View Scopes" drawer works.
     cy.wait('@getTokens');
-    cy.findByText(tokenLabel)
+    cy.findByText(token.label)
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -131,7 +129,7 @@ describe('Personal access tokens', () => {
       });
 
     ui.drawer
-      .findByTitle(tokenLabel)
+      .findByTitle(token.label)
       .should('be.visible')
       .within(() => {
         ui.drawerCloseButton.find().click();
@@ -144,17 +142,14 @@ describe('Personal access tokens', () => {
    * - Confirms that token is removed from list after revoking it
    */
   it('can rename and revoke personal access tokens', () => {
-    const tokenOldLabel = randomLabel();
-    const tokenNewLabel = randomLabel();
-
     const oldToken: Token = appTokenFactory.build({
-      label: tokenOldLabel,
+      label: randomLabel(),
       token: randomString(64),
     });
 
     const newToken: Token = {
       ...oldToken,
-      label: tokenNewLabel,
+      label: randomLabel(),
     };
 
     mockGetPersonalAccessTokens([oldToken]).as('getTokens');
@@ -166,7 +161,7 @@ describe('Personal access tokens', () => {
     cy.wait(['@getTokens', '@getAppTokens']);
 
     // Find token in list, click "Rename", and fill out and submit form.
-    cy.findByText(tokenOldLabel)
+    cy.findByText(oldToken.label)
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -185,7 +180,7 @@ describe('Personal access tokens', () => {
           .should('be.visible')
           .click()
           .clear()
-          .type(tokenNewLabel);
+          .type(newToken.label);
 
         ui.buttonGroup
           .findButtonByTitle('Save')
@@ -196,7 +191,7 @@ describe('Personal access tokens', () => {
 
     // Confirm that token has been renamed, initiate revocation.
     cy.wait('@updateToken');
-    cy.findByText(tokenNewLabel)
+    cy.findByText(newToken.label)
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -209,7 +204,7 @@ describe('Personal access tokens', () => {
 
     mockGetPersonalAccessTokens([]).as('getTokens');
     ui.dialog
-      .findByTitle(`Revoke ${tokenNewLabel}?`)
+      .findByTitle(`Revoke ${newToken.label}?`)
       .should('be.visible')
       .within(() => {
         ui.buttonGroup
@@ -221,11 +216,11 @@ describe('Personal access tokens', () => {
 
     // Confirm that token is removed from list after revoking.
     cy.wait(['@revokeToken', '@getTokens']);
-    ui.toast.assertMessage(`Successfully revoked ${tokenNewLabel}`);
+    ui.toast.assertMessage(`Successfully revoked ${newToken.label}`);
     cy.findByLabelText('List of Personal Access Tokens')
       .should('be.visible')
       .within(() => {
-        cy.findByText(tokenNewLabel).should('not.exist');
+        cy.findByText(newToken.label).should('not.exist');
         cy.findByText('No items to display.').should('be.visible');
       });
   });

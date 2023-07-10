@@ -8,7 +8,7 @@ import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
 import TableFooter from 'src/components/core/TableFooter';
 import { TableHead } from 'src/components/TableHead';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';

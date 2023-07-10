@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import Chip, { ChipProps } from 'src/components/core/Chip';
+import { Chip, ChipProps } from 'src/components/Chip';
 import { makeStyles } from 'tss-react/mui';
 
 interface BetaChipProps

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TooltipProps } from 'src/components/core/Tooltip';
-import TextField from 'src/components/TextField';
+import { TooltipProps } from 'src/components/Tooltip';
+import { TextField } from 'src/components/TextField';
 
 interface Props {
   onBlur: (e: any) => void;

@@ -1,19 +1,21 @@
 import { Interface, Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import CheckBox from 'src/components/CheckBox';
-import Divider from 'src/components/core/Divider';
+import { Checkbox } from 'src/components/Checkbox';
+import { Divider } from 'src/components/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Typography from 'src/components/core/Typography';
+import { Typography } from 'src/components/Typography';
 import { Currency } from 'src/components/Currency';
 import Grid from '@mui/material/Unstable_Grid2';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { useImageQuery } from 'src/queries/images';
+import { Notice } from 'src/components/Notice/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   vlan: {
@@ -88,6 +90,11 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   const classes = useStyles();
 
+  const { data: image } = useImageQuery(
+    selectedImageID ?? '',
+    Boolean(selectedImageID)
+  );
+
   // The VLAN section is shown when the user is not creating by cloning (cloning copies the network interfaces)
   const showVlans = createType !== 'fromLinode';
 
@@ -115,6 +122,29 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
       )
     );
   };
+
+  const checkBackupsWarning = () => {
+    if (accountBackups || props.backups) {
+      if (selectedLinodeID) {
+        const selectedLinode = linodesData?.find(
+          (linode) => linode.id === selectedLinodeID
+        );
+        if (
+          selectedLinode?.image?.includes('private/') ||
+          !selectedLinode?.image
+        ) {
+          return true;
+        }
+      } else if (selectedImageID && !image?.is_public) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  // The backups warning is shown when the user checks to enable backups, but they are using a custom image that may not be compatible.
+  const showBackupsWarning = checkBackupsWarning();
 
   // Check whether the source Linode has been allocated a private IP to select/unselect the 'Private IP' checkbox.
   React.useEffect(() => {
@@ -158,11 +188,17 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           ) : null}
         </Typography>
         <Grid container>
+          {showBackupsWarning && (
+            <Notice warning>
+              Linodes must have a disk formatted with an ext3 or ext4 file
+              system to use the backup service.
+            </Notice>
+          )}
           <Grid xs={12}>
             <FormControlLabel
               className={classes.label}
               control={
-                <CheckBox
+                <Checkbox
                   checked={accountBackups || props.backups}
                   onChange={changeBackups}
                   disabled={accountBackups || disabled || isBareMetal}
@@ -205,7 +241,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             <FormControlLabel
               className={classes.label}
               control={
-                <CheckBox
+                <Checkbox
                   data-testid="private_ip"
                   checked={isPrivateIPChecked}
                   onChange={togglePrivateIP}
