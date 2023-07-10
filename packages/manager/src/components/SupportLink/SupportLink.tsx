@@ -3,7 +3,7 @@ import { Link, LinkProps } from 'react-router-dom';
 import {
   EntityType,
   TicketType,
-} from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+} from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 interface SupportLinkProps {
   title?: string;
