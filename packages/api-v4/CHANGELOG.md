@@ -1,3 +1,15 @@
+## [2023-07-11] - v0.96.0
+
+
+### Added:
+
+- Endpoints for VPC ([#9361](https://github.com/linode/manager/pull/9361))
+- Endpoints for the Akamai Global Load Balancer ([#9363](https://github.com/linode/manager/pull/9363))
+
+### Changed:
+
+- Use 'canceled' instead of 'cancelled' for EntityTransferStatus ([#9335](https://github.com/linode/manager/pull/9335))
+
 ## [2023-06-27] - v0.95.1
 
 

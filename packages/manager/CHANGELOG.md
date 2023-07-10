@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-07-11] - v1.97.0
+
+
+### Added:
+
+- Light/dark mode keyboard shortcut copy on "My Settings" page ([#9286](https://github.com/linode/manager/pull/9286))
+- Outline to some country flags ([#9288](https://github.com/linode/manager/pull/9288))
+- Helper Text for the Add SHHKey Drawer form ([#9290](https://github.com/linode/manager/pull/9290))
+- React Query methods for VPC ([#9361](https://github.com/linode/manager/pull/9361))
+- Improved warning and error messaging for failed backup events ([#9364](https://github.com/linode/manager/pull/9364))
+- Add VPC feature flag ([#9368](https://github.com/linode/manager/pull/9368))
+- AGLB feature flag ([#9370](https://github.com/linode/manager/pull/9370))
+
+### Changed:
+
+- Refactor components to use TypeToConfirmDialog ([#9175](https://github.com/linode/manager/pull/9175))
+- MUI v5 Migration - Components > MenuItem ([#9295](https://github.com/linode/manager/pull/9295))
+- MUI v5 Migration - `Components > Divider` ([#9353](https://github.com/linode/manager/pull/9353))
+
+### Fixed:
+
+- Fix confirmation modal overflow on mobile ([#9289](https://github.com/linode/manager/pull/9289))
+- Object Storage > Create Access Key Drawer Layout Issue ([#9296](https://github.com/linode/manager/pull/9296))
+- Fix LinodeSelectV2 label association ([#9298](https://github.com/linode/manager/pull/9298))
+- Remove underscore in prometheus & grafana svg ([#9301](https://github.com/linode/manager/pull/9301))
+- Restore icons in DBaaS engine selection field ([#9306](https://github.com/linode/manager/pull/9306))
+- Disable delete button for public IP addresses if it's the only IP address ([#9332](https://github.com/linode/manager/pull/9332))
+- ActionMenu tooltip icon color deprecation ([#9352](https://github.com/linode/manager/pull/9352))
+- Only request logo once for invoice pdf ([#9355](https://github.com/linode/manager/pull/9355))
+- Fixed wording in Profile ([#9358](https://github.com/linode/manager/pull/9358))
+- Fix issue with notification menu crashing older safari versions ([#9360](https://github.com/linode/manager/pull/9360))
+- Volume empty state misspelling of NVMe ([#9366](https://github.com/linode/manager/pull/9366))
+
+### Tech Stories:
+
+- MUI v5 Migration - `Components > InlineMenuAction` ([#9268](https://github.com/linode/manager/pull/9268))
+- MUI v5 Migration - `Components > LandingLoading` ([#9282](https://github.com/linode/manager/pull/9282))
+- Upgrade LaunchDarkly client library ([#9285](https://github.com/linode/manager/pull/9285))
+- MUI v5 Migration - `Components > LongviewLineGraph` ([#9291](https://github.com/linode/manager/pull/9291))
+- MUI v5 Migration - Components > SingleTextFieldForm ([#9292](https://github.com/linode/manager/pull/9292))
+- Made yarn up:expose actually expose Cloud Manager on all interfaces ([#9297](https://github.com/linode/manager/pull/9297))
+- MUI v5 Migration - `Components > SelectableTableRow` ([#9299](https://github.com/linode/manager/pull/9299))
+- MUI v5 - Components > Chip ([#9310](https://github.com/linode/manager/pull/9310))
+- Link component: remove default export and improved storybook story ([#9313](https://github.com/linode/manager/pull/9313))
+- Remove `withLoadingAndError` and clean up 2FA components ([#9318](https://github.com/linode/manager/pull/9318))
+- MUI v5 Migration - Components > Toolbar ([#9319](https://github.com/linode/manager/pull/9319))
+- MUI v5 Migration - Components > Accordion (part 2) ([#9320](https://github.com/linode/manager/pull/9320))
+- MUI v5 Migration - Components > AppBar ([#9321](https://github.com/linode/manager/pull/9321))
+- MUI v5 Migration - Components > Box ([#9322](https://github.com/linode/manager/pull/9322))
+- MUI v5 Migration - Components > CopyTooltip  ([#9323](https://github.com/linode/manager/pull/9323))
+- MUI v5 Migration - Components > Button ([#9325](https://github.com/linode/manager/pull/9325))
+- MUI v5 Migration - Components > Hidden ([#9326](https://github.com/linode/manager/pull/9326))
+- MUI v5 Migration - Components > SelectionCard ([#9327](https://github.com/linode/manager/pull/9327))
+- MUI v5 Migration - Components > Typography ([#9328](https://github.com/linode/manager/pull/9328))
+- MUI v5 Migration - Components > Checkbox (part 2) ([#9338](https://github.com/linode/manager/pull/9338))
+- MUI v5 Migration - Components > Chip ([#9339](https://github.com/linode/manager/pull/9339))
+- Remove old changelog scripting ([#9340](https://github.com/linode/manager/pull/9340))
+- MUI v5 - `Components > Snackbar` ([#9359](https://github.com/linode/manager/pull/9359))
+- MUI v5 Migration - Components > Tooltip ([#9369](https://github.com/linode/manager/pull/9369))
+
 ## [2023-06-29] - v1.96.2
 
 ### Fixed:
