@@ -216,7 +216,7 @@ const Select = <
       filterOption={filterOption}
       isMulti={isMulti}
       classes={classes}
-      className={classNames(className, classes.root)}
+      className={classNames(classes.root, className)}
       classNamePrefix="react-select"
       inputId={
         inputId
