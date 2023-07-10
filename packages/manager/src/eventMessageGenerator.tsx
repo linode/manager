@@ -1,5 +1,7 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
@@ -7,7 +9,7 @@ import {
   formatEventWithAppendedText,
   formatEventWithUsername,
 } from './features/Events/Event.helpers';
-import { escapeRegExp } from './utilities/escapeRegExp';
+import { Typography } from '@mui/material';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -770,7 +772,7 @@ export const formatEventWithAPIMessage = (e: Event) => {
   return `${e.action}: ${e.message}`;
 };
 
-export default (e: Event): string => {
+export default (e: Event): JSX.Element | string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators
@@ -811,54 +813,38 @@ export default (e: Event): string => {
     message
   );
 
-  /** return either the formatted message or an empty string */
-  const formattedMessage = applyLinking(e, messageWithUsername);
-  return applyBolding(e, formattedMessage);
+  return applyLinkingAndBolding(e, messageWithUsername);
 };
 
-function applyBolding(event: Event, message: string) {
-  if (!message) {
-    return '';
-  }
+const wordsToBold: string[] = [
+  'added',
+  'attached',
+  'booted',
+  'cloned',
+  'created',
+  'deleted',
+  'detached',
+  'disabled',
+  'duplicated',
+  'enabled',
+  'failed',
+  'migrated',
+  'reboot',
+  'rebooted',
+  'rebuilt',
+  'removed',
+  'reset',
+  'Resize',
+  'resized',
+  'revised',
+  'revoked',
+  'shut down',
+  'updated',
+  'Upgrade',
+  'upgraded',
+];
 
-  const wordsToBold: string[] = [
-    'added',
-    'attached',
-    'booted',
-    'cloned',
-    'created',
-    'deleted',
-    'detached',
-    'disabled',
-    'duplicated',
-    'enabled',
-    'failed',
-    'migrated',
-    'reboot',
-    'rebooted',
-    'rebuilt',
-    'removed',
-    'reset',
-    'Resize',
-    'resized',
-    'revised',
-    'revoked',
-    'shut down',
-    'updated',
-    'Upgrade',
-    'upgraded',
-  ];
-
-  let newMessage = message;
-
-  for (const word of wordsToBold) {
-    newMessage = newMessage.replace(word, `**${word}**`);
-  }
-
-  return newMessage;
-}
-
-export function applyLinking(event: Event, message: string) {
+export const applyLinkingAndBolding = (event: Event, message: string) => {
   if (!message) {
     return '';
   }
@@ -870,24 +856,82 @@ export function applyLinking(event: Event, message: string) {
     false
   );
 
-  let newMessage = message;
-
   if (event.entity?.label && entityLinkTarget) {
-    const label = event.entity.label;
-    const nonTickedLabels = new RegExp(`(?<!\`)${escapeRegExp(label)}`, 'g');
-
-    newMessage = newMessage.replace(
-      nonTickedLabels,
-      `<a href="${entityLinkTarget}">${label}</a> `
-    );
+    return createMessageJSX(message, event.entity.label, entityLinkTarget);
   }
-
   if (event.secondary_entity?.label && secondaryEntityLinkTarget) {
-    newMessage = newMessage.replace(
+    return createMessageJSX(
+      message,
       event.secondary_entity.label,
-      `<a href="${secondaryEntityLinkTarget}">${event.secondary_entity.label}</a>`
+      secondaryEntityLinkTarget
     );
   }
 
-  return newMessage;
-}
+  return createMessageJSX(message, '', '');
+};
+
+const createMessageJSX = (
+  message: string,
+  linkLabel: string,
+  linkTarget: string
+) => {
+  let words;
+
+  // we don't want to split the support ticket title since we want to link it
+  if (message.includes('Support ticket "')) {
+    const ticketTitle = message.match(/"(.*?)"/);
+    if (ticketTitle) {
+      words = message.split('"').map((string) => {
+        if (string !== ticketTitle[1]) {
+          return string.split(' ');
+        }
+        return string;
+      });
+      words = words.flat();
+    }
+  } else {
+    // split every word
+    words = message.split(' ');
+  }
+
+  return (
+    <Typography>
+      {words?.map((word) => {
+        const key = `${word}-${message.length}`;
+
+        if (word === '``') {
+          return `${word} `;
+        }
+        if (word.startsWith('`')) {
+          return (
+            <>
+              <code key={key}>{word.substring(1, word.length - 1)}</code>{' '}
+            </>
+          );
+        }
+        if (wordsToBold.includes(word)) {
+          return <strong key={key}>{word} </strong>;
+        }
+        // other bolded words such as username
+        if (/\*\*(.*?)\*\*/.test(word)) {
+          if (word.endsWith('.')) {
+            return (
+              <strong key={key}>{word.substring(2, word.length - 3)}.</strong>
+            );
+          }
+          return (
+            <strong key={key}>{word.substring(2, word.length - 2)} </strong>
+          );
+        }
+        if (word === linkLabel) {
+          return (
+            <Link key={key} to={linkTarget}>
+              {linkLabel}{' '}
+            </Link>
+          );
+        }
+        return `${word} `;
+      })}
+    </Typography>
+  );
+};

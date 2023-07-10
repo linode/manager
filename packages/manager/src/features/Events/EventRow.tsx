@@ -6,7 +6,6 @@ import { Hidden } from 'src/components/Hidden';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -68,7 +67,7 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
 export interface RowProps {
   action: EventAction;
   link?: string | (() => void);
-  message?: string | void;
+  message?: JSX.Element | string;
   status?: string;
   type:
     | 'linode'
@@ -109,13 +108,7 @@ export const Row: React.FC<RowProps> = (props) => {
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
-        <HighlightedMarkdown
-          textOrMarkdown={message}
-          sanitizeOptions={{
-            allowedTags: ['a'],
-            disallowedTagsMode: 'discard',
-          }}
-        />
+        {message}
       </TableCell>
       <TableCell parentColumn="Relative Date">
         {timestamp.toRelative()}

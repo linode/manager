@@ -16,7 +16,7 @@ import { ApplicationStore } from 'src/store';
 
 export interface EventInfo {
   duration: string;
-  message: string | null;
+  message: JSX.Element | string;
   type: EntityVariants;
   status?: string;
 }

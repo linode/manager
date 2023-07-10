@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import classNames from 'classnames';
 import Divider from 'src/components/core/Divider';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Typography } from 'src/components/Typography';
 import useEventInfo from './useEventInfo';
 import { Event } from '@linode/api-v4/lib/account/types';
@@ -31,11 +30,7 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
     return null;
   }
 
-  const eventMessage = (
-    <div className={unseenEventClass}>
-      <HighlightedMarkdown textOrMarkdown={message} />
-    </div>
-  );
+  const eventMessage = <div className={unseenEventClass}>{message}</div>;
 
   return (
     <>
