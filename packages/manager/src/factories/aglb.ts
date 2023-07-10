@@ -327,50 +327,27 @@ export const createRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
 /**
  * PUT /v4/aglb/routes/{route-id}
  */
-export const updateRouteFactory = Factory.Sync.makeFactory<RoutePayload2[]>([
-  {
-    label: 'images-route',
-    rules: [
-      {
-        match_condition: {
-          host: 'www.acme.com',
-          path: '/images/',
-        },
-        service_targets: [
-          {
-            service_target_name: 'images-backend-aws',
-            service_target_percentage: 70,
-          },
-          {
-            service_target_name: 'images-backend-linode',
-            service_target_percentage: 30,
-          },
-        ],
+export const updateRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
+  label: 'images-route',
+  rules: [
+    {
+      match_condition: {
+        host: 'www.anotherdomain.com',
+        path: '/anotherpath/',
       },
-    ],
-  },
-  {
-    label: 'foo-route',
-    rules: [
-      {
-        match_condition: {
-          host: 'www.bar.com',
-          path: '/foo/',
+      service_targets: [
+        {
+          service_target_name: 'images-backend-aws',
+          service_target_percentage: 50,
         },
-        service_targets: [
-          {
-            service_target_name: 'images-backend-aws',
-            service_target_percentage: 70,
-          },
-          {
-            service_target_name: 'images-backend-linode',
-            service_target_percentage: 30,
-          },
-        ],
-      },
-    ],
-  },
-]);
+        {
+          service_target_name: 'images-backend-linode',
+          service_target_percentage: 50,
+        },
+      ],
+    },
+  ],
+});
 
 /**
  * DELETE /v4/aglb/routes/{route-id}
@@ -462,20 +439,20 @@ export const updateServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
     label: 'images-backend-aws',
     endpoints: [
       {
-        ip: '192.168.0.100',
-        port: 8080,
+        ip: '192.168.0.200',
+        port: 6060,
         capacity: 100,
         hard_rate_limit: 1000,
       },
     ],
-    ca_certificate: 'my-cms-certificate',
+    ca_certificate: 'another-certificate',
     load_balancing_policy: 'ROUND_ROBIN',
     health_check_interval: 10,
     health_check_timeout: 5,
     health_check_unhealthy_thresh: 3,
     health_check_healthy_thresh: 2,
     health_check_path: '/health',
-    health_check_host: 'example1.com',
+    health_check_host: 'anotherexample1.com',
   }
 );
 
