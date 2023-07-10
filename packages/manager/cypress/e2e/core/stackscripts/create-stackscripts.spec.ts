@@ -128,7 +128,7 @@ const createLinodeAndImage = async () => {
 };
 
 authenticate();
-describe('stackscripts', () => {
+describe('Create stackscripts', () => {
   /*
    * - Creates a StackScript with user-defined fields.
    * - Confirms that an error message appears upon submitting script without a shebang.

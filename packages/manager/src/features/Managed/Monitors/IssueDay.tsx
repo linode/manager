@@ -6,7 +6,7 @@ import Good from 'src/assets/icons/monitor-ok.svg';
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 

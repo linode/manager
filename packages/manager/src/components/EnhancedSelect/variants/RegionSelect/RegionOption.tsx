@@ -2,7 +2,7 @@ import * as React from 'react';
 import { OptionProps } from 'react-select';
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
 import Grid from '@mui/material/Unstable_Grid2';

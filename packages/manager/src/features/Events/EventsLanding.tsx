@@ -1,6 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
-import { Filter } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
@@ -24,6 +23,7 @@ import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 import EventRow from './EventRow';
 import { useEventsInfiniteQuery } from 'src/queries/events';
+import { Filter } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -58,7 +58,7 @@ interface EventsLandingProps {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
 }
 
-type CombinedProps = EventsLandingProps & StateProps & WithSnackbarProps;
+type CombinedProps = EventsLandingProps & StateProps;
 
 export const EventsLanding = (props: CombinedProps) => {
   const {
@@ -70,6 +70,7 @@ export const EventsLanding = (props: CombinedProps) => {
   } = props;
 
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     data: eventsData,
@@ -86,6 +87,14 @@ export const EventsLanding = (props: CombinedProps) => {
   );
 
   const loading = isLoading || isFetchingNextPage || entitiesLoading;
+
+  React.useEffect(() => {
+    if (error) {
+      enqueueSnackbar('There was an error loading more events', {
+        variant: 'error',
+      });
+    }
+  }, [enqueueSnackbar, error]);
 
   return (
     <>
@@ -209,9 +218,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, EventsLandingProps>(
-  connected,
-  withSnackbar
-);
+const enhanced = compose<CombinedProps, EventsLandingProps>(connected);
 
 export default enhanced(EventsLanding);

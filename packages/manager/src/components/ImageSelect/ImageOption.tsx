@@ -7,7 +7,7 @@ import { OptionProps } from 'react-select';
 import CloudInitIncompatibleIcon from 'src/assets/icons/cloud-init-incompatible.svg';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
-import TooltipIcon from 'src/components/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useMetadataCustomerTag } from 'src/features/Images/utils';
 import useFlags from 'src/hooks/useFlags';
 

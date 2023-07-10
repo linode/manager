@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import Checkbox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
