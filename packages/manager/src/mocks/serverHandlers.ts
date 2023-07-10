@@ -76,6 +76,23 @@ import {
   proDedicatedTypeFactory,
   kubernetesVersionFactory,
   paymentFactory,
+  getEntrypointsFactory,
+  getEntrypointFactory,
+  createEntrypointFactory,
+  deleteEntrypointFactory,
+  getLoadbalancersFactory,
+  getLoadbalancerFactory,
+  createLoadbalancerFactory,
+  createLoadbalancerWithAllChildrenFactory,
+  deleteLoadbalancerFactory,
+  getRoutesFactory,
+  createRouteFactory,
+  updateRouteFactory,
+  deleteRouteFactory,
+  getServiceTargetsFactory,
+  createServiceTargetFactory,
+  updateServiceTargetFactory,
+  deleteServiceTargetFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
@@ -277,6 +294,75 @@ const databases = [
 
   rest.delete('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+];
+
+const aglb = [
+  // Entrypoints
+  rest.get('*/aglb/entrypoints', (req, res, ctx) => {
+    return res(ctx.json(getEntrypointsFactory.build()));
+  }),
+  rest.get('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
+    return res(ctx.json(getEntrypointFactory.build()));
+  }),
+  rest.post('*/aglb/entrypoints', (req, res, ctx) => {
+    return res(ctx.json(createEntrypointFactory.build()));
+  }),
+  rest.put('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
+    const id = Number(req.params.entrypointId);
+    const body = req.body as any;
+    return res(ctx.json({ ...getEntrypointFactory.build({ id }), ...body }));
+  }),
+  rest.delete('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
+    return res(ctx.json(deleteEntrypointFactory.build()));
+  }),
+  // Load Balancers
+  rest.get('*/aglb/loadbalancers', (req, res, ctx) => {
+    return res(ctx.json(getLoadbalancersFactory.build()));
+  }),
+  rest.get('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
+    return res(ctx.json(getLoadbalancerFactory.build()));
+  }),
+  rest.post('*/aglb/loadbalancers', (req, res, ctx) => {
+    const loadbalancer1 = createLoadbalancerFactory.build();
+    const loadbalancer2 = createLoadbalancerWithAllChildrenFactory.build();
+    return res(ctx.json([loadbalancer1, loadbalancer2]));
+  }),
+  rest.put('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
+    const id = Number(req.params.loadbalancerId);
+    const body = req.body as any;
+    return res(ctx.json({ ...getLoadbalancerFactory.build({ id }), ...body }));
+  }),
+  rest.delete('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
+    return res(ctx.json(deleteLoadbalancerFactory.build()));
+  }),
+  // Routes
+  rest.get('*/aglb/routes', (req, res, ctx) => {
+    return res(ctx.json(getRoutesFactory.build()));
+  }),
+  rest.post('*/aglb/routes', (req, res, ctx) => {
+    return res(ctx.json(createRouteFactory.build()));
+  }),
+  rest.put('*/aglb/routes/:routeId', (req, res, ctx) => {
+    const body = req.body as any;
+    return res(ctx.json({ ...updateRouteFactory.build(), ...body }));
+  }),
+  rest.delete('*/aglb/routes/:routeId', (req, res, ctx) => {
+    return res(ctx.json(deleteRouteFactory.build()));
+  }),
+  // Service Targets
+  rest.get('*/aglb/service-targets', (req, res, ctx) => {
+    return res(ctx.json(getServiceTargetsFactory.build()));
+  }),
+  rest.post('*/aglb/service-targets', (req, res, ctx) => {
+    return res(ctx.json(createServiceTargetFactory.build()));
+  }),
+  rest.put('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
+    const body = req.body as any;
+    return res(ctx.json({ ...updateServiceTargetFactory.build(), ...body }));
+  }),
+  rest.delete('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
+    return res(ctx.json(deleteServiceTargetFactory.build()));
   }),
 ];
 
@@ -1265,6 +1351,7 @@ export const handlers = [
   ...entityTransfers,
   ...statusPage,
   ...databases,
+  ...aglb,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.

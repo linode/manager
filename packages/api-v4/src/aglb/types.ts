@@ -13,6 +13,7 @@ interface LoadbalancerPayload {
 }
 
 export interface CreateLoadbalancerPayload extends LoadbalancerPayload {
+  // I don't like an optional entrypoints field but it'll do for now
   entrypoints?: EntrypointPayload[];
 }
 
