@@ -26,4 +26,7 @@ export const getBetas = (params?: Params, filter?: Filter) =>
  *
  */
 export const getBeta = (betaId: string) =>
-  Request<Beta>(setURL(`${API_ROOT}/betas/${betaId}`), setMethod('GET'));
+  Request<Beta>(
+    setURL(`${API_ROOT}/betas/${encodeURI(betaId)}`),
+    setMethod('GET')
+  );
