@@ -1,19 +1,20 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Box from '@mui/material/Box';
+import { Theme } from '@mui/material/styles';
+import {
+  default as _TextField,
+  StandardTextFieldProps,
+} from '@mui/material/TextField';
 import { clamp } from 'ramda';
 import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
-import {
-  default as _TextField,
-  StandardTextFieldProps,
-} from '@mui/material/TextField';
-import { TooltipProps as _TooltipProps } from 'src/components/core/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipProps as _TooltipProps } from 'src/components/Tooltip';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
+import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   helpWrapper: {
@@ -142,7 +143,11 @@ interface BaseProps {
 
 type Value = string | number | undefined | null;
 
-interface ToolTipProps {
+interface LabelToolTipProps {
+  labelTooltipText?: string | JSX.Element;
+}
+
+interface InputToolTipProps {
   tooltipPosition?: _TooltipProps['placement'];
   tooltipText?: string | JSX.Element;
   tooltipInteractive?: boolean;
@@ -155,7 +160,10 @@ interface TextFieldPropsOverrides extends StandardTextFieldProps {
   label: string;
 }
 
-export type TextFieldProps = BaseProps & TextFieldPropsOverrides & ToolTipProps;
+export type TextFieldProps = BaseProps &
+  TextFieldPropsOverrides &
+  LabelToolTipProps &
+  InputToolTipProps;
 
 export const TextField = (props: TextFieldProps) => {
   const { classes, cx } = useStyles();
@@ -178,6 +186,7 @@ export const TextField = (props: TextFieldProps) => {
     inputProps,
     InputProps,
     label,
+    labelTooltipText,
     loading,
     max,
     min,
@@ -273,22 +282,33 @@ export const TextField = (props: TextFieldProps) => {
         [errorScrollClassName]: !!errorText,
       })}
     >
-      <InputLabel
-        data-qa-textfield-label={label}
-        className={cx({
-          [classes.wrapper]: noMarginTop ? false : true,
-          [classes.noTransform]: true,
-          'visually-hidden': hideLabel,
-        })}
-        htmlFor={validInputId}
-      >
-        {label}
-        {required ? (
-          <span className={classes.label}> (required)</span>
-        ) : optional ? (
-          <span className={classes.label}> (optional)</span>
-        ) : null}
-      </InputLabel>
+      <Box display="flex">
+        <InputLabel
+          data-qa-textfield-label={label}
+          className={cx({
+            [classes.wrapper]: noMarginTop ? false : true,
+            [classes.noTransform]: true,
+            'visually-hidden': hideLabel,
+          })}
+          htmlFor={validInputId}
+        >
+          {label}
+          {required ? (
+            <span className={classes.label}> (required)</span>
+          ) : optional ? (
+            <span className={classes.label}> (optional)</span>
+          ) : null}
+        </InputLabel>
+        {labelTooltipText && (
+          <TooltipIcon
+            text={labelTooltipText}
+            status="help"
+            sxTooltipIcon={{
+              padding: '8px 0px 0px 8px',
+            }}
+          />
+        )}
+      </Box>
 
       {helperText && helperTextPosition === 'top' && (
         <FormHelperText

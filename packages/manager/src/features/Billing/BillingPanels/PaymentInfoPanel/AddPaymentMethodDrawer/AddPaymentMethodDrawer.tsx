@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PaymentMethod } from '@linode/api-v4/lib/account';
 import { VariantType } from 'notistack';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -12,7 +12,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import Box from '@mui/material/Box';
 
 interface Props {

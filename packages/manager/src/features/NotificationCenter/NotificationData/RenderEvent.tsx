@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Box } from 'src/components/Box';
 import classNames from 'classnames';
-import Divider from 'src/components/core/Divider';
+import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import useEventInfo from './useEventInfo';
 import { Event } from '@linode/api-v4/lib/account/types';

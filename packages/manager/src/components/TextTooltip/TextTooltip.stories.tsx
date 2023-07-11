@@ -37,7 +37,7 @@ export const Customized: StoryObj<TextTooltipProps> = {
 };
 
 const meta: Meta<TextTooltipProps> = {
-  title: 'Elements/Tooltip/Text Tooltip',
+  title: 'Components/Tooltip/Text Tooltip',
   args: {
     displayText: 'tooltip text',
     minWidth: 375,
