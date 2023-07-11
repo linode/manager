@@ -28,7 +28,10 @@ const LoadBalancer = () => {
           path="/loadbalancers/entrypoints/create"
         />
         <Route component={LoadBalancerCreate} path="/loadbalancers/create" />
-        <Route component={LoadBalancerDetail} path="/loadbalancer/:id/:tab?" />
+        <Route
+          component={LoadBalancerDetail}
+          path="/loadbalancer/:loadbalancerId/:tab?"
+        />
         <Route component={LoadBalancerLanding} path="/loadbalancers/:tab?" />
       </Switch>
     </React.Suspense>
