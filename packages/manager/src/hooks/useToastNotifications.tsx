@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { SupportLink } from 'src/components/SupportLink';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics';
-import { Event } from '@linode/api-v4/lib/account/types';
 import { styled } from '@mui/material/styles';
 
 export const useToastNotifications = () => {
@@ -285,10 +284,6 @@ const toastSuccessAndFailure = (options: ToastOptions) => {
     return;
   }
 };
-
-export const getLabel = (event: Event) => event.entity?.label ?? '';
-export const getSecondaryLabel = (event: Event) =>
-  event.secondary_entity?.label ?? '';
 
 const formatLink = (text: string, link: string, handleClick?: any) => {
   return (
