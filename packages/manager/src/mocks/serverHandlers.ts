@@ -76,16 +76,14 @@ import {
   proDedicatedTypeFactory,
   kubernetesVersionFactory,
   paymentFactory,
-  getEntrypointsFactory,
   getEntrypointFactory,
   createEntrypointFactory,
   deleteEntrypointFactory,
-  getLoadbalancersFactory,
   getLoadbalancerFactory,
   createLoadbalancerFactory,
   createLoadbalancerWithAllChildrenFactory,
   deleteLoadbalancerFactory,
-  getRoutesFactory,
+  getRouteFactory,
   createRouteFactory,
   updateRouteFactory,
   deleteRouteFactory,
@@ -300,7 +298,7 @@ const databases = [
 const aglb = [
   // Entrypoints
   rest.get('*/aglb/entrypoints', (req, res, ctx) => {
-    return res(ctx.json(getEntrypointsFactory.build()));
+    return res(ctx.json(getEntrypointFactory.buildList(3)));
   }),
   rest.get('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
     return res(ctx.json(getEntrypointFactory.build()));
@@ -318,7 +316,7 @@ const aglb = [
   }),
   // Load Balancers
   rest.get('*/aglb/loadbalancers', (req, res, ctx) => {
-    return res(ctx.json(getLoadbalancersFactory.build()));
+    return res(ctx.json(getLoadbalancerFactory.buildList(3)));
   }),
   rest.get('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
     return res(ctx.json(getLoadbalancerFactory.build()));
@@ -338,10 +336,10 @@ const aglb = [
   }),
   // Routes
   rest.get('*/aglb/routes', (req, res, ctx) => {
-    return res(ctx.json(getRoutesFactory.build()));
+    return res(ctx.json(getRouteFactory.buildList(4)));
   }),
   rest.post('*/aglb/routes', (req, res, ctx) => {
-    return res(ctx.json(createRouteFactory.build()));
+    return res(ctx.json(createRouteFactory.buildList(4)));
   }),
   rest.put('*/aglb/routes/:routeId', (req, res, ctx) => {
     const body = req.body as any;
@@ -352,7 +350,7 @@ const aglb = [
   }),
   // Service Targets
   rest.get('*/aglb/service-targets', (req, res, ctx) => {
-    return res(ctx.json(getServiceTargetsFactory.build()));
+    return res(ctx.json(getServiceTargetsFactory.buildList(2)));
   }),
   rest.post('*/aglb/service-targets', (req, res, ctx) => {
     return res(ctx.json(createServiceTargetFactory.build()));

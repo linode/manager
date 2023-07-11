@@ -13,7 +13,7 @@ interface LoadbalancerPayload {
 }
 
 export interface CreateLoadbalancerPayload extends LoadbalancerPayload {
-  // I don't like an optional entrypoints field but it'll do for now
+  // TODO: AGLB - I don't like an optional entrypoints field but it'll do for now
   entrypoints?: EntrypointPayload[];
 }
 
@@ -40,7 +40,7 @@ export interface EntrypointPayload {
   port: number;
   protocol: Protocol;
   certificate_table: CertificateTable[];
-  // TODO: is it how we want to do it?
+  // TODO: AGLB - is it how we want to do it?
   // for updating an entrypoint we want a list of IDs,
   // but when creating a load balancer with all children it needs the full payload
   // maybe we should have a different type for each case but for now I'll just use this
@@ -102,7 +102,7 @@ export interface Endpoint {
   hard_rate_limit: number;
 }
 
-// I don't know if we gonna need this, but the RoutePayload differs when creating an entrypoint
+// TODO: AGLB - I don't know if we gonna need this, but the RoutePayload differs when creating an entrypoint
 // Hopefully this is a mistake in the in-progress API docs and we can consolidate these types
 // For now I care to match the API docs for the factories
 export interface RoutePayload2 {
