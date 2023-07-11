@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Hidden } from 'src/components/Hidden';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

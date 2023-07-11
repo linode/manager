@@ -5,7 +5,7 @@ import InfoOutline from '@mui/icons-material/InfoOutlined';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 import { IconButton } from 'src/components/IconButton';
-import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
+import { Tooltip, TooltipProps } from 'src/components/Tooltip';
 import { SxProps } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 
@@ -19,18 +19,62 @@ type TooltipIconStatus =
 
 interface Props
   extends Omit<TooltipProps, 'leaveDelay' | 'title' | 'children'> {
+  /**
+   * Pass specific styles to the Tooltip
+   */
   sx?: SxProps;
+  /**
+   * Pass specific CSS styling for the SVG icon.
+   */
   sxTooltipIcon?: SxProps;
+  /**
+   * The tooltip's contents
+   */
   text: string | JSX.Element;
+  /**
+   * Use this custom icon when `status` is `other`
+   * @todo this seems like a flaw... passing an icon should not require `status` to be `other`
+   */
   icon?: JSX.Element;
+  /**
+   * An optional className that does absolutely nothing
+   */
   className?: string;
+  /**
+   * Makes the tooltip interactive (stays open when cursor is over tooltip)
+   * @default false
+   */
   interactive?: boolean;
+  /**
+   * Sets the icon and color
+   */
   status: TooltipIconStatus;
+  /**
+   * Enables a leaveDelay of 3000ms
+   * @default false
+   */
   leaveDelay?: boolean;
+  /**
+   * Tooltip placement
+   * @default 'bottom'
+   */
   tooltipPosition?: TooltipProps['placement'];
+  /**
+   * Send event analytics
+   */
   tooltipAnalyticsEvent?: () => void;
 }
-
+/**
+ * ## Usage
+ *
+ * Tooltips can be attached to any active element (text fields, buttons, etc.) on a page. They provide descriptions or explanations for their paired elements. Thus, tooltips are highly contextual and specific and don’t explain the bigger picture or entire task flow.
+ *
+ * **Guidelines**
+ * - Don’t use tooltips for information that is vital to task completion.
+ * - Provide brief and helpful content inside the tooltip.
+ * - Support _both_ mouse _and_ keyboard hover.
+ * - Present a link to additional content if needed.
+ */
 export const TooltipIcon = (props: Props) => {
   const theme = useTheme();
 

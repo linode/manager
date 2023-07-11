@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
 import _Button, { ButtonProps as _ButtonProps } from '@mui/material/Button';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useTheme, styled, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { isPropValid } from '../../utilities/isPropValid';

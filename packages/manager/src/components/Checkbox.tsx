@@ -5,7 +5,7 @@ import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 import _Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 
 interface Props extends CheckboxProps {
   /**

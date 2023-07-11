@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Tooltip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { styled } from '@mui/material/styles';
 
 interface Props {
