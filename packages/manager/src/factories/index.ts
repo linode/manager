@@ -5,6 +5,7 @@ export * from './accountOAuth';
 export * from './accountPayment';
 export * from './aglb';
 export * from './billing';
+export * from './betas';
 export * from './config';
 export * from './databases';
 export * from './disk';

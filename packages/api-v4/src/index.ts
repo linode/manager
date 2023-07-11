@@ -44,6 +44,8 @@ export * from './volumes';
 
 export * from './vpcs';
 
+export * from './betas';
+
 export {
   baseRequest,
   setToken,
