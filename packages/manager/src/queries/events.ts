@@ -25,15 +25,20 @@ import {
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 
 const queryKey = 'events';
+const infiniteEventsQueryKey = (filter: Filter | undefined = {}) => [
+  queryKey,
+  'infinite',
+  ...(filter ? [filter] : []),
+];
 const eventsPollingQueryKey = (filter?: Filter) => [
   queryKey,
   'polling',
   filter,
 ];
-const infiniteEventsQueryKey = (filter: Filter | undefined = {}) => [
+const pollingIntervalQueryKey = (pollingQueryKey: QueryKey) => [
   queryKey,
-  'infinite',
-  ...(filter ? [filter] : []),
+  'interval',
+  pollingQueryKey,
 ];
 
 export interface EventsQueryOptions {
@@ -120,7 +125,12 @@ const useEventsPolling = (
   eventHandler: (event: Event) => void,
   customFilter: Filter = {}
 ) => {
-  const [intervalMultiplier, setIntervalMultiplier] = React.useState(1);
+  const queryKey = eventsPollingQueryKey(customFilter);
+  const {
+    pollingInterval,
+    incrementPollingInterval,
+    resetPollingInterval,
+  } = usePollingInterval(queryKey);
 
   // This solves the 'split-second' problem:
   // We overlap the filter by 1 second to avoid missing events that occurred just after we polled (during the same second).
@@ -129,7 +139,7 @@ const useEventsPolling = (
   const [ignoreEvents, setIgnoreEvents] = React.useState<Event[]>();
 
   useQuery<Event[], APIError[]>(
-    eventsPollingQueryKey(customFilter),
+    queryKey,
     () =>
       getEvents(
         undefined,
@@ -143,14 +153,12 @@ const useEventsPolling = (
       ).then((response) => response.data),
     {
       enabled,
-      refetchInterval: DISABLE_EVENT_THROTTLE
-        ? 500
-        : INTERVAL * intervalMultiplier,
+      refetchInterval: pollingInterval,
       retryDelay: 5000,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       onSuccess: (events) => {
-        setIntervalMultiplier(Math.min(intervalMultiplier + 1, 16));
+        incrementPollingInterval();
         const newLatestEventTime = events.reduce(
           mostRecentCreated,
           latestEventTime
@@ -171,7 +179,26 @@ const useEventsPolling = (
     }
   );
 
-  return { resetEventsPolling: () => setIntervalMultiplier(1) };
+  return { resetEventsPolling: resetPollingInterval };
+};
+
+const usePollingInterval = (pollingQueryKey: QueryKey) => {
+  const queryKey = pollingIntervalQueryKey(pollingQueryKey);
+  const queryClient = useQueryClient();
+  const { data: intervalMultiplier = 1 } = useQuery(queryKey, () =>
+    queryClient.getQueryData<number>(queryKey)
+  );
+  return {
+    pollingInterval: DISABLE_EVENT_THROTTLE
+      ? 500
+      : intervalMultiplier * INTERVAL,
+    incrementPollingInterval: () =>
+      queryClient.setQueryData<number>(
+        queryKey,
+        Math.min(intervalMultiplier + 1, 16)
+      ),
+    resetPollingInterval: () => queryClient.setQueryData<number>(queryKey, 1),
+  };
 };
 
 const updateEventsCache = (
