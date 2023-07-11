@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { matchPath, useHistory, useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader/LandingHeader';
 import { SafeTabPanel } from 'src/components/SafeTabPanel/SafeTabPanel';
@@ -18,7 +18,7 @@ const EntryPointLanding = React.lazy(
 const LoadBalancerLanding = () => {
   const history = useHistory();
   const { tab } = useParams<{
-    tab?: 'loadbalancers' | 'routes' | 'entrypoints';
+    tab?: 'routes' | 'entrypoints';
   }>();
 
   const tabs = [
@@ -36,32 +36,33 @@ const LoadBalancerLanding = () => {
     },
   ];
 
-  const realTabs = ['loadbalancers', 'routes', 'entrypoints'];
+  const [index, setIndex] = React.useState(
+    tabs.findIndex(
+      (tab) =>
+        Boolean(matchPath(tab.routeName, { path: location.pathname })) || 0
+    )
+  );
 
   const handleTabChange = (index: number) => {
+    setIndex(index);
     history.push(tabs[index].routeName);
   };
 
-  const createButtonText = () => {
-    let buttonText = 'Create ';
-
-    if (tab === 'routes') {
-      buttonText += 'Route';
-    } else if (tab === 'entrypoints') {
-      buttonText += 'Service Target';
-    } else {
-      buttonText += 'Load Balancer';
-    }
-    return buttonText;
-  };
+  const createButtonText = tab
+    ? tab === 'routes'
+      ? 'Create Route'
+      : tab === 'entrypoints'
+      ? 'Create Service Target'
+      : 'Create Load Balancer'
+    : 'Create Load Balancer';
 
   const createButtonAction = () => {
-    if (tab === 'loadbalancers') {
-      history.push(`/loadbalancers/create`);
-    } else if (tab === 'routes') {
+    if (tab === 'routes') {
       history.push(`/loadbalancers/routes/create`);
     } else if (tab === 'entrypoints') {
       history.push(`/loadbalancers/entrypoints/create`);
+    } else {
+      history.push(`/loadbalancers/create`);
     }
   };
 
@@ -70,21 +71,15 @@ const LoadBalancerLanding = () => {
       <DocumentTitleSegment segment="Akamai Global Load Balancers" />
       <LandingHeader
         breadcrumbProps={{ pathname: '/loadbalancers' }}
-        createButtonText={createButtonText()}
-        docsLink="" // TODO: AGLB
+        createButtonText={createButtonText}
+        docsLabel="Docs"
+        docsLink="" // TODO: AGLB -  Add docs link
         entity="Akamai Global Load Balancers"
         onButtonClick={createButtonAction}
         removeCrumbX={1}
         title="Akamai Global Load Balancers"
       />
-      <Tabs
-        index={
-          realTabs.findIndex((t) => t === tab) !== -1
-            ? realTabs.findIndex((t) => t === tab)
-            : 0
-        }
-        onChange={handleTabChange}
-      >
+      <Tabs index={index} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>

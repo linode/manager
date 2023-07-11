@@ -84,7 +84,7 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         href: '/volumes',
       },
       {
-        display: 'LoadBalancers',
+        display: 'Load Balancers',
         href: '/loadbalancers',
       },
       {
