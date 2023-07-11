@@ -114,7 +114,8 @@ interface ActionPanelProps extends BoxProps {
 const ActionsPanel = (props: ActionPanelProps) => {
   const {
     className,
-    showPrimary: primary,
+    showPrimary,
+    showSecondary,
     primaryButtonAriaDescribedBy,
     primaryButtonDataTestId,
     primaryButtonDisabled,
@@ -145,7 +146,7 @@ const ActionsPanel = (props: ActionPanelProps) => {
       className={cx(className, 'actionPanel')}
       {...rest}
     >
-      {secondary ? (
+      {showSecondary ? (
         <Button
           {...{ [secondaryButtonDataQAProp]: true }}
           buttonType="secondary"
@@ -160,7 +161,7 @@ const ActionsPanel = (props: ActionPanelProps) => {
           {secondaryButtonText}
         </Button>
       ) : null}
-      {primary ? (
+      {showPrimary ? (
         <Button
           {...{ [primaryButtonDataQAProp]: true }}
           aria-describedby={primaryButtonAriaDescribedBy}
