@@ -311,7 +311,7 @@ const MainContent = (props: CombinedProps) => {
                             <Route path="/volumes" component={Volumes} />
                             <Redirect path="/volumes*" to="/volumes" />
                             <Route
-                              path="/loadbalancers"
+                              path="/loadbalancer*"
                               component={LoadBalancers}
                             />
                             <Route

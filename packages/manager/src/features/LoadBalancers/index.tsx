@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const LoadBalancerLanding = React.lazy(
@@ -18,11 +18,7 @@ const RouteCreate = React.lazy(
   () => import('./Routes/RouteCreate/RouteCreate')
 );
 
-type CombinedProps = RouteComponentProps;
-
-const LoadBalancer = (props: CombinedProps) => {
-  const path = props.match.path;
-
+const LoadBalancer = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
@@ -32,7 +28,7 @@ const LoadBalancer = (props: CombinedProps) => {
           path="/loadbalancers/entrypoints/create"
         />
         <Route component={LoadBalancerCreate} path="/loadbalancers/create" />
-        <Route component={LoadBalancerDetail} path={`${path}/:id/:tab`} />
+        <Route component={LoadBalancerDetail} path="/loadbalancer/:id/:tab?" />
         <Route component={LoadBalancerLanding} path="/loadbalancers/:tab?" />
       </Switch>
     </React.Suspense>
