@@ -1,10 +1,13 @@
 import { Event } from '@linode/api-v4/lib/account';
+import { render } from '@testing-library/react';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { entityFactory, eventFactory } from 'src/factories/events';
 import getEventMessage, {
+  applyLinkingAndBolding,
   eventMessageCreators,
   safeSecondaryEntityLabel,
 } from './eventMessageGenerator';
-import { applyLinking } from './eventMessageGenerator';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -29,9 +32,10 @@ describe('Event message generation', () => {
         status: 'scheduled',
         entity: null,
       };
-      const result = getEventMessage(mockEvent as Event);
 
-      expect(result).toBe('');
+      const { container } = render(<>{getEventMessage(mockEvent as Event)}</>);
+
+      expect(container.firstElementChild?.innerHTML).toBe('""');
     });
 
     it('should call the message generator with the event', () => {
@@ -95,64 +99,68 @@ describe('Event message generation', () => {
     it('should return empty string if message is falsy', () => {
       const mockEvent = eventFactory.build({ action: 'domain_record_create' });
       const message = null;
-      const result = applyLinking(mockEvent, message as any); // casting since message is a required prop
+      const { getByText } = render(
+        applyLinkingAndBolding(mockEvent, message as any)
+      );
 
-      expect(result).toEqual('');
+      getByText(`""`);
     });
 
     it('should replace entity label with link if entity and link exist', async () => {
       const mockEvent = eventFactory.build({ entity });
       const message = 'created entity foo';
-      const result = applyLinking(mockEvent, message);
+      const { getByRole } = render(
+        <BrowserRouter>
+          {applyLinkingAndBolding(mockEvent, message)}
+        </BrowserRouter>
+      );
 
-      expect(result).toEqual(`created entity <a href="/linodes/10">foo</a> `);
+      expect(getByRole('link').parentNode).toHaveTextContent(message);
+      expect(getByRole('link')).toHaveAttribute('href', '/linodes/10');
     });
 
     it('should replace secondary entity label with link if entity and link exist', () => {
       const mockEvent = eventFactory.build({ entity });
       const message = 'created secondary_entity for foo';
-      const result = applyLinking(mockEvent, message);
-
-      expect(result).toEqual(
-        `created secondary_entity for <a href="/linodes/10">foo</a> `
+      const { getByRole } = render(
+        <BrowserRouter>
+          {applyLinkingAndBolding(mockEvent, message)}
+        </BrowserRouter>
       );
+
+      expect(getByRole('link').parentNode).toHaveTextContent(message);
+      expect(getByRole('link')).toHaveAttribute('href', '/linodes/10');
     });
 
-    it('should not replace entity label if label is inside backticks', () => {
+    it('should replace backticks with code tag', () => {
       const mockEvent = eventFactory.build({ entity });
       const message = 'created `foo`';
-      const result = applyLinking(mockEvent, message);
+      const { container } = render(applyLinkingAndBolding(mockEvent, message));
 
-      expect(result).toEqual('created `foo`');
+      // eslint-disable-next-line xss/no-mixed-html
+      expect(container.firstElementChild).toContainHTML('<code>foo</code>');
     });
 
     it('should escape regex special characters', () => {
-      const mockEvent = eventFactory.build({
-        entity: entityFactory.build({
-          id: 10,
-          label: 'Weird label with special characters.(?)',
-        }),
-      });
-      const message = 'created entity Weird label with special characters.(?)';
-      const result = applyLinking(mockEvent, message);
+      const mockEvent = eventFactory.build({ entity });
+      const message = 'created entity foo with special characters...(?)';
 
-      // eslint-disable-next-line xss/no-mixed-html
-      expect(result).toEqual(
-        'created entity <a href="/linodes/10">Weird label with special characters.(?)</a> '
+      const { getByRole } = render(
+        <BrowserRouter>
+          {applyLinkingAndBolding(mockEvent, message)}
+        </BrowserRouter>
       );
+
+      expect(getByRole('link').parentNode).toHaveTextContent(message);
     });
 
     it('should work when label is null', () => {
-      const mockEvent = eventFactory.build({
-        entity: entityFactory.build({
-          id: 10,
-          label: null,
-        }),
-      });
+      const mockEvent = eventFactory.build({ entity });
       const message = 'created entity Null label';
-      const result = applyLinking(mockEvent, message);
 
-      expect(result).toEqual('created entity Null label');
+      const { container } = render(applyLinkingAndBolding(mockEvent, message));
+
+      expect(container.firstElementChild).toHaveTextContent(message);
     });
   });
 });

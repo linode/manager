@@ -850,7 +850,7 @@ export const applyLinkingAndBolding = (
   bold = false
 ) => {
   if (!message) {
-    return '';
+    return <Typography>&quot;&quot;</Typography>;
   }
 
   const entityLinkTarget = getLinkForEvent(event.action, event.entity, false);
@@ -889,17 +889,15 @@ const createMessageJSX = (
   let words;
 
   // we don't want to split the support ticket title since we want to link it
-  if (message.includes('Support ticket "')) {
-    const ticketTitle = message.match(/"(.*?)"/);
-    if (ticketTitle) {
-      words = message.split('"').map((string) => {
-        if (string !== ticketTitle[1]) {
-          return string.split(' ');
-        }
-        return string;
-      });
-      words = words.flat();
-    }
+  const ticketTitle = message.match(/support ticket "(.*?)"/i);
+  if (ticketTitle) {
+    words = message.split('"').map((string) => {
+      if (string !== ticketTitle[1]) {
+        return string.split(' ');
+      }
+      return string;
+    });
+    words = words.flat();
   } else {
     // split every word
     words = message.split(' ');
@@ -907,44 +905,53 @@ const createMessageJSX = (
 
   return (
     <Typography>
-      {words?.map((word) => {
-        const key = `${word}-${message.length}`;
-
+      {words.map((word) => {
         if (word === '``') {
           return `${word} `;
         }
         if (word.startsWith('`')) {
           return (
             <>
-              <code key={key}>{word.substring(1, word.length - 1)}</code>{' '}
+              <code>{word.substring(1, word.length - 1)}</code>{' '}
             </>
           );
         }
         if (bold && wordsToBold.includes(word)) {
-          return <strong key={key}>{word} </strong>;
+          return (
+            <>
+              <strong key={word}>{word}</strong>{' '}
+            </>
+          );
         }
         // other bolded words such as username
         if (/\*\*(.*?)\*\*/.test(word)) {
           if (word.endsWith('.')) {
             if (bold) {
               return (
-                <strong key={key}>{word.substring(2, word.length - 3)}.</strong>
+                <>
+                  <strong key={word}>
+                    {word.substring(2, word.length - 3)}
+                  </strong>
+                  {'.'}
+                </>
               );
             }
             return `${word.substring(2, word.length - 3)}.`;
           }
           if (bold) {
             return (
-              <strong key={key}>{word.substring(2, word.length - 2)} </strong>
+              <>
+                <strong key={word}>{word.substring(2, word.length - 2)}</strong>{' '}
+              </>
             );
           }
           return `${word.substring(2, word.length - 2)} `;
         }
         if (word === linkLabel) {
           return (
-            <Link key={key} to={linkTarget}>
-              {linkLabel}{' '}
-            </Link>
+            <>
+              <Link to={linkTarget}>{linkLabel}</Link>{' '}
+            </>
           );
         }
         return `${word} `;
