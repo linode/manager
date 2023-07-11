@@ -208,7 +208,7 @@ These environment variables allow users to manage JUnit test result reporting.
 
 | Environment Variable      | Description            | Example        | Default                    |
 |---------------------------|------------------------|----------------|----------------------------|
-| `CY_TEST_JUNIT_REPORTING` | Enable JUnit reporting | `1`            | Unset; disabled by default |
+| `CY_TEST_JUNIT_REPORT`    | Enable JUnit reporting | `1`            | Unset; disabled by default |
 
 ### Writing End-to-End Tests
 
