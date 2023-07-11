@@ -41,7 +41,7 @@ export default defineConfig({
     // This can be overridden using `CYPRESS_BASE_URL`.
     baseUrl: 'http://localhost:3000',
 
-    // This is overridden when `CY_SUITE` is defined.
+    // This is overridden when `CY_TEST_SUITE` is defined.
     // See `cypress/support/plugins/configure-test-suite.ts`.
     specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
 
