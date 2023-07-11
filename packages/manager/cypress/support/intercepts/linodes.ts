@@ -16,7 +16,16 @@ export const interceptCreateLinode = (): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts GET request to mock linode data.
+ * Intercepts GET request to get all Linodes.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetLinodes = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('linode/instances/*'));
+};
+
+/**
+ * Intercepts GET request to get all Linodes and mocks the response.
  *
  * @param linodes - an array of mock linode objects
  *
