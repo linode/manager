@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
@@ -30,10 +31,13 @@ import { useStackScriptsOCA } from 'src/queries/stackscripts';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
+import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 
 type NavEntity =
   | 'Linodes'
   | 'Volumes'
+  | 'Load Balancers'
+  | 'Akamai Global Load Balancers'
   | 'NodeBalancers'
   | 'Domains'
   | 'Longview'
@@ -51,6 +55,8 @@ type NavEntity =
   | 'Help & Support';
 
 interface PrimaryLink {
+  belongsTo?: NavEntity;
+  contains?: NavEntity[];
   display: NavEntity;
   href: string;
   attr?: { [key: string]: any };
@@ -154,6 +160,19 @@ export const PrimaryNav = (props: Props) => {
           icon: <Volume />,
         },
         {
+          display: 'Load Balancers',
+          href: '/loadbalancers',
+          icon: <NodeBalancer />,
+          contains: ['Akamai Global Load Balancers', 'NodeBalancers'],
+        },
+        {
+          belongsTo: 'Load Balancers',
+          display: 'Akamai Global Load Balancers',
+          href: '/loadbalancers',
+          icon: <NodeBalancer />,
+        },
+        {
+          belongsTo: 'Load Balancers',
           display: 'NodeBalancers',
           href: '/nodebalancers',
           icon: <NodeBalancer />,
@@ -309,6 +328,7 @@ export const PrimaryNav = (props: Props) => {
                   isCollapsed,
                   locationSearch: location.search,
                   locationPathname: location.pathname,
+                  primaryLinkGroups,
                   ...thisLink,
                 };
 
@@ -342,6 +362,7 @@ interface PrimaryLinkProps extends PrimaryLink {
   isCollapsed: boolean;
   locationSearch: string;
   locationPathname: string;
+  primaryLinkGroups?: PrimaryLink[][];
   prefetchProps?: {
     onMouseEnter: LinkProps['onMouseEnter'];
     onMouseLeave: LinkProps['onMouseLeave'];
@@ -351,63 +372,95 @@ interface PrimaryLinkProps extends PrimaryLink {
 }
 
 const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
-  const { classes, cx } = useStyles();
+  const { belongsTo, contains, primaryLinkGroups } = props;
+  const _Link = ({ ...props }) => {
+    const { classes, cx } = useStyles();
 
-  const {
-    isBeta,
-    isCollapsed,
-    closeMenu,
-    href,
-    onClick,
-    attr,
-    activeLinks,
-    icon,
-    display,
-    locationSearch,
-    locationPathname,
-    prefetchProps,
-  } = props;
+    const {
+      isBeta,
+      isCollapsed,
+      closeMenu,
+      href,
+      onClick,
+      attr,
+      activeLinks,
+      icon,
+      display,
+      locationSearch,
+      locationPathname,
+      prefetchProps,
+    } = props;
 
-  const isActiveLink = Boolean(
-    linkIsActive(href, locationSearch, locationPathname, activeLinks)
-  );
-
-  return (
-    <Link
-      to={href}
-      onClick={(e: React.ChangeEvent<any>) => {
-        closeMenu();
-        if (onClick) {
-          onClick(e);
-        }
-      }}
-      {...prefetchProps}
-      {...attr}
-      className={cx({
-        [classes.listItem]: true,
-        [classes.active]: isActiveLink,
-      })}
-      aria-current={isActiveLink}
-      data-testid={`menu-item-${display}`}
-    >
-      {icon && (
-        <div className="icon" aria-hidden>
-          {icon}
-        </div>
-      )}
-      <p
+    const isActiveLink = Boolean(
+      linkIsActive(href, locationSearch, locationPathname, activeLinks)
+    );
+    return (
+      <Link
+        to={href}
+        onClick={(e: React.ChangeEvent<any>) => {
+          closeMenu();
+          if (onClick) {
+            onClick(e);
+          }
+        }}
+        {...prefetchProps}
+        {...attr}
         className={cx({
-          [classes.linkItem]: true,
-          primaryNavLink: true,
-          hiddenWhenCollapsed: isCollapsed,
+          [classes.listItem]: true,
+          [classes.active]: isActiveLink,
         })}
+        aria-current={isActiveLink}
+        data-testid={`menu-item-${display}`}
       >
-        {display}
-        {isBeta ? (
-          <BetaChip className={classes.chip} color="primary" component="span" />
-        ) : null}
-      </p>
-    </Link>
+        {icon && (
+          <div className="icon" aria-hidden>
+            {icon}
+          </div>
+        )}
+        <p
+          className={cx({
+            [classes.linkItem]: true,
+            primaryNavLink: true,
+            hiddenWhenCollapsed: isCollapsed,
+          })}
+        >
+          {display}
+          {isBeta ? (
+            <BetaChip
+              className={classes.chip}
+              color="primary"
+              component="span"
+            />
+          ) : null}
+        </p>
+      </Link>
+    );
+  };
+
+  return contains ? (
+    <ShowMoreExpansion name={props.display}>
+      <>
+        {primaryLinkGroups?.map((group) => {
+          const nestedItems = group.filter(
+            (item) => item.belongsTo === props.display
+          );
+
+          if (nestedItems.length > 0) {
+            return nestedItems.map((nestedItem, key) => (
+              <_Link
+                key={`nested-menu-item-${key}`}
+                {...props}
+                {...nestedItem}
+              />
+            ));
+          }
+
+          return null;
+        })}
+      </>
+    </ShowMoreExpansion>
+  ) : belongsTo ? null : (
+    <_Link {...props} />
   );
 });
 
