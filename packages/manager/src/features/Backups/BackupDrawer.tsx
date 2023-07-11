@@ -41,7 +41,7 @@ import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
-import BackupsTable from './BackupsTable';
+import { BackupsTable } from './BackupsTable';
 import { ExtendedLinode, LinodeWithTypeInfo } from './types';
 
 interface DispatchProps {
