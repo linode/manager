@@ -51,11 +51,11 @@ const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
         ))}
       </Grid>
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonHandler={onSubmit}
         primaryButtonLoading={props.loading}
         primaryButtonText="Submit"
-        secondary
+        showSecondary
         secondaryButtonHandler={onClose}
         secondaryButtonText="Cancel"
       />

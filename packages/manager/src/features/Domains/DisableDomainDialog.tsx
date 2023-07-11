@@ -48,11 +48,11 @@ const DisableDomainDialog = (props: Props) => {
       error={error?.[0]?.reason}
       actions={
         <ActionPanel
-          primary
+          showPrimary
           primaryButtonHandler={onSubmit}
           primaryButtonLoading={isLoading}
           primaryButtonText="Disable Domain"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

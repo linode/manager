@@ -388,11 +388,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   renderDialogActions = () => {
     return (
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonDataTestId="confirm-cancel"
         primaryButtonHandler={() => this.resetAllFields(this.state.apiResponse)}
         primaryButtonText="Reset"
-        secondary
+        showSecondary
         secondaryButtonDataTestId="cancel-cancel"
         secondaryButtonHandler={this.handleCloseDialog}
         secondaryButtonText="Cancel"

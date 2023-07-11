@@ -77,11 +77,11 @@ const MigrationNotification: React.FC<Props> = (props) => {
 
   const actions = () => (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonHandler={onSubmit}
       primaryButtonLoading={dialog.isLoading}
       primaryButtonText="Enter Migration Queue"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={closeDialog}
       secondaryButtonText="Cancel"

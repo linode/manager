@@ -188,13 +188,13 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             forDatabaseAccessControls
           />
           <ActionsPanel
-            primary
+            showPrimary
             primaryButtonDisabled={!formTouched}
             primaryButtonLoading={isSubmitting}
             primaryButtonSx={{ marginBottom: 8 }}
             primaryButtonText="Update Access Controls"
             primaryButtonType="submit"
-            secondary
+            showSecondary
             secondaryButtonDisabled={isSubmitting}
             secondaryButtonHandler={onClose}
             secondaryButtonSx={{ marginBottom: 8 }}

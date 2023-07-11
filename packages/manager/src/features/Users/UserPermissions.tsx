@@ -492,12 +492,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         className={classes.section}
         display="flex"
         justifyContent="flex-end"
-        primary
+        showPrimary
         primaryButtonDataTestId="submit"
         primaryButtonHandler={onConfirm}
         primaryButtonLoading={loading}
         primaryButtonText="Save"
-        secondary
+        showSecondary
         secondaryButtonDataTestId="cancel"
         secondaryButtonHandler={onCancel}
         secondaryButtonText="Reset"

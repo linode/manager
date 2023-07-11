@@ -35,11 +35,11 @@ export const DeleteIPDialog = (props: Props) => {
       title={`Delete ${address}?`}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={handleDeleteIP}
           primaryButtonLoading={isLoading}
           primaryButtonText="Delete IP"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

@@ -57,7 +57,7 @@ export const ViewRangeDrawer = (props: Props) => {
           </div>
 
           <ActionsPanel
-            secondary
+            showSecondary
             secondaryButtonDataTestId="cancel"
             secondaryButtonHandler={props.onClose}
             secondaryButtonText="Close"

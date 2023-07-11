@@ -190,7 +190,7 @@ export const AccessSelect = React.memo((props: Props) => {
       ) : null}
 
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonDisabled={
           aclData === selectedACL && corsData === selectedCORSOption
         }
@@ -217,11 +217,11 @@ export const AccessSelect = React.memo((props: Props) => {
         actions={() => (
           <ActionsPanel
             style={{ padding: 0 }}
-            secondary
+            showSecondary
             secondaryButtonHandler={closeDialog}
             secondaryButtonText="Cancel"
             secondaryButtonDataTestId="cancel"
-            primary
+            showPrimary
             primaryButtonHandler={handleSubmit}
             primaryButtonText="Confirm"
           />

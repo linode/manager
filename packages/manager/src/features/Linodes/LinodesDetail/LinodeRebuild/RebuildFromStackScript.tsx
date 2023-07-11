@@ -335,7 +335,7 @@ export const RebuildFromStackScript = (props: Props) => {
               />
               <ActionsPanel
                 className={classes.actionPanel}
-                primary
+                showPrimary
                 primaryButtonDataTestId="rebuild"
                 primaryButtonDisabled={submitButtonDisabled}
                 primaryButtonHandler={handleRebuildButtonClick}

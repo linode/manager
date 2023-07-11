@@ -75,12 +75,12 @@ export const EditOAuthClientDrawer = ({ open, onClose, client }: Props) => {
           />
         </FormControl>
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDisabled={!formik.dirty}
           primaryButtonLoading={isLoading}
           primaryButtonText=" Save Changes"
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

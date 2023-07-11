@@ -57,11 +57,11 @@ const renderActions = (onClose: () => void, provider: TPAProvider) => {
   return (
     <ActionsPanel
       className="p0"
-      secondary
+      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
       secondaryButtonDataTestId="confirm-cancel"
-      primary
+      showPrimary
       primaryButtonDataTestId="confirm-login-change"
       primaryButtonText="Change login"
       primaryButtonAriaDescribedBy="external-site"

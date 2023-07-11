@@ -75,11 +75,11 @@ export const CreateOAuthClientDrawer = ({
           />
         </FormControl>
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonLoading={isLoading}
           primaryButtonText="Create"
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

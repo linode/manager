@@ -167,11 +167,11 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const renderConfirmDeleteActions = () => {
     return (
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonHandler={handleDeleteStackScript}
         primaryButtonLoading={dialog.delete.submitting}
         primaryButtonText="Delete StackScript"
-        secondary
+        showSecondary
         secondaryButtonHandler={handleCloseDialog}
         secondaryButtonText="Cancel"
       />
@@ -181,10 +181,10 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const renderConfirmMakePublicActions = () => {
     return (
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonHandler={handleMakePublic}
         primaryButtonText="Yes, make me a star!"
-        secondary
+        showSecondary
         secondaryButtonHandler={handleCloseDialog}
         secondaryButtonText="Cancel"
       />

@@ -572,11 +572,11 @@ const NodeBalancerCreate = () => {
         actions={
           <ActionsPanel
             style={{ padding: 0 }}
-            primary
+            showPrimary
             primaryButtonHandler={onRemoveConfig}
             primaryButtonLoading={deleteConfigConfirmDialog.submitting}
             primaryButtonText="Delete"
-            secondary
+            showSecondary
             secondaryButtonHandler={onCloseConfirmation}
             secondaryButtonText="Cancel"
           />

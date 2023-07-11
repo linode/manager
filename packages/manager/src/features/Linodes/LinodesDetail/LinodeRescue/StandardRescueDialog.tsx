@@ -240,7 +240,7 @@ export const StandardRescueDialog = (props: Props) => {
               Add Disk
             </Button>
             <ActionsPanel
-              primary
+              showPrimary
               primaryButtonText="Reboot into Rescue Mode"
               primaryButtonDisabled={disabled}
               primaryButtonHandler={onSubmit}

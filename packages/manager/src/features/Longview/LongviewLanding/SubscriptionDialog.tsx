@@ -17,11 +17,11 @@ export const SubscriptionDialog: React.FC<Props> = (props) => {
 
   const actions = () => (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonHandler={onSubmit}
       primaryButtonRole="link"
       primaryButtonText={isManaged ? 'Contact Support' : 'View upgrade options'}
-      secondary
+      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
     />

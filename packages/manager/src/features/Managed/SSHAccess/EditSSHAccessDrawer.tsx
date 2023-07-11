@@ -212,7 +212,7 @@ const EditSSHAccessDrawer: React.FC<Props> = (props) => {
                       </Grid>
                     </Grid>
                     <ActionsPanel
-                      primary
+                      showPrimary
                       primaryButtonHandler={() => handleSubmit()}
                       primaryButtonLoading={isSubmitting}
                       primaryButtonText="Save Changes"

@@ -173,11 +173,11 @@ export const AccessControls = (props: Props) => {
 
   const actionsPanel = (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonHandler={handleRemoveIPAddress}
       primaryButtonLoading={databaseUpdating}
       primaryButtonText="Remove IP Address"
-      secondary
+      showSecondary
       secondaryButtonHandler={handleDialogClose}
       secondaryButtonText="Cancel"
     />

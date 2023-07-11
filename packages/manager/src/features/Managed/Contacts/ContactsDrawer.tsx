@@ -203,7 +203,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                 />
 
                 <ActionsPanel
-                  primary
+                  showPrimary
                   primaryButtonHandler={() => handleSubmit()}
                   primaryButtonLoading={isSubmitting}
                   primaryButtonText={isEditing ? 'Save Changes' : 'Add Contact'}

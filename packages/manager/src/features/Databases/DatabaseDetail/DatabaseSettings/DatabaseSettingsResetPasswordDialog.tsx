@@ -21,12 +21,12 @@ const renderActions = (
 ) => {
   return (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonDataTestId="confirm"
       primaryButtonHandler={onConfirm}
       primaryButtonLoading={loading}
       primaryButtonText="Reset Root Password"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"

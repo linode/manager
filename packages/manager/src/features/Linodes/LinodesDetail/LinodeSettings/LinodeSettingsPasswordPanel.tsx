@@ -97,7 +97,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonDataTestId="password-save"
       primaryButtonDisabled={isReadOnly || linode?.status !== 'offline'}
       primaryButtonHandler={onSubmit}

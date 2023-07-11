@@ -31,11 +31,11 @@ export const RevokeTrustedDeviceDialog = (props: Props) => {
       error={error?.[0].reason}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={onRevoke}
           primaryButtonLoading={isLoading}
           primaryButtonText="Revoke Device"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

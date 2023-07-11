@@ -227,11 +227,11 @@ export const KubeSummaryPanel = (props: Props) => {
         title="Reset Cluster Kubeconfig?"
         actions={
           <ActionsPanel
-            primary
+            showPrimary
             primaryButtonHandler={() => handleResetKubeConfig()}
             primaryButtonLoading={isResettingKubeConfig}
             primaryButtonText="Reset Kubeconfig"
-            secondary
+            showSecondary
             secondaryButtonHandler={() => setResetKubeConfigDialogOpen(false)}
             secondaryButtonText="Cancel"
           />

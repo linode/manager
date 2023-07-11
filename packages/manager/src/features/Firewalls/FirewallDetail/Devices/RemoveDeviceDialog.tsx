@@ -35,12 +35,12 @@ export const RemoveDeviceDialog = (props: Props) => {
       actions={
         <ActionsPanel
           style={{ padding: 0 }}
-          primary
+          showPrimary
           primaryButtonDataTestId="confirm"
           primaryButtonHandler={onDelete}
           primaryButtonLoading={isLoading}
           primaryButtonText="Remove"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"

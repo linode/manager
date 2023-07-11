@@ -38,11 +38,11 @@ export const DeleteRangeDialog = (props: Props) => {
       title={`Delete ${range.range}/${range.prefix}?`}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={handleDeleteIP}
           primaryButtonLoading={isLoading}
           primaryButtonText="Delete Range"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

@@ -51,7 +51,7 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
       heading="Linode Label"
       actions={() => (
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={formik.handleSubmit}
           primaryButtonLoading={isLoading}
           primaryButtonDisabled={isReadOnly || !formik.dirty}

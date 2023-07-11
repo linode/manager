@@ -89,7 +89,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
           tooltipText={tooltipText ? tooltipText : undefined}
         />
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDisabled={disabled || value === initialValue}
           primaryButtonHandler={handleSubmit}
           primaryButtonLoading={submitting}

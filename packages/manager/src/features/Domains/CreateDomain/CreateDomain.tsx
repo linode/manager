@@ -464,7 +464,7 @@ export const CreateDomain = () => {
                 </React.Fragment>
               )}
             <ActionsPanel
-              primary
+              showPrimary
               primaryButtonHandler={() => formik.handleSubmit()}
               primaryButtonDataTestId="submit"
               primaryButtonLoading={formik.isSubmitting}

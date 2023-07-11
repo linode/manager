@@ -238,7 +238,7 @@ const ApiAwarenessModal = (props: Props) => {
       </Notice>
       <ActionsPanel
         className={classes.actionPanelStyles}
-        secondary
+        showSecondary
         secondaryButtonCompactX
         secondaryButtonDataTestId="close-button"
         secondaryButtonHandler={onClose}

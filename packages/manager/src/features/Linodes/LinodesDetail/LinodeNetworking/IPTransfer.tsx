@@ -538,13 +538,13 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
         )}
       </Grid>
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonDataTestId="ip-transfer-save"
         primaryButtonDisabled={readOnly || linodes.length === 0}
         primaryButtonHandler={onSubmit}
         primaryButtonLoading={submitting}
         primaryButtonText="Save"
-        secondary
+        showSecondary
         secondaryButtonDataTestId={'ip-transfer-reset'}
         secondaryButtonDisabled={submitting || linodes.length === 0}
         secondaryButtonHandler={onReset}

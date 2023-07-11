@@ -219,12 +219,12 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
           </Grid>
           <Grid>
             <ActionsPanel
-              primary
+              showPrimary
               primaryButtonDataTestId="submit"
               primaryButtonHandler={this.handleSubmit}
               primaryButtonLoading={loading || enabling || enrolling}
               primaryButtonText="Confirm"
-              secondary
+              showSecondary
               secondaryButtonDataTestId="cancel"
               secondaryButtonHandler={close}
               secondaryButtonText="Cancel"

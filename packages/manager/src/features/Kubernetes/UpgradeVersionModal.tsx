@@ -91,7 +91,7 @@ export const UpgradeDialog = (props: Props) => {
   const actions = (
     <ActionsPanel
       style={{ padding: 0 }}
-      primary
+      showPrimary
       primaryButtonDataTestId="confirm"
       primaryButtonHandler={
         hasUpdatedSuccessfully ? onSubmitRecycleDialog : onSubmitUpgradeDialog
@@ -100,7 +100,7 @@ export const UpgradeDialog = (props: Props) => {
       primaryButtonText={
         hasUpdatedSuccessfully ? 'Recycle All Nodes' : 'Upgrade Version'
       }
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"

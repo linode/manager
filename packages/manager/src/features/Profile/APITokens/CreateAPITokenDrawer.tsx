@@ -291,12 +291,12 @@ export const CreateAPITokenDrawer = (props: Props) => {
         <FormHelperText error>{errorMap.scopes}</FormHelperText>
       )}
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonDataTestId="create-button"
         primaryButtonHandler={form.handleSubmit}
         primaryButtonLoading={isLoading}
         primaryButtonText="Create Token"
-        secondary
+        showSecondary
         secondaryButtonHandler={onClose}
         secondaryButtonText="Cancel"
       />

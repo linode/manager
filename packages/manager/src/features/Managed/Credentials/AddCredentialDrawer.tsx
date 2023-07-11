@@ -95,12 +95,12 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                 />
               </React.Suspense>
               <ActionsPanel
-                primary
+                showPrimary
                 primaryButtonDataTestId="submit"
                 primaryButtonHandler={() => handleSubmit()}
                 primaryButtonLoading={isSubmitting}
                 primaryButtonText="Add Credential"
-                secondary
+                showSecondary
                 secondaryButtonDataTestId="cancel"
                 secondaryButtonHandler={onClose}
                 secondaryButtonText="Cancel"

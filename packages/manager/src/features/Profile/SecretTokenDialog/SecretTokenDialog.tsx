@@ -20,7 +20,7 @@ const renderActions = (
   modalConfirmationButtonText: string
 ) => (
   <ActionsPanel
-    primary
+    showPrimary
     primaryButtonDataTestId="confirm"
     primaryButtonHandler={onClose}
     primaryButtonText={modalConfirmationButtonText}

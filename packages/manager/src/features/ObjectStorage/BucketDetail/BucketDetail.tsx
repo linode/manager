@@ -403,12 +403,12 @@ export const BucketDetail = () => {
         }
         actions={() => (
           <ActionsPanel
-            primary
+            showPrimary
             primaryButtonDataTestId="submit-rebuild"
             primaryButtonHandler={deleteObject}
             primaryButtonLoading={deleteObjectLoading}
             primaryButtonText="Delete"
-            secondary
+            showSecondary
             secondaryButtonDataTestId="cancel"
             secondaryButtonHandler={closeDeleteObjectDialog}
             secondaryButtonText="Cancel"

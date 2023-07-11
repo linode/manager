@@ -144,12 +144,12 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           />
         )}
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonType="submit"
           primaryButtonLoading={isLoading}
           primaryButtonDataTestId="restore-submit"
           primaryButtonText="Restore"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonDataTestId="restore-cancel"
           secondaryButtonText="Cancel"

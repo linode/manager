@@ -204,7 +204,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
       />
       <ActionsPanel
         className={classes.actions}
-        primary
+        showPrimary
         primaryButtonDataTestId="save"
         primaryButtonDisabled={disabled || disableSubmit}
         primaryButtonHandler={onSubmit}
@@ -212,7 +212,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         primaryButtonText={
           mode === 'edit' ? 'Save Changes' : 'Create StackScript'
         }
-        secondary
+        showSecondary
         secondaryButtonDataTestId="cancel"
         secondaryButtonDisabled={disabled}
         secondaryButtonHandler={onCancel}

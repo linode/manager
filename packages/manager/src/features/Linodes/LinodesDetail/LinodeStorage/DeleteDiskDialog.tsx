@@ -41,12 +41,12 @@ export const DeleteDiskDialog = (props: Props) => {
       actions={
         <ActionsPanel
           style={{ padding: 0 }}
-          primary
+          showPrimary
           primaryButtonDataTestId="confirm-delete"
           primaryButtonHandler={onDelete}
           primaryButtonLoading={isLoading}
           primaryButtonText="Delete"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel-delete"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"

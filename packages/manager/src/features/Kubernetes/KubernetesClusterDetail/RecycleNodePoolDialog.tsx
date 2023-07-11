@@ -38,12 +38,12 @@ export const RecycleNodePoolDialog = (props: Props) => {
   const actions = (
     <ActionsPanel
       style={{ padding: 0 }}
-      primary
+      showPrimary
       primaryButtonDataTestId="confirm"
       primaryButtonHandler={onRecycle}
       primaryButtonLoading={isLoading}
       primaryButtonText="Recycle Pool Nodes"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"

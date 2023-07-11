@@ -1009,12 +1009,12 @@ export const LinodeConfigDialog = (props: Props) => {
         </DialogContent>
       </Grid>
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonDisabled={isReadOnly}
         primaryButtonHandler={formik.submitForm}
         primaryButtonLoading={formik.isSubmitting}
         primaryButtonText={config ? 'Save Changes' : 'Add Configuration'}
-        secondary
+        showSecondary
         secondaryButtonHandler={onClose}
         secondaryButtonText="cancel"
       />

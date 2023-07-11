@@ -152,11 +152,11 @@ export const PowerActionsDialog = (props: Props) => {
       error={error?.[0].reason}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={onSubmit}
           primaryButtonLoading={isLoading}
           primaryButtonText={`${props.action} Lindoe`}
-          secondary
+          showSecondary
           secondaryButtonHandler={props.onClose}
           secondaryButtonText="Cancel"
         />

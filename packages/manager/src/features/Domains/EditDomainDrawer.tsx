@@ -199,13 +199,13 @@ export const EditDomainDrawer = (props: Props) => {
           disabled={disabled}
         />
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="submit"
           primaryButtonDisabled={disabled || !formik.dirty}
           primaryButtonLoading={formik.isSubmitting}
           primaryButtonText="Save Changes"
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"

@@ -85,12 +85,12 @@ export const CreateSSHKeyDrawer = React.memo(({ open, onClose }: Props) => {
           }}
         />
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="submit"
           primaryButtonLoading={isLoading}
           primaryButtonText="Add Key"
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

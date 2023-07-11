@@ -75,12 +75,12 @@ const DomainZoneImportDrawer = (props: Props) => {
           disabled={noPermission}
         />
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonType="submit"
           primaryButtonDisabled={!formik.dirty}
           primaryButtonLoading={formik.isSubmitting}
           primaryButtonText="Import"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

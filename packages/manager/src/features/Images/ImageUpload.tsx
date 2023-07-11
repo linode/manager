@@ -204,10 +204,10 @@ export const ImageUpload: React.FC<Props> = (props) => {
               title="Leave this page?"
               actions={() => (
                 <ActionsPanel
-                  primary
+                  showPrimary
                   primaryButtonHandler={handleConfirm}
                   primaryButtonText="Leave Page"
-                  secondary
+                  showSecondary
                   secondaryButtonHandler={handleCancel}
                   secondaryButtonText="Cancel"
                 />

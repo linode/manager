@@ -46,12 +46,12 @@ const ComplianceUpdateModal = () => {
       title="Compliance Update"
       actions={() => (
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={handleAgree}
           primaryButtonLoading={isLoading}
           primaryButtonDisabled={!checked}
           primaryButtonText="Agree"
-          secondary
+          showSecondary
           secondaryButtonHandler={() => {
             setChecked(false);
             complianceModelContext.close();

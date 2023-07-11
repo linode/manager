@@ -134,12 +134,12 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   const actions = (
     <ActionsPanel
       className={classes.actions}
-      primary
+      showPrimary
       primaryButtonDisabled={!hasConfirmed || isLoading || isError}
       primaryButtonHandler={handleAcceptTransfer}
       primaryButtonLoading={submitting}
       primaryButtonText="Accept Transfer"
-      secondary
+      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
     />

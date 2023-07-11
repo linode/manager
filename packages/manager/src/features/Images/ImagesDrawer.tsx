@@ -391,13 +391,13 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
           label,
           description,
         ]}
-        primary
+        showPrimary
         primaryButtonDataTestId="submit"
         primaryButtonDisabled={requirementsMet || !canCreateImage}
         primaryButtonHandler={onSubmit}
         primaryButtonLoading={submitting}
         primaryButtonText={buttonTextMap[mode] ?? 'Submit'}
-        secondary
+        showSecondary
         secondaryButtonDataTestId="cancel"
         secondaryButtonDisabled={!canCreateImage}
         secondaryButtonHandler={close}

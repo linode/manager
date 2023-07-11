@@ -1074,12 +1074,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel
       style={{ padding: 0 }}
-      primary
+      showPrimary
       primaryButtonDataTestId="confirm-cancel"
       primaryButtonHandler={this.deleteConfig}
       primaryButtonLoading={this.state.deleteConfigConfirmDialog.submitting}
       primaryButtonText="Delete"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel-cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"

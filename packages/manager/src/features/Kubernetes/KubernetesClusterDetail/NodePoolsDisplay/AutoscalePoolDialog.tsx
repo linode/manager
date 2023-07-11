@@ -123,7 +123,7 @@ export const AutoscalePoolDialog = (props: Props) => {
       actions={
         <ActionsPanel
           style={{ padding: 0 }}
-          primary
+          showPrimary
           primaryButtonHandler={() => handleSubmit()}
           primaryButtonLoading={isLoading || isSubmitting}
           primaryButtonDisabled={
@@ -134,7 +134,7 @@ export const AutoscalePoolDialog = (props: Props) => {
           }
           primaryButtonDataTestId="confirm"
           primaryButtonText="Save Changes"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={handleClose}
           secondaryButtonText="Cancel"

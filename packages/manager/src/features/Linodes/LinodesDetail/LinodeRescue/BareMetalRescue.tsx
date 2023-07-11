@@ -53,11 +53,11 @@ export const BareMetalRescue = (props: Props) => {
 
   const actions = () => (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonHandler={handleSubmit}
       primaryButtonLoading={loading}
       primaryButtonText="Reboot into Rescue Mode"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"

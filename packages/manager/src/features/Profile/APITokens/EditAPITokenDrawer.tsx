@@ -47,13 +47,13 @@ export const EditAPITokenDrawer = (props: Props) => {
         onChange={form.handleChange}
       />
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonDataTestId="save-button"
         primaryButtonDisabled={!form.dirty}
         primaryButtonHandler={form.handleSubmit}
         primaryButtonLoading={isLoading}
         primaryButtonText="Save"
-        secondary
+        showSecondary
         secondaryButtonHandler={onClose}
         secondaryButtonText="Cancel"
       />

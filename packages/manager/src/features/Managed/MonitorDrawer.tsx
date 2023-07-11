@@ -280,14 +280,14 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                 onBlur={handleBlur}
               />
               <ActionsPanel
-                primary
+                showPrimary
                 primaryButtonDataTestId="submit"
                 primaryButtonHandler={() => handleSubmit()}
                 primaryButtonLoading={isSubmitting}
                 primaryButtonText={
                   mode === 'create' ? 'Add Monitor' : 'Save Changes'
                 }
-                secondary
+                showSecondary
                 secondaryButtonDataTestId="cancel"
                 secondaryButtonHandler={onClose}
                 secondaryButtonText="Cancel"

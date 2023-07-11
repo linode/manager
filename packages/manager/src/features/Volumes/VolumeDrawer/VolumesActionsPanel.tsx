@@ -21,13 +21,13 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
   return (
     //We could remove this with ActionsPanel component.
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonDataTestId="submit"
       primaryButtonDisabled={disabled}
       primaryButtonHandler={onSubmit}
       primaryButtonLoading={isSubmitting}
       primaryButtonText={submitText ?? 'Submit'}
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onCancel}
       secondaryButtonText="Cancel"

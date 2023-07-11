@@ -32,7 +32,7 @@ export const ReplyActions = (props: Props) => {
       {closable && <CloseTicketLink ticketId={ticketId} />}
       <ActionsPanel
         className={classes.actions}
-        primary
+        showPrimary
         primaryButtonHandler={handleSubmitForm}
         primaryButtonLoading={isSubmitting}
         primaryButtonText="Add Update"

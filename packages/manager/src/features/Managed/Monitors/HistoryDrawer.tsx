@@ -27,7 +27,7 @@ export const HistoryDrawer: React.FC<Props> = (props) => {
     >
       {renderDrawerContent(issues, loading, error)}
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonHandler={() => onClose()}
         primaryButtonText="Close"
         primaryButtonDataTestId="close"

@@ -80,7 +80,7 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
               />
 
               <ActionsPanel
-                primary
+                showPrimary
                 primaryButtonDataTestId="submit"
                 primaryButtonHandler={() => handleSubmit()}
                 primaryButtonLoading={isSubmitting}
@@ -159,7 +159,7 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                 />
               </React.Suspense>
               <ActionsPanel
-                primary
+                showPrimary
                 primaryButtonDataTestId="submit"
                 primaryButtonHandler={() => handleSubmit()}
                 primaryButtonLoading={isSubmitting}

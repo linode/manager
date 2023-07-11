@@ -32,12 +32,12 @@ export const DeleteNodePoolDialog = (props: Props) => {
   const actions = (
     <ActionsPanel
       style={{ padding: 0 }}
-      primary
+      showPrimary
       primaryButtonDataTestId="confirm"
       primaryButtonHandler={onDelete}
       primaryButtonLoading={isLoading}
       primaryButtonText="Delete"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"

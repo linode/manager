@@ -140,13 +140,13 @@ export const AddDeviceDrawer = (props: Props) => {
           loading={currentDevicesLoading}
         />
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="submit"
           primaryButtonDisabled={selectedLinodeIds.length === 0}
           primaryButtonHandler={handleSubmit}
           primaryButtonLoading={isLoading}
           primaryButtonText="Add"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"

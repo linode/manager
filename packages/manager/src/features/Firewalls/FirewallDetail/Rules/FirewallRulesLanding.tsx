@@ -277,10 +277,10 @@ const FirewallRulesLanding = (props: Props) => {
               title="Discard Firewall changes?"
               actions={() => (
                 <ActionsPanel
-                  primary
+                  showPrimary
                   primaryButtonHandler={handleCancel}
                   primaryButtonText="Go back and review changes"
-                  secondary
+                  showSecondary
                   secondaryButtonHandler={handleConfirm}
                   secondaryButtonText="Leave and discard changes"
                 />
@@ -362,12 +362,12 @@ const FirewallRulesLanding = (props: Props) => {
       />
       <ActionsPanel
         className={classes.actions}
-        primary
+        showPrimary
         primaryButtonDisabled={!hasUnsavedChanges || disabled}
         primaryButtonHandler={applyChanges}
         primaryButtonLoading={submitting}
         primaryButtonText="Save Changes"
-        secondary
+        showSecondary
         secondaryButtonDisabled={!hasUnsavedChanges || disabled}
         secondaryButtonHandler={() => setDiscardChangesModalOpen(true)}
         secondaryButtonText="Discard Changes"
@@ -406,10 +406,10 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
     const actions = React.useCallback(
       () => (
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={handleClose}
           primaryButtonText="Go back and review changes"
-          secondary
+          showSecondary
           secondaryButtonHandler={handleDiscard}
           secondaryButtonText="Discard changes"
         />

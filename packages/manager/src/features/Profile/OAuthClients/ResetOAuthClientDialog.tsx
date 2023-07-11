@@ -36,11 +36,11 @@ export const ResetOAuthClientDialog = ({
       onClose={onClose}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={onReset}
           primaryButtonLoading={isLoading}
           primaryButtonText="Reset Secret"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

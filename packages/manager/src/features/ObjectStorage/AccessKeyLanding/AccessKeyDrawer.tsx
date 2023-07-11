@@ -241,7 +241,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                   />
                 ) : null}
                 <ActionsPanel
-                  primary
+                  showPrimary
                   primaryButtonHandler={beforeSubmit}
                   primaryButtonDisabled={
                     isRestrictedUser ||
@@ -252,7 +252,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                   primaryButtonText={
                     createMode ? 'Create Access Key' : 'Save Changes'
                   }
-                  secondary
+                  showSecondary
                   secondaryButtonHandler={onClose}
                   secondaryButtonDataTestId="cancel"
                   secondaryButtonText="Cancel"

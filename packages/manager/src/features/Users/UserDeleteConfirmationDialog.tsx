@@ -20,11 +20,11 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
       actions={
         <ActionsPanel
           style={{ padding: 0 }}
-          primary
+          showPrimary
           primaryButtonDataTestId="confirm-delete"
           primaryButtonHandler={onDelete}
           primaryButtonText="Delete"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel-delete"
           secondaryButtonHandler={onCancel}
           secondaryButtonText="Cancel"

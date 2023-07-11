@@ -199,12 +199,12 @@ export const CreateDiskDrawer = (props: Props) => {
           Maximum size: {maximumSize} MB
         </FormHelperText>
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="submit-disk-form"
           primaryButtonLoading={formik.isSubmitting}
           primaryButtonText="Create"
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

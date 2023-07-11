@@ -276,7 +276,7 @@ export const RebuildFromImage = (props: Props) => {
               ) : null}
               <ActionsPanel
                 className={classes.actionPanel}
-                primary
+                showPrimary
                 primaryButtonDataTestId="rebuild-button"
                 primaryButtonDisabled={submitButtonDisabled || disabled}
                 primaryButtonHandler={handleRebuildButtonClick}

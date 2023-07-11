@@ -408,13 +408,13 @@ const IPSharingPanel = (props: Props) => {
         </>
       </DialogContent>
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonDataTestId="submit"
         primaryButtonDisabled={readOnly || noChoices}
         primaryButtonHandler={onSubmit}
         primaryButtonLoading={submitting}
         primaryButtonText="Save"
-        secondary
+        showSecondary
         secondaryButtonDataTestId="reset"
         secondaryButtonDisabled={submitting || noChoices}
         secondaryButtonHandler={onReset}

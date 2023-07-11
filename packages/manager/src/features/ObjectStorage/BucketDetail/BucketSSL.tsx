@@ -138,7 +138,7 @@ const AddCertForm = (props: Props) => {
       </StyledFieldsWrapper>
       <Grid>
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonLoading={isLoading}
           primaryButtonText="Upload Certificate"
           primaryButtonType="submit"

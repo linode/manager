@@ -43,12 +43,12 @@ export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
       open={open}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="revoke-button"
           primaryButtonHandler={onRevoke}
           primaryButtonLoading={isLoading}
           primaryButtonText="Revoke"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel-button"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"

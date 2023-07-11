@@ -68,13 +68,13 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonDataTestId="confirm"
       primaryButtonDisabled={!checked}
       primaryButtonHandler={onUpgrade}
       primaryButtonLoading={submitting}
       primaryButtonText="Upgrade to HA"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"

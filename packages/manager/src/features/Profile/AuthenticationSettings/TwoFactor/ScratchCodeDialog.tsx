@@ -19,7 +19,7 @@ export const ScratchCodeDialog = (props: Props) => {
       onClose={onClose}
       actions={
         <ActionsPanel
-          secondary
+          showSecondary
           secondaryButtonText="Got it"
           secondaryButtonHandler={onClose}
           secondaryButtonDataTestId="submit"

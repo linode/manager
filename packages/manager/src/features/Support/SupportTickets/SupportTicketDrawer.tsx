@@ -655,8 +655,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
             </React.Fragment>
           )}
           <ActionsPanel
-            secondary
-            primary
+            showSecondary
+            showPrimary
             secondaryButtonText=" Cancel"
             primaryButtonText="Open Ticket"
             primaryButtonHandler={onSubmit}

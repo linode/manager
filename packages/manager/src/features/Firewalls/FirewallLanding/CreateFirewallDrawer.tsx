@@ -176,11 +176,11 @@ const CreateFirewallDrawer = (props: Props) => {
           onBlur={handleBlur}
         />
         <ActionsPanel
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonDataTestId="cancel"
           secondaryButtonText="Cancel"
-          primary
+          showPrimary
           primaryButtonText="Create Firewall"
           primaryButtonDataTestId="submit"
           primaryButtonDisabled={userCannotAddFirewall}

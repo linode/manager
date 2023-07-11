@@ -9,7 +9,7 @@ interface ActionPanelProps extends BoxProps {
   /**
    * Renders primary type actionable button.
    */
-  primary?: boolean;
+  showPrimary?: boolean;
 
   /**
    * primary type actionable button custom aria descripton.
@@ -58,16 +58,6 @@ interface ActionPanelProps extends BoxProps {
   primaryButtonSx?: SxProps;
 
   /**
-   * The eliminates left and right padding.
-   */
-  primaryButtonCompactX?: boolean;
-
-  /**
-   * The eliminates top and bottom padding.
-   */
-  primaryButtonCompactY?: boolean;
-
-  /**
    * The text for primary type actionable button tooltip.
    */
   primaryButtonToolTip?: string;
@@ -75,7 +65,7 @@ interface ActionPanelProps extends BoxProps {
   /**
    * Renders secondary type actionable button.
    */
-  secondary?: boolean;
+  showSecondary?: boolean;
 
   /**
    * If true disables secondary type actionable button.
@@ -124,7 +114,7 @@ interface ActionPanelProps extends BoxProps {
 const ActionsPanel = (props: ActionPanelProps) => {
   const {
     className,
-    primary,
+    showPrimary: primary,
     primaryButtonAriaDescribedBy,
     primaryButtonDataTestId,
     primaryButtonDisabled,
@@ -135,7 +125,7 @@ const ActionsPanel = (props: ActionPanelProps) => {
     primaryButtonText,
     primaryButtonToolTip,
     primaryButtonType,
-    secondary,
+    showSecondary: secondary,
     secondaryButtonCompactX,
     secondaryButtonCompactY,
     secondaryButtonDataTestId,

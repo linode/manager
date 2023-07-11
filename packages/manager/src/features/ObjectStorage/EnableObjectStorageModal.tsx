@@ -23,13 +23,13 @@ export const EnableObjectStorageModal = ({
       title="Just to confirm..."
       actions={() => (
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={() => {
             onClose();
             handleSubmit();
           }}
           primaryButtonText="Enable Object Storage"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"

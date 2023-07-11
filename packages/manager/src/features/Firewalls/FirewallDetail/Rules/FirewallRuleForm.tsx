@@ -337,7 +337,7 @@ export const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         </div>
 
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="submit"
           primaryButtonHandler={() => handleSubmit()}
           primaryButtonText={mode === 'create' ? 'Add Rule' : 'Add Changes'}

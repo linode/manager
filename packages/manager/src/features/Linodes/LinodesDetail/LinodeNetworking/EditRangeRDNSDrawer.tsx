@@ -124,12 +124,12 @@ export const EditRangeRDNSDrawer = (props: Props) => {
           Leave this field blank to reset RDNS
         </Typography>
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="submit"
           primaryButtonLoading={isLoading}
           primaryButtonText="Save"
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Close"

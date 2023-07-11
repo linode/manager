@@ -41,11 +41,11 @@ const _DeletionDialog = (props: DeletionDialogProps) => {
   const renderActions = () => (
     <ActionsPanel
       style={{ padding: 0 }}
-      secondary
+      showSecondary
       secondaryButtonText="Cancel"
       secondaryButtonHandler={onClose}
       secondaryButtonDataTestId="cancel"
-      primary
+      showPrimary
       primaryButtonHandler={onDelete}
       primaryButtonDisabled={
         typeToConfirmRequired && confirmationText !== label

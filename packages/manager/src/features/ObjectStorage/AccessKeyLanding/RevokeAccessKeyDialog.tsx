@@ -29,11 +29,11 @@ export const RevokeAccessKeyDialog = (props: RevokeKeysDialogProps) => {
 
   const actions = () => (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonHandler={handleSubmit}
       primaryButtonLoading={isLoading}
       primaryButtonText="Revoke"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="cancel"
       secondaryButtonHandler={handleClose}
       secondaryButtonText="Cancel"

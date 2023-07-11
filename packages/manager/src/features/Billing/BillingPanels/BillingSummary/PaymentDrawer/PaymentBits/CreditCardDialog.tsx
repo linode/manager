@@ -41,12 +41,12 @@ class DialogActions extends React.PureComponent<Actions> {
   render() {
     return (
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonDataTestId="submit"
         primaryButtonHandler={this.props.executePayment}
         primaryButtonLoading={this.props.isMakingPayment}
         primaryButtonText="Confirm Payment"
-        secondary
+        showSecondary
         secondaryButtonDataTestId="cancel"
         secondaryButtonHandler={this.props.cancel}
         secondaryButtonText="Cancel"

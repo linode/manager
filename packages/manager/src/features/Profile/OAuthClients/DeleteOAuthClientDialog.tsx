@@ -33,12 +33,12 @@ export const DeleteOAuthClientDialog = ({
       onClose={onClose}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="button-confirm"
           primaryButtonHandler={onDelete}
           primaryButtonLoading={isLoading}
           primaryButtonText="Delete"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="button-cancel"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"

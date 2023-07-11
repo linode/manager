@@ -56,11 +56,11 @@ export const UpgradeVolumesDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonHandler={onSubmit}
       primaryButtonLoading={isLoading}
       primaryButtonText="Enter Upgrade Queue"
-      secondary
+      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
     />

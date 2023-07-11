@@ -53,11 +53,11 @@ export const CreateImageFromDiskDialog = (props: Props) => {
       error={error?.[0].reason}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={onCreate}
           primaryButtonLoading={isLoading}
           primaryButtonText="Create Image"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

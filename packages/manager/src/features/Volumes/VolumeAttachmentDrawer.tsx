@@ -159,13 +159,13 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
           />
         </FormControl>
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="submit"
           primaryButtonDisabled={disabled || readOnly}
           primaryButtonLoading={formik.isSubmitting}
           primaryButtonText="Attach"
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel"
           secondaryButtonHandler={handleClose}
           secondaryButtonText="Cancel"

@@ -143,12 +143,12 @@ export const ResizeDiskDrawer = (props: Props) => {
           />
         </FormHelperText>
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="submit-disk-form"
           primaryButtonLoading={formik.isSubmitting}
           primaryButtonText="Resize"
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

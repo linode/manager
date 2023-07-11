@@ -215,7 +215,7 @@ const AddIPDrawer = (props: Props) => {
           <Tooltip placement="bottom-end" title={_tooltipCopy}>
             <div style={{ display: 'inline' }}>
               <ActionsPanel
-                primary
+                showPrimary
                 primaryButtonDisabled={disabledIPv4}
                 primaryButtonHandler={handleAllocateIPv4}
                 primaryButtonLoading={ipv4Loading}
@@ -226,7 +226,7 @@ const AddIPDrawer = (props: Props) => {
           </Tooltip>
         ) : (
           <ActionsPanel
-            primary
+            showPrimary
             primaryButtonDisabled={disabledIPv4}
             primaryButtonHandler={handleAllocateIPv4}
             primaryButtonLoading={ipv4Loading}
@@ -275,7 +275,7 @@ const AddIPDrawer = (props: Props) => {
           .
         </Typography>
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDisabled={disabledIPv6}
           primaryButtonHandler={handleCreateIPv6Range}
           primaryButtonLoading={ipv6Loading}

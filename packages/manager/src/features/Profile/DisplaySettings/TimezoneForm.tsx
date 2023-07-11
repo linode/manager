@@ -97,7 +97,7 @@ export const TimezoneForm = (props: Props) => {
           placeholder={'Choose a Timezone'}
         />
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="tz-submit"
           primaryButtonDisabled={disabled}
           primaryButtonHandler={onSubmit}

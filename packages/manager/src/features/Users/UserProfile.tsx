@@ -127,7 +127,7 @@ const UserProfile: React.FC<Props> = (props) => {
             data-qa-username
           />
           <ActionsPanel
-            primary
+            showPrimary
             primaryButtonDataTestId="submit"
             primaryButtonDisabled={username === originalUsername}
             primaryButtonHandler={saveAccount}
@@ -159,7 +159,7 @@ const UserProfile: React.FC<Props> = (props) => {
             data-qa-email
           />
           <ActionsPanel
-            primary
+            showPrimary
             primaryButtonDataTestId="submit"
             // This should be disabled if this is NOT the current user.
             primaryButtonDisabled={

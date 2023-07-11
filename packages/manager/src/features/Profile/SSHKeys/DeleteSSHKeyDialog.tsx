@@ -27,11 +27,11 @@ const DeleteSSHKeyDialog = ({ id, open, onClose, label }: Props) => {
       error={error?.[0].reason}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDataTestId="confirm-delete"
           primaryButtonHandler={onDelete}
           primaryButtonLoading={isLoading}
-          secondary
+          showSecondary
           secondaryButtonDataTestId="cancel-delete"
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"

@@ -189,7 +189,7 @@ export const LishSettings = () => {
           </>
         )}
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonDisabled={
             lishAuthMethod === profile?.lish_auth_method &&
             equals(authorizedKeys, profile?.authorized_keys)

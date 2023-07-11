@@ -21,12 +21,12 @@ const renderActions = (
   return (
     <ActionsPanel
       style={{ padding: 0 }}
-      primary
+      showPrimary
       primaryButtonHandler={onResize}
       primaryButtonLoading={loading}
       primaryButtonDataTestId="confirm"
       primaryButtonText="Resize"
-      secondary
+      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonDataTestId="cancel"
       secondaryButtonText="Cancel"

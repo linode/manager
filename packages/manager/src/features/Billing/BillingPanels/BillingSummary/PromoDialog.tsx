@@ -63,12 +63,12 @@ const PromoDialog = (props: Props) => {
 
   const actions = (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonDisabled={!promoCode}
       primaryButtonHandler={addPromo}
       primaryButtonLoading={loading}
       primaryButtonText="Apply Promo Code"
-      secondary
+      showSecondary
       secondaryButtonHandler={onClose}
       secondaryButtonText="Cancel"
     />

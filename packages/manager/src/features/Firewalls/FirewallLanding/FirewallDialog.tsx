@@ -65,11 +65,11 @@ const FirewallDialog = (props: Props) => {
       error={errorMap[mode]?.[0].reason}
       actions={
         <ActionsPanel
-          primary
+          showPrimary
           primaryButtonHandler={onSubmit}
           primaryButtonLoading={isLoadingMap[mode]}
           primaryButtonText={`${capitalize(mode)} Firewall`}
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="Cancel"
         />

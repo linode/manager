@@ -349,14 +349,14 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const getActions = () => {
     return (
       <ActionsPanel
-        primary
+        showPrimary
         primaryButtonHandler={handleRemoveImage}
         primaryButtonLoading={dialog.submitting}
         primaryButtonDataTestId="submit"
         primaryButtonText={
           dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'
         }
-        secondary
+        showSecondary
         secondaryButtonHandler={closeDialog}
         secondaryButtonText={
           dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'

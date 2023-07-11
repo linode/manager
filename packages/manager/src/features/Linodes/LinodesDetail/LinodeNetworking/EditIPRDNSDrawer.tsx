@@ -72,11 +72,11 @@ export const EditIPRDNSDrawer = (props: Props) => {
         </Typography>
         <ActionsPanel
           style={{ marginTop: 16 }}
-          primary
+          showPrimary
           primaryButtonDataTestId="submit"
           primaryButtonLoading={isLoading}
           primaryButtonType="submit"
-          secondary
+          showSecondary
           secondaryButtonHandler={onClose}
           secondaryButtonText="cancel"
         />

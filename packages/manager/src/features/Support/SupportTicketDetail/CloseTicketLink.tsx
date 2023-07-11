@@ -34,12 +34,12 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
 
   const actions = (
     <ActionsPanel
-      primary
+      showPrimary
       primaryButtonDataTestId="dialog-submit"
       primaryButtonHandler={closeTicket}
       primaryButtonLoading={isLoading}
       primaryButtonText="Confrim"
-      secondary
+      showSecondary
       secondaryButtonDataTestId="dialog-cancel"
       secondaryButtonHandler={() => setIsDialogOpen(false)}
       secondaryButtonText="Cancel"

@@ -209,7 +209,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             </Typography>
           )}
           <ActionsPanel
-            primary
+            showPrimary
             primaryButtonHandler={handleAdd}
             primaryButtonDisabled={!selectedTypeInfo}
             primaryButtonLoading={isLoading}
