@@ -56,7 +56,7 @@ type NavEntity =
 
 interface PrimaryLink {
   belongsTo?: NavEntity;
-  contains?: NavEntity[];
+  containsNestedItems?: boolean;
   display: NavEntity;
   href: string;
   attr?: { [key: string]: any };
@@ -163,7 +163,7 @@ export const PrimaryNav = (props: Props) => {
           display: 'Load Balancers',
           href: '/loadbalancers',
           icon: <NodeBalancer />,
-          contains: ['Akamai Global Load Balancers', 'NodeBalancers'],
+          containsNestedItems: true,
         },
         {
           belongsTo: 'Load Balancers',
@@ -372,7 +372,7 @@ interface PrimaryLinkProps extends PrimaryLink {
 }
 
 const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
-  const { belongsTo, contains, primaryLinkGroups } = props;
+  const { belongsTo, containsNestedItems, primaryLinkGroups } = props;
   const _Link = ({ ...props }) => {
     const { classes, cx } = useStyles();
 
@@ -437,7 +437,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
     );
   };
 
-  return contains ? (
+  return containsNestedItems ? (
     <ShowMoreExpansion name={props.display}>
       <>
         {primaryLinkGroups?.map((group) => {
