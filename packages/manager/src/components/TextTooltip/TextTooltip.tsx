@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ToolTip from 'src/components/core/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { styled } from '@mui/material/styles';
 import type { SxProps } from '@mui/material';
@@ -62,7 +62,7 @@ export const TextTooltip = (props: TextTooltipProps) => {
   );
 };
 
-const StyledRootTooltip = styled(ToolTip, {
+const StyledRootTooltip = styled(Tooltip, {
   label: 'StyledRootTooltip',
 })(({ theme }) => ({
   borderRadius: 4,

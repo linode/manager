@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
+import { Checkbox } from 'src/components/Checkbox';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { TableBody } from 'src/components/TableBody';
@@ -106,7 +106,7 @@ export const TransferTable: React.FC<Props> = (props) => {
         <TableHead>
           <TableRow>
             <TableCell style={{ width: 50, textAlign: 'center' }}>
-              <CheckBox
+              <Checkbox
                 className={`${classes.check} ${
                   hasSelectedAll ? '' : classes.checkEmpty
                 }`}

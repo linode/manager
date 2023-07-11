@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
+import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { TooltipIcon } from 'src/components/TooltipIcon/TooltipIcon';
-import { Box } from 'src/components/Box';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 interface Props {
@@ -31,8 +31,8 @@ export const UserDataAccordionHeading = ({ createType }: Props) => {
           sxTooltipIcon={{ padding: '0 8px', alignItems: 'baseline' }}
           text={
             <>
-              User data is a virtual machine&rsquo;s cloud-init metadata
-              relating to a user&rsquo;s local account.{' '}
+              User data allows you to provide additional custom data to
+              cloud-init to further configure your system.{' '}
               <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
                 Learn more.
               </Link>
