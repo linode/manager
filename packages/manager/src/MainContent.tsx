@@ -310,10 +310,12 @@ const MainContent = (props: CombinedProps) => {
                             <Route path="/linodes" component={LinodesRoutes} />
                             <Route path="/volumes" component={Volumes} />
                             <Redirect path="/volumes*" to="/volumes" />
-                            <Route
-                              path="/loadbalancer*"
-                              component={LoadBalancers}
-                            />
+                            {flags.aglb && (
+                              <Route
+                                path="/loadbalancer*"
+                                component={LoadBalancers}
+                              />
+                            )}
                             <Route
                               path="/nodebalancers"
                               component={NodeBalancers}
