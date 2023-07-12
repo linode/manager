@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
 import { useTheme, styled } from '@mui/material/styles';
-import TopMenuIcon, { StyledTopMenuIconWrapper } from '../TopMenuIcon';
+import { TopMenuIcon, StyledTopMenuIconWrapper } from '../TopMenuIcon';
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import {
   menuId,

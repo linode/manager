@@ -306,7 +306,7 @@ export const UserMenu: React.FC<{}> = () => {
     <div>
       <ReachMenu>
         <Tooltip
-          title={'Profile & Account'}
+          title="Profile & Account"
           disableTouchListener
           enterDelay={500}
           leaveDelay={0}
