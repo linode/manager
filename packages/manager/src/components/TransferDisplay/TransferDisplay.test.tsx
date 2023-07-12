@@ -12,6 +12,7 @@ const MockData = {
 
 const transferDisplayPercentageSubstring = /You have used \d+\.\d\d%/;
 const transferDisplayButtonSubstring = /Monthly Network Transfer Pool/;
+const docsLink = 'https://www.linode.com/docs/guides/network-transfer-quota/';
 
 describe('TransferDisplay', () => {
   it('renders transfer display text and opens the transfer dialog, with GB data stats, on click', async () => {
@@ -70,8 +71,23 @@ describe('TransferDisplay', () => {
 
     const transferDialog = getByTestId('drawer');
     expect(transferDialog.innerHTML).toMatch(
-      /Create a resource to start using Monthly Network Transfer./
+      /Your monthly network transfer will be shown when you create a resource./
     );
     expect(transferDialog.innerHTML).not.toMatch(/GB/);
+  });
+
+  it('renders the transfer display dialog with an accessible docs link', async () => {
+    server.use(
+      rest.get('*/account/transfer', (req, res, ctx) => {
+        return res(ctx.json(MockData));
+      })
+    );
+
+    const { findByText, getByRole } = renderWithTheme(<TransferDisplay />);
+    const transferButton = await findByText(transferDisplayButtonSubstring);
+    fireEvent.click(transferButton);
+
+    expect(getByRole('link')).toHaveAttribute('href', docsLink);
+    expect(getByRole('link').getAttribute('aria-label'));
   });
 });
