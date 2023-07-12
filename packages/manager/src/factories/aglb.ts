@@ -58,8 +58,6 @@ export const updateEntrypointFactory = Factory.Sync.makeFactory<EntrypointPayloa
   }
 );
 
-export const deleteEntrypointFactory = Factory.Sync.makeFactory<{}>({});
-
 // ***********************
 // Loadbalancers endpoints
 // ***********************
@@ -161,8 +159,6 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
   }
 );
 
-export const deleteLoadbalancerFactory = Factory.Sync.makeFactory<{}>({});
-
 // ****************
 // Routes endpoints
 // ****************
@@ -234,8 +230,6 @@ export const updateRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
   ],
 });
 
-export const deleteRouteFactory = Factory.Sync.makeFactory<{}>({});
-
 // *************************
 // Service Targets endpoints
 // *************************
@@ -306,5 +300,3 @@ export const updateServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
     health_check_host: 'anotherexample1.com',
   }
 );
-
-export const deleteServiceTargetFactory = Factory.Sync.makeFactory<{}>({});
