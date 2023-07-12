@@ -4,7 +4,14 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 export interface TableRowErrorProps {
+  /**
+   *  The number of columns the empty state should span
+   */
   colSpan: number;
+  /**
+   * The message to display in the empty state
+   * @default 'No items to display.'
+   */
   message: string | JSX.Element;
 }
 
