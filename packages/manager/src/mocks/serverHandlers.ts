@@ -78,19 +78,15 @@ import {
   paymentFactory,
   getEntrypointFactory,
   createEntrypointFactory,
-  deleteEntrypointFactory,
   getLoadbalancerFactory,
   createLoadbalancerFactory,
   createLoadbalancerWithAllChildrenFactory,
-  deleteLoadbalancerFactory,
   getRouteFactory,
   createRouteFactory,
   updateRouteFactory,
-  deleteRouteFactory,
   getServiceTargetsFactory,
   createServiceTargetFactory,
   updateServiceTargetFactory,
-  deleteServiceTargetFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
@@ -312,7 +308,7 @@ const aglb = [
     return res(ctx.json({ ...getEntrypointFactory.build({ id }), ...body }));
   }),
   rest.delete('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
-    return res(ctx.json(deleteEntrypointFactory.build()));
+    return res(ctx.json({}));
   }),
   // Load Balancers
   rest.get('*/aglb/loadbalancers', (req, res, ctx) => {
@@ -332,7 +328,7 @@ const aglb = [
     return res(ctx.json({ ...getLoadbalancerFactory.build({ id }), ...body }));
   }),
   rest.delete('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
-    return res(ctx.json(deleteLoadbalancerFactory.build()));
+    return res(ctx.json({}));
   }),
   // Routes
   rest.get('*/aglb/routes', (req, res, ctx) => {
@@ -346,7 +342,7 @@ const aglb = [
     return res(ctx.json({ ...updateRouteFactory.build(), ...body }));
   }),
   rest.delete('*/aglb/routes/:routeId', (req, res, ctx) => {
-    return res(ctx.json(deleteRouteFactory.build()));
+    return res(ctx.json({}));
   }),
   // Service Targets
   rest.get('*/aglb/service-targets', (req, res, ctx) => {
@@ -360,7 +356,7 @@ const aglb = [
     return res(ctx.json({ ...updateServiceTargetFactory.build(), ...body }));
   }),
   rest.delete('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
-    return res(ctx.json(deleteServiceTargetFactory.build()));
+    return res(ctx.json({}));
   }),
 ];
 
