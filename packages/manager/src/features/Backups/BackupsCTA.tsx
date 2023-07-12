@@ -8,6 +8,8 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
+import { IconButton } from 'src/components/IconButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { handleOpen } from 'src/store/backupDrawer';
@@ -25,11 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  enableButton: {
-    height: 40,
-    padding: 0,
-    width: 152,
-  },
   enableText: {
     ...theme.applyLinkStyles,
   },
@@ -40,9 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = StateProps & DispatchProps;
+type BackupsCTAProps = StateProps & DispatchProps;
 
-const BackupsCTA: React.FC<CombinedProps> = (props) => {
+const BackupsCTA = (props: BackupsCTAProps) => {
   const {
     linodesWithoutBackups,
     actions: { openBackupsDrawer },
@@ -76,18 +73,18 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
         ) : (
           <Paper className={classes.root}>
             <Typography style={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
-              <button
+              <StyledLinkButton
                 className={classes.enableText}
                 onClick={openBackupsDrawer}
               >
                 Enable Linode Backups
-              </button>{' '}
+              </StyledLinkButton>{' '}
               to protect your data and recover quickly in an emergency.
             </Typography>
             <span style={{ display: 'flex' }}>
-              <button onClick={dismissed} className={classes.closeIcon}>
+              <IconButton onClick={dismissed} className={classes.closeIcon}>
                 <Close />
-              </button>
+              </IconButton>
             </span>
           </Paper>
         );
@@ -122,6 +119,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(connected)(BackupsCTA);
+const enhanced = compose<BackupsCTAProps, {}>(connected)(BackupsCTA);
 
 export default enhanced;
