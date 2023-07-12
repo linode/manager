@@ -84,6 +84,8 @@ export const LinodeSelectV2 = (
     fetchNextPage,
   } = useInfiniteLinodesQuery(filter);
 
+  const [inputValue, setInputValue] = React.useState('');
+
   const linodes = linodesData?.pages.flatMap((page) => page.data);
   const filteredLinodes = optionsFilter
     ? linodes?.filter(optionsFilter)
@@ -94,8 +96,8 @@ export const LinodeSelectV2 = (
       value={mapIdsToLinodes(value, linodes)}
       options={filteredLinodes ?? []}
       getOptionLabel={(linode) => linode.label}
+      clearOnBlur={false}
       ChipProps={{ deleteIcon: <CloseIcon /> }}
-      clearOnBlur
       multiple={multiple}
       loading={linodesDataLoading || loading}
       disabled={disabled}
@@ -118,7 +120,6 @@ export const LinodeSelectV2 = (
       renderInput={(params) => (
         <TextField
           label="Linodes"
-          inputId={params.id}
           placeholder={
             placeholder ?? multiple ? 'Select Linodes' : 'Select a Linode'
           }
@@ -128,6 +129,8 @@ export const LinodeSelectV2 = (
           {...params}
         />
       )}
+      inputValue={inputValue}
+      onInputChange={(_, value) => setInputValue(value)}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
