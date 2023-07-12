@@ -6,26 +6,48 @@ import { TableRow } from 'src/components/TableRow';
 import { TableBody } from 'src/components/TableBody';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TableCell } from 'src/components/TableCell';
-import { useRouteQuery } from 'src/queries/aglb/routes';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
+import { useRoutesQuery } from 'src/queries/aglb/routes';
+import type { Route } from '@linode/api-v4';
+
+const PREFERENCE_KEY = 'aglb-routes';
 
 const RouteLanding = () => {
-  const { data: routes } = useRouteQuery();
+  const pagination = usePagination(1, PREFERENCE_KEY);
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'asc',
+    },
+    `${PREFERENCE_KEY}-order`
+  );
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+  };
+  const { data: routes, error, isLoading } = useRoutesQuery(
+    {
+      page: pagination.page,
+    },
+    filter
+  );
 
   console.log('routes', routes);
 
   return (
     <>
       <DocumentTitleSegment segment="Routes" />
-      {/* <Table>
+      <Table>
         <TableHead>
           <TableRow>
             <TableSortCell
-              active={orderBy === 'domain'}
+              active={orderBy === 'label'}
               direction={order}
-              label="domain"
+              label="label"
               handleClick={handleOrderChange}
             >
-              Domain
+              Label
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'status'}
@@ -33,35 +55,30 @@ const RouteLanding = () => {
               label="status"
               handleClick={handleOrderChange}
             >
-              Status
+              Match Type
             </TableSortCell>
-            <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'type'}
-                direction={order}
-                label="type"
-                handleClick={handleOrderChange}
-              >
-                Type
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'updated'}
-                direction={order}
-                label="updated"
-                handleClick={handleOrderChange}
-              >
-                Last Modified
-              </TableSortCell>
-            </Hidden>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {domains?.data.map((domain: Domain) => (
-            <DomainRow key={domain.id} domain={domain} {...handlers} />
+          {routes?.data.map((route: Route) => (
+            <TableRow key={route.id} data-qa-route-cell={route.id}>
+              <TableCell parentColumn="Label">{route.label}</TableCell>
+              <TableCell parentColumn="Match Type">match type</TableCell>
+              <TableCell>
+                {/* <ActionMenu
+                  routeId={route.id}
+                  routeType={route.type}
+                  routeStatus={route.status}
+                  routeDomain={route.domain}
+                  routePath={route.path}
+                  routeServiceId={route.id}
+                /> */}
+              </TableCell>
+            </TableRow>
           ))}
         </TableBody>
-      </Table> */}
+      </Table>
     </>
   );
 };

@@ -1,5 +1,11 @@
-import Request, { setData, setMethod, setURL } from '../request';
-import { ResourcePage } from 'src/types';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
+import { Filter, Params, ResourcePage } from 'src/types';
 import { BETA_API_ROOT } from 'src/constants';
 import type { Route, RoutePayload } from './types';
 
@@ -8,10 +14,12 @@ import type { Route, RoutePayload } from './types';
  *
  * Returns a paginated list of Akamai Global Load Balancer routes
  */
-export const getRoutes = () =>
+export const getRoutes = (params: Params, filter?: Filter) =>
   Request<ResourcePage<Route>>(
     setURL(`${BETA_API_ROOT}/aglb/routes`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   );
 
 /**

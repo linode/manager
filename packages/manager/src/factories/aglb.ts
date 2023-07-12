@@ -149,7 +149,7 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
 
 export const getRouteFactory = Factory.Sync.makeFactory<Route2>({
   id: Factory.each((i) => i),
-  label: 'images-route',
+  label: Factory.each((i) => `route-${i}`),
   rules: [
     {
       match_condition: {
