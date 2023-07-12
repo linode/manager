@@ -1,4 +1,3 @@
-import OpenInNew from '@mui/icons-material/OpenInNew';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
@@ -26,20 +25,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   link: {
-    display: 'flex',
-    alignItems: 'center',
-    flexFlow: 'row nowrap',
     marginTop: theme.spacing(1),
-    '& p': {
-      marginRight: 4,
-    },
-    '& svg': {
-      width: 15,
-      height: 15,
-      color: theme.palette.text.primary,
-      '&:hover': {
-        color: 'inherit',
-      },
+  },
+  paddedDocsText: {
+    [theme.breakpoints.up('md')]: {
+      paddingRight: theme.spacing(3), // Prevents link text from being split onto two lines.
     },
   },
   paper: {
@@ -66,7 +56,9 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const quota = data?.quota ?? 0;
   const used = data?.used ?? 0;
 
-  const poolUsagePct = used < quota ? (used / quota) * 100 : 100;
+  // Usage percentage should not be 100% if there has been no usage or usage has not exceeded quota.
+  const poolUsagePct =
+    used < quota ? (used / quota) * 100 : used === 0 ? 0 : 100;
 
   if (isError) {
     // We may want to add an error state for this but I think that would clutter
@@ -132,6 +124,17 @@ export const TransferDialog = React.memo((props: DialogProps) => {
   const { isOpen, onClose, poolUsagePct, quota, used } = props;
   const { classes } = useStyles();
   const daysRemainingInMonth = getDaysRemaining();
+  // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
+  const isEmptyPool = quota === 0;
+  const transferQuotaDocsText =
+    used === 0 ? (
+      <span className={classes.paddedDocsText}>
+        Compute instances, NodeBalancers, and Object Storage include network
+        transfer.
+      </span>
+    ) : (
+      'View products and services that include network transfer, and learn how to optimize network usage to avoid billing surprises.'
+    );
 
   return (
     <Dialog
@@ -149,26 +152,37 @@ export const TransferDialog = React.memo((props: DialogProps) => {
         spacing={2}
       >
         <Grid style={{ marginRight: 10 }}>
-          <Typography>{used} GB Used</Typography>
+          {!isEmptyPool ? (
+            <Typography>{used} GB Used</Typography>
+          ) : (
+            <Typography>
+              Your monthly network transfer will be shown when you create a
+              resource.
+            </Typography>
+          )}
         </Grid>
         <Grid>
-          <Typography>
-            {quota >= used ? (
-              <span>{quota - used} GB Available</span>
-            ) : (
-              <span>
-                {(quota - used).toString().replace(/\-/, '')} GB Over Quota
-              </span>
-            )}
-          </Typography>
+          {!isEmptyPool ? (
+            <Typography>
+              {quota >= used ? (
+                <span>{quota - used} GB Available</span>
+              ) : (
+                <span>
+                  {(quota - used).toString().replace(/\-/, '')} GB Over Quota
+                </span>
+              )}
+            </Typography>
+          ) : null}
         </Grid>
       </Grid>
-      <BarPercent
-        max={100}
-        value={Math.ceil(poolUsagePct)}
-        className={classes.poolUsageProgress}
-        rounded
-      />
+      {!isEmptyPool ? (
+        <BarPercent
+          max={100}
+          value={Math.ceil(poolUsagePct)}
+          className={classes.poolUsageProgress}
+          rounded
+        />
+      ) : null}
 
       <Typography className={classes.proratedNotice}>
         <strong>
@@ -178,17 +192,19 @@ export const TransferDialog = React.memo((props: DialogProps) => {
       </Typography>
       <Typography className={classes.proratedNotice}>
         Your account&rsquo;s network transfer pool adds up all the included
-        transfer associated with the active Linode services on your account, and
-        is prorated based on service creation and deletion dates.
+        transfer associated with active Linode services on your account and is
+        prorated based on service creation.
       </Typography>
       <div className={classes.link}>
         <Typography>
-          Optimize your network usage and avoid billing surprises related to
-          network transfer.
+          {transferQuotaDocsText}{' '}
+          <Link
+            to="https://www.linode.com/docs/guides/network-transfer-quota/"
+            aria-label="Learn more – link opens in a new tab"
+          >
+            Learn more.
+          </Link>
         </Typography>
-        <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
-          <OpenInNew />
-        </Link>
       </div>
     </Dialog>
   );
