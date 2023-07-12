@@ -64,7 +64,7 @@ const BackupsCTA = (props: BackupsCTAProps) => {
           >
             <Typography sx={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
               <StyledLinkButton
-                sx={(theme) => ({
+                sx={(theme: Theme) => ({
                   ...theme.applyLinkStyles,
                 })}
                 onClick={openBackupsDrawer}
@@ -75,7 +75,7 @@ const BackupsCTA = (props: BackupsCTAProps) => {
             </Typography>
             <Box component="span" sx={{ display: 'flex' }}>
               <IconButton
-                sx={(theme) => ({
+                sx={(theme: Theme) => ({
                   ...theme.applyLinkStyles,
                   marginLeft: 12,
                   lineHeight: '0.5rem',
