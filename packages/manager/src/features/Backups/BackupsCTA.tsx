@@ -5,10 +5,10 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
 import { IconButton } from 'src/components/IconButton';
+import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { useAccountSettings } from 'src/queries/accountSettings';
@@ -18,25 +18,6 @@ import { MapState } from 'src/store/types';
 import { useProfile } from 'src/queries/profile';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(1),
-    paddingRight: theme.spacing(2),
-    margin: `${theme.spacing(1)} 0 ${theme.spacing(3)} 0`,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  enableText: {
-    ...theme.applyLinkStyles,
-  },
-  closeIcon: {
-    ...theme.applyLinkStyles,
-    marginLeft: 12,
-    lineHeight: '0.5rem',
-  },
-}));
-
 type BackupsCTAProps = StateProps & DispatchProps;
 
 const BackupsCTA = (props: BackupsCTAProps) => {
@@ -44,7 +25,6 @@ const BackupsCTA = (props: BackupsCTAProps) => {
     linodesWithoutBackups,
     actions: { openBackupsDrawer },
   } = props;
-  const classes = useStyles();
 
   const { data: accountSettings } = useAccountSettings();
   const { data: profile } = useProfile();
@@ -71,21 +51,40 @@ const BackupsCTA = (props: BackupsCTAProps) => {
           // eslint-disable-next-line react/jsx-no-useless-fragment
           <React.Fragment />
         ) : (
-          <Paper className={classes.root}>
-            <Typography style={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
+          <Paper
+            sx={(theme: Theme) => ({
+              padding: theme.spacing(1),
+              paddingRight: theme.spacing(2),
+              marginTop: theme.spacing(1),
+              marginBottom: theme.spacing(3),
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            })}
+          >
+            <Typography sx={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
               <StyledLinkButton
-                className={classes.enableText}
+                sx={(theme) => ({
+                  ...theme.applyLinkStyles,
+                })}
                 onClick={openBackupsDrawer}
               >
                 Enable Linode Backups
               </StyledLinkButton>{' '}
               to protect your data and recover quickly in an emergency.
             </Typography>
-            <span style={{ display: 'flex' }}>
-              <IconButton onClick={dismissed} className={classes.closeIcon}>
+            <Box component="span" sx={{ display: 'flex' }}>
+              <IconButton
+                sx={(theme) => ({
+                  ...theme.applyLinkStyles,
+                  marginLeft: 12,
+                  lineHeight: '0.5rem',
+                })}
+                onClick={dismissed}
+              >
                 <Close />
               </IconButton>
-            </span>
+            </Box>
           </Paper>
         );
       }}
