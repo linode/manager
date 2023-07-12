@@ -14,7 +14,7 @@ export const Help = () => {
         role="link"
         onClick={() => history.push('/support')}
       >
-        <StyledTopMenuIconWrapper sx={{ marginLeft: [null, null, '8px'] }}>
+        <StyledTopMenuIconWrapper>
           <HelpSVGIcon status="help" />
         </StyledTopMenuIconWrapper>
       </StyledLinkButton>
