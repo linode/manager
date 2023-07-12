@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { Flags, FlagSet } from 'src/featureFlags';
 import { Dispatch } from 'src/hooks/types';
 import useFlags from 'src/hooks/useFlags';
@@ -58,4 +57,4 @@ const FeatureFlagTool: React.FC<{}> = () => {
   );
 };
 
-export default withFeatureFlagProvider(FeatureFlagTool);
+export default FeatureFlagTool;

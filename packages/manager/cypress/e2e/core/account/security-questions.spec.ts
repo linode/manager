@@ -26,7 +26,7 @@ const getSecurityQuestionsSection = (): Cypress.Chainable => {
  * @returns Cypress chainable.
  */
 const getSecurityQuestion = (questionNumber: number): Cypress.Chainable => {
-  return cy.contains('label', `Question ${questionNumber}`).parent();
+  return cy.contains('label', `Question ${questionNumber}`).parent().parent();
 };
 
 /**
@@ -39,7 +39,7 @@ const getSecurityQuestion = (questionNumber: number): Cypress.Chainable => {
 const getSecurityQuestionAnswer = (
   questionNumber: number
 ): Cypress.Chainable => {
-  return cy.contains('label', `Answer ${questionNumber}`).parent();
+  return cy.contains('label', `Answer ${questionNumber}`).parent().parent();
 };
 
 /**
