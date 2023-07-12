@@ -5,8 +5,19 @@ import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
 
 export interface TableRowLoadingProps {
+  /**
+   * The number of columns the empty state should span
+   * @default 1
+   */
   columns?: number;
+  /**
+   * Optional responsive props to hide cells at certain breakpoints
+   */
   responsive?: Record<number, HiddenProps>;
+  /**
+   * The number of rows to display to customize the loading table's height)
+   * @default 1
+   */
   rows?: number;
 }
 

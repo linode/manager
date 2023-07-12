@@ -1,8 +1,6 @@
-import { useLDClient, withLDProvider } from 'launchdarkly-react-client-sdk';
+import { withLDProvider } from 'launchdarkly-react-client-sdk';
 
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
-
-export { useLDClient };
 
 /**
  * only wrap the component in the HOC if we've passed
@@ -15,14 +13,7 @@ export { useLDClient };
 const featureFlagProvider = LAUNCH_DARKLY_API_KEY
   ? withLDProvider({
       clientSideID: LAUNCH_DARKLY_API_KEY,
-      /**
-       * Initialize the app with an anonymous user.
-       */
-      user: {
-        key: 'anonymous',
-        anonymous: true,
-        privateAttributeNames: ['country', 'taxID'],
-      },
+      options: { allAttributesPrivate: true },
     })
   : (component: React.ComponentType) => component;
 

@@ -5,6 +5,7 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import MUIDialog from 'src/components/core/Dialog';
 import { useHistory } from 'react-router-dom';
 import useAccountManagement from './hooks/useAccountManagement';
+import useFlags from './hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -61,6 +62,7 @@ const GoTo: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
   const { _isManagedAccount, _hasAccountAccess } = useAccountManagement();
+  const flags = useFlags();
 
   const onSelect = (item: Item<string>) => {
     routerHistory.push(item.value);
@@ -82,6 +84,11 @@ const GoTo: React.FC<CombinedProps> = (props) => {
       {
         display: 'Volumes',
         href: '/volumes',
+      },
+      {
+        hide: !flags.aglb,
+        display: 'Load Balancers',
+        href: '/loadbalancers',
       },
       {
         display: 'NodeBalancers',

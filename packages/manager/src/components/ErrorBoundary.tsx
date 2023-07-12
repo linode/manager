@@ -1,4 +1,5 @@
 import React from 'react';
+import { reportException } from 'src/exceptionReporting';
 
 interface Props {
   fallback: React.ReactElement;
@@ -19,6 +20,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.props.callback) {
       this.props.callback(error, errorInfo);
     }
+
+    reportException(error, {
+      message: `Captured in ErrorBoundary.tsx: ${errorInfo}`,
+    });
   }
 
   static getDerivedStateFromError() {

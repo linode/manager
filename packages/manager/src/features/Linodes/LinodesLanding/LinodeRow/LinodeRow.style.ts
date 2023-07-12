@@ -5,7 +5,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
   bodyRow: {
     height: 'auto',
     '&:hover': {
-      backgroundColor: theme.bg.lightBlue1,
       '& [data-qa-copy-ip] button > svg': {
         opacity: 1,
       },

@@ -4,12 +4,12 @@ import { mockGetStackScripts } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
 
 authenticate();
-describe('stackscripts', () => {
+describe('Display stackscripts', () => {
   /*
-   * - Displays welcom message in the landing page.
+   * - Displays welcome message in the landing page.
    * - Confirms that "Automate Deployment with StackScripts!" welcome page appears when user has no StackScripts.
    */
-  it('display the correct welcom message in landing page', () => {
+  it('displays the correct welcome message in landing page', () => {
     mockGetStackScripts([]).as('getStackScripts');
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
@@ -29,7 +29,7 @@ describe('stackscripts', () => {
    * - Displays Account StackScripts in the landing page.
    * - Confirms that all the StackScripts are shown as expected.
    */
-  it('display Account StackScripts in landing page', () => {
+  it('displays Account StackScripts in landing page', () => {
     const stackScripts = stackScriptFactory.buildList(2);
     mockGetStackScripts(stackScripts).as('getStackScripts');
     cy.visitWithLogin('/stackscripts/account');
@@ -54,7 +54,7 @@ describe('stackscripts', () => {
    * - Displays Community StackScripts in the landing page.
    * - Confirms that Community page is not empty.
    */
-  it('display Community StackScripts in landing page', () => {
+  it('displays Community StackScripts in landing page', () => {
     cy.visitWithLogin('/stackscripts/community');
 
     cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
