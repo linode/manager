@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 
-const EntryPointCreate = () => {
+const ServiceTargetCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Service Targets" />
@@ -10,4 +10,4 @@ const EntryPointCreate = () => {
   );
 };
 
-export default EntryPointCreate;
+export default ServiceTargetCreate;

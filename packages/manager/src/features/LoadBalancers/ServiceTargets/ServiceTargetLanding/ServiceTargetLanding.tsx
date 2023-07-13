@@ -19,7 +19,7 @@ import { usePagination } from 'src/hooks/usePagination';
 
 const preferenceKey = 'entrypoints';
 
-const EntryPointLanding = () => {
+const ServiceTargetLanding = () => {
   //TODO: AGLB - Need confirmation on pagination
   const pagination = usePagination(1, preferenceKey);
 
@@ -134,4 +134,4 @@ const EntryPointLanding = () => {
   );
 };
 
-export default EntryPointLanding;
+export default ServiceTargetLanding;
