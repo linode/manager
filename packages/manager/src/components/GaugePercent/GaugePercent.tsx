@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, withTheme, WithTheme } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
+import { withTheme, WithTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Chart } from 'chart.js';
 
@@ -11,7 +12,7 @@ interface Options {
 }
 
 const useStyles = (options: Options) =>
-  makeStyles((theme: Theme) => ({
+  makeStyles()((theme: Theme) => ({
     gaugeWrapper: {
       position: 'relative',
       width: `50%`,
@@ -51,7 +52,7 @@ type CombinedProps = Props & WithTheme;
 const GaugePercent: React.FC<CombinedProps> = (props) => {
   const width = props.width || 300;
   const height = props.height || 300;
-  const classes = useStyles({
+  const { classes } = useStyles({
     width,
     height,
     fontSize: props.innerTextFontSize,
