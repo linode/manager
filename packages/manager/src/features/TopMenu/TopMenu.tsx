@@ -4,16 +4,15 @@ import { Hidden } from 'src/components/Hidden';
 import { AppBar } from 'src/components/AppBar';
 import { IconButton } from 'src/components/IconButton';
 import { makeStyles } from '@mui/styles';
-import { Theme, useTheme } from '@mui/material/styles';
-import clsx from 'clsx';
+import { Theme } from '@mui/material/styles';
 import { Toolbar } from 'src/components/Toolbar';
 import { Typography } from 'src/components/Typography';
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
-import Community from './Community';
-import Help from './Help';
+import { Community } from './Community';
+import { Help } from './Help';
 import NotificationMenu from './NotificationMenu';
 import SearchBar from './SearchBar';
-import TopMenuIcon from './TopMenuIcon';
+import { TopMenuIcon } from './TopMenuIcon';
 import UserMenu from './UserMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,14 +50,7 @@ const TopMenu = (props: Props) => {
     desktopMenuToggle,
   } = props;
 
-  const theme = useTheme();
   const classes = useStyles();
-
-  const communityIconStyles = {
-    [theme.breakpoints.down(370)]: {
-      ...theme.visually.hidden,
-    },
-  };
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -82,34 +74,34 @@ const TopMenu = (props: Props) => {
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar} variant="dense">
           <Hidden mdDown>
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              onClick={desktopMenuToggle}
-              size="large"
-              data-testid="open-nav-menu"
-            >
-              <TopMenuIcon title={navHoverText} key={navHoverText}>
+            <TopMenuIcon title={navHoverText} key={navHoverText}>
+              <IconButton
+                color="inherit"
+                aria-label="open menu"
+                onClick={desktopMenuToggle}
+                size="large"
+                data-testid="open-nav-menu"
+              >
                 <MenuIcon />
-              </TopMenuIcon>
-            </IconButton>
+              </IconButton>
+            </TopMenuIcon>
           </Hidden>
           <Hidden mdUp>
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              onClick={openSideMenu}
-              size="large"
-            >
-              <TopMenuIcon title={navHoverText} key={navHoverText}>
+            <TopMenuIcon title={navHoverText} key={navHoverText}>
+              <IconButton
+                color="inherit"
+                aria-label="open menu"
+                onClick={openSideMenu}
+                size="large"
+              >
                 <MenuIcon />
-              </TopMenuIcon>
-            </IconButton>
+              </IconButton>
+            </TopMenuIcon>
           </Hidden>
           <AddNewMenu />
           <SearchBar />
           <Help />
-          <Community className={clsx(communityIconStyles)} />
+          <Community />
           <NotificationMenu />
           <UserMenu />
         </Toolbar>
