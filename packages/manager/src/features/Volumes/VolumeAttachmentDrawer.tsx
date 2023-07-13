@@ -9,12 +9,12 @@ import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import { Notice } from 'src/components/Notice/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { number, object } from 'yup';
+import { LinodeSelectV2 } from '../Linodes/LinodeSelect/LinodeSelectV2';
 
 interface Props {
   open: boolean;
@@ -122,17 +122,17 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
           />
         )}
         {generalError && <Notice text={generalError} error={true} />}
-        <LinodeSelect
-          selectedLinode={formik.values.linode_id}
-          region={linodeRegion}
-          handleChange={(linode) => {
+        <LinodeSelectV2
+          value={formik.values.linode_id}
+          optionsFilter={(linode) => linode.region === linodeRegion}
+          onSelectionChange={(linode) => {
             if (linode !== null) {
               formik.setFieldValue('linode_id', linode.id);
             }
           }}
-          linodeError={formik.errors.linode_id ?? linodeError}
+          errorText={formik.errors.linode_id ?? linodeError}
           disabled={disabled || readOnly}
-          isClearable={false}
+          clearable={false}
         />
         {!linodeError && (
           <FormHelperText>

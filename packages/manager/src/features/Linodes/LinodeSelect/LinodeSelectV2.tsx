@@ -15,6 +15,8 @@ import { mapIdsToLinodes } from 'src/utilities/mapIdsToLinodes';
 import { CustomPopper, RemoveIcon, SelectedIcon } from './LinodeSelect.styles';
 
 interface LinodeSelectProps {
+  /** Whether to display the clear icon. Defaults to `true`. */
+  clearable?: boolean;
   /** Disable editing the input value. */
   disabled?: boolean;
   /** Hint displayed with error styling. */
@@ -62,6 +64,7 @@ export const LinodeSelectV2 = (
   props: LinodeSingleSelectProps | LinodeMultiSelectProps
 ) => {
   const {
+    clearable = true,
     disabled,
     errorText,
     filter,
@@ -159,6 +162,7 @@ export const LinodeSelectV2 = (
       )}
       PopperComponent={CustomPopper}
       popupIcon={<KeyboardArrowDownIcon />}
+      disableClearable={!clearable}
     />
   );
 };

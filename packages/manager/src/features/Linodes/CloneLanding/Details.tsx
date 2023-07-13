@@ -11,13 +11,13 @@ import { Theme } from '@mui/material/styles';
 import { Typography } from 'src/components/Typography';
 import { Notice } from 'src/components/Notice/Notice';
 import { useRegionsQuery } from 'src/queries/regions';
-import { LinodeSelect } from '../LinodeSelect/LinodeSelect';
 import {
   EstimatedCloneTimeMode,
   ExtendedConfig,
   getAllDisks,
   getEstimatedCloneTime,
 } from './utilities';
+import { LinodeSelectV2 } from '../LinodeSelect/LinodeSelectV2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -251,23 +251,21 @@ export const Configs: React.FC<Props> = (props) => {
         <Typography>Estimated time: {estimatedCloneTime}</Typography>
       )}
 
-      <LinodeSelect
-        label="Destination"
-        selectedLinode={selectedLinodeId}
-        handleChange={(linode) => {
+      <LinodeSelectV2
+        placeholder="Destination"
+        value={selectedLinodeId}
+        onSelectionChange={(linode) => {
           if (linode !== null) {
             handleSelectLinode(linode.id);
           }
         }}
-        filterCondition={
+        optionsFilter={
           shouldExcludeCurrentLinode
             ? (linode: Linode) => linode.id !== currentLinodeId
             : undefined
         }
-        textFieldProps={{
-          error: !!linodeError,
-        }}
-        isClearable={false}
+        errorText={linodeError}
+        clearable={false}
       />
 
       {linodeError && (

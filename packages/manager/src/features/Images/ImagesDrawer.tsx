@@ -18,7 +18,6 @@ import { TextField } from 'src/components/TextField';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/Linodes/DiskSelect';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useCreateImageMutation,
   useUpdateImageMutation,
@@ -26,6 +25,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { useImageAndLinodeGrantCheck } from './utils';
+import { LinodeSelectV2 } from '../Linodes/LinodeSelect/LinodeSelectV2';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -321,19 +321,19 @@ export const ImagesDrawer = (props: CombinedProps) => {
         {notice && <Notice info text={notice} data-qa-notice />}
 
         {['create', 'restore'].includes(mode) && (
-          <LinodeSelect
-            selectedLinode={selectedLinode}
-            linodeError={linodeError}
+          <LinodeSelectV2
+            value={selectedLinode}
+            errorText={linodeError}
+            clearable={false}
             disabled={!canCreateImage}
-            handleChange={(linode) => {
+            onSelectionChange={(linode) => {
               if (linode !== null) {
                 handleLinodeChange(linode.id);
               }
             }}
-            filterCondition={(linode) =>
+            optionsFilter={(linode) =>
               availableLinodes ? availableLinodes.includes(linode.id) : true
             }
-            isClearable={false}
           />
         )}
 
