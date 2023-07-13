@@ -17,18 +17,18 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ServiceTargetRow } from './ServiceTargetRow';
 import { usePagination } from 'src/hooks/usePagination';
 
-const preferenceKey = 'entrypoints';
+const PREFERENCE_KEY = 'serviceTargets';
 
 const ServiceTargetLanding = () => {
   //TODO: AGLB - Need confirmation on pagination
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'label',
       order: 'desc',
     },
-    `${preferenceKey}-order`
+    `${PREFERENCE_KEY}-order`
   );
 
   const filter = {
