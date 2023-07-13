@@ -1,1 +1,1 @@
-export { default } from './CreateDomain';
+export { CreateDomain } from './CreateDomain';

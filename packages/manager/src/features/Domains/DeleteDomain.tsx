@@ -1,21 +1,21 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { useDeleteDomainMutation } from 'src/queries/domains';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-export interface Props {
+export interface DeleteDomainProps {
   domainId: number;
   domainLabel: string;
   // Function that is invoked after Domain has been successfully deleted.
   onSuccess?: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     float: 'right',
     [theme.breakpoints.down('lg')]: {
@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DeleteDomain = (props: Props) => {
-  const classes = useStyles();
+export const DeleteDomain = (props: DeleteDomainProps) => {
+  const { classes } = useStyles();
 
   const { domainId, domainLabel } = props;
   const { enqueueSnackbar } = useSnackbar();
@@ -75,5 +75,3 @@ export const DeleteDomain = (props: Props) => {
     </>
   );
 };
-
-export default DeleteDomain;

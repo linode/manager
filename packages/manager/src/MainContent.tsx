@@ -139,7 +139,11 @@ type CombinedProps = Props & GlobalErrorProps;
 const Account = React.lazy(() => import('src/features/Account'));
 const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
 const Volumes = React.lazy(() => import('src/features/Volumes'));
-const Domains = React.lazy(() => import('src/features/Domains'));
+const Domains = React.lazy(() =>
+  import('src/features/Domains').then((module) => ({
+    default: module.DomainsRoutes,
+  }))
+);
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));

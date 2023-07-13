@@ -23,16 +23,16 @@ interface DeleteData {
   recordID: number;
 }
 
-interface Props {
+interface DomainRecordActionMenuProps {
   deleteData?: DeleteData;
   editPayload: Domain | EditPayload;
   label: string;
   onEdit: (data: Domain | EditPayload) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = DomainRecordActionMenuProps & RouteComponentProps<{}>;
 
-export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
+export const DomainRecordActionMenu = withRouter((props: CombinedProps) => {
   const { deleteData, editPayload, onEdit } = props;
 
   const handleEdit = () => {
@@ -66,6 +66,6 @@ export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
       ariaLabel={`Action menu for Record ${props.label}`}
     />
   );
-};
+});
 
-export default withRouter(DomainRecordActionMenu);
+// export default withRouter(DomainRecordActionMenu);

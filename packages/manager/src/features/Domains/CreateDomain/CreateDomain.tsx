@@ -9,11 +9,11 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
@@ -48,7 +48,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { generateDefaultDomainRecords } from '../domainUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   helperText: {
     maxWidth: 'none',
   },
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type DefaultRecordsType = 'linode' | 'nodebalancer' | 'none';
 
 export const CreateDomain = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -484,5 +484,3 @@ export const CreateDomain = () => {
     </Grid>
   );
 };
-
-export default CreateDomain;

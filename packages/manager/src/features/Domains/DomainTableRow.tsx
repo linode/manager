@@ -1,8 +1,8 @@
 import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
@@ -10,10 +10,10 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import ActionMenu, { Handlers } from './DomainActionMenu';
+import { DomainActionMenu, Handlers } from './DomainActionMenu';
 import { getDomainDisplayType } from './domainUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
   },
@@ -27,10 +27,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = { domain: Domain } & Handlers;
 
-const DomainTableRow: React.FC<CombinedProps> = (props) => {
+export const DomainTableRow = React.memo((props: CombinedProps) => {
   const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <TableRow
@@ -67,7 +67,7 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <ActionMenu
+        <DomainActionMenu
           domain={domain}
           onClone={onClone}
           onDisableOrEnable={onDisableOrEnable}
@@ -77,7 +77,7 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
       </TableCell>
     </TableRow>
   );
-};
+});
 
 const humanizeDomainStatus = (status: DomainStatus) => {
   switch (status) {
@@ -108,5 +108,3 @@ const domainStatusToIconStatus = (status: DomainStatus) => {
       return 'inactive';
   }
 };
-
-export default React.memo(DomainTableRow);

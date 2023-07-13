@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -11,19 +11,17 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import { Typography } from 'src/components/Typography';
 import Paper from 'src/components/core/Paper';
-import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
 
-import DeleteDomain from '../DeleteDomain';
+import { DeleteDomain } from '../DeleteDomain';
 import DomainRecords from '../DomainRecords';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  ...summaryPanelStyles(theme),
+const useStyles = makeStyles()((theme: Theme) => ({
   delete: {
     [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
@@ -45,6 +43,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
     marginLeft: 0,
     marginRight: 0,
+    [theme.breakpoints.up('lg')]: {
+      padding: theme.spacing(1),
+      paddingRight: 0,
+    },
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: theme.spacing(1),
+      paddingTop: 0,
+    },
+  },
+  summarySection: {
+    height: '93%',
+    marginBottom: theme.spacing(2),
+    minHeight: '160px',
+    padding: theme.spacing(2.5),
   },
   tagsSection: {
     '&.MuiGrid-item': {
@@ -56,10 +68,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       order: 2,
     },
   },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 export const DomainDetail = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const params = useParams<{ domainId: string }>();
   const domainId = Number(params.domainId);
 
@@ -180,5 +195,3 @@ export const DomainDetail = () => {
     </>
   );
 };
-
-export default DomainDetail;

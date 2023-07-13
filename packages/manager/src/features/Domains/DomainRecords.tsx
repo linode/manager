@@ -51,8 +51,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { truncateEnd } from 'src/utilities/truncate';
 
-import ActionMenu from './DomainRecordActionMenu';
-import DomainRecordDrawer from './DomainRecordDrawer';
+import { DomainRecordActionMenu } from './DomainRecordActionMenu';
+import { DomainRecordDrawer } from './DomainRecordDrawer';
 
 type ClassNames = 'cells' | 'linkContainer' | 'root';
 
@@ -415,7 +415,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         {
           render: (d: Domain) => {
             return d.type === 'master' ? (
-              <ActionMenu
+              <DomainRecordActionMenu
                 editPayload={d}
                 label={this.props.domain.domain}
                 onEdit={this.handleOpenSOADrawer}
@@ -459,7 +459,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            */
           render: ({ id, name, target, ttl_sec }: DomainRecord) =>
             id === -1 ? null : (
-              <ActionMenu
+              <DomainRecordActionMenu
                 deleteData={{
                   onDelete: this.confirmDeletion,
                   recordID: id,
@@ -505,7 +505,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           render: ({ id, name, priority, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -542,7 +542,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -577,7 +577,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -614,7 +614,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -667,7 +667,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
             target,
             weight,
           }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,
@@ -707,7 +707,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { render: getTTL, title: 'TTL' },
         {
           render: ({ id, name, tag, target, ttl_sec }: DomainRecord) => (
-            <ActionMenu
+            <DomainRecordActionMenu
               deleteData={{
                 onDelete: this.confirmDeletion,
                 recordID: id,

@@ -1,9 +1,9 @@
 import { Domain } from '@linode/api-v4/lib/domains';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -32,17 +32,17 @@ import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';
-import DisableDomainDialog from './DisableDomainDialog';
+import { DisableDomainDialog } from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
-import DomainBanner from './DomainBanner';
-import DomainRow from './DomainTableRow';
-import DomainZoneImportDrawer from './DomainZoneImportDrawer';
+import { DomainBanner } from './DomainBanner';
+import { DomainTableRow } from './DomainTableRow';
+import { DomainZoneImportDrawer } from './DomainZoneImportDrawer';
 import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 import { EditDomainDrawer } from './EditDomainDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   importButton: {
     marginLeft: `-${theme.spacing()}`,
     whiteSpace: 'nowrap',
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+interface DomainsLandingProps {
   // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
   domainForEditing?: Domain;
@@ -65,8 +65,8 @@ interface Props {
 
 const preferenceKey = 'domains';
 
-export const DomainsLanding: React.FC<Props> = (props) => {
-  const classes = useStyles();
+export const DomainsLanding = (props: DomainsLandingProps) => {
+  const { classes } = useStyles();
   const history = useHistory();
   const location = useLocation<{ recordError?: string }>();
 
@@ -299,7 +299,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         </TableHead>
         <TableBody>
           {domains?.data.map((domain: Domain) => (
-            <DomainRow domain={domain} key={domain.id} {...handlers} />
+            <DomainTableRow domain={domain} key={domain.id} {...handlers} />
           ))}
         </TableBody>
       </Table>
@@ -348,5 +348,3 @@ export const DomainsLanding: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default DomainsLanding;
