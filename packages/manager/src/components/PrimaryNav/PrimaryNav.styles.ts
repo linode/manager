@@ -121,6 +121,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       transition: theme.transitions.create(['color']),
       '&.hiddenWhenCollapsed': {
         opacity: 0,
+        maxHeight: 36,
       },
     },
     active: {
