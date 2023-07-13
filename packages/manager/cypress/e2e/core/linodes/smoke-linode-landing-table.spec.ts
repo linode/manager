@@ -134,14 +134,20 @@ describe('linode landing checks', () => {
         'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
       );
 
-      cy.findByLabelText('Link to Linode Support')
+      cy.findByLabelText('Help & Support')
         .should('be.visible')
-        .should('have.attr', 'href', '/support');
+        .should('be.enabled')
+        .click();
 
-      cy.findByTitle('Linode Cloud Community')
+      cy.url().should('endWith', '/support');
+      cy.go('back');
+
+      // Cypress cannot work with other tabs and windows, so we can't test
+      // that this takes the user to the expected place since it has no `href`
+      // attribute.
+      cy.findByLabelText('Linode Cloud Community (opens in new tab)')
         .should('be.visible')
-        .parents('a')
-        .should('have.attr', 'href', 'https://linode.com/community');
+        .should('be.enabled');
 
       getVisible('[aria-label="Notifications"]');
       getVisible('[data-testid="nav-group-profile"]').within(() => {
