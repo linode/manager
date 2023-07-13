@@ -59,7 +59,7 @@ const RouteLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Routes" />
-      <Table>
+      <Table data-testid="aglb-route-landing-table">
         <TableHead>
           <TableRow>
             <TableSortCell
