@@ -8,10 +8,6 @@ import {
   Store,
 } from 'redux';
 import thunk from 'redux-thunk';
-import accountManagement, {
-  defaultState as defaultAccountManagementState,
-  State as AccountManagementState,
-} from 'src/store/accountManagement/accountManagement.reducer';
 import { State as AuthState } from 'src/store/authentication';
 import authentication, {
   defaultState as authenticationDefaultState,
@@ -90,14 +86,12 @@ initReselectDevtools();
  * Default State
  */
 const __resourcesDefaultState = {
-  accountManagement: defaultAccountManagementState,
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
 };
 
 export interface ResourcesState {
-  accountManagement: AccountManagementState;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
@@ -141,7 +135,6 @@ export const defaultState: ApplicationState = {
  * Reducers
  */
 const __resources = combineReducers({
-  accountManagement,
   linodes,
   linodeConfigs,
   linodeDisks,

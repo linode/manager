@@ -11,7 +11,6 @@ import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import {
@@ -33,6 +32,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 
 type CombinedProps = SearchProps & StyleProps;
 
@@ -87,7 +87,7 @@ export const SearchBar = (props: CombinedProps) => {
 
   const history = useHistory();
 
-  const { _isLargeAccount } = useAccountManagement();
+  const _isLargeAccount = useIsLargeAccount();
 
   // Only request things if the search bar is open/active.
   const shouldMakeRequests = searchActive && !_isLargeAccount;

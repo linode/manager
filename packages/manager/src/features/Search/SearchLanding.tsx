@@ -11,7 +11,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Notice } from 'src/components/Notice/Notice';
 import useAPISearch from 'src/features/Search/useAPISearch';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
@@ -37,6 +36,7 @@ import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { getImageLabelForLinode } from '../Images/utils';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -100,7 +100,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const { entities, errors, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
-  const { _isLargeAccount } = useAccountManagement();
+  const _isLargeAccount = useIsLargeAccount();
 
   const {
     data: objectStorageClusters,

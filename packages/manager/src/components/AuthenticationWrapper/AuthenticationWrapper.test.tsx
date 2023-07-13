@@ -15,7 +15,6 @@ const component = shallow<AuthenticationWrapper>(
     initSession={jest.fn()}
     requestLinodes={jest.fn()}
     markAppAsDoneLoading={jest.fn()}
-    checkAccountSize={jest.fn()}
     pendingUpload={false}
     linodes={[]}
     queryClient={queryClient}

@@ -18,7 +18,6 @@ import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
-import { checkAccountSize } from 'src/store/accountManagement/accountManagement.requests';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
@@ -79,9 +78,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
         queryKey: 'account-settings',
         queryFn: getAccountSettings,
       }),
-
-      // Is this a large account? (should we use API or Redux-based search/pagination)
-      this.props.checkAccountSize(),
     ];
 
     // Start events polling
@@ -170,7 +166,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
 
 interface DispatchProps {
   initSession: () => void;
-  checkAccountSize: () => Promise<null>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   markAppAsDoneLoading: () => void;
 }
@@ -179,7 +174,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
-  checkAccountSize: () => dispatch(checkAccountSize()),
   requestLinodes: () => dispatch(requestLinodes({})),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
 });
