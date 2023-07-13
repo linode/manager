@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { RouteTableRow } from '../RouteTableRow';
 import { Table } from 'src/components/Table';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
@@ -33,7 +36,25 @@ const RouteLanding = () => {
     filter
   );
 
-  console.log('routes', routes);
+  const onEdit = (route: Route) => {
+    // TODO: AGLB - does this trigger an edit modal? We need UX
+    return () => null;
+  };
+
+  const onDelete = (route: Route) => {
+    // TODO: AGLB - does this trigger a delete modal with confirmation? We need UX
+    return () => null;
+  };
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return (
+      <ErrorState errorText="There was an error retrieving your domains. Please reload and try again." />
+    );
+  }
 
   return (
     <>
@@ -50,33 +71,35 @@ const RouteLanding = () => {
               Label
             </TableSortCell>
             <TableSortCell
-              active={orderBy === 'status'}
+              active={orderBy === 'Match Type'}
               direction={order}
-              label="status"
+              label="Match Type"
               handleClick={handleOrderChange}
             >
               Match Type
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'Service Targets'}
+              direction={order}
+              label="Service Targets"
+              handleClick={handleOrderChange}
+            >
+              Service Targets
             </TableSortCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {routes?.data.map((route: Route) => (
-            <TableRow key={route.id} data-qa-route-cell={route.id}>
-              <TableCell parentColumn="Label">{route.label}</TableCell>
-              <TableCell parentColumn="Match Type">match type</TableCell>
-              <TableCell>
-                {/* <ActionMenu
-                  routeId={route.id}
-                  routeType={route.type}
-                  routeStatus={route.status}
-                  routeDomain={route.domain}
-                  routePath={route.path}
-                  routeServiceId={route.id}
-                /> */}
-              </TableCell>
-            </TableRow>
-          ))}
+          {routes?.data.map((route: Route) => {
+            return (
+              <RouteTableRow
+                key={`route-tablerow-${route.id}`}
+                route={route}
+                onDelete={onDelete}
+                onEdit={onEdit}
+              />
+            );
+          })}
         </TableBody>
       </Table>
     </>
