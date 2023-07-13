@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 import { LinearProgress } from 'src/components/LinearProgress';
+import { isPropValid } from 'src/utilities/isPropValid';
 
 export interface BarPercentProps {
   /** Additional css class to pass to the component */
@@ -69,6 +70,7 @@ const StyledDiv = styled('div')({
 
 const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
+  shouldForwardProp: (prop) => isPropValid(['rounded'], prop),
 })<Partial<BarPercentProps>>(({ theme, ...props }) => ({
   backgroundColor: theme.color.grey2,
   padding: props.narrow ? 8 : 12,
