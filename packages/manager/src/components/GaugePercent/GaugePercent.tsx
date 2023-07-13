@@ -49,7 +49,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-const GaugePercent: React.FC<CombinedProps> = (props) => {
+const GaugePercent = (props: CombinedProps) => {
   const width = props.width || 300;
   const height = props.height || 300;
   const { classes } = useStyles({
