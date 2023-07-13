@@ -7,11 +7,7 @@ import Request, {
   setData,
 } from '../request';
 import { Filter, Params, ResourcePage } from '../types';
-import { AccountBeta } from './types';
-
-export interface EnrollInBetaData {
-  id: string;
-}
+import { AccountBeta, EnrollInBetaPayload } from './types';
 
 /**
  * getBetas
@@ -45,7 +41,7 @@ export const getAccountBeta = (betaId: string) =>
  * @param data.id { string } ID of the beta you want to be enrolled in.
  *
  */
-export const enrollInBeta = (data: EnrollInBetaData) =>
+export const enrollInBeta = (data: EnrollInBetaPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/betas`),
     setMethod('POST'),

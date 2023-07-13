@@ -460,3 +460,7 @@ export interface AccountLogin {
 export interface AccountBeta extends Beta {
   enrolled: string;
 }
+
+export interface EnrollInBetaPayload {
+  id: string;
+}
