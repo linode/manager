@@ -2,6 +2,7 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { RouteTableRow } from '../RouteTableRow';
 import { Table } from 'src/components/Table';
 import { TableHead } from 'src/components/TableHead';
@@ -32,6 +33,7 @@ const RouteLanding = () => {
   const { data: routes, error, isLoading } = useRoutesQuery(
     {
       page: pagination.page,
+      page_size: pagination.pageSize,
     },
     filter
   );
@@ -102,6 +104,14 @@ const RouteLanding = () => {
           })}
         </TableBody>
       </Table>
+      <PaginationFooter
+        count={routes?.results || 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Routes Table"
+      />
     </>
   );
 };

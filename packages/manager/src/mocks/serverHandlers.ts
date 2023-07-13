@@ -334,7 +334,7 @@ const aglb = [
   }),
   // Routes
   rest.get('*/aglb/routes', (req, res, ctx) => {
-    const routes = getRouteFactory.buildList(4);
+    const routes = getRouteFactory.buildList(110);
     return res(ctx.json(makeResourcePage(routes)));
   }),
   rest.post('*/aglb/routes', (req, res, ctx) => {
