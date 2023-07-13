@@ -3,6 +3,7 @@ import {
   CreateEntrypointPayload,
   CreateLoadbalancerPayload,
   Entrypoint,
+  EntrypointPayload,
   Loadbalancer,
   Route2,
   RoutePayload2,
@@ -41,6 +42,23 @@ export const createEntrypointFactory = Factory.Sync.makeFactory<CreateEntrypoint
     ],
   }
 );
+
+export const updateEntrypointFactory = Factory.Sync.makeFactory<EntrypointPayload>(
+  {
+    label: Factory.each((i) => `entrypoint${i}`),
+    port: 80,
+    protocol: 'TCP',
+    certificate_table: [
+      {
+        sni_hostname: 'updatedexample.com',
+        certificate_id: 'cert-12345',
+      },
+    ],
+    routes: [1],
+  }
+);
+
+export const deleteEntrypointFactory = Factory.Sync.makeFactory<{}>({});
 
 // ***********************
 // Loadbalancers endpoints
@@ -143,6 +161,8 @@ export const updateLoadbalancerFactory = Factory.Sync.makeFactory<UpdateLoadbala
   }
 );
 
+export const deleteLoadbalancerFactory = Factory.Sync.makeFactory<{}>({});
+
 // ****************
 // Routes endpoints
 // ****************
@@ -192,6 +212,30 @@ export const createRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
   ],
 });
 
+export const updateRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
+  label: 'images-route',
+  rules: [
+    {
+      match_condition: {
+        host: 'www.anotherdomain.com',
+        path: '/anotherpath/',
+      },
+      service_targets: [
+        {
+          service_target_name: 'images-backend-aws',
+          service_target_percentage: 50,
+        },
+        {
+          service_target_name: 'images-backend-linode',
+          service_target_percentage: 50,
+        },
+      ],
+    },
+  ],
+});
+
+export const deleteRouteFactory = Factory.Sync.makeFactory<{}>({});
+
 // *************************
 // Service Targets endpoints
 // *************************
@@ -199,7 +243,7 @@ export const createRouteFactory = Factory.Sync.makeFactory<RoutePayload2>({
 export const getServiceTargetsFactory = Factory.Sync.makeFactory<ServiceTarget>(
   {
     id: Factory.each((i) => i),
-    label: 'images-backend-aws',
+    label: Factory.each((i) => `images-backend-aws-${i}`),
     endpoints: [
       {
         ip: '192.168.0.100',
@@ -240,3 +284,27 @@ export const createServiceTargetFactory = Factory.Sync.makeFactory<ServiceTarget
     health_check_host: 'example1.com',
   }
 );
+
+export const updateServiceTargetFactory = Factory.Sync.makeFactory<ServiceTargetPayload>(
+  {
+    label: 'images-backend-aws',
+    endpoints: [
+      {
+        ip: '192.168.0.200',
+        port: 6060,
+        capacity: 100,
+        hard_rate_limit: 1000,
+      },
+    ],
+    ca_certificate: 'another-certificate',
+    load_balancing_policy: 'ROUND_ROBIN',
+    health_check_interval: 10,
+    health_check_timeout: 5,
+    health_check_unhealthy_thresh: 3,
+    health_check_healthy_thresh: 2,
+    health_check_path: '/health',
+    health_check_host: 'anotherexample1.com',
+  }
+);
+
+export const deleteServiceTargetFactory = Factory.Sync.makeFactory<{}>({});
