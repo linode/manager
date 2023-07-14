@@ -1,7 +1,6 @@
 import Popper from '@mui/material/Popper';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import Bell from 'src/assets/icons/notification.svg';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
@@ -20,8 +19,7 @@ import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import usePrevious from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/accountNotifications';
 import { useMarkEventsAsSeen } from 'src/queries/events';
-import { ThunkDispatch } from 'src/store/types';
-import TopMenuIcon from '../TopMenuIcon';
+import { TopMenuIcon } from '../TopMenuIcon';
 import {
   NotificationIconWrapper,
   StyledButton,
@@ -60,8 +58,6 @@ export const NotificationMenu = () => {
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const prevOpen = usePrevious(notificationContext.menuOpen);
 
-  const dispatch = useDispatch<ThunkDispatch>();
-
   const handleNotificationMenuToggle = () => {
     if (!notificationContext.menuOpen) {
       notificationContext.openMenu();
@@ -97,13 +93,12 @@ export const NotificationMenu = () => {
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
   }, [
-    notificationContext.menuOpen,
     dismissNotifications,
-    notifications,
-    dispatch,
-    prevOpen,
-    markEventsAsSeen,
     eventNotifications,
+    markEventsAsSeen,
+    notificationContext.menuOpen,
+    notifications,
+    prevOpen,
   ]);
 
   return (

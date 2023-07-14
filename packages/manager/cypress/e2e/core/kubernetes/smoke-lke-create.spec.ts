@@ -60,11 +60,7 @@ describe('LKE Create Cluster', () => {
     mockCreateCluster(mockCluster).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
     cy.findByText('Add Node Pools').should('be.visible');
-    cy.contains('Cluster Label')
-      .next()
-      .children()
-      .click()
-      .type(mockCluster.label);
+    cy.findByLabelText('Cluster Label').click().type(mockCluster.label);
     cy.findByLabelText('Region')
       .should('be.visible')
       .focus()

@@ -76,6 +76,16 @@ import {
   proDedicatedTypeFactory,
   kubernetesVersionFactory,
   paymentFactory,
+  getEntrypointFactory,
+  createEntrypointFactory,
+  getLoadbalancerFactory,
+  createLoadbalancerFactory,
+  createLoadbalancerWithAllChildrenFactory,
+  getRouteFactory,
+  createRouteFactory,
+  getServiceTargetsFactory,
+  createServiceTargetFactory,
+  updateLoadbalancerFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
@@ -276,6 +286,84 @@ const databases = [
   }),
 
   rest.delete('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+];
+
+const aglb = [
+  // Entrypoints
+  rest.get('*/aglb/entrypoints', (req, res, ctx) => {
+    return res(ctx.json(getEntrypointFactory.buildList(3)));
+  }),
+  rest.get('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
+    return res(ctx.json(getEntrypointFactory.build()));
+  }),
+  rest.post('*/aglb/entrypoints', (req, res, ctx) => {
+    return res(ctx.json(createEntrypointFactory.build()));
+  }),
+  rest.put('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
+    const id = Number(req.params.entrypointId);
+    const body = req.body as any;
+    return res(ctx.json(getEntrypointFactory.build({ id, ...body })));
+  }),
+  rest.delete('*/aglb/entrypoints/:entrypointId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  // Load Balancers
+  rest.get('*/aglb/loadbalancers', (req, res, ctx) => {
+    return res(ctx.json(getLoadbalancerFactory.buildList(3)));
+  }),
+  rest.get('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
+    return res(ctx.json(getLoadbalancerFactory.build()));
+  }),
+  rest.post('*/aglb/loadbalancers', (req, res, ctx) => {
+    const loadbalancer1 = createLoadbalancerFactory.build();
+    const loadbalancer2 = createLoadbalancerWithAllChildrenFactory.build();
+    return res(ctx.json([loadbalancer1, loadbalancer2]));
+  }),
+  rest.put('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
+    const id = Number(req.params.loadbalancerId);
+    const body = req.body as any;
+    // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
+    // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
+    // TODO: AGLB - figure out if this is still accurate
+    return res(ctx.json(updateLoadbalancerFactory.build({ id, ...body })));
+  }),
+  rest.delete('*/aglb/loadbalancers/:loadbalancerId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  // Routes
+  rest.get('*/aglb/routes', (req, res, ctx) => {
+    return res(ctx.json(getRouteFactory.buildList(4)));
+  }),
+  rest.post('*/aglb/routes', (req, res, ctx) => {
+    return res(ctx.json(createRouteFactory.buildList(4)));
+  }),
+  rest.put('*/aglb/routes/:routeId', (req, res, ctx) => {
+    const id = Number(req.params.routeId);
+    const body = req.body as any;
+    return res(ctx.json(createRouteFactory.build({ id, ...body })));
+  }),
+  rest.delete('*/aglb/routes/:routeId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  // Service Targets
+  rest.get('*/aglb/service-targets', (req, res, ctx) => {
+    return res(ctx.json(getServiceTargetsFactory.buildList(2)));
+  }),
+  rest.post('*/aglb/service-targets', (req, res, ctx) => {
+    return res(ctx.json(createServiceTargetFactory.build()));
+  }),
+  rest.put('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
+    const id = Number(req.params.serviceTargetId);
+    const body = req.body as any;
+    return res(
+      ctx.json({
+        ...createServiceTargetFactory.build({ id, ...body }),
+      })
+    );
+  }),
+  rest.delete('*/aglb/service-targets/:serviceTargetId', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
 ];
@@ -1265,6 +1353,7 @@ export const handlers = [
   ...entityTransfers,
   ...statusPage,
   ...databases,
+  ...aglb,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.
