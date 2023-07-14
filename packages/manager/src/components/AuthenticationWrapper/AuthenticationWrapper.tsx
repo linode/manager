@@ -78,10 +78,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
         queryKey: 'account-settings',
         queryFn: getAccountSettings,
       }),
-    ];
 
-    // Fetch first page of Linodes (TODO: remove once the Linodes RQ migration is complete)
-    this.props.getLinodesPage();
+      // Fetch first page of Linodes (TODO: remove once the Linodes RQ migration is complete)
+      this.props.getLinodesPage(),
+    ];
 
     // Start events polling
     startEventsInterval(this.props.store, this.props.queryClient);
