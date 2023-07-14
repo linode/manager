@@ -39,7 +39,6 @@ import {
   diskEventHandler,
   linodeEventsHandler,
 } from './queries/linodes/events';
-import { useSubnetQuery } from './queries/vpcs';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -58,9 +57,6 @@ const BaseApp = withFeatureFlagProvider(
     const { loggedInAsCustomer } = useAuthentication();
 
     const { enqueueSnackbar } = useSnackbar();
-
-    // const { data: subnetData } = useSubnetQuery(vpcID, subnetID);
-    // console.log(subnetData);
 
     const [goToOpen, setGoToOpen] = React.useState(false);
 
