@@ -12,7 +12,7 @@ export interface CreateVPCPayload {
   label: string;
   description?: string;
   region: string;
-  subnets?: SubnetPostObject[];
+  subnets?: CreateSubnetPayload[];
 }
 
 export interface UpdateVPCPayload {
@@ -20,15 +20,19 @@ export interface UpdateVPCPayload {
   description?: string;
 }
 
-export interface SubnetPostObject {
+export interface CreateSubnetPayload {
   label: string;
-  ipv4: string;
-  ipv6: string;
+  ipv4?: string;
+  ipv6?: string;
 }
 
-export interface Subnet extends SubnetPostObject {
+export interface Subnet extends CreateSubnetPayload {
   id: number;
   linodes: number[];
   created: string;
   updated: string;
+}
+
+export interface ModifySubnetPayload {
+  label: string;
 }
