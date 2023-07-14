@@ -14,7 +14,7 @@ const launchDarklyClientstreamPattern =
   'https://clientstream.launchdarkly.com/eval/*/*';
 
 /**
- * Intercepts GET request to feature flag clientstrema URL and mocks the response.
+ * Intercepts GET request to feature flag clientstream URL and mocks the response.
  *
  * This blocks Cloud Manager from initiating a stream with our feature flag
  * service, preventing our mocks from being overridden.

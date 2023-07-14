@@ -11,14 +11,14 @@ import Tabs from 'src/components/core/ReachTabs';
 const RouteLanding = React.lazy(
   () => import('../Routes/RouteLanding/RouteLanding')
 );
-const EntryPointLanding = React.lazy(
-  () => import('../EntryPoints/EntryPointLanding/EntryPointLanding')
+const ServiceTargetLanding = React.lazy(
+  () => import('../ServiceTargets/ServiceTargetLanding/ServiceTargetLanding')
 );
 
 const LoadBalancerLanding = () => {
   const history = useHistory();
   const { tab } = useParams<{
-    tab?: 'routes' | 'entrypoints';
+    tab?: 'routes' | 'service-targets';
   }>();
 
   const tabs = [
@@ -32,7 +32,7 @@ const LoadBalancerLanding = () => {
     },
     {
       title: 'Service Targets',
-      routeName: `/loadbalancers/entrypoints`,
+      routeName: `/loadbalancers/service-targets`,
     },
   ];
 
@@ -51,7 +51,7 @@ const LoadBalancerLanding = () => {
   const createButtonText = tab
     ? tab === 'routes'
       ? 'Create Route'
-      : tab === 'entrypoints'
+      : tab === 'service-targets'
       ? 'Create Service Target'
       : 'Create Load Balancer'
     : 'Create Load Balancer';
@@ -59,8 +59,8 @@ const LoadBalancerLanding = () => {
   const createButtonAction = () => {
     if (tab === 'routes') {
       history.push(`/loadbalancers/routes/create`);
-    } else if (tab === 'entrypoints') {
-      history.push(`/loadbalancers/entrypoints/create`);
+    } else if (tab === 'service-targets') {
+      history.push(`/loadbalancers/service-targets/create`);
     } else {
       history.push(`/loadbalancers/create`);
     }
@@ -90,7 +90,7 @@ const LoadBalancerLanding = () => {
               <RouteLanding />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
-              <EntryPointLanding />
+              <ServiceTargetLanding />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
