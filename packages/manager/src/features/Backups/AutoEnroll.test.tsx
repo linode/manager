@@ -6,13 +6,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { AutoEnroll } from './AutoEnroll';
 
 const props = {
-  classes: {
-    header: '',
-    icon: '',
-    root: '',
-    toggleLabel: '',
-    toggleLabelText: '',
-  },
   enabled: true,
   error: undefined,
   toggle: jest.fn(),
