@@ -21,30 +21,18 @@ const validateIP = (value?: string): boolean => {
     const type = addr.kind();
 
     if (type === 'ipv4') {
-      try {
-        ipaddr.IPv4.isValid(value);
-        ipaddr.IPv4.parseCIDR(value);
-      } catch (err) {
-        return false;
-      }
-
-      return true;
+      ipaddr.IPv4.isValid(value);
+      ipaddr.IPv4.parseCIDR(value);
+    } else if (type === 'ipv6') {
+      ipaddr.IPv6.parseCIDR(value);
+    } else {
+      return false;
     }
 
-    if (type === 'ipv6') {
-      try {
-        ipaddr.IPv6.parseCIDR(value);
-      } catch (err) {
-        return false;
-      }
-
-      return true;
-    }
+    return true;
   } catch (err) {
     return false;
   }
-
-  return false;
 };
 
 const labelValidation = string()
