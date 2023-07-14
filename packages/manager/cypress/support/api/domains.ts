@@ -1,9 +1,10 @@
-import { apiCheckErrors } from './common';
+import { Domain, deleteDomain, getDomains } from '@linode/api-v4';
 import { isTestLabel } from 'support/api/common';
-import { randomDomainName } from 'support/util/random';
-import { Domain, getDomains, deleteDomain } from '@linode/api-v4';
-import { depaginate } from 'support/util/paginate';
 import { oauthToken, pageSize } from 'support/constants/api';
+import { depaginate } from 'support/util/paginate';
+import { randomDomainName } from 'support/util/random';
+
+import { apiCheckErrors } from './common';
 
 /**
  * Deletes all domains which are prefixed with the test entity prefix.
@@ -12,7 +13,7 @@ import { oauthToken, pageSize } from 'support/constants/api';
  */
 export const deleteAllTestDomains = async (): Promise<void> => {
   const domains = await depaginate<Domain>((page: number) =>
-    getDomains({ page_size: pageSize, page })
+    getDomains({ page, page_size: pageSize })
   );
 
   const deletionPromises = domains
@@ -27,17 +28,17 @@ const makeDomainCreateReq = (domain) => {
     ? domain
     : {
         domain: randomDomainName(),
-        type: 'master',
         soa_email: 'admin@example.com',
+        type: 'master',
       };
 
   return cy.request({
-    method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/domains',
-    body: domainData,
     auth: {
       bearer: oauthToken,
     },
+    body: domainData,
+    method: 'POST',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/domains',
   });
 };
 

@@ -3,6 +3,7 @@
  */
 
 import { makeResponse } from 'support/util/response';
+
 import type { FeatureFlagResponseData } from 'support/util/feature-flags';
 
 // LaunchDarkly URL pattern for feature flag retrieval.

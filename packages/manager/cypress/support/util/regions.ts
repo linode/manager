@@ -1,4 +1,5 @@
 import { randomItem } from 'support/util/random';
+
 import type { Region } from '@linode/api-v4';
 
 /**
@@ -13,8 +14,7 @@ export const getOverrideRegion = (): Region | undefined => {
   const overrideRegionId = Cypress.env('CY_TEST_REGION');
 
   try {
-    const reg = getRegionById(overrideRegionId);
-    return reg;
+    return getRegionById(overrideRegionId);
   } catch (e) {
     return undefined;
   }

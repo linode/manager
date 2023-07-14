@@ -1,7 +1,8 @@
-import { Volume, getVolumes, deleteVolume, detachVolume } from '@linode/api-v4';
-import { isTestLabel } from './common';
+import { Volume, deleteVolume, detachVolume, getVolumes } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
+
+import { isTestLabel } from './common';
 
 /**
  * Delete all Volumes whose labels are prefixed "cy-test-".
@@ -13,7 +14,7 @@ import { depaginate } from 'support/util/paginate';
  */
 export const deleteAllTestVolumes = async (): Promise<void> => {
   const volumes = await depaginate<Volume>((page: number) =>
-    getVolumes({ page_size: pageSize, page })
+    getVolumes({ page, page_size: pageSize })
   );
 
   const detachDeletePromises = volumes

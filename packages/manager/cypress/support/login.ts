@@ -1,10 +1,10 @@
-import { DateTime } from 'luxon';
 import { UserPreferences } from '@linode/api-v4/types';
-import {
-  mockCommonRequests,
-  CommonRequestMockOptions,
-} from 'support/intercepts/common';
+import { DateTime } from 'luxon';
 import { oauthToken } from 'support/constants/api';
+import {
+  CommonRequestMockOptions,
+  mockCommonRequests,
+} from 'support/intercepts/common';
 import { apiMatcher } from 'support/util/intercepts';
 
 const overrideLocalStorage = (
@@ -35,6 +35,15 @@ const _loginWithToken = (win) => {
  */
 export interface LinodeVisitOptions {
   /**
+   * Local storage overrides.
+   *
+   * If `undefined` is passed, local storage overriding will be disabled.
+   *
+   * @var {Map<string, any>}
+   */
+  localStorageOverrides?: Map<string, any>;
+
+  /**
    * Whether or not to mock common Linode API requests.
    *
    * If `true`, mocks are enabled with default options. If a
@@ -43,7 +52,7 @@ export interface LinodeVisitOptions {
    *
    * @var {boolean | CommonRequestMockOptions | undefined}
    */
-  mockRequests?: boolean | CommonRequestMockOptions;
+  mockRequests?: CommonRequestMockOptions | boolean;
 
   /**
    * User preference overrides.
@@ -56,24 +65,15 @@ export interface LinodeVisitOptions {
    * @var {UserPreferences | undefined}
    */
   preferenceOverrides?: UserPreferences;
-
-  /**
-   * Local storage overrides.
-   *
-   * If `undefined` is passed, local storage overriding will be disabled.
-   *
-   * @var {Map<string, any>}
-   */
-  localStorageOverrides?: Map<string, any>;
 }
 
 Cypress.Commands.add(
   'visitWithLogin',
   (url: string, linodeOptions?: LinodeVisitOptions, cypressOptions?: any) => {
     const defaultLinodeOptions: LinodeVisitOptions = {
+      localStorageOverrides: undefined,
       mockRequests: true,
       preferenceOverrides: undefined,
-      localStorageOverrides: undefined,
     };
 
     const resolvedLinodeOptions = linodeOptions

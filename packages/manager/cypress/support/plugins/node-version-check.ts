@@ -27,10 +27,10 @@ const getVersionComponents = (versionString: string) => {
     .map((str) => parseInt(str, 10));
 
   return {
+    full: versionString,
     major: versionComponentsArray[0],
     minor: versionComponentsArray[1],
     patch: versionComponentsArray[2],
-    full: versionString,
   };
 };
 

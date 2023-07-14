@@ -1,6 +1,7 @@
-import type { CypressPlugin } from './plugin';
-import type { ResourcePage, Region } from '@linode/api-v4';
 import { baseRequest, getRegions } from '@linode/api-v4';
+
+import type { CypressPlugin } from './plugin';
+import type { Region, ResourcePage } from '@linode/api-v4';
 
 /*
  * Authenticate API requests. Necessary to fetch list of Linode regions.

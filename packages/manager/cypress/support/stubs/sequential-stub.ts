@@ -32,7 +32,7 @@ export const sequentialStub = function (stubs: any | any[]) {
     throw new Error('Expected stubs array to contain at least 1 item');
   }
 
-  const get = function (req: CyHttpMessages.IncomingHttpRequest) {
+  return function (req: CyHttpMessages.IncomingHttpRequest) {
     const current = count;
     count++;
 
@@ -42,6 +42,4 @@ export const sequentialStub = function (stubs: any | any[]) {
       req.reply(stubData[current]);
     }
   };
-
-  return get;
 };
