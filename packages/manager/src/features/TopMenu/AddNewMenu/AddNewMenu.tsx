@@ -61,7 +61,7 @@ export const AddNewMenu = () => {
       link: '/volumes/create',
     },
     {
-      entity: 'LoadBalancer',
+      entity: 'Global Load Balancer',
       // TODO AGLB: Replace with AGLB copy when available
       description: 'Ensure your services are highly available',
       // TODO AGLB: Change this icon to the AGLB icon when available

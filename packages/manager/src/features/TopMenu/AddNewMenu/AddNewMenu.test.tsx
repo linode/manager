@@ -59,7 +59,7 @@ describe('AddNewMenu', () => {
     const { getByText, queryByText } = renderWithTheme(<AddNewMenu />);
     const createButton = getByText('Create');
     fireEvent.click(createButton);
-    const hiddenMenuItem = queryByText('LoadBalancer');
+    const hiddenMenuItem = queryByText('Global Load Balancer');
     expect(hiddenMenuItem).toBeNull();
   });
 });
