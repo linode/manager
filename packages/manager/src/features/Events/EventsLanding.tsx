@@ -19,10 +19,14 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { ApplicationState } from 'src/store';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
-import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
+import {
+  isInProgressEvent,
+  removeBlocklistedEvents,
+} from 'src/utilities/eventUtils';
 import EventRow from './EventRow';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import { Filter } from '@linode/api-v4';
+import { partition } from 'src/utilities/partition';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -80,6 +84,12 @@ export const EventsLanding = (props: CombinedProps) => {
     isFetchingNextPage,
   } = useEventsInfiniteQuery({ filter });
 
+  const [inProgressEvents, completedEvents] = partition(
+    isInProgressEvent,
+    events ?? []
+  );
+  const sortedEvents = [...inProgressEvents, ...completedEvents];
+
   const loading = isLoading || isFetchingNextPage || entitiesLoading;
 
   React.useEffect(() => {
@@ -125,20 +135,20 @@ export const EventsLanding = (props: CombinedProps) => {
             errorMessage,
             entityId,
             error ? 'Error' : undefined,
-            events,
+            sortedEvents,
             emptyMessage
           )}
         </TableBody>
       </Table>
-      {hasNextPage && events !== undefined && !loading ? (
+      {hasNextPage && sortedEvents !== undefined && !loading ? (
         <Waypoint onEnter={() => fetchNextPage()}>
           <div />
         </Waypoint>
       ) : (
         !loading &&
         !error &&
-        events &&
-        events.length > 0 && (
+        sortedEvents &&
+        sortedEvents.length > 0 && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
           </Typography>

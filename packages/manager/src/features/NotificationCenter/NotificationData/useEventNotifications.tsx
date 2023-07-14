@@ -1,5 +1,4 @@
 import { Event, EventAction } from '@linode/api-v4';
-import { partition } from 'ramda';
 import * as React from 'react';
 import { useEventsInfiniteQuery } from 'src/queries/events';
 import {
@@ -10,6 +9,7 @@ import { notificationContext as _notificationContext } from '../NotificationCont
 import { NotificationItem } from '../NotificationSection';
 import { RenderEvent } from './RenderEvent';
 import RenderProgressEvent from './RenderProgressEvent';
+import { partition } from 'src/utilities/partition';
 
 const unwantedEvents: EventAction[] = [
   'account_update',
