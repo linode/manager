@@ -71,9 +71,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       display: 'flex',
       alignItems: 'center',
       cursor: 'pointer',
-      height: 36,
-      lineHeight: 0,
-      padding: '12px 16px',
+      padding: '8px 16px',
       position: 'relative',
       transition: theme.transitions.create(['background-color']),
       '& p': {
@@ -119,10 +117,11 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       color: '#fff',
       fontFamily: 'LatoWebBold', // we keep this bold at all times
       opacity: 1,
+      position: 'relative',
       transition: theme.transitions.create(['color']),
-      whiteSpace: 'nowrap',
       '&.hiddenWhenCollapsed': {
         opacity: 0,
+        maxHeight: 36,
       },
     },
     active: {
@@ -141,6 +140,11 @@ const useStyles = makeStyles<void, 'linkItem'>()(
     },
     chip: {
       marginTop: 2,
+      '&.beta-chip-aglb': {
+        position: 'absolute',
+        left: 70,
+        bottom: -2,
+      },
     },
     logoSvgCollapsed: {
       // Hide 'Akamai' text when the navigation is collapsed and the nav is not hovered

@@ -34,6 +34,7 @@ import { linkIsActive } from './utils';
 type NavEntity =
   | 'Linodes'
   | 'Volumes'
+  | 'Global Load Balancers'
   | 'NodeBalancers'
   | 'Domains'
   | 'Longview'
@@ -59,6 +60,7 @@ interface PrimaryLink {
   onClick?: (e: React.ChangeEvent<any>) => void;
   hide?: boolean;
   isBeta?: boolean;
+  betaChipClassName?: string;
   prefetchRequestFn?: () => void;
   prefetchRequestCondition?: boolean;
 }
@@ -154,6 +156,15 @@ export const PrimaryNav = (props: Props) => {
           icon: <Volume />,
         },
         {
+          display: 'Global Load Balancers',
+          href: '/loadbalancers',
+          // TODO AGLB: replace icon when available
+          icon: <Domain />,
+          hide: !flags.aglb,
+          isBeta: true,
+          betaChipClassName: 'beta-chip-aglb',
+        },
+        {
           display: 'NodeBalancers',
           href: '/nodebalancers',
           icon: <NodeBalancer />,
@@ -241,6 +252,7 @@ export const PrimaryNav = (props: Props) => {
       allowObjPrefetch,
       allowMarketplacePrefetch,
       flags.databaseBeta,
+      flags.aglb,
     ]
   );
 
@@ -355,6 +367,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
 
   const {
     isBeta,
+    betaChipClassName,
     isCollapsed,
     closeMenu,
     href,
@@ -404,7 +417,13 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
       >
         {display}
         {isBeta ? (
-          <BetaChip className={classes.chip} color="primary" component="span" />
+          <BetaChip
+            className={cx(betaChipClassName ? betaChipClassName : '', {
+              [classes.chip]: true,
+            })}
+            color="primary"
+            component="span"
+          />
         ) : null}
       </p>
     </Link>
